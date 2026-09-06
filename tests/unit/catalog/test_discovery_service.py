@@ -157,6 +157,19 @@ async def test_two_callers_of_one_site_build_it_once(catalogs: _Catalogs) -> Non
     assert catalogs.loads == ["plasmodb"]
 
 
+def test_the_configured_service_reads_its_cache_directory_from_the_settings(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """CATALOG_CACHE_DIR names where snapshots are read and written."""
+    settings = McpSettings(catalog_cache_dir=tmp_path / "snapshots")
+    monkeypatch.setattr(discovery_service, "get_mcp_settings", lambda: settings)
+
+    service = discovery_service._configured_service()
+
+    assert service._cache_dir == tmp_path / "snapshots"
+
+
 @pytest.mark.parametrize("refresh", [True, False])
 @pytest.mark.parametrize("sync", [True, False])
 def test_the_configured_service_takes_its_policy_from_the_settings(

@@ -24,6 +24,7 @@ def test_the_installed_source_serves_the_server() -> None:
 
 def test_the_server_settings_keep_the_environment_variable_names() -> None:
     assert set(McpSettings.model_fields) == {
+        "catalog_cache_dir",
         "catalog_refresh_enabled",
         "embedding_index_sync_enabled",
         "pathfinder_mcp_base_url",

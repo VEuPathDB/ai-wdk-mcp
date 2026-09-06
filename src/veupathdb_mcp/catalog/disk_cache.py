@@ -13,7 +13,6 @@ from veupathdb.wdk.wdk_models import (
 
 logger = get_logger(__name__)
 
-DEFAULT_CATALOG_CACHE_DIR = Path(__file__).resolve().parents[3] / "data" / "catalogs"
 _CACHE_TTL_SECONDS = 7 * 24 * 60 * 60
 
 # The shape of the file two images exchange through the catalogs volume. Raise

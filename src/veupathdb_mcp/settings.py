@@ -2,6 +2,7 @@
 
 from collections.abc import Callable
 from functools import cached_property, lru_cache
+from pathlib import Path
 
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -9,6 +10,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from veupathdb_mcp.service_tokens import ServiceTokenRegistry
 
 DEFAULT_OAUTH_URL = "https://auth.veupathdb.org"
+DEFAULT_CATALOG_CACHE_DIR = Path("data/catalogs")
 
 
 class McpSettings(BaseSettings):
@@ -43,6 +45,10 @@ class McpSettings(BaseSettings):
     # Whether this process syncs an embedding index. A process that only reads
     # searches what the syncing process wrote.
     embedding_index_sync_enabled: bool = True
+    # Where per-site catalog snapshots are read and written. Two processes that
+    # name the same directory exchange what one of them refreshes. A relative
+    # path is read from the working directory, so a deployment states its own.
+    catalog_cache_dir: Path = DEFAULT_CATALOG_CACHE_DIR
 
     @field_validator("veupathdb_oauth_url", mode="before")
     @classmethod

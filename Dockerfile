@@ -7,32 +7,24 @@ COPY --from=uv /uv /uvx /usr/local/bin/
 
 WORKDIR /app
 
+# The lock names the client library by a git URL, so the build stage needs git.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
-# The lock names the client library by path, so the sibling is copied with the
-# manifests. After publishing, the context is this folder and these three lines
-# go with the path source.
-COPY veupathdb-py/pyproject.toml veupathdb-py/
-COPY veupathdb-py/README.md veupathdb-py/
-COPY veupathdb-py/src veupathdb-py/src
-COPY veupathdb-mcp/pyproject.toml veupathdb-mcp/
-COPY veupathdb-mcp/uv.lock veupathdb-mcp/
+COPY pyproject.toml uv.lock ./
 
-WORKDIR /app/veupathdb-mcp
 RUN --mount=type=cache,target=/root/.cache/uv \
     UV_LINK_MODE=copy uv sync --frozen --no-install-project
 
-WORKDIR /app
-COPY veupathdb-mcp/README.md veupathdb-mcp/
-COPY veupathdb-mcp/alembic.ini veupathdb-mcp/
-COPY veupathdb-mcp/data veupathdb-mcp/data
-COPY veupathdb-mcp/src veupathdb-mcp/src
+COPY README.md alembic.ini ./
+COPY data data
+COPY src src
 
-ENV PYTHONPATH=/app/veupathdb-mcp/src
+ENV PYTHONPATH=/app/src
 ENV PYTHONUNBUFFERED=1
-WORKDIR /app/veupathdb-mcp
+ENV CATALOG_CACHE_DIR=/app/data/catalogs
 
 EXPOSE 8100
 

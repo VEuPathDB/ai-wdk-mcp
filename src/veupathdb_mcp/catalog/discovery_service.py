@@ -21,7 +21,6 @@ from veupathdb_mcp.catalog.discovery import (
     SearchCatalog,
     TaskSpawner,
 )
-from veupathdb_mcp.catalog.disk_cache import DEFAULT_CATALOG_CACHE_DIR
 from veupathdb_mcp.locks import KeyedLock
 from veupathdb_mcp.settings import get_mcp_settings
 
@@ -179,7 +178,7 @@ def _configured_service() -> DiscoveryService:
     """The service this process serves, from the settings in force."""
     settings = get_mcp_settings()
     return DiscoveryService(
-        cache_dir=DEFAULT_CATALOG_CACHE_DIR,
+        cache_dir=settings.catalog_cache_dir,
         budget_bytes=settings.site_catalog_budget_mb * _MEGABYTE,
         policy=CatalogPolicy(
             refresh=settings.catalog_refresh_enabled,
