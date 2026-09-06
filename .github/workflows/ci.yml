@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: veupathdb-mcp
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - uses: astral-sh/setup-uv@v7
+
+      # The lock names the client library and nothing else, so a `pathfinder`
+      # import fails to resolve here rather than failing a lint rule.
+      - name: Install the package alone
+        run: uv sync --frozen
+
+      - name: Run ruff
+        run: uv run ruff check src tests
+
+      - name: Check formatting
+        run: uv run ruff format --check src tests
+
+      - name: Run mypy
+        run: uv run mypy --strict src
+
+      - name: Run the hermetic suite
+        run: uv run pytest tests/unit
+
+      # The index suite starts a pgvector container and runs this package's own
+      # alembic chain on it.
+      - name: Run the index suite
+        run: uv run pytest tests/integration
+
+  live:
+    name: Live site lane
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - uses: astral-sh/setup-uv@v7
+      - name: Install the package alone
+        run: uv sync --frozen
+      - name: Run the live lane
+        run: uv run pytest tests/live -m live_wdk --override-ini addopts=''

@@ -1,0 +1,120 @@
+[project]
+name = "veupathdb-mcp"
+version = "0.1.0a1"
+description = "The VEuPathDB WDK catalog, parameter and gene tools, served over MCP"
+requires-python = ">=3.14"
+dependencies = [
+    "veupathdb-py",
+    "pydantic>=2.12.0",
+    "pydantic-settings>=2.14.2",
+    "fastmcp-slim[server]>=3.3.0,<4",
+    "mcp>=1.28.1",
+    "starlette>=1.3.1",
+    "uvicorn[standard]>=0.44.0",
+    "cachetools>=7.0.5",
+    "rapidfuzz>=3.14.0",
+    "structlog>=25.0.0",
+    "sqlalchemy[asyncio]>=2.0.49",
+    "asyncpg>=0.31.0",
+    "pgvector>=0.5.0",
+    "numpy>=2.0.0",
+    "openai>=2.0.0",
+    "alembic>=1.18.0",
+]
+
+[tool.uv.sources]
+veupathdb-py = { path = "../veupathdb-py", editable = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/veupathdb_mcp"]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.20.0",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "respx>=0.22.0",
+    "ruff==0.15.9",
+    "testcontainers>=4.14.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+consider_namespace_packages = true
+addopts = "-m 'not live_wdk' --import-mode=importlib"
+markers = [
+    "live_wdk: one call to a running VEuPathDB site (opt-in; run via `uv run pytest tests/live -m live_wdk --override-ini addopts=''`)",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py314"
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "I", "N", "W", "UP", "B", "C4", "SIM",
+    "A", "ASYNC", "BLE", "C90", "DTZ", "EM", "ERA", "FBT", "ICN", "ISC", "LOG",
+    "PIE", "PT", "PTH", "RET", "RSE", "RUF", "S", "T20", "TCH", "TID", "TRY",
+    "PERF", "FURB", "PLC", "PLE", "PLR", "PLW",
+]
+ignore = [
+    "E501",
+    "N803",
+    "N815",
+    # Pydantic models with self-referential fields need quoted forward refs
+    # even on Python 3.14 (PEP 649) because Pydantic's metaclass evaluates
+    # annotations eagerly at class construction time.
+    "UP037",
+    # We don't use TYPE_CHECKING imports.
+    "TC001", "TC002", "TC003",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pylint]
+max-args = 6
+max-returns = 6
+max-branches = 10
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "S101",
+    "S105",
+    "S106",
+    "PLR2004",
+    "FBT",
+    "S311",
+]
+"src/veupathdb_mcp/tools/**" = [
+    "PLR0913",  # a served tool takes the arguments its schema declares
+    "FBT",      # a boolean argument is a boolean in the tool schema
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["veupathdb_mcp"]
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+plugins = ["pydantic.mypy"]
+warn_return_any = true
+warn_unused_ignores = true
+disable_error_code = ["import-untyped", "untyped-decorator"]
+exclude = ["tests/"]
+
+[tool.pydantic-mypy]
+init_typed = false
+
+[tool.pyright]
+pythonVersion = "3.14"
+pythonPlatform = "Linux"

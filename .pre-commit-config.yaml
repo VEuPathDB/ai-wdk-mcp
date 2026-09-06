@@ -1,0 +1,29 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff
+        entry: bash -c "uv run ruff check src tests && uv run ruff format --check src tests"
+        language: system
+        pass_filenames: false
+        types: [python]
+      - id: mypy
+        name: mypy --strict
+        entry: bash -c "uv run mypy --strict src"
+        language: system
+        pass_filenames: false
+        types: [python]
+      - id: pytest
+        name: pytest (hermetic)
+        entry: bash -c "uv run pytest tests/unit"
+        language: system
+        pass_filenames: false
+        types: [python]
+        stages: [pre-push]
+      - id: pytest-integration
+        name: pytest (index suite, pgvector testcontainer)
+        entry: bash -c "uv run pytest tests/integration"
+        language: system
+        pass_filenames: false
+        types: [python]
+        stages: [pre-push]
