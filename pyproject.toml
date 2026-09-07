@@ -1,6 +1,6 @@
 [project]
 name = "veupathdb-mcp"
-version = "0.1.0a1"
+version = "0.1.0a2"
 description = "The VEuPathDB WDK catalog, parameter and gene tools, served over MCP"
 requires-python = ">=3.14"
 dependencies = [
@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-veupathdb-py = { git = "https://github.com/VEuPathDB/ai-veupathdb-client", tag = "v0.1.0a1" }
+veupathdb-py = { git = "https://github.com/VEuPathDB/ai-veupathdb-client", tag = "v0.1.0a2" }
 
 [build-system]
 requires = ["hatchling"]
