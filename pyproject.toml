@@ -1,6 +1,6 @@
 [project]
 name = "veupathdb-mcp"
-version = "0.1.0a2"
+version = "0.1.0a3"
 description = "The VEuPathDB WDK catalog, parameter and gene tools, served over MCP"
 requires-python = ">=3.14"
 dependencies = [
