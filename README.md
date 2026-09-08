@@ -138,10 +138,10 @@ uv run pytest tests/live -m live_wdk --override-ini addopts=''   # one real site
 than a lint rule.
 
 The lock names `veupathdb-py` by the client repository
-(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one commit, so a checkout
-of this repository alone installs and tests. To take a newer client: change `rev`
-in `[tool.uv.sources]`, run `uv lock --upgrade-package veupathdb-py`, then
-`uv sync`.
+(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, so a
+checkout of this repository alone installs and tests. To take a newer client:
+change `tag` in `[tool.uv.sources]`, run `uv lock --upgrade-package veupathdb-py`,
+then `uv sync`.
 
 ## Coverage, honestly
 

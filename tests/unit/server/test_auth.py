@@ -35,7 +35,7 @@ def mcp_credentials(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
 
 
 def _stub_claims(
-    monkeypatch: pytest.MonkeyPatch, answer: VEuPathDBClaims | None | Exception
+    monkeypatch: pytest.MonkeyPatch, answer: VEuPathDBClaims | Exception | None
 ) -> list[str]:
     """Answer the JWKS verification without reaching the OAuth server."""
     verified: list[str] = []

@@ -5,6 +5,7 @@ Single source of truth for catalog/discovery logic used by both:
 - AI tools (`ai/tools/catalog_tools.py`, etc.)
 """
 
+from veupathdb_mcp.catalog._param_filters import has_contrast_sibling
 from veupathdb_mcp.catalog.eda_backed import (
     EdaBackedSearch,
     eda_backed_guidance,
@@ -65,6 +66,7 @@ __all__ = [
     "get_refreshed_dependent_params",
     "get_search_parameters",
     "get_search_parameters_tool",
+    "has_contrast_sibling",
     "inspect_search",
     "is_eda_backed",
     "is_upload_sentinel_vocabulary",

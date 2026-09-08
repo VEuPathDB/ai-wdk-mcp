@@ -104,11 +104,15 @@ def eda_backed_guidance(search: EdaBackedSearch) -> str:
     the EDA tools author it and the step-creation tool serializes it once.
     """
     lines = [
-        f"{search.search_name} is EDA-backed: its {EDA_ANALYSIS_SPEC_PARAM} "
-        f"parameter carries a whole EDA analysis document, so do not propose a "
-        f"value for it.",
-        "Instead: search_eda_studies, then describe_eda_study, then "
-        "open_eda_analysis, then set_eda_filters, then preview_eda_subset.",
+        (
+            f"{search.search_name} is EDA-backed: its {EDA_ANALYSIS_SPEC_PARAM} "
+            f"parameter carries a whole EDA analysis document, so do not propose a "
+            f"value for it."
+        ),
+        (
+            "Instead: search_eda_studies, then describe_eda_study, then "
+            "open_eda_analysis, then set_eda_filters, then preview_eda_subset."
+        ),
     ]
     if search.is_compute_backed:
         lines.append(

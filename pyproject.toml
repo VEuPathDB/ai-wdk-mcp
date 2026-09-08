@@ -1,14 +1,16 @@
 [project]
 name = "veupathdb-mcp"
-version = "0.1.0a3"
+dynamic = ["version"]
 description = "The VEuPathDB WDK catalog, parameter and gene tools, served over MCP"
 requires-python = ">=3.14"
 dependencies = [
     "veupathdb-py",
-    "pydantic>=2.12.0",
+    "pydantic>=2.13.0",
     "pydantic-settings>=2.14.2",
     "fastmcp-slim[server]>=3.3.0,<4",
-    "mcp>=1.28.1",
+    # The server auth middleware and the conformance fixture server use the
+    # mcp 1 low-level API.
+    "mcp>=1.28.1,<2",
     "starlette>=1.3.1",
     "uvicorn[standard]>=0.44.0",
     "cachetools>=7.0.5",
@@ -18,28 +20,31 @@ dependencies = [
     "asyncpg>=0.31.0",
     "pgvector>=0.5.0",
     "numpy>=2.0.0",
-    "openai>=2.0.0",
+    "openai>=3.8.0",
     "alembic>=1.18.0",
 ]
 
 [tool.uv.sources]
-veupathdb-py = { git = "https://github.com/VEuPathDB/ai-veupathdb-client", tag = "v0.1.0a2" }
+veupathdb-py = { git = "https://github.com/VEuPathDB/ai-veupathdb-client", tag = "v0.1.0a3" }
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/veupathdb_mcp/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/veupathdb_mcp"]
 
 [dependency-groups]
 dev = [
-    "mypy>=1.20.0",
+    "mypy>=2.3.1",
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
     "respx>=0.22.0",
-    "ruff==0.15.9",
-    "testcontainers>=4.14.0",
+    "ruff==0.16.6",
+    "testcontainers>=4.15.0",
 ]
 
 [tool.pytest.ini_options]
