@@ -29,8 +29,8 @@ SERVICE_SECRET = "wdk-mcp-service-secret-0123456789ab"
 
 @pytest.fixture
 def mcp_deployment(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
-    monkeypatch.setenv("PATHFINDER_MCP_BASE_URL", BASE_URL)
-    monkeypatch.setenv("PATHFINDER_MCP_SERVICE_TOKENS", f"gene-page:{SERVICE_SECRET}")
+    monkeypatch.setenv("WDK_MCP_BASE_URL", BASE_URL)
+    monkeypatch.setenv("WDK_MCP_SERVICE_TOKENS", f"gene-page:{SERVICE_SECRET}")
     monkeypatch.setenv("VEUPATHDB_OAUTH_URL", "https://auth.veupathdb.org")
     identity._subjects.clear()
     yield
@@ -162,7 +162,7 @@ async def test_a_registered_bearer_reaches_the_call_as_the_user(
 async def test_the_document_is_unreachable_without_a_public_base_url(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setenv("PATHFINDER_MCP_BASE_URL", "")
+    monkeypatch.setenv("WDK_MCP_BASE_URL", "")
 
-    with pytest.raises(ValueError, match="PATHFINDER_MCP_BASE_URL"):
+    with pytest.raises(ValueError, match="WDK_MCP_BASE_URL"):
         protected_resource_routes()

@@ -10,11 +10,11 @@ from veupathdb.domain.parameters.values import ParamValue
 from veupathdb.errors import ValidationError, VEuPathDBError
 from veupathdb.wdk.wdk_models import WDKAnswer
 
-from veupathdb_mcp.controls.control_tests import (
+from veupathdb_mcp.controls.control_tests import run_positive_negative_controls
+from veupathdb_mcp.controls.control_types import (
+    ControlTestResult,
     IntersectionConfig,
-    run_positive_negative_controls,
 )
-from veupathdb_mcp.controls.control_types import ControlTestResult
 from veupathdb_mcp.gene_lookup import (
     MAX_GENE_IDS,
     GeneResolveResult,

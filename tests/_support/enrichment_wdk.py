@@ -85,6 +85,7 @@ class FakeStrategyAPI:
         self.datasets: list[list[str]] = []
         self.steps: list[tuple[NewStepSpec, str]] = []
         self.strategies: list[int] = []
+        self.strategy_names: list[str] = []
         self.deleted: list[int] = []
         self.analyses: list[tuple[str, JSONObject]] = []
 
@@ -104,7 +105,8 @@ class FakeStrategyAPI:
         description: str | None = None,
         is_internal: bool = False,
     ) -> WDKIdentifier:
-        del step_tree, name, description, is_internal
+        del step_tree, description, is_internal
+        self.strategy_names.append(name)
         self.strategies.append(202)
         return WDKIdentifier(id=202)
 

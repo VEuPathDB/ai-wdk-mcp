@@ -1,3 +1,3 @@
-"""veupathdb-wdk-mcp: the WDK catalog, record and step tools, served over MCP."""
+"""Two MCP servers: veupathdb-wdk-mcp and veupathdb-research-mcp."""
 
-__version__ = "0.1.0a4"
+__version__ = "0.2.0a1"

@@ -28,7 +28,7 @@ _NO_SESSION = "the MCP auth path opened a database session"
 
 @pytest.fixture
 def mcp_credentials(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
-    monkeypatch.setenv("PATHFINDER_MCP_SERVICE_TOKENS", f"gene-page:{SERVICE_SECRET}")
+    monkeypatch.setenv("WDK_MCP_SERVICE_TOKENS", f"gene-page:{SERVICE_SECRET}")
     identity._subjects.clear()
     yield
     identity._subjects.clear()

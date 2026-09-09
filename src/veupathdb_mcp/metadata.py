@@ -21,12 +21,12 @@ from veupathdb_mcp.settings import get_mcp_settings
 RESOURCE_NAME = "veupathdb-wdk-mcp"
 DEFAULT_MCP_PATH = "/mcp"
 
-_NO_BASE_URL = "PATHFINDER_MCP_BASE_URL must name the public URL of veupathdb-wdk-mcp."
+_NO_BASE_URL = "WDK_MCP_BASE_URL must name the public URL of veupathdb-wdk-mcp."
 
 
 def _resource_url(mcp_path: str) -> AnyHttpUrl:
     """The protected resource, which RFC 9728 requires to be the MCP endpoint."""
-    base = get_mcp_settings().pathfinder_mcp_base_url.strip()
+    base = get_mcp_settings().wdk_mcp_base_url.strip()
     if not base:
         raise ValueError(_NO_BASE_URL)
     return AnyHttpUrl(f"{base.rstrip('/')}/{mcp_path.lstrip('/')}")

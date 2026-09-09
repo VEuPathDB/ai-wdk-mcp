@@ -1,9 +1,4 @@
-"""Typed models for catalog service responses.
-
-These are lightweight service-layer models used by ``sites.py`` to return
-structured data to transport handlers.  They are NOT WDK integration models
-(those live in ``integrations.veupathdb.wdk_models``).
-"""
+"""What a catalog read answers: record types, searches and parameter specs."""
 
 from dataclasses import dataclass
 
@@ -93,3 +88,17 @@ class SearchMatch:
         if self.relevance > 0.0:
             result["relevance"] = round(self.relevance, 2)
         return result
+
+
+# Searches that answer on every site and rank against no query, so a discovery
+# result carries them whatever it ranked.
+UNIVERSAL_SEARCHES: tuple[SearchMatch, ...] = (
+    SearchMatch(
+        name="GenesByText",
+        display_name="Gene Text Search",
+        description="Search all text fields for genes matching a keyword or phrase.",
+        record_type="transcript",
+        category="general",
+        returns="transcript",
+    ),
+)

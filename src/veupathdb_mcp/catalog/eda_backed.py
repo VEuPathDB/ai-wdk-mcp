@@ -192,7 +192,7 @@ def check_eda_parameters(search: WDKSearch, parameters: Mapping[str, str]) -> No
     messages: JSONArray = list(refusals)
     rows: JSONArray = [{"param": EDA_ANALYSIS_SPEC_PARAM, "messages": messages}]
     raise ValidationError(
-        title="eda_analysis_spec is written by PathFinder, not proposed",
+        title="eda_analysis_spec is written by the host, not proposed",
         detail=eda_backed_guidance(described),
         errors=rows,
     )

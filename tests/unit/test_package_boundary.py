@@ -28,7 +28,7 @@ FORBIDDEN_ROOTS = {
     "fastapi",
 }
 
-ENTRYPOINT = f"{SERVER}.__main__"
+ENTRYPOINTS = (f"{SERVER}.__main__", f"{SERVER}.research.__main__")
 
 # Alembic runs its migrations at import, so the chain is read, never imported.
 MIGRATIONS = f"{SERVER}.alembic"
@@ -73,11 +73,12 @@ def test_no_module_reaches_a_host_or_an_agent(module: ModuleType) -> None:
     assert _distributions(_imported_names(module)) & FORBIDDEN_ROOTS == set()
 
 
-def test_the_served_entrypoint_reaches_no_host() -> None:
-    """A second deployment of the entrypoint carries no application with it."""
+@pytest.mark.parametrize("entrypoint", ENTRYPOINTS)
+def test_a_served_entrypoint_reaches_no_host(entrypoint: str) -> None:
+    """A deployment of either server carries no application with it."""
     by_name = {module.__name__: module for module in _server_modules()}
-    seen = {ENTRYPOINT}
-    pending = [ENTRYPOINT]
+    seen = {entrypoint}
+    pending = [entrypoint]
     reached: set[str] = set()
     while pending:
         module = by_name[pending.pop()]
@@ -108,3 +109,19 @@ def test_the_migration_chain_declares_the_two_tables_it_owns() -> None:
     assert versions.is_dir()
     assert '"embedding_vectors"' in written
     assert '"embedding_index_entries"' in written
+
+
+# The old environment-variable names, read for one release and then removed.
+CONSUMER_NAME_EXCEPTIONS = {f"{SERVER}.settings"}
+
+
+def test_no_module_names_a_consuming_application() -> None:
+    """A shared server states no application's name, in code or in prose."""
+    offenders = [
+        module.__name__
+        for module in _server_modules()
+        if module.__name__ not in CONSUMER_NAME_EXCEPTIONS
+        and "pathfinder" in Path(str(module.__file__)).read_text().lower()
+    ]
+
+    assert offenders == []

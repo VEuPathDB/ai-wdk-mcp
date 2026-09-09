@@ -45,6 +45,54 @@ jobs:
       - name: Run the index suite
         run: uv run pytest tests/integration
 
+  research-conformance:
+    name: Research server admission
+    runs-on: ubuntu-latest
+    env:
+      RESEARCH_MCP_BASE_URL: http://localhost:8110
+      # The suite reads the endpoint and the credential from the environment,
+      # so the lane writes the secret once and the server admits that one.
+      MCP_CONFORMANCE_ENDPOINT: http://localhost:8110/mcp
+      MCP_CONFORMANCE_BEARER: research-mcp-conformance-secret-0123456789
+      CONFORMANCE: veupathdb-mcp-conformance @ git+https://github.com/VEuPathDB/ai-assistant-platform@v0.2.0a2#subdirectory=packages/mcp-conformance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.10"
+
+      - name: Install the package alone
+        run: uv sync --frozen
+
+      # The research server holds no site, no database and no account, so its
+      # admission run needs nothing but the server itself.
+      - name: Serve veupathdb-research-mcp
+        run: |
+          RESEARCH_MCP_SERVICE_TOKENS="ci:$MCP_CONFORMANCE_BEARER" \
+            uv run python -m veupathdb_mcp.research > research-mcp.log 2>&1 &
+          for _ in $(seq 1 30); do
+            if curl -fsS http://localhost:8110/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat research-mcp.log
+          echo "veupathdb-research-mcp did not answer /health" >&2
+          exit 1
+
+      - name: Run the conformance suite
+        run: >
+          uv run --with "$CONFORMANCE" pytest --pyargs mcp_conformance -q -rs
+          --mcp-report admission-report.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: research-admission-report
+          path: admission-report.json
+
   live:
     name: Live site lane
     runs-on: ubuntu-latest

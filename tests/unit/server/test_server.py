@@ -20,6 +20,10 @@ from veupathdb_mcp.catalog import sites
 from veupathdb_mcp.catalog.models import RecordTypeInfo
 from veupathdb_mcp.controls.control_types import ControlTestResult
 from veupathdb_mcp.gene_lookup import GeneResolveResult
+from veupathdb_mcp.tool_meta import (
+    MAX_CALL_SECONDS_META_KEY,
+    STREAM_PART_META_KEY,
+)
 from veupathdb_mcp.tools import user_tools
 from veupathdb_mcp.wdk import step_preview
 
@@ -189,11 +193,11 @@ async def test_enrich_gene_ids_declares_its_stream_part_and_its_budget() -> None
 
     tool = tools["enrich_gene_ids"]
     assert tool.meta is not None
-    assert tool.meta[server.STREAM_PART_META_KEY] == {
+    assert tool.meta[STREAM_PART_META_KEY] == {
         "kind": "data-wdk.enrichment-results",
         "version": 1,
     }
-    assert tool.meta[server.MAX_CALL_SECONDS_META_KEY] > 60
+    assert tool.meta[MAX_CALL_SECONDS_META_KEY] > 60
     assert tool.outputSchema is not None
 
 
@@ -202,7 +206,7 @@ async def test_run_control_tests_on_search_declares_a_budget_over_the_default() 
 
     meta = tools["run_control_tests_on_search"].meta
     assert meta is not None
-    assert meta[server.MAX_CALL_SECONDS_META_KEY] > 60
+    assert meta[MAX_CALL_SECONDS_META_KEY] > 60
 
 
 async def test_a_catalog_call_answers_from_the_catalog_service(

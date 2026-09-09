@@ -1,17 +1,44 @@
 # veupathdb-mcp
 
-The VEuPathDB WDK catalog, parameter and gene tools, served over MCP as
-`veupathdb-wdk-mcp`. Stateless: every tool names its site by value and acts as
-the credential the transport gate verified. It is also a library - the tools
-call the catalog, WDK and gene-lookup functions in process, and a host
+Two MCP servers, one distribution.
+
+| server | module | port | what it serves |
+| --- | --- | --- | --- |
+| `veupathdb-wdk-mcp` | `veupathdb_mcp` | 8100 | the VEuPathDB WDK catalog, parameter, record and step tools |
+| `veupathdb-research-mcp` | `veupathdb_mcp.research` | 8110 | literature search over seven APIs, and web search |
+
+Both are stateless. A WDK tool names its site by value and acts as the
+credential the transport gate verified; a research tool names no site and reads
+the open web on the deployment's own account. This is also a library - the WDK
+tools call the catalog, WDK and gene-lookup functions in process, and a host
 application can call the same functions without going over the wire.
 
 ```bash
 uv sync
-uv run python -m veupathdb_mcp          # serves on :8100, /mcp and /health
+uv run python -m veupathdb_mcp            # WDK, on :8100, /mcp and /health
+uv run python -m veupathdb_mcp.research   # research, on :8110, /mcp and /health
 ```
 
-## The seventeen tools
+## Why two servers in one distribution
+
+Two processes, because the threat models differ: a server that reaches eight
+open-web APIs is not the server that acts as a VEuPathDB user. Two servers also
+keep the site guard unconditional, keep `veupathdb-wdk-mcp` a name that
+describes what it serves, and give each server its own stream-part namespace.
+
+One distribution, because a second repository would copy the settings scaffold,
+the service-token parser, the logging setup, the Dockerfile, the CI workflow,
+the lock and the release ceremony, and would add a second `veupathdb-py` pin to
+keep in step. The price is one resolved environment: the research image
+installs the database and embedding dependencies it never imports. The next
+move, if that price grows, is optional dependency groups with the Dockerfile
+targets syncing different extras.
+
+The two servers share no setting: the WDK server reads `WDK_MCP_*` and
+`VEUPATHDB_*`, the research server reads `RESEARCH_MCP_*`. A secret configured
+for one admits nothing on the other.
+
+## The seventeen WDK tools
 
 Catalog reads (service or user credential):
 
@@ -32,11 +59,28 @@ The last two declare a call budget over the default in tool `_meta`
 the stream part its result carries
 (`org.veupathdb.assistant/streamPart`).
 
+## The two research tools
+
+`web_search` and `literature_search`. Both are annotated
+`readOnlyHint=True, openWorldHint=True` - open, because they reach servers
+outside this deployment - and both declare the same stream part
+(`data-research.sources`) and a 60 second call budget in tool `_meta`.
+
+A result is a ranked index: the leading three rows carry 600 characters of
+text and the rest carry 200, plus the url or the DOI that reaches the full
+record again. `literature_search` reads Europe PMC, Crossref, OpenAlex,
+Semantic Scholar, PubMed, arXiv, bioRxiv and medRxiv in parallel; one source
+that fails is reported as that source's error and the rest still answer.
+
+```bash
+uv run python -m veupathdb_mcp.research
+```
+
 ## Credential modes
 
 | mode | what the caller sends | what it may reach |
 | --- | --- | --- |
-| `service` | a secret from `PATHFINDER_MCP_SERVICE_TOKENS`, as `app_id:secret` | the catalog reads, on the deployment's own WDK service token |
+| `service` | a secret from `WDK_MCP_SERVICE_TOKENS`, as `app_id:secret` | the catalog reads, on the deployment's own WDK service token |
 | `veupathdb_user` | a registered VEuPathDB bearer | every tool, acting as that user |
 
 A guest bearer verifies as nothing: VEuPathDB refuses guest and anonymous
@@ -47,7 +91,7 @@ subject is cached for 300 seconds. **The server reads no application table and
 keeps no account.**
 
 `GET /.well-known/oauth-protected-resource` is the RFC 9728 document, served at
-`PATHFINDER_MCP_BASE_URL`; without that variable the route refuses to build,
+`WDK_MCP_BASE_URL`; without that variable the route refuses to build,
 because a document naming the wrong host sends a client to the wrong authority.
 
 ## Settings
@@ -59,11 +103,46 @@ because a document naming the wrong host sends a client to the wrong authority.
 | `VEUPATHDB_SITES_CONFIG` | a `sites.yaml` of your own; unset reads the client library's bundled one |
 | `VEUPATHDB_AUTH_TOKEN` | the deployment's service credential for user-independent reads |
 | `VEUPATHDB_OAUTH_URL` | the OAuth server that signs VEuPathDB bearers |
-| `PATHFINDER_MCP_BASE_URL` | the URL a client reads the RFC 9728 document at |
-| `PATHFINDER_MCP_SERVICE_TOKENS` | `app_id:secret[,app_id:secret...]`; empty admits user bearers only |
+| `WDK_MCP_BASE_URL` | the URL a client reads the RFC 9728 document at |
+| `WDK_MCP_SERVICE_TOKENS` | `app_id:secret[,app_id:secret...]`; empty admits user bearers only |
 | `SITE_CATALOG_BUDGET_MB` | accounted megabytes of catalogs and indexes one process holds (default 512) |
 | `CATALOG_REFRESH_ENABLED` | whether this process rebuilds a stale catalog |
 | `EMBEDDING_INDEX_SYNC_ENABLED` | whether this process writes vectors, or only searches what another wrote |
+
+`PATHFINDER_MCP_BASE_URL` and `PATHFINDER_MCP_SERVICE_TOKENS` are read as the
+old names of the first two for one release, and then removed.
+
+### The research server
+
+Its only credential mode is `service`. It reads no account, opens no database
+and owns no table, so there is no `VEUPATHDB_OAUTH_URL` here: the deployment
+that runs the server issues the secrets, and the RFC 9728 document names the
+server itself as the authority.
+
+| variable | what it does |
+| --- | --- |
+| `RESEARCH_MCP_BASE_URL` | the URL a client reads the RFC 9728 document at; without it the route refuses to build |
+| `RESEARCH_MCP_SERVICE_TOKENS` | `app_id:secret[,app_id:secret...]`; empty admits nothing |
+| `RESEARCH_MCP_TIMEOUT_SECONDS` | one outbound call's budget (default 15) |
+| `RESEARCH_MCP_MAX_RETRIES` | how many times a client repeats a rate-limited call (default 3) |
+| `RESEARCH_MCP_S2_API_KEY` | raises the Semantic Scholar rate limit for a keyed caller |
+| `RESEARCH_MCP_CROSSREF_MAILTO` | a mailbox Crossref reads out of the User-Agent, which routes the call to its polite pool; empty keeps the anonymous pool |
+
+## The names this server writes into a WDK account
+
+A control run, an enrichment run, a gene-set step and a plan count each hold
+their work in an internal WDK strategy under the caller's own account. The
+host names them: `IntersectionConfig.internal_strategy_name`,
+`EnrichmentService(strategy_name=...)`, `frozen_step_id(strategy_name=...)`
+and `compute_plan_step_counts(strategy_name=...)`. The defaults name no
+application (`"control test"`, `"enrichment analysis"`, `"gene set"`,
+`"step counts"`).
+
+A control run's cleanup matches the name the run wrote, so it takes the same
+`IntersectionConfig` the run took:
+`cleanup_internal_control_test_strategies(api, wdk_items, config)`. One object
+carries the name for both, so a match cannot drift from a write. Two different
+configs are two runs that do not see each other's leftovers.
 
 ## The memory ceiling and the catalog snapshot
 
@@ -119,7 +198,12 @@ one is read the same way:
 
 ```bash
 pytest --pyargs mcp_conformance --mcp-endpoint http://localhost:8100/mcp --mcp-bearer "$TOKEN"
+pytest --pyargs mcp_conformance --mcp-endpoint http://localhost:8110/mcp --mcp-bearer "$RESEARCH_TOKEN"
 ```
+
+The research lane runs in this repository's own CI, because the server needs no
+site, no database and no VEuPathDB account. The WDK lane runs where a WDK
+account exists.
 
 ## Gates
 
@@ -131,6 +215,12 @@ uv run pytest tests/unit                      # hermetic
 uv run pytest tests/integration               # pgvector testcontainer
 uv run pytest tests/live -m live_wdk --override-ini addopts=''   # one real site
 ```
+
+## Images
+
+One `Dockerfile`, two targets. `--target research` builds the research server
+on :8110; the default target builds the WDK server on :8100. Both install the
+one lock, so the research image carries dependencies it never imports.
 
 `tests/unit/test_package_boundary.py` is the isolation proof: no module reaches
 `pathfinder`, `assistant_core`, `pydantic_ai`, `langgraph` or `fastapi`, and

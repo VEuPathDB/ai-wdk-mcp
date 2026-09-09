@@ -22,6 +22,10 @@ from veupathdb.logging import get_logger
 from veupathdb_mcp import __version__
 from veupathdb_mcp.auth import McpCredential, wdk_identity
 from veupathdb_mcp.catalog import sites
+from veupathdb_mcp.tool_meta import (
+    MAX_CALL_SECONDS_META_KEY,
+    STREAM_PART_META_KEY,
+)
 from veupathdb_mcp.tools.catalog_tools import (
     browse_search_categories,
     get_parameter_options,
@@ -47,11 +51,6 @@ from veupathdb_mcp.tools.user_tools import (
 logger = get_logger(__name__)
 
 SERVER_NAME = "veupathdb-wdk-mcp"
-
-# The wire vocabulary a consumer reads off a tool. A server states it; the
-# runtime that reads it is a separate distribution and is not imported here.
-STREAM_PART_META_KEY = "org.veupathdb.assistant/streamPart"
-MAX_CALL_SECONDS_META_KEY = "org.veupathdb.assistant/maxCallSeconds"
 
 ENRICHMENT_PART_KIND = "data-wdk.enrichment-results"
 
@@ -178,9 +177,7 @@ def build_server() -> FastMCP[None]:
 
 
 __all__ = [
-    "MAX_CALL_SECONDS_META_KEY",
     "SERVER_NAME",
-    "STREAM_PART_META_KEY",
     "TOOLS",
     "SiteGuard",
     "WdkIdentity",

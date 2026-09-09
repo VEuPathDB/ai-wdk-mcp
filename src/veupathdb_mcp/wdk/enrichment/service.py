@@ -47,6 +47,8 @@ logger = get_logger(__name__)
 # process-wide. The cap applies to batches, not to analyses within a batch.
 _WDK_ENRICHMENT_SEMAPHORE = asyncio.Semaphore(3)
 
+DEFAULT_ENRICHMENT_STRATEGY_NAME = "enrichment analysis"
+
 
 class EnrichmentService:
     """Unified enrichment dispatcher.
@@ -55,8 +57,14 @@ class EnrichmentService:
     when it is built.
     """
 
-    def __init__(self, background: BackgroundSource | None = None) -> None:
+    def __init__(
+        self,
+        background: BackgroundSource | None = None,
+        *,
+        strategy_name: str = DEFAULT_ENRICHMENT_STRATEGY_NAME,
+    ) -> None:
         self._background = background
+        self._strategy_name = strategy_name
 
     def _background_organism(self) -> str | None:
         return None if self._background is None else self._background.organism
@@ -108,7 +116,7 @@ class EnrichmentService:
             try:
                 created = await api.create_strategy(
                     step_tree=root,
-                    name="Pathfinder enrichment analysis",
+                    name=self._strategy_name,
                     description=None,
                     is_internal=True,
                 )

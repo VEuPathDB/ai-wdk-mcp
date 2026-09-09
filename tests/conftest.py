@@ -15,6 +15,10 @@ from veupathdb_mcp.embeddings.settings import (
     EmbeddingSettings,
     use_embedding_settings_source,
 )
+from veupathdb_mcp.research.settings import (
+    ResearchSettings,
+    use_research_settings_source,
+)
 from veupathdb_mcp.settings import McpSettings, use_mcp_settings_source
 
 # No test embeds against a paid API.
@@ -25,6 +29,7 @@ os.environ["EMBEDDING_BACKEND"] = "fake"
 def _settings_read_the_environment() -> Generator[None]:
     """Every read builds a fresh instance, so a monkeypatched variable applies."""
     use_mcp_settings_source(McpSettings)
+    use_research_settings_source(ResearchSettings)
     use_embedding_settings_source(EmbeddingSettings)
     use_veupathdb_settings_source(VEuPathDBSettings)
     load_sites_config.cache_clear()

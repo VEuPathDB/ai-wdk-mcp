@@ -4,12 +4,9 @@ These helpers run *temporary* WDK steps/strategies to evaluate whether known
 positive controls are returned and known negative controls are excluded.
 """
 
-from dataclasses import dataclass
-
 from pydantic import JsonValue
 from veupathdb.domain.parameters.values import ParamValue, StringValue
 from veupathdb.domain.search import SearchContext
-from veupathdb.domain.strategy.ops import DEFAULT_COMBINE_OPERATOR, CombineOp
 from veupathdb.errors import VEuPathDBError
 from veupathdb.json_types import JSONObject
 from veupathdb.logging import get_logger
@@ -37,17 +34,15 @@ from veupathdb_mcp.controls.control_helpers import (
     delete_temp_strategy,
 )
 from veupathdb_mcp.controls.control_types import (
-    ControlsContext,
     ControlSetData,
     ControlTargetData,
     ControlTestResult,
-    ControlValueFormat,
+    IntersectionConfig,
 )
 from veupathdb_mcp.tool_payloads import ControlOutcome
 from veupathdb_mcp.wdk.helpers import extract_record_ids
 
 __all__ = [
-    "IntersectionConfig",
     "_cleanup_internal_control_test_strategies",
     "_extract_intersection_data",
     "_run_intersection_control",
@@ -96,45 +91,6 @@ async def run_step_control_tests(
         outcome.negative_intersection_ids = sorted(hits)[:_MAX_REPORTED_IDS]
 
     return outcome
-
-
-@dataclass
-class IntersectionConfig:
-    """The target search and the controls search of one intersection run."""
-
-    site_id: str
-    record_type: str
-    target_search_name: str
-    target_parameters: dict[str, ParamValue]
-    controls_search_name: str
-    controls_param_name: str
-    controls_value_format: ControlValueFormat = "newline"
-    controls_extra_parameters: dict[str, ParamValue] | None = None
-    boolean_operator: CombineOp = DEFAULT_COMBINE_OPERATOR
-    id_field: str | None = None
-
-    @classmethod
-    def from_controls_context(
-        cls,
-        ctx: ControlsContext,
-        *,
-        target_search_name: str,
-        target_parameters: dict[str, ParamValue],
-        controls_extra_parameters: dict[str, ParamValue] | None = None,
-        id_field: str | None = None,
-    ) -> "IntersectionConfig":
-        """Build an IntersectionConfig from a ControlsContext."""
-        return cls(
-            site_id=ctx.site_id,
-            record_type=ctx.record_type,
-            target_search_name=target_search_name,
-            target_parameters=target_parameters,
-            controls_search_name=ctx.controls_search_name,
-            controls_param_name=ctx.controls_param_name,
-            controls_value_format=ctx.controls_value_format,
-            controls_extra_parameters=controls_extra_parameters,
-            id_field=id_field,
-        )
 
 
 def _find_param_type(params: list[WDKParameter], param_name: str) -> str | None:
@@ -255,7 +211,7 @@ async def _run_intersection_control(
     try:
         created = await api.create_strategy(
             step_tree=root,
-            name="Pathfinder control test",
+            name=config.internal_strategy_name,
             description=None,
             is_internal=True,
         )
@@ -292,7 +248,9 @@ async def _run_intersection_control(
         await delete_temp_strategy(api, temp_strategy_id)
 
 
-async def _cleanup_internal_control_test_strategies(api: StrategyAPI) -> None:
+async def _cleanup_internal_control_test_strategies(
+    api: StrategyAPI, config: IntersectionConfig
+) -> None:
     """Delete internal control-test strategies left by an interrupted run.
 
     A control test creates a temporary strategy under the current user
@@ -305,7 +263,7 @@ async def _cleanup_internal_control_test_strategies(api: StrategyAPI) -> None:
             "Failed to list strategies for control-test cleanup", error=str(exc)
         )
         return
-    await cleanup_internal_control_test_strategies(api, strategies)
+    await cleanup_internal_control_test_strategies(api, strategies, config)
 
 
 def _extract_intersection_data(
@@ -339,7 +297,7 @@ async def run_positive_negative_controls(
     """
     if not skip_cleanup:
         cleanup_api = get_strategy_api(config.site_id)
-        await _cleanup_internal_control_test_strategies(cleanup_api)
+        await _cleanup_internal_control_test_strategies(cleanup_api, config)
 
     target = ControlTargetData(
         search_name=config.target_search_name,

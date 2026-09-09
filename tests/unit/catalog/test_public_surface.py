@@ -32,3 +32,33 @@ def test_the_public_name_reports_a_contrast_pair() -> None:
     assert catalog.has_contrast_sibling(reference, [reference, comparison])
     assert catalog.has_contrast_sibling(comparison, [reference, comparison])
     assert not catalog.has_contrast_sibling(unpaired, [unpaired, comparison])
+
+
+def test_the_parameter_view_is_read_from_the_package() -> None:
+    """A host that snapshots a parameter reads this package's own type."""
+    assert catalog.ParameterInfo is ParameterInfo
+    assert "ParameterInfo" in catalog.__all__
+
+
+class TestTheUniversalSearches:
+    def test_they_are_read_from_the_package(self) -> None:
+        assert "UNIVERSAL_SEARCHES" in catalog.__all__
+
+    def test_the_gene_text_search_is_one_of_them(self) -> None:
+        names = [search.name for search in catalog.UNIVERSAL_SEARCHES]
+
+        assert names == ["GenesByText"]
+
+    def test_it_carries_the_shape_a_ranked_match_carries(self) -> None:
+        entry = catalog.UNIVERSAL_SEARCHES[0].to_dict()
+
+        assert entry == {
+            "name": "GenesByText",
+            "displayName": "Gene Text Search",
+            "description": (
+                "Search all text fields for genes matching a keyword or phrase."
+            ),
+            "recordType": "transcript",
+            "category": "general",
+            "returns": "transcript",
+        }

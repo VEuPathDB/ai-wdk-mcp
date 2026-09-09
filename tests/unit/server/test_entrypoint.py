@@ -26,8 +26,8 @@ _NO_CREDENTIAL = "The call carried no verified credential."
 
 @pytest.fixture
 def mcp_deployment(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
-    monkeypatch.setenv("PATHFINDER_MCP_BASE_URL", BASE_URL)
-    monkeypatch.setenv("PATHFINDER_MCP_SERVICE_TOKENS", f"gene-page:{SERVICE_SECRET}")
+    monkeypatch.setenv("WDK_MCP_BASE_URL", BASE_URL)
+    monkeypatch.setenv("WDK_MCP_SERVICE_TOKENS", f"gene-page:{SERVICE_SECRET}")
     return
 
 

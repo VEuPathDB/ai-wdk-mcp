@@ -4,7 +4,7 @@ from collections.abc import Callable
 from functools import cached_property, lru_cache
 from pathlib import Path
 
-from pydantic import Field, field_validator
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from veupathdb_mcp.service_tokens import ServiceTokenRegistry
@@ -25,6 +25,7 @@ class McpSettings(BaseSettings):
         case_sensitive=False,
         env_ignore_empty=True,
         extra="ignore",
+        validate_by_name=True,
     )
 
     # OAuth server that signs VEuPathDB bearer tokens. One server serves every site.
@@ -33,8 +34,18 @@ class McpSettings(BaseSettings):
     # The server's own public URL, and the applications it serves in service
     # mode. The secrets are separate from the application's own service tokens,
     # because a credential sent to an MCP server must not authenticate to an API.
-    pathfinder_mcp_base_url: str = ""
-    pathfinder_mcp_service_tokens: str = Field(default="", repr=False)
+    # The PATHFINDER_ names are read for one release and then removed.
+    wdk_mcp_base_url: str = Field(
+        default="",
+        validation_alias=AliasChoices("WDK_MCP_BASE_URL", "PATHFINDER_MCP_BASE_URL"),
+    )
+    wdk_mcp_service_tokens: str = Field(
+        default="",
+        repr=False,
+        validation_alias=AliasChoices(
+            "WDK_MCP_SERVICE_TOKENS", "PATHFINDER_MCP_SERVICE_TOKENS"
+        ),
+    )
 
     # Accounted megabytes of per-site catalogs and semantic indexes one process
     # holds. The least recently used site leaves when the budget is reached.
@@ -50,16 +61,10 @@ class McpSettings(BaseSettings):
     # path is read from the working directory, so a deployment states its own.
     catalog_cache_dir: Path = DEFAULT_CATALOG_CACHE_DIR
 
-    @field_validator("veupathdb_oauth_url", mode="before")
-    @classmethod
-    def _blank_oauth_url_means_the_default(cls, value: object) -> object:
-        """A config file may declare the key empty; that is not a URL."""
-        return DEFAULT_OAUTH_URL if value in (None, "") else value
-
     @cached_property
     def mcp_service_tokens(self) -> ServiceTokenRegistry:
         """The applications this server serves without a user."""
-        return ServiceTokenRegistry.parse(self.pathfinder_mcp_service_tokens)
+        return ServiceTokenRegistry.parse(self.wdk_mcp_service_tokens)
 
 
 @lru_cache

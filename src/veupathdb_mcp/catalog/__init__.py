@@ -1,9 +1,4 @@
-"""Catalog services: sites, record types, searches, parameter metadata.
-
-Single source of truth for catalog/discovery logic used by both:
-- HTTP transport (`transport/http/routers/sites.py`)
-- AI tools (`ai/tools/catalog_tools.py`, etc.)
-"""
+"""The site catalog: sites, record types, searches and parameter metadata."""
 
 from veupathdb_mcp.catalog._param_filters import has_contrast_sibling
 from veupathdb_mcp.catalog.eda_backed import (
@@ -14,7 +9,12 @@ from veupathdb_mcp.catalog.eda_backed import (
     is_upload_sentinel_vocabulary,
     list_eda_backed,
 )
-from veupathdb_mcp.catalog.models import RecordTypeInfo, SearchMatch
+from veupathdb_mcp.catalog.models import (
+    UNIVERSAL_SEARCHES,
+    RecordTypeInfo,
+    SearchMatch,
+)
+from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 from veupathdb_mcp.catalog.parameters import (
     expand_search_details_with_params,
     get_refreshed_dependent_params,
@@ -48,7 +48,9 @@ from veupathdb_mcp.catalog.sites import (
 )
 
 __all__ = [
+    "UNIVERSAL_SEARCHES",
     "EdaBackedSearch",
+    "ParameterInfo",
     "RecordTypeInfo",
     "SearchInspection",
     "SearchMatch",

@@ -5,9 +5,12 @@ from typing import Literal
 
 from pydantic import Field
 from veupathdb.domain.parameters.values import ParamValue
+from veupathdb.domain.strategy.ops import DEFAULT_COMBINE_OPERATOR, CombineOp
 from veupathdb.model import CamelModel
 
 ControlValueFormat = Literal["newline", "json_list", "comma"]
+
+DEFAULT_CONTROL_TEST_STRATEGY_NAME = "control test"
 
 
 class ControlTargetData(CamelModel):
@@ -55,3 +58,47 @@ class ControlsContext:
     controls_value_format: ControlValueFormat
     positive_controls: list[str] = field(default_factory=list)
     negative_controls: list[str] = field(default_factory=list)
+
+
+@dataclass
+class IntersectionConfig:
+    """The target search and the controls search of one intersection run."""
+
+    site_id: str
+    record_type: str
+    target_search_name: str
+    target_parameters: dict[str, ParamValue]
+    controls_search_name: str
+    controls_param_name: str
+    controls_value_format: ControlValueFormat = "newline"
+    controls_extra_parameters: dict[str, ParamValue] | None = None
+    boolean_operator: CombineOp = DEFAULT_COMBINE_OPERATOR
+    id_field: str | None = None
+    # The name of the internal strategy a run writes, and the name its cleanup
+    # matches. One value, so a renamed run still recognises its own leftovers.
+    internal_strategy_name: str = DEFAULT_CONTROL_TEST_STRATEGY_NAME
+
+    @classmethod
+    def from_controls_context(
+        cls,
+        ctx: ControlsContext,
+        *,
+        target_search_name: str,
+        target_parameters: dict[str, ParamValue],
+        controls_extra_parameters: dict[str, ParamValue] | None = None,
+        id_field: str | None = None,
+        internal_strategy_name: str = DEFAULT_CONTROL_TEST_STRATEGY_NAME,
+    ) -> "IntersectionConfig":
+        """Build an IntersectionConfig from a ControlsContext."""
+        return cls(
+            site_id=ctx.site_id,
+            record_type=ctx.record_type,
+            target_search_name=target_search_name,
+            target_parameters=target_parameters,
+            controls_search_name=ctx.controls_search_name,
+            controls_param_name=ctx.controls_param_name,
+            controls_value_format=ctx.controls_value_format,
+            controls_extra_parameters=controls_extra_parameters,
+            id_field=id_field,
+            internal_strategy_name=internal_strategy_name,
+        )
