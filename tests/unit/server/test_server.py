@@ -13,6 +13,8 @@ from mcp.server.auth.middleware.auth_context import auth_context_var
 from mcp.server.auth.middleware.bearer_auth import AuthenticatedUser
 from mcp.types import TextContent, Tool
 from veupathdb.auth_context import veupathdb_auth_token_ctx
+from veupathdb.testing.wdk_fixtures import load_recorded
+from veupathdb.wdk.ai_expression import AiExpressionReport
 
 from veupathdb_mcp import server
 from veupathdb_mcp.auth import CredentialMode, McpCredential
@@ -25,7 +27,7 @@ from veupathdb_mcp.tool_meta import (
     STREAM_PART_META_KEY,
 )
 from veupathdb_mcp.tools import user_tools
-from veupathdb_mcp.wdk import step_preview
+from veupathdb_mcp.wdk import ai_expression, step_preview
 
 SITE = "plasmodb"
 
@@ -199,6 +201,70 @@ async def test_enrich_gene_ids_declares_its_stream_part_and_its_budget() -> None
     }
     assert tool.meta[MAX_CALL_SECONDS_META_KEY] > 60
     assert tool.outputSchema is not None
+
+
+async def test_the_ai_expression_schema_admits_a_count_the_site_did_not_send() -> None:
+    tools = await _list_tools()
+
+    schema = tools["get_ai_expression_summary"].outputSchema
+    assert schema is not None
+    properties = schema["properties"]
+    for name in ("numExperiments", "numExperimentsComplete"):
+        assert properties[name] == {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "default": None,
+        }
+    assert properties["basedOnIncompleteData"] == {
+        "anyOf": [{"type": "boolean"}, {"type": "null"}],
+        "default": None,
+    }
+
+
+async def test_the_ai_expression_schema_names_a_summary_line_experiment() -> None:
+    tools = await _list_tools()
+
+    schema = tools["get_ai_expression_summary"].outputSchema
+    assert schema is not None
+    summary = schema["properties"]["summary"]["anyOf"][0]
+    topic = summary["properties"]["topics"]["items"]
+    line = topic["properties"]["summaries"]["items"]["properties"]
+    assert line["experiment_name"] == {"default": "", "type": "string"}
+    assert line["assay_type"] == {"default": "", "type": "string"}
+
+
+async def test_a_summarized_gene_is_served_without_experiment_counts(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class _Reporter:
+        async def get_ai_expression_report(
+            self, primary_keys: str
+        ) -> AiExpressionReport:
+            del primary_keys
+            return AiExpressionReport.model_validate(
+                load_recorded("ai_expression_summary_present").json_body()
+            )
+
+    monkeypatch.setattr(ai_expression, "get_wdk_client", lambda _site: _Reporter())
+
+    async with _served(_user_credential("user-bearer")) as client:
+        result = await client.call_tool(
+            "get_ai_expression_summary",
+            {"site_id": SITE, "gene_id": "PF3D7_0709000"},
+        )
+
+    content = result.structured_content
+    assert content is not None
+    assert content["geneId"] == "PF3D7_0709000"
+    assert content["resultStatus"] == "present"
+    assert content["numExperiments"] is None
+    assert content["numExperimentsComplete"] is None
+    assert content["basedOnIncompleteData"] is False
+    assert content["unavailableReason"] is None
+    line = content["summary"]["topics"][0]["summaries"][0]
+    assert line["experiment_name"] == (
+        "Intraerythrocytic development cycle transcriptome (2018)"
+    )
+    assert line["assay_type"] == "RNA-Seq"
 
 
 async def test_run_control_tests_on_search_declares_a_budget_over_the_default() -> None:

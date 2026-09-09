@@ -14,6 +14,7 @@ from pydantic import AnyHttpUrl
 from starlette.middleware.authentication import AuthenticationMiddleware
 from starlette.routing import Route
 from starlette.types import ASGIApp
+from veupathdb.settings import get_veupathdb_settings
 
 from veupathdb_mcp.auth import VEuPathDBTokenVerifier
 from veupathdb_mcp.settings import get_mcp_settings
@@ -41,7 +42,9 @@ def protected_resource_routes(mcp_path: str = DEFAULT_MCP_PATH) -> list[Route]:
     """The RFC 9728 document, naming the VEuPathDB OAuth server that signs tokens."""
     return create_protected_resource_routes(
         resource_url=_resource_url(mcp_path),
-        authorization_servers=[AnyHttpUrl(get_mcp_settings().veupathdb_oauth_url)],
+        authorization_servers=[
+            AnyHttpUrl(get_veupathdb_settings().veupathdb_oauth_url)
+        ],
         resource_name=RESOURCE_NAME,
     )
 

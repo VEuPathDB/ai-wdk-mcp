@@ -5,9 +5,8 @@ from __future__ import annotations
 import hashlib
 import time
 
+from veupathdb.settings import get_veupathdb_settings
 from veupathdb.wdk.auth_login import validate_oauth_token
-
-from veupathdb_mcp.settings import get_mcp_settings
 
 _SUBJECT_CACHE_SECONDS = 300.0
 _SUBJECT_CACHE_MAX_ENTRIES = 512
@@ -31,7 +30,9 @@ async def resolve_oauth_subject(token: str) -> str | None:
     if cached is not None and cached[0] > time.monotonic():
         return cached[1]
 
-    claims = await validate_oauth_token(token, get_mcp_settings().veupathdb_oauth_url)
+    claims = await validate_oauth_token(
+        token, get_veupathdb_settings().veupathdb_oauth_url
+    )
     if claims is None or claims.is_guest:
         return None
 

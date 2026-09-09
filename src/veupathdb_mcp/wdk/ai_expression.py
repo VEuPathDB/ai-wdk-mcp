@@ -18,6 +18,8 @@ class GeneExpressionSummary(CamelModel):
 
     ``summary`` is present only when the site generated one. Otherwise
     ``unavailable_reason`` says so, and there is nothing to work around.
+    The counts ride a status that answers no summary, so ``None`` is a count the
+    site did not send. ``based_on_incomplete_data`` rides the summary.
     """
 
     model_config = ConfigDict(frozen=True)
@@ -26,8 +28,9 @@ class GeneExpressionSummary(CamelModel):
     gene_id: str
     result_status: AiExpressionStatus
     summary: AiExpressionSummary | None = None
-    num_experiments: int = 0
-    num_experiments_complete: int = 0
+    num_experiments: int | None = None
+    num_experiments_complete: int | None = None
+    based_on_incomplete_data: bool | None = None
     unavailable_reason: str | None = None
 
 
@@ -59,6 +62,7 @@ async def get_gene_expression_summary(
         summary=found.expression_summary,
         num_experiments=found.num_experiments,
         num_experiments_complete=found.num_experiments_complete,
+        based_on_incomplete_data=found.based_on_incomplete_data,
         unavailable_reason=(
             None if found.expression_summary else NO_SUMMARY_ON_THE_SITE
         ),

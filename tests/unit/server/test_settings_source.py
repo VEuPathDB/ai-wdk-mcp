@@ -9,7 +9,6 @@ import pytest
 
 from veupathdb_mcp.service_tokens import ServiceTokenRegistry
 from veupathdb_mcp.settings import (
-    DEFAULT_OAUTH_URL,
     McpSettings,
     get_mcp_settings,
     use_mcp_settings_source,
@@ -33,7 +32,6 @@ def test_the_server_settings_keep_the_environment_variable_names() -> None:
         "wdk_mcp_base_url",
         "wdk_mcp_service_tokens",
         "site_catalog_budget_mb",
-        "veupathdb_oauth_url",
     }
 
 
@@ -69,15 +67,6 @@ def test_the_new_name_wins_over_the_old_one(
     monkeypatch.setenv("PATHFINDER_MCP_BASE_URL", "https://old.test")
 
     assert McpSettings().wdk_mcp_base_url == "https://new.test"
-
-
-def test_a_blank_oauth_url_reads_as_the_default(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """An empty variable is not a URL, and the settings ignore it."""
-    monkeypatch.setenv("VEUPATHDB_OAUTH_URL", "")
-
-    assert McpSettings().veupathdb_oauth_url == DEFAULT_OAUTH_URL
 
 
 def test_the_server_settings_module_computes_no_path() -> None:

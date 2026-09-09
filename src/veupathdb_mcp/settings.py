@@ -9,7 +9,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from veupathdb_mcp.service_tokens import ServiceTokenRegistry
 
-DEFAULT_OAUTH_URL = "https://auth.veupathdb.org"
 DEFAULT_CATALOG_CACHE_DIR = Path("data/catalogs")
 
 
@@ -27,9 +26,6 @@ class McpSettings(BaseSettings):
         extra="ignore",
         validate_by_name=True,
     )
-
-    # OAuth server that signs VEuPathDB bearer tokens. One server serves every site.
-    veupathdb_oauth_url: str = DEFAULT_OAUTH_URL
 
     # The server's own public URL, and the applications it serves in service
     # mode. The secrets are separate from the application's own service tokens,

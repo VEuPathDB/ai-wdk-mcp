@@ -8,7 +8,7 @@ from veupathdb.wdk.wdk_models import WDKStepTree
 __all__ = ["MissingWDKStepIdError", "build_wdk_step_tree"]
 
 
-class MissingWDKStepIdError(VEuPathDBError):
+class MissingWDKStepIdError(VEuPathDBError[VEuPathDBErrorCode]):
     """A step of the tree reached no WDK step id."""
 
     def __init__(self, step_id: str) -> None:
