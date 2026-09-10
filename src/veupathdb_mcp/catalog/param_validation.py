@@ -127,16 +127,18 @@ class ResolvedSearch:
     values_were_read: bool
 
 
-async def _resolve_search_details(
+async def resolve_search_details(
     ctx: SearchContext,
     *,
     resolved_record_type: str,
     parameters: dict[str, ParamValue],
 ) -> ResolvedSearch:
-    """Fetch search details with contextual params, or fall back to static specs.
+    """The search definition WDK builds from the caller's values.
 
-    The context keeps the original identifiers for error hints. Raises a
-    validation error with search hints when WDK does not know the search.
+    The catalog's published specs answer instead when the contextual read
+    fails, and the result says which of the two it carries. A reader that
+    returns a bare definition drops that flag, this fallback, and the error a
+    search WDK cannot read raises.
     """
     discovery = get_discovery_service()
     try:
@@ -216,7 +218,7 @@ async def validate_search_params(
     """
     raw_context: dict[str, ParamValue] = context_values or {}
     try:
-        resolved = await _resolve_search_details(
+        resolved = await resolve_search_details(
             ctx, resolved_record_type=ctx.record_type, parameters=raw_context
         )
     except VEuPathDBError as exc:
@@ -304,7 +306,7 @@ async def validate_parameters(
             record_type_hint=record_type_hint,
         )
 
-    resolved = await _resolve_search_details(
+    resolved = await resolve_search_details(
         ctx,
         resolved_record_type=resolved_record_type,
         parameters=parameters,
@@ -320,7 +322,7 @@ async def validate_parameters(
     # A tree param counts only its leaves, so a branch selection scores zero
     # until it is expanded. WDK must judge what will be sent, not what arrived.
     if encode_wdk_params(canonical) != encode_wdk_params(parameters):
-        resolved = await _resolve_search_details(
+        resolved = await resolve_search_details(
             ctx,
             resolved_record_type=resolved_record_type,
             parameters=canonical,

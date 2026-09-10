@@ -70,7 +70,7 @@ def _serve(
         del ctx, resolved_record_type, parameters
         return param_validation.ResolvedSearch(response=response, values_were_read=True)
 
-    monkeypatch.setattr(param_validation, "_resolve_search_details", _resolve)
+    monkeypatch.setattr(param_validation, "resolve_search_details", _resolve)
     monkeypatch.setattr(param_validation, "get_refreshed_dependent_params", refresh)
 
 

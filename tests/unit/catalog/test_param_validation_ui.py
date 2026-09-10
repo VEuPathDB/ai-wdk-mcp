@@ -87,7 +87,7 @@ def _serve(
             response=response, values_were_read=values_were_read
         )
 
-    monkeypatch.setattr(param_validation, "_resolve_search_details", _details)
+    monkeypatch.setattr(param_validation, "resolve_search_details", _details)
 
 
 async def _validate(
@@ -230,7 +230,7 @@ class TestAnUnreadableSearch:
             del ctx, resolved_record_type, parameters
             raise WDKError(_NO_SUCH_SEARCH, status=404)
 
-        monkeypatch.setattr(param_validation, "_resolve_search_details", _raise)
+        monkeypatch.setattr(param_validation, "resolve_search_details", _raise)
         result = await _validate()
 
         assert result.validation.is_valid is False

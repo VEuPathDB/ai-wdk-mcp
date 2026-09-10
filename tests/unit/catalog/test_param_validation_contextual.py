@@ -68,7 +68,7 @@ async def _validate() -> param_validation.ValidatedParams:
 
 
 async def _resolve() -> param_validation.ResolvedSearch:
-    return await param_validation._resolve_search_details(
+    return await param_validation.resolve_search_details(
         _CTX,
         resolved_record_type="transcript",
         parameters={
@@ -203,7 +203,7 @@ def static_wdk(monkeypatch: pytest.MonkeyPatch) -> None:
             response=_definition(), values_were_read=False
         )
 
-    monkeypatch.setattr(param_validation, "_resolve_search_details", _static)
+    monkeypatch.setattr(param_validation, "resolve_search_details", _static)
     monkeypatch.setattr(
         param_validation, "get_refreshed_dependent_params", no_dependent_refresh
     )
@@ -294,7 +294,7 @@ class TestAFallbackDefinitionCastsNoVerdict:
                 response=_rejecting_definition(), values_were_read=True
             )
 
-        monkeypatch.setattr(param_validation, "_resolve_search_details", _reject)
+        monkeypatch.setattr(param_validation, "resolve_search_details", _reject)
 
         with pytest.raises(ValidationError, match="Invalid parameter value"):
             await _validate()

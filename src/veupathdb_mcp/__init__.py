@@ -21,7 +21,7 @@ from veupathdb_mcp.settings import (
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
 from veupathdb_mcp.tool_meta import MAX_CALL_SECONDS_META_KEY, STREAM_PART_META_KEY
 
-__version__ = "0.2.0a3"
+__version__ = "0.2.0a4"
 
 __all__ = [
     "DEFAULT_MCP_PATH",

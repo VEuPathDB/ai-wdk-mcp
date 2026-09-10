@@ -106,7 +106,7 @@ def _serve(monkeypatch: pytest.MonkeyPatch, *, readable_tree: bool) -> None:
         del ctx, resolved_record_type, parameters
         return param_validation.ResolvedSearch(response=response, values_were_read=True)
 
-    monkeypatch.setattr(param_validation, "_resolve_search_details", _details)
+    monkeypatch.setattr(param_validation, "resolve_search_details", _details)
     monkeypatch.setattr(
         param_validation, "get_refreshed_dependent_params", no_dependent_refresh
     )
@@ -238,7 +238,7 @@ class TestOnlyAPhyleticSearchIsJudged:
                 response=response, values_were_read=True
             )
 
-        monkeypatch.setattr(param_validation, "_resolve_search_details", _details)
+        monkeypatch.setattr(param_validation, "resolve_search_details", _details)
         monkeypatch.setattr(
             param_validation, "get_refreshed_dependent_params", no_dependent_refresh
         )

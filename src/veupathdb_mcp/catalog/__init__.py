@@ -66,6 +66,7 @@ from veupathdb_mcp.catalog.param_validation import (
     ValidatedParams,
     ValidationCallbacks,
     ValidationResponse,
+    resolve_search_details,
     validate_parameters,
 )
 from veupathdb_mcp.catalog.parameters import (
@@ -188,6 +189,7 @@ __all__ = [
     "read_parameter_options",
     "read_search_definition",
     "resolve_params_with_intent",
+    "resolve_search_details",
     "resolve_search_record_type",
     "search_for_searches",
     "validate_parameters",
