@@ -38,14 +38,11 @@ from veupathdb_mcp.controls.control_types import (
     ControlTargetData,
     ControlTestResult,
     IntersectionConfig,
+    summarize_intersection,
 )
-from veupathdb_mcp.tool_payloads import ControlOutcome
 from veupathdb_mcp.wdk.helpers import extract_record_ids
 
 __all__ = [
-    "_cleanup_internal_control_test_strategies",
-    "_extract_intersection_data",
-    "_run_intersection_control",
     "resolve_controls_param_type",
     "run_positive_negative_controls",
     "run_step_control_tests",
@@ -61,36 +58,39 @@ async def run_step_control_tests(
     wdk_step_id: int,
     positive_controls: list[str] | None = None,
     negative_controls: list[str] | None = None,
-) -> ControlOutcome:
+) -> ControlTestResult:
     """Intersect an already-built step's results with the control gene lists."""
     answer = await get_results_api(site_id).get_step_preview(wdk_step_id, limit=50000)
     result_ids = {record.display_name for record in answer.records}
 
-    outcome = ControlOutcome(
+    target = ControlTargetData(
         step_id=wdk_step_id,
         estimated_size=answer.meta.records_returned(),
     )
+    result = ControlTestResult(site_id=site_id, target=target)
 
     if positive_controls:
         positives = set(positive_controls)
         recovered = result_ids & positives
-        outcome.positive_intersection = len(recovered)
-        outcome.positive_controls_count = len(positives)
-        outcome.positive_recall = len(recovered) / len(positives)
-        outcome.positive_intersection_ids = sorted(recovered)[:_MAX_REPORTED_IDS]
-        outcome.positive_missing_ids = sorted(positives - result_ids)[
-            :_MAX_REPORTED_IDS
-        ]
+        result.positive = ControlSetData(
+            controls_count=len(positives),
+            intersection_count=len(recovered),
+            intersection_ids_sample=sorted(recovered)[:_MAX_REPORTED_IDS],
+            missing_ids_sample=sorted(positives - result_ids)[:_MAX_REPORTED_IDS],
+            recall=len(recovered) / len(positives),
+        )
 
     if negative_controls:
         negatives = set(negative_controls)
         hits = result_ids & negatives
-        outcome.negative_intersection = len(hits)
-        outcome.negative_controls_count = len(negatives)
-        outcome.negative_false_positive_rate = len(hits) / len(negatives)
-        outcome.negative_intersection_ids = sorted(hits)[:_MAX_REPORTED_IDS]
+        result.negative = ControlSetData(
+            controls_count=len(negatives),
+            intersection_count=len(hits),
+            intersection_ids_sample=sorted(hits)[:_MAX_REPORTED_IDS],
+            false_positive_rate=len(hits) / len(negatives),
+        )
 
-    return outcome
+    return result
 
 
 def _find_param_type(params: list[WDKParameter], param_name: str) -> str | None:
@@ -266,23 +266,6 @@ async def _cleanup_internal_control_test_strategies(
     await cleanup_internal_control_test_strategies(api, strategies, config)
 
 
-def _extract_intersection_data(
-    payload: JSONObject,
-) -> tuple[int, set[str], bool]:
-    """Extract the count, the id set, and whether the payload carried ids.
-
-    A large control set has no id list, so the third value is False.
-    """
-    raw_count = payload.get("intersectionCount")
-    count = int(raw_count) if isinstance(raw_count, (int, float)) else 0
-
-    ids_value = payload.get("intersectionIds") if isinstance(payload, dict) else None
-    id_set: set[str] = set()
-    if isinstance(ids_value, list):
-        id_set = {str(x) for x in ids_value if x is not None}
-    return count, id_set, isinstance(ids_value, list)
-
-
 async def run_positive_negative_controls(
     config: IntersectionConfig,
     *,
@@ -320,10 +303,11 @@ async def run_positive_negative_controls(
         target.step_id = pos_data.target_step_id
         target.estimated_size = pos_data.target_estimated_size
 
-        pos_count, found_ids, has_ids = _extract_intersection_data(pos_payload)
-        missing = [x for x in pos if x not in found_ids] if has_ids else []
+        found = summarize_intersection(pos_payload)
+        recovered = found.found_ids
+        missing = [x for x in pos if x not in recovered] if found.ids_were_read else []
         pos_data.missing_ids_sample = missing[:50]
-        pos_data.recall = pos_count / len(pos) if pos else None
+        pos_data.recall = found.intersection_count / len(pos)
         result.positive = pos_data
 
     if neg:
@@ -335,10 +319,9 @@ async def run_positive_negative_controls(
             target.step_id = neg_data.target_step_id
             target.estimated_size = neg_data.target_estimated_size
 
-        neg_count, hit_ids, _ = _extract_intersection_data(neg_payload)
-        unexpected_hits = sorted(hit_ids)[:50] if hit_ids else []
-        neg_data.unexpected_hits_sample = unexpected_hits
-        neg_data.false_positive_rate = neg_count / len(neg) if neg else None
+        hits = summarize_intersection(neg_payload)
+        neg_data.unexpected_hits_sample = sorted(hits.found_ids)[:50]
+        neg_data.false_positive_rate = hits.intersection_count / len(neg)
         result.negative = neg_data
 
     return result

@@ -1,4 +1,4 @@
-"""WDK enrichment parameter encoding helpers.
+"""WDK parameter encoding: vocabulary values and form defaults.
 
 Pure module (no I/O). Handles vocabulary parameter encoding as JSON
 arrays per WDK's ``AbstractEnumParam.convertToTerms()`` requirements,
@@ -8,13 +8,14 @@ and extraction of default parameter values from typed WDK parameters.
 import json
 from collections.abc import Sequence
 
+from veupathdb.domain.parameters.wdk_vocab import flatten_vocab, vocab_keys
 from veupathdb.json_types import JSONObject
 from veupathdb.wdk.wdk_parameters import WDKParameter
 
 # WDK ``EnumParamFormatter.getParamType()`` emits these JSON type strings
 # for params extending ``AbstractEnumParam`` (``EnumParam``, ``FlatVocabParam``).
 # These are the only param types whose stable values must be JSON arrays
-# (via ``AbstractEnumParam.convertToTerms()`` → ``new JSONArray(stableValue)``).
+# (via ``AbstractEnumParam.convertToTerms()`` -> ``new JSONArray(stableValue)``).
 # See ``org.gusdb.wdk.core.api.JsonKeys`` for the constant names
 # (SINGLE_VOCAB_PARAM_TYPE and MULTI_VOCAB_PARAM_TYPE).
 WDK_VOCAB_PARAM_TYPES = frozenset({"single-pick-vocabulary", "multi-pick-vocabulary"})
@@ -23,18 +24,18 @@ WDK_VOCAB_PARAM_TYPES = frozenset({"single-pick-vocabulary", "multi-pick-vocabul
 def extract_vocab_values(params: Sequence[WDKParameter], param_name: str) -> list[str]:
     """Extract the allowed vocabulary values for a named parameter.
 
-    WDK vocabulary params include a ``vocabulary`` field, a list of
-    ``[value, display, null]`` triples.  Returns the ``value`` strings
-    (first element of each triple).
-
-    Returns an empty list if the parameter is not found or has no vocabulary.
+    A flat vocabulary yields its terms and a tree box yields its leaf terms,
+    in the order the vocabulary lists them. A clade node groups organisms and
+    is not a term WDK accepts.
     """
     for p in params:
-        if p.name != param_name:
-            continue
-        if not isinstance(p.vocabulary, list):
-            return []
-        return [entry.term for entry in p.vocabulary]
+        if p.name == param_name:
+            accepted = vocab_keys(p.vocabulary)
+            return [
+                option.value
+                for option in flatten_vocab(p.vocabulary)
+                if option.value in accepted
+            ]
     return []
 
 
@@ -71,17 +72,16 @@ def encode_vocab_params(
     Params whose type is not in the WDK parameter list, or whose type is
     not a vocabulary type, are returned unchanged.
     """
-    type_map = {p.name: p.type for p in wdk_params if p.name}
-    if not type_map:
-        return params
-
+    vocab_names = {
+        p.name for p in wdk_params if p.name and p.type in WDK_VOCAB_PARAM_TYPES
+    }
     encoded: JSONObject = {}
     for name, value in params.items():
-        ptype = type_map.get(name, "")
-        if ptype in WDK_VOCAB_PARAM_TYPES and isinstance(value, str):
-            encoded[name] = encode_vocab_value(value)
-        else:
-            encoded[name] = value
+        match value:
+            case str() if name in vocab_names:
+                encoded[name] = encode_vocab_value(value)
+            case _:
+                encoded[name] = value
     return encoded
 
 

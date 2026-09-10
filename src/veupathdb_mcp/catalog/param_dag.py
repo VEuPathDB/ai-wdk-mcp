@@ -5,10 +5,10 @@ from __future__ import annotations
 from collections.abc import Awaitable, Callable
 
 from pydantic import Field
+from veupathdb.domain.parameters.unbound import UnboundParameter
 from veupathdb.domain.parameters.value_codec import to_wire
 from veupathdb.domain.parameters.values import ParamValue
 from veupathdb.domain.search import SearchContext
-from veupathdb.domain.strategy.operational_spec import OpenSlot
 from veupathdb.errors import ValidationError
 from veupathdb.model import CamelModel
 from veupathdb.wdk.factory import get_wdk_client
@@ -105,7 +105,7 @@ class ResolvedParams(CamelModel):
 
     params: dict[str, ParamValue] = Field(default_factory=dict)
     provenance: dict[str, Provenance] = Field(default_factory=dict)
-    open_slots: list[OpenSlot] = Field(default_factory=list)
+    open_slots: list[UnboundParameter] = Field(default_factory=list)
     unresolved_required: list[str] = Field(default_factory=list)
     # Params the request states a quantity for and nothing bound.
     unread: list[str] = Field(default_factory=list)
@@ -195,12 +195,12 @@ def _outcome_for(
     infos: list[ParameterInfo],
     resolution: _Resolution,
     ledger: _VocabLedger,
-) -> ResolvedParam | OpenSlot | Unread | None:
+) -> ResolvedParam | UnboundParameter | Unread | None:
     """Decides one param, dispatching on whether it is a filter."""
     if info.param_kind != "filter":
         return _resolve_nonfilter(info, resolution, ledger)
     filtered = _resolve_filter_param(info, infos, resolution.overrides)
-    if isinstance(filtered, OpenSlot):
+    if isinstance(filtered, UnboundParameter):
         return filtered
     return ResolvedParam(
         value=filtered,
@@ -227,7 +227,7 @@ async def resolve_params_with_intent(
     overrides = overrides or {}
     context: dict[str, str] = {}
     params: dict[str, ParamValue] = {}
-    open_slots: list[OpenSlot] = []
+    open_slots: list[UnboundParameter] = []
     unresolved: list[str] = []
     unread: list[str] = []
     seen: set[str] = set()
@@ -265,7 +265,7 @@ async def resolve_params_with_intent(
             if isinstance(outcome, Unread):
                 unread.append(outcome.param_name)
                 unresolved.append(outcome.param_name)
-            elif isinstance(outcome, OpenSlot):
+            elif isinstance(outcome, UnboundParameter):
                 open_slots.append(outcome)
                 unresolved.append(info.name)
             elif outcome is not None:

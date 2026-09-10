@@ -9,14 +9,11 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from veupathdb_mcp.embeddings.settings import get_embedding_settings
 from veupathdb_mcp.embeddings.tables import EmbeddingBase
+from veupathdb_mcp.migrate import VERSION_TABLE, include_object
 
 config = context.config
 
 target_metadata = EmbeddingBase.metadata
-
-# This distribution's chain shares a database with its host's. Each records its
-# position in a version table of its own.
-VERSION_TABLE = "alembic_version_veupathdb_mcp"
 
 
 def _database_url() -> str:
@@ -35,6 +32,7 @@ def run_migrations_offline() -> None:
         url=_database_url(),
         target_metadata=target_metadata,
         version_table=VERSION_TABLE,
+        include_object=include_object,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
@@ -47,6 +45,7 @@ def _run_sync_migrations(connection: Connection) -> None:
         connection=connection,
         target_metadata=target_metadata,
         version_table=VERSION_TABLE,
+        include_object=include_object,
     )
     with context.begin_transaction():
         context.run_migrations()

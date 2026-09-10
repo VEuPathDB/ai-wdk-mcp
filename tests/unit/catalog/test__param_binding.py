@@ -183,7 +183,7 @@ class TestVocabularyIsTheWholeList:
         assert [o.value for o in info.vocabulary()] == ["GO:0000001", "GO:0000002"]
 
 
-class TestOpenSlot:
+class TestUnboundParameter:
     def test_it_offers_a_tree_box_vocabulary(self) -> None:
         terms = [f"GO:{i:07d}" for i in range(25)]
         terms.insert(5, terms[3])

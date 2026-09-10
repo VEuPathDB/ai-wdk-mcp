@@ -19,6 +19,50 @@ uv run python -m veupathdb_mcp            # WDK, on :8100, /mcp and /health
 uv run python -m veupathdb_mcp.research   # research, on :8110, /mcp and /health
 ```
 
+## The names a host imports
+
+Every package publishes a surface, so a host reads a name from the package rather
+than from a file inside it.
+
+| package | what it publishes |
+| --- | --- |
+| `veupathdb_mcp` | the version, the credential modes, the settings, the tool error payload, the tool metadata keys |
+| `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation |
+| `veupathdb_mcp.controls` | the control-test runners, their context and their result shapes |
+| `veupathdb_mcp.embeddings` | the embedder, the two index tables, the record manager and the two indexes |
+| `veupathdb_mcp.gene_lookup` | text lookup, id resolution and the organism list |
+| `veupathdb_mcp.research` | the research server, its settings and its two tools |
+| `veupathdb_mcp.tools` | the seventeen served tools |
+| `veupathdb_mcp.wdk` | step trees, step results, sizes, previews, expression and parameter encoding |
+| `veupathdb_mcp.wdk.enrichment` | over-representation analysis, its result shapes and its parser |
+
+`tests/unit/test_cold_import.py` holds the line: it imports every module of the
+distribution first, on an interpreter that holds none of them, so an aggregating
+`__init__` that closes a cycle fails there.
+
+Two rules keep the surfaces acyclic. A control-test runner returns
+`ControlTestResult`, a shape that lives beside it in `veupathdb_mcp.controls`,
+and `veupathdb_mcp.tool_payloads` flattens that into `ControlOutcome` for a host
+that renders one row. WDK parameter encoding is `veupathdb_mcp.wdk.params`, read
+by the parent package rather than by way of a subpackage.
+
+The WDK server, the migration chain and the tool payloads stay off the root
+surface, because the research process imports the root package and carries
+neither a WDK catalog nor a database. Each publishes its own surface instead,
+read by module name:
+
+| module | what it publishes |
+| --- | --- |
+| `veupathdb_mcp.migrate` | the version table, the tables this distribution owns, the autogenerate filter and the upgrade |
+| `veupathdb_mcp.server` | the WDK server name, its tool list, its guards and its builder |
+| `veupathdb_mcp.tool_payloads` | the flat control outcome, the download links, the catalog listings and the plan ranking |
+
+`veupathdb_mcp.tool_meta` declares a surface too, and the root re-exports both
+of its names.
+
+`tests/unit/published_surface.json` is the checked-in copy of all thirteen
+surfaces, so a name leaves one only by editing that file.
+
 ## Why two servers in one distribution
 
 Two processes, because the threat models differ: a server that reaches eight
@@ -184,6 +228,10 @@ its own version table, so the two share a database without touching each other.
 ```bash
 uv run python -m veupathdb_mcp.migrate     # bring the two tables to head
 ```
+
+`veupathdb_mcp.migrate` publishes `VERSION_TABLE` and `OWNED_TABLES`, so a host
+that shares the database reads both names instead of retyping them, and its own
+autogenerate filter stays true when this chain grows a table.
 
 The server does **not** migrate at start: a replica that only reads must not
 change a schema. A host that embeds this package as a library runs

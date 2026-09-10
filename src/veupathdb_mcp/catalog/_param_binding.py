@@ -7,10 +7,10 @@ import re
 from dataclasses import dataclass
 
 from pydantic import Field
+from veupathdb.domain.parameters.unbound import UnboundParameter
 from veupathdb.domain.parameters.value_codec import param_value_from_raw
 from veupathdb.domain.parameters.values import ParamValue
 from veupathdb.domain.parameters.wdk_vocab import match_exact_option
-from veupathdb.domain.strategy.operational_spec import OpenSlot
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
@@ -285,10 +285,10 @@ class _VocabLedger(CamelModel):
         return holder
 
 
-def _open_slot(info: ParameterInfo) -> OpenSlot:
+def _open_slot(info: ParameterInfo) -> UnboundParameter:
     """Builds a question for the user."""
     options = info.vocabulary()
-    return OpenSlot(
+    return UnboundParameter(
         param_name=info.name,
         question=f"Choose a value for {info.display_name}",
         options=[o.value for o in options][:_MAX_SLOT_OPTIONS],
@@ -332,7 +332,7 @@ def _resolve_nonfilter(
     info: ParameterInfo,
     res: _Resolution,
     ledger: _VocabLedger,
-) -> ResolvedParam | OpenSlot | Unread | None:
+) -> ResolvedParam | UnboundParameter | Unread | None:
     """Resolves a non-filter param from an override, then a single valid value, then
     the scalar default, then an open slot. An override outranks the degenerate-pair
     check. Unread means the request states a quantity the default must not answer.

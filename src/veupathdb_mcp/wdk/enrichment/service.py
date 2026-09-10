@@ -23,11 +23,6 @@ from veupathdb.wdk.wdk_models import (
 from veupathdb.wdk.wdk_parameters import WDKParameter
 
 from veupathdb_mcp.controls.control_helpers import delete_temp_strategy
-from veupathdb_mcp.wdk.enrichment.params import (
-    encode_vocab_value,
-    extract_default_params,
-    extract_vocab_values,
-)
 from veupathdb_mcp.wdk.enrichment.parser import (
     ANALYSIS_TYPE_MAP,
     GO_ONTOLOGY_MAP,
@@ -39,6 +34,11 @@ from veupathdb_mcp.wdk.enrichment.types import (
     BackgroundSource,
     EnrichmentAnalysisType,
     EnrichmentResult,
+)
+from veupathdb_mcp.wdk.params import (
+    encode_vocab_value,
+    extract_default_params,
+    extract_vocab_values,
 )
 
 logger = get_logger(__name__)

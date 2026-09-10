@@ -20,6 +20,20 @@ from veupathdb_mcp.controls.control_types import (
 )
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
 
+__all__ = [
+    "ControlOutcome",
+    "DownloadLinks",
+    "SearchCategory",
+    "SearchListing",
+    "StepDownloadUrl",
+    "TransformListing",
+    "gene_sample_attributes",
+    "list_search_categories",
+    "list_search_listings",
+    "list_transform_listings",
+    "rank_example_plans",
+]
+
 logger = get_logger(__name__)
 
 _GENE_RECORD_TYPES = frozenset({"gene", "transcript"})

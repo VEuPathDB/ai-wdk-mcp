@@ -3,9 +3,10 @@
 from dataclasses import dataclass, field
 from typing import Literal
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 from veupathdb.domain.parameters.values import ParamValue
 from veupathdb.domain.strategy.ops import DEFAULT_COMBINE_OPERATOR, CombineOp
+from veupathdb.json_types import JSONObject
 from veupathdb.model import CamelModel
 
 ControlValueFormat = Literal["newline", "json_list", "comma"]
@@ -23,11 +24,15 @@ class ControlTargetData(CamelModel):
 
 
 class ControlSetData(CamelModel):
-    """One control set (positive or negative) in a control-test result."""
+    """One control set (positive or negative) in a control-test result.
+
+    ``intersection_ids`` is None when the control set is over the limit one
+    answer page reads, so the run reports a count and no identifiers.
+    """
 
     controls_count: int = 0
     intersection_count: int = 0
-    intersection_ids: list[str] = Field(default_factory=list)
+    intersection_ids: list[str] | None = None
     intersection_ids_sample: list[str] = Field(default_factory=list)
     target_step_id: int | None = None
     target_estimated_size: int = 0
@@ -35,6 +40,34 @@ class ControlSetData(CamelModel):
     unexpected_hits_sample: list[str] = Field(default_factory=list)
     recall: float | None = None
     false_positive_rate: float | None = None
+
+
+class IntersectionSummary(CamelModel):
+    """What one control-set intersection found: the count and the ids.
+
+    ``intersection_ids`` is None when the control set is over the limit one
+    answer page reads, so the run reports a count and no identifiers.
+    """
+
+    model_config = ConfigDict(extra="ignore", frozen=True, coerce_numbers_to_str=True)
+
+    intersection_count: int = 0
+    intersection_ids: list[str] | None = None
+
+    @property
+    def found_ids(self) -> set[str]:
+        """The identifiers the intersection returned."""
+        return set(self.intersection_ids or ())
+
+    @property
+    def ids_were_read(self) -> bool:
+        """True when the run read identifiers, and not only a count."""
+        return self.intersection_ids is not None
+
+
+def summarize_intersection(payload: JSONObject) -> IntersectionSummary:
+    """Read the count and the identifiers out of one intersection payload."""
+    return IntersectionSummary.model_validate(payload)
 
 
 class ControlTestResult(CamelModel):

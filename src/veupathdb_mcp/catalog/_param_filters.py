@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from pydantic import ConfigDict, Field, JsonValue, field_validator
 from pydantic import ValidationError as PydanticValidationError
+from veupathdb.domain.parameters.unbound import UnboundParameter
 from veupathdb.domain.parameters.values import FilterTermClause, FilterValue
 from veupathdb.domain.parameters.wdk_vocab import VocabOption
-from veupathdb.domain.strategy.operational_spec import OpenSlot
 from veupathdb.errors import ValidationError
 from veupathdb.model import CamelModel
 
@@ -113,8 +113,8 @@ def has_contrast_sibling(info: ParameterInfo, infos: list[ParameterInfo]) -> boo
     return False
 
 
-def _contrast_open_slot(info: ParameterInfo) -> OpenSlot:
-    return OpenSlot(
+def _contrast_open_slot(info: ParameterInfo) -> UnboundParameter:
+    return UnboundParameter(
         param_name=info.name,
         question=(
             f"Choose the sample group for {info.display_name}: a "
@@ -131,9 +131,9 @@ def _contrast_open_slot(info: ParameterInfo) -> OpenSlot:
 
 def _resolve_filter_param(
     info: ParameterInfo, infos: list[ParameterInfo], overrides: OverrideMap
-) -> FilterValue | OpenSlot:
-    """Resolves a filter param to a value, or returns an OpenSlot for an unspecified
-    half of a contrast pair."""
+) -> FilterValue | UnboundParameter:
+    """Resolves a filter param to a value, or returns an UnboundParameter for an
+    unspecified half of a contrast pair."""
     override = overrides.get(info.name)
     if isinstance(override, list):
         raise ValidationError(

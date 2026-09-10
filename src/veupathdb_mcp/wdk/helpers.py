@@ -11,7 +11,7 @@ from veupathdb.wdk.wdk_models import (
 )
 from veupathdb.wdk.wdk_parameters import WDKParameter
 
-from veupathdb_mcp.wdk.enrichment.params import (
+from veupathdb_mcp.wdk.params import (
     encode_vocab_params,
     extract_default_params,
 )

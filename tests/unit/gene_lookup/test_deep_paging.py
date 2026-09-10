@@ -179,7 +179,12 @@ async def test_the_streamed_identifiers_are_deduplicated_in_service_order(
             del site_id
             return _Client()
 
+    async def _no_site_organisms(site_id: str) -> list[str]:
+        del site_id
+        return []
+
     monkeypatch.setattr(site_search, "get_site_router", _Router)
+    monkeypatch.setattr(site_search, "list_organisms", _no_site_organisms)
 
     assert await stream_site_search_gene_ids("plasmodb", "kinase") == [
         "PF3D7_0616000",
