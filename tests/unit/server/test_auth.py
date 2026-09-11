@@ -9,7 +9,7 @@ import pytest
 import structlog.testing
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.errors import ExternalServiceError
-from veupathdb.wdk.auth_login import VEuPathDBClaims
+from veupathdb.wdk import VEuPathDBClaims
 
 from veupathdb_mcp import identity
 from veupathdb_mcp.auth import (

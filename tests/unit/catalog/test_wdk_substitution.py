@@ -2,16 +2,16 @@
 
 from __future__ import annotations
 
-from veupathdb.domain.parameters.specs import ParamSpecNormalized
-from veupathdb.domain.parameters.value_codec import from_wire
-from veupathdb.domain.parameters.values import (
+from veupathdb.domain.parameters import (
     FilterTermClause,
     FilterValue,
     InputStepValue,
     MultiPickValue,
     NumberValue,
+    ParamSpecNormalized,
     SinglePickValue,
     StringValue,
+    from_wire,
 )
 
 from veupathdb_mcp.catalog.wdk_substitution import substituted_params

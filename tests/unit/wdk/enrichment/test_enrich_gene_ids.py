@@ -18,8 +18,8 @@ from tests._support.enrichment_wdk import (
     FakeStrategyAPI,
     wdk,
 )
+from veupathdb import JSONObject
 from veupathdb.errors import ValidationError, VEuPathDBError
-from veupathdb.json_types import JSONObject
 
 from veupathdb_mcp.wdk.enrichment.gene_ids import (
     MAX_ENRICHMENT_GENE_IDS,
@@ -289,6 +289,21 @@ class TestTheByValuePathRunsTheStoredSetMachinery:
         assert set(ran) == set(ALL_ENRICHMENT_ANALYSIS_TYPES)
 
 
+class TestTheOntologyTheGoPluginIsAskedFor:
+    async def test_the_ontology_is_sent_as_the_bare_term(
+        self, wdk: FakeStrategyAPI
+    ) -> None:
+        """The form declares one pick, so the term is the whole wire value."""
+        wdk.rows["go-enrichment"] = [GO_ROW]
+
+        await enrich_gene_ids_by_value(
+            "plasmodb", ["PF3D7_0100100"], BackgroundSource(), ["go_process"]
+        )
+
+        [(_, params)] = wdk.analyses
+        assert params["goAssociationsOntologies"] == "Biological Process"
+
+
 class TestTheBackgroundIsTheOrganismTheCallerNamed:
     async def test_the_named_organism_is_sent_as_a_vocabulary_value(
         self, wdk: FakeStrategyAPI
@@ -303,7 +318,7 @@ class TestTheBackgroundIsTheOrganismTheCallerNamed:
         )
 
         [(_, params)] = wdk.analyses
-        assert params["organism"] == '["Plasmodium vivax P01"]'
+        assert params["organism"] == "Plasmodium vivax P01"
 
     async def test_no_named_organism_keeps_the_analysis_form_default(
         self, wdk: FakeStrategyAPI
@@ -315,7 +330,7 @@ class TestTheBackgroundIsTheOrganismTheCallerNamed:
         )
 
         [(_, params)] = wdk.analyses
-        assert params["organism"] == f'["{ORGANISM}"]'
+        assert params["organism"] == ORGANISM
 
     async def test_the_background_is_reported_with_the_result(
         self, wdk: FakeStrategyAPI

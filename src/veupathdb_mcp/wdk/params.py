@@ -1,24 +1,20 @@
-"""WDK parameter encoding: vocabulary values and form defaults.
+"""The vocabulary a WDK parameter offers, the defaults a form states, and the
+wire form of one value.
 
-Pure module (no I/O). Handles vocabulary parameter encoding as JSON
-arrays per WDK's ``AbstractEnumParam.convertToTerms()`` requirements,
-and extraction of default parameter values from typed WDK parameters.
+Pure module. The wire form of every parameter kind is the client's codec.
 """
 
-import json
 from collections.abc import Sequence
 
-from veupathdb.domain.parameters.wdk_vocab import flatten_vocab, vocab_keys
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.wdk_parameters import WDKParameter
-
-# WDK ``EnumParamFormatter.getParamType()`` emits these JSON type strings
-# for params extending ``AbstractEnumParam`` (``EnumParam``, ``FlatVocabParam``).
-# These are the only param types whose stable values must be JSON arrays
-# (via ``AbstractEnumParam.convertToTerms()`` -> ``new JSONArray(stableValue)``).
-# See ``org.gusdb.wdk.core.api.JsonKeys`` for the constant names
-# (SINGLE_VOCAB_PARAM_TYPE and MULTI_VOCAB_PARAM_TYPE).
-WDK_VOCAB_PARAM_TYPES = frozenset({"single-pick-vocabulary", "multi-pick-vocabulary"})
+from pydantic import JsonValue
+from veupathdb import JSONObject
+from veupathdb.domain.parameters import (
+    flatten_vocab,
+    param_value_from_raw,
+    to_wire,
+    vocab_keys,
+)
+from veupathdb.wdk import WDKParameter
 
 
 def extract_vocab_values(params: Sequence[WDKParameter], param_name: str) -> list[str]:
@@ -39,71 +35,34 @@ def extract_vocab_values(params: Sequence[WDKParameter], param_name: str) -> lis
     return []
 
 
-def encode_vocab_value(value: str) -> str:
-    """Ensure a vocabulary param value is a JSON array string.
+def encode_param_value(param: WDKParameter, value: JsonValue) -> str:
+    """The wire form of one value, for the kind the parameter declares."""
+    return to_wire(param_value_from_raw(value, param.type))
 
-    ``AbstractEnumParam.convertToTerms()`` calls
-    ``new JSONArray(stableValue)``, so a plain string is a parse error.
-    Multi-pick values already arrive as JSON arrays from WDK; single-pick
-    values arrive as plain strings and must be wrapped.
+
+def encode_named_param_value(
+    params: Sequence[WDKParameter], name: str, value: JsonValue
+) -> JsonValue:
+    """The wire form of one named value, for the kind the form declares.
+
+    A form that does not carry the name states no kind, so the value stands as
+    the caller wrote it.
     """
-    if value.startswith("["):
-        try:
-            json.loads(value)
-        except json.JSONDecodeError, ValueError:
-            pass
-        else:
-            return value
-    return json.dumps([value])
-
-
-def encode_vocab_params(
-    params: JSONObject,
-    wdk_params: Sequence[WDKParameter],
-) -> JSONObject:
-    """Encode vocabulary param values as JSON arrays.
-
-    WDK's ``AbstractEnumParam.convertToTerms()`` requires all
-    ``single-pick-vocabulary`` and ``multi-pick-vocabulary`` param values
-    to be JSON-encoded arrays.  This function ensures that encoding is
-    applied **after** merging defaults with user params, so user-supplied
-    plain strings don't bypass the encoding.
-
-    Params whose type is not in the WDK parameter list, or whose type is
-    not a vocabulary type, are returned unchanged.
-    """
-    vocab_names = {
-        p.name for p in wdk_params if p.name and p.type in WDK_VOCAB_PARAM_TYPES
-    }
-    encoded: JSONObject = {}
-    for name, value in params.items():
-        match value:
-            case str() if name in vocab_names:
-                encoded[name] = encode_vocab_value(value)
-            case _:
-                encoded[name] = value
-    return encoded
+    for p in params:
+        if p.name == name:
+            return encode_param_value(p, value)
+    return value
 
 
 def extract_default_params(params: Sequence[WDKParameter]) -> JSONObject:
-    """Extract parameter names and default values from typed WDK parameters.
+    """The default value each parameter of a form offers.
 
     WDK's ``ParamFormatter.java`` emits ``initialDisplayValue`` (via
-    ``JsonKeys.INITIAL_DISPLAY_VALUE``) as the stable default value.
-
-    Vocabulary params (``single-pick-vocabulary``, ``multi-pick-vocabulary``)
-    are encoded as JSON arrays per ``AbstractEnumParam.convertToTerms()``.
+    ``JsonKeys.INITIAL_DISPLAY_VALUE``) as the stable value, which is the wire
+    form of that parameter's kind.
     """
-    defaults: JSONObject = {}
-    for p in params:
-        if not p.name or p.initial_display_value is None:
-            continue
-
-        value = p.initial_display_value
-
-        # Vocab params must be JSON arrays for convertToTerms().
-        if p.type in WDK_VOCAB_PARAM_TYPES:
-            value = encode_vocab_value(value)
-
-        defaults[p.name] = value
-    return defaults
+    return {
+        p.name: p.initial_display_value
+        for p in params
+        if p.name and p.initial_display_value is not None
+    }

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from veupathdb.wdk.wdk_models import WDKAttributeField, WDKSearch
+from veupathdb.wdk import WDKAttributeField, WDKSearch
 
 from veupathdb_mcp.embeddings.semantic_index import SemanticSearchIndex
 

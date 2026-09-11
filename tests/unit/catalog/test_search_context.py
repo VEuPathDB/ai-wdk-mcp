@@ -24,16 +24,9 @@ from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from veupathdb.domain.strategy import StepValidation
 from veupathdb.errors import VEuPathDBError, WDKError
-from veupathdb.wdk.wdk_models import (
-    StepValidation,
-    WDKSearch,
-    WDKSearchResponse,
-)
-from veupathdb.wdk.wdk_parameters import (
-    WDKParameter,
-    WDKStringParam,
-)
+from veupathdb.wdk import WDKParameter, WDKSearch, WDKSearchResponse, WDKStringParam
 
 from veupathdb_mcp.catalog.search_context import (
     context_for_metadata_read,

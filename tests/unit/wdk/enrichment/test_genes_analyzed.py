@@ -10,16 +10,14 @@ background, so the size comes from the step instead.
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain.strategy.validation import StepValidation
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.client import VEuPathDBClient
-from veupathdb.wdk.strategy_api.api import StrategyAPI
-from veupathdb.wdk.wdk_models import (
+from veupathdb import JSONObject
+from veupathdb.domain.strategy import StepValidation
+from veupathdb.wdk import (
+    StrategyAPI,
+    VEuPathDBClient,
+    WDKNumberParam,
     WDKStepAnalysisType,
     WDKStepAnalysisTypeResponse,
-)
-from veupathdb.wdk.wdk_parameters import (
-    WDKNumberParam,
     WDKStringParam,
 )
 

@@ -3,15 +3,8 @@
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain.parameters.wdk_vocab import (
-    WDKTreeBoxVocabNode,
-    WDKVocabNodeData,
-)
-from veupathdb.wdk.wdk_models import WDKSearch
-from veupathdb.wdk.wdk_parameters import (
-    WDKParameter,
-    WDKStringParam,
-)
+from veupathdb.domain.parameters import WDKTreeBoxVocabNode, WDKVocabNodeData
+from veupathdb.wdk import WDKParameter, WDKSearch, WDKStringParam
 
 from veupathdb_mcp.catalog import eda_backed, search_inspection
 from veupathdb_mcp.catalog.eda_backed import (

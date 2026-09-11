@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from pydantic import Field
-from veupathdb.domain.parameters.wdk_vocab import (
+from veupathdb.domain.parameters import (
     WDKDatasetParser,
     WDKFilterOntologyTerm,
     WDKVocabulary,

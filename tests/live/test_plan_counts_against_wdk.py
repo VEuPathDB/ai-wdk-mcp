@@ -3,12 +3,9 @@
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain.parameters.values import StringValue
-from veupathdb.domain.strategy.ast import StrategyStepNode
-from veupathdb.domain.strategy.ops import CombineOp
-from veupathdb.domain.strategy.strategy_ast import StrategyAst
-from veupathdb.wdk.factory import get_strategy_api
-from veupathdb.wdk.strategy_api import is_internal_wdk_strategy_name
+from veupathdb.domain.parameters import StringValue
+from veupathdb.domain.strategy import CombineOp, StrategyAst, StrategyStepNode
+from veupathdb.wdk import get_strategy_api, is_internal_wdk_strategy_name
 
 from veupathdb_mcp.wdk.plan_counts import compute_plan_step_counts
 

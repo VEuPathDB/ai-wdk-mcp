@@ -4,10 +4,12 @@ from dataclasses import dataclass
 from typing import Annotated, Literal, Self
 
 from pydantic import Field, TypeAdapter, ValidationError, model_validator
-from veupathdb.domain.parameters.phyletic import PHYLETIC_MAP_PARAMS
-from veupathdb.domain.parameters.specs import ParamSpecNormalized
-from veupathdb.domain.parameters.values import ParamKind, ParamValue
-from veupathdb.domain.parameters.wdk_vocab import (
+from veupathdb.domain.parameters import (
+    PHYLETIC_LIST_PARAMS,
+    PHYLETIC_MAP_PARAMS,
+    ParamKind,
+    ParamSpecNormalized,
+    ParamValue,
     VocabOption,
     WDKTreeBoxVocabNode,
     WDKVocabulary,
@@ -15,8 +17,7 @@ from veupathdb.domain.parameters.wdk_vocab import (
     flatten_vocab,
 )
 from veupathdb.model import CamelModel
-from veupathdb.wdk.phyletic_tree import phyletic_tree_of
-from veupathdb.wdk.wdk_parameters import WDKParameter
+from veupathdb.wdk import WDKParameter, phyletic_tree_of
 
 from veupathdb_mcp.catalog.eda_backed import (
     UPLOAD_SENTINEL_NOTE,
@@ -27,9 +28,6 @@ from veupathdb_mcp.catalog.vocab_rendering import (
     allowed_values,
     render_vocab_tree,
 )
-
-PHYLETIC_LIST_PARAMS = frozenset({"included_species", "excluded_species"})
-"""The two visible parameters that state a phyletic criterion."""
 
 _PHYLETIC_LIST_HELP = (
     "Species or clade codes from the phyletic tree, comma-separated or a list; "

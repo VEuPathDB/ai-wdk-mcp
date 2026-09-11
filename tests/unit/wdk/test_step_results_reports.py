@@ -9,10 +9,8 @@ from __future__ import annotations
 from typing import Any
 
 import pytest
-from veupathdb.domain.wdk_values import WDKSortDirection
-from veupathdb.wdk.client import VEuPathDBClient
-from veupathdb.wdk.strategy_api.api import StrategyAPI
-from veupathdb.wdk.wdk_models import WDKSortSpec
+from veupathdb.domain import WDKSortDirection
+from veupathdb.wdk import StrategyAPI, VEuPathDBClient, WDKSortSpec
 
 from veupathdb_mcp.wdk.step_results import StepResultsService
 

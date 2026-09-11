@@ -10,13 +10,13 @@ from __future__ import annotations
 import json
 
 import pytest
-from veupathdb.domain.parameters.value_codec import to_wire
-from veupathdb.domain.parameters.values import (
+from veupathdb.domain.parameters import (
     MultiPickValue,
     SinglePickValue,
     StringValue,
+    VocabOption,
+    to_wire,
 )
-from veupathdb.domain.parameters.wdk_vocab import VocabOption
 
 from veupathdb_mcp.catalog.param_dag import (
     OverrideMap,

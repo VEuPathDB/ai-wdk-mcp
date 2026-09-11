@@ -5,21 +5,19 @@ from dataclasses import dataclass
 from typing import Literal
 
 from cachetools import LRUCache
+from veupathdb import get_logger
 from veupathdb.auth_context import veupathdb_auth_token_ctx
-from veupathdb.domain.parameters.values import InputDatasetValue, ParamValue
+from veupathdb.domain.parameters import InputDatasetValue, ParamValue
 from veupathdb.errors import VEuPathDBError, WDKLoginRequiredError
-from veupathdb.logging import get_logger
-from veupathdb.wdk.factory import (
-    get_strategy_api,
-)
-from veupathdb.wdk.strategy_api.api import StrategyAPI
-from veupathdb.wdk.value_decoding import encode_params
-from veupathdb.wdk.wdk_models import (
+from veupathdb.wdk import (
     NewStepSpec,
+    StrategyAPI,
     WDKDatasetConfigIdList,
     WDKDatasetIdListContent,
     WDKSearchConfig,
     WDKStepTree,
+    encode_params,
+    get_strategy_api,
 )
 
 from veupathdb_mcp.wdk.helpers import extract_record_ids

@@ -5,11 +5,8 @@ import time
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field
-from veupathdb.logging import get_logger
-from veupathdb.wdk.wdk_models import (
-    WDKRecordType,
-    WDKSearch,
-)
+from veupathdb import get_logger
+from veupathdb.wdk import WDKRecordType, WDKSearch
 
 logger = get_logger(__name__)
 

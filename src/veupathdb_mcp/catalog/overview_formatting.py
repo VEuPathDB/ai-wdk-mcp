@@ -1,9 +1,9 @@
 """Formats WDK search parameters into a required/optional overview."""
 
 from pydantic import Field
-from veupathdb.domain.parameters.wdk_vocab import VocabOption
+from veupathdb.domain.parameters import VocabOption
 from veupathdb.model import CamelModel
-from veupathdb.wdk.wdk_models import WDKSearch
+from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog.eda_backed import (
     eda_backed_guidance,

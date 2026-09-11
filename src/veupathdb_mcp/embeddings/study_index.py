@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from veupathdb.eda.models import EdaStudyOverview
+from veupathdb.eda import EdaStudyOverview
 
 from veupathdb_mcp.embeddings.record_manager import (
     IndexEntry,

@@ -4,9 +4,12 @@ from __future__ import annotations
 
 from pydantic import ConfigDict, Field, JsonValue, field_validator
 from pydantic import ValidationError as PydanticValidationError
-from veupathdb.domain.parameters.unbound import UnboundParameter
-from veupathdb.domain.parameters.values import FilterTermClause, FilterValue
-from veupathdb.domain.parameters.wdk_vocab import VocabOption
+from veupathdb.domain.parameters import (
+    FilterTermClause,
+    FilterValue,
+    UnboundParameter,
+    VocabOption,
+)
 from veupathdb.errors import ValidationError
 from veupathdb.model import CamelModel
 

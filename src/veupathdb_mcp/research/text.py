@@ -8,7 +8,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 import httpx
 from rapidfuzz import fuzz
-from veupathdb.logging import get_logger
+from veupathdb import get_logger
 
 from veupathdb_mcp.research.citations import LiteratureFilters
 from veupathdb_mcp.research.literature.papers import ParsedPaper

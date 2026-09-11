@@ -14,12 +14,7 @@ from typing import Any
 
 import pytest
 from veupathdb.testing.wdk_fixtures import load_recorded
-from veupathdb.wdk.client import VEuPathDBClient
-from veupathdb.wdk.wdk_models import (
-    WDKRecordType,
-    WDKSearch,
-    WDKSearchResponse,
-)
+from veupathdb.wdk import VEuPathDBClient, WDKRecordType, WDKSearch, WDKSearchResponse
 
 from veupathdb_mcp.catalog import discovery
 from veupathdb_mcp.catalog.catalog_metadata import (

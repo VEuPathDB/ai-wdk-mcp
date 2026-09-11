@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import Any
 
 import pytest
-from veupathdb.domain.wdk_values import WDKRecordIdPart
-from veupathdb.wdk.wdk_models import (
+from veupathdb.domain import WDKRecordIdPart
+from veupathdb.wdk import (
     CombinedStepSpec,
     NewStepSpec,
     WDKAnswer,

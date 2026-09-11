@@ -8,7 +8,7 @@ status: stable
 
 # The choice
 
-Twenty-five tools are served on `veupathdb-wdk-mcp`, against 281 names published for
+Twenty-five tools are served on `veupathdb-wdk-mcp`, against 275 names published for
 in-process import across sixteen surfaces. The line is one property:
 
 **A call is served when its arguments and its result are values.** A call whose
@@ -40,17 +40,13 @@ Eight capabilities that had no tool row and now have one:
 - `make_validation_callbacks` returns a `ValidationCallbacks` of coroutines. A callable
   is not a value, and the wire has no form for one. The served tool builds the
   callbacks from its `site_id`, which is the only argument they take.
-- `build_wdk_step_tree` folds a plan tree and a map of WDK ids into a `WDKStepTree`. It
-  reads no site, carries no credential and performs no I/O, so a tool row would spend a
-  round trip computing what the caller already holds. Both of its types belong to the
-  client library, which a host that reads a served result already installs.
 - `sync_index` writes vectors into the deployment's own database. The process that
   refreshes is not the process that serves (`EMBEDDING_INDEX_SYNC_ENABLED`), so a
   served form would let a caller re-embed a store it does not own.
 
 # What was rejected
 
-**Serving every published name.** Most of the 281 are result models, error types and
+**Serving every published name.** Most of the 275 are result models, error types and
 the small functions those are built from. A tool row for each would publish an API
 surface no client can hold in a context window, and the conformance suite reads every
 row of `tools/list` on every call.

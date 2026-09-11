@@ -7,17 +7,8 @@ from collections.abc import Sequence
 from typing import Any
 
 import pytest
-from veupathdb.domain.parameters.phyletic import (
-    PhyleticBinding,
-    PhyleticNode,
-    PhyleticTree,
-)
-from veupathdb.wdk.phyletic_tree import phyletic_tree_of
-from veupathdb.wdk.wdk_parameters import (
-    WDKEnumParam,
-    WDKParameter,
-    WDKStringParam,
-)
+from veupathdb.domain.parameters import PhyleticBinding, PhyleticNode, PhyleticTree
+from veupathdb.wdk import WDKEnumParam, WDKParameter, WDKStringParam, phyletic_tree_of
 
 from veupathdb_mcp.catalog import param_phyletic
 from veupathdb_mcp.catalog.param_formatting import _PROFILE_PATTERN_HELP
@@ -211,6 +202,16 @@ class TestTheSheetSignature:
     def test_an_ordinary_sheet(self) -> None:
         assert not is_phyletic_sheet(
             [_sheet_info("included_species"), _sheet_info("organism")]
+        )
+
+    def test_a_sheet_without_the_derived_pattern(self) -> None:
+        """All three parameters the binding states name the search, not two."""
+        assert not is_phyletic_sheet(
+            [
+                _sheet_info("included_species"),
+                _sheet_info("excluded_species"),
+                _sheet_info("organism"),
+            ]
         )
 
 

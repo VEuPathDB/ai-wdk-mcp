@@ -14,7 +14,7 @@ from pydantic import AnyHttpUrl
 from starlette.middleware.authentication import AuthenticationMiddleware
 from starlette.routing import Route
 from starlette.types import ASGIApp
-from veupathdb.settings import get_veupathdb_settings
+from veupathdb import get_veupathdb_settings
 
 from veupathdb_mcp.auth import VEuPathDBTokenVerifier
 from veupathdb_mcp.settings import get_mcp_settings

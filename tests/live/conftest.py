@@ -7,7 +7,7 @@ from collections.abc import AsyncGenerator
 
 import pytest
 from veupathdb.auth_context import veupathdb_auth_token_ctx
-from veupathdb.wdk.auth_login import password_login
+from veupathdb.wdk import password_login
 
 _NO_CREDENTIALS = "WDK_TEST_EMAIL and WDK_TEST_PASSWORD name the account this lane uses"
 

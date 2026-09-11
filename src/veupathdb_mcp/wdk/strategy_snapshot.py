@@ -4,23 +4,18 @@ Conversion is pure except for the canonicalization pass, which reads each
 search's parameter specs from WDK.
 """
 
-from veupathdb.domain.parameters.canonicalize import ParameterCanonicalizer
-from veupathdb.domain.parameters.value_codec import as_param_kind
-from veupathdb.domain.parameters.values import ParamKind
-from veupathdb.domain.strategy.ast import StrategyStepNode
-from veupathdb.domain.strategy.ops import parse_op
-from veupathdb.domain.strategy.strategy_ast import StrategyAst
-from veupathdb.domain.strategy.tree import walk
+from veupathdb import get_logger
+from veupathdb.domain.parameters import ParameterCanonicalizer, ParamKind, as_param_kind
+from veupathdb.domain.strategy import StrategyAst, StrategyStepNode, parse_op, walk
 from veupathdb.errors import DataParsingError, VEuPathDBError
-from veupathdb.logging import get_logger
-from veupathdb.wdk.step_tree import walk_wdk_step_tree
-from veupathdb.wdk.strategy_api import StrategyAPI
-from veupathdb.wdk.value_decoding import decode_params
-from veupathdb.wdk.wdk_models import (
+from veupathdb.wdk import (
+    StrategyAPI,
     WDKSearch,
     WDKStep,
     WDKStepTree,
     WDKStrategyDetails,
+    decode_params,
+    walk_wdk_step_tree,
 )
 
 from veupathdb_mcp.catalog.param_adapters import adapt_param_specs_from_search

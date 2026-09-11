@@ -3,7 +3,7 @@
 from enum import Enum
 
 from pydantic import JsonValue
-from veupathdb.json_types import JSONObject
+from veupathdb import JSONObject
 from veupathdb.model import CamelModel
 
 

@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-from veupathdb.domain.parameters.values import (
+from veupathdb.domain.parameters import (
+    FAKE_ALL_SENTINEL,
     MultiPickValue,
     NumberValue,
     SinglePickValue,
     StringValue,
-)
-from veupathdb.domain.parameters.wdk_vocab import (
-    FAKE_ALL_SENTINEL,
     VocabOption,
     WDKTreeBoxVocabNode,
     WDKVocabNodeData,

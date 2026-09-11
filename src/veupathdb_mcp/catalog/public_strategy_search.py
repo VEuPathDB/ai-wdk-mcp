@@ -6,8 +6,8 @@ against the user's query. Returns the top N matches.
 
 import re
 
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.wdk_models import WDKStrategySummary
+from veupathdb import JSONObject
+from veupathdb.wdk import WDKStrategySummary
 
 from veupathdb_mcp.embeddings.record_manager import (
     IndexEntry,

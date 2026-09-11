@@ -1,12 +1,9 @@
 """Reads of one built WDK step that a tool or an endpoint renders directly:
 the first records, and a temporary download URL."""
 
+from veupathdb import JSONObject, strip_html_tags
 from veupathdb.errors import VEuPathDBError
-from veupathdb.json_types import JSONObject
-from veupathdb.text import strip_html_tags
-from veupathdb.wdk.factory import get_results_api, get_strategy_api
-from veupathdb.wdk.strategy_api import StrategyAPI
-from veupathdb.wdk.wdk_models import WDKAnswer
+from veupathdb.wdk import StrategyAPI, WDKAnswer, get_results_api, get_strategy_api
 
 from veupathdb_mcp.wdk.step_results_models import SampleRecordsResult
 

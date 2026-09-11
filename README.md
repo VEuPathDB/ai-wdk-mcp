@@ -33,7 +33,7 @@ than from a file inside it.
 | `veupathdb_mcp.gene_lookup` | text lookup, id resolution and the organism list |
 | `veupathdb_mcp.research` | the research server, its settings and its two tools |
 | `veupathdb_mcp.tools` | the twenty-five served tools |
-| `veupathdb_mcp.wdk` | step trees, step results, sizes, previews, expression, parameter encoding, and the AST a saved strategy converts into |
+| `veupathdb_mcp.wdk` | step trees, step results, sizes, previews, expression, the vocabulary and defaults a form offers, and the AST a saved strategy converts into |
 | `veupathdb_mcp.wdk.enrichment` | over-representation analysis, its result shapes and its parser |
 
 `tests/unit/test_cold_import.py` holds the line: it imports every module of the
@@ -43,8 +43,11 @@ distribution first, on an interpreter that holds none of them, so an aggregating
 Two rules keep the surfaces acyclic. A control-test runner returns
 `ControlTestResult`, a shape that lives beside it in `veupathdb_mcp.controls`,
 and `veupathdb_mcp.tool_payloads` flattens that into `ControlOutcome` for a host
-that renders one row. WDK parameter encoding is `veupathdb_mcp.wdk.params`, read
-by the parent package rather than by way of a subpackage.
+that renders one row. The vocabulary a WDK parameter offers and the defaults a
+form states are `veupathdb_mcp.wdk.params`, read by the parent package rather
+than by way of a subpackage. What a value looks like on the wire is not decided
+here: `encode_param_value` asks the client's codec for the kind the parameter
+declares, so this distribution and the client never disagree about one value.
 
 The root package holds what both servers share, and nothing else: the research
 process imports it and carries neither a WDK account, a WDK catalog nor a
@@ -296,10 +299,11 @@ one lock, so the research image carries dependencies it never imports.
 than a lint rule.
 
 The lock names `veupathdb-py` by the client repository
-(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, so a
-checkout of this repository alone installs and tests. To take a newer client:
+(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, `v0.1.0a9`,
+so a checkout of this repository alone installs and tests. To take a newer client:
 change `tag` in `[tool.uv.sources]`, run `uv lock --upgrade-package veupathdb-py`,
-then `uv sync`.
+then `uv sync`. Every name `src/` and `tests/` reads from the client comes from a client
+package surface, never from a file inside one.
 
 ## Coverage, honestly
 

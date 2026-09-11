@@ -1,11 +1,7 @@
 """Tests for the step control-test service the verification worker calls."""
 
 import pytest
-from veupathdb.wdk.wdk_models import (
-    WDKAnswer,
-    WDKAnswerMeta,
-    WDKRecordInstance,
-)
+from veupathdb.wdk import WDKAnswer, WDKAnswerMeta, WDKRecordInstance
 
 from veupathdb_mcp.controls import ControlTestResult, run_step_control_tests
 from veupathdb_mcp.tool_payloads import ControlOutcome

@@ -6,7 +6,7 @@ import asyncio
 from pathlib import Path
 
 import pytest
-from veupathdb.wdk.wdk_models import WDKSearch
+from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog.discovery import CatalogPolicy, SearchCatalog
 from veupathdb_mcp.embeddings.fake import FakeEmbedder

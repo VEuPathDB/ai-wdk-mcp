@@ -5,16 +5,18 @@ refuses instead of testing whichever organism the WDK form lists first."""
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain.parameters.wdk_vocab import WDKVocabTerm
-from veupathdb.domain.strategy.validation import StepValidation
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.client import VEuPathDBClient
-from veupathdb.wdk.strategy_api.api import StrategyAPI
-from veupathdb.wdk.wdk_models import (
+from veupathdb import JSONObject
+from veupathdb.domain.parameters import WDKVocabTerm
+from veupathdb.domain.strategy import StepValidation
+from veupathdb.wdk import (
+    StrategyAPI,
+    VEuPathDBClient,
+    WDKEnumParam,
+    WDKNumberParam,
+    WDKParameter,
     WDKStepAnalysisType,
     WDKStepAnalysisTypeResponse,
 )
-from veupathdb.wdk.wdk_parameters import WDKEnumParam, WDKNumberParam, WDKParameter
 
 from veupathdb_mcp.wdk.enrichment import service
 from veupathdb_mcp.wdk.enrichment.service import EnrichmentService
@@ -126,7 +128,7 @@ class TestAResultSpanningSeveralOrganisms:
 
         assert errors == []
         assert [a for a, _ in wdk.analyses] == ["go-enrichment"]
-        assert wdk.analyses[0][1]["organism"] == f'["{TOXO}"]'
+        assert wdk.analyses[0][1]["organism"] == TOXO
         assert results[0].terms[0].term_id == "GO:0020035"
         assert results[0].total_genes_analyzed == 10
 
@@ -143,6 +145,6 @@ class TestAResultOfOneOrganism:
         )
 
         assert errors == []
-        assert wdk.analyses[0][1]["organism"] == f'["{TOXO}"]'
+        assert wdk.analyses[0][1]["organism"] == TOXO
         assert results[0].error is None
         assert len(results[0].terms) == 1

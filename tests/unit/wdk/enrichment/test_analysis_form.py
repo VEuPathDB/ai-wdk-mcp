@@ -8,8 +8,7 @@ from __future__ import annotations
 
 import pytest
 from veupathdb.errors import ExternalServiceError
-from veupathdb.wdk.client import VEuPathDBClient
-from veupathdb.wdk.strategy_api.api import StrategyAPI
+from veupathdb.wdk import StrategyAPI, VEuPathDBClient
 
 from veupathdb_mcp.wdk.enrichment import EnrichmentService
 

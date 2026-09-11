@@ -4,9 +4,8 @@ import os
 from collections.abc import Generator
 
 import pytest
-from veupathdb.settings import VEuPathDBSettings, use_veupathdb_settings_source
-from veupathdb.wdk import auth_login
-from veupathdb.wdk.site_router import load_sites_config
+from veupathdb import VEuPathDBSettings, use_veupathdb_settings_source
+from veupathdb.wdk import reset_site_router
 
 from veupathdb_mcp.embeddings import embedder
 from veupathdb_mcp.embeddings.embedder import get_embedder
@@ -32,11 +31,9 @@ def _settings_read_the_environment() -> Generator[None]:
     use_research_settings_source(ResearchSettings)
     use_embedding_settings_source(EmbeddingSettings)
     use_veupathdb_settings_source(VEuPathDBSettings)
-    load_sites_config.cache_clear()
-    auth_login._signing_keys.clear()
+    reset_site_router()
     yield
-    auth_login._signing_keys.clear()
-    load_sites_config.cache_clear()
+    reset_site_router()
 
 
 @pytest.fixture

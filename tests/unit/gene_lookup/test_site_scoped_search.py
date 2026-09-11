@@ -9,22 +9,18 @@ the caller chose, which is what VEuPathDB's own client sends.
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain.parameters.wdk_vocab import (
-    WDKTreeBoxVocabNode,
-    WDKVocabNodeData,
-)
-from veupathdb.domain.search import SearchContext
-from veupathdb.wdk.site_search_client import (
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import WDKTreeBoxVocabNode, WDKVocabNodeData
+from veupathdb.domain.strategy import StepValidation
+from veupathdb.wdk import (
     DocumentTypeFilter,
     SiteSearchResponse,
     SiteSearchStreamRecord,
-)
-from veupathdb.wdk.wdk_models import (
-    StepValidation,
+    WDKEnumParam,
     WDKSearch,
     WDKSearchResponse,
+    WDKStringParam,
 )
-from veupathdb.wdk.wdk_parameters import WDKEnumParam, WDKStringParam
 
 from veupathdb_mcp import gene_lookup
 from veupathdb_mcp.gene_lookup.organisms import (

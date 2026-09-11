@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from typing import cast
 
 import pytest
-from veupathdb.wdk.wdk_models import WDKSearch
+from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog import semantic_matching
 from veupathdb_mcp.catalog.discovery_service import DiscoveryService

@@ -1,8 +1,7 @@
 """Fill the gaps in sparse gene results with WDK metadata."""
 
+from veupathdb import get_logger, strip_html_tags
 from veupathdb.errors import VEuPathDBError
-from veupathdb.logging import get_logger
-from veupathdb.text import strip_html_tags
 
 from .organism import normalize_organism
 from .result import GeneResult

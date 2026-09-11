@@ -4,17 +4,10 @@ parameter merging."""
 from collections.abc import Sequence
 
 from pydantic import JsonValue
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.wdk_models import (
-    WDKAttributeField,
-    WDKRecordInstance,
-)
-from veupathdb.wdk.wdk_parameters import WDKParameter
+from veupathdb import JSONObject
+from veupathdb.wdk import WDKAttributeField, WDKParameter, WDKRecordInstance
 
-from veupathdb_mcp.wdk.params import (
-    encode_vocab_params,
-    extract_default_params,
-)
+from veupathdb_mcp.wdk.params import encode_named_param_value, extract_default_params
 
 _SORTABLE_WDK_TYPES = {"number", "float", "integer", "double"}
 
@@ -144,9 +137,12 @@ def merge_analysis_params(
     """Merge WDK form defaults with user-supplied parameters.
 
     User values sit on top of the defaults, so every required field stays
-    present. Vocabulary parameters are re-encoded as JSON arrays, which is the
-    form WDK accepts.
+    present. A default is the stable value the form stated. A supplied value is
+    put on the wire for the kind the form declares; one the form does not name
+    is carried as it came.
     """
-    defaults = extract_default_params(wdk_params)
-    merged: JSONObject = {**defaults, **user_params}
-    return encode_vocab_params(merged, wdk_params)
+    supplied: JSONObject = {
+        name: encode_named_param_value(wdk_params, name, value)
+        for name, value in user_params.items()
+    }
+    return {**extract_default_params(wdk_params), **supplied}

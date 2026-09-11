@@ -13,7 +13,7 @@ from sqlalchemy import delete, func, select, text
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
-from veupathdb.logging import get_logger
+from veupathdb import get_logger
 
 from veupathdb_mcp.embeddings.db import embedding_session
 from veupathdb_mcp.embeddings.embedder import get_embedder

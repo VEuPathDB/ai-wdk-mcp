@@ -17,7 +17,7 @@ from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.routing import Mount, Route
-from veupathdb.wdk.factory import close_all_clients
+from veupathdb.wdk import close_all_clients
 
 from veupathdb_mcp import __version__
 from veupathdb_mcp.logging_setup import setup_logging

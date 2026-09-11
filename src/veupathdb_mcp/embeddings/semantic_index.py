@@ -9,7 +9,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from veupathdb.wdk.wdk_models import WDKSearch
+from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.embeddings.record_manager import (
     IndexEntry,

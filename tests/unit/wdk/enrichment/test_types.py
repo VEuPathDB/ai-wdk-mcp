@@ -7,7 +7,7 @@ would rank the strongest term last and read a missing probability as certain.
 from __future__ import annotations
 
 import pytest
-from veupathdb.json_types import JSONObject
+from veupathdb import JSONObject
 
 from veupathdb_mcp.wdk.enrichment.types import EnrichmentTerm
 

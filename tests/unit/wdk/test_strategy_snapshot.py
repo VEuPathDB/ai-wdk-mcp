@@ -9,11 +9,10 @@ from __future__ import annotations
 import json
 
 import pytest
-from veupathdb.domain.parameters.values import MultiPickValue
-from veupathdb.domain.strategy.ops import CombineOp
-from veupathdb.domain.strategy.tree import walk
+from veupathdb.domain.parameters import MultiPickValue
+from veupathdb.domain.strategy import CombineOp, walk
 from veupathdb.errors import DataParsingError
-from veupathdb.wdk.wdk_models import (
+from veupathdb.wdk import (
     WDKSearchConfig,
     WDKSearchResponse,
     WDKStep,

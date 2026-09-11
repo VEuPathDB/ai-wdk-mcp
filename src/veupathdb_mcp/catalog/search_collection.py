@@ -3,15 +3,14 @@
 These are internal helpers for the ``search_for_searches`` orchestrator.
 """
 
+from veupathdb import get_logger, strip_html_tags
 from veupathdb.errors import VEuPathDBError
-from veupathdb.logging import get_logger
-from veupathdb.text import strip_html_tags
-from veupathdb.wdk.site_router import get_site_router
-from veupathdb.wdk.site_search_client import (
+from veupathdb.wdk import (
     DocumentTypeFilter,
     SiteSearchDocument,
+    WDKSearch,
+    get_site_router,
 )
-from veupathdb.wdk.wdk_models import WDKSearch
 
 from veupathdb_mcp.catalog.discovery_service import DiscoveryService
 from veupathdb_mcp.catalog.models import SearchMatch

@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain.parameters.canonicalize import ParameterCanonicalizer
-from veupathdb.domain.parameters.specs import ParamSpecNormalized
-from veupathdb.domain.parameters.values import MultiPickValue, SinglePickValue
-from veupathdb.domain.parameters.wdk_vocab import (
+from veupathdb.domain.parameters import (
     FAKE_ALL_SENTINEL,
+    MultiPickValue,
+    ParameterCanonicalizer,
+    ParamSpecNormalized,
+    SinglePickValue,
     WDKTreeBoxVocabNode,
     WDKVocabNodeData,
 )

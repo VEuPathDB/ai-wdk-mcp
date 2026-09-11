@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import pytest
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.wdk_models import WDKStrategySummary
+from veupathdb import JSONObject
+from veupathdb.wdk import WDKStrategySummary
 
 from veupathdb_mcp.catalog import public_strategy_search
 from veupathdb_mcp.catalog.public_strategy_search import (

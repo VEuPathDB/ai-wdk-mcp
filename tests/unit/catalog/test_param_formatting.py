@@ -4,20 +4,15 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from veupathdb.domain.parameters.specs import ParamSpecNormalized
-from veupathdb.domain.parameters.values import SinglePickValue
-from veupathdb.domain.parameters.wdk_vocab import (
+from veupathdb.domain.parameters import (
+    ParamSpecNormalized,
+    SinglePickValue,
     WDKFilterOntologyTerm,
     WDKTreeBoxVocabNode,
     WDKVocabNodeData,
     WDKVocabTerm,
 )
-from veupathdb.wdk.wdk_parameters import (
-    WDKEnumParam,
-    WDKFilterParam,
-    WDKParameter,
-    WDKStringParam,
-)
+from veupathdb.wdk import WDKEnumParam, WDKFilterParam, WDKParameter, WDKStringParam
 
 from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,

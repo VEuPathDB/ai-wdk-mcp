@@ -6,9 +6,9 @@ from typing import Any
 
 import pytest
 from veupathdb.auth_context import veupathdb_auth_token_ctx
-from veupathdb.domain.parameters.values import InputDatasetValue, ParamValue
+from veupathdb.domain.parameters import InputDatasetValue, ParamValue
 from veupathdb.errors import WDKLoginRequiredError
-from veupathdb.wdk.wdk_models import NewStepSpec, WDKIdentifier, WDKStepTree
+from veupathdb.wdk import NewStepSpec, WDKIdentifier, WDKStepTree
 
 from veupathdb_mcp.wdk import gene_set_steps
 from veupathdb_mcp.wdk.gene_set_steps import (

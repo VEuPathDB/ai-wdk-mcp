@@ -4,20 +4,16 @@ the fetcher that reads WDK."""
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain.parameters.values import (
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import (
     FilterValue,
     MultiPickValue,
     NumberValue,
     SinglePickValue,
+    VocabOption,
 )
-from veupathdb.domain.parameters.wdk_vocab import VocabOption
-from veupathdb.domain.search import SearchContext
 from veupathdb.errors import ValidationError, VEuPathDBErrorCode
-from veupathdb.wdk.wdk_models import WDKSearchResponse
-from veupathdb.wdk.wdk_parameters import (
-    WDKParameter,
-    WDKStringParam,
-)
+from veupathdb.wdk import WDKParameter, WDKSearchResponse, WDKStringParam
 
 from veupathdb_mcp.catalog import param_dag
 from veupathdb_mcp.catalog.param_dag import (

@@ -10,10 +10,7 @@ import pytest
 from pydantic import JsonValue
 from veupathdb.errors import WDKError
 from veupathdb.testing.wdk_fixtures import load_recorded
-from veupathdb.wdk.ai_expression import (
-    AiExpressionReport,
-    AiExpressionStatus,
-)
+from veupathdb.wdk import AiExpressionReport, AiExpressionStatus
 
 from veupathdb_mcp.wdk import ai_expression
 from veupathdb_mcp.wdk.ai_expression import (

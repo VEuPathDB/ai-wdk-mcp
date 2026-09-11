@@ -4,7 +4,7 @@ import math
 from collections import Counter
 from dataclasses import dataclass, field
 
-from veupathdb.wdk.wdk_models import WDKSearch
+from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog.models import SearchMatch
 

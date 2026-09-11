@@ -21,7 +21,6 @@
     "EdaStepRequest",
     "FilterFieldInfo",
     "GetParameterOptionsResult",
-    "PHYLETIC_LIST_PARAMS",
     "ParamFetcher",
     "ParamIntent",
     "ParamSpecResponse",
@@ -257,7 +256,6 @@
     "DEFAULT_GENE_SET_STRATEGY_NAME",
     "GeneExpressionSummary",
     "GeneSetWdkContext",
-    "MissingWDKStepIdError",
     "NO_SUMMARY_ON_THE_SITE",
     "RecordAttribute",
     "RecordDetailResponse",
@@ -265,15 +263,12 @@
     "SetOperation",
     "StepCountResult",
     "StepResultsService",
-    "WDK_VOCAB_PARAM_TYPES",
     "build_attribute_list",
     "build_enrichment_params_from_gene_ids",
     "build_snapshot_from_wdk",
-    "build_wdk_step_tree",
     "canonicalize_synced_parameters",
     "compute_plan_step_counts",
-    "encode_vocab_params",
-    "encode_vocab_value",
+    "encode_param_value",
     "extract_default_params",
     "extract_detail_attributes",
     "extract_pk",
@@ -285,7 +280,6 @@
     "get_gene_expression_summary",
     "merge_analysis_params",
     "order_primary_key",
-    "resolve_record_type",
     "resolve_wdk_context",
     "step_download_url",
     "step_results_service",
@@ -313,4 +307,3 @@
     "upsert_enrichment_result"
   ]
 }
-

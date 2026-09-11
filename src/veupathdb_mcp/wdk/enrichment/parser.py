@@ -1,8 +1,8 @@
 """Converts raw WDK enrichment results into structured terms and results."""
 
 from pydantic import JsonValue, ValidationError
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.wdk_models import (
+from veupathdb import JSONObject
+from veupathdb.wdk import (
     WDKEnrichmentResponse,
     WDKEnrichmentRowBase,
     WDKGoEnrichmentRow,

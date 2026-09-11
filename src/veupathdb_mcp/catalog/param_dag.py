@@ -5,13 +5,11 @@ from __future__ import annotations
 from collections.abc import Awaitable, Callable
 
 from pydantic import Field
-from veupathdb.domain.parameters.unbound import UnboundParameter
-from veupathdb.domain.parameters.value_codec import to_wire
-from veupathdb.domain.parameters.values import ParamValue
-from veupathdb.domain.search import SearchContext
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import ParamValue, UnboundParameter, to_wire
 from veupathdb.errors import ValidationError
 from veupathdb.model import CamelModel
-from veupathdb.wdk.factory import get_wdk_client
+from veupathdb.wdk import get_wdk_client
 
 from veupathdb_mcp.catalog._param_binding import (
     OverrideMap,

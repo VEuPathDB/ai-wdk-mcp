@@ -13,24 +13,19 @@ from mcp.server.auth.middleware.auth_context import auth_context_var
 from mcp.server.auth.middleware.bearer_auth import AuthenticatedUser
 from mcp.types import TextContent, Tool
 from veupathdb.auth_context import veupathdb_auth_token_ctx
-from veupathdb.domain.parameters.values import (
-    InputDatasetValue,
-    ParamValue,
-    StringValue,
-)
-from veupathdb.domain.search import SearchContext
-from veupathdb.domain.strategy.ast import StrategyStepNode
-from veupathdb.domain.strategy.strategy_ast import StrategyAst
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import InputDatasetValue, ParamValue, StringValue
+from veupathdb.domain.strategy import StrategyAst, StrategyStepNode
 from veupathdb.errors import ValidationError
 from veupathdb.testing.wdk_fixtures import load_recorded
-from veupathdb.wdk.ai_expression import AiExpressionReport
-from veupathdb.wdk.wdk_models import (
+from veupathdb.wdk import (
+    AiExpressionReport,
     NewStepSpec,
     WDKIdentifier,
     WDKSearch,
     WDKStepTree,
+    WDKStringParam,
 )
-from veupathdb.wdk.wdk_parameters import WDKStringParam
 
 from veupathdb_mcp import server
 from veupathdb_mcp.auth import CredentialMode, McpCredential

@@ -10,15 +10,18 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from difflib import get_close_matches
 
-from veupathdb.domain.parameters.value_codec import coerce_context_values
-from veupathdb.domain.parameters.values import ParamValue
-from veupathdb.domain.parameters.wdk_vocab import WDKTreeBoxVocabNode
+from veupathdb.domain.parameters import (
+    ParamValue,
+    WDKTreeBoxVocabNode,
+    coerce_context_values,
+)
 from veupathdb.errors import WDKError
-from veupathdb.wdk.factory import get_wdk_client
-from veupathdb.wdk.wdk_models import WDKSearch, encode_wdk_params
-from veupathdb.wdk.wdk_parameters import (
+from veupathdb.wdk import (
     WDKBaseParameter,
     WDKParameter,
+    WDKSearch,
+    encode_wdk_params,
+    get_wdk_client,
 )
 
 from veupathdb_mcp.catalog.overview_formatting import (

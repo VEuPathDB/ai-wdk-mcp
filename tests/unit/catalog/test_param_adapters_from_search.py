@@ -10,16 +10,17 @@ from __future__ import annotations
 
 import json
 
-from veupathdb.domain.parameters.specs import (
+from veupathdb.domain.parameters import (
+    FilterTermClause,
+    FilterValue,
     ParamSpecNormalized,
     fill_hidden_required_defaults,
     filled_hidden_defaults,
     topological_fill_order,
 )
-from veupathdb.domain.parameters.values import FilterTermClause, FilterValue
-from veupathdb.domain.strategy.validation import StepValidation
+from veupathdb.domain.strategy import StepValidation
 from veupathdb.testing.wdk_fixtures import load_recorded
-from veupathdb.wdk.wdk_models import (
+from veupathdb.wdk import (
     WDKFilterValue,
     WDKReporter,
     WDKSearch,

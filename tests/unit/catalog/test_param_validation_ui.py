@@ -11,20 +11,11 @@ from typing import cast
 
 import pytest
 from pydantic import JsonValue
-from veupathdb.domain.parameters.values import MultiPickValue, ParamValue, StringValue
-from veupathdb.domain.search import SearchContext
-from veupathdb.errors import (
-    ValidationError,
-    WDKError,
-    param_message_rows,
-)
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.wdk_models import WDKSearchResponse
-from veupathdb.wdk.wdk_parameters import (
-    WDKEnumParam,
-    WDKParameter,
-    WDKStringParam,
-)
+from veupathdb import JSONObject
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import MultiPickValue, ParamValue, StringValue
+from veupathdb.errors import ValidationError, WDKError, param_message_rows
+from veupathdb.wdk import WDKEnumParam, WDKParameter, WDKSearchResponse, WDKStringParam
 
 from veupathdb_mcp.catalog import param_validation
 

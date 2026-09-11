@@ -8,8 +8,8 @@ from enum import StrEnum
 
 from mcp.server.auth.provider import AccessToken
 from pydantic import ConfigDict, Field
+from veupathdb import get_logger
 from veupathdb.auth_context import veupathdb_auth_token_ctx
-from veupathdb.logging import get_logger
 
 from veupathdb_mcp.identity import resolve_oauth_subject
 from veupathdb_mcp.settings import get_mcp_settings

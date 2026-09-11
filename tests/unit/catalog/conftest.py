@@ -5,22 +5,21 @@ from __future__ import annotations
 from typing import Final, TypedDict, Unpack, cast
 
 from pydantic import JsonValue
-from veupathdb.domain.parameters.values import (
+from veupathdb import JSONObject
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import (
     MultiPickValue,
     ParamValue,
     SinglePickValue,
+    VocabOption,
+    WDKVocabTerm,
 )
-from veupathdb.domain.parameters.wdk_vocab import VocabOption, WDKVocabTerm
-from veupathdb.domain.search import SearchContext
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.wdk_models import (
-    StepValidation,
-    WDKSearch,
-    WDKSearchResponse,
-)
-from veupathdb.wdk.wdk_parameters import (
+from veupathdb.domain.strategy import StepValidation
+from veupathdb.wdk import (
     WDKEnumParam,
     WDKParameter,
+    WDKSearch,
+    WDKSearchResponse,
     WDKStringParam,
 )
 

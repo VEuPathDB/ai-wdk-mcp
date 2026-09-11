@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 from pydantic import ConfigDict, Field, model_validator
-from veupathdb.domain.parameters.values import ParamValue
-from veupathdb.json_types import JSONObject
-from veupathdb.logging import get_logger
+from veupathdb import JSONObject, get_logger
+from veupathdb.domain.parameters import ParamValue
 from veupathdb.model import CamelModel
-from veupathdb.wdk.factory import get_strategy_api
+from veupathdb.wdk import get_strategy_api
 
 from veupathdb_mcp.catalog import searches
 from veupathdb_mcp.catalog.public_strategy_search import (

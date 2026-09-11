@@ -5,11 +5,7 @@ from typing import Literal
 
 from pydantic import ConfigDict, Field
 from veupathdb.errors import ValidationError
-from veupathdb.model import (
-    CamelModel,
-    NonFiniteToNone,
-    NonFiniteToNoneRounded,
-)
+from veupathdb.model import CamelModel, NonFiniteToNone, NonFiniteToNoneRounded
 
 type EnrichmentAnalysisType = Literal[
     "go_function", "go_component", "go_process", "pathway", "word"

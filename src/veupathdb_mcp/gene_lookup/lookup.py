@@ -3,8 +3,8 @@
 import asyncio
 from dataclasses import dataclass, field
 
+from veupathdb import get_logger
 from veupathdb.errors import VEuPathDBError
-from veupathdb.logging import get_logger
 
 from veupathdb_mcp.gene_lookup.rerank import (
     QueryIntent,

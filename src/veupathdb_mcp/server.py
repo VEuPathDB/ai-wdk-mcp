@@ -17,7 +17,7 @@ from fastmcp.tools import ToolResult
 from mcp.server.auth.middleware.auth_context import get_access_token
 from mcp.types import CallToolRequestParams, ToolAnnotations
 from pydantic import BaseModel, ConfigDict
-from veupathdb.logging import get_logger
+from veupathdb import get_logger
 
 from veupathdb_mcp import __version__
 from veupathdb_mcp.auth import McpCredential, wdk_identity

@@ -9,17 +9,10 @@ from difflib import get_close_matches
 from typing import Any, cast
 
 from pydantic import JsonValue
-from veupathdb.domain.search import SearchContext
-from veupathdb.errors import (
-    ValidationError,
-    VEuPathDBError,
-    VEuPathDBErrorCode,
-)
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.wdk_models import (
-    WDKRecordType,
-    WDKSearchResponse,
-)
+from veupathdb import JSONObject
+from veupathdb.domain import SearchContext
+from veupathdb.errors import ValidationError, VEuPathDBError, VEuPathDBErrorCode
+from veupathdb.wdk import WDKRecordType, WDKSearchResponse
 
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service
 

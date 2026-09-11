@@ -8,14 +8,14 @@ lookup before giving up.
 
 from __future__ import annotations
 
+from veupathdb import get_logger
 from veupathdb.errors import VEuPathDBError
-from veupathdb.logging import get_logger
+from veupathdb.wdk import resolve_record_type
 
 from veupathdb_mcp.catalog.discovery import SearchCatalog
 from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,
 )
-from veupathdb_mcp.wdk.record_types import resolve_record_type
 
 
 async def get_catalog(site_id: str) -> SearchCatalog:

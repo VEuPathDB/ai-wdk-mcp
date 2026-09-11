@@ -1,20 +1,14 @@
-"""WDK vocabulary parameter encoding, and the defaults a form offers."""
+"""The wire form of one parameter value, and the defaults a form offers."""
 
-from veupathdb.domain.parameters.wdk_vocab import (
+from veupathdb.domain.parameters import (
     FAKE_ALL_SENTINEL,
     WDKTreeBoxVocabNode,
     WDKVocabNodeData,
 )
-from veupathdb.wdk.wdk_parameters import (
-    WDKEnumParam,
-    WDKNumberParam,
-    WDKParameter,
-    WDKStringParam,
-)
+from veupathdb.wdk import WDKEnumParam, WDKNumberParam, WDKParameter, WDKStringParam
 
 from veupathdb_mcp.wdk import (
-    encode_vocab_params,
-    encode_vocab_value,
+    encode_param_value,
     extract_default_params,
     extract_vocab_values,
 )
@@ -49,6 +43,21 @@ class TestTheFormDefaultsAreCarriedBack:
         assert defaults["organism"] == "Plasmodium falciparum 3D7"
         assert defaults["pValueCutoff"] == "0.05"
 
+    def test_a_vocabulary_default_is_carried_back_unwrapped(self) -> None:
+        """WDK states the stable value, so a single pick goes back as it came."""
+        form: list[WDKParameter] = [
+            WDKEnumParam(
+                name="goAssociationsOntologies",
+                display_name="Ontology",
+                type="single-pick-vocabulary",
+                initial_display_value="Biological Process",
+            )
+        ]
+
+        assert extract_default_params(form) == {
+            "goAssociationsOntologies": "Biological Process"
+        }
+
     def test_a_param_the_form_left_empty_is_not_invented(self) -> None:
         # An absent default is the case creation rejects. A made-up value would
         # hide that rejection behind a wrong result.
@@ -57,54 +66,33 @@ class TestTheFormDefaultsAreCarriedBack:
         assert "organism" not in extract_default_params(form)
 
 
-class TestVocabularyValuesAreJsonArrays:
-    """WDK reads a vocabulary stable value with ``new JSONArray(stableValue)``."""
+class TestTheWireFormIsTheClientsCodec:
+    """One codec states every wire form. A single pick is the bare term."""
 
-    def test_a_plain_value_is_wrapped(self) -> None:
-        assert encode_vocab_value("Molecular Function") == '["Molecular Function"]'
-
-    def test_a_value_that_is_already_an_array_is_kept(self) -> None:
-        assert encode_vocab_value('["a", "b"]') == '["a", "b"]'
-
-    def test_a_vocabulary_param_is_encoded_and_the_others_are_not(self) -> None:
-        params = encode_vocab_params(
-            {"goAssociationsOntologies": "Molecular Function", "pValueCutoff": "0.05"},
-            [
-                WDKEnumParam(
-                    name="goAssociationsOntologies",
-                    display_name="Ontology",
-                    type="single-pick-vocabulary",
-                ),
-                WDKNumberParam(name="pValueCutoff", display_name="P-value"),
-            ],
+    def test_a_single_pick_value_is_the_bare_term(self) -> None:
+        param = WDKEnumParam(
+            name="goAssociationsOntologies",
+            display_name="Ontology",
+            type="single-pick-vocabulary",
         )
 
-        assert params == {
-            "goAssociationsOntologies": '["Molecular Function"]',
-            "pValueCutoff": "0.05",
-        }
+        assert encode_param_value(param, "Molecular Function") == "Molecular Function"
 
-    def test_a_value_the_form_does_not_name_is_left_alone(self) -> None:
-        params = encode_vocab_params(
-            {"organism": "Plasmodium falciparum 3D7"},
-            [WDKNumberParam(name="pValueCutoff", display_name="P-value")],
+    def test_a_multi_pick_value_is_a_json_array(self) -> None:
+        param = WDKEnumParam(
+            name="goEvidenceCodes",
+            display_name="Evidence",
+            type="multi-pick-vocabulary",
         )
 
-        assert params == {"organism": "Plasmodium falciparum 3D7"}
-
-    def test_a_vocabulary_value_that_is_not_a_string_is_left_alone(self) -> None:
-        params = encode_vocab_params(
-            {"goAssociationsOntologies": ["Molecular Function"]},
-            [
-                WDKEnumParam(
-                    name="goAssociationsOntologies",
-                    display_name="Ontology",
-                    type="single-pick-vocabulary",
-                )
-            ],
+        assert encode_param_value(param, ["Computed", "Curated"]) == (
+            '["Computed", "Curated"]'
         )
 
-        assert params == {"goAssociationsOntologies": ["Molecular Function"]}
+    def test_a_number_keeps_the_value_the_caller_named(self) -> None:
+        param = WDKNumberParam(name="pValueCutoff", display_name="P-value")
+
+        assert encode_param_value(param, "0.05") == "0.05"
 
 
 class TestTheVocabularyAParamOffers:

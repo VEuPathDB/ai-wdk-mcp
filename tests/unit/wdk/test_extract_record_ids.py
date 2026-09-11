@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from veupathdb.wdk.wdk_models import WDKRecordInstance
+from veupathdb.wdk import WDKRecordInstance
 
 from veupathdb_mcp.wdk.helpers import extract_record_ids
 

@@ -4,8 +4,7 @@ from typing import Any
 
 import pytest
 from tests._support.control_run_wdk import FakeCleanupAPI, RunFakeAPI, patch_control_run
-from veupathdb.wdk.strategy_api.helpers import tag_internal_wdk_strategy_name
-from veupathdb.wdk.wdk_models import WDKStrategySummary
+from veupathdb.wdk import WDKStrategySummary, tag_internal_wdk_strategy_name
 
 from veupathdb_mcp.controls.control_helpers import (
     cleanup_internal_control_test_strategies,

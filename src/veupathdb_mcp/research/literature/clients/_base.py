@@ -3,8 +3,8 @@
 import asyncio
 
 from pydantic import JsonValue
+from veupathdb import get_logger
 from veupathdb.errors import ExternalServiceError
-from veupathdb.logging import get_logger
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.research.citations import (

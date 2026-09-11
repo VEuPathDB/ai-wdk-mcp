@@ -2,27 +2,28 @@
 
 from collections.abc import Callable, Mapping
 
-from veupathdb.domain.parameters.canonicalize import ParameterCanonicalizer
-from veupathdb.domain.parameters.specs import find_input_step_param
-from veupathdb.domain.parameters.values import ParamValue
-from veupathdb.domain.search import SearchContext
+from veupathdb import get_logger
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import (
+    ParameterCanonicalizer,
+    ParamValue,
+    find_input_step_param,
+)
 from veupathdb.errors import (
     ValidationError,
     VEuPathDBError,
     VEuPathDBErrorCode,
     WDKError,
 )
-from veupathdb.logging import get_logger
 from veupathdb.model import CamelModel
-from veupathdb.wdk.client import (
+from veupathdb.wdk import (
     VEuPathDBClient,
-)
-from veupathdb.wdk.factory import get_wdk_client
-from veupathdb.wdk.wdk_models import (
+    WDKParameter,
     WDKSearchResponse,
     encode_wdk_params,
+    get_wdk_client,
+    resolve_record_type,
 )
-from veupathdb.wdk.wdk_parameters import WDKParameter
 
 from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,
@@ -35,7 +36,6 @@ from veupathdb_mcp.catalog.param_formatting import (
 )
 from veupathdb_mcp.catalog.search_context import context_for_metadata_read
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
-from veupathdb_mcp.wdk.record_types import resolve_record_type
 
 from .searches import find_record_type_for_search
 

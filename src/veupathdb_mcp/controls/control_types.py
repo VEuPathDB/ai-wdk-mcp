@@ -4,9 +4,9 @@ from dataclasses import dataclass, field
 from typing import Literal
 
 from pydantic import ConfigDict, Field
-from veupathdb.domain.parameters.values import ParamValue
-from veupathdb.domain.strategy.ops import DEFAULT_COMBINE_OPERATOR, CombineOp
-from veupathdb.json_types import JSONObject
+from veupathdb import JSONObject
+from veupathdb.domain.parameters import ParamValue
+from veupathdb.domain.strategy import DEFAULT_COMBINE_OPERATOR, CombineOp
 from veupathdb.model import CamelModel
 
 ControlValueFormat = Literal["newline", "json_list", "comma"]

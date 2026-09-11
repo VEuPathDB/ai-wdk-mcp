@@ -6,8 +6,8 @@ from typing import Literal
 
 import httpx
 from pydantic import JsonValue, ValidationError
+from veupathdb import get_logger
 from veupathdb.errors import ExternalServiceError
-from veupathdb.logging import get_logger
 
 from veupathdb_mcp.research.citations import (
     Citation,

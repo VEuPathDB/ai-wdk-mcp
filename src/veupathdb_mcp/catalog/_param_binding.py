@@ -7,10 +7,12 @@ import re
 from dataclasses import dataclass
 
 from pydantic import Field
-from veupathdb.domain.parameters.unbound import UnboundParameter
-from veupathdb.domain.parameters.value_codec import param_value_from_raw
-from veupathdb.domain.parameters.values import ParamValue
-from veupathdb.domain.parameters.wdk_vocab import match_exact_option
+from veupathdb.domain.parameters import (
+    ParamValue,
+    UnboundParameter,
+    match_exact_option,
+    param_value_from_raw,
+)
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo

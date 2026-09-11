@@ -3,7 +3,7 @@
 import json
 import re
 
-from veupathdb.text import strip_html_tags
+from veupathdb import strip_html_tags
 
 _MIN_WORDS_FOR_COMPACT_CODE = 2
 

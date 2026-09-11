@@ -11,7 +11,7 @@ from starlette.applications import Starlette
 from starlette.responses import PlainTextResponse
 from starlette.routing import Route
 from starlette.types import Receive, Scope, Send
-from veupathdb.wdk.auth_login import VEuPathDBClaims
+from veupathdb.wdk import VEuPathDBClaims
 
 from veupathdb_mcp import identity
 from veupathdb_mcp.auth import CredentialMode, McpCredential

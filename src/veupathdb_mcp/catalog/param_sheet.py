@@ -5,10 +5,7 @@ from __future__ import annotations
 import re
 
 from pydantic import Field
-from veupathdb.domain.parameters.wdk_vocab import (
-    VocabOption,
-    leading_accession_token,
-)
+from veupathdb.domain.parameters import VocabOption, leading_accession_token
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.catalog.param_formatting import FilterFieldInfo, ParameterInfo

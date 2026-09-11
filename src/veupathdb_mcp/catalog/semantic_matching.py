@@ -4,9 +4,9 @@ Boosts search candidates by cosine similarity from the site's embedding index,
 and injects high-similarity searches that keyword scoring missed.
 """
 
+from veupathdb import get_logger
 from veupathdb.errors import VEuPathDBError
-from veupathdb.logging import get_logger
-from veupathdb.wdk.wdk_models import WDKSearch
+from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog.discovery import SearchCatalog
 from veupathdb_mcp.catalog.discovery_service import DiscoveryService

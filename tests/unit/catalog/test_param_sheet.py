@@ -7,8 +7,8 @@ call the model waits on.
 
 from __future__ import annotations
 
-from veupathdb.domain.parameters.wdk_vocab import VocabOption
-from veupathdb.wdk.wdk_parameters import WDKEnumParam
+from veupathdb.domain.parameters import VocabOption
+from veupathdb.wdk import WDKEnumParam
 
 from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,

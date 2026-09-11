@@ -6,13 +6,11 @@ from typing import Any, cast
 
 import pytest
 from pydantic import JsonValue
-from veupathdb.domain.parameters.specs import ParamSpecNormalized
-from veupathdb.domain.parameters.values import ParamValue, SinglePickValue
-from veupathdb.domain.search import SearchContext
+from veupathdb import JSONObject
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import ParamSpecNormalized, ParamValue, SinglePickValue
 from veupathdb.errors import ValidationError, WDKError
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.wdk_models import WDKSearchResponse
-from veupathdb.wdk.wdk_parameters import WDKEnumParam, WDKParameter
+from veupathdb.wdk import WDKEnumParam, WDKParameter, WDKSearchResponse
 
 from veupathdb_mcp.catalog import param_validation
 

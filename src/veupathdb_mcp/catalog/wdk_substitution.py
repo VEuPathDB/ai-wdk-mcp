@@ -5,9 +5,13 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 
 from pydantic import TypeAdapter, ValidationError
-from veupathdb.domain.parameters.specs import ParamSpecNormalized
-from veupathdb.domain.parameters.value_codec import to_wire
-from veupathdb.domain.parameters.values import FilterClauseKey, FilterValue, ParamValue
+from veupathdb.domain.parameters import (
+    FilterClauseKey,
+    FilterValue,
+    ParamSpecNormalized,
+    ParamValue,
+    to_wire,
+)
 
 _SELECTION_ADAPTER: TypeAdapter[list[str]] = TypeAdapter(list[str])
 

@@ -5,12 +5,11 @@ import re
 from collections.abc import Awaitable, Callable
 from typing import Literal
 
-from veupathdb.domain.search import SearchContext
-from veupathdb.domain.strategy.graph_model import StrategyStep
-from veupathdb.logging import get_logger
+from veupathdb import get_logger
+from veupathdb.domain import SearchContext
+from veupathdb.domain.strategy import StrategyStep
 from veupathdb.model import CamelModel
-from veupathdb.wdk.factory import get_wdk_client
-from veupathdb.wdk.wdk_models import WDKRecordType, WDKSearch
+from veupathdb.wdk import WDKRecordType, WDKSearch, get_wdk_client
 
 from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,

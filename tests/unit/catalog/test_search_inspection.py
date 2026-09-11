@@ -6,16 +6,16 @@ from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from veupathdb.domain.parameters.values import SinglePickValue
-from veupathdb.domain.parameters.wdk_vocab import (
+from veupathdb.domain.parameters import (
     FAKE_ALL_SENTINEL,
+    SinglePickValue,
     WDKTreeBoxVocabNode,
     WDKVocabNodeData,
     collect_leaf_terms,
 )
 from veupathdb.errors import WDKError
 from veupathdb.testing.wdk_fixtures import load_recorded
-from veupathdb.wdk.wdk_models import WDKSearchResponse
+from veupathdb.wdk import WDKSearchResponse
 
 from veupathdb_mcp.catalog import search_inspection, searches
 from veupathdb_mcp.catalog.search_inspection import (

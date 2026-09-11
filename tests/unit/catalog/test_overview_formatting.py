@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from veupathdb.wdk.wdk_models import WDKSearch
-from veupathdb.wdk.wdk_parameters import (
+from veupathdb.wdk import (
     WDKEnumParam,
     WDKNumberParam,
     WDKParameter,
+    WDKSearch,
     WDKStringParam,
 )
 

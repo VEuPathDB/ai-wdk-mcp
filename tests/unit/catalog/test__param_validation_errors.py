@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from typing import Any, cast
 
+from veupathdb.domain.strategy import StepValidation
 from veupathdb.errors import ValidationError
-from veupathdb.wdk.wdk_models import StepValidation
 
 from veupathdb_mcp.catalog._param_validation_errors import (
     unknown_search_error,

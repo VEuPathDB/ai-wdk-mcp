@@ -35,7 +35,6 @@ from veupathdb_mcp.catalog.param_dag import (
 )
 from veupathdb_mcp.catalog.param_discovery import fetch_search_details
 from veupathdb_mcp.catalog.param_formatting import (
-    PHYLETIC_LIST_PARAMS,
     FilterFieldInfo,
     GetParameterOptionsResult,
     ParameterInfo,
@@ -115,7 +114,6 @@ __all__ = [
     "COMPUTE_QUERY",
     "EDA_ANALYSIS_SPEC_PARAM",
     "EDA_DATASET_ID_PARAM",
-    "PHYLETIC_LIST_PARAMS",
     "RADIO_OFF",
     "SUBSET_QUERY",
     "UNIVERSAL_SEARCHES",

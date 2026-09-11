@@ -17,17 +17,9 @@ from typing import Any
 import pytest
 from asyncpg.exceptions import InvalidAuthorizationSpecificationError
 from sqlalchemy.ext.asyncio import AsyncSession
-from veupathdb.domain.parameters.wdk_vocab import (
-    WDKTreeBoxVocabNode,
-    WDKVocabNodeData,
-)
-from veupathdb.wdk.wdk_models import (
-    StepValidation,
-    WDKRecordType,
-    WDKSearch,
-    WDKSearchResponse,
-)
-from veupathdb.wdk.wdk_parameters import WDKEnumParam
+from veupathdb.domain.parameters import WDKTreeBoxVocabNode, WDKVocabNodeData
+from veupathdb.domain.strategy import StepValidation
+from veupathdb.wdk import WDKEnumParam, WDKRecordType, WDKSearch, WDKSearchResponse
 
 from veupathdb_mcp.catalog import discovery_service
 from veupathdb_mcp.catalog.discovery import CatalogPolicy

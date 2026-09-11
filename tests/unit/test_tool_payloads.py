@@ -5,8 +5,8 @@ from __future__ import annotations
 import inspect
 
 import pytest
-from veupathdb.domain.parameters.values import StringValue
-from veupathdb.wdk.wdk_models import WDKStrategySummary
+from veupathdb.domain.parameters import StringValue
+from veupathdb.wdk import WDKStrategySummary
 
 from veupathdb_mcp import tool_payloads
 from veupathdb_mcp.catalog import searches

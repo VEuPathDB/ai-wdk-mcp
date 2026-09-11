@@ -3,7 +3,7 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import Literal
 
-from veupathdb.domain.parameters.wdk_vocab import VocabOption
+from veupathdb.domain.parameters import VocabOption
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo

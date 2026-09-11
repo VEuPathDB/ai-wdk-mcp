@@ -9,12 +9,8 @@ from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from veupathdb.domain.search import SearchContext
-from veupathdb.errors import (
-    ValidationError,
-    VEuPathDBError,
-    VEuPathDBErrorCode,
-)
+from veupathdb.domain import SearchContext
+from veupathdb.errors import ValidationError, VEuPathDBError, VEuPathDBErrorCode
 
 from veupathdb_mcp.catalog import param_discovery
 

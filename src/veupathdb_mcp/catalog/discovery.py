@@ -6,14 +6,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
+from veupathdb import get_logger
 from veupathdb.errors import VEuPathDBError
-from veupathdb.logging import get_logger
-from veupathdb.wdk.client import VEuPathDBClient
-from veupathdb.wdk.wdk_models import (
-    WDKRecordType,
-    WDKSearch,
-    WDKSearchResponse,
-)
+from veupathdb.wdk import VEuPathDBClient, WDKRecordType, WDKSearch, WDKSearchResponse
 
 from veupathdb_mcp.catalog.catalog_metadata import (
     load_dataset_metadata,

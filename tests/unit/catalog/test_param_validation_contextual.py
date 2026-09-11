@@ -9,14 +9,10 @@ published defaults and never a verdict on the caller.
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain.parameters.values import (
-    MultiPickValue,
-    ParamValue,
-    StringValue,
-)
-from veupathdb.domain.search import SearchContext
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import MultiPickValue, ParamValue, StringValue
 from veupathdb.errors import ValidationError, WDKError
-from veupathdb.wdk.wdk_models import WDKSearchResponse
+from veupathdb.wdk import WDKSearchResponse
 
 from veupathdb_mcp.catalog import param_validation
 

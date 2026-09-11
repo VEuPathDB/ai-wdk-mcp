@@ -3,14 +3,10 @@
 from collections.abc import Mapping
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-from veupathdb.errors import (
-    ValidationError,
-    VEuPathDBError,
-    VEuPathDBErrorCode,
-)
-from veupathdb.logging import get_logger
+from veupathdb import get_logger
+from veupathdb.errors import ValidationError, VEuPathDBError, VEuPathDBErrorCode
 from veupathdb.model import CamelModel
-from veupathdb.wdk.wdk_models import (
+from veupathdb.wdk import (
     WDKEnrichmentResponse,
     WDKEnrichmentRowBase,
     WDKGoEnrichmentRow,

@@ -3,13 +3,11 @@
 from typing import Any
 
 import pytest
-from veupathdb.domain.parameters.values import StringValue
-from veupathdb.domain.strategy.ast import StrategyStepNode
-from veupathdb.domain.strategy.ops import CombineOp
-from veupathdb.domain.strategy.strategy_ast import StrategyAst
+from veupathdb import JSONObject
+from veupathdb.domain.parameters import StringValue
+from veupathdb.domain.strategy import CombineOp, StrategyAst, StrategyStepNode
 from veupathdb.errors import VEuPathDBError, VEuPathDBErrorCode
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.wdk_models import (
+from veupathdb.wdk import (
     CombinedStepSpec,
     NewStepSpec,
     WDKAnswer,

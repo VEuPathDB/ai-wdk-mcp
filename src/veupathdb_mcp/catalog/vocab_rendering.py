@@ -4,7 +4,7 @@ Pure module (no I/O). Formats WDK vocabulary trees for display and
 extracts allowed parameter values from typed vocabulary data.
 """
 
-from veupathdb.domain.parameters.wdk_vocab import (
+from veupathdb.domain.parameters import (
     FAKE_ALL_SENTINEL,
     VocabOption,
     WDKTreeBoxVocabNode,

@@ -6,15 +6,10 @@ from pathlib import Path
 from typing import Protocol
 
 from cachetools import LRUCache
-from veupathdb.domain.search import SearchContext
+from veupathdb import get_logger
+from veupathdb.domain import SearchContext
 from veupathdb.errors import VEuPathDBError
-from veupathdb.logging import get_logger
-from veupathdb.wdk.site_router import get_site_router
-from veupathdb.wdk.wdk_models import (
-    WDKRecordType,
-    WDKSearch,
-    WDKSearchResponse,
-)
+from veupathdb.wdk import WDKRecordType, WDKSearch, WDKSearchResponse, get_site_router
 
 from veupathdb_mcp.catalog.discovery import (
     CatalogPolicy,

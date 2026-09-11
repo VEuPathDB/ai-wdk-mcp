@@ -10,7 +10,7 @@ ToxoDB responses. See docs/knowledge/wdk/rules/searches-and-answers.md WDK-ANS-0
 from __future__ import annotations
 
 import pytest
-from veupathdb.json_types import JSONObject
+from veupathdb import JSONObject
 
 from veupathdb_mcp.wdk.enrichment.html import parse_result_genes_html
 from veupathdb_mcp.wdk.enrichment.parser import (

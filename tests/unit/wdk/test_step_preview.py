@@ -2,11 +2,7 @@ from __future__ import annotations
 
 import pytest
 from veupathdb.errors import WDKError
-from veupathdb.wdk.wdk_models import (
-    WDKAnswer,
-    WDKAnswerMeta,
-    WDKRecordInstance,
-)
+from veupathdb.wdk import WDKAnswer, WDKAnswerMeta, WDKRecordInstance
 
 from veupathdb_mcp.wdk import step_preview
 from veupathdb_mcp.wdk.step_preview import step_sample_records

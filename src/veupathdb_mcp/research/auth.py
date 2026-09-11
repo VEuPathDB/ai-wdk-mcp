@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from mcp.server.auth.provider import AccessToken
 from pydantic import ConfigDict, Field
-from veupathdb.logging import get_logger
+from veupathdb import get_logger
 
 from veupathdb_mcp.research.settings import get_research_settings
 

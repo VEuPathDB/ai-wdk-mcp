@@ -8,8 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from veupathdb.domain.parameters.values import ParamValue
-from veupathdb.domain.parameters.wdk_vocab import VocabOption
+from veupathdb.domain.parameters import ParamValue, VocabOption
 
 from veupathdb_mcp.catalog.param_dag import (
     OverrideMap,

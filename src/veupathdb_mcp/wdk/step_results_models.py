@@ -5,8 +5,8 @@ importing the wire models.
 """
 
 from pydantic import Field, JsonValue
-from veupathdb.domain.wdk_values import WDKRecordIdPart
-from veupathdb.json_types import JSONObject
+from veupathdb import JSONObject
+from veupathdb.domain import WDKRecordIdPart
 from veupathdb.model import CamelModel
 
 

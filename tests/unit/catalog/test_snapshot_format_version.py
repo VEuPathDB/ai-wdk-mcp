@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 import pytest
-from veupathdb.wdk.wdk_models import WDKRecordType, WDKSearch
+from veupathdb.wdk import WDKRecordType, WDKSearch
 
 from veupathdb_mcp.catalog import discovery, disk_cache
 from veupathdb_mcp.catalog.catalog_metadata import (

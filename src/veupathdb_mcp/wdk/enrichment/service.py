@@ -2,25 +2,19 @@
 endpoints, gene set endpoints, and AI tools alike."""
 
 import asyncio
-import json
 
-from veupathdb.domain.parameters.values import ParamValue
-from veupathdb.errors import (
-    ValidationError,
-    VEuPathDBError,
-    VEuPathDBErrorCode,
-)
-from veupathdb.json_types import JSONObject
-from veupathdb.logging import get_logger
-from veupathdb.wdk.factory import get_strategy_api
-from veupathdb.wdk.strategy_api import StrategyAPI
-from veupathdb.wdk.value_decoding import encode_params
-from veupathdb.wdk.wdk_models import (
+from veupathdb import JSONObject, get_logger
+from veupathdb.domain.parameters import ParamValue
+from veupathdb.errors import ValidationError, VEuPathDBError, VEuPathDBErrorCode
+from veupathdb.wdk import (
     NewStepSpec,
+    StrategyAPI,
+    WDKParameter,
     WDKSearchConfig,
     WDKStepTree,
+    encode_params,
+    get_strategy_api,
 )
-from veupathdb.wdk.wdk_parameters import WDKParameter
 
 from veupathdb_mcp.controls.control_helpers import delete_temp_strategy
 from veupathdb_mcp.wdk.enrichment.parser import (
@@ -36,7 +30,7 @@ from veupathdb_mcp.wdk.enrichment.types import (
     EnrichmentResult,
 )
 from veupathdb_mcp.wdk.params import (
-    encode_vocab_value,
+    encode_named_param_value,
     extract_default_params,
     extract_vocab_values,
 )
@@ -187,15 +181,17 @@ class EnrichmentService:
                     background_size=0,
                 )
 
-            analysis_params["goAssociationsOntologies"] = json.dumps(
-                [requested_ontology]
+            analysis_params["goAssociationsOntologies"] = encode_named_param_value(
+                wdk_params, "goAssociationsOntologies", requested_ontology
             )
 
         # The organism parameter picks the background genome. WDK refuses one
         # that no gene in the result belongs to.
         background_organism = self._background_organism()
         if background_organism is not None:
-            analysis_params["organism"] = encode_vocab_value(background_organism)
+            analysis_params["organism"] = encode_named_param_value(
+                wdk_params, "organism", background_organism
+            )
 
         logger.info(
             "Running enrichment analysis",

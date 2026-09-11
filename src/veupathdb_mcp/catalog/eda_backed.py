@@ -8,12 +8,12 @@ from dataclasses import dataclass
 
 from pydantic import ValidationError as PydanticValidationError
 from pydantic import model_validator
-from veupathdb.domain.parameters.wdk_vocab import WDKVocabTerm, WDKVocabulary
-from veupathdb.eda.models import EdaNewAnalysis
+from veupathdb import JSONArray
+from veupathdb.domain.parameters import WDKVocabTerm, WDKVocabulary
+from veupathdb.eda import EdaNewAnalysis
 from veupathdb.errors import ValidationError
-from veupathdb.json_types import JSONArray
 from veupathdb.model import CamelModel
-from veupathdb.wdk.wdk_models import WDKSearch
+from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog.searches import get_raw_searches
 

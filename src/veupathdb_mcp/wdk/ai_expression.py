@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from pydantic import ConfigDict
 from veupathdb.model import CamelModel
-from veupathdb.wdk.ai_expression import (
+from veupathdb.wdk import (
     AiExpressionStatus,
     AiExpressionSummary,
+    get_site,
+    get_wdk_client,
 )
-from veupathdb.wdk.factory import get_site, get_wdk_client
 
 NO_SUMMARY_ON_THE_SITE = "no summary has been generated on the site for this gene"
 

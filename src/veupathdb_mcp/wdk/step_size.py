@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from veupathdb.wdk.factory import get_strategy_api
+from veupathdb.wdk import get_strategy_api
 
 
 @dataclass

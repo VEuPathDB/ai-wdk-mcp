@@ -1,11 +1,10 @@
 """Catalog metadata helpers: dataset summaries, ontology categories, record type processing."""
 
 from pydantic import ConfigDict, Field
+from veupathdb import get_logger
 from veupathdb.errors import VEuPathDBError
-from veupathdb.logging import get_logger
 from veupathdb.model import CamelModel
-from veupathdb.wdk.client import VEuPathDBClient
-from veupathdb.wdk.wdk_models import WDKRecordType, WDKSearch
+from veupathdb.wdk import VEuPathDBClient, WDKRecordType, WDKSearch
 
 from veupathdb_mcp.catalog.disk_cache import DatasetReport
 

@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 from fastmcp.exceptions import ToolError
-from veupathdb.domain.parameters.values import ParamValue
-from veupathdb.domain.search import SearchContext
+from veupathdb import JSONObject
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import ParamValue
 from veupathdb.errors import VEuPathDBError
-from veupathdb.json_types import JSONObject
 
 from veupathdb_mcp.catalog import parameters, search_inspection, searches, sites
 from veupathdb_mcp.catalog.models import ParamSpecResponse, RecordTypeInfo, SearchMatch

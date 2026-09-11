@@ -10,11 +10,11 @@ from __future__ import annotations
 from typing import Any, cast
 
 import pytest
-from veupathdb.domain.parameters.values import ParamValue, StringValue
-from veupathdb.domain.search import SearchContext
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import ParamValue, StringValue
 from veupathdb.errors import ValidationError, WDKError
 from veupathdb.testing.wdk_fixtures import load_recorded
-from veupathdb.wdk.wdk_models import WDKRecordType, WDKSearch, WDKSearchResponse
+from veupathdb.wdk import WDKRecordType, WDKSearch, WDKSearchResponse
 
 from veupathdb_mcp.catalog import param_validation, resolve_search_details
 

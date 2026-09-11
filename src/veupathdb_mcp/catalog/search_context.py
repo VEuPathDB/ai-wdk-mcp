@@ -4,11 +4,9 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+from veupathdb import get_logger
 from veupathdb.errors import VEuPathDBError
-from veupathdb.logging import get_logger
-from veupathdb.wdk.client import VEuPathDBClient
-from veupathdb.wdk.wdk_models import WDKSearchResponse
-from veupathdb.wdk.wdk_parameters import WDKParameter
+from veupathdb.wdk import VEuPathDBClient, WDKParameter, WDKSearchResponse
 
 logger = get_logger(__name__)
 

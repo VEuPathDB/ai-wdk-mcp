@@ -2,14 +2,14 @@
 
 import json
 
+from veupathdb import get_logger
 from veupathdb.errors import VEuPathDBError
-from veupathdb.logging import get_logger
-from veupathdb.wdk.strategy_api import (
+from veupathdb.wdk import (
     StrategyAPI,
+    WDKStrategySummary,
     is_internal_wdk_strategy_name,
     strip_internal_wdk_strategy_name,
 )
-from veupathdb.wdk.wdk_models import WDKStrategySummary
 
 from veupathdb_mcp.controls.control_types import (
     ControlValueFormat,

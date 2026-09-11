@@ -6,8 +6,7 @@ service-layer ``ParamSpecResponse`` shape that transport returns.
 
 from collections.abc import Sequence
 
-from veupathdb.wdk.wdk_models import WDKSearch
-from veupathdb.wdk.wdk_parameters import WDKParameter
+from veupathdb.wdk import WDKParameter, WDKSearch
 
 from veupathdb_mcp.catalog.models import ParamSpecResponse
 

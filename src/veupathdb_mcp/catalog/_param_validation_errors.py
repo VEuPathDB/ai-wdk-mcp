@@ -1,11 +1,11 @@
 """The context a search-parameter validation failure reports."""
 
-from veupathdb.domain.search import SearchContext
-from veupathdb.domain.strategy.validation import StepValidation
+from veupathdb import get_logger
+from veupathdb.domain import SearchContext
+from veupathdb.domain.strategy import StepValidation
 from veupathdb.errors import ValidationError, VEuPathDBError
-from veupathdb.logging import get_logger
 from veupathdb.model import CamelModel
-from veupathdb.wdk._failures import bundle_rows
+from veupathdb.wdk import bundle_rows
 
 from veupathdb_mcp.catalog.discovery_service import DiscoveryService
 

@@ -4,45 +4,36 @@ from collections.abc import Mapping, Sequence
 from typing import cast
 
 from pydantic import BaseModel, Field, JsonValue
-from veupathdb.domain.parameters.phyletic import (
+from veupathdb import JSONObject, get_logger
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import (
+    MAX_NEAREST_ENTRIES,
     NO_CONSTRAINT_PATTERN,
+    PHYLETIC_LIST_PARAMS,
     PhyleticBinding,
     PhyleticTree,
     PhyleticUnresolved,
     derive_binding,
-)
-from veupathdb.domain.parameters.wdk_vocab import (
-    MAX_NEAREST_ENTRIES,
     nearest_entries,
 )
-from veupathdb.domain.search import SearchContext
 from veupathdb.errors import VEuPathDBError, VEuPathDBErrorCode
-from veupathdb.json_types import JSONObject
-from veupathdb.logging import get_logger
-from veupathdb.wdk.phyletic_tree import phyletic_tree_of
-from veupathdb.wdk.wdk_parameters import WDKParameter
+from veupathdb.wdk import WDKParameter, phyletic_tree_of, resolve_record_type
 
 from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,
 )
 from veupathdb_mcp.catalog.param_discovery import fetch_search_details
-from veupathdb_mcp.catalog.param_formatting import (
-    PHYLETIC_LIST_PARAMS,
-    ParameterInfo,
-)
+from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 from veupathdb_mcp.embeddings.embedder import (
     EmbeddingUnavailableError,
     get_embedder,
 )
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
-from veupathdb_mcp.wdk.record_types import resolve_record_type
 
 logger = get_logger(__name__)
 
 # The tree holds hundreds of entries, so the response returns only the best matches.
 _MAX_TREE_MATCHES = 20
-
-_PATTERN_PARAM = "profile_pattern"
 
 PhyleticProposals = Mapping[str, str | list[str] | None]
 
@@ -80,7 +71,7 @@ def is_phyletic_sheet(infos: list[ParameterInfo]) -> bool:
     of the signature: naming neither list is itself an empty selection.
     """
     names = {info.name for info in infos}
-    return {_PATTERN_PARAM, *PHYLETIC_LIST_PARAMS} <= names
+    return frozenset(PhyleticBinding.model_fields) <= names
 
 
 def _nearest_entries(tree: PhyleticTree, unknown: Sequence[str]) -> list[str]:

@@ -3,21 +3,18 @@
 import json
 from dataclasses import dataclass
 
+from veupathdb import JSONObject, get_logger, get_veupathdb_settings, strip_html_tags
 from veupathdb.errors import VEuPathDBError
-from veupathdb.json_types import JSONObject
-from veupathdb.logging import get_logger
-from veupathdb.settings import get_veupathdb_settings
-from veupathdb.text import strip_html_tags
-from veupathdb.wdk.client import VEuPathDBClient
-from veupathdb.wdk.factory import get_wdk_client
-from veupathdb.wdk.site_router import get_site_router
-from veupathdb.wdk.strategy_api.api import StrategyAPI
-from veupathdb.wdk.wdk_models import (
+from veupathdb.wdk import (
+    StrategyAPI,
+    VEuPathDBClient,
     WDKAnswer,
     WDKDatasetConfigIdList,
     WDKDatasetIdListContent,
     WDKRecordInstance,
     WDKSearchConfig,
+    get_site_router,
+    get_wdk_client,
 )
 
 from .organism import normalize_organism

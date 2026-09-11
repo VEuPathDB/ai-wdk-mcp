@@ -13,15 +13,11 @@ from typing import cast
 
 import pytest
 from pydantic import JsonValue
-from veupathdb.domain.parameters.values import MultiPickValue, ParamValue, StringValue
-from veupathdb.domain.search import SearchContext
+from veupathdb import JSONObject
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import MultiPickValue, ParamValue, StringValue
 from veupathdb.errors import ValidationError
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.wdk_parameters import (
-    WDKEnumParam,
-    WDKParameter,
-    WDKStringParam,
-)
+from veupathdb.wdk import WDKEnumParam, WDKParameter, WDKStringParam
 
 from veupathdb_mcp.catalog import param_validation
 

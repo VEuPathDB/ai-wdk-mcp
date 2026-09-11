@@ -5,8 +5,8 @@ from __future__ import annotations
 import hashlib
 import time
 
-from veupathdb.settings import get_veupathdb_settings
-from veupathdb.wdk.auth_login import validate_oauth_token
+from veupathdb import get_veupathdb_settings
+from veupathdb.wdk import validate_oauth_token
 
 _SUBJECT_CACHE_SECONDS = 300.0
 _SUBJECT_CACHE_MAX_ENTRIES = 512

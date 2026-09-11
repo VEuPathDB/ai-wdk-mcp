@@ -3,10 +3,7 @@
 from collections.abc import Mapping, Sequence
 
 from pydantic import BaseModel, ConfigDict, Field
-from veupathdb.domain.parameters.wdk_vocab import (
-    MAX_NEAREST_ENTRIES,
-    nearest_entries,
-)
+from veupathdb.domain.parameters import MAX_NEAREST_ENTRIES, nearest_entries
 
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 

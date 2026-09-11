@@ -3,21 +3,19 @@
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain.strategy.validation import StepValidation
+from veupathdb import JSONObject
+from veupathdb.domain.strategy import StepValidation
 from veupathdb.errors import WDKError
-from veupathdb.json_types import JSONObject
-from veupathdb.wdk.wdk_models import (
+from veupathdb.wdk import (
     NewStepSpec,
     WDKDatasetConfigIdList,
+    WDKEnumParam,
     WDKIdentifier,
+    WDKNumberParam,
+    WDKParameter,
     WDKStepAnalysisType,
     WDKStepAnalysisTypeResponse,
     WDKStepTree,
-)
-from veupathdb.wdk.wdk_parameters import (
-    WDKEnumParam,
-    WDKNumberParam,
-    WDKParameter,
 )
 
 from veupathdb_mcp.wdk import gene_set_steps

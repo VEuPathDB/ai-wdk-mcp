@@ -6,11 +6,10 @@ from typing import Annotated, Literal
 
 from fastmcp.exceptions import ToolError
 from pydantic import Field
-from veupathdb.domain.parameters.values import ParamValue
-from veupathdb.domain.strategy.strategy_ast import StrategyAst
+from veupathdb.domain.parameters import ParamValue
+from veupathdb.domain.strategy import StrategyAst
 from veupathdb.errors import ValidationError, VEuPathDBError
-from veupathdb.wdk.factory import get_strategy_api
-from veupathdb.wdk.wdk_models import WDKAnswer
+from veupathdb.wdk import WDKAnswer, get_strategy_api
 
 from veupathdb_mcp.controls.control_tests import (
     run_positive_negative_controls,

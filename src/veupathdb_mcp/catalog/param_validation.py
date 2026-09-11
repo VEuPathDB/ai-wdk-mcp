@@ -4,31 +4,28 @@ from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import dataclass
 
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
-from veupathdb.domain.parameters.canonicalize import ParameterCanonicalizer
-from veupathdb.domain.parameters.phyletic import (
+from veupathdb import JSONObject, get_logger
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import (
     PHYLETIC_PARAM_NAMES,
-    census_states,
-    validate_phyletic_codes,
-)
-from veupathdb.domain.parameters.specs import (
+    ParameterCanonicalizer,
     ParamSpecNormalized,
+    ParamValue,
+    census_states,
     fill_hidden_required_defaults,
     filled_hidden_defaults,
+    to_decoded_map,
     topological_fill_order,
+    validate_phyletic_codes,
 )
-from veupathdb.domain.parameters.value_codec import to_decoded_map
-from veupathdb.domain.parameters.values import ParamValue
-from veupathdb.domain.search import SearchContext
-from veupathdb.domain.strategy.validation import StepValidation
+from veupathdb.domain.strategy import StepValidation
 from veupathdb.errors import ValidationError, VEuPathDBError
-from veupathdb.json_types import JSONObject
-from veupathdb.logging import get_logger
 from veupathdb.model import CamelModel
-from veupathdb.wdk.factory import get_wdk_client
-from veupathdb.wdk.phyletic_tree import phyletic_tree_of
-from veupathdb.wdk.wdk_models import (
+from veupathdb.wdk import (
     WDKSearchResponse,
     encode_wdk_params,
+    get_wdk_client,
+    phyletic_tree_of,
 )
 
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service

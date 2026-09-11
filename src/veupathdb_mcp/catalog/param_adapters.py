@@ -5,9 +5,8 @@ and return domain types (ParamSpecNormalized). They live in the service
 layer because they bridge integration and domain.
 """
 
-from veupathdb.domain.parameters.specs import ParamSpecNormalized
-from veupathdb.wdk.wdk_models import WDKSearch
-from veupathdb.wdk.wdk_parameters import WDKParameter
+from veupathdb.domain.parameters import ParamSpecNormalized
+from veupathdb.wdk import WDKParameter, WDKSearch
 
 
 def adapt_param_from_wdk(param: WDKParameter) -> ParamSpecNormalized:

@@ -1,11 +1,7 @@
 """Site-search gene fetching and document parsing."""
 
-from veupathdb.text import strip_html_tags
-from veupathdb.wdk.site_router import get_site_router
-from veupathdb.wdk.site_search_client import (
-    DocumentTypeFilter,
-    SiteSearchDocument,
-)
+from veupathdb import strip_html_tags
+from veupathdb.wdk import DocumentTypeFilter, SiteSearchDocument, get_site_router
 
 from .organism import normalize_organism
 from .organisms import list_organisms
