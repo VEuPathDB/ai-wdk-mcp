@@ -22,6 +22,9 @@ jobs:
       - uses: astral-sh/setup-uv@v7
         with:
           version: "0.12.10"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
       # The lock names the client library and nothing else, so a `pathfinder`
       # import fails to resolve here rather than failing a lint rule.
@@ -44,6 +47,13 @@ jobs:
       # alembic chain on it.
       - name: Run the index suite
         run: uv run pytest tests/integration
+
+      # The checkouts the citation check reads are not present here, so a
+      # citation of another repository is reported as unverified, not failed.
+      - name: Check the knowledge bundle
+        run: |
+          node scripts/check-knowledge.mjs
+          node --test scripts/check-knowledge.test.mjs
 
   research-conformance:
     name: Research server admission

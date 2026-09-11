@@ -20,6 +20,12 @@ repos:
         pass_filenames: false
         types: [python]
         stages: [pre-push]
+      - id: knowledge
+        name: check-knowledge
+        entry: bash -c "node scripts/check-knowledge.mjs"
+        language: system
+        pass_filenames: false
+        files: ^(docs/knowledge/|scripts/)
       - id: pytest-integration
         name: pytest (index suite, pgvector testcontainer)
         entry: bash -c "uv run pytest tests/integration"
