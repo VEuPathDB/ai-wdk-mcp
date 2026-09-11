@@ -2,6 +2,9 @@
 
 ## 2026-09-11
 
+- The client pin is `v0.1.0a10`, the release that publishes the signing-key reset, so
+  a host that pins both distributions resolves one client URL. `veupathdb-mcp` is 0.2.0a6.
+
 - This bundle exists from this version on. Before it, the rules that bind these two
   servers to a host - which of their functions a host calls in process, which settings
   sources it installs, which alembic chain it runs, and who owns the embedder drift

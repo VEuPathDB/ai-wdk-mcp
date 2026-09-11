@@ -299,7 +299,7 @@ one lock, so the research image carries dependencies it never imports.
 than a lint rule.
 
 The lock names `veupathdb-py` by the client repository
-(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, `v0.1.0a9`,
+(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, `v0.1.0a10`,
 so a checkout of this repository alone installs and tests. To take a newer client:
 change `tag` in `[tool.uv.sources]`, run `uv lock --upgrade-package veupathdb-py`,
 then `uv sync`. Every name `src/` and `tests/` reads from the client comes from a client
