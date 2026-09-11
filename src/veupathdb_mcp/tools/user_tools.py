@@ -7,10 +7,15 @@ from typing import Annotated, Literal
 from fastmcp.exceptions import ToolError
 from pydantic import Field
 from veupathdb.domain.parameters.values import ParamValue
+from veupathdb.domain.strategy.strategy_ast import StrategyAst
 from veupathdb.errors import ValidationError, VEuPathDBError
+from veupathdb.wdk.factory import get_strategy_api
 from veupathdb.wdk.wdk_models import WDKAnswer
 
-from veupathdb_mcp.controls.control_tests import run_positive_negative_controls
+from veupathdb_mcp.controls.control_tests import (
+    run_positive_negative_controls,
+    run_step_control_tests,
+)
 from veupathdb_mcp.controls.control_types import (
     ControlTestResult,
     IntersectionConfig,
@@ -36,6 +41,15 @@ from veupathdb_mcp.wdk.enrichment.types import (
     BackgroundSource,
     EnrichmentAnalysisType,
 )
+from veupathdb_mcp.wdk.gene_set_steps import (
+    DEFAULT_GENE_SET_STRATEGY_NAME,
+    fetch_gene_ids_from_step,
+    frozen_step_id,
+)
+from veupathdb_mcp.wdk.plan_counts import (
+    DEFAULT_PLAN_COUNTS_STRATEGY_NAME,
+    compute_plan_step_counts,
+)
 from veupathdb_mcp.wdk.step_preview import step_download_url
 from veupathdb_mcp.wdk.step_results import step_results_service
 from veupathdb_mcp.wdk.step_size import (
@@ -46,6 +60,9 @@ from veupathdb_mcp.wdk.step_size import (
 # A call past a bound is refused by name, not narrowed in silence.
 type GeneRecordLimit = Annotated[int, Field(ge=1, le=50)]
 type SampleRecordLimit = Annotated[int, Field(ge=1, le=100)]
+
+
+_NO_CONTROL_GENE = "positive_controls or negative_controls must name a gene id."
 
 
 def _bounded_gene_ids(gene_ids: list[str]) -> list[str]:
@@ -219,8 +236,7 @@ async def run_control_tests_on_search(
     positives = normalize_gene_ids(positive_controls or [])
     negatives = normalize_gene_ids(negative_controls or [])
     if not positives and not negatives:
-        msg = "positive_controls or negative_controls must name a gene id."
-        raise ToolError(msg)
+        raise ToolError(_NO_CONTROL_GENE)
     config = IntersectionConfig(
         site_id=site_id,
         record_type=record_type,
@@ -262,3 +278,97 @@ async def enrich_gene_ids(
         )
     except ValidationError as exc:
         raise ToolError(str(exc)) from exc
+
+
+async def get_step_gene_ids(site_id: str, wdk_step_id: int) -> list[str]:
+    """Read the gene identifiers a step that is already built in WDK holds.
+
+    A step that holds more genes than one call carries is refused by name.
+    Read that one with get_step_download_url.
+
+    Args:
+        site_id: VEuPathDB site, for example 'plasmodb'.
+        wdk_step_id: WDK step id.
+    """
+    gene_ids = await fetch_gene_ids_from_step(
+        get_strategy_api(site_id), step_id=wdk_step_id, limit=MAX_GENE_IDS
+    )
+    if len(gene_ids) > MAX_GENE_IDS:
+        msg = (
+            f"step {wdk_step_id} holds more than {MAX_GENE_IDS} genes; one call "
+            "answers at most that many. Read the whole step with "
+            "get_step_download_url."
+        )
+        raise ToolError(msg)
+    return gene_ids
+
+
+async def run_control_tests_on_step(
+    site_id: str,
+    wdk_step_id: int,
+    positive_controls: list[str] | None = None,
+    negative_controls: list[str] | None = None,
+) -> ControlTestResult:
+    """Intersect a step that is already built in WDK with known control genes.
+
+    Args:
+        site_id: VEuPathDB site, for example 'plasmodb'.
+        wdk_step_id: WDK step id.
+        positive_controls: Gene ids the step should hold.
+        negative_controls: Gene ids the step should not hold.
+    """
+    positives = normalize_gene_ids(positive_controls or [])
+    negatives = normalize_gene_ids(negative_controls or [])
+    if not positives and not negatives:
+        raise ToolError(_NO_CONTROL_GENE)
+    return await run_step_control_tests(
+        site_id,
+        wdk_step_id,
+        positive_controls=positives,
+        negative_controls=negatives,
+    )
+
+
+async def count_plan_steps(
+    site_id: str,
+    plan: StrategyAst,
+    strategy_name: str = DEFAULT_PLAN_COUNTS_STRATEGY_NAME,
+) -> dict[str, int | None]:
+    """Count every step of a plan WDK has not built yet, keyed by plan step id.
+
+    A plan of searches alone is counted without a strategy. Any other plan
+    needs a temporary internal strategy in the calling user's account, which
+    is deleted once its counts are read. A step whose count cannot be read is
+    reported as null.
+
+    Args:
+        site_id: VEuPathDB site, for example 'plasmodb'.
+        plan: The strategy plan to count, in its own step ids.
+        strategy_name: Name of the temporary strategy a combined plan needs.
+    """
+    return await compute_plan_step_counts(plan, site_id, strategy_name=strategy_name)
+
+
+async def create_gene_set_step(
+    site_id: str,
+    gene_ids: list[str],
+    record_type: str = "transcript",
+    strategy_name: str = DEFAULT_GENE_SET_STRATEGY_NAME,
+) -> int | None:
+    """Materialize gene identifiers as a WDK step that holds exactly them.
+
+    Creates a temporary WDK dataset, step and internal strategy in the calling
+    user's account. An empty list creates nothing and answers null.
+
+    Args:
+        site_id: VEuPathDB site, for example 'plasmodb'.
+        gene_ids: The genes the step holds, for example ['PF3D7_1222600'].
+        record_type: Record type. Gene searches are 'transcript'.
+        strategy_name: Name of the internal strategy that holds the step.
+    """
+    return await frozen_step_id(
+        site_id,
+        normalize_gene_ids(gene_ids),
+        record_type,
+        strategy_name=strategy_name,
+    )

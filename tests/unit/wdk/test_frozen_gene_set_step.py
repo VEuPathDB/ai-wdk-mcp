@@ -1,9 +1,13 @@
 """A step that holds exactly the gene ids a set stores, and how it is keyed."""
 
+from collections.abc import Iterator
+from contextlib import contextmanager
 from typing import Any
 
 import pytest
+from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.domain.parameters.values import InputDatasetValue, ParamValue
+from veupathdb.errors import WDKLoginRequiredError
 from veupathdb.wdk.wdk_models import NewStepSpec, WDKIdentifier, WDKStepTree
 
 from veupathdb_mcp.wdk import gene_set_steps
@@ -15,6 +19,19 @@ from veupathdb_mcp.wdk.gene_set_steps import (
 
 GENE_A = "PF3D7_0100100"
 GENE_B = "PF3D7_0200200"
+
+ALICE = "bearer-alice"
+BOB = "bearer-bob"
+
+
+@contextmanager
+def _acting_as(token: str) -> Iterator[None]:
+    """Run the block under the WDK token one account signed in with."""
+    reset = veupathdb_auth_token_ctx.set(token)
+    try:
+        yield
+    finally:
+        veupathdb_auth_token_ctx.reset(reset)
 
 
 class _FakeStrategyAPI:
@@ -44,7 +61,7 @@ class _FakeStrategyAPI:
 
 
 @pytest.fixture
-def api(monkeypatch: pytest.MonkeyPatch) -> _FakeStrategyAPI:
+def api(monkeypatch: pytest.MonkeyPatch) -> Iterator[_FakeStrategyAPI]:
     gene_set_steps._FROZEN_STEPS.clear()
     built = _FakeStrategyAPI()
     monkeypatch.setattr(
@@ -64,28 +81,34 @@ def api(monkeypatch: pytest.MonkeyPatch) -> _FakeStrategyAPI:
         "veupathdb_mcp.wdk.gene_set_steps.build_enrichment_params_from_gene_ids",
         _params,
     )
-    return built
+    with _acting_as(ALICE):
+        yield built
 
 
-class TestTheKeyIsTheMembership:
+class TestTheKeyIsTheAccountAndTheMembership:
     def test_the_same_ids_key_the_same_step(self) -> None:
-        assert frozen_step_cache_key("plasmodb", [GENE_A, GENE_B]) == (
-            frozen_step_cache_key("plasmodb", [GENE_A, GENE_B])
+        assert frozen_step_cache_key(ALICE, "plasmodb", [GENE_A, GENE_B]) == (
+            frozen_step_cache_key(ALICE, "plasmodb", [GENE_A, GENE_B])
         )
 
     def test_order_does_not_make_a_new_step(self) -> None:
-        assert frozen_step_cache_key("plasmodb", [GENE_A, GENE_B]) == (
-            frozen_step_cache_key("plasmodb", [GENE_B, GENE_A])
+        assert frozen_step_cache_key(ALICE, "plasmodb", [GENE_A, GENE_B]) == (
+            frozen_step_cache_key(ALICE, "plasmodb", [GENE_B, GENE_A])
         )
 
     def test_a_different_membership_keys_a_different_step(self) -> None:
-        assert frozen_step_cache_key("plasmodb", [GENE_A]) != (
-            frozen_step_cache_key("plasmodb", [GENE_A, GENE_B])
+        assert frozen_step_cache_key(ALICE, "plasmodb", [GENE_A]) != (
+            frozen_step_cache_key(ALICE, "plasmodb", [GENE_A, GENE_B])
         )
 
     def test_the_same_ids_on_another_site_key_another_step(self) -> None:
-        assert frozen_step_cache_key("plasmodb", [GENE_A]) != (
-            frozen_step_cache_key("toxodb", [GENE_A])
+        assert frozen_step_cache_key(ALICE, "plasmodb", [GENE_A]) != (
+            frozen_step_cache_key(ALICE, "toxodb", [GENE_A])
+        )
+
+    def test_the_same_ids_in_another_account_key_another_step(self) -> None:
+        assert frozen_step_cache_key(ALICE, "plasmodb", [GENE_A]) != (
+            frozen_step_cache_key(BOB, "plasmodb", [GENE_A])
         )
 
 
@@ -121,7 +144,7 @@ class TestTheStepIsHeldByAnInternalStrategy:
         assert api.created_strategy_names == [DEFAULT_GENE_SET_STRATEGY_NAME]
         assert "pathfinder" not in DEFAULT_GENE_SET_STRATEGY_NAME.lower()
 
-    async def test_the_same_membership_reuses_the_step(
+    async def test_the_same_caller_twice_reuses_the_step(
         self, api: _FakeStrategyAPI
     ) -> None:
         first = await frozen_step_id("plasmodb", [GENE_A, GENE_B], "transcript")
@@ -129,3 +152,26 @@ class TestTheStepIsHeldByAnInternalStrategy:
 
         assert first == second
         assert len(api.step_specs) == 1
+
+    async def test_another_account_gets_a_step_of_its_own(
+        self, api: _FakeStrategyAPI
+    ) -> None:
+        """A step id names a step in one account, so the key names the account."""
+        first = await frozen_step_id("plasmodb", [GENE_A, GENE_B], "transcript")
+        with _acting_as(BOB):
+            second = await frozen_step_id("plasmodb", [GENE_A, GENE_B], "transcript")
+
+        assert first != second
+        assert len(api.step_specs) == 2
+
+    async def test_a_call_that_names_no_account_is_refused(
+        self, api: _FakeStrategyAPI
+    ) -> None:
+        reset = veupathdb_auth_token_ctx.set(None)
+        try:
+            with pytest.raises(WDKLoginRequiredError):
+                await frozen_step_id("plasmodb", [GENE_A], "transcript")
+        finally:
+            veupathdb_auth_token_ctx.reset(reset)
+
+        assert api.step_specs == []

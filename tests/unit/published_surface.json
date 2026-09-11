@@ -1,19 +1,16 @@
 {
   "veupathdb_mcp": [
-    "CredentialMode",
-    "DEFAULT_MCP_PATH",
     "MAX_CALL_SECONDS_META_KEY",
-    "McpCredential",
-    "McpSettings",
-    "RESOURCE_NAME",
     "STREAM_PART_META_KEY",
     "ServiceToken",
     "ServiceTokenRegistry",
     "ToolErrorPayload",
+    "tool_error"
+  ],
+  "veupathdb_mcp.auth": [
+    "CredentialMode",
+    "McpCredential",
     "VEuPathDBTokenVerifier",
-    "get_mcp_settings",
-    "tool_error",
-    "use_mcp_settings_source",
     "wdk_identity"
   ],
   "veupathdb_mcp.catalog": [
@@ -165,6 +162,12 @@
     "resolve_gene_ids",
     "stream_site_search_gene_ids"
   ],
+  "veupathdb_mcp.metadata": [
+    "DEFAULT_MCP_PATH",
+    "RESOURCE_NAME",
+    "guarded",
+    "protected_resource_routes"
+  ],
   "veupathdb_mcp.migrate": [
     "OWNED_TABLES",
     "VERSION_TABLE",
@@ -200,6 +203,11 @@
     "WdkIdentity",
     "build_server"
   ],
+  "veupathdb_mcp.settings": [
+    "McpSettings",
+    "get_mcp_settings",
+    "use_mcp_settings_source"
+  ],
   "veupathdb_mcp.tool_meta": [
     "MAX_CALL_SECONDS_META_KEY",
     "STREAM_PART_META_KEY"
@@ -219,12 +227,16 @@
   ],
   "veupathdb_mcp.tools": [
     "browse_search_categories",
+    "count_plan_steps",
+    "create_gene_set_step",
     "enrich_gene_ids",
     "get_ai_expression_summary",
     "get_parameter_options",
     "get_search_overview",
+    "get_search_param_specs",
     "get_step_download_url",
     "get_step_estimated_size",
+    "get_step_gene_ids",
     "get_step_sample_records",
     "list_record_types",
     "list_searches",
@@ -232,9 +244,13 @@
     "lookup_gene_records",
     "lookup_phyletic_codes",
     "resolve_gene_ids_to_records",
+    "resolve_search_parameters",
     "run_control_tests_on_search",
+    "run_control_tests_on_step",
+    "search_catalog_index",
     "search_example_plans",
-    "search_for_searches"
+    "search_for_searches",
+    "validate_search_parameters"
   ],
   "veupathdb_mcp.wdk": [
     "AttributesResponse",
@@ -252,7 +268,9 @@
     "WDK_VOCAB_PARAM_TYPES",
     "build_attribute_list",
     "build_enrichment_params_from_gene_ids",
+    "build_snapshot_from_wdk",
     "build_wdk_step_tree",
+    "canonicalize_synced_parameters",
     "compute_plan_step_counts",
     "encode_vocab_params",
     "encode_vocab_value",
@@ -295,3 +313,4 @@
     "upsert_enrichment_result"
   ]
 }
+

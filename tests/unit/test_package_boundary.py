@@ -111,17 +111,12 @@ def test_the_migration_chain_declares_the_two_tables_it_owns() -> None:
     assert '"embedding_index_entries"' in written
 
 
-# The old environment-variable names, read for one release and then removed.
-CONSUMER_NAME_EXCEPTIONS = {f"{SERVER}.settings"}
-
-
 def test_no_module_names_a_consuming_application() -> None:
     """A shared server states no application's name, in code or in prose."""
     offenders = [
         module.__name__
         for module in _server_modules()
-        if module.__name__ not in CONSUMER_NAME_EXCEPTIONS
-        and "pathfinder" in Path(str(module.__file__)).read_text().lower()
+        if "pathfinder" in Path(str(module.__file__)).read_text().lower()
     ]
 
     assert offenders == []

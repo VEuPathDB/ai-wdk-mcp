@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import inspect
+
 import pytest
 from veupathdb.domain.parameters.values import StringValue
 from veupathdb.wdk.wdk_models import WDKStrategySummary
@@ -109,7 +111,6 @@ def test_gene_sample_attributes_are_requested_for_gene_record_types() -> None:
         "organism",
     ]
     assert gene_sample_attributes("gene") == gene_sample_attributes("transcript")
-    assert gene_sample_attributes(None) == gene_sample_attributes("transcript")
 
 
 def test_gene_sample_attributes_are_absent_for_a_non_gene_record_type() -> None:
@@ -229,3 +230,10 @@ async def test_example_plans_fall_back_to_lexical_ranking_without_embeddings(
     plans = await tool_payloads.rank_example_plans(SITE, "gametocyte", limit=3)
 
     assert [plan["name"] for plan in plans] == ["gametocyte genes"]
+
+
+def test_gene_sample_attributes_takes_the_record_type_the_caller_names() -> None:
+    """No record type stands in for another: the signature admits no absence."""
+    signature = inspect.signature(gene_sample_attributes, eval_str=True)
+
+    assert signature.parameters["record_type"].annotation is str

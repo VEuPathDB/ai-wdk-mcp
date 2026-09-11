@@ -30,7 +30,7 @@ def test_the_wdk_service_tokens_do_not_admit_a_research_call(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Two servers, two secrets: one deployment may run only one of them."""
-    monkeypatch.setenv("PATHFINDER_MCP_SERVICE_TOKENS", f"gene-page:{SECRET}")
+    monkeypatch.setenv("WDK_MCP_SERVICE_TOKENS", f"gene-page:{SECRET}")
 
     assert ResearchSettings().research_service_tokens.tokens == ()
     assert McpSettings().mcp_service_tokens.application_for(SECRET) == "gene-page"

@@ -41,6 +41,10 @@ from veupathdb_mcp.wdk.step_results_models import (
 )
 from veupathdb_mcp.wdk.step_size import StepCountResult, get_estimated_size_for_site
 from veupathdb_mcp.wdk.step_tree import MissingWDKStepIdError, build_wdk_step_tree
+from veupathdb_mcp.wdk.strategy_snapshot import (
+    build_snapshot_from_wdk,
+    canonicalize_synced_parameters,
+)
 
 __all__ = [
     "DEFAULT_GENE_SET_STRATEGY_NAME",
@@ -58,7 +62,9 @@ __all__ = [
     "StepResultsService",
     "build_attribute_list",
     "build_enrichment_params_from_gene_ids",
+    "build_snapshot_from_wdk",
     "build_wdk_step_tree",
+    "canonicalize_synced_parameters",
     "compute_plan_step_counts",
     "encode_vocab_params",
     "encode_vocab_value",

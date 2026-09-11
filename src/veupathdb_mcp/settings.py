@@ -4,10 +4,16 @@ from collections.abc import Callable
 from functools import cached_property, lru_cache
 from pathlib import Path
 
-from pydantic import AliasChoices, Field
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from veupathdb_mcp.service_tokens import ServiceTokenRegistry
+
+__all__ = [
+    "McpSettings",
+    "get_mcp_settings",
+    "use_mcp_settings_source",
+]
 
 DEFAULT_CATALOG_CACHE_DIR = Path("data/catalogs")
 
@@ -28,20 +34,11 @@ class McpSettings(BaseSettings):
     )
 
     # The server's own public URL, and the applications it serves in service
-    # mode. The secrets are separate from the application's own service tokens,
-    # because a credential sent to an MCP server must not authenticate to an API.
-    # The PATHFINDER_ names are read for one release and then removed.
-    wdk_mcp_base_url: str = Field(
-        default="",
-        validation_alias=AliasChoices("WDK_MCP_BASE_URL", "PATHFINDER_MCP_BASE_URL"),
-    )
-    wdk_mcp_service_tokens: str = Field(
-        default="",
-        repr=False,
-        validation_alias=AliasChoices(
-            "WDK_MCP_SERVICE_TOKENS", "PATHFINDER_MCP_SERVICE_TOKENS"
-        ),
-    )
+    # mode. The secrets are separate from a host application's own service
+    # tokens, because a credential sent to an MCP server must not authenticate
+    # to an API.
+    wdk_mcp_base_url: str = ""
+    wdk_mcp_service_tokens: str = Field(default="", repr=False)
 
     # Accounted megabytes of per-site catalogs and semantic indexes one process
     # holds. The least recently used site leaves when the budget is reached.

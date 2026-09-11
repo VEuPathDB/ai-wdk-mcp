@@ -19,6 +19,13 @@ from veupathdb.settings import get_veupathdb_settings
 from veupathdb_mcp.auth import VEuPathDBTokenVerifier
 from veupathdb_mcp.settings import get_mcp_settings
 
+__all__ = [
+    "DEFAULT_MCP_PATH",
+    "RESOURCE_NAME",
+    "guarded",
+    "protected_resource_routes",
+]
+
 RESOURCE_NAME = "veupathdb-wdk-mcp"
 DEFAULT_MCP_PATH = "/mcp"
 

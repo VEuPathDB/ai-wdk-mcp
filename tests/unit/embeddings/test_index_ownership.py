@@ -29,13 +29,13 @@ INDEX_TABLES = {"embedding_vectors", "embedding_index_entries"}
 
 def test_the_index_settings_keep_the_environment_variable_names() -> None:
     assert set(EmbeddingSettings.model_fields) == {
-        "api_debug",
         "database_url",
         "embedding_backend",
         "embedding_batch_size",
         "embedding_input_char_limit",
         "embedding_model",
         "embedding_request_concurrency",
+        "embedding_sql_echo",
         "openai_api_key",
     }
 

@@ -31,7 +31,7 @@ def _own_session() -> AsyncSession:
         _own.maker = async_sessionmaker(
             create_async_engine(
                 settings.database_url,
-                echo=settings.api_debug,
+                echo=settings.embedding_sql_echo,
                 pool_pre_ping=True,
             ),
             class_=AsyncSession,

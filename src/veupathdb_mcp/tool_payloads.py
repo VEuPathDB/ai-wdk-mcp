@@ -40,12 +40,9 @@ _GENE_RECORD_TYPES = frozenset({"gene", "transcript"})
 _GENE_SAMPLE_ATTRIBUTES = ("gene_product", "gene_name", "organism")
 
 
-def gene_sample_attributes(record_type: str | None) -> list[str] | None:
-    """The gene attributes a step read requests, or None to keep it id-only.
-
-    An absent record type counts as the gene record type the app defaults to.
-    """
-    if (record_type or "transcript") in _GENE_RECORD_TYPES:
+def gene_sample_attributes(record_type: str) -> list[str] | None:
+    """The gene attributes a step read requests, or None to keep it id-only."""
+    if record_type in _GENE_RECORD_TYPES:
         return list(_GENE_SAMPLE_ATTRIBUTES)
     return None
 

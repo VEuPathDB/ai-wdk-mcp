@@ -30,22 +30,30 @@ from veupathdb_mcp.tools.catalog_tools import (
     browse_search_categories,
     get_parameter_options,
     get_search_overview,
+    get_search_param_specs,
     list_record_types,
     list_searches,
     list_transforms,
     lookup_phyletic_codes,
+    resolve_search_parameters,
+    search_catalog_index,
     search_example_plans,
     search_for_searches,
+    validate_search_parameters,
 )
 from veupathdb_mcp.tools.user_tools import (
+    count_plan_steps,
+    create_gene_set_step,
     enrich_gene_ids,
     get_ai_expression_summary,
     get_step_download_url,
     get_step_estimated_size,
+    get_step_gene_ids,
     get_step_sample_records,
     lookup_gene_records,
     resolve_gene_ids_to_records,
     run_control_tests_on_search,
+    run_control_tests_on_step,
 )
 
 logger = get_logger(__name__)
@@ -56,8 +64,11 @@ ENRICHMENT_PART_KIND = "data-wdk.enrichment-results"
 
 # Five analysis types run three at a time, and each polls WDK to 300 seconds.
 ENRICHMENT_MAX_CALL_SECONDS = 600
-# The same control machinery the durable step variant estimates at 180 seconds.
+# A control run reads a step preview of up to 50,000 records, or builds one
+# intersection step per control set and reads a count from each.
 CONTROL_TESTS_MAX_CALL_SECONDS = 180
+# A combined plan creates one WDK step per node before it reads a count.
+PLAN_COUNTS_MAX_CALL_SECONDS = 180
 
 _NO_CREDENTIAL = "The call carried no verified credential."
 
@@ -141,12 +152,28 @@ TOOLS: tuple[_ToolRow, ...] = (
     _ToolRow(search_example_plans, _READ),
     _ToolRow(get_search_overview, _READ),
     _ToolRow(get_parameter_options, _READ),
+    _ToolRow(get_search_param_specs, _READ),
+    _ToolRow(resolve_search_parameters, _READ),
+    _ToolRow(validate_search_parameters, _READ),
+    _ToolRow(search_catalog_index, _READ),
     _ToolRow(lookup_gene_records, _READ),
     _ToolRow(get_ai_expression_summary, _READ),
     _ToolRow(resolve_gene_ids_to_records, _READ),
     _ToolRow(get_step_estimated_size, _READ),
     _ToolRow(get_step_sample_records, _READ),
     _ToolRow(get_step_download_url, _READ),
+    _ToolRow(get_step_gene_ids, _READ),
+    _ToolRow(
+        run_control_tests_on_step,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: CONTROL_TESTS_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(
+        count_plan_steps,
+        _ADDITIVE_WRITE,
+        {MAX_CALL_SECONDS_META_KEY: PLAN_COUNTS_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(create_gene_set_step, _ADDITIVE_WRITE),
     _ToolRow(
         run_control_tests_on_search,
         _ADDITIVE_WRITE,
@@ -164,7 +191,7 @@ TOOLS: tuple[_ToolRow, ...] = (
 
 
 def build_server() -> FastMCP[None]:
-    """Build veupathdb-wdk-mcp with its seventeen tools and its per-call guards."""
+    """Build veupathdb-wdk-mcp with its tools and its per-call guards."""
     server: FastMCP[None] = FastMCP(
         name=SERVER_NAME,
         version=__version__,

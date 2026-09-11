@@ -47,26 +47,19 @@ def test_the_server_names_its_own_settings_after_itself(
     assert settings.mcp_service_tokens.application_for(SECRET) == "gene-page"
 
 
-def test_a_deployment_on_the_old_names_still_reads(
+def test_a_variable_named_after_one_host_is_not_read(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """The PATHFINDER_ names are read for one release."""
+    """Each setting answers to one name, and that name states no application."""
+    monkeypatch.delenv("WDK_MCP_BASE_URL", raising=False)
+    monkeypatch.delenv("WDK_MCP_SERVICE_TOKENS", raising=False)
     monkeypatch.setenv("PATHFINDER_MCP_BASE_URL", "https://wdk-mcp.test")
     monkeypatch.setenv("PATHFINDER_MCP_SERVICE_TOKENS", f"gene-page:{SECRET}")
 
     settings = McpSettings()
 
-    assert settings.wdk_mcp_base_url == "https://wdk-mcp.test"
-    assert settings.mcp_service_tokens.application_for(SECRET) == "gene-page"
-
-
-def test_the_new_name_wins_over_the_old_one(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setenv("WDK_MCP_BASE_URL", "https://new.test")
-    monkeypatch.setenv("PATHFINDER_MCP_BASE_URL", "https://old.test")
-
-    assert McpSettings().wdk_mcp_base_url == "https://new.test"
+    assert settings.wdk_mcp_base_url == ""
+    assert settings.mcp_service_tokens.tokens == ()
 
 
 def test_the_server_settings_module_computes_no_path() -> None:

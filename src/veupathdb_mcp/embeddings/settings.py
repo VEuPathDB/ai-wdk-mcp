@@ -23,7 +23,9 @@ class EmbeddingSettings(BaseSettings):
     )
 
     database_url: str = Field(default="", repr=False)
-    api_debug: bool = False
+    # Statement echo on the engine this index builds. A host's own echo flag
+    # drives a different engine.
+    embedding_sql_echo: bool = False
 
     openai_api_key: str = Field(default="", repr=False)
 

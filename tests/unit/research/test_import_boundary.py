@@ -61,3 +61,30 @@ print(sorted(roots & {"sqlalchemy", "asyncpg", "pgvector"}))
     )
 
     assert _probe_output(probe) == "[]"
+
+
+def test_the_research_entrypoint_loads_no_wdk_credential_module() -> None:
+    """The root package holds only what both servers share."""
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            """
+import sys
+import veupathdb_mcp.research.__main__
+
+credential_only = (
+    "veupathdb_mcp.auth",
+    "veupathdb_mcp.identity",
+    "veupathdb_mcp.metadata",
+    "veupathdb_mcp.settings",
+)
+print(sorted(name for name in sys.modules if name.startswith(credential_only)))
+""",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert _probe_output(probe) == "[]"

@@ -21,6 +21,10 @@ links to, and non-ASCII punctuation.
 
 - [Backlog](backlog/) - everything outstanding, ranked by what unblocks a second host first
 
+## Decisions
+
+- [Decisions](decisions/) - choices with a real alternative, each naming what was rejected
+
 ## Conventions
 
 - [Conventions](conventions/) - how this bundle is kept honest

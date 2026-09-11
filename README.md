@@ -26,14 +26,14 @@ than from a file inside it.
 
 | package | what it publishes |
 | --- | --- |
-| `veupathdb_mcp` | the version, the credential modes, the settings, the tool error payload, the tool metadata keys |
+| `veupathdb_mcp` | the version, the service-token registry, the tool error payload, the tool metadata keys |
 | `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation |
 | `veupathdb_mcp.controls` | the control-test runners, their context and their result shapes |
 | `veupathdb_mcp.embeddings` | the embedder, the two index tables, the record manager and the two indexes |
 | `veupathdb_mcp.gene_lookup` | text lookup, id resolution and the organism list |
 | `veupathdb_mcp.research` | the research server, its settings and its two tools |
-| `veupathdb_mcp.tools` | the seventeen served tools |
-| `veupathdb_mcp.wdk` | step trees, step results, sizes, previews, expression and parameter encoding |
+| `veupathdb_mcp.tools` | the twenty-five served tools |
+| `veupathdb_mcp.wdk` | step trees, step results, sizes, previews, expression, parameter encoding, and the AST a saved strategy converts into |
 | `veupathdb_mcp.wdk.enrichment` | over-representation analysis, its result shapes and its parser |
 
 `tests/unit/test_cold_import.py` holds the line: it imports every module of the
@@ -46,21 +46,24 @@ and `veupathdb_mcp.tool_payloads` flattens that into `ControlOutcome` for a host
 that renders one row. WDK parameter encoding is `veupathdb_mcp.wdk.params`, read
 by the parent package rather than by way of a subpackage.
 
-The WDK server, the migration chain and the tool payloads stay off the root
-surface, because the research process imports the root package and carries
-neither a WDK catalog nor a database. Each publishes its own surface instead,
-read by module name:
+The root package holds what both servers share, and nothing else: the research
+process imports it and carries neither a WDK account, a WDK catalog nor a
+database. Everything of the WDK side publishes its own surface instead, read by
+module name:
 
 | module | what it publishes |
 | --- | --- |
+| `veupathdb_mcp.auth` | the credential modes, the verified credential, the bearer verifier and the WDK identity |
+| `veupathdb_mcp.metadata` | the resource name, the MCP path, the RFC 9728 routes and the transport gate |
 | `veupathdb_mcp.migrate` | the version table, the tables this distribution owns, the autogenerate filter and the upgrade |
 | `veupathdb_mcp.server` | the WDK server name, its tool list, its guards and its builder |
+| `veupathdb_mcp.settings` | the WDK server's settings, the reader, and the source a host installs |
 | `veupathdb_mcp.tool_payloads` | the flat control outcome, the download links, the catalog listings and the plan ranking |
 
 `veupathdb_mcp.tool_meta` declares a surface too, and the root re-exports both
 of its names.
 
-`tests/unit/published_surface.json` is the checked-in copy of all thirteen
+`tests/unit/published_surface.json` is the checked-in copy of all sixteen
 surfaces, so a name leaves one only by editing that file.
 
 ## Why two servers in one distribution
@@ -82,26 +85,37 @@ The two servers share no setting: the WDK server reads `WDK_MCP_*` and
 `VEUPATHDB_*`, the research server reads `RESEARCH_MCP_*`. A secret configured
 for one admits nothing on the other.
 
-## The seventeen WDK tools
+## The twenty-five WDK tools
 
 Catalog reads (service or user credential):
 
 `list_record_types`, `search_for_searches`, `browse_search_categories`,
 `list_searches`, `list_transforms`, `lookup_phyletic_codes`,
-`search_example_plans`, `get_search_overview`, `get_parameter_options`.
+`search_example_plans`, `get_search_overview`, `get_parameter_options`,
+`get_search_param_specs`, `resolve_search_parameters`,
+`validate_search_parameters`, `search_catalog_index`.
 
-Record, step and evidence reads (the VEuPathDB user whose bearer the call
+Record, step and evidence calls (the VEuPathDB user whose bearer the call
 carries):
 
 `lookup_gene_records`, `resolve_gene_ids_to_records`,
 `get_ai_expression_summary`, `get_step_estimated_size`,
-`get_step_sample_records`, `get_step_download_url`,
-`run_control_tests_on_search`, `enrich_gene_ids`.
+`get_step_sample_records`, `get_step_download_url`, `get_step_gene_ids`,
+`run_control_tests_on_step`, `run_control_tests_on_search`, `count_plan_steps`,
+`create_gene_set_step`, `enrich_gene_ids`.
 
-The last two declare a call budget over the default in tool `_meta`
-(`org.veupathdb.assistant/maxCallSeconds`), and `enrich_gene_ids` also declares
-the stream part its result carries
-(`org.veupathdb.assistant/streamPart`).
+Four of them declare a call budget over the default in tool `_meta`
+(`org.veupathdb.assistant/maxCallSeconds`): the two control runs, the plan
+count, and `enrich_gene_ids`, which also declares the stream part its result
+carries (`org.veupathdb.assistant/streamPart`).
+
+`count_plan_steps` and `create_gene_set_step` write into the calling user's
+account, which is what their `readOnlyHint: false` states. Both hold their work
+in an internal strategy, and the plan count deletes what it created.
+
+A published call this list does not serve is an in-process import, and
+`docs/knowledge/decisions/what-the-wire-serves-and-what-a-host-imports.md`
+states the property that decides which is which.
 
 ## The two research tools
 
@@ -152,9 +166,11 @@ because a document naming the wrong host sends a client to the wrong authority.
 | `SITE_CATALOG_BUDGET_MB` | accounted megabytes of catalogs and indexes one process holds (default 512) |
 | `CATALOG_REFRESH_ENABLED` | whether this process rebuilds a stale catalog |
 | `EMBEDDING_INDEX_SYNC_ENABLED` | whether this process writes vectors, or only searches what another wrote |
+| `EMBEDDING_SQL_ECHO` | whether the index's own engine echoes its statements |
 
-`PATHFINDER_MCP_BASE_URL` and `PATHFINDER_MCP_SERVICE_TOKENS` are read as the
-old names of the first two for one release, and then removed.
+Every setting answers to that one name. A host extends `McpSettings` and
+`EmbeddingSettings` with its own model, so a field neither declares is the
+host's alone and drives the host's own code.
 
 ### The research server
 
@@ -178,9 +194,10 @@ A control run, an enrichment run, a gene-set step and a plan count each hold
 their work in an internal WDK strategy under the caller's own account. The
 host names them: `IntersectionConfig.internal_strategy_name`,
 `EnrichmentService(strategy_name=...)`, `frozen_step_id(strategy_name=...)`
-and `compute_plan_step_counts(strategy_name=...)`. The defaults name no
-application (`"control test"`, `"enrichment analysis"`, `"gene set"`,
-`"step counts"`).
+and `compute_plan_step_counts(strategy_name=...)`. A wire caller names the last
+two through the `strategy_name` argument of `create_gene_set_step` and
+`count_plan_steps`. The defaults name no application (`"control test"`,
+`"enrichment analysis"`, `"gene set"`, `"step counts"`).
 
 A control run's cleanup matches the name the run wrote, so it takes the same
 `IntersectionConfig` the run took:
@@ -249,9 +266,12 @@ pytest --pyargs mcp_conformance --mcp-endpoint http://localhost:8100/mcp --mcp-b
 pytest --pyargs mcp_conformance --mcp-endpoint http://localhost:8110/mcp --mcp-bearer "$RESEARCH_TOKEN"
 ```
 
-The research lane runs in this repository's own CI, because the server needs no
-site, no database and no VEuPathDB account. The WDK lane runs where a WDK
-account exists.
+Both lanes run in this repository's own CI, on every push, at one conformance
+pin. Neither needs a VEuPathDB account: the secret a lane sends is a service
+token the deployment itself issues, and the suite calls a tool only with
+arguments the runner supplies. A lane that supplies sample arguments, a second
+identity and an account-state hook reads the same server more deeply, and that
+lane belongs where a WDK account exists.
 
 ## Gates
 

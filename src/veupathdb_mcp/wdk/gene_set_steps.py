@@ -5,8 +5,9 @@ from dataclasses import dataclass
 from typing import Literal
 
 from cachetools import LRUCache
+from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.domain.parameters.values import InputDatasetValue, ParamValue
-from veupathdb.errors import VEuPathDBError
+from veupathdb.errors import VEuPathDBError, WDKLoginRequiredError
 from veupathdb.logging import get_logger
 from veupathdb.wdk.factory import (
     get_strategy_api,
@@ -75,12 +76,18 @@ async def resolve_root_step_id(api: StrategyAPI, *, strategy_id: int) -> int | N
     return strategy.root_step_id
 
 
-async def fetch_gene_ids_from_step(api: StrategyAPI, *, step_id: int) -> list[str]:
-    """Fetch all gene IDs from a WDK step via the standard report endpoint."""
+async def fetch_gene_ids_from_step(
+    api: StrategyAPI, *, step_id: int, limit: int | None = None
+) -> list[str]:
+    """Fetch gene IDs from a WDK step via the standard report endpoint.
+
+    ``limit`` asks for one id more than the bound, so a caller can tell a step
+    that fits from one that does not. None asks for every id the step holds.
+    """
     answer = await api.get_step_answer(
         step_id,
         attributes=["primary_key"],
-        pagination={"offset": 0, "numRecords": -1},
+        pagination={"offset": 0, "numRecords": -1 if limit is None else limit + 1},
     )
     return extract_record_ids(answer.records)
 
@@ -224,14 +231,26 @@ async def _extract_step_search_context(
     return search_name, record_type, parameters
 
 
-def frozen_step_cache_key(site_id: str, gene_ids: list[str]) -> str:
-    """Key a materialized step by the membership it holds.
+def _calling_account() -> str:
+    """The account a WDK write of this call lands in, named without its token.
 
-    Membership is a set, so order does not make a new step. The site is part
-    of the key because the same locus tag names a different record elsewhere.
+    WDK reads the account from the request's own token, so the token is what
+    tells two callers apart. The digest keeps the credential out of the key.
+    """
+    token = veupathdb_auth_token_ctx.get()
+    if not token:
+        raise WDKLoginRequiredError
+    return hashlib.sha256(token.encode()).hexdigest()
+
+
+def frozen_step_cache_key(account: str, site_id: str, gene_ids: list[str]) -> str:
+    """Key a materialized step by the account that holds it and its membership.
+
+    Membership is a set, so order does not make a new step. A step id names a
+    step in one account on one site, so both are part of the key.
     """
     digest = hashlib.sha256("\n".join(sorted(set(gene_ids))).encode()).hexdigest()
-    return f"{site_id}:{digest}"
+    return f"{account}:{site_id}:{digest}"
 
 
 async def frozen_step_id(
@@ -246,11 +265,12 @@ async def frozen_step_id(
     A step browsed through the search it came from shows whatever that search
     returns now. Materializing the ids gives WDK something to report
     attributes from without letting it decide who is in the set.
-    ``strategy_name`` names the internal strategy that holds the step.
+    ``strategy_name`` names the internal strategy that holds the step. A call
+    that carries no WDK credential is refused, because no account holds it.
     """
     if not gene_ids:
         return None
-    key = frozen_step_cache_key(site_id, gene_ids)
+    key = frozen_step_cache_key(_calling_account(), site_id, gene_ids)
     cached: int | None = _FROZEN_STEPS.get(key)
     if cached is not None:
         return cached

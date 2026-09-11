@@ -16,6 +16,13 @@ from veupathdb_mcp.settings import get_mcp_settings
 
 logger = get_logger(__name__)
 
+__all__ = [
+    "CredentialMode",
+    "McpCredential",
+    "VEuPathDBTokenVerifier",
+    "wdk_identity",
+]
+
 _NO_REGISTERED_USER = "the bearer names no registered VEuPathDB user"
 
 

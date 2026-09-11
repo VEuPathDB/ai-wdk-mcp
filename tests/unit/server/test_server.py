@@ -13,21 +13,47 @@ from mcp.server.auth.middleware.auth_context import auth_context_var
 from mcp.server.auth.middleware.bearer_auth import AuthenticatedUser
 from mcp.types import TextContent, Tool
 from veupathdb.auth_context import veupathdb_auth_token_ctx
+from veupathdb.domain.parameters.values import (
+    InputDatasetValue,
+    ParamValue,
+    StringValue,
+)
+from veupathdb.domain.search import SearchContext
+from veupathdb.domain.strategy.ast import StrategyStepNode
+from veupathdb.domain.strategy.strategy_ast import StrategyAst
+from veupathdb.errors import ValidationError
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk.ai_expression import AiExpressionReport
+from veupathdb.wdk.wdk_models import (
+    NewStepSpec,
+    WDKIdentifier,
+    WDKSearch,
+    WDKStepTree,
+)
+from veupathdb.wdk.wdk_parameters import WDKStringParam
 
 from veupathdb_mcp import server
 from veupathdb_mcp.auth import CredentialMode, McpCredential
-from veupathdb_mcp.catalog import sites
+from veupathdb_mcp.catalog import search_inspection, sites
 from veupathdb_mcp.catalog.models import RecordTypeInfo
+from veupathdb_mcp.catalog.overview_formatting import SearchOverviewResult
+from veupathdb_mcp.catalog.param_dag import ResolvedParams, UnknownParameterError
+from veupathdb_mcp.catalog.param_intent import ParamIntent
+from veupathdb_mcp.catalog.param_validation import ValidatedParams
+from veupathdb_mcp.catalog.search_inspection import (
+    SearchInspection,
+    UnknownSearchError,
+)
 from veupathdb_mcp.controls.control_types import ControlTestResult
+from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
+from veupathdb_mcp.embeddings.record_manager import IndexHit
 from veupathdb_mcp.gene_lookup import GeneResolveResult
 from veupathdb_mcp.tool_meta import (
     MAX_CALL_SECONDS_META_KEY,
     STREAM_PART_META_KEY,
 )
-from veupathdb_mcp.tools import user_tools
-from veupathdb_mcp.wdk import ai_expression, step_preview
+from veupathdb_mcp.tools import catalog_tools, user_tools
+from veupathdb_mcp.wdk import ai_expression, gene_set_steps, step_preview
 
 SITE = "plasmodb"
 
@@ -55,6 +81,14 @@ EXPECTED_ANNOTATIONS: dict[str, dict[str, bool]] = {
     "get_step_estimated_size": READ_ONLY,
     "get_step_sample_records": READ_ONLY,
     "get_step_download_url": READ_ONLY,
+    "get_search_param_specs": READ_ONLY,
+    "resolve_search_parameters": READ_ONLY,
+    "validate_search_parameters": READ_ONLY,
+    "search_catalog_index": READ_ONLY,
+    "get_step_gene_ids": READ_ONLY,
+    "run_control_tests_on_step": READ_ONLY,
+    "count_plan_steps": ADDITIVE_WRITE,
+    "create_gene_set_step": ADDITIVE_WRITE,
     "run_control_tests_on_search": ADDITIVE_WRITE,
     "enrich_gene_ids": ADDITIVE_WRITE,
 }
@@ -72,10 +106,12 @@ def _service_credential() -> McpCredential:
     )
 
 
-def _user_credential(token: str) -> McpCredential:
+def _user_credential(
+    token: str, subject: str = "researcher@example.org"
+) -> McpCredential:
     return McpCredential(
         token=token,
-        client_id="researcher@example.org",
+        client_id=subject,
         scopes=[],
         mode=CredentialMode.VEUPATHDB_USER,
     )
@@ -104,7 +140,7 @@ def _error_text(result: CallToolResult) -> str:
     )
 
 
-async def test_the_served_inventory_is_the_published_seventeen() -> None:
+async def test_the_served_inventory_is_the_published_one() -> None:
     tools = await _list_tools()
 
     assert sorted(tools) == sorted(EXPECTED_ANNOTATIONS)
@@ -456,3 +492,447 @@ async def test_an_out_of_bounds_gene_list_is_refused_naming_gene_ids() -> None:
 
     assert result.is_error
     assert "gene_ids" in _error_text(result)
+
+
+async def test_a_param_spec_call_answers_from_the_search_inspection(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def inspect(
+        site_id: str,
+        search_name: str,
+        *,
+        record_type: str | None = None,
+        query: str | None = None,
+    ) -> SearchInspection:
+        del site_id, query
+        assert search_name == "GenesByMolecularWeight"
+        assert record_type is None
+        return SearchInspection(
+            record_type="transcript",
+            definition=WDKSearch(
+                url_segment=search_name,
+                parameters=[
+                    WDKStringParam(name="min_molecular_weight", is_number=True)
+                ],
+            ),
+            overview=SearchOverviewResult(
+                search_name=search_name,
+                display_name=search_name,
+                description="",
+                record_type="transcript",
+            ),
+        )
+
+    monkeypatch.setattr(search_inspection, "inspect_search", inspect)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "get_search_param_specs",
+            {"site_id": SITE, "search_name": "GenesByMolecularWeight"},
+        )
+
+    assert result.structured_content is not None
+    specs = result.structured_content["result"]
+    assert [spec["name"] for spec in specs] == ["min_molecular_weight"]
+
+
+async def test_an_unknown_search_is_a_tool_error_that_names_the_search(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def refuse(
+        site_id: str,
+        search_name: str,
+        *,
+        record_type: str | None = None,
+        query: str | None = None,
+    ) -> SearchInspection:
+        del site_id, record_type, query
+        raise UnknownSearchError(search_name, ["GenesByMolecularWeight"])
+
+    monkeypatch.setattr(search_inspection, "inspect_search", refuse)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "get_search_param_specs",
+            {"site_id": SITE, "search_name": "GenesByMolecularWeigth"},
+            raise_on_error=False,
+        )
+
+    assert result.is_error
+    text = _error_text(result)
+    assert text.startswith("search_name is not on this site.")
+    assert "Did you mean: ['GenesByMolecularWeight']?" in text
+
+
+async def test_a_validation_call_answers_from_the_validation_service(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seen: list[dict[str, ParamValue]] = []
+
+    async def validate(
+        ctx: SearchContext,
+        *,
+        parameters: dict[str, ParamValue],
+        callbacks: object,
+    ) -> ValidatedParams:
+        del callbacks
+        assert ctx.site_id == SITE
+        assert ctx.search_name == "GenesByText"
+        seen.append(parameters)
+        return ValidatedParams(params=parameters, record_class="transcript")
+
+    monkeypatch.setattr(catalog_tools, "validate_parameters", validate)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "validate_search_parameters",
+            {
+                "site_id": SITE,
+                "search_name": "GenesByText",
+                "parameter_values": {
+                    "text_expression": StringValue(value="kinase").model_dump(
+                        mode="json"
+                    )
+                },
+            },
+        )
+
+    assert seen == [{"text_expression": StringValue(value="kinase")}]
+    assert result.structured_content is not None
+    assert result.structured_content["recordClass"] == "transcript"
+
+
+async def test_a_validation_refusal_is_a_tool_error_that_names_its_cause(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def refuse(
+        ctx: SearchContext,
+        *,
+        parameters: dict[str, ParamValue],
+        callbacks: object,
+    ) -> ValidatedParams:
+        del ctx, parameters, callbacks
+        raise ValidationError(title="Invalid", detail="organism is required")
+
+    monkeypatch.setattr(catalog_tools, "validate_parameters", refuse)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "validate_search_parameters",
+            {"site_id": SITE, "search_name": "GenesByTaxon", "parameter_values": {}},
+            raise_on_error=False,
+        )
+
+    assert result.is_error
+    assert "organism is required" in _error_text(result)
+
+
+async def test_an_index_call_answers_from_the_record_manager(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def search(index_id: str, query: str, top_k: int) -> list[IndexHit]:
+        assert index_id == "catalog:plasmodb"
+        assert (query, top_k) == ("kinase", 2)
+        return [IndexHit(entry_id="transcript/GenesByText", similarity=0.75)]
+
+    monkeypatch.setattr(catalog_tools, "search_index", search)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "search_catalog_index",
+            {"site_id": SITE, "query": "kinase", "top_k": 2},
+        )
+
+    assert result.structured_content == {
+        "result": [{"entry_id": "transcript/GenesByText", "similarity": 0.75}]
+    }
+
+
+async def test_an_unavailable_index_is_a_tool_error_that_names_the_index(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def refuse(index_id: str, query: str, top_k: int) -> list[IndexHit]:
+        del index_id, query, top_k
+        msg = "the store refused the connection"
+        raise SemanticIndexUnavailableError(msg)
+
+    monkeypatch.setattr(catalog_tools, "search_index", refuse)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "search_catalog_index",
+            {"site_id": SITE, "query": "kinase"},
+            raise_on_error=False,
+        )
+
+    assert result.is_error
+    assert "index is unavailable" in _error_text(result)
+
+
+async def test_a_step_gene_read_answers_from_the_strategy_api(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def fetch(
+        api: object, *, step_id: int, limit: int | None = None
+    ) -> list[str]:
+        del api
+        assert (step_id, limit) == (42, 200)
+        return ["PF3D7_1222600", "PF3D7_0709000"]
+
+    monkeypatch.setattr(user_tools, "get_strategy_api", lambda site_id: site_id)
+    monkeypatch.setattr(user_tools, "fetch_gene_ids_from_step", fetch)
+
+    async with _served(_user_credential("user-bearer")) as client:
+        result = await client.call_tool(
+            "get_step_gene_ids", {"site_id": SITE, "wdk_step_id": 42}
+        )
+
+    assert result.structured_content == {"result": ["PF3D7_1222600", "PF3D7_0709000"]}
+
+
+async def test_a_step_past_the_gene_bound_is_refused_naming_the_download(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The wire answer is bounded, and a step past the bound is refused by name."""
+
+    async def fetch(
+        api: object, *, step_id: int, limit: int | None = None
+    ) -> list[str]:
+        del api, step_id
+        assert limit == 200
+        return [f"PF3D7_{index:06d}" for index in range(limit + 1)]
+
+    monkeypatch.setattr(user_tools, "get_strategy_api", lambda site_id: site_id)
+    monkeypatch.setattr(user_tools, "fetch_gene_ids_from_step", fetch)
+
+    async with _served(_user_credential("user-bearer")) as client:
+        result = await client.call_tool(
+            "get_step_gene_ids",
+            {"site_id": SITE, "wdk_step_id": 42},
+            raise_on_error=False,
+        )
+
+    assert result.is_error
+    text = _error_text(result)
+    assert "200" in text
+    assert "get_step_download_url" in text
+
+
+async def test_a_step_control_run_answers_from_the_control_test_service(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def run(
+        site_id: str,
+        wdk_step_id: int,
+        positive_controls: list[str] | None = None,
+        negative_controls: list[str] | None = None,
+    ) -> ControlTestResult:
+        del negative_controls
+        assert (site_id, wdk_step_id) == (SITE, 42)
+        assert positive_controls == ["PF3D7_1222600"]
+        return ControlTestResult(site_id=site_id, record_type="transcript")
+
+    monkeypatch.setattr(user_tools, "run_step_control_tests", run)
+
+    async with _served(_user_credential("user-bearer")) as client:
+        result = await client.call_tool(
+            "run_control_tests_on_step",
+            {
+                "site_id": SITE,
+                "wdk_step_id": 42,
+                "positive_controls": [" PF3D7_1222600 "],
+            },
+        )
+
+    assert result.structured_content is not None
+    assert result.structured_content["siteId"] == SITE
+
+
+async def test_a_step_control_run_without_a_control_is_refused() -> None:
+    async with _served(_user_credential("user-bearer")) as client:
+        result = await client.call_tool(
+            "run_control_tests_on_step",
+            {"site_id": SITE, "wdk_step_id": 42},
+            raise_on_error=False,
+        )
+
+    assert result.is_error
+    assert "positive_controls" in _error_text(result)
+
+
+async def test_a_plan_count_call_answers_from_the_plan_count_service(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seen: list[str] = []
+
+    async def counts(
+        payload: StrategyAst,
+        site_id: str,
+        *,
+        strategy_name: str,
+    ) -> dict[str, int | None]:
+        del site_id
+        seen.append(strategy_name)
+        return {step.id: None for step in [payload.root]} | {"g1": 132}
+
+    monkeypatch.setattr(user_tools, "compute_plan_step_counts", counts)
+
+    plan = StrategyAst(
+        record_type="transcript",
+        root=StrategyStepNode(id="g1", search_name="GenesByText"),
+    )
+    async with _served(_user_credential("user-bearer")) as client:
+        result = await client.call_tool(
+            "count_plan_steps",
+            {"site_id": SITE, "plan": plan.model_dump(by_alias=True, mode="json")},
+        )
+
+    assert seen == ["step counts"]
+    assert result.structured_content == {"g1": 132}
+
+
+async def test_a_gene_set_step_call_answers_from_the_frozen_step_service(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seen: list[list[str]] = []
+
+    async def frozen(
+        site_id: str,
+        gene_ids: list[str],
+        record_type: str,
+        *,
+        strategy_name: str,
+    ) -> int | None:
+        del site_id, record_type
+        assert strategy_name == "gene set"
+        seen.append(gene_ids)
+        return 4242
+
+    monkeypatch.setattr(user_tools, "frozen_step_id", frozen)
+
+    async with _served(_user_credential("user-bearer")) as client:
+        result = await client.call_tool(
+            "create_gene_set_step",
+            {"site_id": SITE, "gene_ids": [" PF3D7_1222600 ", "PF3D7_1222600"]},
+        )
+
+    assert seen == [["PF3D7_1222600"]]
+    assert result.structured_content == {"result": 4242}
+
+
+class _FakeStepApi:
+    """The WDK step and strategy writes a frozen gene set step makes."""
+
+    def __init__(self, first_id: int) -> None:
+        self.next_id = first_id
+
+    async def create_step(self, spec: NewStepSpec, record_type: str) -> WDKIdentifier:
+        del spec, record_type
+        self.next_id += 1
+        return WDKIdentifier(id=self.next_id)
+
+    async def create_strategy(
+        self,
+        step_tree: WDKStepTree,
+        name: str,
+        description: str | None = None,
+        **kwargs: Any,
+    ) -> WDKIdentifier:
+        del step_tree, name, description, kwargs
+        return WDKIdentifier(id=9000)
+
+
+async def test_two_bearers_with_the_same_genes_get_two_gene_set_steps(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A step id names a step in one account, so no caller reads another's step."""
+    api = _FakeStepApi(600)
+
+    async def params(
+        site_id: str, gene_ids: list[str]
+    ) -> tuple[str, dict[str, ParamValue], str]:
+        del site_id, gene_ids
+        return (
+            "GeneByLocusTag",
+            {"ds_gene_ids": InputDatasetValue(dataset_id="ds-1")},
+            "transcript",
+        )
+
+    gene_set_steps._FROZEN_STEPS.clear()
+    monkeypatch.setattr(gene_set_steps, "get_strategy_api", lambda site_id: api)
+    monkeypatch.setattr(gene_set_steps, "build_enrichment_params_from_gene_ids", params)
+
+    arguments = {"site_id": SITE, "gene_ids": ["PF3D7_1222600"]}
+    async with _served(_user_credential("alice-bearer", "alice@example.org")) as client:
+        alice = await client.call_tool("create_gene_set_step", arguments)
+        again = await client.call_tool("create_gene_set_step", arguments)
+    async with _served(_user_credential("bob-bearer", "bob@example.org")) as client:
+        bob = await client.call_tool("create_gene_set_step", arguments)
+
+    assert alice.structured_content == {"result": 601}
+    assert again.structured_content == {"result": 601}
+    assert bob.structured_content == {"result": 602}
+
+
+async def test_a_binding_call_answers_from_the_parameter_walk(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seen: list[tuple[str, dict[str, str | list[str]] | None]] = []
+
+    async def resolve(
+        *,
+        fetch_at: object,
+        intent: ParamIntent,
+        overrides: dict[str, str | list[str]] | None = None,
+    ) -> ResolvedParams:
+        del fetch_at
+        seen.append((intent.text, overrides))
+        return ResolvedParams(params={"organism": StringValue(value="P. falciparum")})
+
+    monkeypatch.setattr(catalog_tools, "resolve_params_with_intent", resolve)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "resolve_search_parameters",
+            {
+                "site_id": SITE,
+                "search_name": "GenesByTaxon",
+                "criterion": "falciparum genes",
+                "overrides": {"organism": "P. falciparum"},
+            },
+        )
+
+    assert seen == [("falciparum genes", {"organism": "P. falciparum"})]
+    assert result.structured_content is not None
+    assert result.structured_content["openSlots"] == []
+
+
+async def test_an_override_that_names_no_parameter_is_a_tool_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def refuse(
+        *,
+        fetch_at: object,
+        intent: ParamIntent,
+        overrides: dict[str, str | list[str]] | None = None,
+    ) -> ResolvedParams:
+        del fetch_at, intent, overrides
+        raise UnknownParameterError(["orgnism"], ["organism"])
+
+    monkeypatch.setattr(catalog_tools, "resolve_params_with_intent", refuse)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "resolve_search_parameters",
+            {
+                "site_id": SITE,
+                "search_name": "GenesByTaxon",
+                "overrides": {"orgnism": "P. falciparum"},
+            },
+            raise_on_error=False,
+        )
+
+    assert result.is_error
+    assert _error_text(result) == (
+        "No such parameter(s) on this search: ['orgnism']. Valid names: ['organism']."
+    )

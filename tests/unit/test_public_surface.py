@@ -24,10 +24,14 @@ PACKAGES = (
 )
 
 # The root modules a host reads by name. They stay off the root surface: an
-# eager re-export would pull alembic and the catalog into the research process.
+# eager re-export would pull the WDK credential path, alembic and the catalog
+# into the research process.
 MODULES = (
+    "veupathdb_mcp.auth",
+    "veupathdb_mcp.metadata",
     "veupathdb_mcp.migrate",
     "veupathdb_mcp.server",
+    "veupathdb_mcp.settings",
     "veupathdb_mcp.tool_meta",
     "veupathdb_mcp.tool_payloads",
 )
