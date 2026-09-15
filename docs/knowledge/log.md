@@ -2,6 +2,11 @@
 
 ## 2026-09-15
 
+- `veupathdb-mcp` is 0.2.0a10. With `RESEARCH_MCP_BRAVE_SEARCH_API_KEY` set, the web tool
+  asks the Brave Search API before any scraped engine and the served answer carries what
+  the call cost (`costUsd`); see
+  [A keyed engine answers first and prices the call](decisions/a-keyed-engine-answers-first-and-prices-the-call.md).
+
 - `veupathdb-mcp` is 0.2.0a9. A literature record with an identifier and no abstract that
   describes it ranks below one that has both, so a one-page venue item whose title repeats
   the query no longer leads; see

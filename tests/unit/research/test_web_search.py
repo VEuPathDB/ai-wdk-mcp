@@ -6,6 +6,8 @@ carries the text the summary would.
 
 from __future__ import annotations
 
+from decimal import Decimal
+
 import pytest
 from ddgs.exceptions import DDGSException
 from veupathdb.errors import ExternalServiceError
@@ -102,3 +104,97 @@ async def test_an_all_blocked_search_raises_with_every_engine_named(
     message = str(refusal.value)
     assert [engine for engine in search.TEXT_ENGINES if engine not in message] == []
     assert "refused" in message
+
+
+BRAVE_ROWS = [
+    {
+        "title": "Circumsporozoite protein - Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Circumsporozoite_protein",
+        "description": "The circumsporozoite protein is the major surface antigen of the sporozoite.",
+    }
+]
+PRICE = Decimal("0.005")
+SERVICE = "web search"
+
+
+def _keyed(monkeypatch: pytest.MonkeyPatch) -> tuple[WebSearchService, list[str]]:
+    """A service with a Brave key, whose scraped engines record when they are asked."""
+    asked: list[str] = []
+
+    def scraped(_q: str, _limit: int, backend: str) -> list[dict[str, str]]:
+        asked.append(backend)
+        return _answer(backend)
+
+    monkeypatch.setattr(WebSearchService, "_ddgs_text", staticmethod(scraped))
+    return WebSearchService(brave_api_key="k", brave_cost_usd=PRICE), asked
+
+
+async def test_a_keyed_search_asks_brave_first_and_carries_its_price(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    svc, asked = _keyed(monkeypatch)
+
+    async def brave(
+        _self: WebSearchService, _q: str, _limit: int
+    ) -> list[dict[str, str]]:
+        return BRAVE_ROWS
+
+    monkeypatch.setattr(WebSearchService, "_brave_rows", brave)
+
+    resp = await svc.search("circumsporozoite protein", limit=5)
+
+    assert asked == []
+    assert resp.search_diagnostics.backend == search.BRAVE_API
+    assert [
+        (attempt.engine, attempt.results, attempt.error)
+        for attempt in resp.search_diagnostics.engines
+    ] == [(search.BRAVE_API, 1, None)]
+    assert [(r.title, r.url, r.snippet) for r in resp.results] == [
+        (
+            "Circumsporozoite protein - Wikipedia",
+            "https://en.wikipedia.org/wiki/Circumsporozoite_protein",
+            "The circumsporozoite protein is the major surface antigen of the sporozoite.",
+        )
+    ]
+    assert resp.cost_usd == PRICE
+
+
+async def test_a_refused_brave_search_falls_back_to_the_scraped_engines_at_no_cost(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    svc, asked = _keyed(monkeypatch)
+
+    async def refused(
+        _self: WebSearchService, _q: str, _limit: int
+    ) -> list[dict[str, str]]:
+        refusal = ExternalServiceError(SERVICE, "brave-api 429 Too Many Requests")
+        raise refusal
+
+    monkeypatch.setattr(WebSearchService, "_brave_rows", refused)
+
+    resp = await svc.search("plasmodium kinases", limit=5)
+
+    assert asked == [search.TEXT_ENGINES[0]]
+    assert resp.search_diagnostics.backend == search.TEXT_ENGINES[0]
+    assert [
+        (attempt.engine, attempt.results) for attempt in resp.search_diagnostics.engines
+    ] == [(search.BRAVE_API, 0), (search.TEXT_ENGINES[0], 1)]
+    assert "429" in (resp.search_diagnostics.engines[0].error or "")
+    assert resp.cost_usd == Decimal(0)
+
+
+async def test_without_a_key_brave_is_not_asked(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        WebSearchService,
+        "_ddgs_text",
+        staticmethod(lambda _q, _limit, backend: _answer(backend)),
+    )
+
+    resp = await WebSearchService().search("plasmodium kinases", limit=5)
+
+    assert [attempt.engine for attempt in resp.search_diagnostics.engines] == [
+        search.TEXT_ENGINES[0]
+    ]
+    assert resp.cost_usd == Decimal(0)

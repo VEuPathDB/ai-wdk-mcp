@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from decimal import Decimal
+
 import pytest
 
 from veupathdb_mcp.research import tools
@@ -254,6 +256,24 @@ async def test_guidance_says_when_the_indexed_sources_returned_nothing(
     assert "Europe PMC and PubMed returned nothing" in out.guidance
     assert "shorter query" in out.guidance
     assert "did not answer" not in out.guidance
+
+
+async def test_a_served_web_search_carries_what_the_call_cost(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    priced = _web_response(2).model_copy(update={"cost_usd": Decimal("0.005")})
+
+    async def _brave(
+        _self: WebSearchService, query: str, **kwargs: object
+    ) -> WebSearchResponse:
+        del query, kwargs
+        return priced
+
+    monkeypatch.setattr(WebSearchService, "search", _brave)
+
+    out = await tools.web_search("plasmodium kinases", limit=2)
+
+    assert out.cost_usd == "0.005"
 
 
 async def test_guidance_names_a_source_that_did_not_answer(

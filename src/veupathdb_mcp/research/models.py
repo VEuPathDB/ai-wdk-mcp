@@ -46,6 +46,8 @@ class WebSearchOut(CamelModel):
     results: list[WebResultOut] = Field(default_factory=list)
     sources: list[SourceRef] = Field(default_factory=list)
     search_diagnostics: SearchDiagnostics = Field(default_factory=SearchDiagnostics)
+    # What this call cost the deployment, in USD as decimal text. "0" for a scraped answer.
+    cost_usd: str = "0"
     guidance: str = ""
     error: str | None = None
 

@@ -130,6 +130,7 @@ def _web_out(response: WebSearchResponse) -> WebSearchOut:
         results=[_web_result(i, item) for i, item in enumerate(response.results)],
         sources=_sources(list(response.citations)),
         search_diagnostics=response.search_diagnostics,
+        cost_usd=str(response.cost_usd),
         guidance=_WEB_GUIDANCE if response.results else "",
         error=response.error,
     )
@@ -166,7 +167,11 @@ async def web_search(
         summary_max_chars: Max characters of per-result summary to include.
     """
     settings = get_research_settings()
-    service = WebSearchService(timeout_seconds=settings.timeout_seconds)
+    service = WebSearchService(
+        timeout_seconds=settings.timeout_seconds,
+        brave_api_key=settings.brave_search_api_key,
+        brave_cost_usd=settings.brave_search_cost_usd,
+    )
     response = await service.search(
         query,
         limit=limit,

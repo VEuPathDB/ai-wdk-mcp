@@ -1,15 +1,16 @@
-"""Web search over ``ddgs``, one engine at a time.
+"""Web search: the Brave Search API when a key is set, then ``ddgs`` one engine at a time.
 
 The server asks each engine in turn and keeps the first answer, so the
 response names the engine that answered and every engine that refused.
 """
 
 import asyncio
+from decimal import Decimal
 
 import httpx
 from ddgs import DDGS
 from ddgs.exceptions import DDGSException
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from veupathdb.errors import ExternalServiceError
 from veupathdb.model import CamelModel
 
@@ -32,6 +33,10 @@ _SERVICE_NAME = "web search"
 
 # The general web engines ddgs serves, in the order this server asks them.
 TEXT_ENGINES: tuple[str, ...] = ("duckduckgo", "mojeek", "yahoo", "google", "brave")
+
+# The keyed engine, asked before every scraped one.
+BRAVE_API = "brave-api"
+_BRAVE_URL = "https://api.search.brave.com/res/v1/web/search"
 
 
 class WebSearchResult(CamelModel):
@@ -60,6 +65,31 @@ class _DdgsRow(BaseModel):
         )
 
 
+class _BraveRow(BaseModel):
+    """One web result as the Brave Search API returns it."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    title: str = ""
+    url: str | None = None
+    description: str | None = None
+
+    def to_result(self) -> WebSearchResult:
+        return WebSearchResult(title=self.title, url=self.url, snippet=self.description)
+
+
+class _BraveWeb(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    results: list[_BraveRow] = Field(default_factory=list)
+
+
+class _BraveResponse(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    web: _BraveWeb = Field(default_factory=_BraveWeb)
+
+
 class WebSearchResponse(CamelModel):
     query: str
     effective_query: str
@@ -67,6 +97,8 @@ class WebSearchResponse(CamelModel):
     search_diagnostics: SearchDiagnostics
     results: list[WebSearchResult]
     citations: list[Citation]
+    # What the engine that answered charged for this call. Scraping is free.
+    cost_usd: Decimal = Decimal(0)
     error: str | None = None
 
 
@@ -85,8 +117,12 @@ class WebSearchService:
         self,
         *,
         timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+        brave_api_key: str = "",
+        brave_cost_usd: Decimal = Decimal(0),
     ) -> None:
         self._timeout = timeout_seconds
+        self._brave_api_key = brave_api_key
+        self._brave_cost_usd = brave_cost_usd
 
     async def search(
         self,
@@ -110,7 +146,7 @@ class WebSearchService:
         limit = max(1, min(int(limit or 5), 10))
         summary_max_chars = max(200, min(int(summary_max_chars or 600), 4000))
 
-        results, diagnostics = await self._ddgs_search(q, limit=limit)
+        results, diagnostics = await self._search_engines(q, limit=limit)
         needs_summary = [
             r
             for r in results
@@ -165,19 +201,27 @@ class WebSearchService:
             search_diagnostics=diagnostics,
             results=results,
             citations=citations,
+            cost_usd=(
+                self._brave_cost_usd if diagnostics.backend == BRAVE_API else Decimal(0)
+            ),
         )
 
-    async def _ddgs_search(
+    async def _search_engines(
         self,
         q: str,
         *,
         limit: int,
     ) -> tuple[list[WebSearchResult], SearchDiagnostics]:
-        """Ask each engine in turn and keep the first answer.
+        """Ask the keyed engine, then each scraped one, and keep the first answer.
 
         A search no engine answers is a refusal, not an empty result.
         """
         attempts: list[EngineAttempt] = []
+        if self._brave_api_key:
+            results, attempt = await self._ask_brave(q, limit=limit)
+            attempts.append(attempt)
+            if results:
+                return results, SearchDiagnostics(backend=BRAVE_API, engines=attempts)
         for engine in TEXT_ENGINES:
             results, attempt = await self._ask_engine(q, limit=limit, engine=engine)
             attempts.append(attempt)
@@ -203,3 +247,39 @@ class WebSearchService:
     def _ddgs_text(q: str, limit: int, backend: str) -> list[dict[str, str]]:
         with DDGS() as client:
             return client.text(q, max_results=limit, backend=backend)
+
+    async def _ask_brave(
+        self,
+        q: str,
+        *,
+        limit: int,
+    ) -> tuple[list[WebSearchResult], EngineAttempt]:
+        try:
+            rows = await self._brave_rows(q, limit)
+        except ExternalServiceError as exc:
+            return [], EngineAttempt(engine=BRAVE_API, error=str(exc))
+        results = [_BraveRow.model_validate(row).to_result() for row in rows]
+        return results, EngineAttempt(engine=BRAVE_API, results=len(results))
+
+    async def _brave_rows(self, q: str, limit: int) -> list[dict[str, str]]:
+        headers = {
+            "Accept": "application/json",
+            "X-Subscription-Token": self._brave_api_key,
+        }
+        try:
+            async with httpx.AsyncClient(timeout=self._timeout) as client:
+                response = await client.get(
+                    _BRAVE_URL,
+                    params={"q": q, "count": limit},
+                    headers=headers,
+                )
+                response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            raise ExternalServiceError(
+                _SERVICE_NAME,
+                f"{BRAVE_API} {exc.response.status_code} {exc.response.reason_phrase}",
+            ) from exc
+        except httpx.HTTPError as exc:
+            raise ExternalServiceError(_SERVICE_NAME, f"{BRAVE_API} {exc}") from exc
+        parsed = _BraveResponse.model_validate(response.json())
+        return [row.model_dump() for row in parsed.web.results]
