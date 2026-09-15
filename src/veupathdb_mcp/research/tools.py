@@ -22,6 +22,7 @@ from veupathdb_mcp.research.models import (
     LiteratureSearchOut,
     PaperOut,
     SourceRef,
+    SourceStatus,
     WebResultOut,
     WebSearchOut,
 )
@@ -53,6 +54,17 @@ _LITERATURE_GUIDANCE = (
     f"{LEADING_RESULTS} carry the abstract. For a paper further down, search "
     "again for its title or its DOI with limit 1."
 )
+
+
+def _source_failure_sentence(statuses: list[SourceStatus]) -> str:
+    """Name the sources that did not answer, so a thin result set reads as one."""
+    silent = [status.source for status in statuses if status.error]
+    if not silent:
+        return ""
+    return (
+        f"These sources did not answer: {', '.join(silent)}. Repeat the search "
+        "with source set to one of them to read it alone."
+    )
 
 
 def _text_at(rank: int, *values: str | None) -> str:
@@ -100,17 +112,23 @@ def _web_out(response: WebSearchResponse) -> WebSearchOut:
         query=response.query,
         results=[_web_result(i, item) for i, item in enumerate(response.results)],
         sources=_sources(list(response.citations)),
+        search_diagnostics=response.search_diagnostics,
         guidance=_WEB_GUIDANCE if response.results else "",
         error=response.error,
     )
 
 
 def _literature_out(response: LiteratureSearchResponse) -> LiteratureSearchOut:
+    sentences = [
+        _LITERATURE_GUIDANCE if response.results else "",
+        _source_failure_sentence(response.sources_status),
+    ]
     return LiteratureSearchOut(
         query=response.query,
         results=[_paper(i, paper) for i, paper in enumerate(response.results)],
         sources=_sources(list(response.citations)),
-        guidance=_LITERATURE_GUIDANCE if response.results else "",
+        sources_status=response.sources_status,
+        guidance=" ".join(sentence for sentence in sentences if sentence),
     )
 
 

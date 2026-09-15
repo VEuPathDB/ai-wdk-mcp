@@ -148,6 +148,7 @@ class LiteratureSearchService:
                 filters=LiteratureFilters(),
                 results=[],
                 citations=[],
+                sources_status=[],
             )
         return None
 

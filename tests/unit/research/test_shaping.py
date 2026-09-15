@@ -11,8 +11,12 @@ from veupathdb_mcp.research.literature.processing import (
     LiteratureSearchResponse,
 )
 from veupathdb_mcp.research.literature.search import LiteratureSearchService
-from veupathdb_mcp.research.web.search import (
+from veupathdb_mcp.research.models import (
+    EngineAttempt,
     SearchDiagnostics,
+    SourceStatus,
+)
+from veupathdb_mcp.research.web.search import (
     WebSearchResponse,
     WebSearchResult,
     WebSearchService,
@@ -21,12 +25,21 @@ from veupathdb_mcp.research.web.search import (
 LONG = "x" * 4000
 
 
+ANSWERED = SearchDiagnostics(
+    backend="mojeek",
+    engines=[
+        EngineAttempt(engine="duckduckgo", error="ratelimit 429"),
+        EngineAttempt(engine="mojeek", results=5),
+    ],
+)
+
+
 def _web_response(count: int) -> WebSearchResponse:
     return WebSearchResponse(
         query="plasmodium kinases",
         effective_query="plasmodium kinases",
         search_adjusted=False,
-        search_diagnostics=SearchDiagnostics(),
+        search_diagnostics=ANSWERED,
         results=[
             WebSearchResult(
                 title=f"Result {i}",
@@ -47,7 +60,9 @@ def _web_response(count: int) -> WebSearchResponse:
     )
 
 
-def _literature_response(count: int) -> LiteratureSearchResponse:
+def _literature_response(
+    count: int, statuses: list[SourceStatus] | None = None
+) -> LiteratureSearchResponse:
     return LiteratureSearchResponse(
         query="plasmodium kinome",
         source="all",
@@ -75,6 +90,9 @@ def _literature_response(count: int) -> LiteratureSearchResponse:
             )
             for i in range(count)
         ],
+        sources_status=statuses
+        if statuses is not None
+        else [SourceStatus(source="europepmc", results=count)],
     )
 
 
@@ -177,30 +195,58 @@ async def test_no_guidance_names_a_tool(stubbed: None) -> None:
     assert named == []
 
 
-async def test_an_empty_web_search_reports_why_and_offers_no_guidance(
+async def test_a_web_search_without_a_query_reports_why_and_offers_no_guidance() -> (
+    None
+):
+    out = await tools.web_search("   ")
+
+    assert (out.error, out.guidance, out.results) == ("query_required", "", [])
+
+
+async def test_a_web_search_names_the_engine_that_answered(stubbed: None) -> None:
+    del stubbed
+
+    out = await tools.web_search("plasmodium kinases", limit=5)
+
+    assert out.search_diagnostics.backend == "mojeek"
+    assert [
+        (attempt.engine, attempt.error) for attempt in out.search_diagnostics.engines
+    ] == [("duckduckgo", "ratelimit 429"), ("mojeek", None)]
+
+
+async def test_a_literature_search_reports_what_each_source_did(
+    stubbed: None,
+) -> None:
+    del stubbed
+
+    out = await tools.literature_search("plasmodium kinome", limit=8)
+
+    assert [
+        (status.source, status.results, status.error) for status in out.sources_status
+    ] == [("europepmc", 8, None)]
+
+
+async def test_guidance_names_a_source_that_did_not_answer(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    async def _blocked(
-        _self: WebSearchService,
+    statuses = [
+        SourceStatus(source="europepmc", results=0, error="read timeout"),
+        SourceStatus(source="pubmed", results=0, error="429"),
+        SourceStatus(source="crossref", results=2),
+    ]
+
+    async def _partial(
+        _self: LiteratureSearchService,
         query: str,
-        limit: int = 5,
-        *,
-        include_summary: bool = False,
-        summary_max_chars: int = 600,
-    ) -> WebSearchResponse:
-        del limit, include_summary, summary_max_chars
-        return WebSearchResponse(
-            query=query,
-            effective_query=query,
-            search_adjusted=False,
-            search_diagnostics=SearchDiagnostics(blocked=True),
-            results=[],
-            citations=[],
-            error="search_blocked",
-        )
+        **kwargs: object,
+    ) -> LiteratureSearchResponse:
+        del query, kwargs
+        return _literature_response(2, statuses)
 
-    monkeypatch.setattr(WebSearchService, "search", _blocked)
+    monkeypatch.setattr(LiteratureSearchService, "search", _partial)
 
-    out = await tools.web_search("plasmodium kinases")
+    out = await tools.literature_search("plasmodium kinome", limit=2)
 
-    assert (out.error, out.guidance, out.results) == ("search_blocked", "", [])
+    assert "europepmc, pubmed" in out.guidance
+    assert "crossref" not in out.guidance
+    assert "source" in out.guidance

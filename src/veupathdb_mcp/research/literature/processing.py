@@ -1,6 +1,7 @@
 """Deduplication, filtering, ranking, and response assembly for literature search."""
 
 from dataclasses import dataclass
+from urllib.parse import urlparse
 
 from pydantic import Field
 from veupathdb.model import CamelModel
@@ -14,6 +15,7 @@ from veupathdb_mcp.research.citations import (
     ensure_unique_citation_tags,
 )
 from veupathdb_mcp.research.literature.papers import ParsedPaper
+from veupathdb_mcp.research.models import SourceStatus
 from veupathdb_mcp.research.text import (
     LiteratureItemContext,
     dedupe_key,
@@ -32,12 +34,51 @@ class SourcePayload(CamelModel):
     error: str | None = None
 
 
+# A path segment names a listing or a search page, not one work.
+_LISTING_SEGMENTS = ("/keyword/", "/search/", "/collection/")
+
+# A DOI prefix that registers records other than journal articles.
+_NON_ARTICLE_DOI_PREFIXES = ("10.2210/",)
+
+
+def _is_listing_url(url: str | None) -> bool:
+    path = urlparse(url or "").path.lower()
+    return any(segment in f"{path}/" for segment in _LISTING_SEGMENTS)
+
+
+def _is_landing_page(paper: ParsedPaper) -> bool:
+    """A record with no identifier, whose url names a host and no work on it."""
+    if paper.pmid or paper.doi:
+        return False
+    path = urlparse(paper.url or "").path
+    return not [segment for segment in path.split("/") if segment]
+
+
+def _is_article(paper: ParsedPaper) -> bool:
+    doi = (paper.doi or "").lower()
+    if doi.startswith(_NON_ARTICLE_DOI_PREFIXES):
+        return False
+    return not _is_listing_url(paper.url) and not _is_landing_page(paper)
+
+
 class EnrichedPaper(ParsedPaper):
-    """ParsedPaper enriched with source tracking and optional reranking score."""
+    """ParsedPaper with its source, its ranking band and an optional score."""
 
     source: str = ""
     score: float | None = None
     score_parts: dict[str, float] | None = None
+
+    @property
+    def is_article(self) -> bool:
+        """The record names one work, and not a listing page or a structure."""
+        return _is_article(self)
+
+    @property
+    def rank_band(self) -> int:
+        """0 for an article with an identifier, 1 for any other article, 2 for the rest."""
+        if not self.is_article:
+            return 2
+        return 0 if (self.pmid or self.doi) else 1
 
 
 class LiteratureSearchResponse(CamelModel):
@@ -52,6 +93,7 @@ class LiteratureSearchResponse(CamelModel):
     filters: LiteratureFilters
     results: list[EnrichedPaper]
     citations: list[Citation]
+    sources_status: list[SourceStatus]
 
 
 @dataclass
@@ -149,19 +191,19 @@ def sort_results(
             reverse=True,
         )
 
-    if results and sort == "relevance" and source == "all":
-        scored = [
-            r.model_copy(
-                update={"score": round(score, 2), "score_parts": parts},
-            )
-            for r in results
-            for score, parts in [rerank_score(query, r)]
-        ]
-        return sorted(
-            scored,
-            key=lambda r: (r.score is not None, r.score or 0.0),
-            reverse=True,
+    if results and sort == "relevance":
+        scored = (
+            [
+                r.model_copy(
+                    update={"score": round(score, 2), "score_parts": parts},
+                )
+                for r in results
+                for score, parts in [rerank_score(query, r)]
+            ]
+            if source == "all"
+            else results
         )
+        return sorted(scored, key=lambda r: (r.rank_band, -(r.score or 0.0)))
 
     return results
 
@@ -186,6 +228,15 @@ def build_response(
 
     ensure_unique_citation_tags(citations)
 
+    sources_status = [
+        SourceStatus(
+            source=name,
+            results=len(payload.results),
+            error=payload.error,
+        )
+        for name, payload in result_data.by_source.items()
+    ]
+
     return LiteratureSearchResponse(
         query=query,
         source=source,
@@ -196,4 +247,5 @@ def build_response(
         filters=filters,
         results=sliced,
         citations=citations,
+        sources_status=sources_status,
     )

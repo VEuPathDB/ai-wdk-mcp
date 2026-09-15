@@ -94,3 +94,82 @@ async def test_one_source_failure_does_not_kill_the_search(
 
     resp = await svc.search("vaccine antigens", source="all", limit=5)
     assert [r.title for r in resp.results] == ["Good paper"]
+
+
+ALL_SOURCES = (
+    "europepmc",
+    "crossref",
+    "openalex",
+    "semanticscholar",
+    "pubmed",
+    "arxiv",
+    "biorxiv",
+    "medrxiv",
+)
+
+
+def _stub_every_client(
+    monkeypatch: pytest.MonkeyPatch,
+    svc: LiteratureSearchService,
+    answer: object,
+) -> None:
+    for client in (
+        svc._europepmc,
+        svc._crossref,
+        svc._openalex,
+        svc._semanticscholar,
+        svc._pubmed,
+        svc._arxiv,
+        svc._preprint,
+    ):
+        monkeypatch.setattr(client, "search", answer)
+
+
+async def test_a_healthy_fan_out_reports_every_source_with_its_count(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    svc = LiteratureSearchService()
+
+    async def two(*_a: object, **_k: object) -> SearchResponse:
+        return SearchResponse(
+            query="vaccine antigens",
+            source="x",
+            results=[
+                ParsedPaper(title="First paper", doi="10.1/a"),
+                ParsedPaper(title="Second paper", doi="10.1/b"),
+            ],
+            citations=[],
+        )
+
+    _stub_every_client(monkeypatch, svc, two)
+
+    resp = await svc.search("vaccine antigens", source="all", limit=5)
+
+    assert [(s.source, s.results, s.error) for s in resp.sources_status] == [
+        (name, 2, None) for name in ALL_SOURCES
+    ]
+
+
+async def test_a_source_that_raises_is_named_with_its_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    svc = LiteratureSearchService()
+
+    async def empty(*_a: object, **_k: object) -> SearchResponse:
+        return SearchResponse(
+            query="vaccine antigens", source="x", results=[], citations=[]
+        )
+
+    async def fail(*_a: object, **_k: object) -> SearchResponse:
+        service, detail = "Europe PMC", "timed out after 30s"
+        raise ExternalServiceError(service, detail)
+
+    _stub_every_client(monkeypatch, svc, empty)
+    monkeypatch.setattr(svc._europepmc, "search", fail)
+
+    resp = await svc.search("vaccine antigens", source="all", limit=5)
+    by_name = {s.source: s for s in resp.sources_status}
+
+    assert "timed out after 30s" in (by_name["europepmc"].error or "")
+    assert [name for name, s in by_name.items() if s.error] == ["europepmc"]
+    assert by_name["crossref"].results == 0

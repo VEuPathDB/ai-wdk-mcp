@@ -1,5 +1,13 @@
 # Knowledge log
 
+## 2026-09-15
+
+- `veupathdb-mcp` is 0.2.0a8. Literature relevance ranks a paper above a page: a listing
+  page, a search page and a DOI prefix that registers no journal article rank below every
+  article, and the score decides inside a band. Both search tools now report what they
+  searched: one row per literature source with its count and its error, and, for the web,
+  the engine that answered and every engine that refused.
+
 ## 2026-09-11
 
 - The client pin is `v0.1.0a10`, the release that publishes the signing-key reset, so

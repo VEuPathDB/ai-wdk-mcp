@@ -1,15 +1,15 @@
-"""Web search over ``ddgs``, which fails over across its search backends.
+"""Web search over ``ddgs``, one engine at a time.
 
-A backend that rate-limits one call is replaced by another, so a refusal from
-one engine is not a refused search.
+The server asks each engine in turn and keeps the first answer, so the
+response names the engine that answered and every engine that refused.
 """
 
 import asyncio
-from dataclasses import dataclass, field
 
 import httpx
 from ddgs import DDGS
-from pydantic import Field
+from ddgs.exceptions import DDGSException
+from pydantic import BaseModel, ConfigDict
 from veupathdb.errors import ExternalServiceError
 from veupathdb.model import CamelModel
 
@@ -19,6 +19,7 @@ from veupathdb_mcp.research.citations import (
     _now_iso,
     ensure_unique_citation_tags,
 )
+from veupathdb_mcp.research.models import EngineAttempt, SearchDiagnostics
 from veupathdb_mcp.research.settings import DEFAULT_TIMEOUT_SECONDS
 from veupathdb_mcp.research.text import (
     BROWSER_USER_AGENT,
@@ -26,6 +27,11 @@ from veupathdb_mcp.research.text import (
 )
 
 _MIN_SNIPPET_LENGTH = 40
+
+_SERVICE_NAME = "web search"
+
+# The general web engines ddgs serves, in the order this server asks them.
+TEXT_ENGINES: tuple[str, ...] = ("duckduckgo", "mojeek", "yahoo", "google", "brave")
 
 
 class WebSearchResult(CamelModel):
@@ -35,11 +41,23 @@ class WebSearchResult(CamelModel):
     summary: str | None = None
 
 
-class SearchDiagnostics(CamelModel):
-    blocked: bool = False
-    attempts: int = 0
-    status_codes: list[int] = Field(default_factory=list)
-    backend: str = ""
+class _DdgsRow(BaseModel):
+    """One raw row from ddgs. The key that holds the link differs by engine."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    title: str = ""
+    href: str | None = None
+    url: str | None = None
+    body: str | None = None
+    snippet: str | None = None
+
+    def to_result(self) -> WebSearchResult:
+        return WebSearchResult(
+            title=self.title,
+            url=self.href or self.url,
+            snippet=self.body or self.snippet,
+        )
 
 
 class WebSearchResponse(CamelModel):
@@ -52,20 +70,12 @@ class WebSearchResponse(CamelModel):
     error: str | None = None
 
 
-@dataclass
-class _DiagnosticsTracker:
-    blocked: bool = False
-    attempts: int = 0
-    status_codes: list[int] = field(default_factory=list)
-    backend: str = ""
-
-    def to_model(self) -> SearchDiagnostics:
-        return SearchDiagnostics(
-            blocked=self.blocked,
-            attempts=self.attempts,
-            status_codes=list(self.status_codes),
-            backend=self.backend,
-        )
+def _refusal_detail(attempts: list[EngineAttempt]) -> str:
+    """Name every engine that was asked and what it answered."""
+    named = "; ".join(
+        f"{attempt.engine}: {attempt.error or 'no results'}" for attempt in attempts
+    )
+    return f"every engine refused: {named}"
 
 
 class WebSearchService:
@@ -100,7 +110,7 @@ class WebSearchService:
         limit = max(1, min(int(limit or 5), 10))
         summary_max_chars = max(200, min(int(summary_max_chars or 600), 4000))
 
-        results, diag = await self._ddgs_search(q, limit=limit)
+        results, diagnostics = await self._ddgs_search(q, limit=limit)
         needs_summary = [
             r
             for r in results
@@ -148,18 +158,13 @@ class WebSearchService:
             )
         ensure_unique_citation_tags(citations)
 
-        error: str | None = None
-        if not results and diag.blocked:
-            error = "search_blocked"
-
         return WebSearchResponse(
             query=q,
             effective_query=q,
             search_adjusted=False,
-            search_diagnostics=diag.to_model(),
+            search_diagnostics=diagnostics,
             results=results,
             citations=citations,
-            error=error,
         )
 
     async def _ddgs_search(
@@ -167,28 +172,34 @@ class WebSearchService:
         q: str,
         *,
         limit: int,
-    ) -> tuple[list[WebSearchResult], _DiagnosticsTracker]:
-        diag = _DiagnosticsTracker(attempts=1)
-        service_name = "web search"
-        try:
-            raw = await asyncio.to_thread(self._ddgs_text, q, limit)
-        except Exception as exc:
-            diag.blocked = True
-            raise ExternalServiceError(service_name, str(exc)) from exc
+    ) -> tuple[list[WebSearchResult], SearchDiagnostics]:
+        """Ask each engine in turn and keep the first answer.
 
-        results = [
-            WebSearchResult(
-                title=item.get("title", ""),
-                url=item.get("href") or item.get("url"),
-                snippet=item.get("body") or item.get("snippet"),
-            )
-            for item in raw
-        ]
-        if not results:
-            diag.blocked = True
-        return results, diag
+        A search no engine answers is a refusal, not an empty result.
+        """
+        attempts: list[EngineAttempt] = []
+        for engine in TEXT_ENGINES:
+            results, attempt = await self._ask_engine(q, limit=limit, engine=engine)
+            attempts.append(attempt)
+            if results:
+                return results, SearchDiagnostics(backend=engine, engines=attempts)
+        raise ExternalServiceError(_SERVICE_NAME, _refusal_detail(attempts))
+
+    async def _ask_engine(
+        self,
+        q: str,
+        *,
+        limit: int,
+        engine: str,
+    ) -> tuple[list[WebSearchResult], EngineAttempt]:
+        try:
+            raw = await asyncio.to_thread(self._ddgs_text, q, limit, engine)
+        except DDGSException as exc:
+            return [], EngineAttempt(engine=engine, error=str(exc))
+        results = [_DdgsRow.model_validate(item).to_result() for item in raw]
+        return results, EngineAttempt(engine=engine, results=len(results))
 
     @staticmethod
-    def _ddgs_text(q: str, limit: int) -> list[dict[str, str]]:
+    def _ddgs_text(q: str, limit: int, backend: str) -> list[dict[str, str]]:
         with DDGS() as client:
-            return client.text(q, max_results=limit)
+            return client.text(q, max_results=limit, backend=backend)
