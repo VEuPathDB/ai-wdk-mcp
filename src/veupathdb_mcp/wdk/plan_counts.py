@@ -5,7 +5,9 @@ needs a temporary internal WDK strategy, which is deleted once read.
 """
 
 import asyncio
+from collections.abc import Mapping
 
+import httpx
 from veupathdb import JSONObject, get_logger
 from veupathdb.domain.parameters import ParamValue
 from veupathdb.domain.strategy import (
@@ -22,11 +24,11 @@ from veupathdb.wdk import (
     MissingWDKStepIdError,
     NewStepSpec,
     StrategyAPI,
-    VEuPathDBClient,
     WDKSearchConfig,
     build_wdk_step_tree,
     encode_params,
     get_strategy_api,
+    get_wdk_client,
 )
 
 from veupathdb_mcp.controls.control_helpers import delete_temp_strategy
@@ -34,6 +36,7 @@ from veupathdb_mcp.controls.control_helpers import delete_temp_strategy
 __all__ = [
     "DEFAULT_PLAN_COUNTS_STRATEGY_NAME",
     "compute_plan_step_counts",
+    "count_search_answer",
     "is_leaf_only_plan",
 ]
 
@@ -58,55 +61,60 @@ async def compute_plan_step_counts(
     ``strategy_name`` names the temporary strategy a non-leaf-only plan needs.
     A step whose count cannot be read is reported as ``None``.
     """
-    api = get_strategy_api(site_id)
     if is_leaf_only_plan(payload.root):
         return await _compute_leaf_counts_parallel(
-            api.client, payload.root, payload.record_type
+            site_id, payload.root, payload.record_type
         )
+    api = get_strategy_api(site_id)
     return await _compute_counts_via_temp_strategy(
         api, payload, site_id, strategy_name=strategy_name
     )
 
 
-async def _count_via_anonymous_report(
-    client: VEuPathDBClient,
+async def count_search_answer(
+    site_id: str,
     record_type: str,
     search_name: str,
-    parameters: dict[str, ParamValue],
+    parameters: Mapping[str, ParamValue],
+    *,
+    timeout_seconds: float | None = None,
 ) -> int | None:
-    """The result count of one search, from the anonymous report endpoint.
+    """The records one search answers, from the anonymous report endpoint.
 
-    A report with ``numRecords: 0`` returns only ``meta.totalCount``, so no
-    step and no strategy is created. Returns ``None`` on failure.
+    A report with ``numRecords: 0`` returns only the total, so no step and no
+    strategy is created and no user session is needed. ``timeout_seconds``
+    bounds the read for a caller that counts on a latency path; the default
+    waits as long as the client does. Returns None when no count arrives.
     """
-    config = WDKSearchConfig(parameters=encode_params(parameters))
+    config = WDKSearchConfig(parameters=encode_params(dict(parameters)))
     report_config: JSONObject = {"pagination": {"offset": 0, "numRecords": 0}}
     try:
-        answer = await client.run_search_report(
-            record_type, search_name, config, report_config
-        )
-    except VEuPathDBError as e:
+        async with asyncio.timeout(timeout_seconds):
+            answer = await get_wdk_client(site_id).run_search_report(
+                record_type, search_name, config, report_config
+            )
+        return answer.meta.records_returned()
+    except (VEuPathDBError, httpx.HTTPError, TimeoutError, ValueError) as e:
         logger.warning(
             "Anonymous report count failed",
+            site_id=site_id,
             record_type=record_type,
             search_name=search_name,
             error=str(e),
         )
         return None
-    else:
-        return answer.meta.records_returned()
 
 
 async def _compute_leaf_counts_parallel(
-    client: VEuPathDBClient,
+    site_id: str,
     root: StrategyStepNode,
     record_type: str,
 ) -> dict[str, int | None]:
     """Count every leaf step at once with anonymous reports."""
     all_steps = walk(root)
     tasks = [
-        _count_via_anonymous_report(
-            client,
+        count_search_answer(
+            site_id,
             record_type,
             step.search_name,
             step.parameters,

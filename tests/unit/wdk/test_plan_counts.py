@@ -160,6 +160,9 @@ def api(monkeypatch: pytest.MonkeyPatch) -> _FakeStrategyAPI:
     monkeypatch.setattr(
         "veupathdb_mcp.wdk.plan_counts.get_strategy_api", lambda site_id: built
     )
+    monkeypatch.setattr(
+        "veupathdb_mcp.wdk.plan_counts.get_wdk_client", lambda site_id: built.client
+    )
     return built
 
 
@@ -197,6 +200,10 @@ class TestALeafOnlyPlanNeedsNoStrategy:
         )
         monkeypatch.setattr(
             "veupathdb_mcp.wdk.plan_counts.get_strategy_api", lambda site_id: built
+        )
+        monkeypatch.setattr(
+            "veupathdb_mcp.wdk.plan_counts.get_wdk_client",
+            lambda site_id: built.client,
         )
 
         counts = await compute_plan_step_counts(_leaf_only_plan(), "plasmodb")
@@ -255,6 +262,10 @@ class TestAPlanWithACombineUsesATemporaryStrategy:
         built = _FakeStrategyAPI(_FakeClient({}), refuse_step="GenesBySignalPeptide")
         monkeypatch.setattr(
             "veupathdb_mcp.wdk.plan_counts.get_strategy_api", lambda site_id: built
+        )
+        monkeypatch.setattr(
+            "veupathdb_mcp.wdk.plan_counts.get_wdk_client",
+            lambda site_id: built.client,
         )
 
         counts = await compute_plan_step_counts(_combine_plan(), "plasmodb")

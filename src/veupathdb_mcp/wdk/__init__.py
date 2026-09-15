@@ -27,7 +27,10 @@ from veupathdb_mcp.wdk.params import (
     extract_default_params,
     extract_vocab_values,
 )
-from veupathdb_mcp.wdk.plan_counts import compute_plan_step_counts
+from veupathdb_mcp.wdk.plan_counts import (
+    compute_plan_step_counts,
+    count_search_answer,
+)
 from veupathdb_mcp.wdk.step_preview import step_download_url, step_sample_records
 from veupathdb_mcp.wdk.step_results import StepResultsService, step_results_service
 from veupathdb_mcp.wdk.step_results_models import (
@@ -59,6 +62,7 @@ __all__ = [
     "build_snapshot_from_wdk",
     "canonicalize_synced_parameters",
     "compute_plan_step_counts",
+    "count_search_answer",
     "encode_param_value",
     "extract_default_params",
     "extract_detail_attributes",

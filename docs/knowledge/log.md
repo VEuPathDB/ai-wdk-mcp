@@ -1,5 +1,17 @@
 # Knowledge log
 
+## 2026-09-16
+
+- `veupathdb-mcp` is 0.2.0a16. `count_search_answer` is published from
+  `veupathdb_mcp.wdk`: one search counted through the anonymous report endpoint with
+  `numRecords: 0`, which creates no step, no strategy and needs no user session. It is the
+  count `compute_plan_step_counts` already made for a leaf-only plan, now named and reachable
+  by a host, so a host that counts one binding does not carry its own copy. `timeout_seconds`
+  bounds one read and reports no count when it expires; the default waits as long as the
+  client does, which is what the plan counts pass. An answer that publishes no total now
+  reports no count instead of raising, so one unreadable leaf no longer ends a whole plan
+  count.
+
 ## 2026-09-15
 
 - `veupathdb-mcp` is 0.2.0a15. A search backend that answers 200 with a body its format does
