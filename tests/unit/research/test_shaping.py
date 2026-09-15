@@ -205,6 +205,19 @@ async def test_a_web_search_without_a_query_reports_why_and_offers_no_guidance()
     assert (out.error, out.guidance, out.results) == ("query_required", "", [])
 
 
+async def test_a_query_with_no_search_terms_is_no_query() -> None:
+    """A lone quotation mark reaches no engine and no source."""
+    web = await tools.web_search('"')
+    literature = await tools.literature_search('" ')
+
+    assert (web.error, web.results) == ("query_required", [])
+    assert (literature.results, literature.sources_status, literature.guidance) == (
+        [],
+        [],
+        "",
+    )
+
+
 async def test_a_web_search_names_the_engine_that_answered(stubbed: None) -> None:
     del stubbed
 

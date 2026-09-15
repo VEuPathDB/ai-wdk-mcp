@@ -41,8 +41,11 @@ abstract and a specific title would gain a little; the stubs would lose nothing.
 
 **A venue blocklist.** Naming Science-Business eXchange, the Protein Data Bank and the
 next venue that turns up needs upkeep no test can drive, and the same publisher prefix
-(`10.1038/`) registers Nature papers beside the stubs. The one prefix that is kept,
-`10.2210/`, registers only structures.
+(`10.1038/`) registers Nature papers beside the stubs. The two prefixes that are kept are
+the ones Crossref shows register almost nothing else: `10.2210/` (structures) and
+`10.3410/` (H1 Connect, once Faculty Opinions: 247,177 datasets against 506 articles,
+read from the Crossref prefix facet on 2026-09-15). Four of 34 citations in one run were
+recommendations of a paper under that prefix rather than the paper.
 
 **Citation and reference counts.** OpenAlex, Semantic Scholar and Crossref all carry
 them, and a record cited by nothing that cites nothing is a stub. But the reference

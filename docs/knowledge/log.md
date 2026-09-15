@@ -2,6 +2,10 @@
 
 ## 2026-09-15
 
+- `veupathdb-mcp` is 0.2.0a12. A `10.3410/` DOI (H1 Connect, once Faculty Opinions) is a
+  recommendation of a paper and ranks as no article; a query with no letter or digit is
+  refused as no query by both search tools.
+
 - `veupathdb-mcp` is 0.2.0a11. An abstract that is the venue name or the title describes
   nothing, so encyclopedia and dictionary entries no longer lead a literature answer.
 

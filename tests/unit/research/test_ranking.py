@@ -83,6 +83,20 @@ GIARDIA_PAPER = ParsedPaper(
         "cluster assembly pathway, and its interactome reaches the cytosol."
     ),
 )
+FACULTY_OPINION = ParsedPaper(
+    title=(
+        "Faculty Opinions recommendation of Discovery of a HapE mutation that "
+        "causes azole resistance in Aspergillus fumigatus"
+    ),
+    doi="10.3410/f.718198602.793487982",
+    url="https://doi.org/10.3410/f.718198602.793487982",
+    journal_title=(
+        "Faculty Opinions - Post-Publication Peer Review of the Biomedical Literature"
+    ),
+    abstract=(
+        "Faculty Opinions - Post-Publication Peer Review of the Biomedical Literature"
+    ),
+)
 SEARCH_PAGE = ParsedPaper(
     title="Search results for circumsporozoite protein",
     url="https://www.medrxiv.org/search/circumsporozoite%2Bprotein",
@@ -239,3 +253,16 @@ def test_a_venue_name_standing_in_for_an_abstract_is_no_abstract() -> None:
         ENCYCLOPEDIA_ENTRY.title,
     ]
     assert (ranked[0].rank_band, ranked[1].rank_band) == (0, 1)
+
+
+def test_a_recommendation_of_a_paper_is_not_the_paper() -> None:
+    """The 10.3410 prefix registers recommendations, so one never outranks a work."""
+    ranked = _ranked(
+        {"crossref": SourcePayload(results=[FACULTY_OPINION, GIARDIA_PAPER])},
+    )
+
+    assert [paper.title for paper in ranked] == [
+        GIARDIA_PAPER.title,
+        FACULTY_OPINION.title,
+    ]
+    assert (ranked[1].is_article, ranked[1].rank_band) == (False, 3)

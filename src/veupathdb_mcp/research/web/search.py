@@ -25,6 +25,7 @@ from veupathdb_mcp.research.settings import DEFAULT_TIMEOUT_SECONDS
 from veupathdb_mcp.research.text import (
     BROWSER_USER_AGENT,
     fetch_page_summary,
+    has_search_terms,
 )
 
 _MIN_SNIPPET_LENGTH = 40
@@ -133,7 +134,7 @@ class WebSearchService:
         summary_max_chars: int = 600,
     ) -> WebSearchResponse:
         q = (query or "").strip()
-        if not q:
+        if not has_search_terms(q):
             return WebSearchResponse(
                 query=q,
                 effective_query=q,

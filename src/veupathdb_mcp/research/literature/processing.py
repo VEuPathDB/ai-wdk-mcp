@@ -38,8 +38,9 @@ class SourcePayload(CamelModel):
 # A path segment names a listing or a search page, not one work.
 _LISTING_SEGMENTS = ("/keyword/", "/search/", "/collection/")
 
-# A DOI prefix that registers records other than journal articles.
-_NON_ARTICLE_DOI_PREFIXES = ("10.2210/",)
+# DOI prefixes that register records other than journal articles: the Protein
+# Data Bank (structures) and H1 Connect, once Faculty Opinions (recommendations).
+_NON_ARTICLE_DOI_PREFIXES = ("10.2210/", "10.3410/")
 
 
 def _is_listing_url(url: str | None) -> bool:

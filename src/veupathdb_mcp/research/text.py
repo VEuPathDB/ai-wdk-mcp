@@ -40,6 +40,11 @@ BROWSER_USER_AGENT = (
 )
 
 
+def has_search_terms(query: str) -> bool:
+    """A query names a term when it holds a letter or a digit."""
+    return any(ch.isalnum() for ch in query)
+
+
 def norm_text(value: str | None) -> str:
     """Normalize text for comparison."""
     return (value or "").strip().lower()

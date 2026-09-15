@@ -35,6 +35,7 @@ from veupathdb_mcp.research.settings import (
     DEFAULT_MAX_RETRIES,
     DEFAULT_TIMEOUT_SECONDS,
 )
+from veupathdb_mcp.research.text import has_search_terms
 
 
 class LiteratureSearchService:
@@ -137,7 +138,7 @@ class LiteratureSearchService:
     ) -> LiteratureSearchResponse | None:
         """Return an error response if the query is empty, else None."""
         q = (query or "").strip()
-        if not q:
+        if not has_search_terms(q):
             return LiteratureSearchResponse(
                 query=q,
                 source="all",
