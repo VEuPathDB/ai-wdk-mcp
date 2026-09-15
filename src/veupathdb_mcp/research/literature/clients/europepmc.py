@@ -12,9 +12,12 @@ from veupathdb_mcp.research.citations import (
 from veupathdb_mcp.research.literature.clients._base import (
     API_USER_AGENT,
     StandardClient,
+    decoded_body,
 )
 from veupathdb_mcp.research.literature.papers import EuropePmcRawResult, ParsedPaper
 from veupathdb_mcp.research.text import truncate_text
+
+_SERVICE = "EuropePMC"
 
 
 class _EpmcResultList(BaseModel):
@@ -50,10 +53,9 @@ class EuropePmcClient(StandardClient):
             ) as client:
                 resp = await client.get(url, params=params, follow_redirects=True)
                 resp.raise_for_status()
-                payload = resp.json()
+                payload = decoded_body(_SERVICE, resp)
         except httpx.HTTPError as exc:
-            service = "EuropePMC"
-            raise ExternalServiceError(service, str(exc)) from exc
+            raise ExternalServiceError(_SERVICE, str(exc)) from exc
         try:
             parsed = _EpmcResponse.model_validate(payload)
             hits = parsed.result_list.result

@@ -2,6 +2,12 @@
 
 ## 2026-09-15
 
+- `veupathdb-mcp` is 0.2.0a15. A search backend that answers 200 with a body its format does
+  not hold is one refused attempt, not a dead search: the metasearch and the keyed engine
+  both record the attempt and the next engine is asked. A literature API that answers a body
+  that is not JSON names itself and is asked once, in place of a raw decode error after three
+  attempts.
+
 - `veupathdb-mcp` is 0.2.0a14. `RESEARCH_MCP_SEARXNG_URL` names a SearXNG instance the web
   tool asks first, before a keyed engine and the scraped ones; see
   [A metasearch the deployment runs answers first](decisions/a-metasearch-the-deployment-runs-answers-first.md).

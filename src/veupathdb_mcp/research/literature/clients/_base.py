@@ -2,6 +2,7 @@
 
 import asyncio
 
+import httpx
 from pydantic import JsonValue
 from veupathdb import get_logger
 from veupathdb.errors import ExternalServiceError
@@ -22,6 +23,18 @@ logger = get_logger(__name__)
 API_USER_AGENT = "veupathdb-research-mcp/1.0"
 
 _DEFAULT_BACKOFF_BASE_S = 1.0
+
+
+def decoded_body(service: str, response: httpx.Response) -> JsonValue:
+    """Read the answer as JSON. A body that does not parse is a refusal."""
+    try:
+        body: JsonValue = response.json()
+    except ValueError as exc:
+        raise ExternalServiceError(
+            service,
+            f"{response.status_code} answered a body that is not JSON",
+        ) from exc
+    return body
 
 
 class SearchResponse(CamelModel):

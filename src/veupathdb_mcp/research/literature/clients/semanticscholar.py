@@ -12,6 +12,7 @@ from veupathdb_mcp.research.citations import (
 from veupathdb_mcp.research.literature.clients._base import (
     API_USER_AGENT,
     StandardClient,
+    decoded_body,
 )
 from veupathdb_mcp.research.literature.papers import (
     ParsedPaper,
@@ -19,6 +20,8 @@ from veupathdb_mcp.research.literature.papers import (
 )
 from veupathdb_mcp.research.settings import get_research_settings
 from veupathdb_mcp.research.text import truncate_text
+
+_SERVICE = "Semantic Scholar"
 
 
 class _S2Response(BaseModel):
@@ -51,10 +54,9 @@ class SemanticScholarClient(StandardClient):
             ) as client:
                 resp = await client.get(url, params=params, follow_redirects=True)
                 resp.raise_for_status()
-                payload = resp.json()
+                payload = decoded_body(_SERVICE, resp)
         except httpx.HTTPError as exc:
-            service = "Semantic Scholar"
-            raise ExternalServiceError(service, str(exc)) from exc
+            raise ExternalServiceError(_SERVICE, str(exc)) from exc
         try:
             parsed = _S2Response.model_validate(payload)
             items = parsed.data

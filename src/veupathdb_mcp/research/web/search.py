@@ -135,6 +135,21 @@ class WebSearchResponse(CamelModel):
 _NO_RESULTS = "No results found."
 
 
+def _engine_payload[Envelope: BaseModel](
+    engine: str,
+    response: httpx.Response,
+    envelope: type[Envelope],
+) -> Envelope:
+    """Read the engine's answer. A body its format does not hold is a refusal."""
+    try:
+        return envelope.model_validate(response.json())
+    except (ValueError, TypeError) as exc:
+        raise ExternalServiceError(
+            _SERVICE_NAME,
+            f"{engine} {response.status_code} answered a body that is not its format",
+        ) from exc
+
+
 def _refusal_detail(attempts: list[EngineAttempt]) -> str:
     """Name every engine that was asked and what it answered."""
     named = "; ".join(
@@ -322,7 +337,7 @@ class WebSearchService:
             ) from exc
         except httpx.HTTPError as exc:
             raise ExternalServiceError(_SERVICE_NAME, f"{SEARXNG} {exc}") from exc
-        parsed = _SearxngResponse.model_validate(response.json())
+        parsed = _engine_payload(SEARXNG, response, _SearxngResponse)
         return [row.model_dump() for row in parsed.results]
 
     async def _ask_brave(
@@ -358,5 +373,5 @@ class WebSearchService:
             ) from exc
         except httpx.HTTPError as exc:
             raise ExternalServiceError(_SERVICE_NAME, f"{BRAVE_API} {exc}") from exc
-        parsed = _BraveResponse.model_validate(response.json())
+        parsed = _engine_payload(BRAVE_API, response, _BraveResponse)
         return [row.model_dump() for row in parsed.web.results]

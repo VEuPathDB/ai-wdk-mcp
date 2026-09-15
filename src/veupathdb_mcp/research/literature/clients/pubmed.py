@@ -18,6 +18,7 @@ from veupathdb_mcp.research.literature.clients._base import (
     BaseClient,
     SearchResponse,
     build_response,
+    decoded_body,
 )
 from veupathdb_mcp.research.literature.papers import (
     ParsedPaper,
@@ -29,6 +30,8 @@ from veupathdb_mcp.research.text import strip_tags, truncate_text
 logger = get_logger(__name__)
 
 _BACKOFF_BASE_S = 1.0
+
+_SERVICE = "PubMed"
 
 # ── PubMed response envelope models ─────────────────────────────────
 
@@ -105,8 +108,7 @@ class PubmedClient(BaseClient):
                     continue
                 raise
         else:
-            service = "PubMed"
-            raise ExternalServiceError(service, str(last_exc))
+            raise ExternalServiceError(_SERVICE, str(last_exc))
 
         if not raw_items:
             return build_response(
@@ -140,7 +142,9 @@ class PubmedClient(BaseClient):
                     },
                 )
                 esearch.raise_for_status()
-                search_resp = _ESearchResponse.model_validate(esearch.json())
+                search_resp = _ESearchResponse.model_validate(
+                    decoded_body(_SERVICE, esearch)
+                )
                 pmids = [s for s in search_resp.esearchresult.idlist if s.strip()]
                 if not pmids:
                     return []
@@ -150,7 +154,9 @@ class PubmedClient(BaseClient):
                     params={"db": "pubmed", "id": ",".join(pmids), "retmode": "json"},
                 )
                 esummary.raise_for_status()
-                sum_resp = _ESummaryResponse.model_validate(esummary.json())
+                sum_resp = _ESummaryResponse.model_validate(
+                    decoded_body(_SERVICE, esummary)
+                )
 
                 abstracts_by_pmid: dict[str, str] = {}
                 if include_abstract:
@@ -173,8 +179,7 @@ class PubmedClient(BaseClient):
                         if m:
                             abstracts_by_pmid[pmid] = strip_tags(m.group(1))
         except httpx.HTTPError as exc:
-            service = "PubMed"
-            raise ExternalServiceError(service, str(exc)) from exc
+            raise ExternalServiceError(_SERVICE, str(exc)) from exc
 
         items: list[JsonValue] = []
         for pmid in pmids:

@@ -6,8 +6,11 @@ carries the text the summary would.
 
 from __future__ import annotations
 
+import inspect
 from decimal import Decimal
 
+import ddgs.ddgs
+import httpx
 import pytest
 from ddgs.exceptions import DDGSException
 from veupathdb.errors import ExternalServiceError
@@ -363,3 +366,83 @@ async def test_the_metasearch_is_asked_before_a_keyed_engine(
 
     assert order == [search.SEARXNG]
     assert resp.cost_usd == Decimal(0)
+
+
+def _served(monkeypatch: pytest.MonkeyPatch, response: httpx.Response) -> None:
+    """Answer every request the search module makes with one response."""
+    built = httpx.AsyncClient
+
+    def factory(*, timeout: float) -> httpx.AsyncClient:
+        return built(
+            timeout=timeout,
+            transport=httpx.MockTransport(lambda _request: response),
+        )
+
+    monkeypatch.setattr(search.httpx, "AsyncClient", factory)
+
+
+HTML_BODY = "<html><body>Access to this instance is blocked.</body></html>"
+
+
+async def test_a_metasearch_that_answers_html_is_a_refused_attempt(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    svc, asked = _metasearch(monkeypatch)
+    _served(monkeypatch, httpx.Response(200, text=HTML_BODY))
+
+    resp = await svc.search("plasmodium kinases", limit=5)
+
+    assert asked == [search.TEXT_ENGINES[0]]
+    assert resp.search_diagnostics.backend == search.TEXT_ENGINES[0]
+    attempt = resp.search_diagnostics.engines[0]
+    assert attempt.engine == search.SEARXNG
+    assert attempt.results == 0
+    assert "searxng 200" in (attempt.error or "")
+    assert [r.title for r in resp.results] == [f"Answered by {search.TEXT_ENGINES[0]}"]
+
+
+async def test_a_metasearch_that_answers_another_shape_is_a_refused_attempt(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    svc, asked = _metasearch(monkeypatch)
+    _served(monkeypatch, httpx.Response(200, json=["not", "an", "envelope"]))
+
+    resp = await svc.search("plasmodium kinases", limit=5)
+
+    assert asked == [search.TEXT_ENGINES[0]]
+    assert resp.search_diagnostics.engines[0].error is not None
+    assert [r.title for r in resp.results] == [f"Answered by {search.TEXT_ENGINES[0]}"]
+
+
+async def test_a_keyed_engine_that_answers_html_is_a_refused_attempt(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    svc, asked = _keyed(monkeypatch)
+    _served(monkeypatch, httpx.Response(200, text=HTML_BODY))
+
+    resp = await svc.search("plasmodium kinases", limit=5)
+
+    assert asked == [search.TEXT_ENGINES[0]]
+    attempt = resp.search_diagnostics.engines[0]
+    assert attempt.engine == search.BRAVE_API
+    assert attempt.results == 0
+    assert "brave-api 200" in (attempt.error or "")
+    assert resp.cost_usd == Decimal(0)
+
+
+async def test_a_keyed_engine_that_answers_another_shape_is_a_refused_attempt(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    svc, asked = _keyed(monkeypatch)
+    _served(monkeypatch, httpx.Response(200, json={"web": "not an object"}))
+
+    resp = await svc.search("plasmodium kinases", limit=5)
+
+    assert asked == [search.TEXT_ENGINES[0]]
+    assert resp.search_diagnostics.engines[0].error is not None
+    assert [r.title for r in resp.results] == [f"Answered by {search.TEXT_ENGINES[0]}"]
+
+
+def test_the_empty_answer_ddgs_reports_is_the_literal_this_module_reads() -> None:
+    """The empty-result signal is a string ddgs builds; pin it against ddgs."""
+    assert f'"{search._NO_RESULTS}"' in inspect.getsource(ddgs.ddgs.DDGS)
