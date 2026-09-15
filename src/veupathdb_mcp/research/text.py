@@ -121,9 +121,19 @@ _MIN_ABSTRACT_SCORE_LEN = 40
 
 
 def describing_abstract(paper: ParsedPaper) -> str:
-    """The abstract when it is long enough to describe the work, else empty."""
+    """The abstract when it describes the work, else empty.
+
+    A venue name or the title standing in for the abstract describes nothing,
+    however long it is.
+    """
     abstract = (paper.abstract or paper.snippet or "").strip()
-    return abstract if len(abstract) >= _MIN_ABSTRACT_SCORE_LEN else ""
+    stands_in = {
+        (paper.journal_title or "").strip().casefold(),
+        paper.title.strip().casefold(),
+    }
+    if len(abstract) < _MIN_ABSTRACT_SCORE_LEN or abstract.casefold() in stands_in:
+        return ""
+    return abstract
 
 
 def rerank_score(query: str, paper: ParsedPaper) -> tuple[float, dict[str, float]]:

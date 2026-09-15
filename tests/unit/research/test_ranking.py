@@ -64,6 +64,25 @@ PDB_ENTRY = ParsedPaper(
     url="https://doi.org/10.2210/pdb8oil/pdb",
     journal_title="Worldwide Protein Data Bank",
 )
+ENCYCLOPEDIA_ENTRY = ParsedPaper(
+    title="Mitosome",
+    doi="10.1007/978-1-4020-6754-9_10556",
+    url="https://doi.org/10.1007/978-1-4020-6754-9_10556",
+    journal_title="Encyclopedia of Genetics, Genomics, Proteomics and Informatics",
+    abstract="Encyclopedia of Genetics, Genomics, Proteomics and Informatics",
+)
+GIARDIA_PAPER = ParsedPaper(
+    title=(
+        "Adaptation of the late ISC pathway in the anaerobic mitochondrial "
+        "organelles of Giardia intestinalis"
+    ),
+    doi="10.1371/journal.ppat.1010773",
+    url="https://doi.org/10.1371/journal.ppat.1010773",
+    abstract=(
+        "The mitosome of Giardia intestinalis retains the late iron-sulfur "
+        "cluster assembly pathway, and its interactome reaches the cytosol."
+    ),
+)
 SEARCH_PAGE = ParsedPaper(
     title="Search results for circumsporozoite protein",
     url="https://www.medrxiv.org/search/circumsporozoite%2Bprotein",
@@ -207,3 +226,16 @@ def test_a_host_with_no_path_is_not_a_work() -> None:
         (paper.title, True),
         (home.title, False),
     ]
+
+
+def test_a_venue_name_standing_in_for_an_abstract_is_no_abstract() -> None:
+    """A long venue name passes a length floor; it still describes no work."""
+    ranked = _ranked(
+        {"crossref": SourcePayload(results=[ENCYCLOPEDIA_ENTRY, GIARDIA_PAPER])},
+    )
+
+    assert [paper.title for paper in ranked] == [
+        GIARDIA_PAPER.title,
+        ENCYCLOPEDIA_ENTRY.title,
+    ]
+    assert (ranked[0].rank_band, ranked[1].rank_band) == (0, 1)

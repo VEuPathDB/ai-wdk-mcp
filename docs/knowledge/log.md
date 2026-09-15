@@ -2,6 +2,9 @@
 
 ## 2026-09-15
 
+- `veupathdb-mcp` is 0.2.0a11. An abstract that is the venue name or the title describes
+  nothing, so encyclopedia and dictionary entries no longer lead a literature answer.
+
 - `veupathdb-mcp` is 0.2.0a10. With `RESEARCH_MCP_BRAVE_SEARCH_API_KEY` set, the web tool
   asks the Brave Search API before any scraped engine and the served answer carries what
   the call cost (`costUsd`); see

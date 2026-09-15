@@ -17,8 +17,11 @@ Data Bank DOI). Inside a band the score decides, and a lower band is still retur
 is all the search found.
 
 "Describes it" is one rule, `describing_abstract` in `research/text.py`: the abstract or
-snippet, stripped, at least forty characters. The scorer already ignored anything shorter;
-the bands read the same rule, so a venue name standing in for an abstract counts as none.
+snippet, stripped, at least forty characters, and not the venue name or the title itself.
+The scorer already ignored anything shorter; the bands read the same rule. The second
+clause was measured in: encyclopedia and dictionary entries titled "Mitosome" carry their
+venue name as the abstract, sixty characters long, and led every answer to a Giardia
+question until the top slots held nothing a reader could use.
 
 # What was measured
 
