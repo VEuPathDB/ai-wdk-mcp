@@ -9,3 +9,4 @@ the code.
 - [A frozen step is keyed by the account it lands in](a-frozen-step-is-keyed-by-the-account-it-lands-in.md) - why the cache of materialized gene-set steps keys by the request's own WDK token
 - [A listing page never outranks a paper](a-listing-page-never-outranks-a-paper.md) - relevance sorts by what a record is (identified and described, identified, an article, the rest) before its title score, and why weights, a venue list and citation counts were not the rule.
 - [A keyed engine answers first and prices the call](a-keyed-engine-answers-first-and-prices-the-call.md) - Brave Search API before the scraped engines when a key is set, the call's price on the answer, scraping as the free fallback.
+- [A metasearch the deployment runs answers first](a-metasearch-the-deployment-runs-answers-first.md) - SearXNG before a keyed engine and the scraped ones, measured: 11 of 12 refused queries answered at 0.4 s, no key, no cost.

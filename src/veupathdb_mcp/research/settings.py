@@ -41,8 +41,12 @@ class ResearchSettings(BaseSettings):
     # Semantic Scholar raises the anonymous rate limit for a keyed caller.
     s2_api_key: str = Field(default="", repr=False)
 
-    # A Brave Search API key makes Brave the first web engine, ahead of the
-    # scraped ones, and each answered call costs the price below in USD.
+    # A SearXNG instance this deployment runs answers web searches first. It
+    # is asked at its JSON search endpoint; empty means no instance.
+    searxng_url: str = ""
+
+    # A Brave Search API key makes Brave the web engine after the metasearch
+    # and ahead of the scraped ones; each answered call costs the price below.
     brave_search_api_key: str = Field(default="", repr=False)
     brave_search_cost_usd: Decimal = Field(default=Decimal("0.005"), ge=0)
 

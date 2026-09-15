@@ -2,6 +2,11 @@
 
 ## 2026-09-15
 
+- `veupathdb-mcp` is 0.2.0a14. `RESEARCH_MCP_SEARXNG_URL` names a SearXNG instance the web
+  tool asks first, before a keyed engine and the scraped ones; see
+  [A metasearch the deployment runs answers first](decisions/a-metasearch-the-deployment-runs-answers-first.md).
+  Startpage joins the scraped engines.
+
 - `veupathdb-mcp` is 0.2.0a13. A web engine that answers and finds nothing has answered:
   a query no engine finds a page for returns an empty result with guidance, and the
   tool raises only when every engine was blocked. Measured: three empty searches in one

@@ -1,4 +1,4 @@
-"""Web search: the Brave Search API when a key is set, then ``ddgs`` one engine at a time.
+"""Web search: the deployment's SearXNG, then the Brave Search API when keyed, then ``ddgs``.
 
 The server asks each engine in turn and keeps the first answer, so the
 response names the engine that answered and every engine that refused.
@@ -33,8 +33,17 @@ _MIN_SNIPPET_LENGTH = 40
 _SERVICE_NAME = "web search"
 
 # The general web engines ddgs serves, in the order this server asks them.
-TEXT_ENGINES: tuple[str, ...] = ("duckduckgo", "mojeek", "yahoo", "google", "brave")
+TEXT_ENGINES: tuple[str, ...] = (
+    "duckduckgo",
+    "mojeek",
+    "yahoo",
+    "startpage",
+    "google",
+    "brave",
+)
 
+# The metasearch this deployment runs, asked before every other engine.
+SEARXNG = "searxng"
 # The keyed engine, asked before every scraped one.
 BRAVE_API = "brave-api"
 _BRAVE_URL = "https://api.search.brave.com/res/v1/web/search"
@@ -64,6 +73,25 @@ class _DdgsRow(BaseModel):
             url=self.href or self.url,
             snippet=self.body or self.snippet,
         )
+
+
+class _SearxngRow(BaseModel):
+    """One result as SearXNG's JSON format returns it."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    title: str = ""
+    url: str | None = None
+    content: str | None = None
+
+    def to_result(self) -> WebSearchResult:
+        return WebSearchResult(title=self.title, url=self.url, snippet=self.content)
+
+
+class _SearxngResponse(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    results: list[_SearxngRow] = Field(default_factory=list)
 
 
 class _BraveRow(BaseModel):
@@ -122,10 +150,12 @@ class WebSearchService:
         self,
         *,
         timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+        searxng_url: str = "",
         brave_api_key: str = "",
         brave_cost_usd: Decimal = Decimal(0),
     ) -> None:
         self._timeout = timeout_seconds
+        self._searxng_url = searxng_url.rstrip("/")
         self._brave_api_key = brave_api_key
         self._brave_cost_usd = brave_cost_usd
 
@@ -223,6 +253,11 @@ class WebSearchService:
         did, the search is empty. A search no engine answers is a refusal.
         """
         attempts: list[EngineAttempt] = []
+        if self._searxng_url:
+            results, attempt = await self._ask_searxng(q, limit=limit)
+            attempts.append(attempt)
+            if results:
+                return results, SearchDiagnostics(backend=SEARXNG, engines=attempts)
         if self._brave_api_key:
             results, attempt = await self._ask_brave(q, limit=limit)
             attempts.append(attempt)
@@ -257,6 +292,38 @@ class WebSearchService:
     def _ddgs_text(q: str, limit: int, backend: str) -> list[dict[str, str]]:
         with DDGS() as client:
             return client.text(q, max_results=limit, backend=backend)
+
+    async def _ask_searxng(
+        self,
+        q: str,
+        *,
+        limit: int,
+    ) -> tuple[list[WebSearchResult], EngineAttempt]:
+        try:
+            rows = await self._searxng_rows(q, limit)
+        except ExternalServiceError as exc:
+            return [], EngineAttempt(engine=SEARXNG, error=str(exc))
+        results = [_SearxngRow.model_validate(row).to_result() for row in rows][:limit]
+        return results, EngineAttempt(engine=SEARXNG, results=len(results))
+
+    async def _searxng_rows(self, q: str, limit: int) -> list[dict[str, object]]:
+        del limit
+        try:
+            async with httpx.AsyncClient(timeout=self._timeout) as client:
+                response = await client.get(
+                    f"{self._searxng_url}/search",
+                    params={"q": q, "format": "json"},
+                )
+                response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            raise ExternalServiceError(
+                _SERVICE_NAME,
+                f"{SEARXNG} {exc.response.status_code} {exc.response.reason_phrase}",
+            ) from exc
+        except httpx.HTTPError as exc:
+            raise ExternalServiceError(_SERVICE_NAME, f"{SEARXNG} {exc}") from exc
+        parsed = _SearxngResponse.model_validate(response.json())
+        return [row.model_dump() for row in parsed.results]
 
     async def _ask_brave(
         self,

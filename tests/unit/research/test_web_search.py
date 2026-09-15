@@ -240,3 +240,126 @@ async def test_a_query_no_engine_finds_a_page_for_answers_nothing(
     assert [attempt.error for attempt in resp.search_diagnostics.engines] == [
         None
     ] * len(search.TEXT_ENGINES)
+
+
+SEARXNG_ROWS = [
+    {
+        "title": "Circumsporozoite protein - Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Circumsporozoite_protein",
+        "content": "The circumsporozoite protein is the major surface antigen of the sporozoite.",
+        "engines": ["google cse"],
+    }
+]
+
+
+def _metasearch(monkeypatch: pytest.MonkeyPatch) -> tuple[WebSearchService, list[str]]:
+    """A service with a SearXNG url, whose scraped engines record when they are asked."""
+    asked: list[str] = []
+
+    def scraped(_q: str, _limit: int, backend: str) -> list[dict[str, str]]:
+        asked.append(backend)
+        return _answer(backend)
+
+    monkeypatch.setattr(WebSearchService, "_ddgs_text", staticmethod(scraped))
+    return WebSearchService(searxng_url="http://searxng:8080"), asked
+
+
+async def test_the_metasearch_answers_first_and_costs_nothing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    svc, asked = _metasearch(monkeypatch)
+
+    async def rows(
+        _self: WebSearchService, _q: str, _limit: int
+    ) -> list[dict[str, object]]:
+        return SEARXNG_ROWS
+
+    monkeypatch.setattr(WebSearchService, "_searxng_rows", rows)
+
+    resp = await svc.search("circumsporozoite protein", limit=5)
+
+    assert asked == []
+    assert resp.search_diagnostics.backend == search.SEARXNG
+    assert [
+        (attempt.engine, attempt.results, attempt.error)
+        for attempt in resp.search_diagnostics.engines
+    ] == [(search.SEARXNG, 1, None)]
+    assert [(r.title, r.url, r.snippet) for r in resp.results] == [
+        (
+            "Circumsporozoite protein - Wikipedia",
+            "https://en.wikipedia.org/wiki/Circumsporozoite_protein",
+            "The circumsporozoite protein is the major surface antigen of the sporozoite.",
+        )
+    ]
+    assert resp.cost_usd == Decimal(0)
+
+
+async def test_a_metasearch_that_finds_nothing_answered_and_the_scraped_engines_follow(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    svc, asked = _metasearch(monkeypatch)
+
+    async def nothing(
+        _self: WebSearchService, _q: str, _limit: int
+    ) -> list[dict[str, object]]:
+        return []
+
+    monkeypatch.setattr(WebSearchService, "_searxng_rows", nothing)
+
+    resp = await svc.search("plasmodium kinases", limit=5)
+
+    assert asked == [search.TEXT_ENGINES[0]]
+    assert [
+        (attempt.engine, attempt.results, attempt.error)
+        for attempt in resp.search_diagnostics.engines
+    ] == [(search.SEARXNG, 0, None), (search.TEXT_ENGINES[0], 1, None)]
+
+
+async def test_a_metasearch_that_is_down_is_a_refused_attempt_not_a_dead_search(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    svc, asked = _metasearch(monkeypatch)
+
+    async def down(
+        _self: WebSearchService, _q: str, _limit: int
+    ) -> list[dict[str, object]]:
+        refusal = ExternalServiceError(SERVICE, "searxng connection refused")
+        raise refusal
+
+    monkeypatch.setattr(WebSearchService, "_searxng_rows", down)
+
+    resp = await svc.search("plasmodium kinases", limit=5)
+
+    assert asked == [search.TEXT_ENGINES[0]]
+    assert "searxng connection refused" in (
+        resp.search_diagnostics.engines[0].error or ""
+    )
+
+
+async def test_the_metasearch_is_asked_before_a_keyed_engine(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    svc = WebSearchService(
+        searxng_url="http://searxng:8080", brave_api_key="k", brave_cost_usd=PRICE
+    )
+    order: list[str] = []
+
+    async def rows(
+        _self: WebSearchService, _q: str, _limit: int
+    ) -> list[dict[str, object]]:
+        order.append(search.SEARXNG)
+        return SEARXNG_ROWS
+
+    async def brave(
+        _self: WebSearchService, _q: str, _limit: int
+    ) -> list[dict[str, str]]:
+        order.append(search.BRAVE_API)
+        return BRAVE_ROWS
+
+    monkeypatch.setattr(WebSearchService, "_searxng_rows", rows)
+    monkeypatch.setattr(WebSearchService, "_brave_rows", brave)
+
+    resp = await svc.search("circumsporozoite protein", limit=5)
+
+    assert order == [search.SEARXNG]
+    assert resp.cost_usd == Decimal(0)

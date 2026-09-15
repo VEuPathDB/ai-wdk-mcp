@@ -181,6 +181,7 @@ async def web_search(
     settings = get_research_settings()
     service = WebSearchService(
         timeout_seconds=settings.timeout_seconds,
+        searxng_url=settings.searxng_url,
         brave_api_key=settings.brave_search_api_key,
         brave_cost_usd=settings.brave_search_cost_usd,
     )
