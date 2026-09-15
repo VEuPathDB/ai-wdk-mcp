@@ -120,18 +120,19 @@ def fuzzy_score(query: str, text: str) -> float:
 _MIN_ABSTRACT_SCORE_LEN = 40
 
 
+def describing_abstract(paper: ParsedPaper) -> str:
+    """The abstract when it is long enough to describe the work, else empty."""
+    abstract = (paper.abstract or paper.snippet or "").strip()
+    return abstract if len(abstract) >= _MIN_ABSTRACT_SCORE_LEN else ""
+
+
 def rerank_score(query: str, paper: ParsedPaper) -> tuple[float, dict[str, float]]:
     """Score a literature result and return the score with its breakdown."""
     title = paper.title
-    abstract = paper.abstract or paper.snippet or ""
+    abstract = describing_abstract(paper)
     journal = paper.journal_title or ""
     title_s = fuzzy_score(query, title)
-    # Only score the abstract when it is long enough to carry real content.
-    abs_s = (
-        fuzzy_score(query, abstract)
-        if len(abstract.strip()) >= _MIN_ABSTRACT_SCORE_LEN
-        else 0.0
-    )
+    abs_s = fuzzy_score(query, abstract) if abstract else 0.0
     journal_s = fuzzy_score(query, journal) if journal else 0.0
     score = 0.70 * title_s + 0.28 * abs_s + 0.02 * journal_s
     return score, {"title": title_s, "abstract": abs_s, "journal": journal_s}

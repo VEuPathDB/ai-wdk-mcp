@@ -67,6 +67,23 @@ def _source_failure_sentence(statuses: list[SourceStatus]) -> str:
     )
 
 
+_INDEXED_SOURCES = ("europepmc", "pubmed")
+
+
+def _indexed_sources_quiet_sentence(statuses: list[SourceStatus]) -> str:
+    """Say when the two indexed sources returned nothing while others answered."""
+    by_source = {status.source: status for status in statuses}
+    indexed = [by_source[name] for name in _INDEXED_SOURCES if name in by_source]
+    quiet = indexed and all(s.results == 0 and not s.error for s in indexed)
+    others = any(s.results for s in statuses if s.source not in _INDEXED_SOURCES)
+    if not (quiet and others):
+        return ""
+    return (
+        "Europe PMC and PubMed returned nothing for this query. They match every "
+        "term, so a shorter query of two or three terms reaches them."
+    )
+
+
 def _text_at(rank: int, *values: str | None) -> str:
     """The first value with text in it, cut to what this rank is worth."""
     limit = LEADING_CHARS if rank < LEADING_RESULTS else INDEXED_CHARS
@@ -122,6 +139,7 @@ def _literature_out(response: LiteratureSearchResponse) -> LiteratureSearchOut:
     sentences = [
         _LITERATURE_GUIDANCE if response.results else "",
         _source_failure_sentence(response.sources_status),
+        _indexed_sources_quiet_sentence(response.sources_status),
     ]
     return LiteratureSearchOut(
         query=response.query,

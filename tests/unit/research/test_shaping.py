@@ -226,6 +226,36 @@ async def test_a_literature_search_reports_what_each_source_did(
     ] == [("europepmc", 8, None)]
 
 
+async def test_guidance_says_when_the_indexed_sources_returned_nothing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Europe PMC and PubMed match every term, so a long query reaches neither."""
+    statuses = [
+        SourceStatus(source="europepmc", results=0),
+        SourceStatus(source="pubmed", results=0),
+        SourceStatus(source="crossref", results=8),
+        SourceStatus(source="openalex", results=8),
+    ]
+
+    async def _quiet(
+        _self: LiteratureSearchService,
+        query: str,
+        **kwargs: object,
+    ) -> LiteratureSearchResponse:
+        del query, kwargs
+        return _literature_response(8, statuses)
+
+    monkeypatch.setattr(LiteratureSearchService, "search", _quiet)
+
+    out = await tools.literature_search(
+        "PF3D7_0304600 circumsporozoite protein expression life cycle transcript"
+    )
+
+    assert "Europe PMC and PubMed returned nothing" in out.guidance
+    assert "shorter query" in out.guidance
+    assert "did not answer" not in out.guidance
+
+
 async def test_guidance_names_a_source_that_did_not_answer(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

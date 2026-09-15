@@ -28,11 +28,24 @@ KEYWORD_PAGE = ParsedPaper(
     ),
 )
 SCIBX_STUB = ParsedPaper(
-    title="Circumsporozoite protein",
+    title="Plasmodium falciparum circumsporozoite protein (CSP)",
     doi="10.1038/scibx.2010.89",
     url="https://doi.org/10.1038/scibx.2010.89",
     journal_title="Science-Business eXchange",
     abstract="Science-Business eXchange",
+)
+INDEXED_PAPER = ParsedPaper(
+    title=(
+        "Transcriptome analysis based detection of Plasmodium falciparum "
+        "development in Anopheles stephensi mosquitoes"
+    ),
+    doi="10.1038/s41598-018-29969-4",
+    url="https://doi.org/10.1038/s41598-018-29969-4",
+    abstract=(
+        "We profiled the Plasmodium falciparum transcriptome across the mosquito "
+        "stages and found circumsporozoite protein transcripts rising in the "
+        "salivary gland sporozoite as the life cycle progresses."
+    ),
 )
 BIORXIV_ARTICLE = ParsedPaper(
     title=(
@@ -70,21 +83,42 @@ def _ranked(by_source: dict[str, SourcePayload]) -> list[EnrichedPaper]:
     return sort_results(filtered, sort="relevance", source="all", query=QUERY)
 
 
-def test_the_two_papers_rank_above_the_structure_entry_and_the_listing_page() -> None:
+def test_the_bands_rank_a_described_paper_first_and_the_pages_last() -> None:
+    """Identifier and abstract, identifier alone, article alone, then the rest."""
     ranked = _ranked(
         {
-            "crossref": SourcePayload(results=[SCIBX_STUB, PDB_ENTRY]),
+            "crossref": SourcePayload(results=[SCIBX_STUB, PDB_ENTRY, INDEXED_PAPER]),
             "biorxiv": SourcePayload(results=[KEYWORD_PAGE, BIORXIV_ARTICLE]),
         }
     )
 
-    assert [paper.title for paper in ranked[:2]] == [
+    assert [paper.title for paper in ranked[:3]] == [
+        INDEXED_PAPER.title,
         SCIBX_STUB.title,
         BIORXIV_ARTICLE.title,
     ]
-    assert sorted(paper.title for paper in ranked[2:]) == sorted(
+    assert sorted(paper.title for paper in ranked[3:]) == sorted(
         [KEYWORD_PAGE.title, PDB_ENTRY.title]
     )
+
+
+def test_a_stub_with_no_abstract_ranks_below_a_paper_the_title_score_prefers() -> None:
+    """The stub's title repeats the query, so only the band can put the paper first."""
+    ranked = _ranked(
+        {"crossref": SourcePayload(results=[SCIBX_STUB, INDEXED_PAPER])},
+    )
+
+    stub, paper = ranked[1], ranked[0]
+    assert (stub.title, paper.title) == (SCIBX_STUB.title, INDEXED_PAPER.title)
+    assert (stub.score or 0.0) > (paper.score or 0.0)
+    assert (stub.rank_band, paper.rank_band) == (1, 0)
+
+
+def test_a_boilerplate_abstract_is_no_abstract() -> None:
+    """An abstract that only repeats the venue does not describe the work."""
+    ranked = _ranked({"crossref": SourcePayload(results=[SCIBX_STUB])})
+
+    assert ranked[0].rank_band == 1
 
 
 def test_a_paper_is_an_article_and_a_landing_page_is_not() -> None:

@@ -2,6 +2,13 @@
 
 ## 2026-09-15
 
+- `veupathdb-mcp` is 0.2.0a9. A literature record with an identifier and no abstract that
+  describes it ranks below one that has both, so a one-page venue item whose title repeats
+  the query no longer leads; see
+  [A listing page never outranks a paper](decisions/a-listing-page-never-outranks-a-paper.md).
+  When Europe PMC and PubMed both return nothing while other sources answer, the guidance
+  says so and asks for a shorter query.
+
 - `veupathdb-mcp` is 0.2.0a8. Literature relevance ranks a paper above a page: a listing
   page, a search page and a DOI prefix that registers no journal article rank below every
   article, and the score decides inside a band. Both search tools now report what they

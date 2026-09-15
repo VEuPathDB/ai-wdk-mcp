@@ -19,6 +19,7 @@ from veupathdb_mcp.research.models import SourceStatus
 from veupathdb_mcp.research.text import (
     LiteratureItemContext,
     dedupe_key,
+    describing_abstract,
     limit_authors,
     passes_filters,
     rerank_score,
@@ -75,10 +76,12 @@ class EnrichedPaper(ParsedPaper):
 
     @property
     def rank_band(self) -> int:
-        """0 for an article with an identifier, 1 for any other article, 2 for the rest."""
+        """0: identified and described. 1: identified. 2: an article. 3: the rest."""
         if not self.is_article:
+            return 3
+        if not (self.pmid or self.doi):
             return 2
-        return 0 if (self.pmid or self.doi) else 1
+        return 0 if describing_abstract(self) else 1
 
 
 class LiteratureSearchResponse(CamelModel):
