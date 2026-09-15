@@ -103,6 +103,10 @@ class WebSearchResponse(CamelModel):
     error: str | None = None
 
 
+# ddgs raises this message for an engine that answered and found nothing.
+_NO_RESULTS = "No results found."
+
+
 def _refusal_detail(attempts: list[EngineAttempt]) -> str:
     """Name every engine that was asked and what it answered."""
     named = "; ".join(
@@ -215,7 +219,8 @@ class WebSearchService:
     ) -> tuple[list[WebSearchResult], SearchDiagnostics]:
         """Ask the keyed engine, then each scraped one, and keep the first answer.
 
-        A search no engine answers is a refusal, not an empty result.
+        An engine that answers and finds nothing has answered: when every engine
+        did, the search is empty. A search no engine answers is a refusal.
         """
         attempts: list[EngineAttempt] = []
         if self._brave_api_key:
@@ -228,6 +233,8 @@ class WebSearchService:
             attempts.append(attempt)
             if results:
                 return results, SearchDiagnostics(backend=engine, engines=attempts)
+        if any(attempt.error is None for attempt in attempts):
+            return [], SearchDiagnostics(engines=attempts)
         raise ExternalServiceError(_SERVICE_NAME, _refusal_detail(attempts))
 
     async def _ask_engine(
@@ -240,6 +247,8 @@ class WebSearchService:
         try:
             raw = await asyncio.to_thread(self._ddgs_text, q, limit, engine)
         except DDGSException as exc:
+            if str(exc) == _NO_RESULTS:
+                return [], EngineAttempt(engine=engine)
             return [], EngineAttempt(engine=engine, error=str(exc))
         results = [_DdgsRow.model_validate(item).to_result() for item in raw]
         return results, EngineAttempt(engine=engine, results=len(results))

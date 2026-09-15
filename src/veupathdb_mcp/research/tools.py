@@ -48,6 +48,10 @@ _WEB_GUIDANCE = (
     f"{LEADING_RESULTS} carry the page text; the rest carry the url that "
     "holds it."
 )
+_WEB_NOTHING_FOUND = (
+    "The engines answered and found no page for this query. A shorter query of "
+    "two or three terms finds more; a site name in it narrows what any engine indexes."
+)
 # A host prefixes the served tool names, so no guidance names a tool.
 _LITERATURE_GUIDANCE = (
     "Ranked most relevant first. Only the first "
@@ -124,6 +128,14 @@ def _paper(rank: int, paper: EnrichedPaper) -> PaperOut:
     )
 
 
+def _web_guidance(response: WebSearchResponse) -> str:
+    if response.results:
+        return _WEB_GUIDANCE
+    if response.error is None and response.search_diagnostics.engines:
+        return _WEB_NOTHING_FOUND
+    return ""
+
+
 def _web_out(response: WebSearchResponse) -> WebSearchOut:
     return WebSearchOut(
         query=response.query,
@@ -131,7 +143,7 @@ def _web_out(response: WebSearchResponse) -> WebSearchOut:
         sources=_sources(list(response.citations)),
         search_diagnostics=response.search_diagnostics,
         cost_usd=str(response.cost_usd),
-        guidance=_WEB_GUIDANCE if response.results else "",
+        guidance=_web_guidance(response),
         error=response.error,
     )
 

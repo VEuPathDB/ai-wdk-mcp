@@ -2,6 +2,12 @@
 
 ## 2026-09-15
 
+- `veupathdb-mcp` is 0.2.0a13. A web engine that answers and finds nothing has answered:
+  a query no engine finds a page for returns an empty result with guidance, and the
+  tool raises only when every engine was blocked. Measured: three empty searches in one
+  turn were three served errors, and a host that retries a tool three times ended the
+  turn with no reply.
+
 - `veupathdb-mcp` is 0.2.0a12. A `10.3410/` DOI (H1 Connect, once Faculty Opinions) is a
   recommendation of a paper and ranks as no article; a query with no letter or digit is
   refused as no query by both search tools.

@@ -218,6 +218,34 @@ async def test_a_query_with_no_search_terms_is_no_query() -> None:
     )
 
 
+async def test_a_web_search_that_finds_nothing_says_so(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    empty = _web_response(0).model_copy(
+        update={
+            "search_diagnostics": SearchDiagnostics(
+                engines=[
+                    EngineAttempt(engine=name) for name in ("duckduckgo", "mojeek")
+                ]
+            )
+        }
+    )
+
+    async def _nothing(
+        _self: WebSearchService, query: str, **kwargs: object
+    ) -> WebSearchResponse:
+        del query, kwargs
+        return empty
+
+    monkeypatch.setattr(WebSearchService, "search", _nothing)
+
+    out = await tools.web_search("site:plasmodb.org 3D7 gene count", limit=5)
+
+    assert (out.error, out.results) == (None, [])
+    assert "found no page" in out.guidance
+    assert "shorter query" in out.guidance
+
+
 async def test_a_web_search_names_the_engine_that_answered(stubbed: None) -> None:
     del stubbed
 

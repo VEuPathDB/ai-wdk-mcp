@@ -198,3 +198,45 @@ async def test_without_a_key_brave_is_not_asked(
         search.TEXT_ENGINES[0]
     ]
     assert resp.cost_usd == Decimal(0)
+
+
+NO_RESULTS = "No results found."
+
+
+async def test_an_engine_that_finds_nothing_answered_and_the_next_one_is_asked(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """ddgs reports an empty answer as an exception; it is not a refusal."""
+    empty, answered = search.TEXT_ENGINES[0], search.TEXT_ENGINES[1]
+
+    def one_empty(_q: str, _limit: int, backend: str) -> list[dict[str, str]]:
+        if backend == empty:
+            raise DDGSException(NO_RESULTS)
+        return _answer(backend)
+
+    monkeypatch.setattr(WebSearchService, "_ddgs_text", staticmethod(one_empty))
+
+    resp = await WebSearchService().search("plasmodium kinases", limit=5)
+
+    assert [
+        (attempt.engine, attempt.results, attempt.error)
+        for attempt in resp.search_diagnostics.engines
+    ] == [(empty, 0, None), (answered, 1, None)]
+
+
+async def test_a_query_no_engine_finds_a_page_for_answers_nothing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def every_empty(_q: str, _limit: int, _backend: str) -> list[dict[str, str]]:
+        raise DDGSException(NO_RESULTS)
+
+    monkeypatch.setattr(WebSearchService, "_ddgs_text", staticmethod(every_empty))
+
+    resp = await WebSearchService().search("site:plasmodb.org 3D7 gene count", limit=5)
+
+    assert resp.results == []
+    assert resp.error is None
+    assert resp.search_diagnostics.backend == ""
+    assert [attempt.error for attempt in resp.search_diagnostics.engines] == [
+        None
+    ] * len(search.TEXT_ENGINES)
