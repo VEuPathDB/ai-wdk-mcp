@@ -15,12 +15,14 @@ from veupathdb.wdk import (
     WDKDatasetConfigIdList,
     WDKDatasetIdListContent,
     WDKSearchConfig,
+    WDKStep,
     WDKStepTree,
     encode_params,
     get_strategy_api,
 )
 
 from veupathdb_mcp.wdk.helpers import extract_record_ids
+from veupathdb_mcp.wdk.param_decoding import decode_wire_parameters, load_search_spec
 
 logger = get_logger(__name__)
 
@@ -190,42 +192,59 @@ async def _count_strategy_steps(api: StrategyAPI, strategy_id: int) -> int:
         return 1
 
 
+async def _decode_step_parameters(
+    api: StrategyAPI,
+    step: WDKStep,
+    search_name: str | None,
+    record_type: str | None,
+) -> dict[str, ParamValue] | None:
+    """The typed values a leaf step sets, or None when its spec is unreadable."""
+    if search_name is None or not record_type:
+        return None
+    wire = dict(step.search_config.parameters)
+    search = await load_search_spec(api, record_type, search_name, wire)
+    if search is None:
+        return None
+    return decode_wire_parameters(search, wire)
+
+
 async def _extract_step_search_context(
     api: StrategyAPI,
     step_id: int,
     record_type: str | None,
 ) -> tuple[str | None, str | None, dict[str, ParamValue] | None]:
-    """Extract the search name, record type, and parameters from a WDK step.
+    """The search name, the record type and the typed parameters of a WDK step.
 
-    Wire parameters need a search spec to decode, so parameters stay unset.
+    Parameters are None when the search spec cannot be read, and an empty
+    mapping when the step sets no parameter the search declares.
     """
-    search_name: str | None = None
-    parameters: dict[str, ParamValue] | None = None
     try:
         step = await api.find_step(step_id)
-        sn = step.search_name
-        if not sn.startswith("boolean_question_"):
-            search_name = sn
-            parameters = None
-        if not record_type:
-            rcn = step.record_class_name
-            if rcn:
-                record_type = (
-                    rcn.split(".")[-1].replace("RecordClass", "").lower()
-                    if "." in rcn
-                    else "transcript"
-                )
-        logger.info(
-            "Extracted search context from WDK step",
-            step_id=step_id,
-            search_name=search_name,
-        )
     except VEuPathDBError as exc:
         logger.warning(
             "Failed to extract search context from step",
             step_id=step_id,
             error=str(exc),
         )
+        return None, record_type, None
+
+    sn = step.search_name
+    search_name = None if sn.startswith("boolean_question_") else sn
+    if not record_type:
+        rcn = step.record_class_name
+        if rcn:
+            record_type = (
+                rcn.split(".")[-1].replace("RecordClass", "").lower()
+                if "." in rcn
+                else "transcript"
+            )
+    parameters = await _decode_step_parameters(api, step, search_name, record_type)
+    logger.info(
+        "Extracted search context from WDK step",
+        step_id=step_id,
+        search_name=search_name,
+        parameter_count=None if parameters is None else len(parameters),
+    )
     return search_name, record_type, parameters
 
 

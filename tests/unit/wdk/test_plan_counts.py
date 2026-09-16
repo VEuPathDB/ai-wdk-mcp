@@ -6,7 +6,11 @@ import pytest
 from veupathdb import JSONObject
 from veupathdb.domain.parameters import StringValue
 from veupathdb.domain.strategy import CombineOp, StrategyAst, StrategyStepNode
-from veupathdb.errors import VEuPathDBError, VEuPathDBErrorCode
+from veupathdb.errors import (
+    SiteNotFoundError,
+    VEuPathDBError,
+    VEuPathDBErrorCode,
+)
 from veupathdb.wdk import (
     CombinedStepSpec,
     NewStepSpec,
@@ -31,6 +35,18 @@ def _wdk_refusal(title: str) -> VEuPathDBError:
 
 
 REFUSAL = _wdk_refusal("WDK refused the step")
+
+
+def _search_refusal() -> VEuPathDBError[VEuPathDBErrorCode]:
+    """A refusal this one search earned, which leaves its count unknown."""
+    return VEuPathDBError(
+        VEuPathDBErrorCode.WDK_ERROR, "Invalid parameter value", status=422
+    )
+
+
+def _site_is_down() -> VEuPathDBError[VEuPathDBErrorCode]:
+    """A refusal about the whole site, which no step's count may absorb."""
+    return VEuPathDBError(VEuPathDBErrorCode.WDK_ERROR, "WDK is down", status=502)
 
 
 def _leaf(
@@ -196,7 +212,7 @@ class TestALeafOnlyPlanNeedsNoStrategy:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         built = _FakeStrategyAPI(
-            _FakeClient({"GenesByMolecularWeight": _wdk_refusal("WDK is down")})
+            _FakeClient({"GenesByMolecularWeight": _search_refusal()})
         )
         monkeypatch.setattr(
             "veupathdb_mcp.wdk.plan_counts.get_strategy_api", lambda site_id: built
@@ -209,6 +225,44 @@ class TestALeafOnlyPlanNeedsNoStrategy:
         counts = await compute_plan_step_counts(_leaf_only_plan(), "plasmodb")
 
         assert counts == {"kinase": None}
+
+    async def test_a_site_that_is_down_is_not_every_step_counting_as_unknown(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """A whole plan of nulls hides a site that answered nothing at all."""
+        built = _FakeStrategyAPI(
+            _FakeClient({"GenesByMolecularWeight": _site_is_down()})
+        )
+        monkeypatch.setattr(
+            "veupathdb_mcp.wdk.plan_counts.get_strategy_api", lambda site_id: built
+        )
+        monkeypatch.setattr(
+            "veupathdb_mcp.wdk.plan_counts.get_wdk_client",
+            lambda site_id: built.client,
+        )
+
+        with pytest.raises(VEuPathDBError) as raised:
+            await compute_plan_step_counts(_leaf_only_plan(), "plasmodb")
+
+        assert raised.value.status == 502
+
+    async def test_a_site_the_deployment_does_not_serve_is_refused(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """An unknown site is not a step whose count could not be read."""
+
+        def _no_such_site(site_id: str) -> object:
+            raise SiteNotFoundError(site_id, ["plasmodb"])
+
+        monkeypatch.setattr(
+            "veupathdb_mcp.wdk.plan_counts.get_wdk_client", _no_such_site
+        )
+
+        with pytest.raises(SiteNotFoundError) as raised:
+            await compute_plan_step_counts(_leaf_only_plan(), "nosuchsite")
+
+        assert raised.value.status == 404
+        assert "nosuchsite" in str(raised.value)
 
 
 class TestAPlanWithACombineUsesATemporaryStrategy:

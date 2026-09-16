@@ -5,21 +5,18 @@ search's parameter specs from WDK.
 """
 
 from veupathdb import get_logger
-from veupathdb.domain.parameters import ParameterCanonicalizer, ParamKind, as_param_kind
 from veupathdb.domain.strategy import StrategyAst, StrategyStepNode, parse_op, walk
-from veupathdb.errors import DataParsingError, VEuPathDBError
+from veupathdb.errors import DataParsingError
 from veupathdb.wdk import (
     StrategyAPI,
     WDKSearch,
     WDKStep,
     WDKStepTree,
     WDKStrategyDetails,
-    decode_params,
     walk_wdk_step_tree,
 )
 
-from veupathdb_mcp.catalog.param_adapters import adapt_param_specs_from_search
-from veupathdb_mcp.catalog.search_context import get_search_params_under_context
+from veupathdb_mcp.wdk.param_decoding import decode_wire_parameters, load_search_spec
 
 __all__ = ["build_snapshot_from_wdk", "canonicalize_synced_parameters"]
 
@@ -174,28 +171,6 @@ def build_snapshot_from_wdk(
     return payload, wire_by_step_id
 
 
-async def _load_search_spec(
-    api: StrategyAPI,
-    record_type: str,
-    search_name: str,
-    context: dict[str, str],
-) -> WDKSearch | None:
-    """Load a search spec, narrowed by the given context. None if unreachable."""
-    try:
-        response = await get_search_params_under_context(
-            api.client, record_type, search_name, context
-        )
-    except VEuPathDBError as exc:
-        logger.warning(
-            "Failed to load search details during WDK sync",
-            record_type=record_type,
-            search_name=search_name,
-            error=str(exc),
-        )
-        return None
-    return response.search_data
-
-
 async def canonicalize_synced_parameters(
     payload: StrategyAst,
     api: StrategyAPI,
@@ -219,32 +194,18 @@ async def canonicalize_synced_parameters(
 
         cache_key = (record_type, search_name)
         if cache_key not in spec_cache:
-            spec_cache[cache_key] = await _load_search_spec(
+            spec_cache[cache_key] = await load_search_spec(
                 api,
                 record_type,
                 search_name,
                 wire_params,
             )
 
-        cached_search = spec_cache.get(cache_key)
-        specs = adapt_param_specs_from_search(cached_search) if cached_search else {}
-        if not specs:
+        cached_search = spec_cache[cache_key]
+        if cached_search is None:
             continue
-        kinds: dict[str, ParamKind] = {
-            name: as_param_kind(spec.param_type) for name, spec in specs.items()
-        }
-        decoded = decode_params(wire_params, kinds)
-        try:
-            canonicalizer = ParameterCanonicalizer(specs)
-            canonical = canonicalizer.canonicalize(decoded)
-        except VEuPathDBError as exc:
-            logger.warning(
-                "Failed to canonicalize synced parameters",
-                record_type=record_type,
-                search_name=search_name,
-                step_id=step.id,
-                error=str(exc),
-            )
+        canonical = decode_wire_parameters(cached_search, wire_params)
+        if canonical is None:
             continue
 
         step.parameters = canonical

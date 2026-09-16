@@ -2,6 +2,28 @@
 
 ## 2026-09-16
 
+- `veupathdb-mcp` is 0.2.0a17. A gene set taken from a single-step strategy carries that
+  search's typed parameters. `_extract_step_search_context` reads the step's own search
+  document and decodes its wire values through the seam the strategy snapshot already used,
+  which is now `veupathdb_mcp.wdk.param_decoding`: one way to get a search's parameter kinds,
+  two callers. Parameters are None when the search document cannot be read and an empty
+  mapping when the step sets none of the parameters the search declares, so a caller tells the
+  two apart. A step whose document is unreadable still reports its genes and its search name.
+  Measured against the recorded `search_genes_by_molecular_weight` document: a step wired with
+  `min_molecular_weight=50000`, `max_molecular_weight=50100` and `organism=["Plasmodium
+  falciparum 3D7"]` reported no parameters and now reports those three as typed values.
+
+- `veupathdb-mcp` is 0.2.0a17. A count reports no number only when the service answered about
+  the one search it asked for. `count_search_answer` reads the refusal's own code, and for a WDK
+  refusal its HTTP status: any 4xx is such an answer and leaves that count unknown, while a site
+  the deployment does not serve, a caller with no registered token, another service, and any 5xx
+  reach the caller, because a null from those says "no records here" where nothing answered at
+  all. `compute_plan_step_counts` still reports None for a step whose own count cannot be read.
+  Measured both ways: a count that absorbed every refusal answered "this step has no readable
+  count" for a site that does not exist, and a host that had refused such a request served 200
+  with nulls; and the anonymous report endpoint answers 401 with a request for an API key on
+  some searches, so a 401 is the endpoint describing itself and not the caller's standing.
+
 - `veupathdb-mcp` is 0.2.0a16. `count_search_answer` is published from
   `veupathdb_mcp.wdk`: one search counted through the anonymous report endpoint with
   `numRecords: 0`, which creates no step, no strategy and needs no user session. It is the

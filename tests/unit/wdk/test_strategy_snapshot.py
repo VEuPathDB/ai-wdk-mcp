@@ -23,7 +23,7 @@ from veupathdb.wdk import (
 from veupathdb_mcp.wdk import (
     build_snapshot_from_wdk,
     canonicalize_synced_parameters,
-    strategy_snapshot,
+    param_decoding,
 )
 
 _BOOLEAN = "boolean_question_TranscriptRecordClasses_TranscriptRecordClass"
@@ -171,7 +171,7 @@ async def test_a_wire_value_is_decoded_against_the_searchs_own_spec(
         del client, record_type, search_name, context
         return _organism_search([organism])
 
-    monkeypatch.setattr(strategy_snapshot, "get_search_params_under_context", _read)
+    monkeypatch.setattr(param_decoding, "get_search_params_under_context", _read)
 
     details = _details().model_copy(
         update={
@@ -201,9 +201,7 @@ async def test_a_step_whose_spec_is_unreachable_keeps_its_empty_parameters(
         msg = "search is unreachable"
         raise DataParsingError(msg)
 
-    monkeypatch.setattr(
-        strategy_snapshot, "get_search_params_under_context", _unreadable
-    )
+    monkeypatch.setattr(param_decoding, "get_search_params_under_context", _unreadable)
 
     ast, wire = build_snapshot_from_wdk(_details())
     await canonicalize_synced_parameters(ast, _FakeStrategyAPI(), wire)

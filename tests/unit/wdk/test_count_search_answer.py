@@ -9,7 +9,16 @@ import time
 import pytest
 from veupathdb import JSONObject
 from veupathdb.domain.parameters import ParamValue, StringValue
-from veupathdb.errors import VEuPathDBError, VEuPathDBErrorCode
+from veupathdb.errors import (
+    DataParsingError,
+    ExternalServiceError,
+    SiteNotFoundError,
+    ValidationError,
+    VEuPathDBError,
+    VEuPathDBErrorCode,
+    WDKError,
+    WDKLoginRequiredError,
+)
 from veupathdb.wdk import WDKAnswer, WDKAnswerMeta, WDKSearchConfig
 
 from veupathdb_mcp.wdk import count_search_answer, plan_counts
@@ -97,20 +106,6 @@ async def test_a_search_that_matches_nothing_reports_the_zero(
     assert count == 0
 
 
-async def test_a_read_the_site_refuses_reports_no_count(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    refusal = VEuPathDBError(VEuPathDBErrorCode.WDK_ERROR, "WDK is down", status=500)
-    recorder = _serve(monkeypatch, refusal)
-
-    count = await count_search_answer(
-        "plasmodb", "transcript", "GenesByText", _params()
-    )
-
-    assert count is None
-    assert len(recorder.report_configs) == 1
-
-
 async def test_an_answer_that_publishes_no_count_reports_none(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -175,3 +170,74 @@ def test_the_budget_is_the_callers_to_state() -> None:
         "timeout_seconds",
     ]
     assert parameters["timeout_seconds"].default is None
+
+
+def _wdk(status: int) -> WDKError:
+    return WDKError(f"GET /reports/standard -> HTTP {status}", status=status)
+
+
+@pytest.mark.parametrize(
+    "refusal",
+    [
+        _wdk(422),
+        _wdk(400),
+        _wdk(404),
+        _wdk(401),
+        _wdk(403),
+        ValidationError("Invalid parameter value"),
+        DataParsingError("Unexpected WDK answer"),
+        VEuPathDBError(VEuPathDBErrorCode.SEARCH_NOT_FOUND, "No such search"),
+    ],
+)
+async def test_a_refusal_the_search_itself_caused_reports_no_count(
+    monkeypatch: pytest.MonkeyPatch, refusal: Exception
+) -> None:
+    """The values it sent or the answer it got back is the count's own business."""
+    recorder = _serve(monkeypatch, refusal)
+
+    count = await count_search_answer(
+        "plasmodb", "transcript", "GenesByText", _params()
+    )
+
+    assert count is None
+    assert len(recorder.report_configs) == 1
+
+
+@pytest.mark.parametrize(
+    "refusal",
+    [
+        SiteNotFoundError("nosuchsite", ["plasmodb", "giardiadb"]),
+        WDKLoginRequiredError(),
+        _wdk(500),
+        _wdk(502),
+        ExternalServiceError("eda", "unreachable"),
+    ],
+)
+async def test_a_refusal_about_the_site_or_the_caller_reaches_the_caller(
+    monkeypatch: pytest.MonkeyPatch, refusal: VEuPathDBError[VEuPathDBErrorCode]
+) -> None:
+    """A count never answers a question that was not about this one search."""
+    _serve(monkeypatch, refusal)
+
+    with pytest.raises(VEuPathDBError) as raised:
+        await count_search_answer("plasmodb", "transcript", "GenesByText", _params())
+
+    assert raised.value.code == refusal.code
+    assert raised.value.status == refusal.status
+
+
+async def test_an_unknown_site_is_refused_and_not_counted_as_unknown(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A site the deployment does not serve is not one step with no count."""
+
+    def _no_such_site(site_id: str) -> object:
+        raise SiteNotFoundError(site_id, ["plasmodb"])
+
+    monkeypatch.setattr(plan_counts, "get_wdk_client", _no_such_site)
+
+    with pytest.raises(SiteNotFoundError) as raised:
+        await count_search_answer("nosuchsite", "transcript", "GenesByText", _params())
+
+    assert raised.value.status == 404
+    assert "nosuchsite" in str(raised.value)

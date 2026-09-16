@@ -7,7 +7,6 @@ needs a temporary internal WDK strategy, which is deleted once read.
 import asyncio
 from collections.abc import Mapping
 
-import httpx
 from veupathdb import JSONObject, get_logger
 from veupathdb.domain.parameters import ParamValue
 from veupathdb.domain.strategy import (
@@ -18,7 +17,7 @@ from veupathdb.domain.strategy import (
     leaves,
     walk,
 )
-from veupathdb.errors import VEuPathDBError
+from veupathdb.errors import VEuPathDBError, VEuPathDBErrorCode
 from veupathdb.wdk import (
     CombinedStepSpec,
     MissingWDKStepIdError,
@@ -71,6 +70,42 @@ async def compute_plan_step_counts(
     )
 
 
+# A refusal one search caused: its name, the values it sent, or its answer.
+_PER_SEARCH_CODES = frozenset(
+    {
+        VEuPathDBErrorCode.VALIDATION_ERROR,
+        VEuPathDBErrorCode.DATA_PARSING_ERROR,
+        VEuPathDBErrorCode.SEARCH_NOT_FOUND,
+    }
+)
+_SERVER_ERROR = 500
+
+
+def _answered_about_this_search(error: VEuPathDBError[VEuPathDBErrorCode]) -> bool:
+    """Whether the service answered about this one search.
+
+    A WDK refusal names its HTTP status. Any 4xx is an answer about this
+    request, including the key an endpoint wants for an anonymous read. A 5xx
+    is the service failing to answer at all, which no count may report as a
+    size.
+    """
+    if error.code is VEuPathDBErrorCode.WDK_ERROR:
+        return error.status < _SERVER_ERROR
+    return error.code in _PER_SEARCH_CODES
+
+
+def _report_no_count(
+    site_id: str, record_type: str, search_name: str, error: Exception
+) -> None:
+    logger.warning(
+        "Anonymous report count failed",
+        site_id=site_id,
+        record_type=record_type,
+        search_name=search_name,
+        error=str(error),
+    )
+
+
 async def count_search_answer(
     site_id: str,
     record_type: str,
@@ -84,7 +119,11 @@ async def count_search_answer(
     A report with ``numRecords: 0`` returns only the total, so no step and no
     strategy is created and no user session is needed. ``timeout_seconds``
     bounds the read for a caller that counts on a latency path; the default
-    waits as long as the client does. Returns None when no count arrives.
+    waits as long as the client does.
+
+    Returns None when this one search did not answer. A refusal about the
+    site, the caller's identity or the service reaches the caller instead: a
+    count states no number for a question it was never asked.
     """
     config = WDKSearchConfig(parameters=encode_params(dict(parameters)))
     report_config: JSONObject = {"pagination": {"offset": 0, "numRecords": 0}}
@@ -94,14 +133,13 @@ async def count_search_answer(
                 record_type, search_name, config, report_config
             )
         return answer.meta.records_returned()
-    except (VEuPathDBError, httpx.HTTPError, TimeoutError, ValueError) as e:
-        logger.warning(
-            "Anonymous report count failed",
-            site_id=site_id,
-            record_type=record_type,
-            search_name=search_name,
-            error=str(e),
-        )
+    except VEuPathDBError as e:
+        if not _answered_about_this_search(e):
+            raise
+        _report_no_count(site_id, record_type, search_name, e)
+        return None
+    except (TimeoutError, ValueError) as e:
+        _report_no_count(site_id, record_type, search_name, e)
         return None
 
 
