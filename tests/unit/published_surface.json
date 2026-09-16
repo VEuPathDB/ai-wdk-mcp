@@ -269,6 +269,7 @@
     "canonicalize_synced_parameters",
     "compute_plan_step_counts",
     "count_search_answer",
+    "describe_step_refusal",
     "encode_param_value",
     "extract_default_params",
     "extract_detail_attributes",

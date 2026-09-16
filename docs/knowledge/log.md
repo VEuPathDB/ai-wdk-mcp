@@ -2,6 +2,20 @@
 
 ## 2026-09-16
 
+- `veupathdb-mcp` is 0.2.0a18. A step the site will not run reports words, not the bundle.
+  `veupathdb_mcp.wdk.describe_step_refusal` reads the validation bundle WDK renders inside its
+  own prose, follows the answer parameter into the bundle of each input step it names, and
+  reports the parameter and the value the site refuses. The three bundle fields
+  (`keyedErrors`, `validationLevel`, `validationStatus`) are required, so a JSON object of
+  another shape is not read as a bundle and the caller keeps its own text; a bundle whose leaf
+  message the reader does not know reports one short sentence instead of the blob. The reader
+  names no user, no step id and no JSON, and the caller keeps logging the whole refusal.
+  Measured on the refusal a saved two-step strategy got: two nested bundles and four
+  identifiers became "This strategy cannot run. The second input of the step you ran sets
+  'profileset_generic' to 'P. falciparum Su Strand Specific RNA Seq data - - Sense', which the
+  site no longer offers. Open that step and choose a value the site offers now." Enrichment is
+  the first caller.
+
 - `veupathdb-mcp` is 0.2.0a17. A gene set taken from a single-step strategy carries that
   search's typed parameters. `_extract_step_search_context` reads the step's own search
   document and decodes its wire values through the seam the strategy snapshot already used,

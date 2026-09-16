@@ -80,6 +80,7 @@ class FakeStrategyAPI:
     def __init__(self) -> None:
         self.rows: dict[str, list[JSONObject]] = {}
         self.failing: set[str] = set()
+        self.refusals: dict[str, str] = {}
         self.datasets: list[list[str]] = []
         self.steps: list[tuple[NewStepSpec, str]] = []
         self.strategies: list[int] = []
@@ -134,6 +135,8 @@ class FakeStrategyAPI:
     ) -> JSONObject:
         del step_id
         self.analyses.append((analysis_type, dict(parameters)))
+        if analysis_type in self.refusals:
+            raise WDKError(self.refusals[analysis_type], status=422)
         if analysis_type in self.failing:
             raise WDKError(_ANALYSIS_FAILED, status=500)
         return {

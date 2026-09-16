@@ -31,6 +31,7 @@ from veupathdb_mcp.wdk.plan_counts import (
     compute_plan_step_counts,
     count_search_answer,
 )
+from veupathdb_mcp.wdk.refusal import describe_step_refusal
 from veupathdb_mcp.wdk.step_preview import step_download_url, step_sample_records
 from veupathdb_mcp.wdk.step_results import StepResultsService, step_results_service
 from veupathdb_mcp.wdk.step_results_models import (
@@ -63,6 +64,7 @@ __all__ = [
     "canonicalize_synced_parameters",
     "compute_plan_step_counts",
     "count_search_answer",
+    "describe_step_refusal",
     "encode_param_value",
     "extract_default_params",
     "extract_detail_attributes",

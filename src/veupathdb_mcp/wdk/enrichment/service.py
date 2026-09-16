@@ -34,6 +34,7 @@ from veupathdb_mcp.wdk.params import (
     extract_default_params,
     extract_vocab_values,
 )
+from veupathdb_mcp.wdk.refusal import describe_step_refusal
 
 logger = get_logger(__name__)
 
@@ -266,12 +267,13 @@ class EnrichmentService:
                     api, step_id, analysis_type, analyzed_gene_count
                 )
             except (VEuPathDBError, RuntimeError) as exc:
+                raw = str(exc)
                 logger.warning(
                     "Enrichment failed",
                     analysis_type=analysis_type,
-                    error=str(exc),
+                    error=raw,
                 )
-                error_msg = str(exc)
+                error_msg = describe_step_refusal(raw) or raw
                 errors.append(f"{analysis_type}: {error_msg}")
                 return EnrichmentResult(
                     analysis_type=analysis_type,
