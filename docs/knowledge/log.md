@@ -1,5 +1,10 @@
 # Knowledge log
 
+## 2026-09-22
+
+- `veupathdb-mcp` is 0.2.0a19: it pins `veupathdb-py` v0.1.0a11, whose search-config update
+  carries the step's own input-step values, so a transform's own parameter can be changed.
+
 ## 2026-09-16
 
 - `veupathdb-mcp` is 0.2.0a18. A step the site will not run reports words, not the bundle.
