@@ -4,6 +4,8 @@
 
 - `veupathdb-mcp` is 0.2.0a19: it pins `veupathdb-py` v0.1.0a11, whose search-config update
   carries the step's own input-step values, so a transform's own parameter can be changed.
+- `veupathdb-mcp` is 0.2.0a20: it pins `veupathdb-py` v0.1.0a12, one step read per search-config
+  update.
 
 ## 2026-09-16
 
