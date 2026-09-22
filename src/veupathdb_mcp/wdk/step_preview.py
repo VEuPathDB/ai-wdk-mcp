@@ -5,6 +5,7 @@ from veupathdb import JSONObject, strip_html_tags
 from veupathdb.errors import VEuPathDBError
 from veupathdb.wdk import StrategyAPI, WDKAnswer, get_results_api, get_strategy_api
 
+from veupathdb_mcp.wdk.step_report_filters import step_view_filters
 from veupathdb_mcp.wdk.step_results_models import SampleRecordsResult
 
 
@@ -58,16 +59,20 @@ async def _preview(
 ) -> WDKAnswer:
     """A record class that rejects the attributes gets an id-only preview."""
     pagination = {"offset": 0, "numRecords": limit}
+    view_filters = await step_view_filters(api, step_id)
     if attributes:
         try:
             return await api.get_step_answer(
                 step_id,
                 attributes=attributes,
                 pagination=pagination,
+                view_filters=view_filters,
             )
         except VEuPathDBError, OSError:
             pass  # The record class lacks these attributes.
-    return await api.get_step_answer(step_id, pagination=pagination)
+    return await api.get_step_answer(
+        step_id, pagination=pagination, view_filters=view_filters
+    )
 
 
 def _sample_of(answer: WDKAnswer, step_id: int) -> SampleRecordsResult:

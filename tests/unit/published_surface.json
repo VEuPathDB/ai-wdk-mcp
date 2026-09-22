@@ -285,7 +285,9 @@
     "resolve_wdk_context",
     "step_download_url",
     "step_results_service",
-    "step_sample_records"
+    "step_sample_records",
+    "step_view_filters",
+    "view_filters_for"
   ],
   "veupathdb_mcp.wdk.enrichment": [
     "ALL_ENRICHMENT_ANALYSIS_TYPES",

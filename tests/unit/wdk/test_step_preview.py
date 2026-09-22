@@ -2,7 +2,14 @@ from __future__ import annotations
 
 import pytest
 from veupathdb.errors import WDKError
-from veupathdb.wdk import WDKAnswer, WDKAnswerMeta, WDKRecordInstance
+from veupathdb.wdk import (
+    WDKAnswer,
+    WDKAnswerMeta,
+    WDKFilterValue,
+    WDKRecordInstance,
+    WDKSearchConfig,
+    WDKStep,
+)
 
 from veupathdb_mcp.wdk import step_preview
 from veupathdb_mcp.wdk.step_preview import step_sample_records
@@ -31,14 +38,23 @@ class _FakeStrategyAPI:
         self.calls: list[list[str] | None] = []
         self._records = records
 
+    async def find_step(self, step_id: int) -> WDKStep:
+        return WDKStep(
+            id=step_id,
+            search_name="GenesByMolecularWeight",
+            search_config=WDKSearchConfig(),
+            record_class_name="transcript",
+        )
+
     async def get_step_answer(
         self,
         step_id: int,
         attributes: list[str] | None = None,
         pagination: dict[str, int] | None = None,
-        user_id: str | None = None,
+        *,
+        view_filters: list[WDKFilterValue] | None = None,
     ) -> WDKAnswer:
-        del step_id, pagination, user_id
+        del step_id, pagination, view_filters
         self.calls.append(attributes)
         if attributes and self._records is None:
             raise WDKError(_ATTRIBUTE_MISSING)
@@ -114,9 +130,10 @@ async def test_a_refused_id_only_read_reaches_the_caller(
             step_id: int,
             attributes: list[str] | None = None,
             pagination: dict[str, int] | None = None,
-            user_id: str | None = None,
+            *,
+            view_filters: list[WDKFilterValue] | None = None,
         ) -> WDKAnswer:
-            del step_id, attributes, pagination, user_id
+            del step_id, attributes, pagination, view_filters
             raise WDKError(_NOT_IN_A_STRATEGY)
 
     _bind(monkeypatch, _Refusing())

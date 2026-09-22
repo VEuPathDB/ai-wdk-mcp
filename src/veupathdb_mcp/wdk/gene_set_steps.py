@@ -23,6 +23,7 @@ from veupathdb.wdk import (
 
 from veupathdb_mcp.wdk.helpers import extract_record_ids
 from veupathdb_mcp.wdk.param_decoding import decode_wire_parameters, load_search_spec
+from veupathdb_mcp.wdk.step_report_filters import step_view_filters
 
 logger = get_logger(__name__)
 
@@ -83,11 +84,13 @@ async def fetch_gene_ids_from_step(
 
     ``limit`` asks for one id more than the bound, so a caller can tell a step
     that fits from one that does not. None asks for every id the step holds.
+    A transcript step answers one row per gene.
     """
     answer = await api.get_step_answer(
         step_id,
         attributes=["primary_key"],
         pagination={"offset": 0, "numRecords": -1 if limit is None else limit + 1},
+        view_filters=await step_view_filters(api, step_id),
     )
     return extract_record_ids(answer.records)
 
@@ -230,14 +233,8 @@ async def _extract_step_search_context(
 
     sn = step.search_name
     search_name = None if sn.startswith("boolean_question_") else sn
-    if not record_type:
-        rcn = step.record_class_name
-        if rcn:
-            record_type = (
-                rcn.split(".")[-1].replace("RecordClass", "").lower()
-                if "." in rcn
-                else "transcript"
-            )
+    # WDK names a step's record class by its url segment.
+    record_type = record_type or step.record_class_name
     parameters = await _decode_step_parameters(api, step, search_name, record_type)
     logger.info(
         "Extracted search context from WDK step",

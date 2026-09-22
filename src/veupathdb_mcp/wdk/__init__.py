@@ -33,6 +33,7 @@ from veupathdb_mcp.wdk.plan_counts import (
 )
 from veupathdb_mcp.wdk.refusal import describe_step_refusal
 from veupathdb_mcp.wdk.step_preview import step_download_url, step_sample_records
+from veupathdb_mcp.wdk.step_report_filters import step_view_filters, view_filters_for
 from veupathdb_mcp.wdk.step_results import StepResultsService, step_results_service
 from veupathdb_mcp.wdk.step_results_models import (
     AttributesResponse,
@@ -81,4 +82,6 @@ __all__ = [
     "step_download_url",
     "step_results_service",
     "step_sample_records",
+    "step_view_filters",
+    "view_filters_for",
 ]

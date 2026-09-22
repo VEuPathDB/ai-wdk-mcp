@@ -1,5 +1,23 @@
 # Knowledge log
 
+## 2026-09-23
+
+- `veupathdb-mcp` is 0.2.0a21: it pins `veupathdb-py` v0.1.0a13, whose step reports take no user
+  id and send `viewFilters` beside `reportConfig`, the only place WDK reads them.
+- A report that enumerates the records of a transcript step reads one row per gene. The standard
+  report of a transcript step has one row per transcript while its count is genes (toxodb 6475
+  rows for 6414 genes, plasmodb 3139 for 3073), so a pager that walks `offset` up to the count
+  repeats genes and never reaches the last rows. `veupathdb_mcp.wdk.step_report_filters` owns
+  the `representativeTranscriptOnly` view filter and sends it on a transcript step only; the
+  `gene` record type has no such filter. The pagers that send it: `StepResultsService.get_records`
+  (the record type the host names), `fetch_gene_ids_from_step`, `step_sample_records` and
+  `run_step_control_tests` (the record type WDK reports for the step), and the identifier read
+  of a control intersection (the record type the catalog names for the target search). Count
+  reads send nothing: `records_returned()` already prefers the gene count. `veupathdb_mcp.wdk`
+  publishes `view_filters_for` and `step_view_filters`, so a host pager applies the same rule.
+- `_extract_step_search_context` takes a step's record type from its `recordClassName`, which WDK
+  sends as the url segment, so a `gene` step is no longer reported as `transcript`.
+
 ## 2026-09-22
 
 - `veupathdb-mcp` is 0.2.0a19: it pins `veupathdb-py` v0.1.0a11, whose search-config update

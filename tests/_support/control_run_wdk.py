@@ -11,6 +11,7 @@ from veupathdb.wdk import (
     NewStepSpec,
     WDKAnswer,
     WDKAnswerMeta,
+    WDKFilterValue,
     WDKIdentifier,
     WDKRecordInstance,
     WDKStepTree,
@@ -39,6 +40,7 @@ class RunFakeAPI(FakeCleanupAPI):
         super().__init__()
         self.created_strategy_names: list[str] = []
         self.answer_calls: list[int] = []
+        self.answer_view_filters: list[list[WDKFilterValue] | None] = []
         self._step_count = step_count
         self._answer_ids = answer_ids
         self._next_id = 200
@@ -68,8 +70,17 @@ class RunFakeAPI(FakeCleanupAPI):
     async def get_step_count(self, step_id: int) -> int:
         return self._step_count
 
-    async def get_step_answer(self, step_id: int, **kwargs: Any) -> WDKAnswer:
+    async def get_step_answer(
+        self,
+        step_id: int,
+        attributes: list[str] | None = None,
+        pagination: dict[str, int] | None = None,
+        *,
+        view_filters: list[WDKFilterValue] | None = None,
+    ) -> WDKAnswer:
+        del attributes, pagination
         self.answer_calls.append(step_id)
+        self.answer_view_filters.append(view_filters)
         return WDKAnswer(
             meta=WDKAnswerMeta(total_count=len(self._answer_ids)),
             records=[
@@ -85,14 +96,16 @@ class RunFakeAPI(FakeCleanupAPI):
         return []
 
 
-def patch_control_run(monkeypatch: pytest.MonkeyPatch, api: RunFakeAPI) -> RunFakeAPI:
+def patch_control_run(
+    monkeypatch: pytest.MonkeyPatch, api: RunFakeAPI, record_type: str = "transcript"
+) -> RunFakeAPI:
     """Route a control run at the given fake, and answer the catalog reads."""
     monkeypatch.setattr(
         "veupathdb_mcp.controls.control_tests.get_strategy_api", lambda site_id: api
     )
 
     async def _record_type(ctx: object) -> str:
-        return "transcript"
+        return record_type
 
     monkeypatch.setattr(
         "veupathdb_mcp.controls.control_tests.find_record_type_for_search", _record_type

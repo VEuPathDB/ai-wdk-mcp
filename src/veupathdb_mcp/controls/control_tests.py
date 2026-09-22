@@ -19,7 +19,6 @@ from veupathdb.wdk import (
     WDKSearchConfig,
     WDKStepTree,
     encode_params,
-    get_results_api,
     get_strategy_api,
 )
 
@@ -38,6 +37,7 @@ from veupathdb_mcp.controls.control_types import (
     summarize_intersection,
 )
 from veupathdb_mcp.wdk.helpers import extract_record_ids
+from veupathdb_mcp.wdk.step_report_filters import step_view_filters, view_filters_for
 
 __all__ = [
     "resolve_controls_param_type",
@@ -48,6 +48,7 @@ __all__ = [
 logger = get_logger(__name__)
 
 _MAX_REPORTED_IDS = 20
+_MAX_STEP_RECORDS = 50000
 
 
 async def run_step_control_tests(
@@ -57,7 +58,12 @@ async def run_step_control_tests(
     negative_controls: list[str] | None = None,
 ) -> ControlTestResult:
     """Intersect an already-built step's results with the control gene lists."""
-    answer = await get_results_api(site_id).get_step_preview(wdk_step_id, limit=50000)
+    api = get_strategy_api(site_id)
+    answer = await api.get_step_answer(
+        wdk_step_id,
+        pagination={"offset": 0, "numRecords": _MAX_STEP_RECORDS},
+        view_filters=await step_view_filters(api, wdk_step_id),
+    )
     result_ids = {record.display_name for record in answer.records}
 
     target = ControlTargetData(
@@ -224,6 +230,7 @@ async def _run_intersection_control(
                     "offset": 0,
                     "numRecords": min(len(controls_ids), fetch_ids_limit),
                 },
+                view_filters=view_filters_for(target_rt),
             )
             ids_found = extract_record_ids(
                 answer.records, preferred_key=config.id_field

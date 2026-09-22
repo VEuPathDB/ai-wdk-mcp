@@ -20,6 +20,7 @@ from veupathdb_mcp.wdk.helpers import (
     merge_analysis_params,
     order_primary_key,
 )
+from veupathdb_mcp.wdk.step_report_filters import view_filters_for
 from veupathdb_mcp.wdk.step_results_models import (
     AttributesResponse,
     RecordAttribute,
@@ -62,7 +63,7 @@ class StepResultsService:
         direction: WDKSortDirection = "ASC",
         attributes: list[str] | None = None,
     ) -> WDKAnswer:
-        """Get paginated result records."""
+        """One page of result records, one row per gene on a transcript step."""
         sorting: list[WDKSortSpec] | None = None
         if sort:
             sorting = [WDKSortSpec(attribute_name=sort, direction=direction)]
@@ -72,6 +73,7 @@ class StepResultsService:
             attributes=attributes,
             pagination={"offset": offset, "numRecords": limit},
             sorting=sorting,
+            view_filters=view_filters_for(self._record_type),
         )
 
     async def get_distribution(self, attribute_name: str) -> WDKColumnDistribution:

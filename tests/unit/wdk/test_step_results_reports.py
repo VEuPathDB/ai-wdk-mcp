@@ -73,7 +73,7 @@ class TestAttributesAreOnlyWhatWeAskFor:
     ) -> None:
         api, sent = _api(monkeypatch)
 
-        await api.get_step_records(9, attributes=["gene_id", "product"], user_id="1")
+        await api.get_step_records(9, attributes=["gene_id", "product"])
 
         assert sent.config["attributes"] == ["gene_id", "product"]
 
@@ -82,7 +82,7 @@ class TestAttributesAreOnlyWhatWeAskFor:
     ) -> None:
         api, sent = _api(monkeypatch)
 
-        await api.get_step_records(9, user_id="1")
+        await api.get_step_records(9)
 
         assert "attributes" not in sent.config
 
@@ -91,7 +91,7 @@ class TestAttributesAreOnlyWhatWeAskFor:
     ) -> None:
         api, sent = _api(monkeypatch)
 
-        await api.get_step_records(9, attributes=[], user_id="1")
+        await api.get_step_records(9, attributes=[])
 
         assert "attributes" not in sent.config
 
@@ -101,7 +101,7 @@ class TestAttributesAreOnlyWhatWeAskFor:
         # Record identity is not an attribute, so an id-only preview is usable.
         api, _ = _api(monkeypatch)
 
-        answer = await api.get_step_records(9, user_id="1")
+        answer = await api.get_step_records(9)
 
         assert answer.records[0].id[0].value == "PF3D7_0100100"
         assert answer.records[0].attributes == {}
@@ -111,7 +111,7 @@ class TestAttributesAreOnlyWhatWeAskFor:
     ) -> None:
         api, sent = _api(monkeypatch)
 
-        await api.get_step_records(9, user_id="1")
+        await api.get_step_records(9)
 
         assert "tables" not in sent.config
 
@@ -140,7 +140,7 @@ class TestACountAsksForZeroRecords:
         # Without the key WDK streams every record, so a caller must opt in.
         api, sent = _api(monkeypatch)
 
-        await api.get_step_records(9, attributes=["gene_id"], user_id="1")
+        await api.get_step_records(9, attributes=["gene_id"])
 
         assert "pagination" not in sent.config
 
@@ -169,7 +169,7 @@ class TestOnlyTheJsonReporterHonoursThePage:
     ) -> None:
         api, sent = _api(monkeypatch)
 
-        await api.get_step_records(9, user_id="1")
+        await api.get_step_records(9)
 
         assert sent.paths[-1].endswith("/reports/standard")
 
@@ -189,9 +189,7 @@ class TestOnlyTheJsonReporterHonoursThePage:
         api, sent = _api(monkeypatch)
 
         await api.get_step_records(
-            9,
-            sorting=[WDKSortSpec(attribute_name="gene_id", direction="DESC")],
-            user_id="1",
+            9, sorting=[WDKSortSpec(attribute_name="gene_id", direction="DESC")]
         )
 
         assert sent.config["sorting"] == [
@@ -223,7 +221,7 @@ class TestTheStepReportEndpointTakesOnlyAReportConfig:
     ) -> None:
         api, sent = _api(monkeypatch)
 
-        await api.get_step_records(9, attributes=["gene_id"], user_id="1")
+        await api.get_step_records(9, attributes=["gene_id"])
 
         assert "searchConfig" not in sent.bodies[-1]
 
@@ -232,7 +230,7 @@ class TestTheStepReportEndpointTakesOnlyAReportConfig:
     ) -> None:
         api, sent = _api(monkeypatch)
 
-        await api.get_step_records(9, attributes=["gene_id"], user_id="1")
+        await api.get_step_records(9, attributes=["gene_id"])
 
         assert list(sent.bodies[-1]) == ["reportConfig"]
 

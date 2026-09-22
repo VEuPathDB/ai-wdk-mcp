@@ -40,13 +40,16 @@ class _FakeStrategyAPI:
         return self._step
 
 
-def _step(search_name: str, parameters: dict[str, str]) -> WDKStep:
+def _step(
+    search_name: str, parameters: dict[str, str], record_class_name: str = "transcript"
+) -> WDKStep:
+    """WDK names a step's record class by its url segment."""
     return WDKStep.model_validate(
         {
             "id": STEP_ID,
             "search_name": search_name,
             "search_config": WDKSearchConfig(parameters=parameters),
-            "record_class_name": "TranscriptRecordClasses.TranscriptRecordClass",
+            "record_class_name": record_class_name,
         }
     )
 
@@ -151,5 +154,14 @@ async def test_a_record_type_the_caller_states_is_kept() -> None:
     api = _FakeStrategyAPI(_step("GenesByMolecularWeight", WEIGHT_WIRE))
 
     _, record_type, _ = await _extract_step_search_context(api, STEP_ID, "gene")
+
+    assert record_type == "gene"
+
+
+@pytest.mark.usefixtures("spec_reads")
+async def test_a_gene_step_reports_the_gene_record_type() -> None:
+    api = _FakeStrategyAPI(_step("GenesByMolecularWeight", WEIGHT_WIRE, "gene"))
+
+    _, record_type, _ = await _extract_step_search_context(api, STEP_ID, None)
 
     assert record_type == "gene"
