@@ -14,6 +14,7 @@ from veupathdb.wdk import WDKSearch
 from veupathdb_mcp.embeddings.record_manager import (
     IndexEntry,
     SyncReport,
+    score_entries,
     search_index,
     sync_index,
 )
@@ -116,6 +117,21 @@ class SemanticSearchIndex:
             if search_name:
                 results.append((search_name, record_type, hit.similarity))
         return results
+
+    async def similarity(self, query_text: str, search_name: str) -> float | None:
+        """The cosine of the query against one search's indexed text.
+
+        None when the index holds no such search or has not stored its vector.
+        """
+        entry_id = next(
+            (e.entry_id for e in self.entries if e.search_name == search_name), None
+        )
+        if entry_id is None:
+            return None
+        scores = await score_entries(
+            catalog_index_id(self.site_id), query_text, [entry_id]
+        )
+        return scores.get(entry_id)
 
     def _build_enriched_text(
         self,

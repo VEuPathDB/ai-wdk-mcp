@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from veupathdb.wdk import WDKAttributeField, WDKSearch
 
+from veupathdb_mcp.embeddings.fake import FakeEmbedder
 from veupathdb_mcp.embeddings.semantic_index import SemanticSearchIndex
 
 
@@ -62,3 +63,16 @@ def test_a_dynamic_attribute_parses_from_the_recorded_wire_shape() -> None:
     )
     assert search.dynamic_attributes[0].display_name == "Met Search Criteria"
     assert "Met Search Criteria" in _text(search)
+
+
+async def test_an_unknown_search_has_no_similarity(
+    fake_embedder: FakeEmbedder,
+) -> None:
+    """A name the catalog does not hold is answered without an embedding call."""
+    index = SemanticSearchIndex(site_id="plasmodb")
+    index.collect(
+        {"transcript": [WDKSearch(url_segment="GenesByText", display_name="Text")]}
+    )
+
+    assert await index.similarity("predicted GPI anchor", "GenesByNothing") is None
+    assert fake_embedder.calls == []

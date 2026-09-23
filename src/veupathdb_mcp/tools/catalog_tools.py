@@ -66,6 +66,11 @@ async def search_for_searches(
 ) -> list[SearchMatch]:
     """Rank a site's searches against a description of what to find.
 
+    A query nothing matches returns an empty list. `relevance` is the score
+    divided by the best hit's score, so the top hit reads 1.0 however weak it
+    is. `semantic_similarity` is the cosine of the query against the search's
+    indexed text, or null when the index did not score that search.
+
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
         query: What you are looking for, in as much detail as you have.

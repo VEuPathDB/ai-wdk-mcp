@@ -43,6 +43,17 @@ _SEARCH_SQL = text(
     """,
 )
 
+_SCORE_SQL = text(
+    """
+    SELECT e.entry_id AS entry_id,
+           1 - (v.embedding <=> CAST(:query_vector AS vector)) AS similarity
+    FROM embedding_index_entries AS e
+    JOIN embedding_vectors AS v
+      ON v.content_hash = e.content_hash AND v.model = :model
+    WHERE e.index_id = :index_id AND e.entry_id = ANY(:entry_ids)
+    """,
+)
+
 
 @dataclass(frozen=True, slots=True)
 class IndexEntry:
@@ -222,6 +233,27 @@ async def search_index(index_id: str, query: str, top_k: int) -> list[IndexHit]:
             IndexHit(entry_id=entry_id, similarity=float(similarity))
             for entry_id, similarity in rows.all()
         ]
+
+
+async def score_entries(
+    index_id: str, query: str, entry_ids: Sequence[str]
+) -> dict[str, float]:
+    """The cosine of the query against each named entry that has a vector."""
+    if not entry_ids:
+        return {}
+    settings = get_embedding_settings()
+    vector = await get_embedder().embed_query(query)
+    async with _index_session() as session:
+        rows = await session.execute(
+            _SCORE_SQL,
+            {
+                "query_vector": _vector_literal(vector),
+                "model": settings.embedding_model,
+                "index_id": index_id,
+                "entry_ids": list(entry_ids),
+            },
+        )
+        return {entry_id: float(similarity) for entry_id, similarity in rows.all()}
 
 
 async def index_size(index_id: str) -> int:

@@ -12,6 +12,7 @@ from veupathdb_mcp.embeddings.fake import FakeEmbedder
 from veupathdb_mcp.embeddings.record_manager import (
     IndexEntry,
     prune_orphan_vectors,
+    score_entries,
     search_index,
     sync_index,
 )
@@ -184,3 +185,34 @@ async def test_similarity_is_the_cosine_and_not_a_distance(
     assert hits[0].similarity == pytest.approx(expected, abs=1e-6)
     # The pair is genuinely unlike, so 1.0 could not stand in for the cosine.
     assert abs(expected) < 0.5
+
+
+async def test_scoring_named_entries_gives_each_its_cosine(
+    embedder: FakeEmbedder,
+) -> None:
+    await sync_index(_INDEX, _entries(("a", "alpha"), ("b", "beta"), ("c", "gamma")))
+    query_vector, alpha_vector = await embedder.embed_documents(["beta", "alpha"])
+    expected = sum(q * t for q, t in zip(query_vector, alpha_vector, strict=True))
+    embedder.calls.clear()
+
+    scores = await score_entries(_INDEX, "beta", ["a", "b"])
+
+    assert scores.keys() == {"a", "b"}
+    assert scores["a"] == pytest.approx(expected, abs=1e-6)
+    assert scores["b"] == pytest.approx(1.0, abs=1e-6)
+    assert embedder.calls == [["beta"]], "the query is embedded once"
+
+
+async def test_scoring_leaves_out_an_entry_the_index_does_not_hold(
+    embedder: FakeEmbedder,
+) -> None:
+    del embedder
+    await sync_index(_INDEX, _entries(("a", "alpha")))
+    await sync_index(_OTHER_INDEX, _entries(("z", "beta")))
+
+    assert await score_entries(_INDEX, "beta", ["z", "missing"]) == {}
+
+
+async def test_scoring_no_entry_embeds_nothing(embedder: FakeEmbedder) -> None:
+    assert await score_entries(_INDEX, "beta", []) == {}
+    assert embedder.calls == []

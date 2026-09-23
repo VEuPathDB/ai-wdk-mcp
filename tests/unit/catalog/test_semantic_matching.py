@@ -12,6 +12,7 @@ from typing import cast
 import pytest
 from veupathdb.wdk import WDKSearch
 
+from veupathdb_mcp import catalog
 from veupathdb_mcp.catalog import semantic_matching
 from veupathdb_mcp.catalog.discovery_service import DiscoveryService
 from veupathdb_mcp.catalog.models import SearchMatch
@@ -42,10 +43,10 @@ class _StubIndex(SemanticSearchIndex):
 
 
 class _FakeCatalog:
-    def __init__(self, index: SemanticSearchIndex) -> None:
+    def __init__(self, index: SemanticSearchIndex | None) -> None:
         self._index = index
 
-    def get_semantic_index(self) -> SemanticSearchIndex:
+    def get_semantic_index(self) -> SemanticSearchIndex | None:
         return self._index
 
     def find_search(self, record_type: str, search_name: str) -> None:
@@ -169,3 +170,113 @@ async def test_a_hit_over_the_floor_is_injected_with_its_bonus() -> None:
     assert [entry.name for _, entry in scored] == ["GenesByText", "GenesByGoTerm"]
     assert scored[1][0] == pytest.approx(semantic_matching._SEMANTIC_BOOST * 0.5)
     assert scored[1][0] == pytest.approx(35.0)
+
+
+@pytest.mark.asyncio
+async def test_a_boosted_candidate_carries_its_raw_cosine() -> None:
+    index = _StubIndex(hits=[("GenesByGoTerm", "transcript", 0.5)])
+    scored = [(1.0, _match("GenesByGoTerm")), (2.0, _match("GenesByText"))]
+
+    await semantic_matching.apply_semantic_bonus(
+        scored, _discovery(index), "plasmodb", "kinase", ["transcript"]
+    )
+
+    assert scored[0][1].semantic_similarity == pytest.approx(0.5)
+    assert scored[1][1].semantic_similarity is None, "the index did not score it"
+
+
+@pytest.mark.asyncio
+async def test_an_injected_hit_carries_its_raw_cosine() -> None:
+    index = _StubIndex(hits=[("GenesByGoTerm", "transcript", 0.5)])
+    scored = [(1.0, _match("GenesByText"))]
+
+    await semantic_matching.apply_semantic_bonus(
+        scored, _resolving_discovery(index), "plasmodb", "kinase", ["transcript"]
+    )
+
+    assert scored[1][1].semantic_similarity == pytest.approx(0.5)
+
+
+@pytest.mark.asyncio
+async def test_a_negative_cosine_is_reported_and_adds_nothing() -> None:
+    index = _StubIndex(hits=[("GenesByGoTerm", "transcript", -0.1)])
+    scored = [(1.0, _match("GenesByGoTerm"))]
+
+    await semantic_matching.apply_semantic_bonus(
+        scored, _discovery(index), "plasmodb", "kinase", ["transcript"]
+    )
+
+    assert scored[0][0] == pytest.approx(1.0)
+    assert scored[0][1].semantic_similarity == pytest.approx(-0.1)
+
+
+@pytest.mark.asyncio
+async def test_an_unreachable_index_leaves_every_similarity_unknown() -> None:
+    index = _StubIndex(hits=[("GenesByGoTerm", "transcript", 0.9)], refuse=True)
+    scored = [(1.0, _match("GenesByGoTerm"))]
+
+    await semantic_matching.apply_semantic_bonus(
+        scored, _discovery(index), "plasmodb", "kinase", ["transcript"]
+    )
+
+    assert scored[0][1].semantic_similarity is None
+
+
+@dataclass
+class _ScoringIndex(SemanticSearchIndex):
+    """An index that answers one fixed cosine per search name."""
+
+    cosines: dict[str, float] = field(default_factory=dict)
+
+    async def similarity(self, query_text: str, search_name: str) -> float | None:
+        del query_text
+        return self.cosines.get(search_name)
+
+
+class TestSearchSimilarity:
+    async def test_it_is_the_index_cosine_for_the_named_search(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        index = _ScoringIndex(cosines={"GenesByExportPrediction": 0.21})
+        monkeypatch.setattr(
+            semantic_matching, "get_discovery_service", lambda: _discovery(index)
+        )
+
+        cosine = await semantic_matching.search_similarity(
+            "plasmodb", "predicted GPI anchor", "GenesByExportPrediction"
+        )
+
+        assert cosine == pytest.approx(0.21)
+
+    async def test_an_unknown_search_has_no_cosine(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        index = _ScoringIndex(cosines={"GenesByExportPrediction": 0.21})
+        monkeypatch.setattr(
+            semantic_matching, "get_discovery_service", lambda: _discovery(index)
+        )
+
+        cosine = await semantic_matching.search_similarity(
+            "plasmodb", "predicted GPI anchor", "GenesByNothing"
+        )
+
+        assert cosine is None
+
+    async def test_a_catalog_without_an_index_has_no_cosine(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setattr(
+            semantic_matching,
+            "get_discovery_service",
+            lambda: cast("DiscoveryService", _FakeDiscovery(_FakeCatalog(None))),
+        )
+
+        cosine = await semantic_matching.search_similarity(
+            "plasmodb", "predicted GPI anchor", "GenesByExportPrediction"
+        )
+
+        assert cosine is None
+
+    def test_the_host_reads_it_from_the_package(self) -> None:
+        assert catalog.search_similarity is semantic_matching.search_similarity
+        assert "search_similarity" in catalog.__all__

@@ -93,6 +93,7 @@
     "resolve_search_details",
     "resolve_search_record_type",
     "search_for_searches",
+    "search_similarity",
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at"

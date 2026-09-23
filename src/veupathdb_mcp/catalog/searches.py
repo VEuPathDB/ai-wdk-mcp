@@ -3,6 +3,7 @@ candidate collection live in sibling modules."""
 
 import re
 from collections.abc import Awaitable, Callable
+from dataclasses import replace
 from typing import Literal
 
 from veupathdb import get_logger
@@ -186,8 +187,9 @@ async def search_for_searches(
 ) -> list[SearchMatch]:
     """Find searches that match a query or keywords.
 
-    A category restricts the candidates to that category plus the
-    universal searches. A query too vague to rank raises ``VagueSearchQueryError``.
+    A category restricts the candidates to that category plus the universal
+    searches. A query nothing matches returns an empty list. A query too vague
+    to rank raises ``VagueSearchQueryError``.
     """
     kw_list = keywords or []
     rejection = _query_rejection(query, has_keywords=bool(kw_list))
@@ -209,36 +211,26 @@ async def search_for_searches(
 
     await apply_semantic_bonus(scored, discovery, site_id, query, record_types)
 
-    scored.sort(
+    # A search no term, keyword or embedding matched is not a result.
+    ranked = sorted(
+        (item for item in scored if item[0] > 0),
         key=lambda item: (
             -item[0],
             record_type_priority(item[1].record_type),
             item[1].display_name,
-        )
+        ),
     )
-
-    # Relevance is the score normalized against the best score.
-    max_score = scored[0][0] if scored else 1.0
-    if max_score <= 0:
-        max_score = 1.0
+    if not ranked:
+        return []
+    best_score = ranked[0][0]
 
     seen: set[str] = set()
     result: list[SearchMatch] = []
-    for sc, entry in scored:
+    for sc, entry in ranked:
         if entry.name in seen:
             continue
         seen.add(entry.name)
-        result.append(
-            SearchMatch(
-                name=entry.name,
-                display_name=entry.display_name,
-                description=entry.description,
-                record_type=entry.record_type,
-                category=entry.category,
-                returns=entry.returns,
-                relevance=sc / max_score,
-            )
-        )
+        result.append(replace(entry, relevance=sc / best_score))
         if len(result) >= limit:
             break
 

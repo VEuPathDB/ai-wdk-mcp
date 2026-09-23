@@ -2,6 +2,15 @@
 
 ## 2026-09-23
 
+- `veupathdb-mcp` is 0.2.0a23. `search_for_searches` returns only the searches that a term, a
+  keyword or the semantic index matched, so a query that matches nothing returns an empty list.
+  `relevance` is relative to the best hit of the same answer, so the top hit reads 1.0 however
+  weak it is. `SearchMatch.semantic_similarity` is the cosine of the query against the
+  search's indexed text, `None` where the index did not score that search, and serializes as
+  `semanticSimilarity` in `to_dict()`. `veupathdb_mcp.catalog.search_similarity(site_id, query,
+  search_name)` returns the cosine for one named search, from
+  `SemanticSearchIndex.similarity`, which embeds the query once and reads only that entry.
+
 - `veupathdb-mcp` is 0.2.0a22: it pins `veupathdb-py` v0.1.0a14, whose identity read makes one
   attempt under a ten-second deadline and raises on an outage.
 

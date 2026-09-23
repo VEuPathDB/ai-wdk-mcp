@@ -4,12 +4,17 @@ Boosts search candidates by cosine similarity from the site's embedding index,
 and injects high-similarity searches that keyword scoring missed.
 """
 
+from dataclasses import replace
+
 from veupathdb import get_logger
 from veupathdb.errors import VEuPathDBError
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog.discovery import SearchCatalog
-from veupathdb_mcp.catalog.discovery_service import DiscoveryService
+from veupathdb_mcp.catalog.discovery_service import (
+    DiscoveryService,
+    get_discovery_service,
+)
 from veupathdb_mcp.catalog.models import SearchMatch
 from veupathdb_mcp.catalog.scoring import resolve_returns
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
@@ -27,7 +32,9 @@ _MIN_SEMANTIC_SIM = 0.35
 _SEMANTIC_TOP_K = 50
 
 
-def build_search_match(search: WDKSearch, rt: str) -> SearchMatch:
+def build_search_match(
+    search: WDKSearch, rt: str, semantic_similarity: float
+) -> SearchMatch:
     """Build a SearchMatch from a WDKSearch for semantic injection."""
     display = search.display_name or search.url_segment
     category = ""
@@ -42,6 +49,7 @@ def build_search_match(search: WDKSearch, rt: str) -> SearchMatch:
         record_type=rt,
         category=category,
         returns=returns,
+        semantic_similarity=semantic_similarity,
     )
 
 
@@ -78,11 +86,28 @@ async def apply_semantic_bonus(
     sem_scores = {name: sim for name, _, sim in in_scope}
 
     for i, (sc, entry) in enumerate(scored):
-        sim = sem_scores.get(entry.name, 0.0)
-        if sim > 0.0:
-            scored[i] = (sc + _SEMANTIC_BOOST * sim, entry)
+        if entry.name not in sem_scores:
+            continue
+        sim = sem_scores[entry.name]
+        scored[i] = (
+            sc + _SEMANTIC_BOOST * max(sim, 0.0),
+            replace(entry, semantic_similarity=sim),
+        )
 
     _inject_missed(scored, catalog, in_scope)
+
+
+async def search_similarity(site_id: str, query: str, search_name: str) -> float | None:
+    """The cosine of a query against one search's indexed text on a site.
+
+    None when the site's index holds no vector for that search. An index store
+    or embedder that does not answer raises ``SemanticIndexUnavailableError``.
+    """
+    catalog = await get_discovery_service().get_catalog(site_id)
+    index = catalog.get_semantic_index()
+    if index is None:
+        return None
+    return await index.similarity(query, search_name)
 
 
 def _fits(record_type: str, rt_set: set[str]) -> bool:
@@ -103,4 +128,4 @@ def _inject_missed(
         search = catalog.find_search(rt, search_name)
         if search is None:
             continue
-        scored.append((_SEMANTIC_BOOST * sim, build_search_match(search, rt)))
+        scored.append((_SEMANTIC_BOOST * sim, build_search_match(search, rt, sim)))

@@ -104,6 +104,7 @@ from veupathdb_mcp.catalog.searches import (
     resolve_search_record_type,
     search_for_searches,
 )
+from veupathdb_mcp.catalog.semantic_matching import search_similarity
 from veupathdb_mcp.catalog.sites import (
     get_record_types,
     list_sites,
@@ -190,6 +191,7 @@ __all__ = [
     "resolve_search_details",
     "resolve_search_record_type",
     "search_for_searches",
+    "search_similarity",
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at",

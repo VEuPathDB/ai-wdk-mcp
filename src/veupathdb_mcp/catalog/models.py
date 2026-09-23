@@ -59,11 +59,7 @@ class RecordTypeInfo:
 
 @dataclass(frozen=True, slots=True)
 class SearchMatch:
-    """A search result from search_for_searches.
-
-    Replaces the untyped ``dict[str, str]`` that was previously threaded
-    through scoring, site-search bonus, and final results.
-    """
+    """One search that search_for_searches ranked against a query."""
 
     name: str
     display_name: str
@@ -71,7 +67,12 @@ class SearchMatch:
     record_type: str
     category: str = ""
     returns: str = ""
+    # The score divided by the best score of the same answer, so the top hit
+    # reads 1.0 whether or not it matches the query well.
     relevance: float = 0.0
+    # The cosine of the query against the search's indexed text. None when
+    # the semantic index did not score this search.
+    semantic_similarity: float | None = None
 
     def to_dict(self) -> dict[str, str | float]:
         """Serialize to the camelCase dict shape expected by AI tool callers."""
@@ -87,6 +88,8 @@ class SearchMatch:
             result["returns"] = self.returns
         if self.relevance > 0.0:
             result["relevance"] = round(self.relevance, 2)
+        if self.semantic_similarity is not None:
+            result["semanticSimilarity"] = round(self.semantic_similarity, 2)
         return result
 
 

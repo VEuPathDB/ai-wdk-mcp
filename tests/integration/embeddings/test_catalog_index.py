@@ -175,3 +175,48 @@ async def test_a_catalog_build_that_may_sync_writes_its_vectors(
 
     assert await index_size(catalog_index_id("openeddb")) == 3
     assert fake_embedder.calls != []
+
+
+async def test_similarity_is_the_cosine_against_the_named_search(
+    db: None,
+    fake_embedder: FakeEmbedder,
+) -> None:
+    del db
+    index = _collected("testdb", _SEARCHES)
+    await index.sync()
+    go_text = next(
+        entry.enriched_text
+        for entry in index.entries
+        if entry.search_name == "GenesByGoTerm"
+    )
+    query_vector, text_vector = await fake_embedder.embed_documents(
+        ["predicted GPI anchor", go_text]
+    )
+    expected = sum(q * t for q, t in zip(query_vector, text_vector, strict=True))
+
+    cosine = await index.similarity("predicted GPI anchor", "GenesByGoTerm")
+
+    assert cosine == pytest.approx(expected, abs=1e-6)
+
+
+async def test_a_search_on_another_record_type_is_scored_under_its_own(
+    db: None,
+) -> None:
+    del db
+    index = _collected("testdb", _SEARCHES)
+    await index.sync()
+    length_text = index.entries[0].enriched_text
+
+    cosine = await index.similarity(length_text, "SequencesByLength")
+
+    assert index.entries[0].search_name == "SequencesByLength"
+    assert cosine == pytest.approx(1.0, abs=1e-6)
+
+
+async def test_a_collected_search_with_no_stored_vector_has_no_similarity(
+    db: None,
+) -> None:
+    del db
+    index = _collected("testdb", _SEARCHES)
+
+    assert await index.similarity("predicted GPI anchor", "GenesByGoTerm") is None
