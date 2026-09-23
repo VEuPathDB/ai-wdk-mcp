@@ -2,6 +2,9 @@
 
 ## 2026-09-23
 
+- `veupathdb-mcp` is 0.2.0a22: it pins `veupathdb-py` v0.1.0a14, whose identity read makes one
+  attempt under a ten-second deadline and raises on an outage.
+
 - `veupathdb-mcp` is 0.2.0a21: it pins `veupathdb-py` v0.1.0a13, whose step reports take no user
   id and send `viewFilters` beside `reportConfig`, the only place WDK reads them.
 - A report that enumerates the records of a transcript step reads one row per gene. The standard
