@@ -2,6 +2,12 @@
 
 ## 2026-09-23
 
+- `veupathdb-mcp` is 0.2.0a24: it pins `veupathdb-py` v0.1.0a15, whose analysis document
+  holds every compute plugin the site offers (`EdaComputeDescriptor` and
+  `EdaVisualizationDescriptor` unions, `differential_expression_computations`,
+  `analysis_descriptor_patch`). No code of this distribution changes; the pin moves so a
+  host that takes the client release resolves one URL for it.
+
 - `veupathdb-mcp` is 0.2.0a23. `search_for_searches` returns only the searches that a term, a
   keyword or the semantic index matched, so a query that matches nothing returns an empty list.
   `relevance` is relative to the best hit of the same answer, so the top hit reads 1.0 however
