@@ -1,5 +1,21 @@
 # Knowledge log
 
+## 2026-09-24
+
+- `veupathdb-mcp` is 0.2.0a25. A control test names every control id it was given. A It pins `veupathdb-py` v0.1.0a16, whose VDI and EDA user-scoped calls never fall back to the service token.
+  positive set is `PositiveControls` (`recoveredIds`, `missedIds`), a negative set is
+  `NegativeControls` (`admittedIds`, `excludedIds`); `ControlSetData`,
+  `IntersectionSummary` and `summarize_intersection` leave `veupathdb_mcp.controls`.
+  `controlsCount`, `intersectionCount`, `recall` and `falsePositiveRate` are computed
+  from the two lists, so a consumer reads a count from its list and never from a field
+  stated apart from it. `ControlOutcome` replaces `positiveIntersectionIds`,
+  `positiveMissingIds` and `negativeIntersectionIds` with `positiveRecoveredIds`,
+  `positiveMissedIds`, `negativeAdmittedIds` and `negativeExcludedIds`; its six counts and
+  rates keep their wire names and are computed from those lists. No list is cut: the
+  step runner pages through every record of the step, and the search runner reads every
+  id of the intersection whatever the size of the control set. See
+  [A control test files every id it was given](decisions/a-control-test-files-every-id-it-was-given.md).
+
 ## 2026-09-23
 
 - `veupathdb-mcp` is 0.2.0a24: it pins `veupathdb-py` v0.1.0a15, whose analysis document

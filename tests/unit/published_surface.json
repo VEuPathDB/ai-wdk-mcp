@@ -99,20 +99,19 @@
     "wdk_fetch_at"
   ],
   "veupathdb_mcp.controls": [
-    "ControlSetData",
     "ControlTargetData",
     "ControlTestResult",
     "ControlValueFormat",
     "ControlsContext",
     "DEFAULT_CONTROL_TEST_STRATEGY_NAME",
     "IntersectionConfig",
-    "IntersectionSummary",
+    "NegativeControls",
+    "PositiveControls",
     "cleanup_internal_control_test_strategies",
     "delete_temp_strategy",
     "resolve_controls_param_type",
     "run_positive_negative_controls",
-    "run_step_control_tests",
-    "summarize_intersection"
+    "run_step_control_tests"
   ],
   "veupathdb_mcp.embeddings": [
     "EMBEDDING_DIMENSIONS",

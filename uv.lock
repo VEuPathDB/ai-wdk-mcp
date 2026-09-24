@@ -2080,7 +2080,7 @@ requires-dist = [
     { name = "starlette", specifier = ">=1.3.1" },
     { name = "structlog", specifier = ">=25.0.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.44.0" },
-    { name = "veupathdb-py", git = "https://github.com/VEuPathDB/ai-veupathdb-client?tag=v0.1.0a15" },
+    { name = "veupathdb-py", git = "https://github.com/VEuPathDB/ai-veupathdb-client?tag=v0.1.0a16" },
 ]
 
 [package.metadata.requires-dev]
@@ -2095,8 +2095,8 @@ dev = [
 
 [[package]]
 name = "veupathdb-py"
-version = "0.1.0a15"
-source = { git = "https://github.com/VEuPathDB/ai-veupathdb-client?tag=v0.1.0a15#d9c86b844637cdc1994639851265586072c809ca" }
+version = "0.1.0a16"
+source = { git = "https://github.com/VEuPathDB/ai-veupathdb-client?tag=v0.1.0a16#62f70e2f9b64ca370dddaf0a4eebbc8e4836f51b" }
 dependencies = [
     { name = "httpx" },
     { name = "json5" },

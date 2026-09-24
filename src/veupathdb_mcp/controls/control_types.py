@@ -1,13 +1,15 @@
 """What a control test takes, and what it returns."""
 
+from collections import Counter
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import Literal, Self
 
-from pydantic import ConfigDict, Field
-from veupathdb import JSONObject
+from pydantic import ConfigDict, Field, model_validator
 from veupathdb.domain.parameters import ParamValue
 from veupathdb.domain.strategy import DEFAULT_COMBINE_OPERATOR, CombineOp
 from veupathdb.model import CamelModel
+
+from veupathdb_mcp.computed import computed
 
 ControlValueFormat = Literal["newline", "json_list", "comma"]
 
@@ -23,51 +25,83 @@ class ControlTargetData(CamelModel):
     estimated_size: int | None = None
 
 
-class ControlSetData(CamelModel):
-    """One control set (positive or negative) in a control-test result.
+def _partition_error(returned: list[str], not_returned: list[str]) -> str | None:
+    """Why two id lists are not one control set, or None when they are."""
+    if not returned and not not_returned:
+        return "a control set holds at least one id"
+    filed = Counter(returned + not_returned)
+    repeated = sorted(gene_id for gene_id, times in filed.items() if times > 1)
+    if repeated:
+        return f"a control id is filed on one list only: {repeated}"
+    return None
 
-    ``intersection_ids`` is None when the control set is over the limit one
-    answer page reads, so the run reports a count and no identifiers.
+
+class PositiveControls(CamelModel):
+    """The positive controls of one test, each filed as recovered or missed.
+
+    The two lists partition the controls, so each count is read from them.
     """
 
-    controls_count: int = 0
-    intersection_count: int = 0
-    intersection_ids: list[str] | None = None
-    intersection_ids_sample: list[str] = Field(default_factory=list)
-    target_step_id: int | None = None
-    target_estimated_size: int = 0
-    missing_ids_sample: list[str] = Field(default_factory=list)
-    unexpected_hits_sample: list[str] = Field(default_factory=list)
-    recall: float | None = None
-    false_positive_rate: float | None = None
+    model_config = ConfigDict(frozen=True)
+
+    recovered_ids: list[str]
+    missed_ids: list[str]
+
+    @model_validator(mode="after")
+    def _the_lists_partition_the_controls(self) -> Self:
+        error = _partition_error(self.recovered_ids, self.missed_ids)
+        if error is not None:
+            raise ValueError(error)
+        return self
+
+    @computed
+    def controls_count(self) -> int:
+        """Every positive control the test was given."""
+        return len(self.recovered_ids) + len(self.missed_ids)
+
+    @computed
+    def intersection_count(self) -> int:
+        """The positive controls the target returned."""
+        return len(self.recovered_ids)
+
+    @computed
+    def recall(self) -> float:
+        """The share of the positive controls the target returned."""
+        return self.intersection_count / self.controls_count
 
 
-class IntersectionSummary(CamelModel):
-    """What one control-set intersection found: the count and the ids.
+class NegativeControls(CamelModel):
+    """The negative controls of one test, each filed as admitted or excluded.
 
-    ``intersection_ids`` is None when the control set is over the limit one
-    answer page reads, so the run reports a count and no identifiers.
+    The two lists partition the controls, so each count is read from them.
     """
 
-    model_config = ConfigDict(extra="ignore", frozen=True, coerce_numbers_to_str=True)
+    model_config = ConfigDict(frozen=True)
 
-    intersection_count: int = 0
-    intersection_ids: list[str] | None = None
+    admitted_ids: list[str]
+    excluded_ids: list[str]
 
-    @property
-    def found_ids(self) -> set[str]:
-        """The identifiers the intersection returned."""
-        return set(self.intersection_ids or ())
+    @model_validator(mode="after")
+    def _the_lists_partition_the_controls(self) -> Self:
+        error = _partition_error(self.admitted_ids, self.excluded_ids)
+        if error is not None:
+            raise ValueError(error)
+        return self
 
-    @property
-    def ids_were_read(self) -> bool:
-        """True when the run read identifiers, and not only a count."""
-        return self.intersection_ids is not None
+    @computed
+    def controls_count(self) -> int:
+        """Every negative control the test was given."""
+        return len(self.admitted_ids) + len(self.excluded_ids)
 
+    @computed
+    def intersection_count(self) -> int:
+        """The negative controls the target returned."""
+        return len(self.admitted_ids)
 
-def summarize_intersection(payload: JSONObject) -> IntersectionSummary:
-    """Read the count and the identifiers out of one intersection payload."""
-    return IntersectionSummary.model_validate(payload)
+    @computed
+    def false_positive_rate(self) -> float:
+        """The share of the negative controls the target returned."""
+        return self.intersection_count / self.controls_count
 
 
 class ControlTestResult(CamelModel):
@@ -76,8 +110,8 @@ class ControlTestResult(CamelModel):
     site_id: str = ""
     record_type: str = ""
     target: ControlTargetData = Field(default_factory=ControlTargetData)
-    positive: ControlSetData | None = None
-    negative: ControlSetData | None = None
+    positive: PositiveControls | None = None
+    negative: NegativeControls | None = None
 
 
 @dataclass

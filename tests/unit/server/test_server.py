@@ -743,6 +743,32 @@ async def test_a_step_control_run_answers_from_the_control_test_service(
     assert result.structured_content["siteId"] == SITE
 
 
+@pytest.mark.parametrize(
+    "tool_name", ["run_control_tests_on_step", "run_control_tests_on_search"]
+)
+async def test_a_control_run_schema_names_every_id_list(tool_name: str) -> None:
+    tools = await _list_tools()
+
+    schema = tools[tool_name].outputSchema
+    assert schema is not None
+    positive = schema["properties"]["positive"]["anyOf"][0]
+    negative = schema["properties"]["negative"]["anyOf"][0]
+    assert positive["required"] == [
+        "recoveredIds",
+        "missedIds",
+        "controlsCount",
+        "intersectionCount",
+        "recall",
+    ]
+    assert negative["required"] == [
+        "admittedIds",
+        "excludedIds",
+        "controlsCount",
+        "intersectionCount",
+        "falsePositiveRate",
+    ]
+
+
 async def test_a_step_control_run_without_a_control_is_refused() -> None:
     async with _served(_user_credential("user-bearer")) as client:
         result = await client.call_tool(

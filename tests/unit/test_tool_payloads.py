@@ -11,9 +11,10 @@ from veupathdb.wdk import WDKStrategySummary
 from veupathdb_mcp import tool_payloads
 from veupathdb_mcp.catalog import searches
 from veupathdb_mcp.controls.control_types import (
-    ControlSetData,
     ControlTargetData,
     ControlTestResult,
+    NegativeControls,
+    PositiveControls,
 )
 from veupathdb_mcp.embeddings.embedder import EmbeddingUnavailableError
 from veupathdb_mcp.gene_lookup import MAX_GENE_IDS, normalize_gene_ids
@@ -42,21 +43,11 @@ def _control_test_result() -> ControlTestResult:
             step_id=77,
             estimated_size=132,
         ),
-        positive=ControlSetData(
-            controls_count=3,
-            intersection_count=2,
-            intersection_ids_sample=["PF3D7_1222600", "PF3D7_1031000"],
-            missing_ids_sample=["PF3D7_0000001"],
-            target_estimated_size=132,
-            recall=2 / 3,
+        positive=PositiveControls(
+            recovered_ids=["PF3D7_1222600", "PF3D7_1031000"],
+            missed_ids=["PF3D7_0000001"],
         ),
-        negative=ControlSetData(
-            controls_count=1,
-            intersection_count=0,
-            unexpected_hits_sample=[],
-            target_estimated_size=132,
-            false_positive_rate=0.0,
-        ),
+        negative=NegativeControls(admitted_ids=[], excluded_ids=["PF3D7_0000002"]),
     )
 
 
@@ -69,11 +60,13 @@ def test_a_control_outcome_carries_the_counts_the_control_test_measured() -> Non
     assert outcome.positive_intersection == 2
     assert outcome.positive_controls_count == 3
     assert outcome.positive_recall == pytest.approx(2 / 3)
-    assert outcome.positive_intersection_ids == ["PF3D7_1222600", "PF3D7_1031000"]
-    assert outcome.positive_missing_ids == ["PF3D7_0000001"]
+    assert outcome.positive_recovered_ids == ["PF3D7_1222600", "PF3D7_1031000"]
+    assert outcome.positive_missed_ids == ["PF3D7_0000001"]
     assert outcome.negative_intersection == 0
     assert outcome.negative_controls_count == 1
     assert outcome.negative_false_positive_rate == 0.0
+    assert outcome.negative_admitted_ids == []
+    assert outcome.negative_excluded_ids == ["PF3D7_0000002"]
     assert outcome.parameters == {
         "organism": StringValue(value="Plasmodium falciparum 3D7")
     }
@@ -83,15 +76,20 @@ def test_a_control_outcome_built_field_by_field_keeps_those_fields() -> None:
     outcome = ControlOutcome(
         step_id=123,
         estimated_size=100,
-        positive_intersection=2,
-        positive_controls_count=2,
-        positive_recall=1.0,
+        positive_recovered_ids=["PF3D7_1222600", "PF3D7_1031000"],
+        positive_missed_ids=[],
     )
 
     assert outcome.step_id == 123
     assert outcome.search_name == ""
     assert outcome.positive_intersection == 2
+    assert outcome.positive_recall == 1.0
     assert outcome.negative_intersection is None
+
+
+def test_a_control_outcome_with_one_list_of_a_kind_is_refused() -> None:
+    with pytest.raises(ValueError, match="both of its lists or neither"):
+        ControlOutcome(negative_admitted_ids=["PF3D7_1222600"])
 
 
 def test_a_control_test_without_control_sets_reports_no_counts() -> None:
@@ -100,7 +98,9 @@ def test_a_control_test_without_control_sets_reports_no_counts() -> None:
     )
 
     assert outcome.positive_intersection is None
+    assert outcome.positive_recovered_ids is None
     assert outcome.negative_intersection is None
+    assert outcome.negative_excluded_ids is None
     assert outcome.estimated_size == 0
 
 

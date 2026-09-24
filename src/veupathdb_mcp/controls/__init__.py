@@ -12,28 +12,26 @@ from veupathdb_mcp.controls.control_tests import (
 from veupathdb_mcp.controls.control_types import (
     DEFAULT_CONTROL_TEST_STRATEGY_NAME,
     ControlsContext,
-    ControlSetData,
     ControlTargetData,
     ControlTestResult,
     ControlValueFormat,
     IntersectionConfig,
-    IntersectionSummary,
-    summarize_intersection,
+    NegativeControls,
+    PositiveControls,
 )
 
 __all__ = [
     "DEFAULT_CONTROL_TEST_STRATEGY_NAME",
-    "ControlSetData",
     "ControlTargetData",
     "ControlTestResult",
     "ControlValueFormat",
     "ControlsContext",
     "IntersectionConfig",
-    "IntersectionSummary",
+    "NegativeControls",
+    "PositiveControls",
     "cleanup_internal_control_test_strategies",
     "delete_temp_strategy",
     "resolve_controls_param_type",
     "run_positive_negative_controls",
     "run_step_control_tests",
-    "summarize_intersection",
 ]

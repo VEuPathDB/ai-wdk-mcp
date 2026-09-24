@@ -4,8 +4,9 @@ These helpers run *temporary* WDK steps/strategies to evaluate whether known
 positive controls are returned and known negative controls are excluded.
 """
 
-from pydantic import JsonValue
-from veupathdb import JSONObject, get_logger
+from dataclasses import dataclass
+
+from veupathdb import get_logger
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import ParamValue, StringValue
 from veupathdb.errors import VEuPathDBError
@@ -30,11 +31,11 @@ from veupathdb_mcp.controls.control_helpers import (
     delete_temp_strategy,
 )
 from veupathdb_mcp.controls.control_types import (
-    ControlSetData,
     ControlTargetData,
     ControlTestResult,
     IntersectionConfig,
-    summarize_intersection,
+    NegativeControls,
+    PositiveControls,
 )
 from veupathdb_mcp.wdk.helpers import extract_record_ids
 from veupathdb_mcp.wdk.step_report_filters import step_view_filters, view_filters_for
@@ -47,8 +48,49 @@ __all__ = [
 
 logger = get_logger(__name__)
 
-_MAX_REPORTED_IDS = 20
-_MAX_STEP_RECORDS = 50000
+_STEP_PAGE_RECORDS = 50000
+
+
+def _positive_controls(
+    controls: list[str], returned: set[str]
+) -> PositiveControls | None:
+    """File each positive control as recovered or missed, or None without one."""
+    ids = set(controls)
+    if not ids:
+        return None
+    return PositiveControls(
+        recovered_ids=sorted(ids & returned), missed_ids=sorted(ids - returned)
+    )
+
+
+def _negative_controls(
+    controls: list[str], returned: set[str]
+) -> NegativeControls | None:
+    """File each negative control as admitted or excluded, or None without one."""
+    ids = set(controls)
+    if not ids:
+        return None
+    return NegativeControls(
+        admitted_ids=sorted(ids & returned), excluded_ids=sorted(ids - returned)
+    )
+
+
+async def _read_step_ids(api: StrategyAPI, step_id: int) -> tuple[set[str], int]:
+    """Read every record of a step, one page at a time, and the step's count."""
+    view_filters = await step_view_filters(api, step_id)
+    ids: set[str] = set()
+    offset = 0
+    while True:
+        answer = await api.get_step_answer(
+            step_id,
+            pagination={"offset": offset, "numRecords": _STEP_PAGE_RECORDS},
+            view_filters=view_filters,
+        )
+        ids.update(record.display_name for record in answer.records)
+        offset += len(answer.records)
+        count = answer.meta.records_returned()
+        if not answer.records or offset >= count:
+            return ids, count
 
 
 async def run_step_control_tests(
@@ -57,43 +99,14 @@ async def run_step_control_tests(
     positive_controls: list[str] | None = None,
     negative_controls: list[str] | None = None,
 ) -> ControlTestResult:
-    """Intersect an already-built step's results with the control gene lists."""
-    api = get_strategy_api(site_id)
-    answer = await api.get_step_answer(
-        wdk_step_id,
-        pagination={"offset": 0, "numRecords": _MAX_STEP_RECORDS},
-        view_filters=await step_view_filters(api, wdk_step_id),
+    """File every control by whether an already-built step returns it."""
+    result_ids, count = await _read_step_ids(get_strategy_api(site_id), wdk_step_id)
+    return ControlTestResult(
+        site_id=site_id,
+        target=ControlTargetData(step_id=wdk_step_id, estimated_size=count),
+        positive=_positive_controls(positive_controls or [], result_ids),
+        negative=_negative_controls(negative_controls or [], result_ids),
     )
-    result_ids = {record.display_name for record in answer.records}
-
-    target = ControlTargetData(
-        step_id=wdk_step_id,
-        estimated_size=answer.meta.records_returned(),
-    )
-    result = ControlTestResult(site_id=site_id, target=target)
-
-    if positive_controls:
-        positives = set(positive_controls)
-        recovered = result_ids & positives
-        result.positive = ControlSetData(
-            controls_count=len(positives),
-            intersection_count=len(recovered),
-            intersection_ids_sample=sorted(recovered)[:_MAX_REPORTED_IDS],
-            missing_ids_sample=sorted(positives - result_ids)[:_MAX_REPORTED_IDS],
-            recall=len(recovered) / len(positives),
-        )
-
-    if negative_controls:
-        negatives = set(negative_controls)
-        hits = result_ids & negatives
-        result.negative = ControlSetData(
-            controls_count=len(negatives),
-            intersection_count=len(hits),
-            intersection_ids_sample=sorted(hits)[:_MAX_REPORTED_IDS],
-            false_positive_rate=len(hits) / len(negatives),
-        )
-
-    return result
 
 
 def _find_param_type(params: list[WDKParameter], param_name: str) -> str | None:
@@ -128,12 +141,20 @@ async def resolve_controls_param_type(
     return None
 
 
+@dataclass(frozen=True)
+class _IntersectionRun:
+    """The target step one intersection created, and the control ids it returned."""
+
+    target_step_id: int
+    target_estimated_size: int | None
+    returned_ids: set[str]
+
+
 async def _run_intersection_control(
     config: IntersectionConfig,
     controls_ids: list[str],
-    fetch_ids_limit: int = 500,
-) -> JSONObject:
-    """Run a single control intersection and return results.
+) -> _IntersectionRun:
+    """Run a single control intersection and read every id it returned.
 
     Each call creates its own target step, because WDK deletes every step of
     a strategy together with the strategy.
@@ -221,33 +242,20 @@ async def _run_intersection_control(
         temp_strategy_id = created.id
 
         target_total = await _get_total_count_for_step(api, target_step_id)
-        total = await _get_total_count_for_step(api, combined_step_id)
-        ids_found: list[str] = []
-        if controls_ids and len(controls_ids) <= fetch_ids_limit:
-            answer = await api.get_step_answer(
-                combined_step_id,
-                pagination={
-                    "offset": 0,
-                    "numRecords": min(len(controls_ids), fetch_ids_limit),
-                },
-                view_filters=view_filters_for(target_rt),
-            )
-            ids_found = extract_record_ids(
-                answer.records, preferred_key=config.id_field
-            )
-
-        intersection_ids_sample: JsonValue = list(ids_found[:50])
-        intersection_ids: JsonValue = (
-            list(ids_found) if len(controls_ids) <= fetch_ids_limit else None
+        # The intersection lies inside the controls step, so one read of
+        # every record reads no more records than the call names controls.
+        answer = await api.get_step_answer(
+            combined_step_id,
+            pagination={"offset": 0, "numRecords": -1},
+            view_filters=view_filters_for(target_rt),
         )
-        return {
-            "controlsCount": len([x for x in controls_ids if str(x).strip()]),
-            "intersectionCount": total,
-            "intersectionIdsSample": intersection_ids_sample,
-            "intersectionIds": intersection_ids,
-            "targetStepId": target_step_id,
-            "targetEstimatedSize": target_total,
-        }
+        return _IntersectionRun(
+            target_step_id=target_step_id,
+            target_estimated_size=target_total,
+            returned_ids=set(
+                extract_record_ids(answer.records, preferred_key=config.id_field)
+            ),
+        )
     finally:
         await delete_temp_strategy(api, temp_strategy_id)
 
@@ -300,32 +308,16 @@ async def run_positive_negative_controls(
     neg = [str(x).strip() for x in (negative_controls or []) if str(x).strip()]
 
     if pos:
-        pos_payload = await _run_intersection_control(config, controls_ids=pos)
-        pos_data = ControlSetData.model_validate(pos_payload)
-
-        # Capture target info from the first successful run.
-        target.step_id = pos_data.target_step_id
-        target.estimated_size = pos_data.target_estimated_size
-
-        found = summarize_intersection(pos_payload)
-        recovered = found.found_ids
-        missing = [x for x in pos if x not in recovered] if found.ids_were_read else []
-        pos_data.missing_ids_sample = missing[:50]
-        pos_data.recall = found.intersection_count / len(pos)
-        result.positive = pos_data
+        pos_run = await _run_intersection_control(config, controls_ids=pos)
+        target.step_id = pos_run.target_step_id
+        target.estimated_size = pos_run.target_estimated_size
+        result.positive = _positive_controls(pos, pos_run.returned_ids)
 
     if neg:
-        neg_payload = await _run_intersection_control(config, controls_ids=neg)
-        neg_data = ControlSetData.model_validate(neg_payload)
-
-        # Fill target info if not set yet (e.g. no positive controls).
+        neg_run = await _run_intersection_control(config, controls_ids=neg)
         if target.step_id is None:
-            target.step_id = neg_data.target_step_id
-            target.estimated_size = neg_data.target_estimated_size
-
-        hits = summarize_intersection(neg_payload)
-        neg_data.unexpected_hits_sample = sorted(hits.found_ids)[:50]
-        neg_data.false_positive_rate = hits.intersection_count / len(neg)
-        result.negative = neg_data
+            target.step_id = neg_run.target_step_id
+            target.estimated_size = neg_run.target_estimated_size
+        result.negative = _negative_controls(neg, neg_run.returned_ids)
 
     return result

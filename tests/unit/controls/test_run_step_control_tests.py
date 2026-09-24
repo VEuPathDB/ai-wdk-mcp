@@ -101,11 +101,8 @@ async def test_positive_controls_report_recall(fake_results: _FakeStrategyAPI) -
     assert result.positive.controls_count == 3
     assert result.positive.intersection_count == 2
     assert result.positive.recall == pytest.approx(2 / 3)
-    assert result.positive.intersection_ids_sample == [
-        "PF3D7_0100100",
-        "PF3D7_0100200",
-    ]
-    assert result.positive.missing_ids_sample == ["PF3D7_9999999"]
+    assert result.positive.recovered_ids == ["PF3D7_0100100", "PF3D7_0100200"]
+    assert result.positive.missed_ids == ["PF3D7_9999999"]
     assert result.negative is None
     assert fake_results.calls == [(4242, 50000)]
 
@@ -122,7 +119,8 @@ async def test_negative_controls_report_false_positive_rate(
     assert result.negative.controls_count == 2
     assert result.negative.intersection_count == 1
     assert result.negative.false_positive_rate == pytest.approx(0.5)
-    assert result.negative.intersection_ids_sample == ["PF3D7_0100300"]
+    assert result.negative.admitted_ids == ["PF3D7_0100300"]
+    assert result.negative.excluded_ids == ["PF3D7_8888888"]
     assert result.positive is None
 
 
@@ -156,9 +154,10 @@ async def test_the_payload_layer_flattens_the_result(
     assert outcome.positive_controls_count == 2
     assert outcome.positive_intersection == 1
     assert outcome.positive_recall == pytest.approx(0.5)
-    assert outcome.positive_intersection_ids == ["PF3D7_0100100"]
-    assert outcome.positive_missing_ids == ["PF3D7_9999999"]
+    assert outcome.positive_recovered_ids == ["PF3D7_0100100"]
+    assert outcome.positive_missed_ids == ["PF3D7_9999999"]
     assert outcome.negative_controls_count == 1
     assert outcome.negative_intersection == 1
     assert outcome.negative_false_positive_rate == pytest.approx(1.0)
-    assert outcome.negative_intersection_ids == ["PF3D7_0100300"]
+    assert outcome.negative_admitted_ids == ["PF3D7_0100300"]
+    assert outcome.negative_excluded_ids == []

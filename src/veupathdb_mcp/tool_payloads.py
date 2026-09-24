@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Self
+
 from pydantic import ConfigDict, Field, model_validator
 from veupathdb import JSONObject, get_logger
 from veupathdb.domain.parameters import ParamValue
@@ -13,9 +15,11 @@ from veupathdb_mcp.catalog.public_strategy_search import (
     rank_public_strategies,
     rank_public_strategies_semantic,
 )
+from veupathdb_mcp.computed import computed
 from veupathdb_mcp.controls.control_types import (
-    ControlSetData,
     ControlTestResult,
+    NegativeControls,
+    PositiveControls,
 )
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
 
@@ -93,47 +97,41 @@ class DownloadLinks(CamelModel):
     expires_in_seconds: int | None = None
 
 
-def _positive_fields(data: ControlSetData | None) -> dict[str, object]:
-    """The positive-control half of a flat control outcome, or nothing."""
-    if data is None:
+def _positive_lists(controls: PositiveControls | None) -> dict[str, list[str]]:
+    """The positive-control lists of a flat control outcome, or nothing."""
+    if controls is None:
         return {}
     return {
-        "positive_intersection": data.intersection_count,
-        "positive_controls_count": data.controls_count,
-        "positive_recall": data.recall,
-        "positive_intersection_ids": data.intersection_ids_sample,
-        "positive_missing_ids": data.missing_ids_sample,
+        "positive_recovered_ids": controls.recovered_ids,
+        "positive_missed_ids": controls.missed_ids,
     }
 
 
-def _negative_fields(data: ControlSetData | None) -> dict[str, object]:
-    """The negative-control half of a flat control outcome, or nothing."""
-    if data is None:
+def _negative_lists(controls: NegativeControls | None) -> dict[str, list[str]]:
+    """The negative-control lists of a flat control outcome, or nothing."""
+    if controls is None:
         return {}
     return {
-        "negative_intersection": data.intersection_count,
-        "negative_controls_count": data.controls_count,
-        "negative_false_positive_rate": data.false_positive_rate,
-        "negative_intersection_ids": data.intersection_ids_sample,
+        "negative_admitted_ids": controls.admitted_ids,
+        "negative_excluded_ids": controls.excluded_ids,
     }
 
 
 class ControlOutcome(CamelModel):
-    """One control test, flat: what was tested and what the controls recovered."""
+    """One control test, flat: what was tested and where each control was filed.
+
+    A control kind the test was not given has None for both of its lists, and
+    each count and rate is read from the two lists of its kind.
+    """
 
     step_id: int | None = None
     search_name: str = ""
     parameters: dict[str, ParamValue] = Field(default_factory=dict)
     estimated_size: int = 0
-    positive_intersection: int | None = None
-    positive_controls_count: int | None = None
-    positive_recall: float | None = None
-    positive_intersection_ids: list[str] = Field(default_factory=list)
-    positive_missing_ids: list[str] = Field(default_factory=list)
-    negative_intersection: int | None = None
-    negative_controls_count: int | None = None
-    negative_false_positive_rate: float | None = None
-    negative_intersection_ids: list[str] = Field(default_factory=list)
+    positive_recovered_ids: list[str] | None = None
+    positive_missed_ids: list[str] | None = None
+    negative_admitted_ids: list[str] | None = None
+    negative_excluded_ids: list[str] | None = None
     downloads: DownloadLinks | None = None
 
     @model_validator(mode="before")
@@ -147,11 +145,73 @@ class ControlOutcome(CamelModel):
                     "search_name": raw.target.search_name,
                     "parameters": raw.target.parameters,
                     "estimated_size": raw.target.estimated_size or 0,
-                    **_positive_fields(raw.positive),
-                    **_negative_fields(raw.negative),
+                    **_positive_lists(raw.positive),
+                    **_negative_lists(raw.negative),
                 }
             case _:
                 return raw
+
+    @model_validator(mode="after")
+    def _each_kind_is_a_control_set(self) -> Self:
+        self._positive()
+        self._negative()
+        return self
+
+    def _positive(self) -> PositiveControls | None:
+        match (self.positive_recovered_ids, self.positive_missed_ids):
+            case (None, None):
+                return None
+            case (list() as recovered, list() as missed):
+                return PositiveControls(recovered_ids=recovered, missed_ids=missed)
+            case _:
+                msg = "a positive control set names both of its lists or neither"
+                raise ValueError(msg)
+
+    def _negative(self) -> NegativeControls | None:
+        match (self.negative_admitted_ids, self.negative_excluded_ids):
+            case (None, None):
+                return None
+            case (list() as admitted, list() as excluded):
+                return NegativeControls(admitted_ids=admitted, excluded_ids=excluded)
+            case _:
+                msg = "a negative control set names both of its lists or neither"
+                raise ValueError(msg)
+
+    @computed
+    def positive_controls_count(self) -> int | None:
+        """Every positive control the test was given."""
+        positive = self._positive()
+        return None if positive is None else positive.controls_count
+
+    @computed
+    def positive_intersection(self) -> int | None:
+        """The positive controls the target returned."""
+        positive = self._positive()
+        return None if positive is None else positive.intersection_count
+
+    @computed
+    def positive_recall(self) -> float | None:
+        """The share of the positive controls the target returned."""
+        positive = self._positive()
+        return None if positive is None else positive.recall
+
+    @computed
+    def negative_controls_count(self) -> int | None:
+        """Every negative control the test was given."""
+        negative = self._negative()
+        return None if negative is None else negative.controls_count
+
+    @computed
+    def negative_intersection(self) -> int | None:
+        """The negative controls the target returned."""
+        negative = self._negative()
+        return None if negative is None else negative.intersection_count
+
+    @computed
+    def negative_false_positive_rate(self) -> float | None:
+        """The share of the negative controls the target returned."""
+        negative = self._negative()
+        return None if negative is None else negative.false_positive_rate
 
 
 async def list_search_categories(
