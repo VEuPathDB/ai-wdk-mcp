@@ -34,7 +34,7 @@ than from a file inside it.
 | `veupathdb_mcp.research` | the research server, its settings and its two tools |
 | `veupathdb_mcp.separation` | the separation run, its request, its progress rows, its result, the request charges it makes and the hypergeometric tail it reads controls by |
 | `veupathdb_mcp.tools` | the twenty-seven served tools |
-| `veupathdb_mcp.wdk` | step trees, step results, sizes, previews, expression, the vocabulary and defaults a form offers, and the AST a saved strategy converts into |
+| `veupathdb_mcp.wdk` | step trees, sizes, the sample of a built step (`step_sample_records`), downloads, expression, the vocabulary and defaults a form offers, and the AST a saved strategy converts into |
 | `veupathdb_mcp.wdk.enrichment` | over-representation analysis, its result shapes and its parser |
 
 `tests/unit/test_cold_import.py` holds the line: it imports every module of the

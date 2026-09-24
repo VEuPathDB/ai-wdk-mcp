@@ -2,8 +2,28 @@
 
 ## 2026-09-24
 
-- `veupathdb-mcp` is 0.2.0a25. A control test names every control id it was given. A It pins `veupathdb-py` v0.1.0a16, whose VDI and EDA user-scoped calls never fall back to the service token.
-  positive set is `PositiveControls` (`recoveredIds`, `missedIds`), a negative set is
+- A sample of a built step sends no view filter. On a transcript step the
+  `representativeTranscriptOnly` filter makes WDK rank the whole answer before it returns a
+  row: a union with the whole P. falciparum 3D7 genome (5720 genes, 5791 transcripts) took
+  longer than the client's 30 s attempt three times over, so `step_sample_records(limit=8)`
+  failed after 188 s, while the same page without the filter answered in 0.6 s.
+  `step_sample_records` and the served `get_step_sample_records` now share
+  `veupathdb_mcp/wdk/step_preview.py::step_sample_answer`: it reads `4 * limit` rows from
+  offset 0 without the filter, keeps the first row of each gene (the first part of the
+  primary key, `gene_source_id` on a transcript) in the order read, and reads one more page
+  only when the first holds fewer distinct genes than both `limit` and the step's gene count.
+  The same sample answers in 0.5 s. The pagers keep the filter: a page past offset 0 needs
+  one row per gene to reach the last genes. `StepResultsService` and `step_results_service`
+  leave `veupathdb_mcp.wdk` with the module that held them, and so do the names only they
+  read: `AttributesResponse`, `RecordAttribute`, `RecordDetailResponse`,
+  `build_attribute_list`, `extract_detail_attributes` and `merge_analysis_params`. The
+  enrichment service builds its own analysis request. Falsified by
+  `tests/unit/wdk/test_step_preview.py::TestASampleIsOneRowPerGene` and the live lane's
+  `tests/live/test_the_sample_of_a_genome_union_is_quick.py`.
+
+- `veupathdb-mcp` is 0.2.0a25. It pins `veupathdb-py` v0.1.0a16, whose VDI and EDA
+  user-scoped calls never fall back to the service token. A control test names every
+  control id it was given. A positive set is `PositiveControls` (`recoveredIds`, `missedIds`), a negative set is
   `NegativeControls` (`admittedIds`, `excludedIds`); `ControlSetData`,
   `IntersectionSummary` and `summarize_intersection` leave `veupathdb_mcp.controls`.
   `controlsCount`, `intersectionCount`, `recall` and `falsePositiveRate` are computed
@@ -43,10 +63,11 @@
   rows for 6414 genes, plasmodb 3139 for 3073), so a pager that walks `offset` up to the count
   repeats genes and never reaches the last rows. `veupathdb_mcp.wdk.step_report_filters` owns
   the `representativeTranscriptOnly` view filter and sends it on a transcript step only; the
-  `gene` record type has no such filter. The pagers that send it: `StepResultsService.get_records`
-  (the record type the host names), `fetch_gene_ids_from_step`, `step_sample_records` and
-  `run_step_control_tests` (the record type WDK reports for the step), and the identifier read
-  of a control intersection (the record type the catalog names for the target search). Count
+  `gene` record type has no such filter. The pagers that send it: `fetch_gene_ids_from_step`
+  and `run_step_control_tests` (the record type WDK reports for the step), and the identifier
+  read of a control intersection (the record type the catalog names for the target search).
+  The sample read, `step_sample_records` and `step_sample_answer` in `step_preview.py`, which
+  the served `get_step_sample_records` also calls, sends no filter (2026-09-24 entry). Count
   reads send nothing: `records_returned()` already prefers the gene count. `veupathdb_mcp.wdk`
   publishes `view_filters_for` and `step_view_filters`, so a host pager applies the same rule.
 - `_extract_step_search_context` takes a step's record type from its `recordClassName`, which WDK
@@ -210,8 +231,8 @@
   a one-element array, and WDK reads both as the same value. The defaults an analysis
   form offers are carried back as WDK stated them, because a stable value is already a
   wire value. A supplied number takes the canonical form of its kind, so `1.0` reaches
-  WDK as `1`, and `merge_analysis_params` refuses a range or a filter value handed to it
-  as a wire string rather than passing it through. No served tool's result changes
+  WDK as `1`. A range or a filter value handed to an analysis request as a wire string is
+  refused rather than passed through. No served tool's result changes
   shape: the change is in the analysis request this server sends. The client's next
   fixture pass can pin the two forms this rests on: record
   `GET .../steps/{id}/analyses/{analysisName}` for `go-enrichment` and `word-enrichment`

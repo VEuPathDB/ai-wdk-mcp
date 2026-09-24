@@ -1,0 +1,853 @@
+{
+ "provenance": {
+  "site": "plasmodb",
+  "method": "POST",
+  "path": "/users/current/steps/{stepId}/reports/standard",
+  "step": {
+   "searchName": "GenesByTaxon",
+   "parameters": {
+    "organism": "[\"Plasmodium falciparum 3D7\"]"
+   },
+   "recordType": "transcript"
+  },
+  "request": {
+   "reportConfig": {
+    "attributes": [
+     "gene_product",
+     "gene_name",
+     "organism"
+    ],
+    "pagination": {
+     "offset": 1369,
+     "numRecords": 32
+    }
+   }
+  },
+  "status": 200,
+  "recorded_at": "2026-09-24"
+ },
+ "body": {
+  "records": [
+   {
+    "tables": {},
+    "displayName": "PF3D7_0612400",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "peptidyl-tRNA hydrolase, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0612400"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0612400.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0612500",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "conserved Plasmodium protein, unknown function"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0612500"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0612500.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0612600",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "NCS6",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "cytoplasmic tRNA 2-thiolation protein 1, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0612600"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0612600.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0612700",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "P12",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "6-cysteine protein P12"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0612700"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0612700.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0612800",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "P12p",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "6-cysteine protein P12p"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0612800"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0612800.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0612900",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "NOG1",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "nucleolar GTP-binding protein 1, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0612900"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0612900.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0613000",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "conserved Plasmodium protein, unknown function"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0613000"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0613000.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0613000",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "conserved Plasmodium protein, unknown function"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0613000"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0613000.2"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0613000",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "conserved Plasmodium protein, unknown function"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0613000"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0613000.3"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0613100",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "Apicomplexa microprotein | domain-containing protein"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0613100"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0613100.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0613200",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "conserved Plasmodium protein, unknown function"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0613200"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0613200.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0613300",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "ROP14",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "rhoptry protein ROP14"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0613300"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0613300.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0613400",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "RPL18",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "50S ribosomal protein L18, apicoplast, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0613400"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0613400.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0613500",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "AP-3 complex subunit beta, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0613500"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0613500.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0613600",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "anchor protein"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0613600"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0613600.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0613700",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "syntaxin-binding protein, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0613700"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0613700.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0613800",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "AP2-06B",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "AP2 domain transcription factor"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0613800"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0613800.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0613900",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "MyoE",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "myosin E, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0613900"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0613900.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0614000",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "thiamine-phosphate synthase, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0614000"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0614000.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0614100",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "filamin domain-containing protein, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0614100"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0614100.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0614200",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "NAR1",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "cytosolic Fe-S cluster assembly factor NAR1, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0614200"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0614200.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0614300",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "MFR1",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "major facilitator superfamily-related transporter, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0614300"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0614300.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0614400",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "CWF7",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "pre-mRNA-splicing factor CWF7, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0614400"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0614400.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0614500",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "RPL19",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "60S ribosomal protein L19"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0614500"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0614500.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0614600",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "ARPC4",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "actin-related protein 2/3 complex subunit 4, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0614600"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0614600.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0614700",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "F-box protein FBXO6, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0614700"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0614700.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0614800",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "ENDOIII",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "endonuclease III"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0614800"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0614800.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0614900",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "conserved Plasmodium membrane protein, unknown function"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0614900"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0614900.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0615000",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "conserved Plasmodium protein, unknown function"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0615000"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0615000.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0615100",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "ENR",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "enoyl-acyl carrier reductase"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0615100"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0615100.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0615200",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": null,
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "conserved protein, unknown function"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0615200"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0615200.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "PF3D7_0615300",
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "GWT1",
+     "organism": "<i>Plasmodium falciparum 3D7</i>",
+     "gene_product": "GPI-anchored wall transfer protein 1, putative"
+    },
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_0615300"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_0615300.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "tableErrors": []
+   }
+  ],
+  "meta": {
+   "displayViewTotalCount": 5720,
+   "tables": [],
+   "pagination": {
+    "offset": 1369,
+    "numRecords": 32
+   },
+   "cachePreviouslyExisted": true,
+   "viewTotalCount": 5791,
+   "sorting": [],
+   "recordClassName": "transcript",
+   "responseCount": 32,
+   "attributes": [
+    "gene_product",
+    "gene_name",
+    "organism"
+   ],
+   "totalCount": 5791,
+   "displayTotalCount": 5720
+  }
+ }
+}

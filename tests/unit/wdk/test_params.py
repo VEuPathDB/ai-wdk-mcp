@@ -1,5 +1,7 @@
 """The wire form of one parameter value, and the defaults a form offers."""
 
+import pytest
+from pydantic import TypeAdapter
 from veupathdb.domain.parameters import (
     FAKE_ALL_SENTINEL,
     WDKTreeBoxVocabNode,
@@ -12,6 +14,7 @@ from veupathdb_mcp.wdk import (
     extract_default_params,
     extract_vocab_values,
 )
+from veupathdb_mcp.wdk.params import encode_named_param_value
 
 
 def _form() -> list[WDKParameter]:
@@ -169,3 +172,21 @@ class TestTheVocabularyAParamOffers:
 
     def test_a_param_that_is_not_there_offers_nothing(self) -> None:
         assert extract_vocab_values([], "organism") == []
+
+
+class TestANamedValueTakesTheKindItsFormDeclares:
+    """An analysis request puts each supplied value on the wire through the form."""
+
+    def test_a_number_takes_its_canonical_form(self) -> None:
+        assert encode_named_param_value(_form(), "pValueCutoff", "1.0") == "1"
+
+    def test_a_range_handed_over_as_a_wire_string_is_refused(self) -> None:
+        span = TypeAdapter(WDKParameter).validate_python(
+            {"name": "span", "type": "number-range", "displayName": "Span"}
+        )
+
+        with pytest.raises(ValueError, match="number-range"):
+            encode_named_param_value([span], "span", '{"min": 2, "max": 4}')
+
+    def test_a_name_the_form_does_not_carry_stands_as_written(self) -> None:
+        assert encode_named_param_value(_form(), "goSubset", "No") == "No"

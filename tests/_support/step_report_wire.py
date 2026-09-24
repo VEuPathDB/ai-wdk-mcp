@@ -32,10 +32,16 @@ def _answer(record_class_name: str) -> dict[str, Any]:
 
 
 class ReportWire:
-    """Answers one step of one record type and keeps every report body sent."""
+    """Answers one step of one record type and keeps every report body sent.
 
-    def __init__(self, record_class_name: str) -> None:
+    Given pages, the n-th report answers the n-th page.
+    """
+
+    def __init__(
+        self, record_class_name: str, pages: list[dict[str, Any]] | None = None
+    ) -> None:
         self._record_class_name = record_class_name
+        self._pages = pages
         self.bodies: list[dict[str, Any]] = []
 
     async def get(self, path: str, **_: object) -> Any:
@@ -52,15 +58,19 @@ class ReportWire:
     ) -> Any:
         del path
         self.bodies.append(json or {})
+        if self._pages is not None:
+            return self._pages[len(self.bodies) - 1]
         return _answer(self._record_class_name)
 
 
 def wire_api(
-    monkeypatch: pytest.MonkeyPatch, record_class_name: str
+    monkeypatch: pytest.MonkeyPatch,
+    record_class_name: str,
+    pages: list[dict[str, Any]] | None = None,
 ) -> tuple[StrategyAPI, ReportWire]:
     """A real strategy API over an in-memory WDK that answers one record type."""
     client = VEuPathDBClient("https://example.invalid/service")
-    wire = ReportWire(record_class_name)
+    wire = ReportWire(record_class_name, pages)
     monkeypatch.setattr(client, "get", wire.get)
     monkeypatch.setattr(client, "post", wire.post)
     return StrategyAPI(client, user_id="1"), wire

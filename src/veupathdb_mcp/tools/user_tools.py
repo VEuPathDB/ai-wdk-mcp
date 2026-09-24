@@ -49,8 +49,7 @@ from veupathdb_mcp.wdk.plan_counts import (
     DEFAULT_PLAN_COUNTS_STRATEGY_NAME,
     compute_plan_step_counts,
 )
-from veupathdb_mcp.wdk.step_preview import step_download_url
-from veupathdb_mcp.wdk.step_results import step_results_service
+from veupathdb_mcp.wdk.step_preview import step_download_url, step_sample_answer
 from veupathdb_mcp.wdk.step_size import (
     StepCountResult,
     get_estimated_size_for_site,
@@ -174,13 +173,11 @@ async def get_step_sample_records(
         record_type: Record type of the step. Gene steps are 'transcript'.
         limit: Number of records to return.
     """
-    results = step_results_service(
-        site_id=site_id,
-        step_id=wdk_step_id,
-        record_type=record_type,
-    )
-    return await results.get_records(
-        limit=limit, attributes=gene_sample_attributes(record_type)
+    return await step_sample_answer(
+        site_id,
+        wdk_step_id,
+        limit=limit,
+        attributes=gene_sample_attributes(record_type),
     )
 
 

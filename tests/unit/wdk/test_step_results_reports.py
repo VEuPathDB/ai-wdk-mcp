@@ -9,10 +9,7 @@ from __future__ import annotations
 from typing import Any
 
 import pytest
-from veupathdb.domain import WDKSortDirection
 from veupathdb.wdk import StrategyAPI, VEuPathDBClient, WDKSortSpec
-
-from veupathdb_mcp.wdk.step_results import StepResultsService
 
 _ANSWER: dict[str, Any] = {
     "meta": {
@@ -173,16 +170,6 @@ class TestOnlyTheJsonReporterHonoursThePage:
 
         assert sent.paths[-1].endswith("/reports/standard")
 
-    async def test_the_service_always_bounds_its_page(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        api, sent = _api(monkeypatch)
-        service = StepResultsService(api, step_id=9, record_type="transcript")
-
-        await service.get_records(offset=40, limit=20)
-
-        assert sent.config["pagination"] == {"offset": 40, "numRecords": 20}
-
     async def test_sorting_reaches_the_reporter_that_applies_it(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -196,17 +183,6 @@ class TestOnlyTheJsonReporterHonoursThePage:
             {"attributeName": "gene_id", "direction": "DESC"}
         ]
         assert sent.paths[-1].endswith("/reports/standard")
-
-    async def test_the_service_sort_direction_is_carried(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        api, sent = _api(monkeypatch)
-        service = StepResultsService(api, step_id=9, record_type="transcript")
-        direction: WDKSortDirection = "DESC"
-
-        await service.get_records(sort="product", direction=direction)
-
-        assert sent.config["sorting"][0]["direction"] == "DESC"
 
 
 class TestTheStepReportEndpointTakesOnlyAReportConfig:
