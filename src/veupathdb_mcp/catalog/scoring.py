@@ -86,15 +86,6 @@ def score_search(
     return score
 
 
-def is_chooser_search(search: WDKSearch) -> bool:
-    """Return True for a routing search that carries no real parameters.
-
-    WDK marks these with ``hideOperation`` in ``websiteProperties``.
-    """
-    ws_props = search.properties.get("websiteProperties", [])
-    return "hideOperation" in ws_props
-
-
 def record_type_priority(record_type: str) -> int:
     """Rank a record type. A lower number is a higher priority."""
     rt = record_type.lower()

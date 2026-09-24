@@ -17,7 +17,6 @@ from veupathdb_mcp.catalog.discovery_service import (
 )
 from veupathdb_mcp.catalog.models import SearchMatch
 from veupathdb_mcp.catalog.scoring import (
-    is_chooser_search,
     record_type_priority,
     score_candidates,
 )
@@ -25,6 +24,11 @@ from veupathdb_mcp.catalog.search_collection import (
     apply_site_search_bonus,
     collect_search_candidates,
     resolve_record_types,
+)
+from veupathdb_mcp.catalog.search_offer import (
+    is_boolean_search,
+    is_listed_search,
+    is_ranked_search,
 )
 from veupathdb_mcp.catalog.semantic_matching import apply_semantic_bonus
 
@@ -112,9 +116,7 @@ async def browse_search_categories(
 
     groups: dict[str, list[str]] = {}
     for s in searches:
-        if s.full_name.startswith("InternalQuestions."):
-            continue
-        if is_chooser_search(s):
+        if not is_ranked_search(s):
             continue
         cat = catalog.get_search_category(s.url_segment) or "(universal)"
         groups.setdefault(cat, []).append(s.display_name or s.url_segment)
@@ -142,7 +144,7 @@ async def list_searches(site_id: str, record_type: str) -> list[dict[str, str]]:
     searches = await discovery.get_searches(site_id, record_type)
     result: list[dict[str, str]] = []
     for s in searches:
-        if s.full_name.startswith("InternalQuestions."):
+        if not is_listed_search(s):
             continue
         result.append(
             {
@@ -156,7 +158,8 @@ async def list_searches(site_id: str, record_type: str) -> list[dict[str, str]]:
 async def list_transforms(site_id: str, record_type: str) -> list[dict[str, str]]:
     """List the searches that accept an input step, with their descriptions.
 
-    These searches chain one step onto another.
+    These searches chain one step onto another, whatever their question set.
+    The boolean question is left out, because a combine step reaches it.
     """
     discovery = get_discovery_service()
     searches = await discovery.get_searches(site_id, record_type)
@@ -164,7 +167,7 @@ async def list_transforms(site_id: str, record_type: str) -> list[dict[str, str]
     for s in searches:
         if not s.allowed_primary_input_record_class_names:
             continue
-        if s.full_name.startswith("InternalQuestions."):
+        if is_boolean_search(s):
             continue
         result.append(
             {

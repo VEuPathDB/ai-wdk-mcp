@@ -198,3 +198,36 @@ def test_a_card_survives_its_own_json(plasmodb: list[ExperimentCard]) -> None:
 
     assert ExperimentCard.model_validate(card.model_dump(mode="json")) == card
     assert card.model_dump(mode="json", by_alias=True)["datasetId"] == ("DS_00f985857c")
+
+
+class _OneRecordSite:
+    """A client whose report holds the vectorbase record cited by a DOI alone."""
+
+    async def post(self, path: str, *, json: JSONObject) -> JSONObject:
+        del path, json
+        return {
+            "records": [
+                {
+                    "id": [{"name": "dataset_id", "value": "DS_af57b0e081"}],
+                    "attributes": {"display_name": "Head samples"},
+                    "tables": {
+                        "References": [],
+                        "Publications": [
+                            {
+                                "citation": "DOI linkout",
+                                "dataset_id": "DS_af57b0e081",
+                                "pmid": None,
+                                "url": "https://doi.org/10.1007/978-3-319-24244-6_2",
+                            }
+                        ],
+                    },
+                }
+            ]
+        }
+
+
+async def test_a_publication_without_a_pmid_keeps_its_dataset() -> None:
+    cards = await load_dataset_metadata(_OneRecordSite(), "vectorbase")
+
+    assert [card.dataset_id for card in cards] == ["DS_af57b0e081"]
+    assert cards[0].pmids == []

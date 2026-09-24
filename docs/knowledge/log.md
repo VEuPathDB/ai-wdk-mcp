@@ -2,6 +2,26 @@
 
 ## 2026-09-24
 
+- A search that takes an input step is listed whatever its question set.
+  `list_transforms(site, "transcript")` answered only `TranscriptsFromGenes` and
+  `GenesBySpanLogic` on fungidb, plasmodb, toxodb, vectorbase and the portal, because it
+  skipped every search filed under `InternalQuestions`; it now answers
+  `TranscriptsFromGenes`, `GenesByOrthologs`, `GenesByPathwaysTransform`,
+  `GenesByCompoundsTransform`, `GenesByWeightFilter` and `GenesBySpanLogic` on the four
+  component sites, and `TranscriptsFromGenes`, `GenesByOrthologs`, `GenesByWeightFilter` and
+  `GenesBySpanLogic` on the portal. `list_searches`, `browse_search_categories` and the
+  candidates of `search_for_searches` offer the same input-step searches, and the semantic
+  injection no longer names the boolean question or a chooser search. The predicates live
+  in `catalog/search_offer.py`, which takes `is_chooser_search` from `catalog/scoring.py`.
+  See [An input-step search is listed whatever its question set](decisions/an-input-step-search-is-listed-whatever-its-question-set.md).
+
+- A dataset whose publication row has no PMID keeps the site's datasets. On vectorbase
+  and the portal, the Publications row of `DS_af57b0e081` is a DOI linkout with `pmid`
+  null, so `DatasetReport` refused the whole report and both catalogs held 0 datasets.
+  `DatasetPublication.pmid` is optional; the rebuilt catalogs hold 613 (vectorbase) and 2592
+  (portal). Falsified by
+  `tests/unit/catalog/test_experiment_cards.py::test_a_publication_without_a_pmid_keeps_its_dataset`.
+
 - A sample of a built step sends no view filter. On a transcript step the
   `representativeTranscriptOnly` filter makes WDK rank the whole answer before it returns a
   row: a union with the whole P. falciparum 3D7 genome (5720 genes, 5791 transcripts) took

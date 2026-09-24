@@ -127,8 +127,10 @@ class DatasetReference(BaseModel):
 
 
 class DatasetPublication(BaseModel):
+    """One row of the Publications table. A row cited by a DOI alone has no PMID."""
+
     model_config = ConfigDict(extra="ignore")
-    pmid: str = ""
+    pmid: str | None = None
 
 
 class DatasetTables(BaseModel):

@@ -14,10 +14,8 @@ from veupathdb.wdk import (
 
 from veupathdb_mcp.catalog.discovery_service import DiscoveryService
 from veupathdb_mcp.catalog.models import SearchMatch
-from veupathdb_mcp.catalog.scoring import (
-    is_chooser_search,
-    record_type_priority,
-)
+from veupathdb_mcp.catalog.scoring import record_type_priority
+from veupathdb_mcp.catalog.search_offer import is_ranked_search
 
 logger = get_logger(__name__)
 
@@ -117,9 +115,7 @@ async def collect_search_candidates(
     for rt_name in record_types:
         searches = await discovery.get_searches(site_id, rt_name)
         for s in searches:
-            if s.full_name.startswith("InternalQuestions."):
-                continue
-            if is_chooser_search(s):
+            if not is_ranked_search(s):
                 continue
             if category:
                 search_cat = catalog.get_search_category(s.url_segment)

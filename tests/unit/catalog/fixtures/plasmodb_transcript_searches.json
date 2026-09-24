@@ -1,0 +1,501 @@
+{
+ "provenance": {
+  "site": "plasmodb",
+  "method": "GET",
+  "url": "https://plasmodb.org/plasmo/service/record-types/transcript/searches",
+  "status": 200,
+  "recorded_at": "2026-09-24",
+  "trimmed": "keeps TranscriptsFromGenes, the realtime basket search and GenesBySpanLogic, each whole, in the order WDK sent them"
+ },
+ "body": [
+  {
+   "urlSegment": "TranscriptsFromGenes",
+   "dynamicAttributes": [
+    {
+     "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+     "isInReport": true,
+     "formats": [
+      {
+       "isInReport": true,
+       "displayName": "Histogram",
+       "name": "wdk_weight-histogram",
+       "description": "Display a histogram of weight distribution",
+       "scopes": [],
+       "type": "histogram"
+      }
+     ],
+     "truncateTo": 100,
+     "displayName": "Search Weight",
+     "name": "wdk_weight",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "columnDataType": "STRING",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    }
+   ],
+   "defaultSorting": [
+    {
+     "attributeName": "gene_location_text",
+     "direction": "ASC"
+    }
+   ],
+   "isAnalyzable": true,
+   "displayName": "Transform Transcripts to Genes",
+   "allowedPrimaryInputRecordClassNames": [
+    "gene"
+   ],
+   "fullName": "GeneQuestions.TranscriptsFromGenes",
+   "description": "Find transcripts from a result set of genes",
+   "defaultAttributes": [
+    "primary_key",
+    "gene_location_text",
+    "gene_product"
+   ],
+   "groups": [
+    {
+     "displayType": "hidden",
+     "displayName": "",
+     "name": "_hidden",
+     "description": "",
+     "isVisible": false,
+     "parameters": [
+      "transcript_result"
+     ]
+    }
+   ],
+   "filters": [
+    {
+     "isViewOnly": false,
+     "name": "organismFilter"
+    },
+    {
+     "displayName": "Transcripts",
+     "isViewOnly": false,
+     "name": "matched_transcript_filter_array"
+    },
+    {
+     "isViewOnly": false,
+     "name": "genesByPathway"
+    }
+   ],
+   "shortDisplayName": "FromTrans",
+   "paramNames": [
+    "transcript_result"
+   ],
+   "isCacheable": true,
+   "outputRecordClassName": "transcript",
+   "noSummaryOnSingleRecord": false,
+   "queryName": "TranscriptsFromGenes",
+   "defaultSummaryView": "_default",
+   "properties": {
+    "organisms": [
+     "P. falciparum",
+     "P. vivax",
+     "P. yoelii",
+     "P. berghei",
+     "P. chabaudi",
+     "P. knowlesi"
+    ],
+    "specificAttribution": []
+   },
+   "summaryViewPlugins": [
+    {
+     "displayName": "Gene Results",
+     "name": "_default",
+     "description": "View transcripts."
+    },
+    {
+     "displayName": "Genome View",
+     "name": "genomic-view",
+     "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+    }
+   ]
+  },
+  {
+   "urlSegment": "TranscriptRecordClasses_TranscriptRecordClassByRealtimeBasket",
+   "dynamicAttributes": [
+    {
+     "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+     "isInReport": true,
+     "formats": [
+      {
+       "isInReport": true,
+       "displayName": "Histogram",
+       "name": "wdk_weight-histogram",
+       "description": "Display a histogram of weight distribution",
+       "scopes": [],
+       "type": "histogram"
+      }
+     ],
+     "truncateTo": 100,
+     "displayName": "Search Weight",
+     "name": "wdk_weight",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "columnDataType": "NUMBER",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    }
+   ],
+   "defaultSorting": [
+    {
+     "attributeName": "gene_location_text",
+     "direction": "ASC"
+    }
+   ],
+   "isAnalyzable": true,
+   "displayName": "Current Transcript Basket",
+   "fullName": "InternalQuestions.TranscriptRecordClasses_TranscriptRecordClassByRealtimeBasket",
+   "defaultAttributes": [
+    "primary_key",
+    "gene_location_text",
+    "gene_product"
+   ],
+   "groups": [
+    {
+     "displayType": "empty",
+     "displayName": "",
+     "name": "empty",
+     "description": "",
+     "isVisible": true,
+     "parameters": []
+    }
+   ],
+   "filters": [
+    {
+     "isViewOnly": false,
+     "name": "organismFilter"
+    },
+    {
+     "displayName": "Transcripts",
+     "isViewOnly": false,
+     "name": "matched_transcript_filter_array"
+    },
+    {
+     "isViewOnly": false,
+     "name": "genesByPathway"
+    }
+   ],
+   "shortDisplayName": "Transcript Basket",
+   "paramNames": [],
+   "isCacheable": true,
+   "outputRecordClassName": "transcript",
+   "noSummaryOnSingleRecord": false,
+   "queryName": "TranscriptRecordClasses_TranscriptRecordClassByRealtimeBasket",
+   "defaultSummaryView": "_default",
+   "properties": {
+    "organisms": [
+     "P. falciparum",
+     "P. vivax",
+     "P. yoelii",
+     "P. berghei",
+     "P. chabaudi",
+     "P. knowlesi"
+    ],
+    "specificAttribution": []
+   },
+   "summaryViewPlugins": [
+    {
+     "displayName": "Gene Results",
+     "name": "_default",
+     "description": "View transcripts."
+    },
+    {
+     "displayName": "Genome View",
+     "name": "genomic-view",
+     "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+    }
+   ]
+  },
+  {
+   "summary": "Filter genes with span logic operation against other results",
+   "urlSegment": "GenesBySpanLogic",
+   "dynamicAttributes": [
+    {
+     "isInReport": true,
+     "formats": [],
+     "truncateTo": 100,
+     "displayName": "Match Count",
+     "name": "matched_count",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "align": "center",
+     "columnDataType": "NUMBER",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    },
+    {
+     "isInReport": true,
+     "formats": [],
+     "truncateTo": 100,
+     "displayName": "Region",
+     "name": "feature_region",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "align": "center",
+     "columnDataType": "STRING",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    },
+    {
+     "isInReport": true,
+     "formats": [],
+     "truncateTo": 4000,
+     "displayName": "Matched Regions",
+     "name": "matched_regions",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "columnDataType": "STRING",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    },
+    {
+     "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+     "isInReport": true,
+     "formats": [
+      {
+       "isInReport": true,
+       "displayName": "Histogram",
+       "name": "wdk_weight-histogram",
+       "description": "Display a histogram of weight distribution",
+       "scopes": [],
+       "type": "histogram"
+      }
+     ],
+     "truncateTo": 100,
+     "displayName": "Search Weight",
+     "name": "wdk_weight",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "columnDataType": "NUMBER",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    }
+   ],
+   "defaultSorting": [
+    {
+     "attributeName": "organism",
+     "direction": "ASC"
+    },
+    {
+     "attributeName": "location_text",
+     "direction": "ASC"
+    }
+   ],
+   "isAnalyzable": true,
+   "displayName": "Genes by Relative Location",
+   "allowedPrimaryInputRecordClassNames": [
+    "transcript",
+    "variation",
+    "genomic-segment"
+   ],
+   "fullName": "SpanQuestions.GenesBySpanLogic",
+   "description": "Filter genes with span logic operation against other results",
+   "defaultAttributes": [
+    "primary_key",
+    "organism",
+    "location_text",
+    "gene_product",
+    "matched_count",
+    "feature_region",
+    "matched_regions"
+   ],
+   "groups": [
+    {
+     "displayType": "empty",
+     "displayName": "",
+     "name": "empty",
+     "description": "",
+     "isVisible": true,
+     "parameters": [
+      "span_sentence",
+      "span_operation",
+      "span_strand",
+      "span_output",
+      "region_a",
+      "region_b",
+      "span_begin_a",
+      "span_begin_direction_a",
+      "span_begin_offset_a",
+      "span_end_a",
+      "span_end_direction_a",
+      "span_end_offset_a",
+      "span_begin_b",
+      "span_begin_direction_b",
+      "span_begin_offset_b",
+      "span_end_b",
+      "span_end_direction_b",
+      "span_end_offset_b"
+     ]
+    },
+    {
+     "displayType": "hidden",
+     "displayName": "",
+     "name": "_hidden",
+     "description": "",
+     "isVisible": false,
+     "parameters": [
+      "span_a",
+      "span_b"
+     ]
+    }
+   ],
+   "filters": [
+    {
+     "isViewOnly": false,
+     "name": "organismFilter"
+    },
+    {
+     "displayName": "Transcripts",
+     "isViewOnly": false,
+     "name": "matched_transcript_filter_array"
+    },
+    {
+     "isViewOnly": false,
+     "name": "genesByPathway"
+    }
+   ],
+   "shortDisplayName": "Genes by Rel Loc",
+   "paramNames": [
+    "span_sentence",
+    "span_operation",
+    "span_strand",
+    "span_output",
+    "region_a",
+    "region_b",
+    "span_a",
+    "span_begin_a",
+    "span_begin_direction_a",
+    "span_begin_offset_a",
+    "span_end_a",
+    "span_end_direction_a",
+    "span_end_offset_a",
+    "span_b",
+    "span_begin_b",
+    "span_begin_direction_b",
+    "span_begin_offset_b",
+    "span_end_b",
+    "span_end_direction_b",
+    "span_end_offset_b"
+   ],
+   "isCacheable": true,
+   "allowedSecondaryInputRecordClassNames": [
+    "transcript",
+    "variation",
+    "genomic-segment"
+   ],
+   "outputRecordClassName": "transcript",
+   "noSummaryOnSingleRecord": false,
+   "queryName": "TranscriptsBySpanLogic",
+   "defaultSummaryView": "_default",
+   "properties": {
+    "organisms": [
+     "P. falciparum",
+     "P. vivax",
+     "P. yoelii",
+     "P. berghei",
+     "P. chabaudi",
+     "P. knowlesi"
+    ],
+    "specificAttribution": []
+   },
+   "summaryViewPlugins": [
+    {
+     "displayName": "Gene Results",
+     "name": "_default",
+     "description": "View transcripts."
+    },
+    {
+     "displayName": "Genome View",
+     "name": "genomic-view",
+     "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+    }
+   ]
+  }
+ ]
+}

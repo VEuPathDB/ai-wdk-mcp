@@ -17,6 +17,7 @@ from veupathdb_mcp.catalog.discovery_service import (
 )
 from veupathdb_mcp.catalog.models import SearchMatch
 from veupathdb_mcp.catalog.scoring import resolve_returns
+from veupathdb_mcp.catalog.search_offer import is_ranked_search
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
 
 logger = get_logger(__name__)
@@ -120,12 +121,15 @@ def _inject_missed(
     catalog: SearchCatalog,
     hits: list[tuple[str, str, float]],
 ) -> None:
-    """Add the high-similarity searches keyword scoring never proposed."""
+    """Add the high-similarity searches keyword scoring never proposed.
+
+    The index holds every search, so a hit the listings do not offer is dropped.
+    """
     existing_names = {entry.name for _, entry in scored}
     for search_name, rt, sim in hits:
         if search_name in existing_names or sim < _MIN_SEMANTIC_SIM:
             continue
         search = catalog.find_search(rt, search_name)
-        if search is None:
+        if search is None or not is_ranked_search(search):
             continue
         scored.append((_SEMANTIC_BOOST * sim, build_search_match(search, rt, sim)))

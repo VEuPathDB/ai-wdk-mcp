@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from typing import cast
 
 import pytest
+from tests._support.recorded_searches import recorded_search
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp import catalog
@@ -69,6 +70,25 @@ class _FakeDiscovery:
     async def get_catalog(self, site_id: str) -> _FakeCatalog:
         del site_id
         return self._catalog
+
+
+class _OfferingCatalog(_FakeCatalog):
+    """A catalog that owns the recorded definitions and one chooser search."""
+
+    def find_search(self, record_type: str, search_name: str) -> WDKSearch:
+        del record_type
+        if search_name == "GenesByChooser":
+            return WDKSearch(
+                url_segment=search_name,
+                properties={"websiteProperties": ["hideOperation"]},
+            )
+        recorded = {
+            "GenesByOrthologs": "search_genes_by_orthologs",
+            "boolean_question_TranscriptRecordClasses_TranscriptRecordClass": (
+                "search_boolean_transcript"
+            ),
+        }
+        return recorded_search(recorded[search_name]).search_data
 
 
 def _match(name: str) -> SearchMatch:
@@ -220,6 +240,28 @@ async def test_an_unreachable_index_leaves_every_similarity_unknown() -> None:
     )
 
     assert scored[0][1].semantic_similarity is None
+
+
+async def test_an_injected_hit_is_a_search_the_listings_offer() -> None:
+    index = _StubIndex(
+        hits=[
+            ("GenesByOrthologs", "transcript", 0.6),
+            (
+                "boolean_question_TranscriptRecordClasses_TranscriptRecordClass",
+                "transcript",
+                0.6,
+            ),
+            ("GenesByChooser", "transcript", 0.6),
+        ]
+    )
+    scored = [(1.0, _match("GenesByText"))]
+    discovery = cast("DiscoveryService", _FakeDiscovery(_OfferingCatalog(index)))
+
+    await semantic_matching.apply_semantic_bonus(
+        scored, discovery, "plasmodb", "orthologs", ["transcript"]
+    )
+
+    assert [entry.name for _, entry in scored] == ["GenesByText", "GenesByOrthologs"]
 
 
 @dataclass
