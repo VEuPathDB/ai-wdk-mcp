@@ -9,6 +9,9 @@ import pytest
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog.discovery import CatalogPolicy, SearchCatalog
+from veupathdb_mcp.catalog.experiment_card import ExperimentCard
+from veupathdb_mcp.catalog.experiments import read_experiment
+from veupathdb_mcp.embeddings.experiment_index import experiment_index_id
 from veupathdb_mcp.embeddings.fake import FakeEmbedder
 from veupathdb_mcp.embeddings.record_manager import index_size
 from veupathdb_mcp.embeddings.semantic_index import (
@@ -220,3 +223,56 @@ async def test_a_collected_search_with_no_stored_vector_has_no_similarity(
     index = _collected("testdb", _SEARCHES)
 
     assert await index.similarity("predicted GPI anchor", "GenesByGoTerm") is None
+
+
+def _dataset(site_id: str, dataset_id: str) -> ExperimentCard:
+    return ExperimentCard(
+        site_id=site_id,
+        dataset_id=dataset_id,
+        name="Oocyst excystation time course",
+        organism="Cryptosporidium parvum Iowa II",
+        assay="RNASeq",
+        record_url=f"https://{site_id}.org/app/record/dataset/{dataset_id}",
+    )
+
+
+async def test_a_catalog_build_that_may_sync_writes_its_experiments(
+    db: None,
+) -> None:
+    del db
+    catalog = _catalog("openeddb", sync=True)
+    catalog._searches = _SEARCHES
+    catalog._datasets = [_dataset("openeddb", "DS_1"), _dataset("openeddb", "DS_2")]
+
+    catalog._collect_semantic_index()
+    await _finish_sync(catalog)
+
+    assert await index_size(experiment_index_id("openeddb")) == 2
+    assert await read_experiment("openeddb", "DS_2") == _dataset("openeddb", "DS_2")
+
+
+async def test_a_catalog_build_that_may_not_sync_writes_no_experiment(
+    db: None,
+    fake_embedder: FakeEmbedder,
+) -> None:
+    del db
+    catalog = _catalog("gateddb", sync=False)
+    catalog._searches = _SEARCHES
+    catalog._datasets = [_dataset("gateddb", "DS_1")]
+
+    catalog._collect_semantic_index()
+    await _finish_sync(catalog)
+
+    assert await index_size(experiment_index_id("gateddb")) == 0
+    assert fake_embedder.calls == []
+
+
+async def test_a_catalog_of_datasets_alone_still_syncs_them(db: None) -> None:
+    del db
+    catalog = _catalog("datasetdb", sync=True)
+    catalog._datasets = [_dataset("datasetdb", "DS_1")]
+
+    catalog._collect_semantic_index()
+    await _finish_sync(catalog)
+
+    assert await index_size(experiment_index_id("datasetdb")) == 1

@@ -27,12 +27,13 @@ than from a file inside it.
 | package | what it publishes |
 | --- | --- |
 | `veupathdb_mcp` | the version, the service-token registry, the tool error payload, the tool metadata keys |
-| `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation |
+| `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation, and other sites' experiment cards |
 | `veupathdb_mcp.controls` | the control-test runners, their context and their result shapes |
-| `veupathdb_mcp.embeddings` | the embedder, the two index tables, the record manager and the two indexes |
+| `veupathdb_mcp.embeddings` | the embedder, its three tables, the record manager and the indexes on them |
 | `veupathdb_mcp.gene_lookup` | text lookup, id resolution and the organism list |
 | `veupathdb_mcp.research` | the research server, its settings and its two tools |
-| `veupathdb_mcp.tools` | the twenty-five served tools |
+| `veupathdb_mcp.separation` | the separation run, its request, its progress rows, its result, the request charges it makes and the hypergeometric tail it reads controls by |
+| `veupathdb_mcp.tools` | the twenty-seven served tools |
 | `veupathdb_mcp.wdk` | step trees, step results, sizes, previews, expression, the vocabulary and defaults a form offers, and the AST a saved strategy converts into |
 | `veupathdb_mcp.wdk.enrichment` | over-representation analysis, its result shapes and its parser |
 
@@ -66,7 +67,7 @@ module name:
 `veupathdb_mcp.tool_meta` declares a surface too, and the root re-exports both
 of its names.
 
-`tests/unit/published_surface.json` is the checked-in copy of all sixteen
+`tests/unit/published_surface.json` is the checked-in copy of all seventeen
 surfaces, so a name leaves one only by editing that file.
 
 ## Why two servers in one distribution
@@ -88,7 +89,7 @@ The two servers share no setting: the WDK server reads `WDK_MCP_*` and
 `VEUPATHDB_*`, the research server reads `RESEARCH_MCP_*`. A secret configured
 for one admits nothing on the other.
 
-## The twenty-five WDK tools
+## The twenty-seven WDK tools
 
 Catalog reads (service or user credential):
 
@@ -96,7 +97,8 @@ Catalog reads (service or user credential):
 `list_searches`, `list_transforms`, `lookup_phyletic_codes`,
 `search_example_plans`, `get_search_overview`, `get_parameter_options`,
 `get_search_param_specs`, `resolve_search_parameters`,
-`validate_search_parameters`, `search_catalog_index`.
+`validate_search_parameters`, `search_catalog_index`,
+`rank_experiments_elsewhere`, `read_experiment`.
 
 Record, step and evidence calls (the VEuPathDB user whose bearer the call
 carries):
@@ -240,13 +242,14 @@ names and tokens.
 
 ## The two migration chains
 
-This distribution owns `embedding_vectors` and `embedding_index_entries` and
-carries its own alembic history under `src/veupathdb_mcp/alembic/`, recording
-its position in `alembic_version_veupathdb_mcp`. A host application's chain uses
+This distribution owns `embedding_vectors`, `embedding_index_entries` and
+`experiment_cards`, and carries its own alembic history under
+`src/veupathdb_mcp/alembic/`, recording its position in
+`alembic_version_veupathdb_mcp`. A host application's chain uses
 its own version table, so the two share a database without touching each other.
 
 ```bash
-uv run python -m veupathdb_mcp.migrate     # bring the two tables to head
+uv run python -m veupathdb_mcp.migrate     # bring the owned tables to head
 ```
 
 `veupathdb_mcp.migrate` publishes `VERSION_TABLE` and `OWNED_TABLES`, so a host
@@ -256,8 +259,9 @@ autogenerate filter stays true when this chain grows a table.
 The server does **not** migrate at start: a replica that only reads must not
 change a schema. A host that embeds this package as a library runs
 `veupathdb_mcp.migrate.upgrade_head(connection)` on its own connection instead.
-A database that already carries the two tables from a host's chain is stamped
-once (`alembic stamp head` against this chain) rather than re-created.
+A database that already carries the two index tables from a host's chain is stamped
+once at their revision (`alembic stamp 2026_08_29_0001` against this chain) and then
+upgraded, rather than re-created.
 
 ## Admission
 

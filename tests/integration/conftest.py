@@ -61,5 +61,5 @@ async def embedding_index_cleaner(index_engine: AsyncEngine) -> AsyncGenerator[N
 async def _truncate(index_engine: AsyncEngine) -> None:
     async with index_engine.begin() as connection:
         await connection.exec_driver_sql(
-            "TRUNCATE TABLE embedding_index_entries, embedding_vectors",
+            "TRUNCATE TABLE embedding_index_entries, embedding_vectors, experiment_cards",
         )

@@ -1,4 +1,4 @@
-"""The embedding index owns its settings, its sessions and its two tables."""
+"""The embedding index owns its settings, its sessions and its three tables."""
 
 from __future__ import annotations
 
@@ -22,9 +22,10 @@ from veupathdb_mcp.embeddings.tables import (
     EmbeddingBase,
     EmbeddingIndexEntry,
     EmbeddingVector,
+    ExperimentCardRow,
 )
 
-INDEX_TABLES = {"embedding_vectors", "embedding_index_entries"}
+INDEX_TABLES = {"embedding_vectors", "embedding_index_entries", "experiment_cards"}
 
 
 def test_the_index_settings_keep_the_environment_variable_names() -> None:
@@ -50,10 +51,11 @@ def test_the_index_settings_module_computes_no_path() -> None:
     assert "config.toml" not in source
 
 
-def test_the_two_tables_map_on_the_index_base() -> None:
+def test_the_three_tables_map_on_the_index_base() -> None:
     assert set(EmbeddingBase.metadata.tables) == INDEX_TABLES
     assert EmbeddingVector.__tablename__ == "embedding_vectors"
     assert EmbeddingIndexEntry.__tablename__ == "embedding_index_entries"
+    assert ExperimentCardRow.__tablename__ == "experiment_cards"
 
 
 def test_the_index_opens_the_session_the_host_installed(
@@ -76,7 +78,7 @@ def test_the_index_opens_the_session_the_host_installed(
 def test_the_index_builds_its_own_engine_when_the_host_installs_none(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """A standalone process reads the two tables through its own pool."""
+    """A standalone process reads its tables through its own pool."""
     monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://u@db.test/index")
     monkeypatch.setattr(db, "_source", db._SessionSource())
     monkeypatch.setattr(db, "_own", db._OwnFactory())

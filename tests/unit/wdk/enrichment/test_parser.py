@@ -9,6 +9,9 @@ ToxoDB responses. See docs/knowledge/wdk/rules/searches-and-answers.md WDK-ANS-0
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import pytest
 from veupathdb import JSONObject
 
@@ -118,3 +121,31 @@ def test_infinity_becomes_none_not_a_finite_number() -> None:
 def test_non_dict_result_yields_empty_envelope() -> None:
     assert parse_enrichment_response("not a dict").result_data == []
     assert parse_enrichment_response(None).result_data == []
+
+
+def _recorded_pathway_rows() -> list[JSONObject]:
+    """The pathway rows plasmodb answered for the signal-peptide positives."""
+    recorded = Path(__file__).parents[2] / "separation/fixtures/one_run_requests.json"
+    exchanges = json.loads(recorded.read_text())["exchanges"]
+    return next(
+        rows
+        for exchange in exchanges
+        if exchange["method"] == "GET" and exchange["path"].endswith("/result")
+        for rows in [exchange["response_json"]["resultData"]]
+        if rows and "pathwayId" in rows[0]
+    )
+
+
+def test_a_pathway_term_carries_the_source_its_row_names() -> None:
+    terms = parse_enrichment_terms(_recorded_pathway_rows(), "pathway")
+
+    assert [(t.term_id, t.pathway_source) for t in terms] == [
+        ("ec00071", "KEGG"),
+        ("ec00061", "KEGG"),
+    ]
+
+
+def test_a_go_term_carries_no_pathway_source() -> None:
+    [term] = parse_enrichment_terms([_go_row()], "go_function")
+
+    assert term.pathway_source is None

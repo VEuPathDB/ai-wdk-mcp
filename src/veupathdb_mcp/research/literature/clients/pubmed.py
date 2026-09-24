@@ -33,7 +33,7 @@ _BACKOFF_BASE_S = 1.0
 
 _SERVICE = "PubMed"
 
-# ── PubMed response envelope models ─────────────────────────────────
+# PubMed response envelope models.
 
 
 class _ESearchResult(BaseModel):

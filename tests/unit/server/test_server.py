@@ -29,7 +29,9 @@ from veupathdb.wdk import (
 
 from veupathdb_mcp import server
 from veupathdb_mcp.auth import CredentialMode, McpCredential
-from veupathdb_mcp.catalog import search_inspection, sites
+from veupathdb_mcp.catalog import experiments, search_inspection, sites
+from veupathdb_mcp.catalog.experiment_card import ExperimentCard
+from veupathdb_mcp.catalog.experiments import ExperimentMatch, UnknownExperimentError
 from veupathdb_mcp.catalog.models import RecordTypeInfo
 from veupathdb_mcp.catalog.overview_formatting import SearchOverviewResult
 from veupathdb_mcp.catalog.param_dag import ResolvedParams, UnknownParameterError
@@ -80,6 +82,8 @@ EXPECTED_ANNOTATIONS: dict[str, dict[str, bool]] = {
     "resolve_search_parameters": READ_ONLY,
     "validate_search_parameters": READ_ONLY,
     "search_catalog_index": READ_ONLY,
+    "rank_experiments_elsewhere": READ_ONLY,
+    "read_experiment": READ_ONLY,
     "get_step_gene_ids": READ_ONLY,
     "run_control_tests_on_step": READ_ONLY,
     "count_plan_steps": ADDITIVE_WRITE,
@@ -139,6 +143,14 @@ async def test_the_served_inventory_is_the_published_one() -> None:
     tools = await _list_tools()
 
     assert sorted(tools) == sorted(EXPECTED_ANNOTATIONS)
+
+
+async def test_the_store_reads_of_experiment_cards_stay_in_process() -> None:
+    tools = await _list_tools()
+
+    assert [
+        name for name in ("sites_publishing", "sites_holding_organism") if name in tools
+    ] == []
 
 
 async def test_no_tool_keeps_the_name_the_inventory_renamed() -> None:
@@ -628,7 +640,11 @@ async def test_an_index_call_answers_from_the_record_manager(
     async def search(index_id: str, query: str, top_k: int) -> list[IndexHit]:
         assert index_id == "catalog:plasmodb"
         assert (query, top_k) == ("kinase", 2)
-        return [IndexHit(entry_id="transcript/GenesByText", similarity=0.75)]
+        return [
+            IndexHit(
+                index_id=index_id, entry_id="transcript/GenesByText", similarity=0.75
+            )
+        ]
 
     monkeypatch.setattr(catalog_tools, "search_index", search)
 
@@ -639,7 +655,13 @@ async def test_an_index_call_answers_from_the_record_manager(
         )
 
     assert result.structured_content == {
-        "result": [{"entry_id": "transcript/GenesByText", "similarity": 0.75}]
+        "result": [
+            {
+                "index_id": "catalog:plasmodb",
+                "entry_id": "transcript/GenesByText",
+                "similarity": 0.75,
+            }
+        ]
     }
 
 
@@ -662,6 +684,102 @@ async def test_an_unavailable_index_is_a_tool_error_that_names_the_index(
 
     assert result.is_error
     assert "index is unavailable" in _error_text(result)
+
+
+_CRYPTO_CARD = ExperimentCard(
+    site_id="cryptodb",
+    dataset_id="DS_c1",
+    name="Oocyst excystation time course",
+    organism="Cryptosporidium parvum Iowa II",
+    assay="RNASeq",
+    attribution="Lippuner et al. 2018",
+    record_url="https://cryptodb.org/cryptodb/app/record/dataset/DS_c1",
+)
+
+
+async def test_an_elsewhere_call_answers_from_the_experiment_indexes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seen: list[tuple[str, str, int]] = []
+
+    async def rank(site_id: str, query: str, *, limit: int) -> list[ExperimentMatch]:
+        seen.append((site_id, query, limit))
+        return [ExperimentMatch(card=_CRYPTO_CARD, similarity=0.52)]
+
+    monkeypatch.setattr(experiments, "rank_experiments_elsewhere", rank)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "rank_experiments_elsewhere",
+            {"site_id": SITE, "query": "sporozoite excystation", "limit": 2},
+        )
+
+    assert seen == [(SITE, "sporozoite excystation", 2)]
+    assert result.structured_content is not None
+    [match] = result.structured_content["result"]
+    assert match["similarity"] == 0.52
+    assert match["card"]["siteId"] == "cryptodb"
+    assert match["card"]["datasetId"] == "DS_c1"
+
+
+async def test_an_unavailable_experiment_index_is_a_tool_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def refuse(site_id: str, query: str, *, limit: int) -> list[ExperimentMatch]:
+        del site_id, query, limit
+        msg = "the store refused the connection"
+        raise SemanticIndexUnavailableError(msg)
+
+    monkeypatch.setattr(experiments, "rank_experiments_elsewhere", refuse)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "rank_experiments_elsewhere",
+            {"site_id": SITE, "query": "sporozoite excystation"},
+            raise_on_error=False,
+        )
+
+    assert result.is_error
+    assert "index is unavailable" in _error_text(result)
+
+
+async def test_a_read_experiment_call_answers_the_stored_card(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def read(site_id: str, dataset_id: str) -> ExperimentCard:
+        assert (site_id, dataset_id) == ("cryptodb", "DS_c1")
+        return _CRYPTO_CARD
+
+    monkeypatch.setattr(experiments, "read_experiment", read)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "read_experiment", {"site_id": "cryptodb", "dataset_id": "DS_c1"}
+        )
+
+    assert result.structured_content is not None
+    assert result.structured_content["recordUrl"] == _CRYPTO_CARD.record_url
+    assert result.structured_content["organism"] == "Cryptosporidium parvum Iowa II"
+
+
+async def test_an_unknown_dataset_is_a_tool_error_that_names_dataset_id(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def read(site_id: str, dataset_id: str) -> ExperimentCard:
+        raise UnknownExperimentError(site_id, dataset_id)
+
+    monkeypatch.setattr(experiments, "read_experiment", read)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "read_experiment",
+            {"site_id": SITE, "dataset_id": "DS_missing"},
+            raise_on_error=False,
+        )
+
+    assert result.is_error
+    assert "dataset_id" in _error_text(result)
+    assert "DS_missing" in _error_text(result)
 
 
 async def test_a_step_gene_read_answers_from_the_strategy_api(

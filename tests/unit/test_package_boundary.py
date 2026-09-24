@@ -101,7 +101,7 @@ def test_only_the_server_configures_logging() -> None:
     assert offenders == [LOGGING_OWNER]
 
 
-def test_the_migration_chain_declares_the_two_tables_it_owns() -> None:
+def test_the_migration_chain_declares_the_tables_it_owns() -> None:
     """The chain ships in the package, so an installed distribution can run it."""
     versions = Path(str(veupathdb_mcp.__file__)).parent / "alembic" / "versions"
     written = "\n".join(path.read_text() for path in versions.glob("*.py"))
@@ -109,6 +109,7 @@ def test_the_migration_chain_declares_the_two_tables_it_owns() -> None:
     assert versions.is_dir()
     assert '"embedding_vectors"' in written
     assert '"embedding_index_entries"' in written
+    assert '"experiment_cards"' in written
 
 
 def test_no_module_names_a_consuming_application() -> None:

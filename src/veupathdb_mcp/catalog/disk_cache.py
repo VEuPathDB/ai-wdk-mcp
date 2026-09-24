@@ -4,9 +4,11 @@ import json
 import time
 from pathlib import Path
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from veupathdb import get_logger
-from veupathdb.wdk import WDKRecordType, WDKSearch
+from veupathdb.wdk import SiteInfo, WDKRecordType, WDKSearch
+
+from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 
 logger = get_logger(__name__)
 
@@ -14,7 +16,7 @@ _CACHE_TTL_SECONDS = 7 * 24 * 60 * 60
 
 # The shape of the file two images exchange through the catalogs volume. Raise
 # it whenever a field changes meaning, is added or is dropped.
-SNAPSHOT_FORMAT_VERSION = 1
+SNAPSHOT_FORMAT_VERSION = 2
 
 
 class CatalogSnapshot(BaseModel):
@@ -26,8 +28,7 @@ class CatalogSnapshot(BaseModel):
     cached_at: float = Field(default_factory=time.time)
     record_types: list[WDKRecordType]
     searches: dict[str, list[WDKSearch]]
-    dataset_summaries: dict[str, str]
-    dataset_contacts: dict[str, str]
+    datasets: list[ExperimentCard]
     search_categories: dict[str, str]
     search_category_labels: dict[str, str] = Field(default_factory=dict)
     available_categories: list[str]
@@ -84,6 +85,9 @@ def save_catalog_cache(
 
 # The models below parse the WDK dataset report.
 
+# The record class of the searches a gene strategy binds.
+_GENE_RECORD_CLASS = "TranscriptRecordClasses.TranscriptRecordClass"
+
 
 class DatasetPkPart(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -93,14 +97,53 @@ class DatasetPkPart(BaseModel):
 
 class DatasetAttributes(BaseModel):
     model_config = ConfigDict(extra="ignore")
-    summary: str | None = None
-    contact: str | None = None
+    display_name: str = ""
+    type: str = ""
+    newcategory: str = ""
+    organism_prefix: str = ""
+    short_attribution: str = ""
+    summary: str = ""
+
+    @field_validator("*", mode="before")
+    @classmethod
+    def _absent_is_empty(cls, value: str | None) -> str:
+        return value or ""
+
+
+class DatasetReference(BaseModel):
+    """One row of the References table: a WDK object the dataset feeds."""
+
+    model_config = ConfigDict(extra="ignore")
+    target_type: str = ""
+    target_name: str = ""
+    record_type: str = ""
+
+    @property
+    def gene_search(self) -> str | None:
+        """The url segment of the gene search this row names, if it names one."""
+        if self.target_type != "question" or self.record_type != _GENE_RECORD_CLASS:
+            return None
+        return self.target_name.rpartition(".")[2]
+
+
+class DatasetPublication(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    pmid: str = ""
+
+
+class DatasetTables(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    references: list[DatasetReference] = Field(default_factory=list, alias="References")
+    publications: list[DatasetPublication] = Field(
+        default_factory=list, alias="Publications"
+    )
 
 
 class DatasetRecord(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: list[DatasetPkPart] = Field(default_factory=list)
     attributes: DatasetAttributes = Field(default_factory=DatasetAttributes)
+    tables: DatasetTables = Field(default_factory=DatasetTables)
 
     @property
     def dataset_id(self) -> str:
@@ -109,19 +152,23 @@ class DatasetRecord(BaseModel):
                 return part.value
         return self.id[0].value if self.id else ""
 
-    def populate(
-        self,
-        summaries: dict[str, str],
-        contacts: dict[str, str],
-    ) -> None:
-        """Writes this record's summary and contact into the given maps."""
-        ds_id = self.dataset_id
-        if not ds_id:
-            return
-        if self.attributes.summary:
-            summaries[ds_id] = self.attributes.summary
-        if self.attributes.contact:
-            contacts[ds_id] = self.attributes.contact
+    def card(self, site: SiteInfo) -> ExperimentCard:
+        """The record as a card of the site that published it."""
+        searches = (reference.gene_search for reference in self.tables.references)
+        pmids = (publication.pmid for publication in self.tables.publications)
+        attributes = self.attributes
+        return ExperimentCard(
+            site_id=site.id,
+            dataset_id=self.dataset_id,
+            name=attributes.display_name,
+            organism=attributes.organism_prefix,
+            assay=attributes.newcategory or attributes.type,
+            attribution=attributes.short_attribution,
+            summary=attributes.summary,
+            pmids=list(dict.fromkeys(pmid for pmid in pmids if pmid)),
+            searches=list(dict.fromkeys(name for name in searches if name)),
+            record_url=f"{site.web_base_url}/app/record/dataset/{self.dataset_id}",
+        )
 
 
 class DatasetReport(BaseModel):

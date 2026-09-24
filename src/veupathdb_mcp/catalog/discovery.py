@@ -21,7 +21,9 @@ from veupathdb_mcp.catalog.disk_cache import (
     save_catalog_cache,
     try_load_catalog_cache,
 )
+from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
+from veupathdb_mcp.embeddings.experiment_index import sync_experiments
 from veupathdb_mcp.embeddings.semantic_index import SemanticSearchIndex
 
 logger = get_logger(__name__)
@@ -72,8 +74,7 @@ class SearchCatalog:
         self._record_types: list[WDKRecordType] = []
         self._searches: dict[str, list[WDKSearch]] = {}
         self._search_details: dict[str, WDKSearchResponse] = {}
-        self._dataset_summaries: dict[str, str] = {}
-        self._dataset_contacts: dict[str, str] = {}
+        self._datasets: list[ExperimentCard] = []
         self._semantic_index: SemanticSearchIndex | None = None
         self._search_categories: dict[str, str] = {}
         self._search_category_labels: dict[str, str] = {}
@@ -96,8 +97,7 @@ class SearchCatalog:
         """Populate in-memory state from a cached snapshot."""
         self._record_types = snapshot.record_types
         self._searches = snapshot.searches
-        self._dataset_summaries = snapshot.dataset_summaries
-        self._dataset_contacts = snapshot.dataset_contacts
+        self._datasets = snapshot.datasets
         self._search_categories = snapshot.search_categories
         self._search_category_labels = snapshot.search_category_labels
         self._available_categories = set(snapshot.available_categories)
@@ -108,8 +108,7 @@ class SearchCatalog:
         return CatalogSnapshot(
             record_types=self._record_types,
             searches=self._searches,
-            dataset_summaries=self._dataset_summaries,
-            dataset_contacts=self._dataset_contacts,
+            datasets=self._datasets,
             search_categories=self._search_categories,
             search_category_labels=self._search_category_labels,
             available_categories=sorted(self._available_categories),
@@ -131,9 +130,7 @@ class SearchCatalog:
                 client, record_types, expanded_supported=expanded_supported
             )
 
-            ds = await load_dataset_metadata(client, self.site_id)
-            self._dataset_summaries = ds.summaries
-            self._dataset_contacts = ds.contacts
+            self._datasets = await load_dataset_metadata(client, self.site_id)
 
             onto = await load_ontology_categories(client, self.site_id)
             self._search_categories = onto.search_categories
@@ -189,7 +186,7 @@ class SearchCatalog:
                 site_id=self.site_id,
                 record_types=len(self._record_types),
                 total_searches=sum(len(s) for s in self._searches.values()),
-                datasets=len(self._dataset_summaries),
+                datasets=len(self._datasets),
             )
         except (VEuPathDBError, OSError, RuntimeError) as e:
             logger.exception(
@@ -215,27 +212,33 @@ class SearchCatalog:
             )
 
     def _collect_semantic_index(self) -> None:
-        """Hold the index the catalog offers, and start the sync beside it.
+        """Hold the index the catalog offers, and start the syncs beside it.
 
         The store is a separate service. The catalog is served whether or not
-        it answers, so the sync is neither awaited nor allowed to fail a load.
+        it answers, so a sync is neither awaited nor allowed to fail a load.
         """
         index = SemanticSearchIndex(site_id=self.site_id)
         index.collect(self._searches, category_labels=self._search_category_labels)
         self._semantic_index = index
-        if self._policy.sync and index.entries:
+        if self._policy.sync and (index.entries or self._datasets):
             self._index_sync = self._spawn(
-                self._sync_semantic_index(index),
+                self._sync_semantic_index(index, list(self._datasets)),
                 name=f"index-sync-{self.site_id}",
             )
 
-    async def _sync_semantic_index(self, index: SemanticSearchIndex) -> None:
-        """Write the index to its store, reporting a refusal rather than raising."""
+    async def _sync_semantic_index(
+        self, index: SemanticSearchIndex, datasets: list[ExperimentCard]
+    ) -> None:
+        """Write the search and experiment indexes, reporting a refusal rather than raising."""
         try:
             await index.sync()
+            await sync_experiments(
+                self.site_id, [card.index_entry() for card in datasets]
+            )
         except SemanticIndexUnavailableError as exc:
             logger.warning(
-                "The semantic index was not synced, so ranking stays lexical",
+                "The semantic indexes were not synced, so ranking stays lexical "
+                "and no other site sees this site's experiments",
                 site_id=self.site_id,
                 error_class=type(exc.__cause__ or exc).__name__,
                 error=str(exc),

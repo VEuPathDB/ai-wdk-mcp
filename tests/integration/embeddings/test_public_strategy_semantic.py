@@ -65,11 +65,11 @@ async def test_ranking_follows_the_index_order(
     strategies = [_strat(1, "A"), _strat(2, "B"), _strat(3, "C")]
 
     async def ranked(index_id: str, query: str, top_k: int) -> list[IndexHit]:
-        del index_id, query, top_k
+        del query, top_k
         return [
-            IndexHit(entry_id="1", similarity=0.9),
-            IndexHit(entry_id="3", similarity=0.6),
-            IndexHit(entry_id="2", similarity=0.1),
+            IndexHit(index_id=index_id, entry_id="1", similarity=0.9),
+            IndexHit(index_id=index_id, entry_id="3", similarity=0.6),
+            IndexHit(index_id=index_id, entry_id="2", similarity=0.1),
         ]
 
     monkeypatch.setattr(public_strategy_search, "search_index", ranked)
@@ -86,10 +86,10 @@ async def test_a_hit_below_the_threshold_is_dropped(
     strategies = [_strat(1, "A"), _strat(2, "B")]
 
     async def ranked(index_id: str, query: str, top_k: int) -> list[IndexHit]:
-        del index_id, query, top_k
+        del query, top_k
         return [
-            IndexHit(entry_id="1", similarity=0.9),
-            IndexHit(entry_id="2", similarity=0.0),
+            IndexHit(index_id=index_id, entry_id="1", similarity=0.9),
+            IndexHit(index_id=index_id, entry_id="2", similarity=0.0),
         ]
 
     monkeypatch.setattr(public_strategy_search, "search_index", ranked)

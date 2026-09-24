@@ -75,9 +75,10 @@ def _form(analysis_name: str) -> list[WDKParameter]:
 
 
 class FakeStrategyAPI:
-    """Answers the WDK calls the shared enrichment machinery makes."""
+    """Answers the WDK calls the shared enrichment machinery makes, named in order."""
 
     def __init__(self) -> None:
+        self.calls: list[str] = []
         self.rows: dict[str, list[JSONObject]] = {}
         self.failing: set[str] = set()
         self.refusals: dict[str, str] = {}
@@ -89,10 +90,12 @@ class FakeStrategyAPI:
         self.analyses: list[tuple[str, JSONObject]] = []
 
     async def create_dataset(self, config: WDKDatasetConfigIdList) -> int:
+        self.calls.append("create_dataset")
         self.datasets.append(list(config.source_content.ids))
         return 4242
 
     async def create_step(self, spec: NewStepSpec, record_type: str) -> WDKIdentifier:
+        self.calls.append("create_step")
         self.steps.append((spec, record_type))
         return WDKIdentifier(id=101)
 
@@ -105,22 +108,26 @@ class FakeStrategyAPI:
         is_internal: bool = False,
     ) -> WDKIdentifier:
         del step_tree, description, is_internal
+        self.calls.append("create_strategy")
         self.strategy_names.append(name)
         self.strategies.append(202)
         return WDKIdentifier(id=202)
 
     async def delete_strategy(self, strategy_id: int) -> None:
+        self.calls.append("delete_strategy")
         self.deleted.append(strategy_id)
 
     async def get_step_count(self, step_id: int, user_id: str | None = None) -> int:
         """The step holds the temporary dataset, so its count is the list's."""
         del step_id, user_id
+        self.calls.append("get_step_count")
         return len(self.datasets[-1]) if self.datasets else 0
 
     async def get_analysis_type(
         self, step_id: int, analysis_type: str
     ) -> WDKStepAnalysisTypeResponse:
         del step_id
+        self.calls.append("get_analysis_type")
         return WDKStepAnalysisTypeResponse(
             search_data=WDKStepAnalysisType(
                 name=analysis_type,
@@ -134,6 +141,7 @@ class FakeStrategyAPI:
         self, *, step_id: int, analysis_type: str, parameters: JSONObject
     ) -> JSONObject:
         del step_id
+        self.calls.append("run_step_analysis")
         self.analyses.append((analysis_type, dict(parameters)))
         if analysis_type in self.refusals:
             raise WDKError(self.refusals[analysis_type], status=422)

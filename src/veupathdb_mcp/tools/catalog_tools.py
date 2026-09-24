@@ -8,7 +8,15 @@ from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import ParamValue
 from veupathdb.errors import VEuPathDBError
 
-from veupathdb_mcp.catalog import parameters, search_inspection, searches, sites
+from veupathdb_mcp.catalog import (
+    experiments,
+    parameters,
+    search_inspection,
+    searches,
+    sites,
+)
+from veupathdb_mcp.catalog.experiment_card import ExperimentCard
+from veupathdb_mcp.catalog.experiments import ExperimentMatch, UnknownExperimentError
 from veupathdb_mcp.catalog.models import ParamSpecResponse, RecordTypeInfo, SearchMatch
 from veupathdb_mcp.catalog.overview_formatting import SearchOverviewResult
 from veupathdb_mcp.catalog.param_dag import (
@@ -283,6 +291,46 @@ async def search_catalog_index(
         return await search_index(catalog_index_id(site_id), query, top_k)
     except SemanticIndexUnavailableError as exc:
         msg = f"The semantic index is unavailable. {exc}"
+        raise ToolError(msg) from exc
+
+
+async def rank_experiments_elsewhere(
+    site_id: str,
+    query: str,
+    limit: int = 3,
+) -> list[ExperimentMatch]:
+    """Rank the experiments of the other VEuPathDB sites against a description.
+
+    Each match is a dataset of another site, labelled with that site, and one
+    site gives one match at most. None of them can be bound on site_id: read
+    one to take its condition, stage or organism into a search on site_id.
+
+    Args:
+        site_id: The site the caller works on, for example 'plasmodb'.
+        query: What you are looking for, in as much detail as you have.
+        limit: Largest number of sites to return a match from.
+    """
+    try:
+        return await experiments.rank_experiments_elsewhere(site_id, query, limit=limit)
+    except SemanticIndexUnavailableError as exc:
+        msg = f"The experiment index is unavailable. {exc}"
+        raise ToolError(msg) from exc
+
+
+async def read_experiment(site_id: str, dataset_id: str) -> ExperimentCard:
+    """Read one dataset of a VEuPathDB site: what it measured, and what it feeds.
+
+    Args:
+        site_id: The site that publishes the dataset, for example 'cryptodb'.
+        dataset_id: WDK dataset id, for example 'DS_00f985857c'.
+    """
+    try:
+        return await experiments.read_experiment(site_id, dataset_id)
+    except UnknownExperimentError as exc:
+        msg = f"dataset_id is not a dataset of {site_id}. {exc}"
+        raise ToolError(msg) from exc
+    except SemanticIndexUnavailableError as exc:
+        msg = f"The experiment index is unavailable. {exc}"
         raise ToolError(msg) from exc
 
 

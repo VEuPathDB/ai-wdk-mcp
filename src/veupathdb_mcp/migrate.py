@@ -22,6 +22,7 @@ VERSION_TABLE = "alembic_version_veupathdb_mcp"
 OWNED_TABLES = (
     "embedding_vectors",
     "embedding_index_entries",
+    "experiment_cards",
 )
 
 

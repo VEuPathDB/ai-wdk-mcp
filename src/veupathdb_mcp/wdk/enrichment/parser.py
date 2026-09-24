@@ -75,6 +75,7 @@ def _row_to_term(
     row: WDKEnrichmentRowBase,
     term_id: str,
     term_name: str,
+    pathway_source: str | None = None,
 ) -> EnrichmentTerm:
     """Map a WDK enrichment row to a domain term.
 
@@ -93,6 +94,7 @@ def _row_to_term(
             "fdr": row.benjamini,
             "bonferroni": row.bonferroni,
             "genes": genes,
+            "pathway_source": pathway_source,
         }
     )
 
@@ -110,6 +112,7 @@ def parse_enrichment_terms(
             wdk_row: WDKEnrichmentRowBase
             term_id: str
             term_name: str
+            pathway_source: str | None = None
             if analysis_type in _GO_ANALYSIS_TYPES:
                 go_row = WDKGoEnrichmentRow.model_validate(row)
                 wdk_row, term_id, term_name = go_row, go_row.go_id, go_row.go_term
@@ -120,10 +123,11 @@ def parse_enrichment_terms(
                     pw_row.pathway_id,
                     pw_row.pathway_name,
                 )
+                pathway_source = pw_row.pathway_source
             else:
                 wd_row = WDKWordEnrichmentRow.model_validate(row)
                 wdk_row, term_id, term_name = wd_row, wd_row.word, wd_row.pathway_name
-            terms.append(_row_to_term(wdk_row, term_id, term_name))
+            terms.append(_row_to_term(wdk_row, term_id, term_name, pathway_source))
         except ValidationError:
             continue
     return terms

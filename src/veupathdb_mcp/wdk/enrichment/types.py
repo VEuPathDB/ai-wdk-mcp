@@ -54,7 +54,7 @@ class EnrichmentTerm(CamelModel):
 
     WDK returns numeric fields as JSON strings (``"3.48"``, ``"3.40e-13"``,
     ``"Infinity"``). A None ratio is unbounded; a None probability is not
-    computable.
+    computable. A pathway term names the pathway source its row carries.
     """
 
     model_config = ConfigDict(frozen=True)
@@ -69,6 +69,7 @@ class EnrichmentTerm(CamelModel):
     fdr: NonFiniteToNone
     bonferroni: NonFiniteToNone
     genes: list[str] = Field(default_factory=list)
+    pathway_source: str | None = None
 
 
 class EnrichmentResult(CamelModel):

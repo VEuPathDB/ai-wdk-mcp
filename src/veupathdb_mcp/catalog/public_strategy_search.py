@@ -30,7 +30,7 @@ _MIN_TOKEN_LEN = 2
 
 
 def _tokenize(text: str) -> set[str]:
-    """Lowercase tokenization — split on non-alphanumeric, keep tokens >= 2 chars."""
+    """Lowercase tokens split on non-alphanumerics, each of two characters or more."""
     return {
         tok for tok in _TOKEN_RE.findall(text.lower()) if len(tok) >= _MIN_TOKEN_LEN
     }

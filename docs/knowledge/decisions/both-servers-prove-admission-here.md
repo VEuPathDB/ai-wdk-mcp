@@ -23,7 +23,7 @@ supplies. The runner here supplies none, so the one family that calls tools send
 bad argument its own schema refuses, and the site guard refuses it before any read.
 
 Measured on the served endpoint at this version: 24 checks pass, 8 skip, no check
-fails, with 25 tools in the report.
+fails, with 27 tools in the report.
 
 # What the skips are
 

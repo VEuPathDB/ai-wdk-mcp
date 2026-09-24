@@ -1,59 +1,61 @@
-"""Catalog metadata helpers: dataset summaries, ontology categories, record type processing."""
+"""Catalog metadata helpers: dataset cards, ontology categories, record type processing."""
 
 from pydantic import ConfigDict, Field
-from veupathdb import get_logger
+from veupathdb import JSONObject, get_logger
 from veupathdb.errors import VEuPathDBError
 from veupathdb.model import CamelModel
-from veupathdb.wdk import VEuPathDBClient, WDKRecordType, WDKSearch
+from veupathdb.wdk import VEuPathDBClient, WDKRecordType, WDKSearch, get_site_router
 
 from veupathdb_mcp.catalog.disk_cache import DatasetReport
+from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 
 logger = get_logger(__name__)
 
 
-class DatasetMetadata:
-    """Dataset summaries and contacts, keyed by dataset name."""
+DATASET_REPORT_PATH = "/record-types/dataset/searches/AllDatasets/reports/standard"
 
-    __slots__ = ("contacts", "summaries")
+# The attributes and tables a card reads, and nothing else.
+_CARD_ATTRIBUTES = [
+    "primary_key",
+    "display_name",
+    "type",
+    "newcategory",
+    "organism_prefix",
+    "short_attribution",
+    "summary",
+]
+_CARD_TABLES = ["References", "Publications"]
 
-    def __init__(
-        self,
-        summaries: dict[str, str],
-        contacts: dict[str, str],
-    ) -> None:
-        self.summaries = summaries
-        self.contacts = contacts
+
+def dataset_report_request() -> JSONObject:
+    """The body of the report request a catalog build posts."""
+    return {
+        "searchConfig": {"parameters": {}},
+        "reportConfig": {
+            "attributes": list(_CARD_ATTRIBUTES),
+            "tables": list(_CARD_TABLES),
+        },
+    }
 
 
 async def load_dataset_metadata(
     client: VEuPathDBClient, site_id: str
-) -> DatasetMetadata:
-    """Fetch all dataset summaries and contacts. Return empty metadata on failure."""
-    summaries: dict[str, str] = {}
-    contacts: dict[str, str] = {}
+) -> list[ExperimentCard]:
+    """Read every dataset the site publishes as a card. Return none on failure."""
     try:
-        report_config = {
-            "attributes": ["primary_key", "summary", "contact"],
-        }
-        answer = await client.post(
-            "/record-types/dataset/searches/AllDatasets/reports/standard",
-            json={"searchConfig": {"parameters": {}}, "reportConfig": report_config},
-        )
+        answer = await client.post(DATASET_REPORT_PATH, json=dataset_report_request())
         report = DatasetReport.model_validate(answer)
-        for rec in report.records:
-            rec.populate(summaries, contacts)
-        logger.info(
-            "Dataset metadata loaded",
-            site_id=site_id,
-            datasets=len(summaries),
-        )
     except VEuPathDBError, OSError, ValueError, TypeError:
         logger.warning(
             "Failed to load dataset metadata (non-fatal)",
             site_id=site_id,
             exc_info=True,
         )
-    return DatasetMetadata(summaries=summaries, contacts=contacts)
+        return []
+    site = get_site_router().get_site(site_id)
+    cards = [record.card(site) for record in report.records if record.dataset_id]
+    logger.info("Dataset metadata loaded", site_id=site_id, datasets=len(cards))
+    return cards
 
 
 class OntologyCategories:

@@ -17,10 +17,7 @@ from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import VEuPathDBClient, WDKRecordType, WDKSearch, WDKSearchResponse
 
 from veupathdb_mcp.catalog import discovery
-from veupathdb_mcp.catalog.catalog_metadata import (
-    DatasetMetadata,
-    OntologyCategories,
-)
+from veupathdb_mcp.catalog.catalog_metadata import OntologyCategories
 from veupathdb_mcp.catalog.discovery import (
     _EMPTY_CATALOG_BYTES,
     CatalogPolicy,
@@ -31,6 +28,7 @@ from veupathdb_mcp.catalog.disk_cache import (
     save_catalog_cache,
     try_load_catalog_cache,
 )
+from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.param_adapters import adapt_param_specs_from_search
 from veupathdb_mcp.embeddings.semantic_index import SemanticSearchIndex
 
@@ -94,8 +92,8 @@ def _genes_by_location() -> WDKSearch:
 def offline_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
     """Cut the WDK reads and the disk write out of ``_fetch_from_api``."""
 
-    async def _datasets(*_args: object) -> DatasetMetadata:
-        return DatasetMetadata({}, {})
+    async def _datasets(*_args: object) -> list[ExperimentCard]:
+        return []
 
     async def _ontology(*_args: object) -> OntologyCategories:
         return OntologyCategories({}, set(), {})
@@ -135,8 +133,7 @@ async def test_a_catalog_reports_the_bytes_it_holds(tmp_path: Path) -> None:
     snapshot = CatalogSnapshot(
         record_types=[],
         searches={"transcript": [WDKSearch(url_segment="A", display_name="A")]},
-        dataset_summaries={},
-        dataset_contacts={},
+        datasets=[],
         search_categories={},
         available_categories=[],
     )
@@ -161,8 +158,7 @@ def _stale_snapshot() -> CatalogSnapshot:
         cached_at=0.0,
         record_types=[],
         searches={},
-        dataset_summaries={},
-        dataset_contacts={},
+        datasets=[],
         search_categories={},
         available_categories=[],
     )

@@ -43,6 +43,28 @@ _SEARCH_SQL = text(
     """,
 )
 
+# Each named index's best members, ranked by one embedding of the query.
+_SEARCH_MANY_SQL = text(
+    """
+    SELECT index_id, entry_id, similarity
+    FROM (
+        SELECT e.index_id AS index_id,
+               e.entry_id AS entry_id,
+               1 - (v.embedding <=> CAST(:query_vector AS vector)) AS similarity,
+               ROW_NUMBER() OVER (
+                   PARTITION BY e.index_id
+                   ORDER BY v.embedding <=> CAST(:query_vector AS vector), e.entry_id
+               ) AS rank
+        FROM embedding_index_entries AS e
+        JOIN embedding_vectors AS v
+          ON v.content_hash = e.content_hash AND v.model = :model
+        WHERE e.index_id = ANY(:index_ids)
+    ) AS ranked
+    WHERE rank <= :top_k
+    ORDER BY similarity DESC, index_id, entry_id
+    """,
+)
+
 _SCORE_SQL = text(
     """
     SELECT e.entry_id AS entry_id,
@@ -76,8 +98,9 @@ class SyncReport:
 
 @dataclass(frozen=True, slots=True)
 class IndexHit:
-    """One ranked member, with its cosine similarity in [-1, 1]."""
+    """One ranked member of one index, with its cosine similarity in [-1, 1]."""
 
+    index_id: str
     entry_id: str
     similarity: float
 
@@ -87,7 +110,7 @@ class IndexStoreUnavailableError(SemanticIndexUnavailableError):
 
 
 @asynccontextmanager
-async def _index_session() -> AsyncIterator[AsyncSession]:
+async def index_session() -> AsyncIterator[AsyncSession]:
     """A session whose store failures reach the caller as one typed error.
 
     A driver refusal is a plain ``Exception`` with no relation to ``OSError``,
@@ -114,7 +137,7 @@ async def sync_index(index_id: str, entries: Sequence[IndexEntry]) -> SyncReport
     bodies = {entry.entry_id: entry.text[:limit] for entry in entries}
     wanted = {entry_id: content_hash(model, body) for entry_id, body in bodies.items()}
 
-    async with _index_session() as session:
+    async with index_session() as session:
         rows = await session.execute(
             select(
                 EmbeddingIndexEntry.entry_id,
@@ -140,7 +163,7 @@ async def sync_index(index_id: str, entries: Sequence[IndexEntry]) -> SyncReport
                 {"model": model, "content_hash": digest, "embedding": vector}
                 for digest, vector in zip(missing, vectors, strict=True)
             ]
-            for vector_chunk in _chunks(vector_rows):
+            for vector_chunk in statement_chunks(vector_rows):
                 await session.execute(
                     insert(EmbeddingVector)
                     .values(vector_chunk)
@@ -151,7 +174,7 @@ async def sync_index(index_id: str, entries: Sequence[IndexEntry]) -> SyncReport
             {"index_id": index_id, "entry_id": entry_id, "content_hash": digest}
             for entry_id, digest in wanted.items()
         ]
-        for member_chunk in _chunks(member_rows):
+        for member_chunk in statement_chunks(member_rows):
             statement = insert(EmbeddingIndexEntry).values(member_chunk)
             await session.execute(
                 statement.on_conflict_do_update(
@@ -162,7 +185,7 @@ async def sync_index(index_id: str, entries: Sequence[IndexEntry]) -> SyncReport
                     },
                 ),
             )
-        for gone_chunk in _chunks(gone):
+        for gone_chunk in statement_chunks(gone):
             await session.execute(
                 delete(EmbeddingIndexEntry).where(
                     EmbeddingIndexEntry.index_id == index_id,
@@ -219,7 +242,7 @@ async def search_index(index_id: str, query: str, top_k: int) -> list[IndexHit]:
     """The index's members ranked by cosine similarity to the query."""
     settings = get_embedding_settings()
     vector = await get_embedder().embed_query(query)
-    async with _index_session() as session:
+    async with index_session() as session:
         rows = await session.execute(
             _SEARCH_SQL,
             {
@@ -230,8 +253,32 @@ async def search_index(index_id: str, query: str, top_k: int) -> list[IndexHit]:
             },
         )
         return [
-            IndexHit(entry_id=entry_id, similarity=float(similarity))
+            IndexHit(index_id=index_id, entry_id=entry_id, similarity=float(similarity))
             for entry_id, similarity in rows.all()
+        ]
+
+
+async def search_indexes(
+    index_ids: Sequence[str], query: str, top_k: int
+) -> list[IndexHit]:
+    """The top_k members of each named index, best first, from one query embedding."""
+    if not index_ids:
+        return []
+    settings = get_embedding_settings()
+    vector = await get_embedder().embed_query(query)
+    async with index_session() as session:
+        rows = await session.execute(
+            _SEARCH_MANY_SQL,
+            {
+                "query_vector": _vector_literal(vector),
+                "model": settings.embedding_model,
+                "index_ids": list(index_ids),
+                "top_k": top_k,
+            },
+        )
+        return [
+            IndexHit(index_id=index_id, entry_id=entry_id, similarity=float(similarity))
+            for index_id, entry_id, similarity in rows.all()
         ]
 
 
@@ -243,7 +290,7 @@ async def score_entries(
         return {}
     settings = get_embedding_settings()
     vector = await get_embedder().embed_query(query)
-    async with _index_session() as session:
+    async with index_session() as session:
         rows = await session.execute(
             _SCORE_SQL,
             {
@@ -258,7 +305,7 @@ async def score_entries(
 
 async def index_size(index_id: str) -> int:
     """How many members the index holds."""
-    async with _index_session() as session:
+    async with index_session() as session:
         return (
             await session.scalar(
                 select(func.count())
@@ -272,7 +319,7 @@ async def index_size(index_id: str) -> int:
 async def prune_orphan_vectors(older_than: timedelta) -> int:
     """Delete vectors no index names any more, once they are old enough."""
     cutoff = datetime.now(UTC) - older_than
-    async with _index_session() as session:
+    async with index_session() as session:
         referenced = select(EmbeddingIndexEntry.content_hash).where(
             EmbeddingIndexEntry.content_hash == EmbeddingVector.content_hash,
         )
@@ -288,7 +335,7 @@ async def prune_orphan_vectors(older_than: timedelta) -> int:
             .scalars()
             .all()
         )
-        for orphan_chunk in _chunks(list(orphans)):
+        for orphan_chunk in statement_chunks(list(orphans)):
             await session.execute(
                 delete(EmbeddingVector).where(
                     EmbeddingVector.content_hash.in_(orphan_chunk),
@@ -300,7 +347,7 @@ async def prune_orphan_vectors(older_than: timedelta) -> int:
         return len(orphans)
 
 
-def _chunks[T](rows: Sequence[T]) -> list[Sequence[T]]:
+def statement_chunks[T](rows: Sequence[T]) -> list[Sequence[T]]:
     """The rows in statement-sized groups."""
     return [
         rows[start : start + _STATEMENT_ROWS]

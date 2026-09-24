@@ -1,5 +1,6 @@
 """The site catalog: sites, record types, searches and parameter metadata."""
 
+from veupathdb_mcp.catalog._param_binding import OverrideMap
 from veupathdb_mcp.catalog._param_filters import has_contrast_sibling
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service
 from veupathdb_mcp.catalog.eda_backed import (
@@ -14,6 +15,15 @@ from veupathdb_mcp.catalog.eda_backed import (
     is_eda_backed,
     is_upload_sentinel_vocabulary,
     list_eda_backed,
+)
+from veupathdb_mcp.catalog.experiment_card import ExperimentCard
+from veupathdb_mcp.catalog.experiments import (
+    ExperimentMatch,
+    UnknownExperimentError,
+    rank_experiments_elsewhere,
+    read_experiment,
+    sites_holding_organism,
+    sites_publishing,
 )
 from veupathdb_mcp.catalog.models import (
     UNIVERSAL_SEARCHES,
@@ -120,8 +130,11 @@ __all__ = [
     "UNIVERSAL_SEARCHES",
     "EdaBackedSearch",
     "EdaStepRequest",
+    "ExperimentCard",
+    "ExperimentMatch",
     "FilterFieldInfo",
     "GetParameterOptionsResult",
+    "OverrideMap",
     "ParamFetcher",
     "ParamIntent",
     "ParamSpecResponse",
@@ -141,6 +154,7 @@ __all__ = [
     "SearchParametersResult",
     "SearchQueryRejection",
     "SheetEntry",
+    "UnknownExperimentError",
     "UnknownParameterError",
     "UnknownSearchError",
     "VagueSearchQueryError",
@@ -185,6 +199,8 @@ __all__ = [
     "make_record_type_resolver",
     "make_validation_callbacks",
     "radio_pairs",
+    "rank_experiments_elsewhere",
+    "read_experiment",
     "read_parameter_options",
     "read_search_definition",
     "resolve_params_with_intent",
@@ -192,6 +208,8 @@ __all__ = [
     "resolve_search_record_type",
     "search_for_searches",
     "search_similarity",
+    "sites_holding_organism",
+    "sites_publishing",
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at",

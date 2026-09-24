@@ -1,4 +1,4 @@
-"""The embedding index: the embedder, the two tables, and the indexes on them."""
+"""The embedding index: the embedder, its tables, and the indexes on them."""
 
 from veupathdb_mcp.embeddings.db import embedding_session, use_embedding_session_factory
 from veupathdb_mcp.embeddings.embedder import (
@@ -8,6 +8,7 @@ from veupathdb_mcp.embeddings.embedder import (
     get_embedder,
 )
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
+from veupathdb_mcp.embeddings.experiment_index import experiment_index_id
 from veupathdb_mcp.embeddings.fake import FakeEmbedder
 from veupathdb_mcp.embeddings.openai_embedder import OpenAIEmbedder
 from veupathdb_mcp.embeddings.record_manager import (
@@ -19,6 +20,7 @@ from veupathdb_mcp.embeddings.record_manager import (
     index_size,
     prune_orphan_vectors,
     search_index,
+    search_indexes,
     sync_index,
 )
 from veupathdb_mcp.embeddings.semantic_index import (
@@ -42,6 +44,7 @@ from veupathdb_mcp.embeddings.tables import (
     EmbeddingBase,
     EmbeddingIndexEntry,
     EmbeddingVector,
+    ExperimentCardRow,
 )
 
 __all__ = [
@@ -53,6 +56,7 @@ __all__ = [
     "EmbeddingSettings",
     "EmbeddingUnavailableError",
     "EmbeddingVector",
+    "ExperimentCardRow",
     "FakeEmbedder",
     "IndexEntry",
     "IndexHit",
@@ -65,11 +69,13 @@ __all__ = [
     "catalog_index_id",
     "content_hash",
     "embedding_session",
+    "experiment_index_id",
     "get_embedder",
     "get_embedding_settings",
     "index_size",
     "prune_orphan_vectors",
     "search_index",
+    "search_indexes",
     "search_study_index",
     "strip_markup",
     "study_index_is_built",

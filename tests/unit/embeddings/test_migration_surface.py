@@ -29,8 +29,12 @@ def test_the_owned_tables_are_the_tables_the_index_maps() -> None:
     assert set(OWNED_TABLES) == set(EmbeddingBase.metadata.tables)
 
 
-def test_the_owned_tables_are_the_two_index_tables() -> None:
-    assert OWNED_TABLES == ("embedding_vectors", "embedding_index_entries")
+def test_the_owned_tables_are_the_index_tables_and_the_experiment_cards() -> None:
+    assert OWNED_TABLES == (
+        "embedding_vectors",
+        "embedding_index_entries",
+        "experiment_cards",
+    )
 
 
 def test_the_filter_keeps_every_table_this_distribution_owns() -> None:

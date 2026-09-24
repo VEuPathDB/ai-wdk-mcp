@@ -14,6 +14,7 @@ from veupathdb_mcp.embeddings.record_manager import (
     prune_orphan_vectors,
     score_entries,
     search_index,
+    search_indexes,
     sync_index,
 )
 from veupathdb_mcp.embeddings.tables import (
@@ -139,6 +140,69 @@ async def test_search_reads_only_its_own_index(embedder: FakeEmbedder) -> None:
     await sync_index(_OTHER_INDEX, _entries(("z", "beta")))
     hits = await search_index(_OTHER_INDEX, "beta", top_k=5)
     assert [hit.entry_id for hit in hits] == ["z"]
+
+
+async def test_a_hit_names_the_index_it_came_from(embedder: FakeEmbedder) -> None:
+    del embedder
+    await sync_index(_INDEX, _entries(("a", "alpha")))
+
+    hits = await search_index(_INDEX, "alpha", top_k=1)
+
+    assert [(hit.index_id, hit.entry_id) for hit in hits] == [(_INDEX, "a")]
+
+
+async def test_a_search_over_indexes_embeds_the_query_once(
+    embedder: FakeEmbedder,
+) -> None:
+    await sync_index(_INDEX, _entries(("a", "alpha"), ("b", "beta")))
+    await sync_index(_OTHER_INDEX, _entries(("y", "gamma"), ("z", "beta")))
+    embedder.calls.clear()
+
+    hits = await search_indexes([_INDEX, _OTHER_INDEX], "beta", top_k=2)
+
+    assert embedder.calls == [["beta"]]
+    assert {(hit.index_id, hit.entry_id) for hit in hits} == {
+        (_INDEX, "a"),
+        (_INDEX, "b"),
+        (_OTHER_INDEX, "y"),
+        (_OTHER_INDEX, "z"),
+    }
+    assert [hit.similarity for hit in hits] == sorted(
+        (hit.similarity for hit in hits), reverse=True
+    )
+    assert hits[0].similarity == pytest.approx(1.0, abs=1e-6)
+
+
+async def test_a_search_over_indexes_keeps_the_top_k_of_each(
+    embedder: FakeEmbedder,
+) -> None:
+    del embedder
+    await sync_index(_INDEX, _entries(("a", "beta"), ("b", "beta"), ("c", "delta")))
+    await sync_index(_OTHER_INDEX, _entries(("z", "gamma")))
+
+    hits = await search_indexes([_INDEX, _OTHER_INDEX], "beta", top_k=1)
+
+    assert [(hit.index_id, hit.entry_id) for hit in hits] == [
+        (_INDEX, "a"),
+        (_OTHER_INDEX, "z"),
+    ]
+
+
+async def test_a_search_over_indexes_reads_no_index_it_did_not_name(
+    embedder: FakeEmbedder,
+) -> None:
+    del embedder
+    await sync_index(_INDEX, _entries(("a", "beta")))
+    await sync_index(_OTHER_INDEX, _entries(("z", "beta")))
+
+    hits = await search_indexes([_OTHER_INDEX], "beta", top_k=5)
+
+    assert [(hit.index_id, hit.entry_id) for hit in hits] == [(_OTHER_INDEX, "z")]
+
+
+async def test_a_search_over_no_index_embeds_nothing(embedder: FakeEmbedder) -> None:
+    assert await search_indexes([], "beta", top_k=5) == []
+    assert embedder.calls == []
 
 
 async def test_search_on_an_empty_index_returns_nothing(

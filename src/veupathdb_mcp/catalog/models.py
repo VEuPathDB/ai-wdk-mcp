@@ -47,7 +47,7 @@ class ParamSpecResponse(CamelModel):
 class RecordTypeInfo:
     """Simplified record type summary for API responses.
 
-    Contains only the fields needed by transport handlers — the full
+    Contains only the fields needed by transport handlers; the full
     WDK record type (with searches, properties, etc.) stays in the
     integration layer as ``WDKRecordType``.
     """

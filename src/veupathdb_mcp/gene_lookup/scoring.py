@@ -44,7 +44,7 @@ def score_gene_relevance(query: str, result: GeneResult) -> float:
     score += _W_PRODUCT * prod_score
     score += _W_FIELD_QUALITY * score_field_quality(mf_list)
 
-    # Exact/near-exact match bonus — ensures "alpha tubulin 2" beats
+    # An exact or near-exact match wins, so "alpha tubulin 2" beats
     # "casein kinase 2, alpha subunit" which only shares tokens.
     best_desc = max(prod_score, disp_score, name_score)
     if best_desc >= _NEAR_EXACT_MATCH_THRESHOLD:

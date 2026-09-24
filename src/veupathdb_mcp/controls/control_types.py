@@ -1,6 +1,7 @@
 """What a control test takes, and what it returns."""
 
 from collections import Counter
+from collections.abc import Set
 from dataclasses import dataclass, field
 from typing import Literal, Self
 
@@ -8,12 +9,18 @@ from pydantic import ConfigDict, Field, model_validator
 from veupathdb.domain.parameters import ParamValue
 from veupathdb.domain.strategy import DEFAULT_COMBINE_OPERATOR, CombineOp
 from veupathdb.model import CamelModel
+from veupathdb.wdk import WDKStepTree
 
 from veupathdb_mcp.computed import computed
 
 ControlValueFormat = Literal["newline", "json_list", "comma"]
 
 DEFAULT_CONTROL_TEST_STRATEGY_NAME = "control test"
+
+CONTROLS_SEARCH = "GeneByLocusTag"
+"""The transcript search that reads a gene id list."""
+CONTROLS_PARAM = "ds_gene_ids"
+"""The input-dataset parameter of ``CONTROLS_SEARCH``."""
 
 
 class ControlTargetData(CamelModel):
@@ -46,6 +53,14 @@ class PositiveControls(CamelModel):
 
     recovered_ids: list[str]
     missed_ids: list[str]
+
+    @classmethod
+    def filed(cls, controls: list[str], returned: Set[str]) -> Self:
+        """File each control by whether the target returned it."""
+        ids = set(controls)
+        return cls(
+            recovered_ids=sorted(ids & returned), missed_ids=sorted(ids - returned)
+        )
 
     @model_validator(mode="after")
     def _the_lists_partition_the_controls(self) -> Self:
@@ -81,6 +96,14 @@ class NegativeControls(CamelModel):
     admitted_ids: list[str]
     excluded_ids: list[str]
 
+    @classmethod
+    def filed(cls, controls: list[str], returned: Set[str]) -> Self:
+        """File each control by whether the target returned it."""
+        ids = set(controls)
+        return cls(
+            admitted_ids=sorted(ids & returned), excluded_ids=sorted(ids - returned)
+        )
+
     @model_validator(mode="after")
     def _the_lists_partition_the_controls(self) -> Self:
         error = _partition_error(self.admitted_ids, self.excluded_ids)
@@ -112,6 +135,42 @@ class ControlTestResult(CamelModel):
     target: ControlTargetData = Field(default_factory=ControlTargetData)
     positive: PositiveControls | None = None
     negative: NegativeControls | None = None
+
+
+@dataclass(frozen=True)
+class ControlsSearch:
+    """The search that reads a control id list, and how its parameter takes the ids."""
+
+    search_name: str = CONTROLS_SEARCH
+    param_name: str = CONTROLS_PARAM
+    record_type: str = "transcript"
+    value_format: ControlValueFormat = "newline"
+    extra_parameters: dict[str, ParamValue] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class ControlsDataset:
+    """The controls, uploaded once, as the step spec every intersection of a run reads."""
+
+    search_name: str
+    parameters: dict[str, ParamValue]
+    record_type: str
+
+
+@dataclass(frozen=True)
+class IntersectionTarget:
+    """A step tree already on the account, and the record type its root returns."""
+
+    tree: WDKStepTree
+    record_type: str
+
+
+@dataclass(frozen=True)
+class Intersection:
+    """The target's own count, and every control id the intersection returned."""
+
+    target_count: int | None
+    returned_ids: frozenset[str]
 
 
 @dataclass

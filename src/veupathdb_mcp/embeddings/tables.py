@@ -1,4 +1,4 @@
-"""The two tables the embedding index owns, on a base of their own.
+"""The tables the embedding index owns, on a base of their own.
 
 The index ships without the assistant runtime, so its rows map on a base no
 other unit shares.
@@ -8,7 +8,9 @@ from datetime import datetime
 
 from pgvector.sqlalchemy import VECTOR
 from sqlalchemy import DateTime, Index, String, func
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from veupathdb import JSONObject
 
 from veupathdb_mcp.embeddings.embedder import EMBEDDING_DIMENSIONS
 
@@ -16,6 +18,8 @@ CONTENT_HASH_LENGTH = 64
 INDEX_ID_LENGTH = 128
 ENTRY_ID_LENGTH = 256
 EMBEDDING_MODEL_LENGTH = 64
+SITE_ID_LENGTH = 64
+DATASET_ID_LENGTH = 64
 
 
 class EmbeddingBase(DeclarativeBase):
@@ -57,3 +61,16 @@ class EmbeddingIndexEntry(EmbeddingBase):
     )
 
     __table_args__ = (Index("ix_embedding_index_entries_index_id", "index_id"),)
+
+
+class ExperimentCardRow(EmbeddingBase):
+    """One dataset card of one site, readable when its site's catalog is not held."""
+
+    __tablename__ = "experiment_cards"
+
+    site_id: Mapped[str] = mapped_column(String(SITE_ID_LENGTH), primary_key=True)
+    dataset_id: Mapped[str] = mapped_column(String(DATASET_ID_LENGTH), primary_key=True)
+    card: Mapped[JSONObject] = mapped_column(JSONB, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )

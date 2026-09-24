@@ -1,9 +1,11 @@
-"""The process-wide state a test must not inherit: settings sources and the embedder."""
+"""The process-wide state a test must not inherit: settings, the log and the embedder."""
 
+import logging
 import os
 from collections.abc import Generator
 
 import pytest
+import structlog
 from veupathdb import VEuPathDBSettings, use_veupathdb_settings_source
 from veupathdb.wdk import reset_site_router
 
@@ -34,6 +36,22 @@ def _settings_read_the_environment() -> Generator[None]:
     reset_site_router()
     yield
     reset_site_router()
+
+
+@pytest.fixture(autouse=True)
+def _logging_is_the_default() -> Generator[None]:
+    """A test that runs a server's log setup leaves no processor or handler behind.
+
+    A logger first used under that setup keeps its processors after a reset, so a
+    later capture of the log would miss it.
+    """
+    root = logging.getLogger()
+    handlers = list(root.handlers)
+    level = root.level
+    yield
+    structlog.reset_defaults()
+    root.handlers = handlers
+    root.setLevel(level)
 
 
 @pytest.fixture

@@ -18,7 +18,7 @@ def build_param_specs_from_list(
 
     All subtype-specific fields (vocabulary, min/max, etc.) are declared on
     ``WDKBaseParameter`` with safe defaults, so no isinstance narrowing is
-    needed — every ``WDKParameter`` variant exposes them directly.
+    needed: every ``WDKParameter`` variant exposes them directly.
     """
     results: list[ParamSpecResponse] = []
     for param in params:

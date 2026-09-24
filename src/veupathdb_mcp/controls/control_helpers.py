@@ -30,10 +30,9 @@ def _encode_id_list(ids: list[str], fmt: ControlValueFormat) -> str:
 
 
 async def delete_temp_strategy(api: StrategyAPI, strategy_id: int | None) -> None:
-    """Best-effort deletion of a temporary WDK strategy.
+    """Delete a temporary WDK strategy, and log a refusal instead of raising it.
 
-    Silently logs and swallows errors — callers should use this in
-    ``finally`` blocks to avoid masking the original exception.
+    A caller runs it in a ``finally`` block, so it never masks the first error.
     """
     if strategy_id is None:
         return
@@ -58,6 +57,18 @@ async def _get_total_count_for_step(api: StrategyAPI, step_id: int) -> int | Non
         return None
 
 
+def leftover_strategy_ids(
+    wdk_items: list[WDKStrategySummary], strategy_name: str
+) -> list[int]:
+    """The internal strategies a run under this name left on the account."""
+    return [
+        item.strategy_id
+        for item in wdk_items
+        if is_internal_wdk_strategy_name(item.name)
+        and strip_internal_wdk_strategy_name(item.name).startswith(strategy_name)
+    ]
+
+
 async def cleanup_internal_control_test_strategies(
     api: StrategyAPI,
     wdk_items: list[WDKStrategySummary],
@@ -69,23 +80,18 @@ async def cleanup_internal_control_test_strategies(
     then pass it here with the config a run was given. The config carries the
     name the run wrote, so a match can never drift from a write.
     """
-    for item in wdk_items:
-        if not is_internal_wdk_strategy_name(item.name):
-            continue
-        display_name = strip_internal_wdk_strategy_name(item.name)
-        if not display_name.startswith(config.internal_strategy_name):
-            continue
+    for strategy_id in leftover_strategy_ids(wdk_items, config.internal_strategy_name):
         try:
-            await api.delete_strategy(item.strategy_id)
+            await api.delete_strategy(strategy_id)
             logger.info(
                 "Deleted leaked internal control-test WDK strategy",
                 site_id=config.site_id,
-                wdk_strategy_id=item.strategy_id,
+                wdk_strategy_id=strategy_id,
             )
         except VEuPathDBError as e:
             logger.warning(
                 "Failed to delete leaked internal control-test strategy",
                 site_id=config.site_id,
-                wdk_strategy_id=item.strategy_id,
+                wdk_strategy_id=strategy_id,
                 error=str(e),
             )

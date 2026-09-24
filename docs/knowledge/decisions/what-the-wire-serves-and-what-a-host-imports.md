@@ -8,8 +8,8 @@ status: stable
 
 # The choice
 
-Twenty-five tools are served on `veupathdb-wdk-mcp`, against 275 names published for
-in-process import across sixteen surfaces. The line is one property:
+Twenty-seven tools are served on `veupathdb-wdk-mcp`, against 331 names published for
+in-process import across seventeen surfaces. The line is one property:
 
 **A call is served when its arguments and its result are values.** A call whose
 contract includes a Python object the caller builds, or a write into a store the
@@ -46,7 +46,7 @@ Eight capabilities that had no tool row and now have one:
 
 # What was rejected
 
-**Serving every published name.** Most of the 275 are result models, error types and
+**Serving every published name.** Most of the 331 are result models, error types and
 the small functions those are built from. A tool row for each would publish an API
 surface no client can hold in a context window, and the conformance suite reads every
 row of `tools/list` on every call.
