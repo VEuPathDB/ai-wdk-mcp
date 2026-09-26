@@ -45,7 +45,13 @@ _VALUE_FORMAT_TEMPLATES: dict[str, str] = {
     "timestamp": '{"type": "timestamp", "value": "<ISO-8601>"}',
     "single-pick-vocabulary": '{"type": "single-pick-vocabulary", "value": "<one of allowed_values>"}',
     "multi-pick-vocabulary": '{"type": "multi-pick-vocabulary", "values": ["<from allowed_values>", "..."]}',
-    "filter": '{"type": "filter", "filters": [{"field": "<field>", "value": <value>}]}',
+    "filter": (
+        '{"type": "filter", "filters": [{"field": "<member facet>", "value": '
+        '["<member>", "..."]}, {"field": "<range facet>", "value": {"min": <n>, '
+        '"max": <n>}}]}; a range leaves out the bound it does not state. '
+        'Shorthand: "<member facet>=<m1>,<m2>", "<range facet><=<n>", '
+        '"<range facet>>=<n>" or "<range facet>=<lo>..<hi>"'
+    ),
     "input-dataset": '{"type": "input-dataset", "datasetId": "<id>"}',
     "input-step": '{"type": "input-step", "stepId": "<id>"}',
 }

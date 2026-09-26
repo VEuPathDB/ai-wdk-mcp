@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from pydantic import ConfigDict, Field, JsonValue, field_validator
+from typing import Self
+
+from pydantic import BaseModel, ConfigDict, Field, JsonValue, RootModel, model_validator
 from pydantic import ValidationError as PydanticValidationError
 from veupathdb.domain.parameters import (
     FilterTermClause,
@@ -46,52 +48,134 @@ def _match_filter_values(
     return [match_option(options, v) or v for v in raw_values]
 
 
+def _is_range(field: FilterFieldInfo) -> bool:
+    """WDK parses a date clause as a range whatever its isRange flag says."""
+    return field.is_range or field.type == "date"
+
+
+class _Bounds(BaseModel):
+    """The bounds of a range clause. WDK reads an absent bound as unbounded."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    @model_validator(mode="after")
+    def _one_bound(self) -> Self:
+        if not self.model_dump(exclude_none=True):
+            msg = "a range states min, max or both"
+            raise ValueError(msg)
+        return self
+
+
+class _NumberBounds(_Bounds):
+    min: float | None = None
+    max: float | None = None
+
+
+class _DateBounds(_Bounds):
+    min: str | None = None
+    max: str | None = None
+
+
+class _Members(RootModel[list[str]]):
+    """The members a clause selects. One member may be written without a list."""
+
+    model_config = ConfigDict(coerce_numbers_to_str=True)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _one_or_many(cls, raw: JsonValue) -> JsonValue:
+        if raw is None:
+            return []
+        return raw if isinstance(raw, list) else [raw]
+
+
+def _range_forms(term: str) -> str:
+    return (
+        f"'{term}<=<n>', '{term}>=<n>' or '{term}=<lo>..<hi>', or the JSON value "
+        '{"min": <n>, "max": <n>} with either bound left out'
+    )
+
+
+def _member_forms(term: str) -> str:
+    return f'\'{term}=<m1>,<m2>\' or the JSON value ["<m1>", "<m2>"]'
+
+
+def _refused(
+    info: ParameterInfo, field: FilterFieldInfo, value: JsonValue
+) -> ValidationError:
+    kind, forms = (
+        ("range", _range_forms(field.term))
+        if _is_range(field)
+        else ("member", _member_forms(field.term))
+    )
+    return ValidationError(
+        title="Invalid parameter value",
+        detail=f"Facet '{field.term}' of '{info.name}' is a {kind} facet. Write {forms}.",
+        errors=[{"param": info.name, "facet": field.term, "value": value}],
+    )
+
+
+def _clause(
+    info: ParameterInfo, field: FilterFieldInfo, value: JsonValue
+) -> FilterTermClause:
+    """Writes a clause's value in the shape WDK parses for its facet."""
+    try:
+        if _is_range(field):
+            bounds = _DateBounds if field.type == "date" else _NumberBounds
+            written: JsonValue = bounds.model_validate(value).model_dump(
+                exclude_none=True
+            )
+        else:
+            written = _match_filter_values(field, _Members.model_validate(value).root)
+    except PydanticValidationError as exc:
+        raise _refused(info, field, value) from exc
+    return FilterTermClause(
+        field=field.term, type=field.type, is_range=field.is_range, value=written
+    )
+
+
 class _RawFilterClause(CamelModel):
     """A clause as the model emits it, which may be partial. The type, isRange and
     includeUnknown fields come from the ontology instead."""
 
     model_config = ConfigDict(extra="ignore")
     field: str = ""
-    value: list[JsonValue] = Field(default_factory=list)
-
-    @field_validator("value", mode="before")
-    @classmethod
-    def _as_member_list(cls, v: JsonValue) -> JsonValue:
-        if v is None:
-            return []
-        return v if isinstance(v, list) else [v]
+    value: JsonValue = Field(default_factory=list)
 
 
 class _RawFilterInput(CamelModel):
     """The WDK filters wrapper. Clauses may be partial and bind to the ontology later."""
 
     model_config = ConfigDict(extra="ignore")
-    filters: list[_RawFilterClause] = Field(default_factory=list)
+    filters: list[_RawFilterClause]
 
 
 def _enrich_clause(
     info: ParameterInfo, raw: _RawFilterClause
 ) -> FilterTermClause | None:
-    """Binds a clause to an ontology facet and matches its members to the facet values.
+    """Binds a clause to an ontology facet and writes its value for that facet.
     A clause for an unknown facet passes through for WDK to validate."""
     if not raw.field:
         return None
     facet = _match_filter_field(info, raw.field)
     if facet is None:
         return FilterTermClause(field=raw.field, value=raw.value)
-    return FilterTermClause(
-        field=facet.term,
-        type=facet.type,
-        is_range=facet.is_range,
-        value=_match_filter_values(facet, [str(v) for v in raw.value]),
-    )
+    return _clause(info, facet, raw.value)
 
 
 def _filter_from_json(info: ParameterInfo, text: str) -> FilterValue:
     try:
         parsed = _RawFilterInput.model_validate_json(text)
-    except PydanticValidationError:
-        return FilterValue()
+    except PydanticValidationError as exc:
+        raise ValidationError(
+            title="Invalid parameter value",
+            detail=(
+                f"Parameter '{info.name}' takes filter JSON "
+                '{"filters": [{"field": "<facet>", "value": <value>}]} '
+                "or the shorthand '<facet>=<value>'."
+            ),
+            errors=[{"param": info.name, "value": text}],
+        ) from exc
     clauses = [
         clause
         for raw in parsed.filters
@@ -142,11 +226,10 @@ def _resolve_filter_param(
         raise ValidationError(
             title="Invalid parameter value",
             detail=(
-                f"Parameter '{info.name}' is a filter, which selects members of "
-                f"ONE facet. A bare list names no facet. Pass "
-                f"'<facet>=<value1>,<value2>' instead, e.g. "
-                f"'{info.filter_fields[0].term if info.filter_fields else 'Sample type'}"
-                f"={','.join(override[:2])}'."
+                f"Parameter '{info.name}' is a filter, and each clause names ONE "
+                f"facet. A bare list names no facet. Pass a member facet as "
+                f"'<facet>=<m1>,<m2>' and a range facet as '<facet><=<n>', "
+                f"'<facet>>=<n>' or '<facet>=<lo>..<hi>'."
             ),
             errors=[{"param": info.name, "value": list(override)}],
         )
@@ -155,31 +238,37 @@ def _resolve_filter_param(
     return _resolve_filter(info, override)
 
 
+def _shorthand_value(
+    info: ParameterInfo, field: FilterFieldInfo, bound: str, raw: str
+) -> JsonValue:
+    """Reads the value of the shorthand: members for a member facet, and
+    <=x, >=x or =lo..hi for a range facet."""
+    if not _is_range(field):
+        if bound:
+            raise _refused(info, field, raw)
+        return [v.strip() for v in raw.split(",") if v.strip()]
+    if bound == "<":
+        return {"max": raw}
+    if bound == ">":
+        return {"min": raw}
+    low, dots, high = raw.partition("..")
+    return {"min": low.strip() or None, "max": high.strip() or None} if dots else raw
+
+
 def _resolve_filter(info: ParameterInfo, override: str | None) -> FilterValue:
     """Builds a filter param value. The WDK default is the empty filter set, which
     includes all samples. An override is either WDK filter JSON or the shorthand
-    facet=value1,value2, and both select members of one ontology facet."""
+    on one ontology facet: facet=value1,value2 for a member facet, and
+    facet<=x, facet>=x or facet=lo..hi for a range facet."""
     if not override:
         return FilterValue()
     text = override.strip()
     if text.startswith("{"):
         return _filter_from_json(info, text)
     field_hint, sep, raw = text.partition("=")
-    if not sep:
+    bound = field_hint[-1] if field_hint.endswith(("<", ">")) else ""
+    field = _match_filter_field(info, field_hint.removesuffix(bound)) if sep else None
+    value = _shorthand_value(info, field, bound, raw.strip()) if field else None
+    if field is None or not value:
         return FilterValue()
-    field = _match_filter_field(info, field_hint)
-    if field is None:
-        return FilterValue()
-    raw_values = [v.strip() for v in raw.split(",") if v.strip()]
-    if not raw_values:
-        return FilterValue()
-    return FilterValue(
-        filters=[
-            FilterTermClause(
-                field=field.term,
-                type=field.type,
-                is_range=field.is_range,
-                value=_match_filter_values(field, raw_values),
-            )
-        ]
-    )
+    return FilterValue(filters=[_clause(info, field, value)])

@@ -1,0 +1,517 @@
+{
+  "method": "POST",
+  "url": "https://plasmodb.org/plasmo/service/record-types/transcript/searches/GenesByVariantCharacteristics?expandParams=true",
+  "status": 200,
+  "ms": 6.351500007440336,
+  "request_json": {
+    "contextParamValues": {
+      "organism_select_none": "[\"Plasmodium falciparum 3D7\"]"
+    }
+  },
+  "request_text": null,
+  "response_json": {
+    "searchData": {
+      "summary": "Find genes whose precomputed variant statistics meet your criteria - variant\n          density, missense and loss-of-function counts, allele frequency, or piN/piS.",
+      "urlSegment": "GenesByVariantCharacteristics",
+      "dynamicAttributes": [
+        {
+          "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "wdk_weight-histogram",
+              "description": "Display a histogram of weight distribution",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "Search Weight",
+          "name": "wdk_weight",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        }
+      ],
+      "defaultSorting": [
+        {
+          "attributeName": "gene_variants_per_kb",
+          "direction": "DESC"
+        },
+        {
+          "attributeName": "gene_total_variants",
+          "direction": "DESC"
+        }
+      ],
+      "isAnalyzable": true,
+      "displayName": "Short Variant Characteristics",
+      "fullName": "GeneQuestions.GenesByVariantCharacteristics",
+      "description": "Search genes by the variation statistics summarized across every sample loaded\n          for the organism. Short variants are single nucleotide polymorphisms (SNPs) and\n          short insertions/deletions (Indels); both are counted in the variant totals and\n          in the impact and effect-class statistics, while the diversity ratios (piN/piS\n          and nucleotide diversity) rest on SNPs only, since they are computed from\n          synonymous and nonsynonymous codon changes. These are the same numbers shown in\n          the Genetic Variation section of the gene record page, so a gene found here will\n          report the same values when you open it.\n\n          <ul>\n            <li><b>This search does not take a sample set.</b> If you want to compare a\n              group of samples you chose - or two groups against each other - use the\n              \"SNV Characteristics Within a Group of Samples\" search instead. That one\n              recomputes from the raw alignments and takes read-frequency and\n              percent-called thresholds; this one reads precomputed values and returns\n              immediately.</li>\n\n            <li>Pick an organism first. The distributions in the filter are drawn from\n              that organism's genes, and variant density differs by an order of magnitude\n              between organisms, so a pooled distribution would not help you choose a\n              threshold for either.</li>\n\n            <li>Some statistics are only defined when enough alleles were sampled at a\n              locus - common and singleton counts, highest minor allele frequency, and\n              the diversity ratios. Where an organism's sampling does not reach that\n              floor the value is left empty rather than reported as zero, so those genes\n              are simply absent from that statistic's distribution. They are excluded\n              from your result only if you filter on that statistic.</li>\n\n            <li><b>piN/piS</b> is normalized by Nei-Gojobori site counts derived from the\n              genetic code, so it does not carry the codon-bias distortion that the\n              older non-synonymous / synonymous count ratio does. Below 1 suggests\n              purifying selection; above 1 suggests diversifying selection.</li>\n          </ul>",
+      "defaultAttributes": [
+        "primary_key",
+        "gene_product",
+        "gene_total_variants",
+        "gene_variants_per_kb",
+        "gene_variants_lof",
+        "gene_variants_missense_common",
+        "gene_pi_n_pi_s",
+        "gene_variation_strains_sampled"
+      ],
+      "groups": [
+        {
+          "displayType": "empty",
+          "displayName": "",
+          "name": "empty",
+          "description": "",
+          "isVisible": true,
+          "parameters": [
+            "organism_select_none",
+            "gene_variant_stats"
+          ]
+        }
+      ],
+      "filters": [
+        {
+          "isViewOnly": false,
+          "name": "organismFilter"
+        },
+        {
+          "displayName": "Transcripts",
+          "isViewOnly": false,
+          "name": "matched_transcript_filter_array"
+        },
+        {
+          "isViewOnly": false,
+          "name": "genesByPathway"
+        }
+      ],
+      "shortDisplayName": "Short Variant Chars",
+      "paramNames": [
+        "organism_select_none",
+        "gene_variant_stats"
+      ],
+      "isCacheable": false,
+      "outputRecordClassName": "transcript",
+      "noSummaryOnSingleRecord": false,
+      "queryName": "GenesByVariantCharacteristics",
+      "defaultSummaryView": "_default",
+      "parameters": [
+        {
+          "displayName": "Organism",
+          "minSelectedCount": 0,
+          "maxSelectedCount": -1,
+          "isVisible": true,
+          "type": "multi-pick-vocabulary",
+          "help": "Select organism(s) you wish to query against. Click the [+] to expand taxon groupings.",
+          "depthExpanded": 0,
+          "dependentParams": [
+            "gene_variant_stats"
+          ],
+          "displayType": "treeBox",
+          "isReadOnly": false,
+          "vocabulary": {
+            "data": {
+              "display": "@@fake@@",
+              "term": "@@fake@@"
+            },
+            "children": [
+              {
+                "data": {
+                  "display": "Plasmodium chabaudi",
+                  "term": "Plasmodium chabaudi"
+                },
+                "children": [
+                  {
+                    "data": {
+                      "display": "Plasmodium chabaudi chabaudi",
+                      "term": "Plasmodium chabaudi chabaudi"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "data": {
+                  "display": "Plasmodium falciparum",
+                  "term": "Plasmodium falciparum"
+                },
+                "children": [
+                  {
+                    "data": {
+                      "display": "Plasmodium falciparum 3D7",
+                      "term": "Plasmodium falciparum 3D7"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "data": {
+                  "display": "Plasmodium reichenowi",
+                  "term": "Plasmodium reichenowi"
+                },
+                "children": [
+                  {
+                    "data": {
+                      "display": "Plasmodium reichenowi CDC",
+                      "term": "Plasmodium reichenowi CDC"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "data": {
+                  "display": "Plasmodium vinckei",
+                  "term": "Plasmodium vinckei"
+                },
+                "children": [
+                  {
+                    "data": {
+                      "display": "Plasmodium vinckei vinckei CY",
+                      "term": "Plasmodium vinckei vinckei CY"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "data": {
+                  "display": "Plasmodium vivax",
+                  "term": "Plasmodium vivax"
+                },
+                "children": [
+                  {
+                    "data": {
+                      "display": "Plasmodium vivax P01",
+                      "term": "Plasmodium vivax P01"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "data": {
+                  "display": "Plasmodium yoelii",
+                  "term": "Plasmodium yoelii"
+                },
+                "children": [
+                  {
+                    "data": {
+                      "display": "Plasmodium yoelii yoelii 17X",
+                      "term": "Plasmodium yoelii yoelii 17X"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          "allowEmptyValue": true,
+          "name": "organism_select_none",
+          "countOnlyLeaves": true,
+          "initialDisplayValue": "[\"Plasmodium falciparum 3D7\"]",
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "maxRecommendedMsg": [
+              "<p>\n          You are selecting more than five organisms.\n        </p>\n        <p>\n          Selecting a large number of organisms may impact performance and make results harder to interpret.\n        </p>\n        <p>\n          <b>Please select five or fewer organisms where possible.</b>\n        </p>\n        <p>\n          For the best experience, use <i>My Organism Preferences</i> in the page header to focus on the organisms you care about most.\n        </p>"
+            ],
+            "specificAttribution": [],
+            "organismProperties": [
+              "pruneNodesWithSingleExtendingChild",
+              "showOnlyPreferredOrganisms",
+              "highlightReferenceOrganisms"
+            ],
+            "maxRecommended": [
+              "5"
+            ]
+          },
+          "group": "empty"
+        },
+        {
+          "displayName": "Variant Characteristics",
+          "hideEmptyOntologyNodes": true,
+          "values": {
+            "most_severe_impact": [
+              "MODERATE",
+              "MODIFIER",
+              "HIGH",
+              "LOW"
+            ]
+          },
+          "sortLeavesBeforeBranches": true,
+          "minSelectedCount": -1,
+          "isVisible": true,
+          "type": "filter",
+          "countPredictsAnswerCount": false,
+          "help": "Filter genes by their summarized variant statistics. Choose an organism first.",
+          "visibleHelp": "Choose an organism first; the distributions below are drawn from that organism's\n        genes. Each statistic is summarized across every sample loaded for the organism,\n        and is the same value shown in the Genetic Variation section of the gene record page.\n        <br><br>\n        Statistics that depend on allele frequency - common and singleton counts, highest\n        minor allele frequency, and the diversity ratios - are only defined where enough\n        alleles were sampled at a locus. Genes below that floor carry no value and are\n        simply absent from that statistic's distribution rather than being counted as zero.",
+          "dependentParams": [],
+          "isReadOnly": false,
+          "allowEmptyValue": false,
+          "name": "gene_variant_stats",
+          "initialDisplayValue": "{\"filters\":[]}",
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          },
+          "ontology": [
+            {
+              "display": "Variant burden",
+              "precision": 0,
+              "term": "variant_burden",
+              "isRange": false
+            },
+            {
+              "parent": "variant_burden",
+              "display": "Total variants",
+              "precision": 0,
+              "description": "Variant loci within the gene, SNVs and small indels together.",
+              "term": "total_variants",
+              "units": "variants",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "parent": "variant_burden",
+              "display": "Variants per kb",
+              "precision": 2,
+              "description": "Normalized by the gene's genomic span - start to end, introns and UTRs included - not by CDS length. Reported exactly as the gene record page reports it.",
+              "term": "variants_per_kb",
+              "units": "variants/kb",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "parent": "variant_burden",
+              "display": "SNVs",
+              "precision": 0,
+              "description": "Single-nucleotide variants.",
+              "term": "n_snv",
+              "units": "variants",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "parent": "variant_burden",
+              "display": "Indels",
+              "precision": 0,
+              "description": "Small insertions and deletions.",
+              "term": "n_indel",
+              "units": "variants",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "display": "Consequence",
+              "precision": 0,
+              "term": "variant_consequence",
+              "isRange": false
+            },
+            {
+              "parent": "variant_consequence",
+              "display": "Missense variants",
+              "precision": 0,
+              "description": "Loci whose most severe consequence in this gene is a missense change.",
+              "term": "n_missense",
+              "units": "variants",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "parent": "variant_consequence",
+              "display": "Synonymous variants",
+              "precision": 0,
+              "description": "Loci whose most severe consequence in this gene is synonymous.",
+              "term": "n_synonymous",
+              "units": "variants",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "parent": "variant_consequence",
+              "display": "Loss-of-function variants",
+              "precision": 0,
+              "description": "Predicted to disrupt the protein: frameshift, stop gained, or splice-disrupting.",
+              "term": "n_lof",
+              "units": "variants",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "parent": "variant_consequence",
+              "display": "Most severe impact",
+              "precision": 0,
+              "description": "The severity of the worst consequence any variant has in this gene, as classified by SnpEff.",
+              "term": "most_severe_impact",
+              "type": "string",
+              "isRange": false
+            },
+            {
+              "display": "Allele frequency",
+              "precision": 0,
+              "term": "variant_frequency",
+              "isRange": false
+            },
+            {
+              "parent": "variant_frequency",
+              "display": "Common variants (MAF > 5%)",
+              "precision": 0,
+              "description": "Loci with a minor allele frequency above 5%. Counted only where at least 20 alleles were sampled at the locus; genes with no qualifying locus carry no value and are absent from this distribution.",
+              "term": "n_common",
+              "units": "variants",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "parent": "variant_frequency",
+              "display": "Singleton variants",
+              "precision": 0,
+              "description": "Loci seen in exactly one allele copy. Requires at least 100 sampled alleles at the locus.",
+              "term": "n_singleton",
+              "units": "variants",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "parent": "variant_frequency",
+              "display": "Highest minor allele frequency",
+              "precision": 4,
+              "description": "The largest minor allele frequency at any locus in the gene. 0.5 is its ceiling by definition.",
+              "term": "max_minor_allele_frequency",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "display": "Diversity and selection",
+              "precision": 0,
+              "term": "variant_selection",
+              "isRange": false
+            },
+            {
+              "parent": "variant_selection",
+              "display": "piN/piS",
+              "precision": 3,
+              "description": "Nonsynonymous over synonymous nucleotide diversity for the representative transcript, normalized by Nei-Gojobori site counts derived from the genetic code. Below 1 suggests purifying selection, above 1 diversifying. Unlike a raw nonsynonymous/synonymous count ratio this does not carry the codon-bias distortion. Defined only where enough alleles were sampled.",
+              "term": "pi_n_pi_s_snpeff",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "parent": "variant_selection",
+              "display": "Nucleotide diversity per CDS site",
+              "precision": 6,
+              "description": "Mean pairwise nucleotide diversity over the representative transcript's coding sites.",
+              "term": "pi_per_site_cds",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "parent": "variant_selection",
+              "display": "Nonsynonymous / synonymous count ratio",
+              "precision": 2,
+              "description": "The raw count ratio. Kept for continuity with the older SNP searches; piN/piS above is the normalized statistic and is the better measure.",
+              "term": "nonsyn_syn_ratio_snpeff",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "display": "Sampling depth",
+              "precision": 0,
+              "term": "variant_sampling",
+              "isRange": false
+            },
+            {
+              "parent": "variant_sampling",
+              "display": "Strains sampled",
+              "precision": 0,
+              "description": "The largest number of strains with a call at any locus in the gene. Use this to judge how much weight the frequency statistics can carry.",
+              "term": "max_called_strain_count",
+              "units": "strains",
+              "type": "number",
+              "isRange": true
+            },
+            {
+              "parent": "variant_sampling",
+              "display": "Average call rate",
+              "precision": 3,
+              "description": "Mean fraction of sampled strains with a call, across the gene's loci.",
+              "term": "avg_call_rate",
+              "type": "number",
+              "isRange": true
+            }
+          ],
+          "group": "empty"
+        }
+      ],
+      "properties": {
+        "organisms": [
+          "P. falciparum",
+          "P. vivax",
+          "P. yoelii",
+          "P. berghei",
+          "P. chabaudi",
+          "P. knowlesi"
+        ],
+        "specificAttribution": []
+      },
+      "summaryViewPlugins": [
+        {
+          "displayName": "Gene Results",
+          "name": "_default",
+          "description": "View transcripts."
+        },
+        {
+          "displayName": "Genome View",
+          "name": "genomic-view",
+          "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+        }
+      ]
+    },
+    "validation": {
+      "level": "SEMANTIC",
+      "isValid": false,
+      "errors": {
+        "general": [],
+        "byKey": {
+          "gene_variant_stats": [
+            "Cannot be empty."
+          ]
+        }
+      }
+    }
+  },
+  "response_text": null
+}
