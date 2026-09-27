@@ -5,18 +5,16 @@ from __future__ import annotations
 from typing import ClassVar
 
 from veupathdb.domain.parameters import (
-    ParamSpecNormalized,
+    ParamValue,
     SinglePickValue,
     WDKFilterOntologyTerm,
     WDKTreeBoxVocabNode,
     WDKVocabNodeData,
-    WDKVocabTerm,
 )
 from veupathdb.wdk import WDKEnumParam, WDKFilterParam, WDKParameter, WDKStringParam
 
 from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,
-    format_normalized_param_info,
     format_param_info_typed,
     format_typed_param,
 )
@@ -122,7 +120,7 @@ class TestDependentParamNote:
     _DEPENDS: ClassVar[dict[str, list[str]]] = {
         "samples_percentile_generic": ["profileset_generic"]
     }
-    _APPLIED: ClassVar[dict[str, SinglePickValue]] = {
+    _APPLIED: ClassVar[dict[str, ParamValue]] = {
         "profileset_generic": SinglePickValue(value="DeRisi 3D7 Smoothed")
     }
 
@@ -397,49 +395,33 @@ class TestTheFullTreeSurvivesTheWireCap:
         assert len(self._big_sheet().vocabulary()) == self._LEAF_COUNT + 1
 
 
-class TestFormatNormalizedParamInfo:
-    def test_it_emits_vocab_and_dependency_links(self) -> None:
-        specs: dict[str, ParamSpecNormalized] = {
-            "organism": ParamSpecNormalized(
-                name="organism",
-                param_type="single-pick-vocabulary",
-                allow_empty_value=False,
-                vocabulary=vocab_terms(
-                    ("Pf3D7", "P. falciparum 3D7"), ("PvP01", "P. vivax P01")
-                ),
-                dependent_params=("taxon",),
+class TestTheDependencyLinks:
+    def test_a_parent_and_its_child_name_each_other(self) -> None:
+        organism = WDKEnumParam(
+            name="organism",
+            display_name="Organism",
+            type="single-pick-vocabulary",
+            vocabulary=vocab_terms(
+                ("Pf3D7", "P. falciparum 3D7"), ("PvP01", "P. vivax P01")
             ),
-            "taxon": ParamSpecNormalized(
-                name="taxon",
-                param_type="single-pick-vocabulary",
-                allow_empty_value=False,
-                vocabulary=vocab_terms(
-                    ("PfTaxonA", "Pf Taxon A"), ("PfTaxonB", "Pf Taxon B")
-                ),
+            dependent_params=["taxon"],
+        )
+        taxon = WDKEnumParam(
+            name="taxon",
+            display_name="Taxon",
+            type="single-pick-vocabulary",
+            vocabulary=vocab_terms(
+                ("PfTaxonA", "Pf Taxon A"), ("PfTaxonB", "Pf Taxon B")
             ),
-        }
+        )
 
-        by_name = {p.name: p for p in format_normalized_param_info(specs)}
+        by_name = {p.name: p for p in format_param_info_typed([organism, taxon])}
 
-        assert by_name["organism"].required is True
         assert by_name["organism"].controls_vocab_of == ["taxon"]
         assert by_name["organism"].vocab_depends_on is None
-        taxon = by_name["taxon"]
-        assert taxon.vocab_depends_on == ["organism"]
-        assert taxon.allowed_values is not None
-        assert sorted(v.value for v in taxon.allowed_values) == ["PfTaxonA", "PfTaxonB"]
-
-    def test_it_truncates_a_large_vocab(self) -> None:
-        huge = [WDKVocabTerm((f"v{i}", f"v{i}", None)) for i in range(200)]
-        specs = {
-            "p": ParamSpecNormalized(
-                name="p", param_type="single-pick-vocabulary", vocabulary=huge
-            )
-        }
-
-        formatted = format_normalized_param_info(specs)
-
-        assert formatted[0].allowed_values is not None
-        assert len(formatted[0].allowed_values) == 50
-        assert formatted[0].allowed_values_note is not None
-        assert "truncated" in formatted[0].allowed_values_note.lower()
+        assert by_name["taxon"].vocab_depends_on == ["organism"]
+        assert by_name["taxon"].allowed_values is not None
+        assert sorted(v.value for v in by_name["taxon"].allowed_values) == [
+            "PfTaxonA",
+            "PfTaxonB",
+        ]

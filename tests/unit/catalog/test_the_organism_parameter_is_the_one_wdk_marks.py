@@ -1,0 +1,105 @@
+"""The organism parameter is the one WDK marks, whatever its name."""
+
+from __future__ import annotations
+
+from unittest.mock import AsyncMock, MagicMock
+
+import pytest
+from tests._support.recorded_searches import recorded_search
+from veupathdb.domain import SearchContext
+
+from veupathdb_mcp import catalog
+from veupathdb_mcp.catalog import searches
+from veupathdb_mcp.catalog.overview_formatting import format_search_overview
+from veupathdb_mcp.catalog.param_formatting import format_param_info_typed
+from veupathdb_mcp.catalog.param_sheet import build_sheet
+
+MARKED = [
+    ("search_genes_by_ngs_snps", "organismSinglePick"),
+    ("search_genes_by_gene_model_chars", "organism_select_none"),
+    ("search_genes_by_molecular_weight", "organism"),
+]
+
+
+def _infos(fixture: str) -> list[catalog.ParameterInfo]:
+    definition = recorded_search(fixture).search_data
+    return format_param_info_typed(definition.parameters or [])
+
+
+@pytest.mark.parametrize(("fixture", "marked"), MARKED)
+def test_only_the_marked_parameter_is_the_organism_parameter(
+    fixture: str, marked: str
+) -> None:
+    infos = _infos(fixture)
+
+    assert [info.name for info in infos if info.organism_param] == [marked]
+
+
+def test_the_mark_travels_on_the_wire() -> None:
+    by_name = {info.name: info for info in _infos("search_genes_by_ngs_snps")}
+
+    assert by_name["organismSinglePick"].model_dump(by_alias=True)["organismParam"]
+    assert not by_name["snp_class"].model_dump(by_alias=True)["organismParam"]
+
+
+@pytest.mark.parametrize(("fixture", "marked"), MARKED)
+def test_the_sheet_names_the_organism_parameter(fixture: str, marked: str) -> None:
+    sheet = build_sheet(_infos(fixture), query="genes")
+
+    assert [entry.name for entry in sheet if entry.organism_param] == [marked]
+
+
+def test_the_overview_names_the_organism_parameter() -> None:
+    response = recorded_search("search_genes_by_gene_model_chars")
+
+    overview = format_search_overview(
+        definition=response.search_data,
+        record_type="transcript",
+        infos=_infos("search_genes_by_gene_model_chars"),
+        query="genes",
+    )
+
+    entries = overview.required + overview.optional
+    assert [entry.name for entry in entries if entry.organism_param] == [
+        "organism_select_none"
+    ]
+
+
+def _discovery(monkeypatch: pytest.MonkeyPatch, fixture: str) -> MagicMock:
+    discovery = MagicMock()
+    discovery.get_search_details = AsyncMock(return_value=recorded_search(fixture))
+    monkeypatch.setattr(searches, "get_discovery_service", lambda: discovery)
+    return discovery
+
+
+class TestOrganismParameter:
+    def test_a_host_reads_it_from_the_package(self) -> None:
+        assert catalog.organism_parameter is searches.organism_parameter
+        assert "organism_parameter" in catalog.__all__
+
+    @pytest.mark.parametrize(("fixture", "marked"), MARKED)
+    async def test_it_names_the_marked_parameter(
+        self, monkeypatch: pytest.MonkeyPatch, fixture: str, marked: str
+    ) -> None:
+        discovery = _discovery(monkeypatch, fixture)
+        search_name = recorded_search(fixture).search_data.url_segment
+
+        name = await catalog.organism_parameter("plasmodb", "transcript", search_name)
+
+        assert name == marked
+        discovery.get_search_details.assert_awaited_once_with(
+            SearchContext(
+                site_id="plasmodb", record_type="transcript", search_name=search_name
+            )
+        )
+
+    async def test_a_search_with_no_mark_has_none(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        fixture = "search_with_a_hidden_required_parameter"
+        _discovery(monkeypatch, fixture)
+        search_name = recorded_search(fixture).search_data.url_segment
+
+        name = await catalog.organism_parameter("plasmodb", "transcript", search_name)
+
+        assert name is None

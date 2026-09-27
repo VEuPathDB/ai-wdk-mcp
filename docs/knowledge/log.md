@@ -1,5 +1,22 @@
 # Knowledge log
 
+## 2026-09-27
+
+- `veupathdb-mcp` is 0.2.0a31. It pins `veupathdb-py` v0.1.0a19, whose parameter model
+  reads `is_organism` from the `properties.organismProperties` WDK sets on the search's
+  organism parameter (WDK-PARAM-013 in the client bundle). `ParameterInfo.organism_param`,
+  `SheetEntry.organism_param` and `ParamOverviewEntry.organism_param` carry that mark, so
+  `get_parameter_options`, `get_search_overview` and the sheet name the organism parameter
+  whatever WDK calls it: `organismSinglePick` on plasmodb `GenesByNgsSnps`,
+  `organism_select_none` on vectorbase `GenesByGeneModelChars`, `organism` on
+  `GenesByMolecularWeight`. `veupathdb_mcp.catalog.organism_parameter(site_id, record_type,
+  search_name)` answers the marked parameter's name from the cached search details, or None
+  for a search with no mark. The mark means an organism-organized vocabulary: plasmodb marks
+  `ms_assay` (`GenesByMassSpec`) and `ptm_assay` (`GenesByPTM`), whose leaves are
+  experiments. `format_normalized_param_info` leaves `param_formatting`: no module read it,
+  and its input carries no mark. Falsified by
+  `tests/unit/catalog/test_the_organism_parameter_is_the_one_wdk_marks.py`.
+
 ## 2026-09-24
 
 - A search that takes an input step is listed whatever its question set.

@@ -52,6 +52,7 @@ class SheetEntry(CamelModel):
     type: str
     required: bool
     is_number: bool = False
+    organism_param: bool = False
     is_tree: bool = False
     help: str = ""
     default: str | None = None
@@ -167,6 +168,7 @@ def build_sheet(infos: list[ParameterInfo], *, query: str) -> list[SheetEntry]:
                 type=info.type,
                 required=info.required,
                 is_number=info.is_number,
+                organism_param=info.organism_param,
                 is_tree=info.allowed_values_tree is not None,
                 help=info.help,
                 default=info.default_value,

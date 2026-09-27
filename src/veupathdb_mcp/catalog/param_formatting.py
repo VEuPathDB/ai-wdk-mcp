@@ -8,11 +8,9 @@ from veupathdb.domain.parameters import (
     PHYLETIC_LIST_PARAMS,
     PHYLETIC_MAP_PARAMS,
     ParamKind,
-    ParamSpecNormalized,
     ParamValue,
     VocabOption,
     WDKTreeBoxVocabNode,
-    WDKVocabulary,
     dedupe_options,
     flatten_vocab,
 )
@@ -107,6 +105,8 @@ class ParameterInfo(CamelModel):
     is_visible: bool
     # WDK reports numeric bounds as ``type: "string"`` with ``isNumber: true``.
     is_number: bool = False
+    # WDK marks the search's organism parameter with ``properties.organismProperties``.
+    organism_param: bool = False
     help: str
     value_format: str
     default_value: str | None = None
@@ -218,20 +218,8 @@ def _capped_vocab_fields(options: list[VocabOption]) -> _VocabFields:
 
 
 def _format_vocabulary(param: WDKParameter) -> _VocabFields:
-    return _format_vocabulary_raw(
-        param_name=param.name,
-        param_type=param.type,
-        vocabulary=param.vocabulary,
-    )
-
-
-def _format_vocabulary_raw(
-    *,
-    param_name: str,
-    param_type: str,
-    vocabulary: WDKVocabulary | None,
-) -> _VocabFields:
-    if param_type == "multi-pick-vocabulary" and isinstance(
+    vocabulary = param.vocabulary
+    if param.type == "multi-pick-vocabulary" and isinstance(
         vocabulary, WDKTreeBoxVocabNode
     ):
         tree_lines = render_vocab_tree(vocabulary, max_lines=80)
@@ -242,7 +230,7 @@ def _format_vocabulary_raw(
             if truncated:
                 suffix += (
                     f"\nNote: tree truncated; use get_parameter_options("
-                    f"search_name='<search>', parameter_id='{param_name}', "
+                    f"search_name='<search>', parameter_id='{param.name}', "
                     f"query='<keyword>') to see values for a specific category."
                 )
             return _VocabFields(allowed_values_tree=tree_text + suffix)
@@ -329,6 +317,7 @@ def format_typed_param(
         value_format=_value_format(param.type),
         default_value=param.initial_display_value,
         is_number=param.is_number,
+        organism_param=param.is_organism,
         min=param.min,
         max=param.max,
         allowed_values=vocab.allowed_values,
@@ -365,56 +354,6 @@ def filter_fields_for(param: WDKParameter) -> list[FilterFieldInfo]:
         for term in param.ontology
         if term.type is not None
     ]
-
-
-def format_normalized_param_info(
-    specs: dict[str, ParamSpecNormalized],
-) -> list[ParameterInfo]:
-    depends_on: dict[str, list[str]] = {}
-    controls: dict[str, list[str]] = {}
-    for parent_name, parent_spec in specs.items():
-        for child_name in parent_spec.dependent_params:
-            depends_on.setdefault(child_name, []).append(parent_name)
-            controls.setdefault(parent_name, []).append(child_name)
-
-    return [
-        _format_normalized_one(spec, depends_on, controls)
-        for name, spec in specs.items()
-        if name not in PHYLETIC_MAP_PARAMS
-    ]
-
-
-def _format_normalized_one(
-    spec: ParamSpecNormalized,
-    depends_on: dict[str, list[str]],
-    controls: dict[str, list[str]],
-) -> ParameterInfo:
-    vocab = _format_vocabulary_raw(
-        param_name=spec.name,
-        param_type=spec.param_type,
-        vocabulary=spec.vocabulary,
-    )
-    is_required = not spec.allow_empty_value or (
-        spec.min_selected_count is not None and spec.min_selected_count >= 1
-    )
-    return ParameterInfo(
-        name=spec.name,
-        display_name=spec.name,
-        type=spec.param_type,
-        required=is_required,
-        is_visible=spec.is_visible,
-        help=spec.help or "",
-        value_format=_value_format(spec.param_type),
-        default_value=spec.initial_display_value,
-        is_number=spec.is_number,
-        min=spec.min,
-        max=spec.max,
-        allowed_values=vocab.allowed_values,
-        allowed_values_tree=vocab.allowed_values_tree,
-        allowed_values_note=vocab.allowed_values_note,
-        controls_vocab_of=controls.get(spec.name),
-        vocab_depends_on=depends_on.get(spec.name),
-    )
 
 
 def phyletic_options_for(

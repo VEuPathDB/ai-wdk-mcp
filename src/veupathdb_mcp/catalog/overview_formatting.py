@@ -24,6 +24,7 @@ class ParamOverviewEntry(CamelModel):
     type: str
     description: str
     value_format: str
+    organism_param: bool = False
     default: str | None = None
     min: float | None = None
     max: float | None = None
@@ -101,6 +102,7 @@ def format_search_overview(
             type=sheet.type,
             description=sheet.help,
             value_format=info.value_format,
+            organism_param=sheet.organism_param,
             default=sheet.default,
             min=sheet.min,
             max=sheet.max,

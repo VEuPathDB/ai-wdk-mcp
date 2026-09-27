@@ -90,6 +90,7 @@
     "lookup_phyletic_codes",
     "make_record_type_resolver",
     "make_validation_callbacks",
+    "organism_parameter",
     "radio_pairs",
     "rank_experiments_elsewhere",
     "read_experiment",

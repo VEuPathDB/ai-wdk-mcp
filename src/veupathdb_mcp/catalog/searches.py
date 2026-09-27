@@ -250,6 +250,19 @@ async def read_search_definition(
     return details.search_data
 
 
+async def organism_parameter(
+    site_id: str, record_type: str, search_name: str
+) -> str | None:
+    """The parameter WDK marks as the search's organism, or None when it marks none."""
+    details = await get_discovery_service().get_search_details(
+        SearchContext(site_id=site_id, record_type=record_type, search_name=search_name)
+    )
+    return next(
+        (p.name for p in details.search_data.parameters or [] if p.is_organism),
+        None,
+    )
+
+
 async def resolve_search_record_type(
     site_id: str, search_name: str, record_type: str | None
 ) -> str:
