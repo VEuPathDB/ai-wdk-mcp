@@ -103,6 +103,8 @@ class ParameterInfo(CamelModel):
     type: str
     required: bool
     is_visible: bool
+    # WDK marks a parameter only the site sets with ``isReadOnly``.
+    is_read_only: bool = False
     # WDK reports numeric bounds as ``type: "string"`` with ``isNumber: true``.
     is_number: bool = False
     # WDK marks the search's organism parameter with ``properties.organismProperties``.
@@ -313,6 +315,7 @@ def format_typed_param(
         type=param.type,
         required=not param.allow_empty_value or param.min_selected_count >= 1,
         is_visible=param.is_visible,
+        is_read_only=param.is_read_only,
         help=help_text,
         value_format=_value_format(param.type),
         default_value=param.initial_display_value,

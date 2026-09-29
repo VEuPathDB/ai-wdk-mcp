@@ -239,7 +239,7 @@ def test_a_flat_vocabulary_is_not_a_tree() -> None:
     assert entry.is_tree is False
 
 
-def test_hidden_params_are_not_on_the_sheet() -> None:
+def test_a_hidden_param_without_a_vocabulary_is_not_on_the_sheet() -> None:
     hidden = ParameterInfo(
         name="WebServicesPath",
         display_name="",

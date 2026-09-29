@@ -1,5 +1,17 @@
 # Knowledge log
 
+## 2026-09-29
+
+- `veupathdb-mcp` is 0.2.0a32. `ParameterInfo.is_read_only` carries the `isReadOnly`
+  WDK sets on a parameter only the site sets, read through the client's
+  `WDKBaseParameter.is_read_only`: on plasmodb `GenesByText`, `document_type` is hidden
+  and read-only with no vocabulary, while `channel` on the Gomez-Diaz percentile search is
+  hidden, not read-only, with the vocabulary `Channel 1`, `Channel 2`. Hidden means not
+  shown, not fixed, so `build_sheet` lists a hidden parameter that has a vocabulary, with
+  `SheetEntry.hidden` set, and leaves out a hidden parameter without one.
+  `format_search_overview` still lists visible parameters only. Falsified by
+  `tests/unit/catalog/test_a_hidden_choice_is_on_the_sheet.py`.
+
 ## 2026-09-27
 
 - `veupathdb-mcp` is 0.2.0a31. It pins `veupathdb-py` v0.1.0a19, whose parameter model

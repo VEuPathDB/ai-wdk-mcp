@@ -95,6 +95,8 @@ def format_search_overview(
     optional: list[ParamOverviewEntry] = []
 
     for sheet in build_sheet(infos, query=query):
+        if sheet.hidden:
+            continue
         info = by_name[sheet.name]
         entry = ParamOverviewEntry(
             name=sheet.name,
