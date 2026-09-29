@@ -29,8 +29,6 @@ EDA_NOTEBOOK_TYPE_PROPERTY = "edaNotebookType"
 # The one query that declares the spec parameter and never reads it.
 _SPEC_IS_INERT = frozenset({WGCNA_QUERY})
 
-_COMPUTE_QUERIES = frozenset({COMPUTE_QUERY})
-
 
 @dataclass(frozen=True, slots=True)
 class EdaBackedSearch:
@@ -68,18 +66,24 @@ def _dataset_default(search: WDKSearch) -> str | None:
 
 
 def eda_backed_search(search: WDKSearch) -> EdaBackedSearch | None:
-    """Describe an EDA-backed search, or None when it is not one."""
+    """Describe an EDA-backed search, or None when it is not one.
+
+    A search that reads the spec runs a compute when it opens an EDA notebook,
+    where the compute is authored, or when it is the generic compute export.
+    """
     if not is_eda_backed(search):
         return None
     notebook = search.properties.get(EDA_NOTEBOOK_TYPE_PROPERTY, [])
+    reads_the_spec = search.query_name not in _SPEC_IS_INERT
     return EdaBackedSearch(
         search_name=search.url_segment,
         display_name=search.display_name,
         query_name=search.query_name,
         notebook_type=notebook[0] if notebook else None,
-        reads_the_spec=search.query_name not in _SPEC_IS_INERT,
+        reads_the_spec=reads_the_spec,
         needs_dataset_id=EDA_DATASET_ID_PARAM in search.param_names,
-        is_compute_backed=search.query_name in _COMPUTE_QUERIES,
+        is_compute_backed=reads_the_spec
+        and (bool(notebook) or search.query_name == COMPUTE_QUERY),
         default_dataset_id=_dataset_default(search),
     )
 

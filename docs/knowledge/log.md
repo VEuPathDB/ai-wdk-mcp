@@ -2,6 +2,18 @@
 
 ## 2026-09-29
 
+- `veupathdb-mcp` is 0.2.0a33. `EdaBackedSearch.is_compute_backed` is read from the
+  search's definition: a search that reads the spec runs a compute when it opens an EDA
+  notebook (`properties.edaNotebookType`) or is the generic `GenesByEdaVizWithCompute`
+  export. On the twelve sites' transcript listings, every search that declares a
+  notebook runs a compute except the inert `GenesByWGCNAModule`: 584 differential-expression
+  and 5 antibody-array searches on `GenesByEdaVizWithCompute`, and the 12
+  `GenesByDESeqUserDataset`, which runs its own query and reads the volcano cut in its spec.
+  No subset search (`GenesByEdaSubset`, `GenesByEdaSubsetGeneric`,
+  `GenesByPhenotypeUserDataset`) declares one. The spec does not decide the kind: a subset
+  export keeps the analysis's computations. Falsified by
+  `tests/unit/catalog/test_a_search_that_opens_a_notebook_runs_a_compute.py`.
+
 - `veupathdb-mcp` is 0.2.0a32. `ParameterInfo.is_read_only` carries the `isReadOnly`
   WDK sets on a parameter only the site sets, read through the client's
   `WDKBaseParameter.is_read_only`: on plasmodb `GenesByText`, `document_type` is hidden

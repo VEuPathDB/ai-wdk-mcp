@@ -1,0 +1,1316 @@
+{
+  "provenance": {
+    "site": "plasmodb",
+    "method": "GET",
+    "url": "https://plasmodb.org/plasmo/service/record-types/transcript/searches",
+    "status": 200,
+    "recorded_at": "2026-09-29",
+    "trimmed": "keeps the first search of each query and notebook pair among those that declare eda_analysis_spec, each whole, in the order WDK sent them"
+  },
+  "body": [
+    {
+      "summary": "Find genes based on filtering metadata provided by a single dataset.",
+      "urlSegment": "GenesByEdaSubset",
+      "dynamicAttributes": [
+        {
+          "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "wdk_weight-histogram",
+              "description": "Display a histogram of weight distribution",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "Search Weight",
+          "name": "wdk_weight",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        }
+      ],
+      "defaultSorting": [
+        {
+          "attributeName": "organism",
+          "direction": "ASC"
+        },
+        {
+          "attributeName": "gene_location_text",
+          "direction": "ASC"
+        }
+      ],
+      "isAnalyzable": true,
+      "displayName": "Gene Dataset Filtering",
+      "fullName": "GeneQuestions.GenesByEdaSubset",
+      "description": "Find genes based on filtering metadata provided by a single dataset.",
+      "defaultAttributes": [
+        "primary_key",
+        "organism",
+        "gene_location_text",
+        "gene_product"
+      ],
+      "groups": [
+        {
+          "displayType": "empty",
+          "displayName": "",
+          "name": "empty",
+          "description": "",
+          "isVisible": true,
+          "parameters": [
+            "eda_dataset_id",
+            "eda_analysis_spec"
+          ]
+        }
+      ],
+      "filters": [
+        {
+          "isViewOnly": false,
+          "name": "organismFilter"
+        },
+        {
+          "displayName": "Transcripts",
+          "isViewOnly": false,
+          "name": "matched_transcript_filter_array"
+        },
+        {
+          "isViewOnly": false,
+          "name": "genesByPathway"
+        }
+      ],
+      "shortDisplayName": "Gene Dataset",
+      "paramNames": [
+        "eda_dataset_id",
+        "eda_analysis_spec"
+      ],
+      "isCacheable": true,
+      "outputRecordClassName": "transcript",
+      "noSummaryOnSingleRecord": false,
+      "queryName": "GenesByEdaSubset",
+      "defaultSummaryView": "_default",
+      "properties": {
+        "organisms": [
+          "P. falciparum",
+          "P. vivax",
+          "P. yoelii",
+          "P. berghei",
+          "P. chabaudi",
+          "P. knowlesi"
+        ],
+        "specificAttribution": []
+      },
+      "summaryViewPlugins": [
+        {
+          "displayName": "Gene Results",
+          "name": "_default",
+          "description": "View transcripts."
+        },
+        {
+          "displayName": "Genome View",
+          "name": "genomic-view",
+          "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+        }
+      ]
+    },
+    {
+      "summary": "Find genes based on filtering metadata provided by a single dataset.",
+      "urlSegment": "GenesByPhenotypeUserDataset",
+      "dynamicAttributes": [
+        {
+          "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "wdk_weight-histogram",
+              "description": "Display a histogram of weight distribution",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "Search Weight",
+          "name": "wdk_weight",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        }
+      ],
+      "defaultSorting": [
+        {
+          "attributeName": "organism",
+          "direction": "ASC"
+        },
+        {
+          "attributeName": "gene_location_text",
+          "direction": "ASC"
+        }
+      ],
+      "isAnalyzable": true,
+      "displayName": "Phenotype (User Datasets)",
+      "fullName": "GeneQuestions.GenesByPhenotypeUserDataset",
+      "description": "Find genes based on filtering metadata provided by a single dataset.",
+      "defaultAttributes": [
+        "primary_key",
+        "organism",
+        "gene_location_text",
+        "gene_product"
+      ],
+      "groups": [
+        {
+          "displayType": "empty",
+          "displayName": "",
+          "name": "empty",
+          "description": "",
+          "isVisible": true,
+          "parameters": [
+            "eda_dataset_id",
+            "eda_analysis_spec"
+          ]
+        }
+      ],
+      "filters": [
+        {
+          "isViewOnly": false,
+          "name": "organismFilter"
+        },
+        {
+          "displayName": "Transcripts",
+          "isViewOnly": false,
+          "name": "matched_transcript_filter_array"
+        },
+        {
+          "isViewOnly": false,
+          "name": "genesByPathway"
+        }
+      ],
+      "shortDisplayName": "UD Phenotype",
+      "paramNames": [
+        "eda_dataset_id",
+        "eda_analysis_spec"
+      ],
+      "isCacheable": false,
+      "outputRecordClassName": "transcript",
+      "noSummaryOnSingleRecord": false,
+      "queryName": "GenesByPhenotypeUserDataset",
+      "defaultSummaryView": "_default",
+      "properties": {
+        "organisms": [
+          "P. falciparum",
+          "P. vivax",
+          "P. yoelii",
+          "P. berghei",
+          "P. chabaudi",
+          "P. knowlesi"
+        ],
+        "specificAttribution": [],
+        "userDatasetType": [
+          "phenotype"
+        ]
+      },
+      "summaryViewPlugins": [
+        {
+          "displayName": "Gene Results",
+          "name": "_default",
+          "description": "View transcripts."
+        },
+        {
+          "displayName": "Genome View",
+          "name": "genomic-view",
+          "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+        }
+      ]
+    },
+    {
+      "summary": "Find genes which are differentially expressed in an RNA-Seq experiment based on EDA analysis.",
+      "urlSegment": "GenesByDESeqUserDataset",
+      "dynamicAttributes": [
+        {
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "effectSize-histogram",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "Effect Size",
+          "name": "effectSize",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "align": "center",
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        },
+        {
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "pValue-histogram",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "P-Value",
+          "name": "pValue",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "align": "center",
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        },
+        {
+          "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "wdk_weight-histogram",
+              "description": "Display a histogram of weight distribution",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "Search Weight",
+          "name": "wdk_weight",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        }
+      ],
+      "defaultSorting": [
+        {
+          "attributeName": "organism",
+          "direction": "ASC"
+        },
+        {
+          "attributeName": "gene_location_text",
+          "direction": "ASC"
+        }
+      ],
+      "isAnalyzable": true,
+      "displayName": "RNA-Seq Differential Expression (User Datasets)",
+      "fullName": "GeneQuestions.GenesByDESeqUserDataset",
+      "description": "Find genes that are differentially expressed between two groups of samples in an RNA-Seq experiment.\nThis search uses a guided notebook within ${projectName} that runs DESeq2, a widely-used statistical method for RNA-Seq differential expression analysis (Love et al., 2014).\n\n<br><br>\n\n<u>How to run this search</u>: Open the <b>Configure Search</b> tab and work through the notebook steps in order:\n\n<ul>\n<li><b>Select Expression Data</b> &mdash; Choose the gene identifier variable and count type for the dataset.</li>\n<li><b>Explore Sample Variation (optional)</b> &mdash; Run a PCA to visualise sources of variation across samples. Use it to spot outliers or batch effects and exclude them before the DESeq2 step.</li>\n<li><b>Define Sample Groups</b> &mdash; Select a metadata variable (e.g. treatment, tissue type, or developmental stage) and assign samples to a <b>Reference</b> group and a <b>Comparison</b> group.</li>\n<li><b>Set Thresholds</b> &mdash; Explore the results on an interactive volcano plot. Adjust the effect size and p-value thresholds to highlight the genes you want to retrieve.</li>\n<li><b>Run the Search</b> &mdash; Click <i>Get Answer</i> to retrieve all genes that meet your criteria.</li>\n</ul>\n\n<br>\n\n<u>Effect size</u>: The effect size is expressed as a log2 fold change &mdash; how much more or less a gene is expressed in the Comparison group relative to the Reference group.\nA positive value indicates up-regulation; a negative value indicates down-regulation.\n\n<br><br>\n\n<u>P-value</u>: DESeq2 computes both a raw p-value and a Benjamini-Hochberg adjusted p-value for each gene.\nThe volcano plot is drawn using the <b>raw p-value</b> (on a &minus;log10 scale), and the p-value threshold you set on the plot is also applied to the raw p-value.\nAdjusted p-values are available in the mouse-over tooltip for each point on the volcano plot.\nA lower p-value (raw or adjusted) indicates a more statistically confident call.\n\n<br><br>\n\n<u>Removing outliers</u>: If the PCA plot reveals samples that cluster away from the rest (potential outliers or contaminated libraries), you can exclude them using the <b>Select Samples</b> step at the top of the notebook.\nApply a filter on the sample identifier or a metadata variable to remove those samples before running DESeq2.\nNote that changing the sample subset will reset any group assignments you have already made in the DESeq2 step, so it is best to check the PCA first before defining your groups.",
+      "defaultAttributes": [
+        "primary_key",
+        "organism",
+        "gene_location_text",
+        "gene_product"
+      ],
+      "groups": [
+        {
+          "displayType": "empty",
+          "displayName": "",
+          "name": "empty",
+          "description": "",
+          "isVisible": true,
+          "parameters": [
+            "eda_dataset_id",
+            "eda_analysis_spec"
+          ]
+        }
+      ],
+      "filters": [
+        {
+          "isViewOnly": false,
+          "name": "organismFilter"
+        },
+        {
+          "displayName": "Transcripts",
+          "isViewOnly": false,
+          "name": "matched_transcript_filter_array"
+        },
+        {
+          "isViewOnly": false,
+          "name": "genesByPathway"
+        }
+      ],
+      "shortDisplayName": "UD RNA-Seq (de)",
+      "paramNames": [
+        "eda_dataset_id",
+        "eda_analysis_spec"
+      ],
+      "isCacheable": false,
+      "outputRecordClassName": "transcript",
+      "noSummaryOnSingleRecord": false,
+      "queryName": "GenesByDESeqUserDataset",
+      "defaultSummaryView": "_default",
+      "properties": {
+        "organisms": [
+          "P. falciparum",
+          "P. vivax",
+          "P. yoelii",
+          "P. berghei",
+          "P. chabaudi",
+          "P. knowlesi"
+        ],
+        "userDatasetType": [
+          "rnaseqrc"
+        ],
+        "edaNotebookType": [
+          "differentialExpressionNotebook"
+        ],
+        "specificAttribution": [],
+        "displayCategory": [
+          "Differential Expression"
+        ]
+      },
+      "summaryViewPlugins": [
+        {
+          "displayName": "Gene Results",
+          "name": "_default",
+          "description": "View transcripts."
+        },
+        {
+          "displayName": "Genome View",
+          "name": "genomic-view",
+          "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+        }
+      ]
+    },
+    {
+      "summary": "Find genes based on filtering metadata provided by a single dataset.",
+      "urlSegment": "GenesByEdaVizWithCompute",
+      "dynamicAttributes": [
+        {
+          "isInReport": true,
+          "formats": [],
+          "truncateTo": 100,
+          "displayName": "Effect Size",
+          "name": "effectSize",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        },
+        {
+          "isInReport": true,
+          "formats": [],
+          "truncateTo": 100,
+          "displayName": "P-Value",
+          "name": "pValue",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        },
+        {
+          "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "wdk_weight-histogram",
+              "description": "Display a histogram of weight distribution",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "Search Weight",
+          "name": "wdk_weight",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        }
+      ],
+      "defaultSorting": [
+        {
+          "attributeName": "organism",
+          "direction": "ASC"
+        },
+        {
+          "attributeName": "gene_location_text",
+          "direction": "ASC"
+        }
+      ],
+      "isAnalyzable": true,
+      "displayName": "Gene Dataset Filtering",
+      "fullName": "GeneQuestions.GenesByEdaVizWithCompute",
+      "description": "Find genes based on filtering metadata provided by a single dataset.",
+      "defaultAttributes": [
+        "primary_key",
+        "effectSize",
+        "pValue",
+        "organism",
+        "gene_location_text",
+        "gene_product"
+      ],
+      "groups": [
+        {
+          "displayType": "empty",
+          "displayName": "",
+          "name": "empty",
+          "description": "",
+          "isVisible": true,
+          "parameters": [
+            "eda_dataset_id",
+            "eda_analysis_spec"
+          ]
+        }
+      ],
+      "filters": [
+        {
+          "isViewOnly": false,
+          "name": "organismFilter"
+        },
+        {
+          "displayName": "Transcripts",
+          "isViewOnly": false,
+          "name": "matched_transcript_filter_array"
+        },
+        {
+          "isViewOnly": false,
+          "name": "genesByPathway"
+        }
+      ],
+      "shortDisplayName": "Gene Dataset",
+      "paramNames": [
+        "eda_dataset_id",
+        "eda_analysis_spec"
+      ],
+      "isCacheable": true,
+      "outputRecordClassName": "transcript",
+      "noSummaryOnSingleRecord": false,
+      "queryName": "GenesByEdaVizWithCompute",
+      "defaultSummaryView": "_default",
+      "properties": {
+        "organisms": [
+          "P. falciparum",
+          "P. vivax",
+          "P. yoelii",
+          "P. berghei",
+          "P. chabaudi",
+          "P. knowlesi"
+        ],
+        "specificAttribution": []
+      },
+      "summaryViewPlugins": [
+        {
+          "displayName": "Gene Results",
+          "name": "_default",
+          "description": "View transcripts."
+        },
+        {
+          "displayName": "Genome View",
+          "name": "genomic-view",
+          "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+        }
+      ]
+    },
+    {
+      "summary": "Filter genes by Phenotype Data.",
+      "urlSegment": "GenesByPhenotypeEdaSubset_PlasmoDB_pknoA1H1_piggyBac_mutagenesis_MIS_MFS_Phenotype_RSRC",
+      "dynamicAttributes": [
+        {
+          "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "wdk_weight-histogram",
+              "description": "Display a histogram of weight distribution",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "Search Weight",
+          "name": "wdk_weight",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        }
+      ],
+      "defaultSorting": [
+        {
+          "attributeName": "gene_location_text",
+          "direction": "ASC"
+        }
+      ],
+      "isAnalyzable": true,
+      "displayName": "P. knowlesi A1H1 essential genes via piggyBac screen Phenotype",
+      "fullName": "GeneQuestions.GenesByPhenotypeEdaSubset_PlasmoDB_pknoA1H1_piggyBac_mutagenesis_MIS_MFS_Phenotype_RSRC",
+      "description": "Filter genes by Phenotype Data.  Click on a filter on the left to view data and apply a filter.  You can apply as many filters as you choose.",
+      "defaultAttributes": [
+        "primary_key",
+        "organism",
+        "gene_location_text",
+        "gene_product"
+      ],
+      "groups": [
+        {
+          "displayType": "hidden",
+          "displayName": "",
+          "name": "_hidden",
+          "description": "",
+          "isVisible": false,
+          "parameters": [
+            "eda_dataset_id"
+          ]
+        },
+        {
+          "displayType": "empty",
+          "displayName": "",
+          "name": "empty",
+          "description": "",
+          "isVisible": true,
+          "parameters": [
+            "eda_analysis_spec"
+          ]
+        }
+      ],
+      "filters": [
+        {
+          "isViewOnly": false,
+          "name": "organismFilter"
+        },
+        {
+          "displayName": "Transcripts",
+          "isViewOnly": false,
+          "name": "matched_transcript_filter_array"
+        },
+        {
+          "isViewOnly": false,
+          "name": "genesByPathway"
+        }
+      ],
+      "newBuild": "68.0",
+      "shortDisplayName": "PknoA1H1 essential genes piggyBac (QP)",
+      "paramNames": [
+        "eda_dataset_id",
+        "eda_analysis_spec"
+      ],
+      "isCacheable": true,
+      "outputRecordClassName": "transcript",
+      "noSummaryOnSingleRecord": false,
+      "queryName": "GenesByEdaSubsetGeneric",
+      "defaultSummaryView": "_default",
+      "properties": {
+        "organisms": [
+          "P. falciparum",
+          "P. vivax",
+          "P. yoelii",
+          "P. berghei",
+          "P. chabaudi",
+          "P. knowlesi"
+        ],
+        "specificAttribution": []
+      },
+      "summaryViewPlugins": [
+        {
+          "displayName": "Gene Results",
+          "name": "_default",
+          "description": "View transcripts."
+        },
+        {
+          "displayName": "Genome View",
+          "name": "genomic-view",
+          "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+        }
+      ]
+    },
+    {
+      "summary": "Find genes with differential expression in antibody array data based on EDA analysis.",
+      "urlSegment": "GenesByAntibodyArrayEdaSubset_PlasmoDB_Crompton_Mali_AntibodyArray_RSRC",
+      "dynamicAttributes": [
+        {
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "effectSize-histogram",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "Effect Size",
+          "name": "effectSize",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "align": "center",
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        },
+        {
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "pValue-histogram",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "P-Value",
+          "name": "pValue",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "align": "center",
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        },
+        {
+          "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "wdk_weight-histogram",
+              "description": "Display a histogram of weight distribution",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "Search Weight",
+          "name": "wdk_weight",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        }
+      ],
+      "defaultSorting": [
+        {
+          "attributeName": "effectSize",
+          "direction": "DESC"
+        }
+      ],
+      "isAnalyzable": true,
+      "displayName": "Protein targets of serum antibodies in response to infection Antibody Array",
+      "fullName": "GeneQuestions.GenesByAntibodyArrayEdaSubset_PlasmoDB_Crompton_Mali_AntibodyArray_RSRC",
+      "description": "Find proteins with differential abundance between two groups of samples in an antibody array experiment.\nThis search uses a guided notebook within the site that runs Limma, a widely-used statistical method for analysing microarray and antibody array data (Ritchie et al., 2015).\n\n<br><br>\n\n<u>How to run this search</u>: Open the <b>Configure Search</b> tab and work through the notebook steps in order:\n\n<ul>\n<li><b>Select Antibody Array Data</b> &mdash; Choose the antibody identifier variable and the signal type (measurement type) for the dataset.</li>\n<li><b>Explore Sample Variation (optional)</b> &mdash; Run a PCA to visualise sources of variation across samples. Use it to spot outliers or batch effects and exclude them before the Limma step.</li>\n<li><b>Define Sample Groups</b> &mdash; Select a metadata variable (e.g. treatment, tissue type, or disease status) and assign samples to a <b>Reference</b> group and a <b>Comparison</b> group.</li>\n<li><b>Set Thresholds</b> &mdash; Explore the results on an interactive volcano plot. Adjust the effect size and p-value thresholds to highlight the proteins you want to retrieve.</li>\n<li><b>Run the Search</b> &mdash; Click <i>Get Answer</i> to retrieve all proteins that meet your criteria.</li>\n</ul>\n\n<br>\n\n<u>Effect size</u>: The effect size is expressed as a log2 fold change &mdash; how much more or less abundant a protein is in the Comparison group relative to the Reference group.\nA positive value indicates higher abundance in the Comparison group; a negative value indicates lower abundance.\n\n<br><br>\n\n<u>P-value</u>: Limma computes both a raw p-value and a Benjamini-Hochberg adjusted p-value for each protein.\nThe volcano plot is drawn using the <b>raw p-value</b> (on a &minus;log10 scale), and the p-value threshold you set on the plot is also applied to the raw p-value.\nAdjusted p-values are available in the mouse-over tooltip for each point on the volcano plot.\nA lower p-value (raw or adjusted) indicates a more statistically confident call.\n\n<br><br>\n\n<u>Removing outliers</u>: If the PCA plot reveals samples that cluster away from the rest (potential outliers or contaminated arrays), you can exclude them using the <b>Select Samples</b> step at the top of the notebook.\nApply a filter on the sample identifier or a metadata variable to remove those samples before running Limma.\nNote that changing the sample subset will reset any group assignments you have already made in the Limma step, so it is best to check the PCA first before defining your groups.",
+      "defaultAttributes": [
+        "primary_key",
+        "organism",
+        "gene_product",
+        "effectSize",
+        "pValue"
+      ],
+      "groups": [
+        {
+          "displayType": "hidden",
+          "displayName": "",
+          "name": "_hidden",
+          "description": "",
+          "isVisible": false,
+          "parameters": [
+            "eda_dataset_id"
+          ]
+        },
+        {
+          "displayType": "empty",
+          "displayName": "",
+          "name": "empty",
+          "description": "",
+          "isVisible": true,
+          "parameters": [
+            "eda_analysis_spec"
+          ]
+        }
+      ],
+      "filters": [
+        {
+          "isViewOnly": false,
+          "name": "organismFilter"
+        },
+        {
+          "displayName": "Transcripts",
+          "isViewOnly": false,
+          "name": "matched_transcript_filter_array"
+        },
+        {
+          "isViewOnly": false,
+          "name": "genesByPathway"
+        }
+      ],
+      "newBuild": "20.0",
+      "shortDisplayName": "Serum Ab Response (QAA)",
+      "paramNames": [
+        "eda_dataset_id",
+        "eda_analysis_spec"
+      ],
+      "isCacheable": true,
+      "outputRecordClassName": "transcript",
+      "noSummaryOnSingleRecord": false,
+      "queryName": "GenesByEdaVizWithCompute",
+      "defaultSummaryView": "_default",
+      "properties": {
+        "organisms": [
+          "P. falciparum",
+          "P. vivax",
+          "P. yoelii",
+          "P. berghei",
+          "P. chabaudi",
+          "P. knowlesi"
+        ],
+        "specificAttribution": [],
+        "edaNotebookType": [
+          "antibodyArrayNotebook"
+        ]
+      },
+      "summaryViewPlugins": [
+        {
+          "displayName": "Gene Results",
+          "name": "_default",
+          "description": "View transcripts."
+        },
+        {
+          "displayName": "Genome View",
+          "name": "genomic-view",
+          "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+        }
+      ]
+    },
+    {
+      "summary": "Return genes within a module found in a weighted gene correlation network analysis.",
+      "urlSegment": "GenesByRNASeqpfal3D7_Lee_Gambian_ebi_rnaSeq_RSRCWGCNAModules",
+      "dynamicAttributes": [
+        {
+          "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "wdk_weight-histogram",
+              "description": "Display a histogram of weight distribution",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "Search Weight",
+          "name": "wdk_weight",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        }
+      ],
+      "defaultSorting": [
+        {
+          "attributeName": "gene_location_text",
+          "direction": "ASC"
+        }
+      ],
+      "isAnalyzable": true,
+      "displayName": "P. falciparum 3D7 Dual transcriptomes of malaria-infected Gambian children (RNA-Seq) WGCNA modules (functional prediction)",
+      "fullName": "GeneQuestions.GenesByRNASeqpfal3D7_Lee_Gambian_ebi_rnaSeq_RSRCWGCNAModules",
+      "description": "<u>Run this search</u>: This search returns genes that belong to a specific WGCNA module. Choose your module of interest from the dropdown menu for the WGCNA Module parameter. (See the study explorer section below for tools on identifying a module that may be of interest to you.) Then choose the correlation coefficient that a gene's expression profile must share with the eigengene for the gene to be considered a member of the module. Click Get Answer to retrieve genes that meet your criteria. <br><br>\n        \n        <u>WGCNA module</u>: Weighted gene co-expression network analysis (WGCNA) identifies groups of genes that have similar expression across samples. The analysis considers the whole transcriptome data set and clusters co-expressed genes into groups called modules. The modules in VEuPathDB were found using an <a href=\"https://www.biorxiv.org/content/10.1101/234062v1.full.pdf\">iterative Weighted Gene Correlation Network Analysis</a>.  <br><br>\n\n        <u>Eigengene</u>: The eigengene is created in the WGCNA analysis and is an imaginary gene whose expression profile represents an average gene within the module. Each module is represented by an eigengene. It is very likely that no gene within the module has the same expression profile as the eigengene. <br><br>\n\n        <u><a href=\"https://qa.plasmodb.org/plasmo.b68/app/workspace/analyses/DS_82dc5abc7f/new\" target=\"_blank\">Study Explorer</a></u>: Relationships between modules or between modules and study variables such as participant disease status (asymptomatic vs severe), blood parasitemia, or age, may reveal central players in biological processes associated with the whole transcriptome data set. Use the <a href=\"https://qa.plasmodb.org/plasmo.b68/app/workspace/analyses/DS_82dc5abc7f/new\" target=\"_blank\">Study Explorer</a> to browse variable distributions, analyze/visualize correlations between modules, and analyze/visualize correlations between modules and study variables.",
+      "defaultAttributes": [
+        "primary_key",
+        "gene_location_text",
+        "gene_product"
+      ],
+      "groups": [
+        {
+          "displayType": "hidden",
+          "displayName": "",
+          "name": "_hidden",
+          "description": "",
+          "isVisible": false,
+          "parameters": [
+            "eda_dataset_id",
+            "wgcnaDataset"
+          ]
+        },
+        {
+          "displayType": "empty",
+          "displayName": "",
+          "name": "empty",
+          "description": "",
+          "isVisible": true,
+          "parameters": [
+            "eda_analysis_spec",
+            "wgcnaParam",
+            "wgcna_correlation_cutoff"
+          ]
+        }
+      ],
+      "filters": [
+        {
+          "isViewOnly": false,
+          "name": "organismFilter"
+        },
+        {
+          "displayName": "Transcripts",
+          "isViewOnly": false,
+          "name": "matched_transcript_filter_array"
+        },
+        {
+          "isViewOnly": false,
+          "name": "genesByPathway"
+        }
+      ],
+      "searchVisibleHelp": "<div class=\"wgcna-banner\">\n          <div class=\"wgcna-banner-img-container\">\n            <a target=\"_blank\" href=\"/plasmo/app/workspace/analyses/DS_82dc5abc7f/new/learn\">\n              <img id=\"wgcna_help_image\" src=\"\" />\n            </a>\n            <div><a target=\"_blank\" href=\"/plasmo/app/workspace/analyses/DS_82dc5abc7f/new/learn\"><strong>Study Explorer</strong></a></div>\n          </div>\n          <div>\n            <p>\n              Use the <a target=\"_blank\" href=\"/plasmo/app/workspace/analyses/DS_82dc5abc7f/new/learn\">Study Explorer</a> to discover WGCNA modules (co-expression networks) of interest. For example, a module may have a positive correlation with study metadata such as patient platelet count or age.  The Study Explorer offers metadata filters and visualization tools to help conceptualize modules in relation to study variables so that you may discover and choose a module of interest.\n            </p>\n          </div>\n        </div>",
+      "newBuild": "46.0",
+      "shortDisplayName": "Pfal Gambian children RNA-Seq WGCNA modules",
+      "paramNames": [
+        "eda_dataset_id",
+        "eda_analysis_spec",
+        "wgcnaParam",
+        "wgcnaDataset",
+        "wgcna_correlation_cutoff"
+      ],
+      "isCacheable": false,
+      "outputRecordClassName": "transcript",
+      "noSummaryOnSingleRecord": false,
+      "queryName": "GenesByWGCNAModule",
+      "defaultSummaryView": "_default",
+      "properties": {
+        "organisms": [
+          "P. falciparum",
+          "P. vivax",
+          "P. yoelii",
+          "P. berghei",
+          "P. chabaudi",
+          "P. knowlesi"
+        ],
+        "specificAttribution": [],
+        "edaNotebookType": [
+          "wgcnaCorrelationNotebook"
+        ]
+      },
+      "summaryViewPlugins": [
+        {
+          "displayName": "Gene Results",
+          "name": "_default",
+          "description": "View transcripts."
+        },
+        {
+          "displayName": "Genome View",
+          "name": "genomic-view",
+          "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+        }
+      ]
+    },
+    {
+      "summary": "Find genes that are differentially expressed in an RNA-Seq experiment based on EDA analysis.",
+      "urlSegment": "GenesByRNASeqpfal3D7_Tonkin_Hill_Malaria_ebi_rnaSeq_RSRCDESeq",
+      "dynamicAttributes": [
+        {
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "effectSize-histogram",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "Effect Size",
+          "name": "effectSize",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "align": "center",
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        },
+        {
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "pValue-histogram",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "P-Value",
+          "name": "pValue",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "align": "center",
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        },
+        {
+          "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+          "isInReport": true,
+          "formats": [
+            {
+              "isInReport": true,
+              "displayName": "Histogram",
+              "name": "wdk_weight-histogram",
+              "description": "Display a histogram of weight distribution",
+              "scopes": [],
+              "type": "histogram"
+            }
+          ],
+          "truncateTo": 100,
+          "displayName": "Search Weight",
+          "name": "wdk_weight",
+          "isSortable": true,
+          "isDisplayable": true,
+          "isRemovable": true,
+          "columnDataType": "NUMBER",
+          "tools": {
+            "reports": [],
+            "filters": []
+          },
+          "properties": {
+            "organisms": [
+              "P. falciparum",
+              "P. vivax",
+              "P. yoelii",
+              "P. berghei",
+              "P. chabaudi",
+              "P. knowlesi"
+            ],
+            "specificAttribution": []
+          }
+        }
+      ],
+      "defaultSorting": [
+        {
+          "attributeName": "effectSize",
+          "direction": "DESC"
+        }
+      ],
+      "isAnalyzable": true,
+      "displayName": "P. falciparum 3D7 Transcriptome in severe vs uncomplicated malaria RNA-Seq (Differential Expression)",
+      "fullName": "GeneQuestions.GenesByRNASeqpfal3D7_Tonkin_Hill_Malaria_ebi_rnaSeq_RSRCDESeq",
+      "description": "Find genes that are differentially expressed between two groups of samples in an RNA-Seq experiment.\nThis search uses a guided notebook within ${projectName} that runs DESeq2, a widely-used statistical method for RNA-Seq differential expression analysis (Love et al., 2014).\n\n<br><br>\n\n<u>How to run this search</u>: Open the <b>Configure Search</b> tab and work through the notebook steps in order:\n\n<ul>\n<li><b>Select Expression Data</b> &mdash; Choose the gene identifier variable and count type for the dataset.</li>\n<li><b>Explore Sample Variation (optional)</b> &mdash; Run a PCA to visualise sources of variation across samples. Use it to spot outliers or batch effects and exclude them before the DESeq2 step.</li>\n<li><b>Define Sample Groups</b> &mdash; Select a metadata variable (e.g. treatment, tissue type, or developmental stage) and assign samples to a <b>Reference</b> group and a <b>Comparison</b> group.</li>\n<li><b>Set Thresholds</b> &mdash; Explore the results on an interactive volcano plot. Adjust the effect size and p-value thresholds to highlight the genes you want to retrieve.</li>\n<li><b>Run the Search</b> &mdash; Click <i>Get Answer</i> to retrieve all genes that meet your criteria.</li>\n</ul>\n\n<br>\n\n<u>Effect size</u>: The effect size is expressed as a log2 fold change &mdash; how much more or less a gene is expressed in the Comparison group relative to the Reference group.\nA positive value indicates up-regulation; a negative value indicates down-regulation.\n\n<br><br>\n\n<u>P-value</u>: DESeq2 computes both a raw p-value and a Benjamini-Hochberg adjusted p-value for each gene.\nThe volcano plot is drawn using the <b>raw p-value</b> (on a &minus;log10 scale), and the p-value threshold you set on the plot is also applied to the raw p-value.\nAdjusted p-values are available in the mouse-over tooltip for each point on the volcano plot.\nA lower p-value (raw or adjusted) indicates a more statistically confident call.\n\n<br><br>\n\n<u>Removing outliers</u>: If the PCA plot reveals samples that cluster away from the rest (potential outliers or contaminated libraries), you can exclude them using the <b>Select Samples</b> step at the top of the notebook.\nApply a filter on the sample identifier or a metadata variable to remove those samples before running DESeq2.\nNote that changing the sample subset will reset any group assignments you have already made in the DESeq2 step, so it is best to check the PCA first before defining your groups.",
+      "defaultAttributes": [
+        "primary_key",
+        "organism",
+        "gene_product",
+        "effectSize",
+        "pValue"
+      ],
+      "groups": [
+        {
+          "displayType": "hidden",
+          "displayName": "",
+          "name": "_hidden",
+          "description": "",
+          "isVisible": false,
+          "parameters": [
+            "eda_dataset_id"
+          ]
+        },
+        {
+          "displayType": "empty",
+          "displayName": "",
+          "name": "empty",
+          "description": "",
+          "isVisible": true,
+          "parameters": [
+            "eda_analysis_spec"
+          ]
+        }
+      ],
+      "filters": [
+        {
+          "isViewOnly": false,
+          "name": "organismFilter"
+        },
+        {
+          "displayName": "Transcripts",
+          "isViewOnly": false,
+          "name": "matched_transcript_filter_array"
+        },
+        {
+          "isViewOnly": false,
+          "name": "genesByPathway"
+        }
+      ],
+      "newBuild": "29",
+      "shortDisplayName": "Pf severe malaria RNASeq (de)",
+      "paramNames": [
+        "eda_dataset_id",
+        "eda_analysis_spec"
+      ],
+      "isCacheable": true,
+      "outputRecordClassName": "transcript",
+      "noSummaryOnSingleRecord": false,
+      "queryName": "GenesByEdaVizWithCompute",
+      "defaultSummaryView": "_default",
+      "properties": {
+        "organisms": [
+          "P. falciparum",
+          "P. vivax",
+          "P. yoelii",
+          "P. berghei",
+          "P. chabaudi",
+          "P. knowlesi"
+        ],
+        "edaNotebookType": [
+          "differentialExpressionNotebook"
+        ],
+        "specificAttribution": [],
+        "displayCategory": [
+          "Differential Expression"
+        ]
+      },
+      "summaryViewPlugins": [
+        {
+          "displayName": "Gene Results",
+          "name": "_default",
+          "description": "View transcripts."
+        },
+        {
+          "displayName": "Genome View",
+          "name": "genomic-view",
+          "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+        }
+      ]
+    }
+  ]
+}
