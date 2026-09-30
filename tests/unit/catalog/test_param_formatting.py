@@ -14,6 +14,7 @@ from veupathdb.domain.parameters import (
 from veupathdb.wdk import WDKEnumParam, WDKFilterParam, WDKParameter, WDKStringParam
 
 from veupathdb_mcp.catalog.param_formatting import (
+    ParamDependencies,
     ParameterInfo,
     format_param_info_typed,
     format_typed_param,
@@ -95,7 +96,7 @@ def test_filter_param_exposes_selectable_leaf_facets() -> None:
         },
     )
 
-    info = format_typed_param(param, {}, {})
+    info = format_typed_param(param, ParamDependencies())
 
     assert info.param_kind == "filter"
     fields = {f.term: f for f in info.filter_fields}
@@ -127,8 +128,7 @@ class TestDependentParamNote:
     def _applied_note(self) -> str:
         info = format_typed_param(
             _samples("samples_percentile_generic"),
-            self._DEPENDS,
-            {},
+            ParamDependencies(depends_on=self._DEPENDS),
             applied_context=self._APPLIED,
         )
         assert info.note is not None
@@ -145,7 +145,8 @@ class TestDependentParamNote:
 
     def test_falls_back_to_the_default_context_wording(self) -> None:
         info = format_typed_param(
-            _samples("samples_percentile_generic"), self._DEPENDS, {}
+            _samples("samples_percentile_generic"),
+            ParamDependencies(depends_on=self._DEPENDS),
         )
 
         assert info.note is not None
@@ -154,8 +155,7 @@ class TestDependentParamNote:
     def test_ignores_context_for_parents_this_param_does_not_have(self) -> None:
         info = format_typed_param(
             _samples("samples_percentile_generic"),
-            self._DEPENDS,
-            {},
+            ParamDependencies(depends_on=self._DEPENDS),
             applied_context={"organism": SinglePickValue(value="P. falciparum")},
         )
 
@@ -171,8 +171,7 @@ class TestAnUnqualifiedRead:
     def _default_note(self) -> str:
         info = format_typed_param(
             _samples("samples"),
-            self._DEPENDS,
-            {},
+            ParamDependencies(depends_on=self._DEPENDS),
             parent_defaults={"profileset": "DeRisi HB3 Smoothed"},
         )
         assert info.note is not None
@@ -185,7 +184,9 @@ class TestAnUnqualifiedRead:
         assert "DIFFERENT" in self._default_note()
 
     def test_without_a_known_default_it_still_says_it_is_a_default(self) -> None:
-        info = format_typed_param(_samples("samples"), self._DEPENDS, {})
+        info = format_typed_param(
+            _samples("samples"), ParamDependencies(depends_on=self._DEPENDS)
+        )
 
         assert info.note is not None
         assert "default" in info.note.lower()
@@ -193,8 +194,7 @@ class TestAnUnqualifiedRead:
     def test_an_applied_context_still_names_what_was_applied(self) -> None:
         info = format_typed_param(
             _samples("samples"),
-            self._DEPENDS,
-            {},
+            ParamDependencies(depends_on=self._DEPENDS),
             applied_context={
                 "profileset": SinglePickValue(value="DeRisi 3D7 Smoothed")
             },
@@ -219,7 +219,7 @@ class TestRequiredFollowsBothWdkSignals:
                 "minSelectedCount": min_selected,
             }
         )
-        return format_typed_param(param, {}, {}).required
+        return format_typed_param(param, ParamDependencies()).required
 
     def test_a_minimum_selection_makes_a_param_required(self) -> None:
         assert self._required(allow_empty=True, min_selected=1) is True

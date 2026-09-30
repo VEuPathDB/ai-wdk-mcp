@@ -1,6 +1,8 @@
 """Pure formatting of WDK parameter specs into AI-facing info objects."""
 
-from dataclasses import dataclass
+import re
+from collections.abc import Mapping, Sequence
+from dataclasses import dataclass, field
 from typing import Annotated, Literal, Self
 
 from pydantic import Field, TypeAdapter, ValidationError, model_validator
@@ -15,17 +17,25 @@ from veupathdb.domain.parameters import (
     flatten_vocab,
 )
 from veupathdb.model import CamelModel
-from veupathdb.wdk import WDKParameter, phyletic_tree_of
+from veupathdb.wdk import WDKBaseParameter, WDKParameter, phyletic_tree_of
 
 from veupathdb_mcp.catalog.eda_backed import (
     UPLOAD_SENTINEL_NOTE,
     is_upload_sentinel_vocabulary,
 )
+from veupathdb_mcp.catalog.vocab_lookup import VocabLookup
 from veupathdb_mcp.catalog.vocab_rendering import (
+    _MAX_NARROWED_ENTRIES,
     _MAX_VOCAB_ENTRIES,
-    allowed_values,
     render_vocab_tree,
+    vocab_options,
 )
+
+RADIO_OFF = "N/A"
+"""The value a free-text half takes when it states nothing. An empty value is refused."""
+
+# The prompt a site prints in a free-text box, for example "(Example: chr22)".
+_EXAMPLE_PROMPT = re.compile(r"\(example:.*\)", re.IGNORECASE | re.DOTALL)
 
 _PHYLETIC_LIST_HELP = (
     "Species or clade codes from the phyletic tree, comma-separated or a list; "
@@ -115,8 +125,12 @@ class ParameterInfo(CamelModel):
     min: float | None = None
     max: float | None = None
     allowed_values: list[VocabOption] | None = None
+    # The count the shown list was cut from. None when the list travels whole.
+    allowed_values_total: int | None = None
     allowed_values_tree: str | None = None
     allowed_values_note: str | None = None
+    # The phrasings a query read, when one narrowed the vocabulary.
+    vocab_lookup: VocabLookup | None = None
     controls_vocab_of: list[str] | None = None
     vocab_depends_on: list[str] | None = None
     note: str | None = None
@@ -134,6 +148,18 @@ class ParameterInfo(CamelModel):
     def vocabulary(self) -> list[VocabOption]:
         """The whole option list when it was flattened, else the capped view."""
         return dedupe_options(self.vocab_leaves or self.allowed_values or [])
+
+    def is_placeholder(self, value: str) -> bool:
+        """Whether a value is the site's prompt text or the radio off value.
+
+        A term the vocabulary offers is a value, whatever it reads.
+        """
+        if any(option.value == value for option in self.vocabulary()):
+            return False
+        text = value.strip()
+        return text.casefold() == RADIO_OFF.casefold() or bool(
+            _EXAMPLE_PROMPT.fullmatch(text)
+        )
 
 
 class ParameterNotOnSearch(CamelModel):
@@ -175,51 +201,53 @@ GetParameterOptionsResult = Annotated[
 # ---------------------------------------------------------------------------
 
 
-def _build_typed_dependency_map(
-    params: list[WDKParameter],
-) -> dict[str, list[str]]:
-    """Map each child param to the parent params that determine its vocabulary."""
+@dataclass(frozen=True, slots=True)
+class ParamDependencies:
+    """Which parameters' vocabularies each parameter controls, both ways."""
+
+    # Each child parameter, with the parents that determine its vocabulary.
+    depends_on: Mapping[str, list[str]] = field(default_factory=dict)
+    # Each parent parameter, with the children whose vocabulary it controls.
+    controls: Mapping[str, list[str]] = field(default_factory=dict)
+
+
+def param_dependencies(params: Sequence[WDKBaseParameter]) -> ParamDependencies:
+    """The dependency links the parameters of one search declare."""
     depends_on: dict[str, list[str]] = {}
-    for param in params:
-        if param.dependent_params:
-            for dep in param.dependent_params:
-                depends_on.setdefault(dep, []).append(param.name)
-    return depends_on
-
-
-def _build_typed_controls_map(
-    params: list[WDKParameter],
-) -> dict[str, list[str]]:
-    """Map each parent param to the child params whose vocabulary it controls."""
     controls: dict[str, list[str]] = {}
     for param in params:
         if param.dependent_params:
             controls[param.name] = list(param.dependent_params)
-    return controls
+            for dep in param.dependent_params:
+                depends_on.setdefault(dep, []).append(param.name)
+    return ParamDependencies(depends_on=depends_on, controls=controls)
 
 
 @dataclass(frozen=True)
 class _VocabFields:
     allowed_values: list[VocabOption] | None = None
+    allowed_values_total: int | None = None
     allowed_values_tree: str | None = None
     allowed_values_note: str | None = None
 
 
-_VOCAB_TRUNCATION_NOTE = (
-    f"Showing first {_MAX_VOCAB_ENTRIES} of many values (list truncated). "
-    "Use the exact value/ID you need; it does not have to appear in this list."
-)
-
-
-def _capped_vocab_fields(options: list[VocabOption]) -> _VocabFields:
-    """The wire view of an option list, with a note when the cap hid entries."""
+def _capped_vocab_fields(options: list[VocabOption], cap: int) -> _VocabFields:
+    """The wire view of an option list, with the total and a note when cut."""
     if not options:
         return _VocabFields()
-    note = _VOCAB_TRUNCATION_NOTE if len(options) >= _MAX_VOCAB_ENTRIES else None
-    return _VocabFields(allowed_values=options, allowed_values_note=note)
+    if len(options) <= cap:
+        return _VocabFields(allowed_values=options)
+    return _VocabFields(
+        allowed_values=options[:cap],
+        allowed_values_total=len(options),
+        allowed_values_note=(
+            f"Showing {cap} of {len(options)} values (list truncated). "
+            "Use the exact value/ID you need; it does not have to appear in this list."
+        ),
+    )
 
 
-def _format_vocabulary(param: WDKParameter) -> _VocabFields:
+def _format_vocabulary(param: WDKParameter, cap: int) -> _VocabFields:
     vocabulary = param.vocabulary
     if param.type == "multi-pick-vocabulary" and isinstance(
         vocabulary, WDKTreeBoxVocabNode
@@ -237,24 +265,26 @@ def _format_vocabulary(param: WDKParameter) -> _VocabFields:
                 )
             return _VocabFields(allowed_values_tree=tree_text + suffix)
     elif vocabulary is not None:
-        return _capped_vocab_fields(allowed_values(vocabulary))
+        return _capped_vocab_fields(vocab_options(vocabulary), cap)
 
     return _VocabFields()
 
 
 def format_typed_param(
     param: WDKParameter,
-    depends_on: dict[str, list[str]],
-    controls: dict[str, list[str]],
+    dependencies: ParamDependencies,
     applied_context: dict[str, ParamValue] | None = None,
     parent_defaults: dict[str, str] | None = None,
     phyletic_options: list[VocabOption] | None = None,
+    lookup: VocabLookup | None = None,
 ) -> ParameterInfo:
     """Format one typed WDK parameter for the model.
 
     The note names the parent values the vocabulary was fetched under.
     ``phyletic_options`` is the clade tree a phyletic species list takes.
+    ``lookup`` is the query that narrowed the vocabulary, if one did.
     """
+    cap = _MAX_VOCAB_ENTRIES if lookup is None else _MAX_NARROWED_ENTRIES
     name = param.name
     help_text = param.help or ""
     if name == "profile_pattern":
@@ -268,18 +298,16 @@ def format_typed_param(
     elif phyletic_options is not None:
         # The tree is the list's only vocabulary, so it must reach the wire through
         # ``allowed_values``: ``vocab_leaves`` is excluded from serialization.
-        vocab = _capped_vocab_fields(
-            dedupe_options(phyletic_options)[:_MAX_VOCAB_ENTRIES]
-        )
+        vocab = _capped_vocab_fields(dedupe_options(phyletic_options), cap)
         leaves = phyletic_options
     else:
-        vocab = _format_vocabulary(param)
+        vocab = _format_vocabulary(param, cap)
         leaves = flatten_vocab(param.vocabulary)
 
     note: str | None = None
     vocab_depends_on: list[str] | None = None
-    if name in depends_on:
-        parents = depends_on[name]
+    if name in dependencies.depends_on:
+        parents = dependencies.depends_on[name]
         vocab_depends_on = parents
         context = applied_context or {}
         applied = {p: context[p] for p in parents if p in context}
@@ -324,9 +352,11 @@ def format_typed_param(
         min=param.min,
         max=param.max,
         allowed_values=vocab.allowed_values,
+        allowed_values_total=vocab.allowed_values_total,
         allowed_values_tree=vocab.allowed_values_tree,
         allowed_values_note=vocab.allowed_values_note,
-        controls_vocab_of=controls.get(name),
+        vocab_lookup=lookup,
+        controls_vocab_of=dependencies.controls.get(name),
         vocab_depends_on=vocab_depends_on,
         note=note,
         filter_fields=filter_fields_for(param),
@@ -360,9 +390,9 @@ def filter_fields_for(param: WDKParameter) -> list[FilterFieldInfo]:
 
 
 def phyletic_options_for(
-    params: list[WDKParameter], parameter_id: str, query: str | None
+    params: list[WDKParameter], parameter_id: str
 ) -> list[VocabOption] | None:
-    """The clade tree one phyletic species list takes, narrowed by the query.
+    """The clade tree one phyletic species list takes.
 
     The two lists carry no WDK vocabulary of their own, so a read of either
     shows the tree instead. ``None`` for any other parameter.
@@ -370,34 +400,18 @@ def phyletic_options_for(
     if parameter_id not in PHYLETIC_LIST_PARAMS:
         return None
     tree = phyletic_tree_of(params)
-    if tree is None:
-        return None
-    return filter_vocab_options(tree.labels(), query)
-
-
-def filter_vocab_options(
-    options: list[VocabOption], query: str | None
-) -> list[VocabOption]:
-    """Keep the options whose code or label contains the query, ignoring case."""
-    if not query:
-        return options
-    needle = query.lower()
-    return [
-        o for o in options if needle in o.value.lower() or needle in o.display.lower()
-    ]
+    return None if tree is None else tree.labels()
 
 
 def format_param_info_typed(params: list[WDKParameter]) -> list[ParameterInfo]:
     """Format typed WDK parameters for the model. Phyletic structural params are dropped."""
-    depends_on = _build_typed_dependency_map(params)
-    controls = _build_typed_controls_map(params)
+    dependencies = param_dependencies(params)
     tree = phyletic_tree_of(params)
     labels = tree.labels() if tree is not None else None
     return [
         format_typed_param(
             p,
-            depends_on,
-            controls,
+            dependencies,
             phyletic_options=labels if p.name in PHYLETIC_LIST_PARAMS else None,
         )
         for p in params

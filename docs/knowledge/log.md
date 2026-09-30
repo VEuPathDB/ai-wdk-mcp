@@ -1,5 +1,25 @@
 # Knowledge log
 
+## 2026-09-30
+
+- `veupathdb-mcp` is 0.2.0a34. A query-narrowed vocabulary travels whole up to 300
+  entries, and a list cut at its bound carries `ParameterInfo.allowed_values_total` and
+  the note "Showing N of M values": a read of the recorded N. fowleri Pfam vocabulary for
+  "peptidase" shows all 66 entries, and an unnarrowed read shows 50 of 3,745.
+  `VocabNarrowing.query` and the `get_parameter_options` tool take one phrase or several
+  phrasings of one concept, and `ParameterInfo.vocab_lookup` (`VocabLookup`,
+  `PhrasingMatch`, both on the `veupathdb_mcp.catalog` surface) names each phrasing that
+  matched and the entries it matched first. The rule is
+  [a vocabulary lookup reads the phrasings of a term](decisions/a-vocabulary-lookup-reads-the-phrasings-of-a-term.md).
+  `ParameterInfo.is_placeholder(value)` says whether a value is the radio off value `N/A`
+  or a site's "(Example: ...)" prompt and not a term the vocabulary offers; `RADIO_OFF`
+  moves to `catalog/param_formatting.py` beside it, and `check_radio_pairs` reads a free-text
+  half through it. `format_typed_param` takes one `ParamDependencies` in place of the two
+  dependency maps, built by `param_dependencies`, and `phyletic_options_for` no longer
+  takes a query. Falsified by `tests/unit/catalog/test_a_narrowed_vocabulary_travels_whole.py`,
+  `tests/unit/catalog/test_a_lookup_reads_several_phrasings.py` and
+  `tests/unit/catalog/test_a_placeholder_is_no_value.py`.
+
 ## 2026-09-29
 
 - `veupathdb-mcp` is 0.2.0a33. `EdaBackedSearch.is_compute_backed` is read from the

@@ -5,9 +5,8 @@ from __future__ import annotations
 import pytest
 from veupathdb.domain.parameters import VocabOption
 
-from veupathdb_mcp.catalog.param_formatting import ParameterInfo
+from veupathdb_mcp.catalog.param_formatting import RADIO_OFF, ParameterInfo
 from veupathdb_mcp.catalog.radio_pairs import (
-    RADIO_OFF,
     RadioPair,
     check_radio_pairs,
     radio_pairs,

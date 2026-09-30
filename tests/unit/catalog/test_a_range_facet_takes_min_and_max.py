@@ -15,6 +15,7 @@ from veupathdb.wdk import WDKSearchResponse
 from veupathdb_mcp.catalog.param_dag import ParameterInfo, resolve_params_with_intent
 from veupathdb_mcp.catalog.param_formatting import (
     FilterFieldInfo,
+    ParamDependencies,
     format_typed_param,
 )
 from veupathdb_mcp.catalog.param_intent import ParamIntent
@@ -31,7 +32,7 @@ def _variant_stats() -> ParameterInfo:
     exchange = WDKExchange.model_validate_json(_RECORDED.read_text())
     search = WDKSearchResponse.model_validate(exchange.response_json).search_data
     param = next(p for p in search.parameters or [] if p.name == _PARAM)
-    return format_typed_param(param, {}, {})
+    return format_typed_param(param, ParamDependencies())
 
 
 def _collection_dates() -> ParameterInfo:

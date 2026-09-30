@@ -13,9 +13,10 @@ from veupathdb.domain.parameters import (
     flatten_vocab,
 )
 
-# Cap rendered vocab entries so the LLM tool response stays within a
-# manageable size; large WDK vocabularies can have thousands of values.
+# The entries a whole vocabulary shows; a query reaches the rest.
 _MAX_VOCAB_ENTRIES = 50
+# The entries a query-narrowed vocabulary shows. A narrowed list travels whole below it.
+_MAX_NARROWED_ENTRIES = 300
 
 
 def _count_descendants(node: WDKTreeBoxVocabNode) -> int:
@@ -71,12 +72,8 @@ def render_vocab_tree(
     return _lines
 
 
-def allowed_values(vocab: WDKVocabulary | None) -> list[VocabOption]:
-    """Extract WDK-accepted parameter values from a vocabulary.
-
-    Returns ``VocabOption`` objects (value + display) so the LLM knows
-    both *what to pass* and *what it means*. Capped at 50.
-    """
+def vocab_options(vocab: WDKVocabulary | None) -> list[VocabOption]:
+    """Every WDK-accepted value of a vocabulary with its label, in order."""
     if not vocab:
         return []
-    return dedupe_options(flatten_vocab(vocab))[:_MAX_VOCAB_ENTRIES]
+    return dedupe_options(flatten_vocab(vocab))

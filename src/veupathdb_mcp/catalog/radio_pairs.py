@@ -5,10 +5,7 @@ from collections.abc import Mapping, Sequence
 from pydantic import BaseModel, ConfigDict, Field
 from veupathdb.domain.parameters import MAX_NEAREST_ENTRIES, nearest_entries
 
-from veupathdb_mcp.catalog.param_formatting import ParameterInfo
-
-RADIO_OFF = "N/A"
-"""The value a free-text half takes when it states nothing. An empty value is refused."""
+from veupathdb_mcp.catalog.param_formatting import RADIO_OFF, ParameterInfo
 
 _WILDCARD_CHARS = "*%"
 
@@ -45,16 +42,16 @@ def radio_pairs(properties: Mapping[str, list[str]]) -> list[RadioPair]:
     ]
 
 
-def _stated(proposal: str | list[str] | None) -> str | None:
+def _stated(info: ParameterInfo, proposal: str | list[str] | None) -> str | None:
     """The criterion a free-text proposal states, or ``None`` for none.
 
-    A blank value and the off value both state nothing.
+    A blank value and a placeholder both state nothing.
     """
     values = [proposal] if isinstance(proposal, str) else proposal or []
     stated = [
         text
         for value in values
-        if (text := value.strip()) and text.casefold() != RADIO_OFF.casefold()
+        if (text := value.strip()) and not info.is_placeholder(text)
     ]
     return stated[0] if stated else None
 
@@ -85,7 +82,7 @@ def check_radio_pairs(
     for pair in pairs:
         if not _has_radio_shape(by_name, pair):
             continue
-        value = _stated(proposals.get(pair.free_text))
+        value = _stated(by_name[pair.free_text], proposals.get(pair.free_text))
         if value is None:
             overrides[pair.free_text] = RADIO_OFF
         elif issue is None:

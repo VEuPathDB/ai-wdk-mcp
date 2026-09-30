@@ -12,12 +12,13 @@ from difflib import get_close_matches
 
 from veupathdb.domain.parameters import (
     ParamValue,
+    VocabOption,
     WDKTreeBoxVocabNode,
     coerce_context_values,
+    flatten_vocab,
 )
 from veupathdb.errors import WDKError
 from veupathdb.wdk import (
-    WDKBaseParameter,
     WDKParameter,
     WDKSearch,
     encode_wdk_params,
@@ -34,6 +35,7 @@ from veupathdb_mcp.catalog.param_formatting import (
     ParentContextRequired,
     format_param_info_typed,
     format_typed_param,
+    param_dependencies,
     phyletic_options_for,
 )
 from veupathdb_mcp.catalog.search_context import (
@@ -44,6 +46,7 @@ from veupathdb_mcp.catalog.searches import (
     read_search_definition,
     resolve_search_record_type,
 )
+from veupathdb_mcp.catalog.vocab_lookup import VocabLookup, VocabRead, read_options
 
 _SEARCH_NOT_FOUND_STATUS = 404
 
@@ -79,12 +82,19 @@ class UnknownSearchError(Exception):
 class VocabNarrowing:
     """How one parameter read cuts a vocabulary down to what travels.
 
-    ``query`` keeps the entries that carry the text. ``organism_hints`` reorders
-    a tree so the branches naming those organisms render before the cap.
+    ``query`` is one phrase, or several phrasings of one concept; the entries
+    any of them matches are kept. ``organism_hints`` reorders a tree so the
+    branches naming those organisms render before the cap.
     """
 
-    query: str | None = None
+    query: str | Sequence[str] | None = None
     organism_hints: Sequence[str] = ()
+
+    @property
+    def terms(self) -> tuple[str, ...]:
+        """The phrasings the query names, blanks left out."""
+        named = [self.query] if isinstance(self.query, str) else self.query or []
+        return tuple(term for term in named if term.strip())
 
 
 @dataclass(frozen=True, slots=True)
@@ -112,18 +122,18 @@ def _entry_matches(term: str, display: str, query: str) -> bool:
 
 def _matching_branches(
     node: WDKTreeBoxVocabNode,
-    query: str,
+    read: VocabRead,
 ) -> WDKTreeBoxVocabNode | None:
     """The node when it or a descendant matches, carrying only those branches.
 
     A node that matches keeps its whole subtree, because its children are the
     submittable terms under it.
     """
-    if _entry_matches(node.data.term, node.data.display, query):
+    if read.matches(node.data.term, node.data.display):
         return node
     kept = [
         branch
-        for branch in (_matching_branches(child, query) for child in node.children)
+        for branch in (_matching_branches(child, read) for child in node.children)
         if branch is not None
     ]
     if not kept:
@@ -160,25 +170,36 @@ def _prioritized_branches(
     return reorder(node)
 
 
-def _filter_vocab(param: WDKParameter, query: str) -> WDKParameter:
-    """Filter a parameter vocabulary by a case-insensitive substring.
+def _filter_vocab(
+    param: WDKParameter, terms: Sequence[str]
+) -> tuple[WDKParameter, VocabLookup | None]:
+    """Narrow a parameter vocabulary to the entries the terms match, ranked.
 
-    A list keeps the entries whose term or label carries the text; a tree keeps
-    the branches that reach one.
+    A list keeps the entries a phrasing matches; a tree keeps the branches that
+    reach one.
     """
     vocab = param.vocabulary
-    if vocab is None:
-        return param
-    q = query.casefold()
+    if vocab is None or not terms:
+        return param, None
+    read = read_options(flatten_vocab(vocab), terms)
 
     if isinstance(vocab, WDKTreeBoxVocabNode):
-        pruned = _matching_branches(vocab, q)
-        return param.model_copy(
-            update={"vocabulary": pruned or vocab.model_copy(update={"children": []})},
-        )
+        pruned = _matching_branches(vocab, read)
+        narrowed = pruned or vocab.model_copy(update={"children": []})
+        return param.model_copy(update={"vocabulary": narrowed}), read.lookup
 
-    kept = [term for term in vocab if _entry_matches(term.term, term.display, q)]
-    return param.model_copy(update={"vocabulary": kept})
+    by_value = {term.term: term for term in vocab}
+    kept = [by_value[option.value] for option in read.options]
+    return param.model_copy(update={"vocabulary": kept}), read.lookup
+
+
+def _narrowed_phyletic(
+    options: list[VocabOption] | None, terms: Sequence[str]
+) -> tuple[list[VocabOption] | None, VocabLookup | None]:
+    if options is None:
+        return None, None
+    read = read_options(options, terms)
+    return read.options, read.lookup
 
 
 def _prioritize_organisms(
@@ -278,31 +299,23 @@ async def read_parameter_options(
             ),
         )
 
-    depends_on: dict[str, list[str]] = {}
-    controls: dict[str, list[str]] = {}
-    for p in all_params:
-        base: WDKBaseParameter = p
-        if base.dependent_params:
-            controls[base.name] = list(base.dependent_params)
-            for dep in base.dependent_params:
-                depends_on.setdefault(dep, []).append(base.name)
-
     for p in all_params:
         if p.name == parameter_id:
-            filtered = _filter_vocab(p, narrow.query) if narrow.query else p
+            filtered, lookup = _filter_vocab(p, narrow.terms)
+            phyletic, phyletic_lookup = _narrowed_phyletic(
+                phyletic_options_for(all_params, parameter_id), narrow.terms
+            )
             return format_typed_param(
                 _prioritize_organisms(filtered, narrow.organism_hints),
-                depends_on=depends_on,
-                controls=controls,
+                dependencies=param_dependencies(all_params),
                 applied_context=context or None,
                 parent_defaults={
                     other.name: other.initial_display_value
                     for other in all_params
                     if other.initial_display_value
                 },
-                phyletic_options=phyletic_options_for(
-                    all_params, parameter_id, narrow.query
-                ),
+                phyletic_options=phyletic,
+                lookup=lookup or phyletic_lookup,
             )
 
     valid = [p.name for p in all_params]

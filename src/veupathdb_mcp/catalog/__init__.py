@@ -45,6 +45,7 @@ from veupathdb_mcp.catalog.param_dag import (
 )
 from veupathdb_mcp.catalog.param_discovery import fetch_search_details
 from veupathdb_mcp.catalog.param_formatting import (
+    RADIO_OFF,
     FilterFieldInfo,
     GetParameterOptionsResult,
     ParameterInfo,
@@ -87,7 +88,6 @@ from veupathdb_mcp.catalog.parameters import (
     validate_search_params,
 )
 from veupathdb_mcp.catalog.radio_pairs import (
-    RADIO_OFF,
     RadioPairIssue,
     check_radio_pairs,
     radio_pairs,
@@ -121,6 +121,7 @@ from veupathdb_mcp.catalog.sites import (
     list_sites,
 )
 from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
+from veupathdb_mcp.catalog.vocab_lookup import PhrasingMatch, VocabLookup
 
 __all__ = [
     "COMPUTE_QUERY",
@@ -142,6 +143,7 @@ __all__ = [
     "ParameterInfo",
     "ParameterNotOnSearch",
     "ParentContextRequired",
+    "PhrasingMatch",
     "PhyleticNoSelection",
     "PhyleticUnresolvedProposal",
     "Provenance",
@@ -162,6 +164,7 @@ __all__ = [
     "ValidatedParams",
     "ValidationCallbacks",
     "ValidationResponse",
+    "VocabLookup",
     "VocabNarrowing",
     "adapt_param_specs_from_search",
     "assign_step_record_classes",

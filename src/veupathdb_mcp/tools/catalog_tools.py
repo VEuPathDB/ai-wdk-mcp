@@ -202,7 +202,7 @@ async def get_parameter_options(
     parameter_id: str,
     record_type: str | None = None,
     context_values: dict[str, str] | None = None,
-    query: str | None = None,
+    query: str | list[str] | None = None,
 ) -> GetParameterOptionsResult:
     """Read one parameter's vocabulary under the parent values supplied.
 
@@ -212,7 +212,9 @@ async def get_parameter_options(
         parameter_id: Parameter name to read.
         record_type: Record type. Omit to resolve it from the site catalog.
         context_values: Values of the parameters this one depends on.
-        query: Terms that narrow a vocabulary too large to travel whole.
+        query: One phrase, or several phrasings of one concept, that narrow the
+            vocabulary. Hyphen and space match alike, and a phrase also
+            matches its words in any order.
     """
     return await search_inspection.read_parameter_options(
         site_id,
