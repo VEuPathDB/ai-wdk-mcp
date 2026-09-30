@@ -14,7 +14,6 @@ from veupathdb.domain.parameters import (
     VocabOption,
     WDKTreeBoxVocabNode,
     dedupe_options,
-    flatten_vocab,
 )
 from veupathdb.model import CamelModel
 from veupathdb.wdk import WDKBaseParameter, WDKParameter, phyletic_tree_of
@@ -27,6 +26,8 @@ from veupathdb_mcp.catalog.vocab_lookup import VocabLookup
 from veupathdb_mcp.catalog.vocab_rendering import (
     _MAX_NARROWED_ENTRIES,
     _MAX_VOCAB_ENTRIES,
+    entries_of,
+    prompts_of,
     render_vocab_tree,
     vocab_options,
 )
@@ -129,6 +130,8 @@ class ParameterInfo(CamelModel):
     allowed_values_total: int | None = None
     allowed_values_tree: str | None = None
     allowed_values_note: str | None = None
+    # The terms of the entries the site ships as a prompt, left out of every list.
+    prompt_values: list[str] = Field(default_factory=list)
     # The phrasings a query read, when one narrowed the vocabulary.
     vocab_lookup: VocabLookup | None = None
     controls_vocab_of: list[str] | None = None
@@ -150,10 +153,13 @@ class ParameterInfo(CamelModel):
         return dedupe_options(self.vocab_leaves or self.allowed_values or [])
 
     def is_placeholder(self, value: str) -> bool:
-        """Whether a value is the site's prompt text or the radio off value.
+        """Whether a value is the site's prompt text, a prompt entry of the
+        vocabulary, or the radio off value.
 
-        A term the vocabulary offers is a value, whatever it reads.
+        Any other term the vocabulary offers is a value, whatever it reads.
         """
+        if value in self.prompt_values:
+            return True
         if any(option.value == value for option in self.vocabulary()):
             return False
         text = value.strip()
@@ -302,7 +308,7 @@ def format_typed_param(
         leaves = phyletic_options
     else:
         vocab = _format_vocabulary(param, cap)
-        leaves = flatten_vocab(param.vocabulary)
+        leaves = entries_of(param.vocabulary)
 
     note: str | None = None
     vocab_depends_on: list[str] | None = None
@@ -355,6 +361,7 @@ def format_typed_param(
         allowed_values_total=vocab.allowed_values_total,
         allowed_values_tree=vocab.allowed_values_tree,
         allowed_values_note=vocab.allowed_values_note,
+        prompt_values=prompts_of(param.vocabulary),
         vocab_lookup=lookup,
         controls_vocab_of=dependencies.controls.get(name),
         vocab_depends_on=vocab_depends_on,

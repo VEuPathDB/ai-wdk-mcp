@@ -4,6 +4,8 @@ Pure module (no I/O). Formats WDK vocabulary trees for display and
 extracts allowed parameter values from typed vocabulary data.
 """
 
+import re
+
 from veupathdb.domain.parameters import (
     FAKE_ALL_SENTINEL,
     VocabOption,
@@ -72,8 +74,27 @@ def render_vocab_tree(
     return _lines
 
 
+# A label that asks for a choice ("Choose chromosome", "Choose a Module") or
+# names no choice ("--None--"). A vocabulary query unions such a row in as a
+# prompt; WDK marks it no other way.
+_PROMPT_LABEL = re.compile(r"choose\b.*|--.*--", re.IGNORECASE | re.DOTALL)
+
+
+def is_prompt_entry(option: VocabOption) -> bool:
+    """Whether a vocabulary entry is the site's prompt rather than a value."""
+    return bool(_PROMPT_LABEL.fullmatch(option.display.strip()))
+
+
+def entries_of(vocab: WDKVocabulary | None) -> list[VocabOption]:
+    """Every entry of a vocabulary, flattened, prompts left out."""
+    return [option for option in flatten_vocab(vocab) if not is_prompt_entry(option)]
+
+
+def prompts_of(vocab: WDKVocabulary | None) -> list[str]:
+    """The terms of the prompt entries a vocabulary ships."""
+    return [option.value for option in flatten_vocab(vocab) if is_prompt_entry(option)]
+
+
 def vocab_options(vocab: WDKVocabulary | None) -> list[VocabOption]:
     """Every WDK-accepted value of a vocabulary with its label, in order."""
-    if not vocab:
-        return []
-    return dedupe_options(flatten_vocab(vocab))
+    return dedupe_options(entries_of(vocab))

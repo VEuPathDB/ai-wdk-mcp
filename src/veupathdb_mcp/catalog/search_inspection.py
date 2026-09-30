@@ -15,7 +15,6 @@ from veupathdb.domain.parameters import (
     VocabOption,
     WDKTreeBoxVocabNode,
     coerce_context_values,
-    flatten_vocab,
 )
 from veupathdb.errors import WDKError
 from veupathdb.wdk import (
@@ -47,6 +46,7 @@ from veupathdb_mcp.catalog.searches import (
     resolve_search_record_type,
 )
 from veupathdb_mcp.catalog.vocab_lookup import VocabLookup, VocabRead, read_options
+from veupathdb_mcp.catalog.vocab_rendering import entries_of
 
 _SEARCH_NOT_FOUND_STATUS = 404
 
@@ -181,7 +181,7 @@ def _filter_vocab(
     vocab = param.vocabulary
     if vocab is None or not terms:
         return param, None
-    read = read_options(flatten_vocab(vocab), terms)
+    read = read_options(entries_of(vocab), terms)
 
     if isinstance(vocab, WDKTreeBoxVocabNode):
         pruned = _matching_branches(vocab, read)

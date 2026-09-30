@@ -2,6 +2,22 @@
 
 ## 2026-09-30
 
+- `veupathdb-mcp` is 0.2.0a35. An entry a vocabulary query unions in as a prompt
+  is not a value: `vocab_rendering.is_prompt_entry` reads its label, which asks for
+  a choice ("Choose chromosome", "Choose a Module", "Choose a public or private Gene
+  List User Dataset") or names none ("--None--"). WDK marks such a row no other way:
+  ApiCommonModel's `ChromosomeOrderNum` and `ChromosomeForNgsSnps` union
+  `'Choose chromosome'` in at order -1 (`sharedParams.xml`), the WGCNA module query
+  unions term `1_choose_module` with the label "Choose a Module", the user-dataset
+  queries union term `bla` or `1111` with a "Choose a ..." label (`geneParams.xml`),
+  and the continent query unions `--None--` (`popsetParams.xml`); the web client
+  compares the chromosome value with the literal (`DynSpansBySourceId.tsx`). The
+  recorded plasmodb `GenesByLocation` sheet ships "Choose chromosome" as the first
+  term and as `initialDisplayValue`. `ParameterInfo.allowed_values`,
+  `vocab_leaves` and a narrowed read leave such an entry out,
+  `ParameterInfo.prompt_values` names its term, and `is_placeholder` is true for
+  it. Falsified by `tests/unit/catalog/test_a_prompt_entry_is_no_value.py`.
+
 - `veupathdb-mcp` is 0.2.0a34. A query-narrowed vocabulary travels whole up to 300
   entries, and a list cut at its bound carries `ParameterInfo.allowed_values_total` and
   the note "Showing N of M values": a read of the recorded N. fowleri Pfam vocabulary for
