@@ -1,5 +1,11 @@
 # Knowledge log
 
+## 2026-10-03
+
+- `veupathdb-mcp` is 0.2.0a36 and takes `veupathdb-py` 0.1.0a20, whose EDA client
+  runs the dimensionality-reduction compute and reads the service's plot statistics.
+  The served tools are unchanged.
+
 ## 2026-09-30
 
 - `veupathdb-mcp` is 0.2.0a35. An entry a vocabulary query unions in as a prompt
