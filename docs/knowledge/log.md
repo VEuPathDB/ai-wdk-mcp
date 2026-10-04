@@ -2,6 +2,17 @@
 
 ## 2026-10-04
 
+- `veupathdb-mcp` is 0.2.0a39. A curated search and a curated study run on their
+  dataset's assay: `SearchCatalog.dataset_assay(search_name)` is the assay every card
+  that names the search records (none when they differ), and
+  `SearchCatalog.study_assay(dataset_id)` is the card's with that id. A host reads them as
+  `veupathdb_mcp.catalog.dataset_assay(site_id, search_name)` and
+  `veupathdb_mcp.catalog.study_assay(site_id, dataset_id)`. The assay is the record's
+  `newcategory`, else its `type`, from the `AllDatasets` report the build already posts
+  ([the decision](decisions/a-curated-search-runs-on-its-datasets-assay.md)).
+  `tests/_support/recorded_catalog.py` builds a catalog from a recorded report for both
+  dataset tests. No served tool schema changes and no snapshot format change.
+
 - `veupathdb-mcp` is 0.2.0a38. A search that exactly one dataset names runs on that
   dataset's organisms: `ExperimentCard.organisms` lists the organisms of a card apart,
   `SearchCatalog.dataset_organisms(search_name)` returns those of the one card whose

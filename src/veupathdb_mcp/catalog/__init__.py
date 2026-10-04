@@ -105,6 +105,7 @@ from veupathdb_mcp.catalog.searches import (
     VagueSearchQueryError,
     assign_step_record_classes,
     browse_search_categories,
+    dataset_assay,
     dataset_organisms,
     get_raw_record_types,
     get_raw_searches,
@@ -115,6 +116,7 @@ from veupathdb_mcp.catalog.searches import (
     read_search_definition,
     resolve_search_record_type,
     search_for_searches,
+    study_assay,
 )
 from veupathdb_mcp.catalog.semantic_matching import search_similarity
 from veupathdb_mcp.catalog.sites import (
@@ -175,6 +177,7 @@ __all__ = [
     "build_sheet",
     "check_radio_pairs",
     "contrast_role_of",
+    "dataset_assay",
     "dataset_organisms",
     "derive_phyletic_overrides",
     "eda_backed_guidance",
@@ -217,6 +220,7 @@ __all__ = [
     "search_similarity",
     "sites_holding_organism",
     "sites_publishing",
+    "study_assay",
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at",

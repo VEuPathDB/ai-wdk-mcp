@@ -270,6 +270,19 @@ async def dataset_organisms(site_id: str, search_name: str) -> list[str]:
     return catalog.dataset_organisms(search_name)
 
 
+async def dataset_assay(site_id: str, search_name: str) -> str | None:
+    """The assay every dataset the search runs on records, or None when they
+    differ or no dataset of the site names it."""
+    catalog = await get_discovery_service().get_catalog(site_id)
+    return catalog.dataset_assay(search_name)
+
+
+async def study_assay(site_id: str, dataset_id: str) -> str | None:
+    """The assay of the site's dataset record with this id, or None."""
+    catalog = await get_discovery_service().get_catalog(site_id)
+    return catalog.study_assay(dataset_id)
+
+
 async def resolve_search_record_type(
     site_id: str, search_name: str, record_type: str | None
 ) -> str:

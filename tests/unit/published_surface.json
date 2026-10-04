@@ -64,6 +64,7 @@
     "build_sheet",
     "check_radio_pairs",
     "contrast_role_of",
+    "dataset_assay",
     "dataset_organisms",
     "derive_phyletic_overrides",
     "eda_backed_guidance",
@@ -106,6 +107,7 @@
     "search_similarity",
     "sites_holding_organism",
     "sites_publishing",
+    "study_assay",
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at"

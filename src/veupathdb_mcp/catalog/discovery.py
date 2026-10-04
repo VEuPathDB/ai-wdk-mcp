@@ -307,14 +307,31 @@ class SearchCatalog:
                 return rt_name
         return None
 
-    def dataset_organisms(self, search_name: str) -> list[str]:
-        """The organisms of the one dataset that names the search, or none.
+    def _the_dataset_of(self, search_name: str) -> ExperimentCard | None:
+        """The one dataset that names the search, or None.
 
         A search that several datasets name picks its dataset with a parameter,
-        so no one dataset states its organism.
+        so no one dataset states what it runs on.
         """
         named = [card for card in self._datasets if search_name in card.searches]
-        return list(named[0].organisms) if len(named) == 1 else []
+        return named[0] if len(named) == 1 else None
+
+    def dataset_organisms(self, search_name: str) -> list[str]:
+        """The organisms of the one dataset that names the search, or none."""
+        card = self._the_dataset_of(search_name)
+        return [] if card is None else list(card.organisms)
+
+    def dataset_assay(self, search_name: str) -> str | None:
+        """The assay every dataset that names the search records, or None when
+        they record different ones, one records none, or none names it."""
+        assays = {card.assay for card in self._datasets if search_name in card.searches}
+        return next(iter(assays)) if len(assays) == 1 and "" not in assays else None
+
+    def study_assay(self, dataset_id: str) -> str | None:
+        """The assay of the dataset record a study is, or None when the site
+        publishes no such record or no assay on it."""
+        card = next((c for c in self._datasets if c.dataset_id == dataset_id), None)
+        return None if card is None else card.assay or None
 
     def get_search_category(self, search_name: str) -> str | None:
         """Get the ontology subcategory for a search, or None if universal."""
