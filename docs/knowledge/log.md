@@ -2,6 +2,18 @@
 
 ## 2026-10-04
 
+- `veupathdb-mcp` is 0.2.0a38. A search that exactly one dataset names runs on that
+  dataset's organisms: `ExperimentCard.organisms` lists the organisms of a card apart,
+  `SearchCatalog.dataset_organisms(search_name)` returns those of the one card whose
+  `searches` names the search, and none when no card or several cards name it, and
+  `veupathdb_mcp.catalog.dataset_organisms(site_id, search_name)` is the host's read
+  beside `organism_parameter`, which outranks it. The source is the `AllDatasets` report
+  the catalog build already posts (`organism_prefix` and the `References` table); every
+  organism it lists for a dataset with a gene search is a term of the site's organism
+  vocabulary on five sites ([the decision](decisions/a-dataset-search-runs-on-its-datasets-organism.md)).
+  `tests/unit/catalog/fixtures/cryptodb_all_datasets.json` is the recorded cryptodb
+  report. No served tool schema changes.
+
 - A step or a report whose values hold no term list reads no search definition
   (`veupathdb-py` 0.1.0a22), so the controls step of a measure, a confirm and an
   enrichment reads none: `MEASURE_REQUESTS` is 9, `confirm_requests(leaves)` is

@@ -263,6 +263,13 @@ async def organism_parameter(
     )
 
 
+async def dataset_organisms(site_id: str, search_name: str) -> list[str]:
+    """The organisms of the dataset the search runs on, or none when no one
+    dataset of the site names it."""
+    catalog = await get_discovery_service().get_catalog(site_id)
+    return catalog.dataset_organisms(search_name)
+
+
 async def resolve_search_record_type(
     site_id: str, search_name: str, record_type: str | None
 ) -> str:

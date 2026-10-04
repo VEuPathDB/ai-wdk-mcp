@@ -57,9 +57,14 @@ class ExperimentCard(CamelModel):
     def _cut_summary(cls, value: str) -> str:
         return _plain(value)[:SUMMARY_LIMIT]
 
+    @property
+    def organisms(self) -> tuple[str, ...]:
+        """Each organism the dataset holds, as the site's organism vocabulary names it."""
+        return tuple(self.organism.split(ORGANISM_SEPARATOR)) if self.organism else ()
+
     def line(self) -> str:
         """The site, the organism, the assay and the name, on one short line."""
-        organisms = self.organism.split(ORGANISM_SEPARATOR) if self.organism else []
+        organisms = self.organisms
         where = organisms[0] if organisms else ""
         if len(organisms) > 1:
             where = f"{where} and {len(organisms) - 1} more"

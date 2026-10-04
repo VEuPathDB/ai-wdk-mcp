@@ -307,6 +307,15 @@ class SearchCatalog:
                 return rt_name
         return None
 
+    def dataset_organisms(self, search_name: str) -> list[str]:
+        """The organisms of the one dataset that names the search, or none.
+
+        A search that several datasets name picks its dataset with a parameter,
+        so no one dataset states its organism.
+        """
+        named = [card for card in self._datasets if search_name in card.searches]
+        return list(named[0].organisms) if len(named) == 1 else []
+
     def get_search_category(self, search_name: str) -> str | None:
         """Get the ontology subcategory for a search, or None if universal."""
         return self._search_categories.get(search_name)

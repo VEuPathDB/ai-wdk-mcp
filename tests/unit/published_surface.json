@@ -64,6 +64,7 @@
     "build_sheet",
     "check_radio_pairs",
     "contrast_role_of",
+    "dataset_organisms",
     "derive_phyletic_overrides",
     "eda_backed_guidance",
     "eda_backed_search",
