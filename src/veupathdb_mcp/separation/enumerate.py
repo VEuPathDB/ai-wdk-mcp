@@ -367,7 +367,9 @@ async def _enriched_terms(
         except VEuPathDBError as exc:
             refusal = str(exc)
         else:
-            terms = [(a.analysis_type, t) for a in enrichment.analyses for t in a.terms]
+            terms: list[tuple[EnrichmentAnalysisType, EnrichmentTerm]] = [
+                (a.analysis_type, t) for a in enrichment.analyses for t in a.terms
+            ]
             return sorted(
                 terms,
                 key=lambda pair: (pair[1].p_value is None, pair[1].p_value or 0.0),

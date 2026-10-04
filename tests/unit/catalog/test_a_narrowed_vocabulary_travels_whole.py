@@ -7,6 +7,8 @@ from veupathdb.domain.parameters import VocabOption
 from veupathdb.wdk import WDKEnumParam
 
 from veupathdb_mcp.catalog.param_formatting import (
+    _MAX_NARROWED_ENTRIES,
+    _MAX_VOCAB_ENTRIES,
     ParamDependencies,
     ParameterInfo,
     format_typed_param,
@@ -16,10 +18,6 @@ from veupathdb_mcp.catalog.search_inspection import (
     read_parameter_options,
 )
 from veupathdb_mcp.catalog.vocab_lookup import VocabLookup
-from veupathdb_mcp.catalog.vocab_rendering import (
-    _MAX_NARROWED_ENTRIES,
-    _MAX_VOCAB_ENTRIES,
-)
 
 from .conftest import vocab_terms
 from .pfam_refresh import CONTEXT, FOWLERI, PARAMETER, SEARCH, serve

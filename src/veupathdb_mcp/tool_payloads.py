@@ -39,15 +39,21 @@ __all__ = [
 
 logger = get_logger(__name__)
 
-_GENE_RECORD_TYPES = frozenset({"gene", "transcript"})
-_GENE_SAMPLE_ATTRIBUTES = ("gene_product", "gene_name", "organism")
+# The product, the name and the organism, as each gene record type declares them.
+_GENE_SAMPLE_ATTRIBUTES: dict[str, tuple[str, ...]] = {
+    "transcript": ("gene_product", "gene_name", "organism"),
+    "gene": ("product", "name", "organism"),
+}
 
 
 def gene_sample_attributes(record_type: str) -> list[str] | None:
-    """The gene attributes a step read requests, or None to keep it id-only."""
-    if record_type in _GENE_RECORD_TYPES:
-        return list(_GENE_SAMPLE_ATTRIBUTES)
-    return None
+    """The gene attributes a step read requests, or None to keep it id-only.
+
+    WDK refuses an attribute the record type does not declare.
+    """
+    if record_type not in _GENE_SAMPLE_ATTRIBUTES:
+        return None
+    return list(_GENE_SAMPLE_ATTRIBUTES[record_type])
 
 
 class SearchCategory(CamelModel):

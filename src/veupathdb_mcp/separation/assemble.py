@@ -17,6 +17,7 @@ from veupathdb_mcp.separation.models import (
     MeasuredCandidate,
     SeparationMode,
     SeparationNode,
+    SeparationOperator,
     informs,
 )
 
@@ -79,7 +80,7 @@ class _Tree:
             used=[m.candidate.id],
         )
 
-    def add(self, operator: CombineOp, m: MeasuredCandidate) -> None:
+    def add(self, operator: SeparationOperator, m: MeasuredCandidate) -> None:
         leaf = SeparationNode(kind="leaf", candidate_id=m.candidate.id)
         self.node = SeparationNode(
             kind="combine", operator=operator, inputs=[self.node, leaf]
@@ -135,21 +136,21 @@ def _best_move(
     tree: _Tree,
     recovering: list[MeasuredCandidate],
     excluding: list[MeasuredCandidate],
-) -> tuple[CombineOp, MeasuredCandidate, int] | None:
+) -> tuple[SeparationOperator, MeasuredCandidate, int] | None:
     """The move that removes the most negatives and keeps every recovered positive.
 
     A tie goes to an intersection, then to the smaller result.
     """
-    moves = [
+    moves: list[tuple[SeparationOperator, MeasuredCandidate, int]] = [
         (CombineOp.INTERSECT, m, len(tree.admitted - _admitted(m)))
         for m in recovering
         if m.candidate.id not in tree.used and _recovered(m) >= tree.recovered
     ]
-    moves += [
+    moves.extend(
         (CombineOp.MINUS, m, len(tree.admitted & _admitted(m)))
         for m in excluding
         if m.candidate.id not in tree.used and not _recovered(m) & tree.recovered
-    ]
+    )
     return max(
         moves,
         key=lambda move: (

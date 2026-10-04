@@ -24,8 +24,6 @@ from veupathdb_mcp.catalog.eda_backed import (
 )
 from veupathdb_mcp.catalog.vocab_lookup import VocabLookup
 from veupathdb_mcp.catalog.vocab_rendering import (
-    _MAX_NARROWED_ENTRIES,
-    _MAX_VOCAB_ENTRIES,
     entries_of,
     prompts_of,
     render_vocab_tree,
@@ -130,6 +128,8 @@ class ParameterInfo(CamelModel):
     allowed_values_total: int | None = None
     allowed_values_tree: str | None = None
     allowed_values_note: str | None = None
+    # The shown entries that carry the request's words. None when no request ranked the read.
+    allowed_values_from_request: int | None = None
     # The terms of the entries the site ships as a prompt, left out of every list.
     prompt_values: list[str] = Field(default_factory=list)
     # The phrasings a query read, when one narrowed the vocabulary.
@@ -235,25 +235,68 @@ class _VocabFields:
     allowed_values_total: int | None = None
     allowed_values_tree: str | None = None
     allowed_values_note: str | None = None
+    allowed_values_from_request: int | None = None
 
 
-def _capped_vocab_fields(options: list[VocabOption], cap: int) -> _VocabFields:
-    """The wire view of an option list, with the total and a note when cut."""
-    if not options:
-        return _VocabFields()
-    if len(options) <= cap:
-        return _VocabFields(allowed_values=options)
-    return _VocabFields(
-        allowed_values=options[:cap],
-        allowed_values_total=len(options),
-        allowed_values_note=(
-            f"Showing {cap} of {len(options)} values (list truncated). "
-            "Use the exact value/ID you need; it does not have to appear in this list."
-        ),
+# The entries a whole vocabulary shows; a query reaches the rest.
+_MAX_VOCAB_ENTRIES = 50
+# The entries a query-narrowed vocabulary shows. A narrowed list travels whole below it.
+_MAX_NARROWED_ENTRIES = 300
+
+
+def _from_request(shown: list[VocabOption], lookup: VocabLookup | None) -> int | None:
+    """The shown entries that carry the request's words, when the request ranked."""
+    if lookup is None or not lookup.request_terms:
+        return None
+    carried = set(lookup.request_values())
+    return sum(option.value in carried for option in shown)
+
+
+def _request_note(held: int, lookup: VocabLookup) -> str:
+    words = ", ".join(f"'{term}'" for term in lookup.request_terms)
+    total = len(lookup.request_values())
+    if not total:
+        return f" No entry the query kept carries the request's words {words}."
+    if held == total:
+        return (
+            f" The list holds all {total} entries whose labels carry the request's "
+            f"words {words}, first."
+        )
+    return (
+        f" The list holds {held} of the {total} entries whose labels carry the "
+        f"request's words {words}."
     )
 
 
-def _format_vocabulary(param: WDKParameter, cap: int) -> _VocabFields:
+def _capped_vocab_fields(
+    options: list[VocabOption], lookup: VocabLookup | None
+) -> _VocabFields:
+    """The wire view of an option list, with the total and a note when cut.
+
+    A narrowed list travels whole up to the larger cap.
+    """
+    if not options:
+        return _VocabFields()
+    cap = _MAX_VOCAB_ENTRIES if lookup is None else _MAX_NARROWED_ENTRIES
+    shown = options[:cap]
+    held = _from_request(shown, lookup)
+    if len(options) <= cap:
+        return _VocabFields(allowed_values=shown, allowed_values_from_request=held)
+    note = (
+        f"Showing {cap} of {len(options)} values (list truncated). "
+        "Use the exact value/ID you need; it does not have to appear in this list."
+    )
+    if held is not None and lookup is not None:
+        note += _request_note(held, lookup)
+    return _VocabFields(
+        allowed_values=shown,
+        allowed_values_total=len(options),
+        allowed_values_note=note,
+        allowed_values_from_request=held,
+    )
+
+
+def _format_vocabulary(param: WDKParameter, lookup: VocabLookup | None) -> _VocabFields:
     vocabulary = param.vocabulary
     if param.type == "multi-pick-vocabulary" and isinstance(
         vocabulary, WDKTreeBoxVocabNode
@@ -271,7 +314,7 @@ def _format_vocabulary(param: WDKParameter, cap: int) -> _VocabFields:
                 )
             return _VocabFields(allowed_values_tree=tree_text + suffix)
     elif vocabulary is not None:
-        return _capped_vocab_fields(vocab_options(vocabulary), cap)
+        return _capped_vocab_fields(vocab_options(vocabulary), lookup)
 
     return _VocabFields()
 
@@ -290,7 +333,6 @@ def format_typed_param(
     ``phyletic_options`` is the clade tree a phyletic species list takes.
     ``lookup`` is the query that narrowed the vocabulary, if one did.
     """
-    cap = _MAX_VOCAB_ENTRIES if lookup is None else _MAX_NARROWED_ENTRIES
     name = param.name
     help_text = param.help or ""
     if name == "profile_pattern":
@@ -304,10 +346,10 @@ def format_typed_param(
     elif phyletic_options is not None:
         # The tree is the list's only vocabulary, so it must reach the wire through
         # ``allowed_values``: ``vocab_leaves`` is excluded from serialization.
-        vocab = _capped_vocab_fields(dedupe_options(phyletic_options), cap)
+        vocab = _capped_vocab_fields(dedupe_options(phyletic_options), lookup)
         leaves = phyletic_options
     else:
-        vocab = _format_vocabulary(param, cap)
+        vocab = _format_vocabulary(param, lookup)
         leaves = entries_of(param.vocabulary)
 
     note: str | None = None
@@ -361,6 +403,7 @@ def format_typed_param(
         allowed_values_total=vocab.allowed_values_total,
         allowed_values_tree=vocab.allowed_values_tree,
         allowed_values_note=vocab.allowed_values_note,
+        allowed_values_from_request=vocab.allowed_values_from_request,
         prompt_values=prompts_of(param.vocabulary),
         vocab_lookup=lookup,
         controls_vocab_of=dependencies.controls.get(name),

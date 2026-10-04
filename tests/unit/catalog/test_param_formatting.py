@@ -14,12 +14,12 @@ from veupathdb.domain.parameters import (
 from veupathdb.wdk import WDKEnumParam, WDKFilterParam, WDKParameter, WDKStringParam
 
 from veupathdb_mcp.catalog.param_formatting import (
+    _MAX_VOCAB_ENTRIES,
     ParamDependencies,
     ParameterInfo,
     format_param_info_typed,
     format_typed_param,
 )
-from veupathdb_mcp.catalog.vocab_rendering import _MAX_VOCAB_ENTRIES
 
 from .conftest import param_info, vocab_terms
 

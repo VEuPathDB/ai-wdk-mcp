@@ -1,5 +1,30 @@
 # Knowledge log
 
+## 2026-10-04
+
+- A step or a report whose values hold no term list reads no search definition
+  (`veupathdb-py` 0.1.0a22), so the controls step of a measure, a confirm and an
+  enrichment reads none: `MEASURE_REQUESTS` is 9, `confirm_requests(leaves)` is
+  `4 * leaves + 5` and `ENRICHMENT_REQUESTS` is 33, each the recorded run's count.
+  Pyright reads `separation/` clean: `SeparationOperator` names the three combine
+  operators an assembled boolean takes.
+
+- `veupathdb-mcp` is 0.2.0a37 and takes `veupathdb-py` 0.1.0a22. A lookup ranks the
+  request's own words first: `VocabNarrowing.request` is the concept in the request's
+  words, `read_options(options, terms, *, request_terms)` reads them as a term is, and
+  the kept entries they match rank first, phrase before word, while the phrasings alone
+  decide which entries are kept. `VocabLookup.request_terms` and
+  `VocabLookup.request_matches` name what ranked, `ParameterInfo.allowed_values_from_request`
+  counts the shown entries that carry those words, and a cut list's note says how many of
+  them it holds ([the lookup decision](decisions/a-vocabulary-lookup-reads-the-phrasings-of-a-term.md)).
+  The two vocabulary caps, `_MAX_VOCAB_ENTRIES` (50) and `_MAX_NARROWED_ENTRIES` (300),
+  live in `param_formatting` beside `_capped_vocab_fields`, which picks the cap from the
+  read's lookup. `gene_sample_attributes` names the attributes each gene record type
+  declares: `transcript` reads `gene_product`, `gene_name` and `organism`, and `gene`
+  reads `product`, `name` and `organism`. WDK refuses an attribute a record type does
+  not declare; every recorded catalog under `data/catalogs/` declares these, and
+  `tests/unit/test_tool_payloads.py` reads them there. No served tool schema changes.
+
 ## 2026-10-03
 
 - `veupathdb-mcp` is 0.2.0a36 and takes `veupathdb-py` 0.1.0a20, whose EDA client

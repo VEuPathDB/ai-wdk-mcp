@@ -78,23 +78,35 @@ class UnknownSearchError(Exception):
         super().__init__(self.guidance)
 
 
+def _named_terms(named: str | Sequence[str] | None) -> tuple[str, ...]:
+    """One term or several, blanks left out."""
+    listed = [named] if isinstance(named, str) else named or []
+    return tuple(term for term in listed if term.strip())
+
+
 @dataclass(frozen=True, slots=True)
 class VocabNarrowing:
     """How one parameter read cuts a vocabulary down to what travels.
 
     ``query`` is one phrase, or several phrasings of one concept; the entries
     any of them matches are kept. ``organism_hints`` reorders a tree so the
-    branches naming those organisms render before the cap.
+    branches naming those organisms render before the cap. ``request`` is the
+    concept in the request's own words; the kept entries it matches rank first.
     """
 
     query: str | Sequence[str] | None = None
     organism_hints: Sequence[str] = ()
+    request: str | Sequence[str] | None = None
 
     @property
     def terms(self) -> tuple[str, ...]:
         """The phrasings the query names, blanks left out."""
-        named = [self.query] if isinstance(self.query, str) else self.query or []
-        return tuple(term for term in named if term.strip())
+        return _named_terms(self.query)
+
+    @property
+    def request_terms(self) -> tuple[str, ...]:
+        """The request's own words for the concept, blanks left out."""
+        return _named_terms(self.request)
 
 
 @dataclass(frozen=True, slots=True)
@@ -171,7 +183,7 @@ def _prioritized_branches(
 
 
 def _filter_vocab(
-    param: WDKParameter, terms: Sequence[str]
+    param: WDKParameter, narrowing: VocabNarrowing
 ) -> tuple[WDKParameter, VocabLookup | None]:
     """Narrow a parameter vocabulary to the entries the terms match, ranked.
 
@@ -179,9 +191,11 @@ def _filter_vocab(
     reach one.
     """
     vocab = param.vocabulary
-    if vocab is None or not terms:
+    if vocab is None or not narrowing.terms:
         return param, None
-    read = read_options(entries_of(vocab), terms)
+    read = read_options(
+        entries_of(vocab), narrowing.terms, request_terms=narrowing.request_terms
+    )
 
     if isinstance(vocab, WDKTreeBoxVocabNode):
         pruned = _matching_branches(vocab, read)
@@ -194,11 +208,11 @@ def _filter_vocab(
 
 
 def _narrowed_phyletic(
-    options: list[VocabOption] | None, terms: Sequence[str]
+    options: list[VocabOption] | None, narrowing: VocabNarrowing
 ) -> tuple[list[VocabOption] | None, VocabLookup | None]:
     if options is None:
         return None, None
-    read = read_options(options, terms)
+    read = read_options(options, narrowing.terms, request_terms=narrowing.request_terms)
     return read.options, read.lookup
 
 
@@ -301,9 +315,9 @@ async def read_parameter_options(
 
     for p in all_params:
         if p.name == parameter_id:
-            filtered, lookup = _filter_vocab(p, narrow.terms)
+            filtered, lookup = _filter_vocab(p, narrow)
             phyletic, phyletic_lookup = _narrowed_phyletic(
-                phyletic_options_for(all_params, parameter_id), narrow.terms
+                phyletic_options_for(all_params, parameter_id), narrow
             )
             return format_typed_param(
                 _prioritize_organisms(filtered, narrow.organism_hints),

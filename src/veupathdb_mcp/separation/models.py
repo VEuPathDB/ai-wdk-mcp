@@ -154,6 +154,10 @@ class SkippedCandidate(CamelModel):
     detail: str = ""
 
 
+# The operators an assembled boolean combines two nodes with.
+type SeparationOperator = Literal[CombineOp.INTERSECT, CombineOp.UNION, CombineOp.MINUS]
+
+
 class SeparationNode(CamelModel):
     """The assembled boolean: a measured candidate, or a combine of two nodes."""
 
@@ -161,9 +165,7 @@ class SeparationNode(CamelModel):
 
     kind: Literal["leaf", "combine"]
     candidate_id: str | None = None
-    operator: Literal[CombineOp.INTERSECT, CombineOp.UNION, CombineOp.MINUS] | None = (
-        None
-    )
+    operator: SeparationOperator | None = None
     inputs: list["SeparationNode"] = Field(default_factory=list)
 
     @model_validator(mode="after")

@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import inspect
+from pathlib import Path
 
 import pytest
+from pydantic import BaseModel, ConfigDict, Field
 from veupathdb.domain.parameters import StringValue
 from veupathdb.wdk import WDKStrategySummary
 
@@ -31,6 +33,7 @@ from veupathdb_mcp.tool_payloads import (
 )
 
 SITE = "plasmodb"
+CATALOGS = Path(__file__).resolve().parents[2] / "data" / "catalogs"
 
 
 def _control_test_result() -> ControlTestResult:
@@ -110,7 +113,49 @@ def test_gene_sample_attributes_are_requested_for_gene_record_types() -> None:
         "gene_name",
         "organism",
     ]
-    assert gene_sample_attributes("gene") == gene_sample_attributes("transcript")
+    assert gene_sample_attributes("gene") == ["product", "name", "organism"]
+
+
+class _RecordedAttribute(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    name: str
+
+
+class _RecordedRecordType(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    url_segment: str = Field(alias="urlSegment")
+    attributes: list[_RecordedAttribute]
+
+
+class _RecordedCatalog(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    record_types: list[_RecordedRecordType]
+
+
+@pytest.mark.parametrize(
+    "catalog", sorted(CATALOGS.glob("*.json")), ids=lambda path: path.stem
+)
+def test_each_gene_record_type_declares_the_attributes_its_sample_reads(
+    catalog: Path,
+) -> None:
+    """A record type answers 400 to an attribute it does not declare."""
+    recorded = _RecordedCatalog.model_validate_json(catalog.read_text())
+    declared = {
+        record_type.url_segment: {
+            attribute.name for attribute in record_type.attributes
+        }
+        for record_type in recorded.record_types
+    }
+    sampled = [name for name in ("gene", "transcript") if name in declared]
+    missing = {
+        name: sorted(set(gene_sample_attributes(name) or []) - declared[name])
+        for name in sampled
+    }
+
+    assert missing == {name: [] for name in sampled}
 
 
 def test_gene_sample_attributes_are_absent_for_a_non_gene_record_type() -> None:
@@ -209,11 +254,11 @@ async def test_example_plans_fall_back_to_lexical_ranking_without_embeddings(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     summary = WDKStrategySummary(
-        strategyId=1,
-        rootStepId=1,
+        strategy_id=1,
+        root_step_id=1,
         name="gametocyte genes",
         description="gametocyte surface antigens",
-        isPublic=True,
+        is_public=True,
     )
 
     class _Api:
@@ -222,7 +267,7 @@ async def test_example_plans_fall_back_to_lexical_ranking_without_embeddings(
 
     async def unavailable(*args: object, **kwargs: object) -> list[dict[str, object]]:
         del args, kwargs
-        raise EmbeddingUnavailableError(batch_size=1, cause=RuntimeError("down"))
+        raise EmbeddingUnavailableError(batch_size=1, cause="down")
 
     monkeypatch.setattr(tool_payloads, "get_strategy_api", lambda site_id: _Api())
     monkeypatch.setattr(tool_payloads, "rank_public_strategies_semantic", unavailable)

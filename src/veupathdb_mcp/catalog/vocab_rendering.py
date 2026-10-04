@@ -15,11 +15,6 @@ from veupathdb.domain.parameters import (
     flatten_vocab,
 )
 
-# The entries a whole vocabulary shows; a query reaches the rest.
-_MAX_VOCAB_ENTRIES = 50
-# The entries a query-narrowed vocabulary shows. A narrowed list travels whole below it.
-_MAX_NARROWED_ENTRIES = 300
-
 
 def _count_descendants(node: WDKTreeBoxVocabNode) -> int:
     """Count all descendants of a vocab tree node (excluding itself)."""
