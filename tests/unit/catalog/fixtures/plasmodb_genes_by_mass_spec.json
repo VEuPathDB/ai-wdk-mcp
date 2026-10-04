@@ -1,0 +1,1542 @@
+{
+ "method": "GET",
+ "url": "https://plasmodb.org/plasmo/service/record-types/transcript/searches/GenesByMassSpec?expandParams=true",
+ "status": 200,
+ "ms": 0,
+ "request_json": null,
+ "request_text": null,
+ "response_json": {
+  "searchData": {
+   "summary": "Find genes that have evidence for protein-level expression from mass \n            specrtometry-based proteomics experiments.<br><br>",
+   "urlSegment": "GenesByMassSpec",
+   "dynamicAttributes": [
+    {
+     "isInReport": true,
+     "formats": [
+      {
+       "isInReport": true,
+       "displayName": "Histogram",
+       "name": "sample_count-histogram",
+       "scopes": [],
+       "type": "histogram"
+      }
+     ],
+     "truncateTo": 100,
+     "displayName": "Selected Samples that match",
+     "name": "sample_count",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "align": "center",
+     "columnDataType": "STRING",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    },
+    {
+     "isInReport": true,
+     "formats": [
+      {
+       "isInReport": true,
+       "displayName": "Histogram",
+       "name": "unique_sequence_count-histogram",
+       "scopes": [],
+       "type": "histogram"
+      }
+     ],
+     "truncateTo": 100,
+     "displayName": "Unique Peptides (Across Samples)",
+     "name": "unique_sequence_count",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "align": "center",
+     "columnDataType": "STRING",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    },
+    {
+     "isInReport": true,
+     "formats": [
+      {
+       "isInReport": true,
+       "displayName": "Histogram",
+       "name": "sum_sequence_count-histogram",
+       "scopes": [],
+       "type": "histogram"
+      }
+     ],
+     "truncateTo": 100,
+     "displayName": "Sum of Unique Peptides (Within Samples)",
+     "name": "sum_sequence_count",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "align": "center",
+     "columnDataType": "STRING",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    },
+    {
+     "isInReport": true,
+     "formats": [
+      {
+       "isInReport": true,
+       "displayName": "Histogram",
+       "name": "sum_spectrum_count-histogram",
+       "scopes": [],
+       "type": "histogram"
+      }
+     ],
+     "truncateTo": 100,
+     "displayName": "Total Number of Spectra",
+     "name": "sum_spectrum_count",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "align": "center",
+     "columnDataType": "NUMBER",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    },
+    {
+     "isInReport": true,
+     "formats": [],
+     "truncateTo": 100,
+     "displayName": "Met Search Criteria",
+     "name": "matched_result",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "columnDataType": "STRING",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    },
+    {
+     "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+     "isInReport": true,
+     "formats": [
+      {
+       "isInReport": true,
+       "displayName": "Histogram",
+       "name": "wdk_weight-histogram",
+       "description": "Display a histogram of weight distribution",
+       "scopes": [],
+       "type": "histogram"
+      }
+     ],
+     "truncateTo": 100,
+     "displayName": "Search Weight",
+     "name": "wdk_weight",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "columnDataType": "NUMBER",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    }
+   ],
+   "defaultSorting": [
+    {
+     "attributeName": "unique_sequence_count",
+     "direction": "DESC"
+    }
+   ],
+   "isAnalyzable": true,
+   "displayName": "Mass Spec. Evidence",
+   "fullName": "GeneQuestions.GenesByMassSpec",
+   "description": "Find genes that have evidence for protein-level expression from mass \n            specrtometry-based proteomics experiments.<br><br>\n            \n            PlasmoDB maps peptides from proteomics experiments to a reference genome and allows you to search for \n            genes based on that mapping. Expand the Experiment/Samples parameter to see a list of proteomics datasets \n            integrated into PlasmoDB. The list is organized by: <br><br>\n            <ol><li>the organism that the peptides are mapped to</li>\n            <li>the experiment name (model organism)</li>\n            <li>the samples analyzed in the experiment</li></ol>\n            \n            The stringency of the search can be adjusted using the \"Minimum Number of Spectera / Sample\" \n            and \"Minimum Number of Unique Peptide Sequences\". <br>\n            <u>Minimum Number of Spectra / Sample:</u><br>\n            Use this parameter to set a minimum for the number of mass spectra that must support a sample (all peptides) before a gene is returned for this sample (note that this number is the sum of spectra for all peptides / sample).  \n            This parameter can be considered a measure of protein abundance within a particular sample.<br><br>\n            \n            <u>Minimum Number of Unique Peptide Sequences:</u><br>\n            Use this parameter to define the number of unique peptides that must map to a gene before the gene is returned by \n            the search. Although protein expression is confirmed with the mapping of one unique pepetide, requiring more \n            than one peptide to map to a gene will ensure that false positives are not returned by the search.  Note that the next parameter controls whether to apply this number per sample or across all samples.<br><br>\n            \n            <u>Apply min # peptide sequences / sample OR across samples:</u><br>\n            Select Per Sample to require that each sample meet this minimum number of unique peptide sequences.  Selecting All will first union the unique peptides for all selected samples and this set will be used to meet the minimum number of unique peptide sequences.",
+   "defaultAttributes": [
+    "primary_key",
+    "gene_location_text",
+    "gene_product",
+    "sample_count",
+    "sum_sequence_count",
+    "unique_sequence_count"
+   ],
+   "groups": [
+    {
+     "displayType": "empty",
+     "displayName": "",
+     "name": "empty",
+     "description": "",
+     "isVisible": true,
+     "parameters": [
+      "ms_assay",
+      "min_sequence_count",
+      "sample_vs_all"
+     ]
+    },
+    {
+     "displayType": "ShowHide",
+     "displayName": "Advanced Parameters",
+     "name": "advancedParams",
+     "description": "",
+     "isVisible": false,
+     "parameters": [
+      "min_spectrum_count"
+     ]
+    }
+   ],
+   "filters": [
+    {
+     "isViewOnly": false,
+     "name": "organismFilter"
+    },
+    {
+     "displayName": "Transcripts",
+     "isViewOnly": false,
+     "name": "matched_transcript_filter_array"
+    },
+    {
+     "isViewOnly": false,
+     "name": "genesByPathway"
+    }
+   ],
+   "shortDisplayName": "Mass Spec",
+   "paramNames": [
+    "ms_assay",
+    "min_sequence_count",
+    "sample_vs_all",
+    "min_spectrum_count"
+   ],
+   "isCacheable": true,
+   "outputRecordClassName": "transcript",
+   "noSummaryOnSingleRecord": false,
+   "queryName": "GenesByMassSpec",
+   "defaultSummaryView": "_default",
+   "parameters": [
+    {
+     "displayName": "Experiments and Samples",
+     "minSelectedCount": 1,
+     "maxSelectedCount": -1,
+     "isVisible": true,
+     "type": "multi-pick-vocabulary",
+     "help": "Choose the Proteomics Experiment(s) and/or Sample(s) that you wish to query.  Click the + to expand a section.<br><br>\n\n             Experiments are listed under the organism (reference genome) that peptides are aligned to. Experiment names are followed by the strain\n             of the model organism and the first author's name in parentheses. Click the + next to the Experiment name for\n             a list of samples analyzed in that experiment. Individual samples can be queried.",
+     "depthExpanded": 0,
+     "dependentParams": [],
+     "displayType": "treeBox",
+     "isReadOnly": false,
+     "vocabulary": {
+      "data": {
+       "display": "@@fake@@",
+       "term": "@@fake@@"
+      },
+      "children": [
+       {
+        "data": {
+         "display": "<b>Plasmodium</b>",
+         "term": "Plasmodium"
+        },
+        "children": [
+         {
+          "data": {
+           "display": "<b>Plasmodium berghei</b>",
+           "term": "Plasmodium berghei"
+          },
+          "children": [
+           {
+            "data": {
+             "display": "<b>Plasmodium berghei ANKA</b>",
+             "term": "Plasmodium berghei ANKA"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Male vs female gametocytes (ANKA)",
+               "term": "pberANKA_massSpec_MaleAndFemaleGametocytes_Waters_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "female gametocytes",
+                 "term": "female gametocytes_Plasmodium berghei ANKA"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "male gametocytes",
+                 "term": "male gametocytes_Plasmodium berghei ANKA"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "mixed gametocytes",
+                 "term": "mixed gametocytes_Plasmodium berghei ANKA"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Proteomic Analysis of Plasmodium berghei Merosomes (Shears et al.)",
+               "term": "pberANKA_massSpec_Shears_Merosomes_Liver_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "merosomes",
+                 "term": "merosomes_Plasmodium berghei ANKA"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Sporozoite proteome in P. berghei (Hamada et al)",
+               "term": "pberANKA_massSpec_Hamada_Sporozoite_Proteome_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "Sporozites",
+                 "term": "Sporozites_Plasmodium berghei ANKA"
+                },
+                "children": []
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "data": {
+           "display": "<b>Plasmodium falciparum</b>",
+           "term": "Plasmodium falciparum"
+          },
+          "children": [
+           {
+            "data": {
+             "display": "<b>Plasmodium falciparum 3D7</b>",
+             "term": "Plasmodium falciparum 3D7"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Asexual stages ubiquitome (Green et al. 2020)",
+               "term": "pfal3D7_massSpec_Green_Asexual_Stages_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "merozoite",
+                 "term": "merozoite_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "ring",
+                 "term": "ring_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "schizont",
+                 "term": "schizont_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "trophozoite",
+                 "term": "trophozoite_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Blood stage phospho- and total proteome (3D7)",
+               "term": "pfal3D7_massSpec_Boothroyd_Elias_Moritz_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "schizont phosphopeptide-depleted",
+                 "term": "schizont phosphopeptide-depleted_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "schizont phosphopeptide-enriched",
+                 "term": "schizont phosphopeptide-enriched_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Cytoplasmic and nuclear fractions from rings, trophozoites and schizonts (3D7) (Oehring et al.)",
+               "term": "pfal3D7_massSpec_Voss_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "Ring stage cytoplasmic extract",
+                 "term": "Ring stage cytoplasmic extract_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Ring stage nuclear fraction 1",
+                 "term": "Ring stage nuclear fraction 1_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Ring stage nuclear fraction 2",
+                 "term": "Ring stage nuclear fraction 2_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Ring stage nuclear fraction 3",
+                 "term": "Ring stage nuclear fraction 3_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Ring stage nuclear fraction 4",
+                 "term": "Ring stage nuclear fraction 4_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Schizont cytosolic extract",
+                 "term": "Schizont cytosolic extract_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Schizont nuclear fraction 1",
+                 "term": "Schizont nuclear fraction 1_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Schizont nuclear fraction 2",
+                 "term": "Schizont nuclear fraction 2_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Schizont nuclear fraction 3",
+                 "term": "Schizont nuclear fraction 3_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Schizont nuclear fraction 4",
+                 "term": "Schizont nuclear fraction 4_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Trophozoite cytosolic extract",
+                 "term": "Trophozoite cytosolic extract_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Trophozoite nuclear fraction 1",
+                 "term": "Trophozoite nuclear fraction 1 _Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Trophozoite nuclear fraction 2",
+                 "term": "Trophozoite nuclear fraction 2_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Trophozoite nuclear fraction 3",
+                 "term": "Trophozoite nuclear fraction 3_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Trophozoite nuclear fraction 4",
+                 "term": "Trophozoite nuclear fraction 4_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Gametocyte proteomics (Lasonder et al.)",
+               "term": "pfal3D7_massSpec_Lasonder_Bartfai_Gametocytes_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "female gametocytes",
+                 "term": "female gametocytes_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "male gametocytes",
+                 "term": "male gametocytes_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "mixed gametocytes",
+                 "term": "mixed gametocytes_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Gametocytogenesis: trophozoite vs early or late gametocytes (3D7, NF54) (Silvestrini et al.)",
+               "term": "pfal3D7_massSpec_Lasonder_Blood_Stages_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "stage I-II gametocytes (3D7)",
+                 "term": "stage I-II gametocytes (3D7)_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "stage V gametocytes (NF54)",
+                 "term": "stage V gametocytes (NF54)_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "synchronous trophozoites from gametocyte-less 3D7A clone F12",
+                 "term": "synchronous trophozoites from gametocyte-less 3D7A clone F12_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Infected erythrocytes from patient blood sample (Acharya et al.)",
+               "term": "pfal3D7_massSpec_Tatu_Clinical_preprocessed_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "P. falciparum infected erythrocytes from patient blood sample",
+                 "term": "P. falciparum infected erythrocytes from patient blood sample_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Intraerythrocytic stages phosphoproteome (3D7) (Pease et al.)",
+               "term": "pfal3D7_massSpec_Chakrabarti_Phosphoproteome_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "intraerythrocytic stages",
+                 "term": "intraerythrocytic stages_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Lysine acetylation proteomics (Cobbold et al.)",
+               "term": "pfal3D7_massSpec_Lysine_Acetylation_Proteomics_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "lysine acetylation proteomics",
+                 "term": "lysine acetylation proteomics_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Merozoite phosphoproteome (3D7) (Lasonder et al.)",
+               "term": "pfal3D7_massSpec_Lasonder_Merozoite_Phosphoproteome_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "Enriched merozoite phospho-proteins",
+                 "term": "Enriched merozoite phospho-proteins_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Merozoite Proteome (3D7) ()",
+               "term": "pfal3D7_massSpec_Khan_Merozoite_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "merozoite proteome (3D7)",
+                 "term": "merozoite proteome (3D7)_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Nuclear Proteome (Briquet et al.)",
+               "term": "pfal3D7_massSpec_Briquet_Nuclear_Prot_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "nuclear proteome",
+                 "term": "nuclear proteome_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Oocyst sporozoite global proteome in P. falciparum (Lindner and Swearingen et al.)",
+               "term": "pfal3D7_massSpec_Lindner_Oocyst_Proteome_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "Oocyst sporozoites",
+                 "term": "Oocyst sporozoites_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Parasite infected erythrocyte surface proteins (PIESP) (3D7) (Florens et al.)",
+               "term": "pfal3D7_massSpec_Florens_PIESPs_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "late trophozoite-schizont stage biotin-purified iRBC membrane proteins",
+                 "term": "late trophozoite-schizont stage biotin-purified iRBC membrane proteins_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Parasite rupture from erythrocyte (D10) (Bowyer et al.)",
+               "term": "pfal3D7_massSpec_Bowyer_Post_Infection_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "schizont, 42 h post-infection",
+                 "term": "schizont 42 h post-infection_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "schizont, 48 h post-infection",
+                 "term": "schizont 48 h post-infection_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "PfCRK4 regulated phosphoproteome at 29 and 37 hpi (Ganter et al)",
+               "term": "pfal3D7_massSpec_Ganter_Regulated_Phosphoproteome_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "Phosphoproteome",
+                 "term": "Phosphoproteome_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Phosphorylation in the Plasmodium falciparum proteome (meta-analysis) (Camacho et al. 2023)",
+               "term": "pfal3D7_massSpec_Camacho_Proteome_Analysis_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "PX_Collection",
+                 "term": "PX_Collection_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Salivary gland sporozoite total, N-acetyl-, phospho- and surface proteomes (NF54) (Lindner et al.)",
+               "term": "pfal3D7_massSpec_Kappe_Sprotozoite_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "n-acetylated total proteome",
+                 "term": "n-acetylated total proteome_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "phosphorylated total proteome",
+                 "term": "phosphorylated total proteome_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "sg-sporozoite",
+                 "term": "sg-sporozoite_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "surface proteins",
+                 "term": "surface proteins_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Schizont Phosphoproteome (3D7)(2011) (Solyakov et al.)",
+               "term": "pfal3D7_massSpec_Tobin_Phosphoproteome_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "Enriched schizont phospho-proteins (2011)",
+                 "term": "Enriched schizont phospho-proteins (2011)_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Schizont Phosphoproteome (3D7)(2012) (Lasonder et al.)",
+               "term": "pfal3D7_massSpec_Lasonder_Schizont_Phosphoproteome_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "Enriched schizont phospho-proteins (2012)",
+                 "term": "Enriched schizont phospho-proteins (2012)_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Sexual and asexual life cycle proteomes (3D7) (Florens et al.)",
+               "term": "pfal3D7_massSpec_Florens_Life_Cycle_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "gametocyte stage IV and V",
+                 "term": "gametocyte stage IV and V_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "merozoite (synchronized)",
+                 "term": "merozoite (synchronized)_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "sporozoite, 14 day purified",
+                 "term": "sporozoite 14 day purified_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "trophozoite (synchronized)",
+                 "term": "trophozoite (synchronized)_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Sporozoite Maturation Proteome (NF54) (Lasonder et al.)",
+               "term": "pfal3D7_massSpec_Lasonder_Mosquito_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "oocyst-derived sporozoite 13-14 days post-infection",
+                 "term": "oocyst-derived sporozoite 13-14 days post-infection_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "oocysts 7-8 days post-infection",
+                 "term": "oocysts 7-8 days post-infection_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "salivary gland sporozoites 18-22 days post-infection",
+                 "term": "salivary gland sporozoites 18-22 days post-infection_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Sporozoite surface proteome (NF54) (Swearingen et al.)",
+               "term": "pfal3D7_massSpec_Sporozoite_surface_proteome_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "BSA-treated sporozoites 1",
+                 "term": "BSA-treated sporozoites 1_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "BSA-treated sporozoites 2",
+                 "term": "BSA-treated sporozoites 2_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "BSA-treated sporozoites 3",
+                 "term": "BSA-treated sporozoites 3_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "heparin-treated sporozoites 1",
+                 "term": "heparin-treated sporozoites 1_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "heparin-treated sporozoites 2",
+                 "term": "heparin-treated sporozoites 2_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "heparin-treated sporozoites 3",
+                 "term": "heparin-treated sporozoites 3_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "untreated sporozoites 1",
+                 "term": "untreated sporozoites 1_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "untreated sporozoites 2",
+                 "term": "untreated sporozoites 2_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "untreated sporozoites 3",
+                 "term": "untreated sporozoites 3_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "untreated sporozoites 4",
+                 "term": "untreated sporozoites 4_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "untreated sporozoites 5",
+                 "term": "untreated sporozoites 5_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "untreated sporozoites 6",
+                 "term": "untreated sporozoites 6_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Translatome of P. falciparum mature infectious stage V gametocytes (Alves et al. 2026)",
+               "term": "pfal3D7_massSpec_Delves_Gametocytes_Proteomics_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "Delves_Gametocytes_Proteomics",
+                 "term": "Delves_Gametocytes_Proteomics_Plasmodium falciparum 3D7"
+                },
+                "children": []
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "data": {
+           "display": "<b>Plasmodium vivax</b>",
+           "term": "Plasmodium vivax"
+          },
+          "children": [
+           {
+            "data": {
+             "display": "<b>Plasmodium vivax P01</b>",
+             "term": "Plasmodium vivax P01"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Infected erythrocytes from patient blood sample (Acharya et al.)",
+               "term": "pvivP01_massSpec_Tatu_Clinical_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "P. vivax infected erythrocytes from patient blood samples",
+                 "term": "P. vivax infected erythrocytes from patient blood samples_Plasmodium vivax P01"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Intraerythrocytic life cycle of <i>Plasmodium vivax</i> (VCG-1) (Moreno-Perez et al.)",
+               "term": "pvivP01_massSpec_Patarroyo_Intraerythrocytic_Proteome_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "intraerythrocytic proteins",
+                 "term": "intraerythrocytic proteins_Plasmodium vivax P01"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Salivary gland sporozoite total and surface proteome (VK210, VK247) (Swearingen et al.)",
+               "term": "pvivP01_massSpec_sporozoite_proteomics_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "VK210 surface proteome",
+                 "term": "VK210 surface proteome_Plasmodium vivax P01"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "VK210 total n-Acetyl",
+                 "term": "VK210 total n-Acetyl_Plasmodium vivax P01"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "VK210 total phosphorylated",
+                 "term": "VK210 total phosphorylated_Plasmodium vivax P01"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "VK210 total proteome",
+                 "term": "VK210 total proteome_Plasmodium vivax P01"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "VK247 surface proteome",
+                 "term": "VK247 surface proteome_Plasmodium vivax P01"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "VK247 total n-Acetyl",
+                 "term": "VK247 total n-Acetyl_Plasmodium vivax P01"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "VK247 total phosphorylated",
+                 "term": "VK247 total phosphorylated _Plasmodium vivax P01"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "VK247 total proteome",
+                 "term": "VK247 total proteome_Plasmodium vivax P01"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Schizont proteome from human blood sample (Roobsoong et al.)",
+               "term": "pvivP01_massSpec_Cui_Schizont_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "schizont stage proteome from human blood sample",
+                 "term": "schizont stage proteome from human blood sample_Plasmodium vivax P01"
+                },
+                "children": []
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "data": {
+         "display": "<b>Plasmodium yoelii</b>",
+         "term": "Plasmodium yoelii"
+        },
+        "children": [
+         {
+          "data": {
+           "display": "<b>Plasmodium yoelii yoelii</b>",
+           "term": "Plasmodium yoelii yoelii"
+          },
+          "children": [
+           {
+            "data": {
+             "display": "<b>Plasmodium yoelii yoelii 17X</b>",
+             "term": "Plasmodium yoelii yoelii 17X"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Liver stage proteomes (17X) (Tarun et al.)",
+               "term": "pyoeyoelii17X_massSpec_LiverStage_Kappe_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "infected hepatocytes containing late schizont, 40 h post-infection",
+                 "term": "infected hepatocytes containing late schizont 40 h post-infection_Plasmodium yoelii yoelii 17X"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "infected hepatocytes containing merozoite, 50 h post-infection",
+                 "term": "infected hepatocytes containing merozoite 50 h post-infection_Plasmodium yoelii yoelii 17X"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Oocyst sporozoite global proteome in P. yoelii (Lindner and Swearingen et al.)",
+               "term": "pyoeyoelii17X_massSpec_Lindner_Oocyst_Salivary_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "Oocyst sporozoites",
+                 "term": "Oocyst sporozoites_Plasmodium yoelii yoelii 17X"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Salivary gland sporozoite total and surface proteome (17XNL) (El-Manzalawy et al.)",
+               "term": "pyoeyoelii17X_massSpec_Sporozoite_Surface_Proteome_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "sg-sporozoite",
+                 "term": "sg-sporozoite_Plasmodium yoelii yoelii 17X"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "sporozoite surface - Rep 1",
+                 "term": "sporozoite surface - Rep 1_Plasmodium yoelii yoelii 17X"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "sporozoite surface - Rep 2",
+                 "term": "sporozoite surface - Rep 2_Plasmodium yoelii yoelii 17X"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "surface proteins",
+                 "term": "surface proteins_Plasmodium yoelii yoelii 17X"
+                },
+                "children": []
+               }
+              ]
+             },
+             {
+              "data": {
+               "display": "Zygote and female gametocyte proteomics PY17 (Rios et al.)",
+               "term": "pyoeyoelii17X_massSpec_Rios_Zygote_GametocytePY17_RSRC"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "female gametocytes",
+                 "term": "female gametocytes_Plasmodium yoelii yoelii 17X"
+                },
+                "children": []
+               },
+               {
+                "data": {
+                 "display": "Zygotes",
+                 "term": "Zygotes_Plasmodium yoelii yoelii 17X"
+                },
+                "children": []
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "<b>Plasmodium yoelii yoelii 17XNL</b>",
+             "term": "Plasmodium yoelii yoelii 17XNL"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "<b>Plasmodium yoelii yoelii 17XNL 2023</b>",
+               "term": "Plasmodium yoelii yoelii 17XNL 2023"
+              },
+              "children": [
+               {
+                "data": {
+                 "display": "Liver stage proteomes aligned to Pyoe yoelii 17XNL 2023 (Tarun et al.)",
+                 "term": "pyoeyoelii17XNL2023_massSpec_LiverStage_Kappe2023_RSRC"
+                },
+                "children": [
+                 {
+                  "data": {
+                   "display": "infected hepatocytes containing late schizont, 40 h post-infection",
+                   "term": "infected hepatocytes containing late schizont 40 h post-infection_Plasmodium yoelii yoelii 17XNL 2023"
+                  },
+                  "children": []
+                 },
+                 {
+                  "data": {
+                   "display": "infected hepatocytes containing merozoite, 50 h post-infection",
+                   "term": "infected hepatocytes containing merozoite 50 h post-infection_Plasmodium yoelii yoelii 17XNL 2023"
+                  },
+                  "children": []
+                 }
+                ]
+               },
+               {
+                "data": {
+                 "display": "Oocyst sporozoite global proteome in Pyoe yoelii 17XNL 2023 (Lindner and Swearingen et al.)",
+                 "term": "pyoeyoelii17XNL2023_massSpec_Lindner_Oocyst_Sali2023_RSRC"
+                },
+                "children": [
+                 {
+                  "data": {
+                   "display": "Oocyst sporozoites",
+                   "term": "Oocyst sporozoites_Plasmodium yoelii yoelii 17XNL 2023"
+                  },
+                  "children": []
+                 }
+                ]
+               },
+               {
+                "data": {
+                 "display": "Salivary gland sporozoite total and surface proteome (17XNL2023) (El-Manzalawy et al.)",
+                 "term": "pyoeyoelii17XNL2023_massSpec_Sporozoite_Surface_Proteome2023_RSRC"
+                },
+                "children": [
+                 {
+                  "data": {
+                   "display": "sg-sporozoite 2023",
+                   "term": "sg-sporozoite 2023_Plasmodium yoelii yoelii 17XNL 2023"
+                  },
+                  "children": []
+                 },
+                 {
+                  "data": {
+                   "display": "sporozoite surface 2023 - Rep 1",
+                   "term": "sporozoite surface 2023 - Rep 1 _Plasmodium yoelii yoelii 17XNL 2023"
+                  },
+                  "children": []
+                 },
+                 {
+                  "data": {
+                   "display": "sporozoite surface 2023 - Rep 2",
+                   "term": "sporozoite surface 2023 - Rep 2_Plasmodium yoelii yoelii 17XNL 2023"
+                  },
+                  "children": []
+                 },
+                 {
+                  "data": {
+                   "display": "surface proteins 2023",
+                   "term": "surface proteins 2023_Plasmodium yoelii yoelii 17XNL 2023"
+                  },
+                  "children": []
+                 }
+                ]
+               },
+               {
+                "data": {
+                 "display": "Zygote and female gametocyte proteomics (Rios et al.)",
+                 "term": "pyoeyoelii17XNL2023_massSpec_Rios_Zygote_Gametocyte_RSRC"
+                },
+                "children": [
+                 {
+                  "data": {
+                   "display": "female gametocytes",
+                   "term": "female gametocytes_Plasmodium yoelii yoelii 17XNL 2023"
+                  },
+                  "children": []
+                 },
+                 {
+                  "data": {
+                   "display": "Zygotes",
+                   "term": "Zygotes_Plasmodium yoelii yoelii 17XNL 2023"
+                  },
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "allowEmptyValue": false,
+     "name": "ms_assay",
+     "countOnlyLeaves": true,
+     "initialDisplayValue": "[]",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": [],
+      "organismProperties": [
+       "pruneNodesWithSingleExtendingChild",
+       "showOnlyPreferredOrganisms"
+      ]
+     },
+     "group": "empty"
+    },
+    {
+     "displayName": "Minimum Number of Unique Peptide Sequences",
+     "length": 0,
+     "isVisible": true,
+     "isMultiLine": false,
+     "type": "string",
+     "help": "Use this parameter to set a minimum for the number of unique peptide sequences that must map to a gene before it is returned by the search. One mapped peptide is considered evidence of protein expression. The greater the number of peptides that map to a gene, the greater the confidence that the protein product is present.",
+     "dependentParams": [],
+     "isReadOnly": false,
+     "isNumber": false,
+     "allowEmptyValue": false,
+     "name": "min_sequence_count",
+     "initialDisplayValue": "1",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     },
+     "group": "empty"
+    },
+    {
+     "displayName": "Apply min # peptide sequences / sample OR across samples",
+     "minSelectedCount": 1,
+     "maxSelectedCount": 1,
+     "isVisible": true,
+     "type": "single-pick-vocabulary",
+     "help": "This parameter allows you to apply the minimum number of peptides to each selected sample or across all selected samples.  Choose \"Per Sample\" to require that each selected sample has your minimum number of unique peptides. Choose \"Across Selected Samples\" to allow the minimum number of unique peptides to be calculated as the sum from all unique peptides across selected samples. Choosing \"Per Sample\" is more stringent than choosing \"Across Selected Samples\" and therefore returns fewer genes with protein evidence.",
+     "dependentParams": [],
+     "displayType": "select",
+     "isReadOnly": false,
+     "vocabulary": [
+      [
+       "Per Sample",
+       "Per Sample",
+       null
+      ],
+      [
+       "Across Selected Samples",
+       "Across Selected Samples",
+       null
+      ]
+     ],
+     "allowEmptyValue": false,
+     "name": "sample_vs_all",
+     "initialDisplayValue": "Per Sample",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     },
+     "group": "empty"
+    },
+    {
+     "displayName": "Minimum number of spectra per gene (applied per sample)",
+     "length": 0,
+     "isVisible": true,
+     "isMultiLine": false,
+     "type": "string",
+     "help": "Use this parameter to set a minimum for the number of spectra that must support a gene before it is returned by the search. This value reflects the sum of mass spectra for all peptides that map to a gene from a selected sample.  The parameter can be considered a rough measure of protein abundance within a particular sample.",
+     "visibleHelp": "Warning: We did NOT receive spectral counts for many experiments.  For those experiments where spectral counts are not provided, the spectral count is set to the number of peptides mapping to a gene. Thus, increasing this parameter value beyond the number of peptides may remove evidence for samples that simply didn't provide spectral counts.",
+     "dependentParams": [],
+     "isReadOnly": false,
+     "isNumber": false,
+     "allowEmptyValue": false,
+     "name": "min_spectrum_count",
+     "initialDisplayValue": "1",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     },
+     "group": "advancedParams"
+    }
+   ],
+   "properties": {
+    "organisms": [
+     "P. falciparum",
+     "P. vivax",
+     "P. yoelii",
+     "P. berghei",
+     "P. chabaudi",
+     "P. knowlesi"
+    ],
+    "organism": [],
+    "specificAttribution": []
+   },
+   "summaryViewPlugins": [
+    {
+     "displayName": "Gene Results",
+     "name": "_default",
+     "description": "View transcripts."
+    },
+    {
+     "displayName": "Genome View",
+     "name": "genomic-view",
+     "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+    }
+   ]
+  },
+  "validation": {
+   "level": "DISPLAYABLE",
+   "isValid": true
+  }
+ },
+ "response_text": null
+}

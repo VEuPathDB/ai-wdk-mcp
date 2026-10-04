@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from tests._support.recorded_searches import recorded_search
 from veupathdb.domain import SearchContext
+from veupathdb.wdk import WDKSearchResponse
 
 from veupathdb_mcp import catalog
 from veupathdb_mcp.catalog import searches
@@ -19,6 +22,12 @@ MARKED = [
     ("search_genes_by_gene_model_chars", "organism_select_none"),
     ("search_genes_by_molecular_weight", "organism"),
 ]
+# The site each recorded search came from.
+RECORDED_ON = {
+    "search_genes_by_ngs_snps": "plasmodb",
+    "search_genes_by_gene_model_chars": "vectorbase",
+    "search_genes_by_molecular_weight": "plasmodb",
+}
 
 
 def _infos(fixture: str) -> list[catalog.ParameterInfo]:
@@ -65,11 +74,41 @@ def test_the_overview_names_the_organism_parameter() -> None:
     ]
 
 
-def _discovery(monkeypatch: pytest.MonkeyPatch, fixture: str) -> MagicMock:
+_FIXTURES = Path(__file__).parent / "fixtures"
+
+
+def _site_search(name: str) -> WDKSearchResponse:
+    """A plasmodb definition this suite recorded whole."""
+    recorded = json.loads((_FIXTURES / f"{name}.json").read_text())
+    return WDKSearchResponse.model_validate(recorded["response_json"])
+
+
+def _serving(
+    monkeypatch: pytest.MonkeyPatch,
+    by_search: dict[str, WDKSearchResponse],
+    site_id: str = "plasmodb",
+) -> MagicMock:
+    """Each search's definition from ``by_search``, and the site's recorded
+    GenesByTaxon, whose marked parameter lists the site's organisms."""
+    taxon = _site_search(f"{site_id}_genes_by_taxon")
+    served = {"GenesByTaxon": taxon, **by_search}
+
+    async def _details(ctx: SearchContext) -> WDKSearchResponse:
+        return served[ctx.search_name]
+
     discovery = MagicMock()
-    discovery.get_search_details = AsyncMock(return_value=recorded_search(fixture))
+    discovery.get_search_details = AsyncMock(side_effect=_details)
     monkeypatch.setattr(searches, "get_discovery_service", lambda: discovery)
     return discovery
+
+
+def _discovery(monkeypatch: pytest.MonkeyPatch, fixture: str) -> MagicMock:
+    response = recorded_search(fixture)
+    return _serving(
+        monkeypatch,
+        {response.search_data.url_segment: response},
+        RECORDED_ON.get(fixture, "plasmodb"),
+    )
 
 
 class TestOrganismParameter:
@@ -83,13 +122,14 @@ class TestOrganismParameter:
     ) -> None:
         discovery = _discovery(monkeypatch, fixture)
         search_name = recorded_search(fixture).search_data.url_segment
+        site_id = RECORDED_ON[fixture]
 
-        name = await catalog.organism_parameter("plasmodb", "transcript", search_name)
+        name = await catalog.organism_parameter(site_id, "transcript", search_name)
 
         assert name == marked
-        discovery.get_search_details.assert_awaited_once_with(
+        discovery.get_search_details.assert_any_await(
             SearchContext(
-                site_id="plasmodb", record_type="transcript", search_name=search_name
+                site_id=site_id, record_type="transcript", search_name=search_name
             )
         )
 
@@ -103,3 +143,26 @@ class TestOrganismParameter:
         name = await catalog.organism_parameter("plasmodb", "transcript", search_name)
 
         assert name is None
+
+    async def test_a_marked_tree_whose_leaves_name_no_organism_has_none(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        mass_spec = _site_search("plasmodb_genes_by_mass_spec")
+        _serving(monkeypatch, {"GenesByMassSpec": mass_spec})
+
+        name = await catalog.organism_parameter(
+            "plasmodb", "transcript", "GenesByMassSpec"
+        )
+
+        assert name is None
+
+    async def test_the_organism_search_names_its_own_parameter(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _serving(monkeypatch, {})
+
+        name = await catalog.organism_parameter(
+            "plasmodb", "transcript", "GenesByTaxon"
+        )
+
+        assert name == "organism"

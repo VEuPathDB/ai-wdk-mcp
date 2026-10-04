@@ -8,9 +8,11 @@ from typing import Literal
 
 from veupathdb import get_logger
 from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import vocab_keys
 from veupathdb.domain.strategy import StrategyStep
+from veupathdb.errors import VEuPathDBError
 from veupathdb.model import CamelModel
-from veupathdb.wdk import WDKRecordType, WDKSearch, get_wdk_client
+from veupathdb.wdk import WDKParameter, WDKRecordType, WDKSearch, get_wdk_client
 
 from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,
@@ -250,17 +252,39 @@ async def read_search_definition(
     return details.search_data
 
 
-async def organism_parameter(
+# The search whose marked parameter lists every organism of a site.
+ORGANISM_SEARCH = "GenesByTaxon"
+
+
+async def _marked(
     site_id: str, record_type: str, search_name: str
-) -> str | None:
-    """The parameter WDK marks as the search's organism, or None when it marks none."""
+) -> WDKParameter | None:
     details = await get_discovery_service().get_search_details(
         SearchContext(site_id=site_id, record_type=record_type, search_name=search_name)
     )
     return next(
-        (p.name for p in details.search_data.parameters or [] if p.is_organism),
-        None,
+        (p for p in details.search_data.parameters or [] if p.is_organism), None
     )
+
+
+async def organism_parameter(
+    site_id: str, record_type: str, search_name: str
+) -> str | None:
+    """The parameter WDK marks as the search's organism, or None when it marks none
+    or its leaves name no organism the site's organism search lists, as a tree of
+    samples under organism branches does. A site whose organism search is not
+    read keeps the mark."""
+    marked = await _marked(site_id, record_type, search_name)
+    if marked is None or search_name == ORGANISM_SEARCH:
+        return None if marked is None else marked.name
+    try:
+        listing = await _marked(site_id, record_type, ORGANISM_SEARCH)
+    except VEuPathDBError:
+        listing = None
+    organisms = vocab_keys(None if listing is None else listing.vocabulary)
+    if organisms and organisms.isdisjoint(vocab_keys(marked.vocabulary)):
+        return None
+    return marked.name
 
 
 async def dataset_organisms(site_id: str, search_name: str) -> list[str]:

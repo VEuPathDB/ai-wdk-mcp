@@ -2,6 +2,14 @@
 
 ## 2026-10-04
 
+- `veupathdb-mcp` is 0.2.0a40. `catalog.organism_parameter` names the marked
+  parameter only when its leaves share an organism with the leaves of the site's
+  `GenesByTaxon` organism parameter. A marked tree that lists samples under its
+  organism branches, such as plasmodb `GenesByMassSpec.ms_assay`, names none, so a
+  host reads no organism scope from its sample terms. A site whose `GenesByTaxon`
+  is not read keeps the mark. `tests/unit/catalog/fixtures` holds the plasmodb
+  `GenesByMassSpec` and the plasmodb and vectorbase `GenesByTaxon` definitions. No
+  served tool schema changes.
 - `veupathdb-mcp` is 0.2.0a39. A curated search and a curated study run on their
   dataset's assay: `SearchCatalog.dataset_assay(search_name)` is the assay every card
   that names the search records (none when they differ), and
