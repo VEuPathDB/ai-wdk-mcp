@@ -327,11 +327,21 @@ class SearchCatalog:
         assays = {card.assay for card in self._datasets if search_name in card.searches}
         return next(iter(assays)) if len(assays) == 1 and "" not in assays else None
 
+    def _study_card(self, dataset_id: str) -> ExperimentCard | None:
+        """The dataset record a study is, or None when the site publishes none."""
+        return next((c for c in self._datasets if c.dataset_id == dataset_id), None)
+
     def study_assay(self, dataset_id: str) -> str | None:
         """The assay of the dataset record a study is, or None when the site
         publishes no such record or no assay on it."""
-        card = next((c for c in self._datasets if c.dataset_id == dataset_id), None)
+        card = self._study_card(dataset_id)
         return None if card is None else card.assay or None
+
+    def study_organisms(self, dataset_id: str) -> list[str]:
+        """The organisms of the dataset record a study is, or none when the
+        site publishes no such record."""
+        card = self._study_card(dataset_id)
+        return [] if card is None else list(card.organisms)
 
     def get_search_category(self, search_name: str) -> str | None:
         """Get the ontology subcategory for a search, or None if universal."""

@@ -117,6 +117,7 @@ from veupathdb_mcp.catalog.searches import (
     resolve_search_record_type,
     search_for_searches,
     study_assay,
+    study_organisms,
 )
 from veupathdb_mcp.catalog.semantic_matching import search_similarity
 from veupathdb_mcp.catalog.sites import (
@@ -221,6 +222,7 @@ __all__ = [
     "sites_holding_organism",
     "sites_publishing",
     "study_assay",
+    "study_organisms",
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at",

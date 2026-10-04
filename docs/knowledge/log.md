@@ -2,6 +2,11 @@
 
 ## 2026-10-04
 
+- `veupathdb-mcp` is 0.2.0a41. A study runs on the organisms of the dataset record it
+  is: `SearchCatalog.study_organisms(dataset_id)` reads the card `study_assay` reads,
+  from the `AllDatasets` report the build already posts, and a host reads it as
+  `veupathdb_mcp.catalog.study_organisms(site_id, dataset_id)`. A study the site
+  publishes no record for runs on none. No served tool schema changes.
 - `veupathdb-mcp` is 0.2.0a40. `catalog.organism_parameter` names the marked
   parameter only when its leaves share an organism with the leaves of the site's
   `GenesByTaxon` organism parameter. A marked tree that lists samples under its

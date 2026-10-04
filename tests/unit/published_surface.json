@@ -108,6 +108,7 @@
     "sites_holding_organism",
     "sites_publishing",
     "study_assay",
+    "study_organisms",
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at"

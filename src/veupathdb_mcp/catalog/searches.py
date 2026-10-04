@@ -307,6 +307,12 @@ async def study_assay(site_id: str, dataset_id: str) -> str | None:
     return catalog.study_assay(dataset_id)
 
 
+async def study_organisms(site_id: str, dataset_id: str) -> list[str]:
+    """The organisms of the site's dataset record with this id, or none."""
+    catalog = await get_discovery_service().get_catalog(site_id)
+    return catalog.study_organisms(dataset_id)
+
+
 async def resolve_search_record_type(
     site_id: str, search_name: str, record_type: str | None
 ) -> str:
