@@ -1,5 +1,11 @@
 # Knowledge log
 
+## 2026-10-06
+
+- `veupathdb-mcp` is 0.2.0b2 on `veupathdb-py` 0.1.0b2: a request that makes WDK run a
+  search waits for one of a few slots per site and is not sent again after a 5xx or a
+  timeout, and every request names its sender in its User-Agent.
+
 ## 2026-10-04
 
 - `veupathdb-mcp` is 0.2.0a41. A study runs on the organisms of the dataset record it
