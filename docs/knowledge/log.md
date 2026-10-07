@@ -1,5 +1,14 @@
 # Knowledge log
 
+## 2026-10-07
+
+- The AI expression summary is keyed by the gene record's declared primary key columns,
+  read once per site from `GET /record-types/gene`: a component site keys a gene by
+  `source_id,project_id`, the portal by `source_id` alone, and the reporter refuses any
+  other shape with 422. The key always appended the project id, so the portal answered
+  422 for every gene. `veupathdb-mcp` is 0.2.0b3 on `veupathdb-py` 0.1.0b3, whose portal
+  project id is `UniDB`.
+
 ## 2026-10-06
 
 - `veupathdb-mcp` is 0.2.0b2 on `veupathdb-py` 0.1.0b2: a request that makes WDK run a

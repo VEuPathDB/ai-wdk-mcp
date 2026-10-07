@@ -12,6 +12,7 @@ from fastmcp.client.client import CallToolResult
 from mcp.server.auth.middleware.auth_context import auth_context_var
 from mcp.server.auth.middleware.bearer_auth import AuthenticatedUser
 from mcp.types import TextContent, Tool
+from pydantic import JsonValue
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import InputDatasetValue, ParamValue, StringValue
@@ -279,6 +280,13 @@ async def test_a_summarized_gene_is_served_without_experiment_counts(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     class _Reporter:
+        async def get(self, path: str) -> JsonValue:
+            del path
+            return {
+                "urlSegment": "gene",
+                "primaryKeyColumnRefs": ["source_id", "project_id"],
+            }
+
         async def get_ai_expression_report(
             self, primary_keys: str
         ) -> AiExpressionReport:
@@ -287,6 +295,7 @@ async def test_a_summarized_gene_is_served_without_experiment_counts(
                 load_recorded("ai_expression_summary_present").json_body()
             )
 
+    monkeypatch.setattr(ai_expression, "_GENE_KEY_COLUMNS", {})
     monkeypatch.setattr(ai_expression, "get_wdk_client", lambda _site: _Reporter())
 
     async with _served(_user_credential("user-bearer")) as client:

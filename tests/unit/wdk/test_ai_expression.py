@@ -26,11 +26,26 @@ def _recorded(name: str) -> JsonValue:
     return load_recorded(name).json_body()
 
 
+COMPONENT_KEY = ["source_id", "project_id"]
+PORTAL_KEY = ["source_id"]
+
+
 class _FakeClient:
-    def __init__(self, report: JsonValue, refusal: WDKError | None = None) -> None:
+    def __init__(
+        self,
+        report: JsonValue,
+        refusal: WDKError | None = None,
+        key_columns: list[str] | None = None,
+    ) -> None:
         self._report = report
         self._refusal = refusal
+        self._key_columns = COMPONENT_KEY if key_columns is None else key_columns
         self.primary_keys: list[str] = []
+        self.reads: list[str] = []
+
+    async def get(self, path: str) -> JsonValue:
+        self.reads.append(path)
+        return {"urlSegment": "gene", "primaryKeyColumnRefs": list(self._key_columns)}
 
     async def get_ai_expression_report(self, primary_keys: str) -> AiExpressionReport:
         self.primary_keys.append(primary_keys)
@@ -39,17 +54,23 @@ class _FakeClient:
         return AiExpressionReport.model_validate(self._report)
 
 
+@pytest.fixture(autouse=True)
+def no_record_type_read_yet(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(ai_expression, "_GENE_KEY_COLUMNS", {})
+
+
 def _install(
     monkeypatch: pytest.MonkeyPatch,
     report: JsonValue,
     refusal: WDKError | None = None,
+    key_columns: list[str] | None = None,
 ) -> _FakeClient:
-    client = _FakeClient(report, refusal)
+    client = _FakeClient(report, refusal, key_columns)
     monkeypatch.setattr(ai_expression, "get_wdk_client", lambda _site: client)
     return client
 
 
-class TestThePrimaryKeyCarriesTheProjectId:
+class TestThePrimaryKeyFollowsTheGeneRecordColumns:
     async def test_the_site_project_id_is_appended(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -68,6 +89,25 @@ class TestThePrimaryKeyCarriesTheProjectId:
 
         assert client.primary_keys == ["TGME49_203310,ToxoDB"]
         assert result.gene_id == "TGME49_203310"
+
+    async def test_a_record_keyed_by_its_source_id_alone_sends_the_id_alone(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        client = _install(monkeypatch, {}, key_columns=PORTAL_KEY)
+
+        await get_gene_expression_summary("veupathdb", INCOMPLETE_GENE)
+
+        assert client.primary_keys == [INCOMPLETE_GENE]
+
+    async def test_the_gene_record_type_is_read_once_per_site(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        client = _install(monkeypatch, {})
+
+        await get_gene_expression_summary("plasmodb", INCOMPLETE_GENE)
+        await get_gene_expression_summary("plasmodb", SUMMARIZED_GENE)
+
+        assert client.reads == ["/record-types/gene"]
 
 
 class TestTheRecordedSummarizedGene:
