@@ -1,7 +1,6 @@
 """The settings the research MCP server reads, and where it reads them from."""
 
 from collections.abc import Callable
-from decimal import Decimal
 from functools import cached_property, lru_cache
 
 from pydantic import Field
@@ -44,11 +43,6 @@ class ResearchSettings(BaseSettings):
     # A SearXNG instance this deployment runs answers web searches first. It
     # is asked at its JSON search endpoint; empty means no instance.
     searxng_url: str = ""
-
-    # A Brave Search API key makes Brave the web engine after the metasearch
-    # and ahead of the scraped ones; each answered call costs the price below.
-    brave_search_api_key: str = Field(default="", repr=False)
-    brave_search_cost_usd: Decimal = Field(default=Decimal("0.005"), ge=0)
 
     # Crossref routes a call that names a mailbox to its polite pool. An empty
     # value keeps the anonymous pool.

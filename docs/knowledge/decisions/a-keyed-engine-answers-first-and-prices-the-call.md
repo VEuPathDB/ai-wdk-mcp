@@ -1,37 +1,31 @@
 ---
 type: Decision
 title: A keyed engine answers first and prices the call
-description: With a Brave Search API key the web tool asks Brave before any scraped engine, and the answer carries what the call cost, so the host bills it; scraping stays as the fallback and is free.
+description: Reversed. The web tool asked the Brave Search API before the scraped engines and priced each call on the answer; the deployment runs its own SearXNG, so the paid keyed engine, its key, its price and the cost on the answer are gone.
 tags: [research, web-search, cost]
-status: stable
+status: deprecated
 ---
 
-# The choice
+# The choice, reversed
 
-`WebSearchService` (`src/veupathdb_mcp/research/web/search.py`) asks the Brave Search API
-first when `RESEARCH_MCP_BRAVE_SEARCH_API_KEY` is set, and falls through to the scraped
-engines in `TEXT_ENGINES` when Brave refuses or returns nothing. The attempt is recorded
-in `search_diagnostics` like any engine, under the name `brave-api`.
+`WebSearchService` (`src/veupathdb_mcp/research/web/search.py`) asked the Brave Search API
+first when a key was set, and served its per-call price as `costUsd` on `WebSearchOut` for
+the host to bill.
 
-The answer carries its price: `WebSearchResponse.cost_usd` is
-`RESEARCH_MCP_BRAVE_SEARCH_COST_USD` (default 0.005, Brave's $5 per 1,000) when Brave
-answered and 0 otherwise, served as `costUsd` on `WebSearchOut`. The host that called the
-tool adds it to the user's bill; this server keeps no ledger.
+The deployment runs its own SearXNG, which answers web searches first at no cost
+([the metasearch decision](a-metasearch-the-deployment-runs-answers-first.md)). A paid
+keyed engine is not used, so the keyed engine, its key and price settings, and the cost
+field on the answer are deleted. No served tool prices its answer now.
+`tests/unit/research/test_shaping.py::test_a_served_web_search_carries_no_price` and
+`tests/unit/research/test_web_search.py::test_a_web_search_answer_carries_no_price` fail
+if a price returns to the answer.
 
 # What was measured
 
 Twenty research questions through a host on the scraped engines alone: Google answered a
 captcha on every call, Brave's public page answered 429 on every call, and DuckDuckGo and
-Mojeek answered some of the time. One question raised the refusal three times.
+Mojeek answered some of the time.
 
-# What was rejected
+# What replaced it
 
-**Scraping only.** The engines that answer change by the hour, and a refusal costs the
-host a model round trip each time.
-
-**A price table on the host.** The server knows which engine answered and what it charges;
-a host that guesses the price from the engine name is wrong the day the price moves. The
-answer is the only place both facts meet.
-
-**Making Brave the only engine.** A key can lapse, a quota can run out; the scraped
-engines still answer some of the time and cost nothing.
+The metasearch the deployment runs, then the engines `ddgs` scrapes. Both are free.

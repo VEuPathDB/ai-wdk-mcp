@@ -2,6 +2,10 @@
 
 ## 2026-10-08
 
+- The web tool asks the deployment's SearXNG, then the engines `ddgs` scrapes. The Brave
+  Search API, its key and price settings, and `costUsd` on the web search answer are
+  removed ([the reversed decision](decisions/a-keyed-engine-answers-first-and-prices-the-call.md)).
+  The scraped `brave` entry leaves `TEXT_ENGINES` too, so no step of the web tool asks Brave.
 - Jenkins publishes the two images (`Jenkinsfile`). The research server moved out of
   `Dockerfile` into `Dockerfile.research`, and a release tag is spelled in semver
   ([the decision](decisions/each-image-is-the-last-stage-of-its-own-dockerfile.md)).

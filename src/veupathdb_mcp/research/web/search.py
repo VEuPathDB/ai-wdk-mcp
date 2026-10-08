@@ -1,11 +1,10 @@
-"""Web search: the deployment's SearXNG, then the Brave Search API when keyed, then ``ddgs``.
+"""Web search: the deployment's SearXNG, then the engines ``ddgs`` scrapes.
 
 The server asks each engine in turn and keeps the first answer, so the
 response names the engine that answered and every engine that refused.
 """
 
 import asyncio
-from decimal import Decimal
 
 import httpx
 from ddgs import DDGS
@@ -39,14 +38,10 @@ TEXT_ENGINES: tuple[str, ...] = (
     "yahoo",
     "startpage",
     "google",
-    "brave",
 )
 
 # The metasearch this deployment runs, asked before every other engine.
 SEARXNG = "searxng"
-# The keyed engine, asked before every scraped one.
-BRAVE_API = "brave-api"
-_BRAVE_URL = "https://api.search.brave.com/res/v1/web/search"
 
 
 class WebSearchResult(CamelModel):
@@ -94,31 +89,6 @@ class _SearxngResponse(BaseModel):
     results: list[_SearxngRow] = Field(default_factory=list)
 
 
-class _BraveRow(BaseModel):
-    """One web result as the Brave Search API returns it."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    title: str = ""
-    url: str | None = None
-    description: str | None = None
-
-    def to_result(self) -> WebSearchResult:
-        return WebSearchResult(title=self.title, url=self.url, snippet=self.description)
-
-
-class _BraveWeb(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-
-    results: list[_BraveRow] = Field(default_factory=list)
-
-
-class _BraveResponse(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-
-    web: _BraveWeb = Field(default_factory=_BraveWeb)
-
-
 class WebSearchResponse(CamelModel):
     query: str
     effective_query: str
@@ -126,8 +96,6 @@ class WebSearchResponse(CamelModel):
     search_diagnostics: SearchDiagnostics
     results: list[WebSearchResult]
     citations: list[Citation]
-    # What the engine that answered charged for this call. Scraping is free.
-    cost_usd: Decimal = Decimal(0)
     error: str | None = None
 
 
@@ -166,13 +134,9 @@ class WebSearchService:
         *,
         timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
         searxng_url: str = "",
-        brave_api_key: str = "",
-        brave_cost_usd: Decimal = Decimal(0),
     ) -> None:
         self._timeout = timeout_seconds
         self._searxng_url = searxng_url.rstrip("/")
-        self._brave_api_key = brave_api_key
-        self._brave_cost_usd = brave_cost_usd
 
     async def search(
         self,
@@ -251,9 +215,6 @@ class WebSearchService:
             search_diagnostics=diagnostics,
             results=results,
             citations=citations,
-            cost_usd=(
-                self._brave_cost_usd if diagnostics.backend == BRAVE_API else Decimal(0)
-            ),
         )
 
     async def _search_engines(
@@ -262,7 +223,7 @@ class WebSearchService:
         *,
         limit: int,
     ) -> tuple[list[WebSearchResult], SearchDiagnostics]:
-        """Ask the keyed engine, then each scraped one, and keep the first answer.
+        """Ask the metasearch, then each scraped engine, and keep the first answer.
 
         An engine that answers and finds nothing has answered: when every engine
         did, the search is empty. A search no engine answers is a refusal.
@@ -273,11 +234,6 @@ class WebSearchService:
             attempts.append(attempt)
             if results:
                 return results, SearchDiagnostics(backend=SEARXNG, engines=attempts)
-        if self._brave_api_key:
-            results, attempt = await self._ask_brave(q, limit=limit)
-            attempts.append(attempt)
-            if results:
-                return results, SearchDiagnostics(backend=BRAVE_API, engines=attempts)
         for engine in TEXT_ENGINES:
             results, attempt = await self._ask_engine(q, limit=limit, engine=engine)
             attempts.append(attempt)
@@ -339,39 +295,3 @@ class WebSearchService:
             raise ExternalServiceError(_SERVICE_NAME, f"{SEARXNG} {exc}") from exc
         parsed = _engine_payload(SEARXNG, response, _SearxngResponse)
         return [row.model_dump() for row in parsed.results]
-
-    async def _ask_brave(
-        self,
-        q: str,
-        *,
-        limit: int,
-    ) -> tuple[list[WebSearchResult], EngineAttempt]:
-        try:
-            rows = await self._brave_rows(q, limit)
-        except ExternalServiceError as exc:
-            return [], EngineAttempt(engine=BRAVE_API, error=str(exc))
-        results = [_BraveRow.model_validate(row).to_result() for row in rows]
-        return results, EngineAttempt(engine=BRAVE_API, results=len(results))
-
-    async def _brave_rows(self, q: str, limit: int) -> list[dict[str, str]]:
-        headers = {
-            "Accept": "application/json",
-            "X-Subscription-Token": self._brave_api_key,
-        }
-        try:
-            async with httpx.AsyncClient(timeout=self._timeout) as client:
-                response = await client.get(
-                    _BRAVE_URL,
-                    params={"q": q, "count": limit},
-                    headers=headers,
-                )
-                response.raise_for_status()
-        except httpx.HTTPStatusError as exc:
-            raise ExternalServiceError(
-                _SERVICE_NAME,
-                f"{BRAVE_API} {exc.response.status_code} {exc.response.reason_phrase}",
-            ) from exc
-        except httpx.HTTPError as exc:
-            raise ExternalServiceError(_SERVICE_NAME, f"{BRAVE_API} {exc}") from exc
-        parsed = _engine_payload(BRAVE_API, response, _BraveResponse)
-        return [row.model_dump() for row in parsed.web.results]
