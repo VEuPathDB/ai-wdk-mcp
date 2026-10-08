@@ -105,6 +105,8 @@
     "resolve_search_record_type",
     "search_for_searches",
     "search_similarity",
+    "shortlist",
+    "shortlist_slot",
     "sites_holding_organism",
     "sites_publishing",
     "study_assay",

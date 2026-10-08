@@ -27,7 +27,7 @@ than from a file inside it.
 | package | what it publishes |
 | --- | --- |
 | `veupathdb_mcp` | the version, the service-token registry, the tool error payload, the tool metadata keys |
-| `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation, and other sites' experiment cards |
+| `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation, the shortlist a long vocabulary is shown as, and other sites' experiment cards |
 | `veupathdb_mcp.controls` | the control-test runners, their context and their result shapes |
 | `veupathdb_mcp.embeddings` | the embedder, its three tables, the record manager and the indexes on them |
 | `veupathdb_mcp.gene_lookup` | text lookup, id resolution and the organism list |

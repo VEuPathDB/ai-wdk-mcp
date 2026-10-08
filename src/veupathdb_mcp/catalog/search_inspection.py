@@ -36,6 +36,7 @@ from veupathdb_mcp.catalog.param_formatting import (
     format_typed_param,
     param_dependencies,
     phyletic_options_for,
+    shown_facets,
 )
 from veupathdb_mcp.catalog.search_context import (
     get_search_params_under_context,
@@ -319,7 +320,7 @@ async def read_parameter_options(
             phyletic, phyletic_lookup = _narrowed_phyletic(
                 phyletic_options_for(all_params, parameter_id), narrow
             )
-            return format_typed_param(
+            read = format_typed_param(
                 _prioritize_organisms(filtered, narrow.organism_hints),
                 dependencies=param_dependencies(all_params),
                 applied_context=context or None,
@@ -330,6 +331,12 @@ async def read_parameter_options(
                 },
                 phyletic_options=phyletic,
                 lookup=lookup or phyletic_lookup,
+            )
+            query = " ".join((*narrow.terms, *narrow.request_terms))
+            if not query or not read.facets():
+                return read
+            return read.model_copy(
+                update={"filter_fields": shown_facets(read.facets(), query)}
             )
 
     valid = [p.name for p in all_params]

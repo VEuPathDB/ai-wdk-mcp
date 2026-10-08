@@ -2,6 +2,22 @@
 
 ## 2026-10-08
 
+- An open slot carries its whole vocabulary: `_open_slot` and `_contrast_open_slot` kept
+  the first 20 values, so the PlasmoDB organism slot ended at `Plasmodium coatneyi` and
+  held no `Plasmodium falciparum 3D7` (value 26 of 90), and the VectorBase one held ticks
+  only. `resolve_search_parameters` serves each slot through `catalog.shortlist_slot`, the
+  rule `build_sheet` uses: whole up to `DIRECT_MAX`, else the `TOP_K` values the criterion
+  names best, with the total and the `get_parameter_options` query named in its question.
+  The ranking moves to `catalog/shortlist.py`; `catalog.shortlist` and
+  `catalog.shortlist_slot` join the surface.
+- A filter facet keeps every value the site sent: `filter_fields_for` cut each facet to 12
+  values, so the recorded PlasmoDB SNP sample filter offered 101 of 1521 and its country
+  facet 12 of 20, without Gambia. `ParameterInfo.filter_leaves` holds them all and
+  `facets()` reads them; the contrast slot and the filter clause are built from them. Each
+  view a model reads (`filter_fields`, the sheet's `filter_facets`, a read with a query)
+  goes through `shown_facets`, the same shortlist ranked by that view's words. A cut facet
+  carries `valuesTotal` (537 for the SNP sample name, shown as 200), and the sheet's note
+  names the cut facets and the `get_parameter_options` query that reads the rest.
 - The web tool asks the deployment's SearXNG, then the engines `ddgs` scrapes. The Brave
   Search API, its key and price settings, and `costUsd` on the web search answer are
   removed ([the reversed decision](decisions/a-keyed-engine-answers-first-and-prices-the-call.md)).

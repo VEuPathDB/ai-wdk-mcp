@@ -15,7 +15,7 @@ from veupathdb.domain.parameters import (
 from veupathdb.errors import ValidationError
 from veupathdb.model import CamelModel
 
-from veupathdb_mcp.catalog._param_binding import _MAX_SLOT_OPTIONS, OverrideMap
+from veupathdb_mcp.catalog._param_binding import OverrideMap
 from veupathdb_mcp.catalog.param_formatting import (
     FilterFieldInfo,
     ParameterInfo,
@@ -26,13 +26,13 @@ from veupathdb_mcp.catalog.param_intent import match_option
 def _match_filter_field(info: ParameterInfo, hint: str) -> FilterFieldInfo | None:
     """Resolves a facet by name. An exact term or display match wins over a substring."""
     hint_l = hint.strip().lower()
-    for field in info.filter_fields:
+    for field in info.facets():
         if hint_l in (field.term.lower(), field.display.lower()):
             return field
     return next(
         (
             field
-            for field in info.filter_fields
+            for field in info.facets()
             if hint_l in field.term.lower() or hint_l in field.display.lower()
         ),
         None,
@@ -209,10 +209,8 @@ def _contrast_open_slot(info: ParameterInfo) -> UnboundParameter:
             f"side, not all samples on both."
         ),
         options=[
-            f"{field.term}={value}"
-            for field in info.filter_fields
-            for value in field.values
-        ][:_MAX_SLOT_OPTIONS],
+            f"{field.term}={value}" for field in info.facets() for value in field.values
+        ],
     )
 
 

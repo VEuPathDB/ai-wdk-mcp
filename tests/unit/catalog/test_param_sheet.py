@@ -14,12 +14,8 @@ from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,
     format_param_info_typed,
 )
-from veupathdb_mcp.catalog.param_sheet import (
-    DIRECT_MAX,
-    TOP_K,
-    SheetEntry,
-    build_sheet,
-)
+from veupathdb_mcp.catalog.param_sheet import SheetEntry, build_sheet
+from veupathdb_mcp.catalog.shortlist import DIRECT_MAX, TOP_K
 
 from .conftest import vocab_terms
 

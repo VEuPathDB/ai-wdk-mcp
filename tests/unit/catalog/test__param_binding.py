@@ -197,7 +197,7 @@ class TestUnboundParameter:
 
         assert FAKE_ALL_SENTINEL not in slot.options
         assert len(set(slot.options)) == len(slot.options)
-        assert slot.options == [f"GO:{i:07d}" for i in range(20)]
+        assert slot.options == [f"GO:{i:07d}" for i in range(25)]
 
 
 class TestSingleValidValue:

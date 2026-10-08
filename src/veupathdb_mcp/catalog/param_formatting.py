@@ -22,6 +22,7 @@ from veupathdb_mcp.catalog.eda_backed import (
     UPLOAD_SENTINEL_NOTE,
     is_upload_sentinel_vocabulary,
 )
+from veupathdb_mcp.catalog.shortlist import shortlist_values
 from veupathdb_mcp.catalog.vocab_lookup import VocabLookup
 from veupathdb_mcp.catalog.vocab_rendering import (
     entries_of,
@@ -101,6 +102,7 @@ class FilterFieldInfo(CamelModel):
     type: str
     is_range: bool = False
     values: list[str] = Field(default_factory=list)
+    values_total: int | None = None
 
 
 class ParameterInfo(CamelModel):
@@ -138,6 +140,7 @@ class ParameterInfo(CamelModel):
     vocab_depends_on: list[str] | None = None
     note: str | None = None
     filter_fields: list[FilterFieldInfo] = Field(default_factory=list)
+    filter_leaves: list[FilterFieldInfo] = Field(default_factory=list, exclude=True)
     # Flattened vocabulary leaves for internal matching. Never sent to the model.
     vocab_leaves: list[VocabOption] = Field(default_factory=list, exclude=True)
     # `type` is the WDK ParamKind; `kind` is the model discriminator.
@@ -151,6 +154,10 @@ class ParameterInfo(CamelModel):
     def vocabulary(self) -> list[VocabOption]:
         """The whole option list when it was flattened, else the capped view."""
         return dedupe_options(self.vocab_leaves or self.allowed_values or [])
+
+    def facets(self) -> list[FilterFieldInfo]:
+        """Every facet with every value the site sent, else the shown view."""
+        return self.filter_leaves or self.filter_fields
 
     def is_placeholder(self, value: str) -> bool:
         """Whether a value is the site's prompt text, a prompt entry of the
@@ -385,6 +392,7 @@ def format_typed_param(
                 f"concluding that any value does or does not exist."
             )
 
+    facets = filter_fields_for(param)
     return ParameterInfo(
         name=name,
         display_name=param.display_name or name,
@@ -409,13 +417,23 @@ def format_typed_param(
         controls_vocab_of=dependencies.controls.get(name),
         vocab_depends_on=vocab_depends_on,
         note=note,
-        filter_fields=filter_fields_for(param),
+        filter_fields=shown_facets(facets, ""),
+        filter_leaves=facets,
         # Always flattened, because ``allowed_values`` is capped and can omit a value.
         vocab_leaves=leaves,
     )
 
 
-_MAX_FILTER_FIELD_VALUES = 12
+def shown_facets(facets: list[FilterFieldInfo], query: str) -> list[FilterFieldInfo]:
+    """Each facet with the values a model reads of it, ranked by ``query``.
+
+    A cut facet names how many values the site sent."""
+    shown: list[FilterFieldInfo] = []
+    for facet in facets:
+        values = shortlist_values(facet.values, query)
+        total = len(facet.values) if len(values) < len(facet.values) else None
+        shown.append(facet.model_copy(update={"values": values, "values_total": total}))
+    return shown
 
 
 def filter_fields_for(param: WDKParameter) -> list[FilterFieldInfo]:
@@ -432,7 +450,7 @@ def filter_fields_for(param: WDKParameter) -> list[FilterFieldInfo]:
             display=term.display or term.term,
             type=term.type,
             is_range=term.is_range,
-            values=(values.get(term.term) or [])[:_MAX_FILTER_FIELD_VALUES],
+            values=values.get(term.term) or [],
         )
         for term in param.ontology
         if term.type is not None

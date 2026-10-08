@@ -27,7 +27,6 @@ from veupathdb_mcp.catalog.param_intent import (
 _SCALAR_DEFAULTABLE: frozenset[str] = frozenset(
     {"number", "string", "date", "timestamp", "single-pick-vocabulary"}
 )
-_MAX_SLOT_OPTIONS = 20
 # A vocabulary needs two or more options before a shared value is a real choice.
 _MIN_VOCAB_SIZE_FOR_DEGENERACY = 2
 
@@ -293,7 +292,7 @@ def _open_slot(info: ParameterInfo) -> UnboundParameter:
     return UnboundParameter(
         param_name=info.name,
         question=f"Choose a value for {info.display_name}",
-        options=[o.value for o in options][:_MAX_SLOT_OPTIONS],
+        options=[o.value for o in options],
     )
 
 

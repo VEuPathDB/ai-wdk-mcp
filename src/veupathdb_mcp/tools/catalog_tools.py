@@ -30,6 +30,7 @@ from veupathdb_mcp.catalog.param_specs_formatting import build_param_specs
 from veupathdb_mcp.catalog.param_validation import ValidatedParams, validate_parameters
 from veupathdb_mcp.catalog.search_inspection import UnknownSearchError
 from veupathdb_mcp.catalog.searches import VagueSearchQueryError
+from veupathdb_mcp.catalog.shortlist import shortlist_slot
 from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
 from veupathdb_mcp.embeddings.record_manager import IndexHit, search_index
@@ -347,7 +348,9 @@ async def resolve_search_parameters(
 
     Each parameter takes the value the overrides state, the only value its
     vocabulary allows, or its own default. What none of those reach is an open
-    slot the caller answers.
+    slot the caller answers. A long slot vocabulary is cut to the values the
+    criterion names best; get_parameter_options with query='<words>' reads the
+    values the cut left out.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
@@ -357,10 +360,12 @@ async def resolve_search_parameters(
         overrides: Values stated by name, each a string or a list of strings.
     """
     try:
-        return await resolve_params_with_intent(
+        resolved = await resolve_params_with_intent(
             fetch_at=wdk_fetch_at(site_id, record_type, search_name),
             intent=ParamIntent(text=criterion),
             overrides=overrides,
         )
     except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc
+    shown = [shortlist_slot(slot, criterion) for slot in resolved.open_slots]
+    return resolved.model_copy(update={"open_slots": shown})
