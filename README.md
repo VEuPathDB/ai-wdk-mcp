@@ -78,12 +78,11 @@ keep the site guard unconditional, keep `veupathdb-wdk-mcp` a name that
 describes what it serves, and give each server its own stream-part namespace.
 
 One distribution, because a second repository would copy the settings scaffold,
-the service-token parser, the logging setup, the Dockerfile, the CI workflow,
-the lock and the release ceremony, and would add a second `veupathdb-py` pin to
-keep in step. The price is one resolved environment: the research image
-installs the database and embedding dependencies it never imports. The next
-move, if that price grows, is optional dependency groups with the Dockerfile
-targets syncing different extras.
+the service-token parser, the logging setup, the CI workflow, the lock and the
+release ceremony, and would add a second `veupathdb-py` pin to keep in step. The
+price is one resolved environment: the research image installs the database and
+embedding dependencies it never imports. The next move, if that price grows, is
+optional dependency groups with each Dockerfile syncing its own extras.
 
 The two servers share no setting: the WDK server reads `WDK_MCP_*` and
 `VEUPATHDB_*`, the research server reads `RESEARCH_MCP_*`. A secret configured
@@ -293,9 +292,30 @@ uv run pytest tests/live -m live_wdk --override-ini addopts=''   # one real site
 
 ## Images
 
-One `Dockerfile`, two targets. `--target research` builds the research server
-on :8110; the default target builds the WDK server on :8100. Both install the
-one lock, so the research image carries dependencies it never imports.
+Two Dockerfiles, one image each. A file builds its server as its last stage, so
+neither build takes a target:
+
+```bash
+docker build -t wdk-mcp .                                # the WDK server, on :8100
+docker build -f Dockerfile.research -t research-mcp .    # the research server, on :8110
+```
+
+Every stage before the last one is the same in both files, so both images install
+the one lock and the research image carries dependencies it never imports.
+`tests/unit/test_dockerfiles.py` fails when the two install stages differ, when the
+last stage of a file does not build on the install stage, or when it serves another
+module.
+
+`Jenkinsfile` publishes both to Docker Hub, the WDK server as
+`veupathdb/pathfinder-wdk-mcp` and the research server as
+`veupathdb/pathfinder-research-mcp`. A push to `main` publishes `latest`. A release
+tag publishes its version, and the builder reads a tag only in its semver spelling:
+`v`, then the version with a hyphen before a pre-release. Version `0.2.0b5` is tagged
+`v0.2.0-b5` and publishes `0.2.0-b5`; version `0.2.0` is tagged `v0.2.0` and
+publishes `0.2.0`, `0.2` and `0`. A tag in the PEP 440 spelling (`v0.2.0b5`)
+publishes no image. `__version__` keeps its PEP 440 spelling, because PEP 440 reads
+`0.2.0-b5` as `0.2.0b5`, and a host that pins this repository by tag names the semver
+tag.
 
 `tests/unit/test_package_boundary.py` is the isolation proof: no module reaches
 `pathfinder`, `assistant_core`, `pydantic_ai`, `langgraph` or `fastapi`, and
@@ -303,7 +323,7 @@ one lock, so the research image carries dependencies it never imports.
 than a lint rule.
 
 The lock names `veupathdb-py` by the client repository
-(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, `v0.1.0a10`,
+(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, `v0.1.0b3`,
 so a checkout of this repository alone installs and tests. To take a newer client:
 change `tag` in `[tool.uv.sources]`, run `uv lock --upgrade-package veupathdb-py`,
 then `uv sync`. Every name `src/` and `tests/` reads from the client comes from a client

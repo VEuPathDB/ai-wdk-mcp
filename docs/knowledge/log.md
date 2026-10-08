@@ -1,5 +1,16 @@
 # Knowledge log
 
+## 2026-10-08
+
+- Jenkins publishes the two images (`Jenkinsfile`). The research server moved out of
+  `Dockerfile` into `Dockerfile.research`, and a release tag is spelled in semver
+  ([the decision](decisions/each-image-is-the-last-stage-of-its-own-dockerfile.md)).
+  Each file builds the image id its old target built.
+- [The image decision](decisions/each-image-is-the-last-stage-of-its-own-dockerfile.md)
+  cites pipelib by line: `executeBuild` reads the image keys (lines 193-201), not
+  `buildContainers`. The backlog gains
+  [the server images install the dev group](backlog/the-server-images-install-the-dev-group.md).
+
 ## 2026-10-07
 
 - The AI expression summary is keyed by the gene record's declared primary key columns,

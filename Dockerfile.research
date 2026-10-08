@@ -26,16 +26,11 @@ COPY src src
 ENV PYTHONPATH=/app/src
 ENV PYTHONUNBUFFERED=1
 
-FROM base AS wdk
+FROM base AS research
 
-COPY alembic.ini ./
-COPY data data
+EXPOSE 8110
 
-ENV CATALOG_CACHE_DIR=/app/data/catalogs
+HEALTHCHECK --interval=10s --timeout=5s --start-period=15s --retries=3 \
+    CMD curl -fsS http://localhost:8110/health || exit 1
 
-EXPOSE 8100
-
-HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=3 \
-    CMD curl -fsS http://localhost:8100/health || exit 1
-
-CMD [".venv/bin/python", "-m", "veupathdb_mcp"]
+CMD [".venv/bin/python", "-m", "veupathdb_mcp.research"]
