@@ -38,6 +38,11 @@ def test_the_index_settings_keep_the_environment_variable_names() -> None:
         "embedding_request_concurrency",
         "embedding_sql_echo",
         "openai_api_key",
+        "postgres_db",
+        "postgres_host",
+        "postgres_password",
+        "postgres_port",
+        "postgres_user",
     }
 
 

@@ -75,3 +75,11 @@ class TestServiceTokenRegistry:
 
         assert SECRET not in repr(registry)
         assert "analytics" in repr(registry)
+
+    def test_an_application_reads_back_its_own_secret(self) -> None:
+        registry = ServiceTokenRegistry.parse(
+            f"analytics:{SECRET},gene-page:{OTHER_SECRET}",
+        )
+
+        assert registry.secret_for("gene-page") == OTHER_SECRET
+        assert registry.secret_for("pathfinder") is None

@@ -161,6 +161,7 @@ because a document naming the wrong host sends a client to the wrong authority.
 | variable | what it does |
 | --- | --- |
 | `DATABASE_URL` | the Postgres holding the two embedding tables |
+| `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | the same address in parts, in place of `DATABASE_URL`; setting `POSTGRES_PASSWORD` and `DATABASE_URL` together fails startup |
 | `OPENAI_API_KEY`, `EMBEDDING_*` | the embedder behind semantic search |
 | `VEUPATHDB_SITES_CONFIG` | the `sites.yaml` this deployment serves; required, because the client library ships no default list and the first site read fails without one |
 | `VEUPATHDB_AUTH_TOKEN` | the deployment's service credential for user-independent reads |

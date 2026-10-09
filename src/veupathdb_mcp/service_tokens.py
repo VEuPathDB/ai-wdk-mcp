@@ -71,3 +71,13 @@ class ServiceTokenRegistry(BaseModel):
             if hmac.compare_digest(token.secret.encode("utf-8"), candidate):
                 matched = token.application_id
         return matched
+
+    def secret_for(self, application_id: str) -> str | None:
+        return next(
+            (
+                token.secret
+                for token in self.tokens
+                if token.application_id == application_id
+            ),
+            None,
+        )

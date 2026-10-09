@@ -2,10 +2,11 @@
 
 from collections.abc import Callable
 from functools import lru_cache
-from typing import Literal
+from typing import Literal, Self
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy.engine import URL
 
 
 class EmbeddingSettings(BaseSettings):
@@ -23,6 +24,11 @@ class EmbeddingSettings(BaseSettings):
     )
 
     database_url: str = Field(default="", repr=False)
+    postgres_host: str = ""
+    postgres_port: int = 5432
+    postgres_user: str = ""
+    postgres_password: str = Field(default="", repr=False)
+    postgres_db: str = ""
     # Statement echo on the engine this index builds. A host's own echo flag
     # drives a different engine.
     embedding_sql_echo: bool = False
@@ -37,6 +43,54 @@ class EmbeddingSettings(BaseSettings):
     embedding_batch_size: int = Field(default=256, ge=1)
     # Characters of one input the embedder reads. A longer text is cut.
     embedding_input_char_limit: int = Field(default=2000, ge=1)
+
+    @model_validator(mode="after")
+    def _database_url_from_the_postgres_settings(self) -> Self:
+        if not self.postgres_password:
+            return self
+        parts = {
+            "POSTGRES_HOST": self.postgres_host,
+            "POSTGRES_USER": self.postgres_user,
+            "POSTGRES_DB": self.postgres_db,
+        }
+        missing = [name for name, value in parts.items() if not value.strip()]
+        if missing:
+            msg = f"POSTGRES_PASSWORD is set and {', '.join(missing)} is not set."
+            raise ValueError(msg)
+        built = URL.create(
+            "postgresql+asyncpg",
+            username=self.postgres_user,
+            password=self.postgres_password,
+            host=self.postgres_host,
+            port=self.postgres_port,
+            database=self.postgres_db,
+        ).render_as_string(hide_password=False)
+        if self.database_url not in ("", built):
+            msg = "Set DATABASE_URL or POSTGRES_PASSWORD, not both."
+            raise ValueError(msg)
+        self.database_url = built
+        return self
+        if self.database_url:
+            msg = "Set DATABASE_URL or POSTGRES_PASSWORD, not both."
+            raise ValueError(msg)
+        parts = {
+            "POSTGRES_HOST": self.postgres_host,
+            "POSTGRES_USER": self.postgres_user,
+            "POSTGRES_DB": self.postgres_db,
+        }
+        missing = [name for name, value in parts.items() if not value.strip()]
+        if missing:
+            msg = f"POSTGRES_PASSWORD is set and {', '.join(missing)} is not set."
+            raise ValueError(msg)
+        self.database_url = URL.create(
+            "postgresql+asyncpg",
+            username=self.postgres_user,
+            password=self.postgres_password,
+            host=self.postgres_host,
+            port=self.postgres_port,
+            database=self.postgres_db,
+        ).render_as_string(hide_password=False)
+        return self
 
 
 @lru_cache
