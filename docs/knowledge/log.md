@@ -2,6 +2,14 @@
 
 ## 2026-10-09
 
+- An expensive search holds one line on the database
+  ([the decision](decisions/an-expensive-search-holds-one-line-on-the-database.md)).
+  `veupathdb_mcp.search_line` holds a Postgres advisory lock per site for each High
+  Speed SNP search (or each search a host's rule names), the served process installs it
+  at startup when it has a database and runs each tool call as one search turn, and
+  `count_search_answer` hands its budget to the client, which starts it when the report
+  is sent.
+
 - Tests run against QA and a deployment names its site list
   ([the decision](decisions/tests-run-against-qa-and-a-deployment-names-its-sites.md)).
   `tests/conftest.py` puts the client's QA list in force for every test, the fourteen

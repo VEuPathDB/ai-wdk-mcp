@@ -18,6 +18,7 @@ from mcp.server.auth.middleware.auth_context import get_access_token
 from mcp.types import CallToolRequestParams, ToolAnnotations
 from pydantic import BaseModel, ConfigDict
 from veupathdb import get_logger
+from veupathdb.wdk import search_turn
 
 from veupathdb_mcp import __version__
 from veupathdb_mcp.auth import McpCredential, wdk_identity
@@ -116,6 +117,16 @@ class WdkIdentity(Middleware):
             return await call_next(context)
 
 
+class SearchTurnPerCall(Middleware):
+    async def on_call_tool(
+        self,
+        context: MiddlewareContext[CallToolRequestParams],
+        call_next: CallNext[CallToolRequestParams, ToolResult],
+    ) -> ToolResult:
+        with search_turn():
+            return await call_next(context)
+
+
 class SiteGuard(Middleware):
     """Refuses a call that names a site this deployment does not serve."""
 
@@ -200,7 +211,7 @@ def build_server() -> FastMCP[None]:
         name=SERVER_NAME,
         version=__version__,
         instructions=_INSTRUCTIONS,
-        middleware=[WdkIdentity(), SiteGuard()],
+        middleware=[WdkIdentity(), SiteGuard(), SearchTurnPerCall()],
     )
     for row in TOOLS:
         server.tool(row.fn, annotations=row.annotations, meta=row.meta)
@@ -210,6 +221,7 @@ def build_server() -> FastMCP[None]:
 __all__ = [
     "SERVER_NAME",
     "TOOLS",
+    "SearchTurnPerCall",
     "SiteGuard",
     "WdkIdentity",
     "build_server",

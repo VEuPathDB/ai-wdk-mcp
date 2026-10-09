@@ -4,8 +4,9 @@ entries they match, ranks them, and names each phrasing that matched."""
 from __future__ import annotations
 
 import pytest
+from tests._support.recordings import TEST_ROOT
 from veupathdb.domain.parameters import VocabOption
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 from veupathdb_mcp.catalog.search_inspection import (
@@ -15,7 +16,12 @@ from veupathdb_mcp.catalog.search_inspection import (
 
 from .pfam_refresh import CONTEXT, DAL972, PARAMETER, SEARCH, serve
 
-pytestmark = pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+pytestmark = pytest.mark.skipif(
+    needs_qa_recording(
+        TEST_ROOT / "unit/catalog/fixtures/tritrypdb_dal972_pfam_refresh.json"
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 
 # Labels that hold "RNA-binding" with a hyphen, which one substring missed.
 _HYPHENATED = ("PF14608", "PF12171")

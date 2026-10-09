@@ -12,14 +12,13 @@ from typing import cast
 
 import pytest
 from tests._support.recorded_searches import recorded_search
-from veupathdb.testing import NEEDS_QA_RECORDING
+from tests._support.recordings import TEST_ROOT
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog import searches
 from veupathdb_mcp.catalog.discovery_service import DiscoveryService
 from veupathdb_mcp.catalog.search_collection import collect_search_candidates
-
-pytestmark = pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 
 _LISTING = Path(__file__).parent / "fixtures" / "plasmodb_transcript_searches.json"
 
@@ -69,6 +68,14 @@ def site(monkeypatch: pytest.MonkeyPatch) -> DiscoveryService:
 
 
 class TestTheTransformListing:
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            "wdk/search_boolean_transcript.json",
+            "wdk/search_genes_by_orthologs.json",
+            TEST_ROOT / "unit/catalog/fixtures/plasmodb_transcript_searches.json",
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_the_orthology_transform_under_internal_questions_is_listed(
         self, site: DiscoveryService
     ) -> None:
@@ -79,6 +86,14 @@ class TestTheTransformListing:
 
         assert "GenesByOrthologs" in [row["name"] for row in rows]
 
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            "wdk/search_boolean_transcript.json",
+            "wdk/search_genes_by_orthologs.json",
+            TEST_ROOT / "unit/catalog/fixtures/plasmodb_transcript_searches.json",
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_the_boolean_question_is_not_listed(
         self, site: DiscoveryService
     ) -> None:
@@ -87,6 +102,14 @@ class TestTheTransformListing:
 
         assert _boolean().url_segment not in [row["name"] for row in rows]
 
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            "wdk/search_boolean_transcript.json",
+            "wdk/search_genes_by_orthologs.json",
+            TEST_ROOT / "unit/catalog/fixtures/plasmodb_transcript_searches.json",
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_every_search_that_takes_an_input_step_is_listed(
         self, site: DiscoveryService
     ) -> None:
@@ -99,6 +122,10 @@ class TestTheTransformListing:
             "GenesBySpanLogic",
         ]
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_boolean_transcript.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_the_boolean_question_is_known_by_its_shape_not_its_name(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -114,6 +141,14 @@ class TestTheTransformListing:
 
 
 class TestTheOtherListings:
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            "wdk/search_boolean_transcript.json",
+            "wdk/search_genes_by_orthologs.json",
+            TEST_ROOT / "unit/catalog/fixtures/plasmodb_transcript_searches.json",
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_the_search_listing_holds_the_transform_and_not_the_boolean(
         self, site: DiscoveryService
     ) -> None:
@@ -126,6 +161,14 @@ class TestTheOtherListings:
             "GenesBySpanLogic",
         ]
 
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            "wdk/search_boolean_transcript.json",
+            "wdk/search_genes_by_orthologs.json",
+            TEST_ROOT / "unit/catalog/fixtures/plasmodb_transcript_searches.json",
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_the_categories_name_the_transform_and_not_the_boolean(
         self, site: DiscoveryService
     ) -> None:
@@ -140,6 +183,14 @@ class TestTheOtherListings:
             ]
         ]
 
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            "wdk/search_boolean_transcript.json",
+            "wdk/search_genes_by_orthologs.json",
+            TEST_ROOT / "unit/catalog/fixtures/plasmodb_transcript_searches.json",
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_the_ranking_candidates_hold_the_transform_and_not_the_boolean(
         self, site: DiscoveryService
     ) -> None:

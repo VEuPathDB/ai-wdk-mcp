@@ -9,7 +9,7 @@ from __future__ import annotations
 import pytest
 from pydantic import JsonValue
 from veupathdb.errors import WDKError
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import AiExpressionReport, AiExpressionStatus
 
@@ -111,7 +111,10 @@ class TestThePrimaryKeyFollowsTheGeneRecordColumns:
         assert client.reads == ["/record-types/gene"]
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/ai_expression_summary_present.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 class TestTheRecordedSummarizedGene:
     """The recorded body of a gene the site summarized."""
 
@@ -178,7 +181,10 @@ class TestTheRecordedSummarizedGene:
         assert len({line.experiment_name for line in lines}) == 41
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/ai_expression_experiments_incomplete.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 class TestTheRecordedGeneWithExperimentsOutstanding:
     """The recorded body of a gene whose experiments are not all summarized."""
 

@@ -8,7 +8,8 @@ from unittest.mock import MagicMock
 
 import pytest
 from tests._support.recorded_catalog import recorded_catalog
-from veupathdb.testing import NEEDS_QA_RECORDING
+from tests._support.recordings import TEST_ROOT
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 
 from veupathdb_mcp import catalog
 from veupathdb_mcp.catalog import searches
@@ -20,8 +21,13 @@ _UV_MICROARRAY = (
 )
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 class TestTheCatalogMarksTheAssayASearchRunsOn:
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            TEST_ROOT / "unit/catalog/fixtures/cryptodb_all_datasets.json"
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_a_search_one_dataset_names_has_its_category(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     ) -> None:
@@ -32,6 +38,12 @@ class TestTheCatalogMarksTheAssayASearchRunsOn:
             for name in (_HOMINIS_OOCYSTS, _UV_MICROARRAY, "GenesByRtPcrFoldChange")
         ] == ["RNASeq", "DNA Microarray Assay", "RT PCR"]
 
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            TEST_ROOT / "unit/catalog/fixtures/cryptodb_all_datasets.json"
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_a_search_its_datasets_agree_on_has_their_category(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     ) -> None:
@@ -46,6 +58,12 @@ class TestTheCatalogMarksTheAssayASearchRunsOn:
             )
         ] == ["scRNA-Seq", "RNASeq", "Protein expression"]
 
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     @pytest.mark.parametrize("search_name", ["GeneByLocusTag", "GenesByEcNumber"])
     async def test_a_search_its_datasets_differ_on_has_none(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path, search_name: str
@@ -54,6 +72,12 @@ class TestTheCatalogMarksTheAssayASearchRunsOn:
 
         assert plasmodb.dataset_assay(search_name) is None
 
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            TEST_ROOT / "unit/catalog/fixtures/cryptodb_all_datasets.json"
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_a_search_no_dataset_names_has_none(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     ) -> None:
@@ -62,8 +86,13 @@ class TestTheCatalogMarksTheAssayASearchRunsOn:
         assert cryptodb.dataset_assay("GenesByText") is None
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 class TestTheCatalogMarksTheAssayOfAStudy:
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_a_study_has_the_category_of_its_dataset_record(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     ) -> None:
@@ -74,6 +103,12 @@ class TestTheCatalogMarksTheAssayOfAStudy:
             for dataset_id in ("DS_eeca6a5476", "DS_10068cde24", "DS_0fdca599cd")
         ] == ["RNASeq", "Phenotype", "Immunology"]
 
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            TEST_ROOT / "unit/catalog/fixtures/cryptodb_all_datasets.json"
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_a_record_with_no_category_has_its_type(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     ) -> None:
@@ -81,6 +116,12 @@ class TestTheCatalogMarksTheAssayOfAStudy:
 
         assert cryptodb.study_assay("DS_0d9651c265") == "isolates"
 
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            TEST_ROOT / "unit/catalog/fixtures/cryptodb_all_datasets.json"
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     @pytest.mark.parametrize("dataset_id", ["DS_6889a51dab", "EDAUD_lhZ5ptRgo014J"])
     async def test_a_study_the_site_publishes_no_assay_for_has_none(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path, dataset_id: str
@@ -98,7 +139,12 @@ class TestAHostReadsTheAssay:
         )
         assert {"dataset_assay", "study_assay"} <= set(catalog.__all__)
 
-    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            TEST_ROOT / "unit/catalog/fixtures/cryptodb_all_datasets.json"
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_from_the_catalog_of_the_site(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     ) -> None:

@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import VEuPathDBClient, WDKRecordType, WDKSearch, WDKSearchResponse
 
@@ -214,14 +214,21 @@ async def test_a_serving_process_keeps_the_stale_snapshot_and_builds_nothing(
     assert stale_cache.names == []
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 class TestWdkSearch002TheUrlSegmentIsTheAddress:
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     def test_wdk_search_002_a_search_carries_two_different_names(self) -> None:
         search = _molecular_weight().search_data
 
         assert search.url_segment == "GenesByMolecularWeight"
         assert search.full_name == "GeneQuestions.GenesByMolecularWeight"
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_wdk_search_002_the_request_path_carries_the_url_segment(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -235,6 +242,10 @@ class TestWdkSearch002TheUrlSegmentIsTheAddress:
 
         assert get.paths == [_MOLECULAR_WEIGHT_PATH]
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_wdk_search_002_the_full_name_never_reaches_the_path(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -250,6 +261,9 @@ class TestWdkSearch002TheUrlSegmentIsTheAddress:
         assert get.paths == [_MOLECULAR_WEIGHT_PATH]
         assert search.full_name not in get.paths[0]
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_by_full_name.json"), reason=NEEDS_QA_RECORDING
+    )
     def test_wdk_search_002_the_full_name_is_a_404(self) -> None:
         recorded = load_recorded("search_by_full_name")
 
@@ -258,13 +272,20 @@ class TestWdkSearch002TheUrlSegmentIsTheAddress:
             "Resource 'search: GeneQuestions.GenesByMolecularWeight' does not exist."
         )
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     def test_wdk_search_002_the_full_name_is_kept_as_data(self) -> None:
         # It is the name a step's searchName carries and error messages use.
         assert _molecular_weight().search_data.full_name != ""
 
 
 class TestWdkSearch001ASearchBelongsToOneRecordClass:
-    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_under_the_wrong_record_type.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     def test_wdk_search_001_the_wrong_record_type_is_a_404(self) -> None:
         recorded = load_recorded("search_under_the_wrong_record_type")
 
@@ -274,7 +295,10 @@ class TestWdkSearch001ASearchBelongsToOneRecordClass:
             'record type "OrganismRecordClass"'
         )
 
-    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_under_the_wrong_record_type.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     def test_wdk_search_001_the_refusal_names_the_record_class_full_name(self) -> None:
         # The path segment is the url segment; the comparison is against the
         # record class full name.
@@ -283,7 +307,10 @@ class TestWdkSearch001ASearchBelongsToOneRecordClass:
         assert "OrganismRecordClass" in body
         assert 'record type "organism"' not in body
 
-    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     def test_wdk_search_001_a_search_declares_one_output_record_class(self) -> None:
         search = _molecular_weight().search_data
 
@@ -301,7 +328,9 @@ class TestWdkSearch001ASearchBelongsToOneRecordClass:
         assert catalog.find_search("transcript", "GenesByExonCount") is not None
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_location.json"), reason=NEEDS_QA_RECORDING
+)
 class TestWdkSearch004ParamNamesIsTheParameterList:
     """``supplementWithBasicParamInfo`` writes ``groups`` and ``paramNames`` from
     one call, so they agree on membership by construction.

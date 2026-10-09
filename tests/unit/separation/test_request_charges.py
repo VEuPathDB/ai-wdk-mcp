@@ -10,10 +10,11 @@ from typing import Any
 
 import httpx
 import pytest
+from tests._support.recordings import TEST_ROOT
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.domain.parameters import MultiPickValue, SinglePickValue
 from veupathdb.domain.strategy import CombineOp
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import get_strategy_api, get_wdk_client
 
 from veupathdb_mcp.controls import ControlsSearch, upload_controls
@@ -40,7 +41,10 @@ from veupathdb_mcp.separation.measure import (
 )
 from veupathdb_mcp.wdk.enrichment import BackgroundSource, enrich_gene_ids_by_value
 
-pytestmark = pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+pytestmark = pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/separation/fixtures/one_run_requests.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 
 RECORDED = Path(__file__).parent / "fixtures" / "one_run_requests.json"
 ORGANISM = "Plasmodium falciparum 3D7"

@@ -89,7 +89,10 @@ class _FakeClient:
         search_name: str,
         search_config: WDKSearchConfig,
         report_config: JSONObject | None = None,
+        *,
+        budget_seconds: float | None = None,
     ) -> WDKAnswer:
+        del budget_seconds
         self.report_configs.append(report_config)
         answer = self._counts[search_name]
         if isinstance(answer, Exception):

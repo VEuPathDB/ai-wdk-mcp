@@ -7,7 +7,7 @@ from tests._support.recorded_searches import gene_list_search, recorded_search
 from tests._support.separation_site import FALCIPARUM, patch_site
 from veupathdb.domain.parameters import MultiPickValue, StringValue
 from veupathdb.errors import WDKError
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKStrategySummary, tag_internal_wdk_strategy_name
 
 from veupathdb_mcp.gene_lookup import GeneResolveResult, GeneResult
@@ -125,7 +125,13 @@ async def _run(request: SeparationRequest) -> tuple:
     return result, rows
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_the_thread_search_separates_and_the_read_confirms_it(
     account: _Account,
 ) -> None:
@@ -145,7 +151,13 @@ async def test_the_thread_search_separates_and_the_read_confirms_it(
     assert result.organisms == [FALCIPARUM]
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_every_call_is_charged_and_the_leftover_is_deleted(
     account: _Account,
 ) -> None:
@@ -157,7 +169,13 @@ async def test_every_call_is_charged_and_the_leftover_is_deleted(
     assert (result.charged_requests, result.budget) == (CHARGED, 400)
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_each_phase_reports_one_row_and_each_candidate_its_own(
     account: _Account,
 ) -> None:
@@ -180,7 +198,13 @@ async def test_each_phase_reports_one_row_and_each_candidate_its_own(
     )
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_the_result_serializes_with_its_verdict(account: _Account) -> None:
     result, _ = await _run(_request())
 
@@ -207,13 +231,25 @@ def test_an_id_on_both_lists_is_refused() -> None:
         _request(negatives=[POSITIVES[0]])
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_no_resolved_negative_fails_the_run(account: _Account) -> None:
     with pytest.raises(ValueError, match="no negative control resolves"):
         await _run(_request(negatives=[UNKNOWN]))
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_a_failed_resolution_fails_the_run_with_wdk_s_words(
     account: _Account, monkeypatch: pytest.MonkeyPatch
 ) -> None:

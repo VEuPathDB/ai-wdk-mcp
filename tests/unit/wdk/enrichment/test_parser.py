@@ -13,8 +13,9 @@ import json
 from pathlib import Path
 
 import pytest
+from tests._support.recordings import TEST_ROOT
 from veupathdb import JSONObject
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 
 from veupathdb_mcp.wdk.enrichment.html import parse_result_genes_html
 from veupathdb_mcp.wdk.enrichment.parser import (
@@ -137,7 +138,10 @@ def _recorded_pathway_rows() -> list[JSONObject]:
     )
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/separation/fixtures/one_run_requests.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_a_pathway_term_carries_the_source_its_row_names() -> None:
     terms = parse_enrichment_terms(_recorded_pathway_rows(), "pathway")
 

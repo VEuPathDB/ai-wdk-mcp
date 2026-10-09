@@ -13,7 +13,7 @@ import pytest
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import ParamValue, StringValue
 from veupathdb.errors import ValidationError, WDKError
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKRecordType, WDKSearch, WDKSearchResponse
 
@@ -114,7 +114,10 @@ async def _resolve() -> param_validation.ResolvedSearch:
     )
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 class TestTheResultSaysWhetherWdkReadTheValues:
     async def test_the_callers_value_reaches_wdk(
         self, monkeypatch: pytest.MonkeyPatch

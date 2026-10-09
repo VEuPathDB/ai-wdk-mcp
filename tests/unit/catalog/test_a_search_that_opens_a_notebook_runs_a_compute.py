@@ -7,12 +7,18 @@ import json
 from pathlib import Path
 
 import pytest
-from veupathdb.testing import NEEDS_QA_RECORDING
+from tests._support.recordings import TEST_ROOT
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog import eda_backed_guidance, eda_backed_search
 
-pytestmark = pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+pytestmark = pytest.mark.skipif(
+    needs_qa_recording(
+        TEST_ROOT / "unit/catalog/fixtures/plasmodb_eda_backed_searches.json"
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 
 _LISTING = Path(__file__).parent / "fixtures" / "plasmodb_eda_backed_searches.json"
 

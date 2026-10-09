@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import pytest
+from tests._support.recordings import TEST_ROOT
 from veupathdb.domain.parameters import VocabOption
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKEnumParam
 
 from veupathdb_mcp.catalog.param_formatting import (
@@ -44,7 +45,12 @@ def _values(options: list[VocabOption] | None) -> set[str]:
     return {option.value for option in options or []}
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        TEST_ROOT / "unit/catalog/fixtures/amoebadb_nfowleri_pfam_refresh.json"
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_every_peptidase_entry_travels(monkeypatch: pytest.MonkeyPatch) -> None:
     serve(monkeypatch, FOWLERI)
 
@@ -57,7 +63,12 @@ async def test_every_peptidase_entry_travels(monkeypatch: pytest.MonkeyPatch) ->
     assert info.allowed_values_note is None
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        TEST_ROOT / "unit/catalog/fixtures/amoebadb_nfowleri_pfam_refresh.json"
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_an_unnarrowed_read_names_the_total_it_was_cut_from(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

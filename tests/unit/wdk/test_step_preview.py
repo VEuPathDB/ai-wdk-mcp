@@ -5,9 +5,10 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from tests._support.recordings import TEST_ROOT
 from tests._support.step_report_wire import ReportWire, wire_api
 from veupathdb.errors import WDKError
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import (
     WDKAnswer,
     WDKAnswerMeta,
@@ -191,7 +192,12 @@ def _bind_wire(
 
 
 class TestASampleIsOneRowPerGene:
-    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            TEST_ROOT / "unit/wdk/fixtures/transcript_page_with_repeated_genes.json"
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_the_first_row_of_each_gene_is_kept_in_the_order_seen(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -262,7 +268,12 @@ class TestASampleIsOneRowPerGene:
         assert [row["id"] for row in result.records] == ["PF3D7_0100100"]
         assert len(wire.bodies) == 1
 
-    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+    @pytest.mark.skipif(
+        needs_qa_recording(
+            TEST_ROOT / "unit/wdk/fixtures/transcript_page_with_repeated_genes.json"
+        ),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_the_served_sample_is_the_same_gene_level_read(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:

@@ -5,9 +5,10 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from tests._support.recordings import TEST_ROOT
 from veupathdb import JSONObject
 from veupathdb.devtools.wdk_capture import WDKExchange
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 
 from veupathdb_mcp.catalog.catalog_metadata import (
     DATASET_REPORT_PATH,
@@ -46,7 +47,10 @@ def _named(cards: list[ExperimentCard], name: str) -> ExperimentCard:
     return next(card for card in cards if card.name == name)
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_the_recording_is_the_request_the_build_posts() -> None:
     recorded = WDKExchange.model_validate_json(_RECORDED.read_text())
 
@@ -54,7 +58,10 @@ def test_the_recording_is_the_request_the_build_posts() -> None:
     assert recorded.request_json == dataset_report_request()
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_the_build_asks_for_the_attributes_and_tables_a_card_reads() -> None:
     site = _RecordedSite()
 
@@ -76,14 +83,20 @@ async def test_the_build_asks_for_the_attributes_and_tables_a_card_reads() -> No
     }
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_the_report_has_one_card_per_dataset(plasmodb: list[ExperimentCard]) -> None:
     assert len(plasmodb) == 323
     assert len({card.dataset_id for card in plasmodb}) == 323
     assert {card.site_id for card in plasmodb} == {"plasmodb"}
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_a_card_reads_its_dataset_without_markup(
     plasmodb: list[ExperimentCard],
 ) -> None:
@@ -104,7 +117,10 @@ def test_a_card_reads_its_dataset_without_markup(
     )
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_a_card_names_the_gene_searches_it_feeds_on_its_site(
     plasmodb: list[ExperimentCard],
 ) -> None:
@@ -119,7 +135,10 @@ def test_a_card_names_the_gene_searches_it_feeds_on_its_site(
     assert "IntronJunctionDynamicSearch" not in card.searches
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_no_card_names_a_search_of_another_record_class(
     plasmodb: list[ExperimentCard],
 ) -> None:
@@ -129,7 +148,10 @@ def test_no_card_names_a_search_of_another_record_class(
     assert "IntronJunctionDynamicSearch" not in named
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_a_dataset_without_a_category_takes_its_type(
     plasmodb: list[ExperimentCard],
 ) -> None:
@@ -143,7 +165,10 @@ def test_a_dataset_without_a_category_takes_its_type(
     ]
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_a_dataset_of_several_organisms_lists_them_apart(
     plasmodb: list[ExperimentCard],
 ) -> None:
@@ -156,7 +181,10 @@ def test_a_dataset_of_several_organisms_lists_them_apart(
     ]
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_a_summary_is_cut_at_six_hundred_characters(
     plasmodb: list[ExperimentCard],
 ) -> None:
@@ -175,7 +203,10 @@ def test_a_summary_is_cut_at_six_hundred_characters(
     assert "<p>" not in long.summary
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_a_line_names_the_site_organism_assay_and_attribution(
     plasmodb: list[ExperimentCard],
 ) -> None:
@@ -187,7 +218,10 @@ def test_a_line_names_the_site_organism_assay_and_attribution(
     )
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_every_line_fits_one_hundred_sixty_characters(
     plasmodb: list[ExperimentCard],
 ) -> None:
@@ -197,7 +231,10 @@ def test_every_line_fits_one_hundred_sixty_characters(
     assert all(line.startswith("plasmodb | ") for line in lines)
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_a_line_of_several_organisms_names_the_first_and_counts_the_rest(
     plasmodb: list[ExperimentCard],
 ) -> None:
@@ -206,7 +243,10 @@ def test_a_line_of_several_organisms_names_the_first_and_counts_the_rest(
     assert card.line().startswith("plasmodb | Plasmodium berghei ANKA and 13 more | ")
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(TEST_ROOT / "unit/catalog/fixtures/plasmodb_all_datasets.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_a_card_survives_its_own_json(plasmodb: list[ExperimentCard]) -> None:
     card = _named(plasmodb, _KNOWLESI)
 

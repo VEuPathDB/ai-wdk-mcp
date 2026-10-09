@@ -16,14 +16,15 @@ again in that repository.
 
 # What it blocks
 
-Every test marked `pytest.mark.skip(reason=NEEDS_QA_RECORDING)`;
-`uv run pytest tests/unit -rs` lists them. A test that reads `data/catalogs/` is
-skipped too, because that snapshot was built on production.
+Every test skipped with `NEEDS_QA_RECORDING` while `needs_qa_recording` finds its
+recordings absent; `uv run pytest tests/unit -rs` lists them. The test that reads
+`data/catalogs/` is skipped without a condition, because that snapshot is present and was
+built on production; it runs again once the snapshot is built on QA and its skip goes.
 
 # How to finish
 
 QA answers automated clients first: outside the VEuPathDB network the QA sites answer
 with a pre-release login. Then record each file on QA (`scripts/record_all_datasets.py`
 for the two AllDatasets reports; the provenance of the others names the request),
-re-measure every count a test pins, drop the skip markers, delete the backup directory,
-and remove this item and its line.
+re-measure every count a test pins (the skips lift by themselves once each recording is
+in place), delete the backup directory, and remove this item and its line.

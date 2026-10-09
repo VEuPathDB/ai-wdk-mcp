@@ -118,7 +118,7 @@ async def count_search_answer(
 
     A report with ``numRecords: 0`` returns only the total, so no step and no
     strategy is created and no user session is needed. ``timeout_seconds``
-    bounds the read for a caller that counts on a latency path; the default
+    bounds the read once it is sent, for a caller on a latency path; the default
     waits as long as the client does.
 
     Returns None when this one search did not answer. A refusal about the
@@ -128,10 +128,13 @@ async def count_search_answer(
     config = WDKSearchConfig(parameters=encode_params(dict(parameters)))
     report_config: JSONObject = {"pagination": {"offset": 0, "numRecords": 0}}
     try:
-        async with asyncio.timeout(timeout_seconds):
-            answer = await get_wdk_client(site_id).run_search_report(
-                record_type, search_name, config, report_config
-            )
+        answer = await get_wdk_client(site_id).run_search_report(
+            record_type,
+            search_name,
+            config,
+            report_config,
+            budget_seconds=timeout_seconds,
+        )
         return answer.meta.records_returned()
     except VEuPathDBError as e:
         if not _answered_about_this_search(e):

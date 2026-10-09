@@ -20,12 +20,14 @@ from starlette.routing import Mount, Route
 from veupathdb.wdk import close_all_clients
 
 from veupathdb_mcp import __version__
+from veupathdb_mcp.embeddings import get_embedding_settings
 from veupathdb_mcp.logging_setup import setup_logging
 from veupathdb_mcp.metadata import (
     DEFAULT_MCP_PATH,
     guarded,
     protected_resource_routes,
 )
+from veupathdb_mcp.search_line import install_search_line
 from veupathdb_mcp.server import SERVER_NAME, build_server
 
 HEALTH_PATH = "/health"
@@ -55,6 +57,9 @@ def build_app() -> Starlette:
     async def lifespan(app: Starlette) -> AsyncIterator[None]:
         del app
         setup_logging()
+        database_url = get_embedding_settings().database_url
+        if database_url:
+            install_search_line(database_url)
         async with mcp_app.lifespan(mcp_app):
             yield
         await close_all_clients()

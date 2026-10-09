@@ -18,6 +18,7 @@ PACKAGES = (
     "veupathdb_mcp.embeddings",
     "veupathdb_mcp.gene_lookup",
     "veupathdb_mcp.research",
+    "veupathdb_mcp.search_line",
     "veupathdb_mcp.separation",
     "veupathdb_mcp.tools",
     "veupathdb_mcp.wdk",

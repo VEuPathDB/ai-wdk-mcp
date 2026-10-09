@@ -298,7 +298,8 @@ it whatever the environment names. `check-test-sites.mjs` fails on a production 
 host anywhere outside `README.md`, `docs/`, the catalog cache under `data/catalogs/` and
 the backup of the production recordings.
 A test whose recording was made on production is skipped with
-`veupathdb.testing.NEEDS_QA_RECORDING` until it is recorded again on QA
+`veupathdb.testing.NEEDS_QA_RECORDING` while `veupathdb.testing.needs_qa_recording`
+finds the recording absent, so a QA recording lifts the skip with no change to the test
 ([the decision](docs/knowledge/decisions/tests-run-against-qa-and-a-deployment-names-its-sites.md)).
 
 ## Images

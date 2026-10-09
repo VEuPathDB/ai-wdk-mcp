@@ -14,7 +14,7 @@ from veupathdb.domain.parameters import (
     collect_leaf_terms,
 )
 from veupathdb.errors import WDKError
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKSearchResponse
 
@@ -43,7 +43,10 @@ def _stub_client(monkeypatch: pytest.MonkeyPatch, fixture: str) -> MagicMock:
 
 
 class TestInspectSearch:
-    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_it_returns_the_overview_and_the_definition_it_came_from(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -72,7 +75,10 @@ class TestInspectSearch:
         ]
         assert result.overview.optional == []
 
-    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_it_ranks_without_a_query(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -88,7 +94,10 @@ class TestInspectSearch:
             "max_molecular_weight",
         ]
 
-    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_it_resolves_the_record_type_when_none_is_given(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -144,8 +153,11 @@ def _raw(name: str) -> Any:
     return raw
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 class TestReadParameterOptions:
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_location.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_it_formats_one_parameter(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -163,6 +175,10 @@ class TestReadParameterOptions:
         assert result.controls_vocab_of == ["chromosomeOptional"]
         assert result.allowed_values
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_location.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_a_query_narrows_the_vocabulary(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -193,6 +209,10 @@ class TestReadParameterOptions:
             for option in narrowed.allowed_values
         )
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_a_query_narrows_a_tree_vocabulary(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -224,6 +244,10 @@ class TestReadParameterOptions:
         assert "Plasmodium berghei ANKA" not in narrowed.allowed_values_tree
         assert "Plasmodium berghei ANKA" in whole.allowed_values_tree
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_organism_hints_float_the_matching_branches(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -264,6 +288,10 @@ class TestReadParameterOptions:
         assert hinted_at < _first_falciparum(unbiased_tree)
         assert hinted_at < 5
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_location.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_a_query_reads_the_terms_and_not_their_repr(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -291,6 +319,10 @@ class TestReadParameterOptions:
         assert result.allowed_values is None
         assert result.vocab_leaves == []
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_location.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_a_dependent_parameter_asks_for_its_parent(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -306,6 +338,10 @@ class TestReadParameterOptions:
         assert result.kind == "parent_context_required"
         assert result.parent_parameter_ids == ["organismSinglePick"]
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_location.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_context_travels_by_value(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -324,6 +360,10 @@ class TestReadParameterOptions:
         context = client.get_search_details_with_params.await_args.kwargs["context"]
         assert context["organismSinglePick"] == "Plasmodium falciparum 3D7"
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_location.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_it_accepts_already_typed_context(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -343,6 +383,10 @@ class TestReadParameterOptions:
         context = client.get_search_details_with_params.await_args.kwargs["context"]
         assert context["organismSinglePick"] == "Plasmodium falciparum 3D7"
 
+    @pytest.mark.skipif(
+        needs_qa_recording("wdk/search_genes_by_location.json"),
+        reason=NEEDS_QA_RECORDING,
+    )
     async def test_an_unknown_parameter_names_the_valid_ones(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:

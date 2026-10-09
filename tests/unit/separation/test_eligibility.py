@@ -7,7 +7,7 @@ from tests._support.recorded_searches import (
     recorded_search,
 )
 from veupathdb.domain.parameters import MultiPickValue
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog import ParameterInfo, format_param_info_typed
@@ -18,8 +18,6 @@ from veupathdb_mcp.separation.eligibility import (
     search_skip,
 )
 from veupathdb_mcp.separation.enumerate import CandidateSkippedError, Proposal, bind
-
-pytestmark = pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 
 FALCIPARUM = "Plasmodium falciparum 3D7"
 
@@ -48,15 +46,25 @@ def _catalog_proposal(search: WDKSearch) -> Proposal:
     )
 
 
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_orthologs.json"), reason=NEEDS_QA_RECORDING
+)
 def test_an_ortholog_transform_is_a_transform() -> None:
     assert search_skip(_search("search_genes_by_orthologs")) == "transform"
 
 
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_boolean_transcript.json"), reason=NEEDS_QA_RECORDING
+)
 def test_the_boolean_search_is_a_transform() -> None:
     """Its two answer parameters take input steps."""
     assert search_skip(_search("search_boolean_transcript")) == "transform"
 
 
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_a_molecular_weight_search_is_eligible() -> None:
     search = _search("search_genes_by_molecular_weight")
 
@@ -64,10 +72,18 @@ def test_a_molecular_weight_search_is_eligible() -> None:
     assert params_skip(_infos(search)) is None
 
 
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_an_analysis_backed_search_needs_an_analysis() -> None:
     assert search_skip(analysis_backed_search().search_data) == "needs_an_analysis"
 
 
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_the_locus_tag_search_takes_a_gene_list() -> None:
     search = gene_list_search().search_data
 
@@ -75,6 +91,10 @@ def test_the_locus_tag_search_takes_a_gene_list() -> None:
     assert params_skip(_infos(search)) == "takes_a_gene_list"
 
 
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 def test_the_organism_binds_by_vocabulary() -> None:
     infos = _infos(_search("search_genes_by_molecular_weight"))
 
@@ -82,6 +102,10 @@ def test_the_organism_binds_by_vocabulary() -> None:
     assert organism_overrides(infos, [FALCIPARUM, "Toxoplasma gondii ME49"]) == {}
 
 
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_a_search_that_binds_from_the_organism_alone_is_bound() -> None:
     search = _search("search_genes_by_molecular_weight")
 
@@ -97,6 +121,10 @@ async def test_a_search_that_binds_from_the_organism_alone_is_bound() -> None:
     ]
 
 
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_a_binding_that_leaves_an_open_slot_is_unbound_required() -> None:
     """The recorded vocabulary holds no Toxoplasma organism, so none binds."""
     search = _search("search_genes_by_molecular_weight")

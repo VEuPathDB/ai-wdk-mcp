@@ -20,7 +20,8 @@ status: stable
 - **No production recording stays where a test reads it.** The recordings made on
   production moved to `fixtures-production-backup-2026-10-09/`, which no test, image or
   build reads. A test that read one is skipped with
-  `veupathdb.testing.NEEDS_QA_RECORDING` until it is recorded again on QA
+  `veupathdb.testing.NEEDS_QA_RECORDING` while `needs_qa_recording` finds the recordings
+  it reads absent, so a QA recording lifts the skip with no change to the test
   ([the backlog item](../backlog/the-production-recordings-are-recorded-again-on-qa.md)).
 - **The guard.** `scripts/check-test-sites.mjs` fails on a production host (a site
   domain whose nearest label is not `qa` or `q2`: bare, `www.`, `beta.`, a numbered

@@ -39,6 +39,7 @@ class _Recorder:
         self._delay = delay
         self.search_configs: list[WDKSearchConfig] = []
         self.report_configs: list[JSONObject | None] = []
+        self.budgets: list[float | None] = []
 
     async def run_search_report(
         self,
@@ -46,12 +47,16 @@ class _Recorder:
         search_name: str,
         search_config: WDKSearchConfig,
         report_config: JSONObject | None = None,
+        *,
+        budget_seconds: float | None = None,
     ) -> WDKAnswer:
         del record_type, search_name
         self.search_configs.append(search_config)
         self.report_configs.append(report_config)
+        self.budgets.append(budget_seconds)
         if self._delay:
-            await asyncio.sleep(self._delay)
+            async with asyncio.timeout(budget_seconds):
+                await asyncio.sleep(self._delay)
         if isinstance(self._answer, Exception):
             raise self._answer
         return WDKAnswer(meta=WDKAnswerMeta(total_count=self._answer), records=[])
@@ -132,6 +137,18 @@ async def test_a_read_over_its_budget_reports_no_count(
 
     assert count is None
     assert elapsed < 0.3, "the caller does not wait out a read past its budget"
+
+
+async def test_the_budget_goes_to_the_client_which_starts_it_at_the_send(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    recorder = _serve(monkeypatch, 42)
+
+    await count_search_answer(
+        "plasmodb", "transcript", "GenesByText", _params(), timeout_seconds=7.5
+    )
+
+    assert recorder.budgets == [7.5]
 
 
 async def test_a_read_within_its_budget_answers(

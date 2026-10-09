@@ -224,6 +224,17 @@
     "use_research_settings_source",
     "web_search"
   ],
+  "veupathdb_mcp.search_line": [
+    "ExpensiveSearch",
+    "ExpensiveSearchLine",
+    "NOTICE_SECONDS",
+    "SearchLine",
+    "SearchWaitListener",
+    "install_search_line",
+    "search_line_gate",
+    "search_line_key",
+    "told_while_waiting"
+  ],
   "veupathdb_mcp.separation": [
     "BudgetSpentError",
     "CLEANUP_REQUESTS",
@@ -258,6 +269,7 @@
   ],
   "veupathdb_mcp.server": [
     "SERVER_NAME",
+    "SearchTurnPerCall",
     "SiteGuard",
     "TOOLS",
     "WdkIdentity",

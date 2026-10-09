@@ -18,7 +18,7 @@ from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import InputDatasetValue, ParamValue, StringValue
 from veupathdb.domain.strategy import StrategyAst, StrategyStepNode
 from veupathdb.errors import ValidationError
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import (
     AiExpressionReport,
@@ -277,7 +277,10 @@ async def test_the_ai_expression_schema_names_a_summary_line_experiment() -> Non
     assert line["assay_type"] == {"default": "", "type": "string"}
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/ai_expression_summary_present.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_a_summarized_gene_is_served_without_experiment_counts(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

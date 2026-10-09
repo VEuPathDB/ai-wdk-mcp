@@ -6,9 +6,10 @@ from tests._support.recorded_searches import (
     recorded_search,
     site_recorded_search,
 )
+from tests._support.recordings import TEST_ROOT
 from tests._support.separation_site import FALCIPARUM, RecordedCatalog, patch_site
 from veupathdb.domain.parameters import MultiPickValue, SinglePickValue, StringValue
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 
 from veupathdb_mcp.catalog import (
     RADIO_OFF,
@@ -96,7 +97,13 @@ def test_a_product_phrase_is_one_the_positives_share() -> None:
     assert product_phrases(products) == ["serine/threonine protein kinase"]
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_a_pick_binds_the_entry_its_term_names() -> None:
     search = recorded_search("search_genes_by_molecular_weight").search_data
     catalog = RecordedCatalog(_responses())
@@ -114,7 +121,13 @@ async def test_a_pick_binds_the_entry_its_term_names() -> None:
     assert parameters["organism"] == MultiPickValue(values=["Plasmodium vivax P01"])
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_a_term_the_vocabulary_lacks_is_a_vocabulary_miss() -> None:
     search = recorded_search("search_genes_by_molecular_weight").search_data
     catalog = RecordedCatalog(_responses())
@@ -133,7 +146,13 @@ async def test_a_term_the_vocabulary_lacks_is_a_vocabulary_miss() -> None:
     assert skipped.value.reason == "vocabulary_miss"
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_the_thread_goes_first_and_the_catalog_copy_is_a_duplicate(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -156,7 +175,13 @@ async def test_the_thread_goes_first_and_the_catalog_copy_is_a_duplicate(
     ]
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_a_literature_query_binds_its_hits_with_the_reference(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -172,7 +197,13 @@ async def test_a_literature_query_binds_its_hits_with_the_reference(
     assert candidates[0].parameters["organism"] == MultiPickValue(values=[FALCIPARUM])
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_a_query_too_vague_to_rank_skips_the_source(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -196,7 +227,13 @@ async def test_a_query_too_vague_to_rank_skips_the_source(
     )
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_a_term_whose_search_the_site_lacks_is_not_a_gene_search(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -225,7 +262,13 @@ async def test_a_term_whose_search_the_site_lacks_is_not_a_gene_search(
     )
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_positives_of_two_organisms_skip_the_enrichment(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -245,7 +288,13 @@ async def test_positives_of_two_organisms_skip_the_enrichment(
     )
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_the_catalog_takes_only_what_the_budget_can_measure(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -289,7 +338,13 @@ def _enriched(
     )
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        TEST_ROOT / "unit/separation/fixtures/search_go_term.json",
+        TEST_ROOT / "unit/separation/fixtures/search_metabolic_pathway.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_enriched_terms_bind_the_entries_their_ids_name_on_the_site(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -363,7 +418,12 @@ async def test_enriched_terms_bind_the_entries_their_ids_name_on_the_site(
     ]
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording(
+        TEST_ROOT / "unit/separation/fixtures/search_metabolic_pathway.json"
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_a_pathway_entry_the_sheet_does_not_hold_is_a_vocabulary_miss(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

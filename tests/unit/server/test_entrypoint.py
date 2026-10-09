@@ -10,6 +10,7 @@ import pytest
 from mcp.shared.auth import ProtectedResourceMetadata
 from mcp.types import CallToolResult, JSONRPCResponse, ListToolsResult, TextContent
 from starlette.applications import Starlette
+from veupathdb.wdk import open_search_gate, search_gate, use_search_gate
 
 from veupathdb_mcp import __version__
 from veupathdb_mcp.__main__ import HEALTH_PATH, ServerHealth, build_app
@@ -158,3 +159,34 @@ async def test_the_verified_credential_reaches_the_tool_layer(
 
 def test_the_server_declares_the_deployments_version() -> None:
     assert build_server().version == __version__
+
+
+@pytest.fixture
+def open_gate() -> Iterator[None]:
+    use_search_gate(open_search_gate)
+    yield
+    use_search_gate(open_search_gate)
+
+
+@pytest.mark.usefixtures("mcp_deployment", "open_gate")
+async def test_a_server_with_a_database_joins_the_expensive_search_line(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://index@db.invalid/index")
+
+    async with _serving():
+        installed = search_gate()
+
+    assert installed is not open_search_gate
+
+
+@pytest.mark.usefixtures("mcp_deployment", "open_gate")
+async def test_a_server_without_a_database_keeps_the_open_gate(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+
+    async with _serving():
+        installed = search_gate()
+
+    assert installed is open_search_gate

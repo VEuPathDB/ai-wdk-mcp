@@ -11,7 +11,7 @@ import json
 import pytest
 from veupathdb.domain.parameters import MultiPickValue, StringValue
 from veupathdb.errors import DataParsingError
-from veupathdb.testing import NEEDS_QA_RECORDING
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKSearchConfig, WDKSearchResponse, WDKStep
 
@@ -95,7 +95,10 @@ def unreadable_spec(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(param_decoding, "get_search_params_under_context", _read)
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 @pytest.mark.usefixtures("spec_reads")
 async def test_a_single_step_search_carries_its_decoded_parameters() -> None:
     api = _FakeStrategyAPI(_step("GenesByMolecularWeight", WEIGHT_WIRE))
@@ -113,7 +116,10 @@ async def test_a_single_step_search_carries_its_decoded_parameters() -> None:
     }
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 @pytest.mark.usefixtures("spec_reads")
 async def test_a_step_that_sets_no_parameter_reports_an_empty_mapping() -> None:
     """An empty mapping and a missing one say different things to the caller."""
@@ -152,7 +158,10 @@ async def test_a_boolean_step_reports_no_search_and_reads_no_spec(
     assert spec_reads == []
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 @pytest.mark.usefixtures("spec_reads")
 async def test_a_record_type_the_caller_states_is_kept() -> None:
     api = _FakeStrategyAPI(_step("GenesByMolecularWeight", WEIGHT_WIRE))
@@ -162,7 +171,10 @@ async def test_a_record_type_the_caller_states_is_kept() -> None:
     assert record_type == "gene"
 
 
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 @pytest.mark.usefixtures("spec_reads")
 async def test_a_gene_step_reports_the_gene_record_type() -> None:
     api = _FakeStrategyAPI(_step("GenesByMolecularWeight", WEIGHT_WIRE, "gene"))
