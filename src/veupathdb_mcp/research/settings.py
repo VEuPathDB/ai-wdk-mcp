@@ -20,6 +20,7 @@ class ResearchSettings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
+        hide_input_in_errors=True,
         env_prefix="research_mcp_",
         env_file_encoding="utf-8",
         case_sensitive=False,

@@ -26,6 +26,7 @@ class McpSettings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
+        hide_input_in_errors=True,
         env_file_encoding="utf-8",
         case_sensitive=False,
         env_ignore_empty=True,
