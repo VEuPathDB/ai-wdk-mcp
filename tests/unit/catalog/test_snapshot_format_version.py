@@ -30,7 +30,7 @@ _CARD = ExperimentCard(
     assay="RNASeq",
     attribution="Chuang et al. 2022",
     pmids=["36056126"],
-    record_url="https://plasmodb.org/plasmo/app/record/dataset/DS_00f985857c",
+    record_url="https://qa.plasmodb.org/plasmo.qa/app/record/dataset/DS_00f985857c",
 )
 
 # The file a format-1 build wrote: two maps keyed by dataset id, no cards.

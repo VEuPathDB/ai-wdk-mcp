@@ -26,6 +26,12 @@ repos:
         language: system
         pass_filenames: false
         files: ^(docs/knowledge/|scripts/)
+      - id: test-sites
+        name: check-test-sites
+        entry: bash -c "node scripts/check-test-sites.mjs && node --test scripts/check-test-sites.test.mjs"
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: pytest-integration
         name: pytest (index suite, pgvector testcontainer)
         entry: bash -c "uv run pytest tests/integration"

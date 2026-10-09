@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 from pydantic import BaseModel, ConfigDict, Field
 from veupathdb.domain.parameters import StringValue
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.wdk import WDKStrategySummary
 
 from veupathdb_mcp import tool_payloads
@@ -135,6 +136,7 @@ class _RecordedCatalog(BaseModel):
     record_types: list[_RecordedRecordType]
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 @pytest.mark.parametrize(
     "catalog", sorted(CATALOGS.glob("*.json")), ids=lambda path: path.stem
 )
@@ -240,13 +242,13 @@ async def test_search_categories_carry_the_counts_the_ontology_groups(
 
 def test_a_step_download_url_names_the_step_the_format_and_the_url() -> None:
     payload = StepDownloadUrl(
-        step_id=42, format="tab", download_url="https://plasmodb.org/x.tab"
+        step_id=42, format="tab", download_url="https://qa.plasmodb.org/x.tab"
     )
 
     assert payload.model_dump(by_alias=True) == {
         "stepId": 42,
         "format": "tab",
-        "downloadUrl": "https://plasmodb.org/x.tab",
+        "downloadUrl": "https://qa.plasmodb.org/x.tab",
     }
 
 

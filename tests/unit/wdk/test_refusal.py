@@ -17,9 +17,9 @@ from tests._support.wdk_refusals import (
 from veupathdb_mcp.wdk.refusal import describe_step_refusal
 
 _INTERNALS = (
-    "1202189953",
-    "440118373",
-    "440118363",
+    "1000000101",
+    "900000004",
+    "900000003",
     "keyedErrors",
     "validationLevel",
     "validationStatus",

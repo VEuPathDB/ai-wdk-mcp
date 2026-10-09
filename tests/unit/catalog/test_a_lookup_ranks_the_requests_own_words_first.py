@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import pytest
 from veupathdb.domain.parameters import VocabOption
+from veupathdb.testing import NEEDS_QA_RECORDING
 
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 from veupathdb_mcp.catalog.search_inspection import (
@@ -138,6 +139,7 @@ async def _read(narrowing: VocabNarrowing) -> ParameterInfo:
     return result
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_a_cut_list_holds_every_entry_the_request_words_name(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -162,6 +164,7 @@ async def test_a_cut_list_holds_every_entry_the_request_words_name(
     )
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_without_the_request_words_the_cut_hides_most_of_them(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

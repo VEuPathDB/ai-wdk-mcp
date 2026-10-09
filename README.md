@@ -162,7 +162,7 @@ because a document naming the wrong host sends a client to the wrong authority.
 | --- | --- |
 | `DATABASE_URL` | the Postgres holding the two embedding tables |
 | `OPENAI_API_KEY`, `EMBEDDING_*` | the embedder behind semantic search |
-| `VEUPATHDB_SITES_CONFIG` | a `sites.yaml` of your own; unset reads the client library's bundled one |
+| `VEUPATHDB_SITES_CONFIG` | the `sites.yaml` this deployment serves; required, because the client library ships no default list and the first site read fails without one |
 | `VEUPATHDB_AUTH_TOKEN` | the deployment's service credential for user-independent reads |
 | `VEUPATHDB_OAUTH_URL` | the OAuth server that signs VEuPathDB bearers |
 | `WDK_MCP_BASE_URL` | the URL a client reads the RFC 9728 document at |
@@ -287,8 +287,19 @@ uv run ruff check src tests && uv run ruff format --check src tests
 uv run mypy --strict src
 uv run pytest tests/unit                      # hermetic
 uv run pytest tests/integration               # pgvector testcontainer
-uv run pytest tests/live -m live_wdk --override-ini addopts=''   # one real site
+uv run pytest tests/live -m live_wdk --override-ini addopts=''   # one QA site
+node scripts/check-knowledge.mjs && node --test scripts/check-knowledge.test.mjs
+node scripts/check-test-sites.mjs && node --test scripts/check-test-sites.test.mjs
 ```
+
+Every test, the live lane included, reads the QA site list the client library ships
+(`veupathdb.testing.QA_SITES_FILE`), and `scripts/record_all_datasets.py` records from
+it whatever the environment names. `check-test-sites.mjs` fails on a production or beta
+host anywhere outside `README.md`, `docs/`, the catalog cache under `data/catalogs/` and
+the backup of the production recordings.
+A test whose recording was made on production is skipped with
+`veupathdb.testing.NEEDS_QA_RECORDING` until it is recorded again on QA
+([the decision](docs/knowledge/decisions/tests-run-against-qa-and-a-deployment-names-its-sites.md)).
 
 ## Images
 

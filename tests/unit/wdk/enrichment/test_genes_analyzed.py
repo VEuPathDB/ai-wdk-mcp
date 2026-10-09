@@ -96,7 +96,7 @@ class TestTheServiceReportsTheStepsOwnCount:
         monkeypatch.setattr(service, "get_strategy_api", lambda site_id: api)
 
         results, errors = await EnrichmentService()._run_analyses_on_step(
-            "plasmodb", 440117143, ["go_process"], []
+            "plasmodb", 900000007, ["go_process"], []
         )
 
         assert errors == []

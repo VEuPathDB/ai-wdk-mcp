@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import VEuPathDBClient, WDKRecordType, WDKSearch, WDKSearchResponse
 
@@ -213,6 +214,7 @@ async def test_a_serving_process_keeps_the_stale_snapshot_and_builds_nothing(
     assert stale_cache.names == []
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 class TestWdkSearch002TheUrlSegmentIsTheAddress:
     def test_wdk_search_002_a_search_carries_two_different_names(self) -> None:
         search = _molecular_weight().search_data
@@ -262,6 +264,7 @@ class TestWdkSearch002TheUrlSegmentIsTheAddress:
 
 
 class TestWdkSearch001ASearchBelongsToOneRecordClass:
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     def test_wdk_search_001_the_wrong_record_type_is_a_404(self) -> None:
         recorded = load_recorded("search_under_the_wrong_record_type")
 
@@ -271,6 +274,7 @@ class TestWdkSearch001ASearchBelongsToOneRecordClass:
             'record type "OrganismRecordClass"'
         )
 
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     def test_wdk_search_001_the_refusal_names_the_record_class_full_name(self) -> None:
         # The path segment is the url segment; the comparison is against the
         # record class full name.
@@ -279,6 +283,7 @@ class TestWdkSearch001ASearchBelongsToOneRecordClass:
         assert "OrganismRecordClass" in body
         assert 'record type "organism"' not in body
 
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     def test_wdk_search_001_a_search_declares_one_output_record_class(self) -> None:
         search = _molecular_weight().search_data
 
@@ -296,6 +301,7 @@ class TestWdkSearch001ASearchBelongsToOneRecordClass:
         assert catalog.find_search("transcript", "GenesByExonCount") is not None
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 class TestWdkSearch004ParamNamesIsTheParameterList:
     """``supplementWithBasicParamInfo`` writes ``groups`` and ``paramNames`` from
     one call, so they agree on membership by construction.

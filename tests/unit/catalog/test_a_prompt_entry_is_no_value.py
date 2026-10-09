@@ -6,6 +6,7 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKEnumParam, WDKSearchResponse
 
@@ -41,6 +42,7 @@ def _values(info: ParameterInfo) -> list[str]:
     return [option.value for option in info.allowed_values or []]
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 def test_the_chromosome_prompt_is_not_offered() -> None:
     chromosome = _chromosome()
 
@@ -51,6 +53,7 @@ def test_the_chromosome_prompt_is_not_offered() -> None:
     assert chromosome.prompt_values == [_CHOOSE]
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 def test_the_chromosome_prompt_is_a_placeholder_and_a_chromosome_is_not() -> None:
     chromosome = _chromosome()
 
@@ -79,6 +82,7 @@ def test_a_prompt_whose_term_is_an_id_is_read_by_its_label() -> None:
     assert info.is_placeholder("bla")
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_a_narrowed_read_matches_no_prompt(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

@@ -237,7 +237,7 @@ async def test_a_web_search_that_finds_nothing_says_so(
 
     monkeypatch.setattr(WebSearchService, "search", _nothing)
 
-    out = await tools.web_search("site:plasmodb.org 3D7 gene count", limit=5)
+    out = await tools.web_search("site:qa.plasmodb.org 3D7 gene count", limit=5)
 
     assert (out.error, out.results) == (None, [])
     assert "found no page" in out.guidance

@@ -229,7 +229,7 @@ async def _load_discovery_details_and_allowed(
 def prefer_original_wdk_error(original: WDKError, fallback: WDKError) -> WDKError:
     """Keep the component site's error when the portal retry also fails.
 
-    Not every component-site search exists on veupathdb.org, so the retry
+    Not every component-site search exists on the portal, so the retry
     often fails with an unrelated 500. Letting that replace the original turns
     a specific, actionable message into a generic one and leaves the editor
     saying only "Failed to load parameters for this search".

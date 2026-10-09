@@ -12,6 +12,7 @@ from tests._support.recorded_catalog import (
     recorded_catalog,
 )
 from veupathdb.devtools.wdk_capture import WDKExchange
+from veupathdb.testing import NEEDS_QA_RECORDING
 
 from veupathdb_mcp import catalog
 from veupathdb_mcp.catalog import searches
@@ -27,17 +28,19 @@ _HOMINIS_OOCYSTS = "GenesByRNASeqchomTU502_Widmer_oocysts_ebi_rnaSeq_RSRCPercent
 _BINDING_SITES = "GenesByBindingSiteFeature"
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 def test_the_recording_is_the_request_the_build_posts() -> None:
     recorded = WDKExchange.model_validate_json(
         (CATALOG_FIXTURES / "cryptodb_all_datasets.json").read_text()
     )
 
     assert recorded.url == (
-        f"https://cryptodb.org/cryptodb/service{DATASET_REPORT_PATH}"
+        f"https://qa.cryptodb.org/cryptodb.qa/service{DATASET_REPORT_PATH}"
     )
     assert recorded.request_json == dataset_report_request()
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_a_card_lists_its_organisms_apart() -> None:
     cards = await load_dataset_metadata(
         RecordedDatasetSite("cryptodb_all_datasets.json"), "cryptodb"
@@ -64,6 +67,7 @@ def test_a_card_with_no_organism_lists_none() -> None:
     assert card.organisms == ()
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 class TestTheCatalogReadsTheDatasetASearchRunsOn:
     async def test_a_search_one_dataset_names_has_its_organism(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
@@ -112,6 +116,7 @@ class TestDatasetOrganisms:
         assert catalog.dataset_organisms is searches.dataset_organisms
         assert "dataset_organisms" in catalog.__all__
 
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     async def test_it_reads_the_catalog_of_the_site(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     ) -> None:

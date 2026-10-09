@@ -18,6 +18,7 @@ from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import InputDatasetValue, ParamValue, StringValue
 from veupathdb.domain.strategy import StrategyAst, StrategyStepNode
 from veupathdb.errors import ValidationError
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import (
     AiExpressionReport,
@@ -276,6 +277,7 @@ async def test_the_ai_expression_schema_names_a_summary_line_experiment() -> Non
     assert line["assay_type"] == {"default": "", "type": "string"}
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_a_summarized_gene_is_served_without_experiment_counts(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -385,7 +387,9 @@ async def test_a_step_call_answers_from_the_results_service(
             attributes: list[str] | None = None,
         ) -> str:
             del attributes
-            return f"https://plasmodb.org/temporary-results/{step_id}.{output_format}"
+            return (
+                f"https://qa.plasmodb.org/temporary-results/{step_id}.{output_format}"
+            )
 
     monkeypatch.setattr(step_preview, "get_results_api", lambda site_id: _Results())
 
@@ -398,7 +402,7 @@ async def test_a_step_call_answers_from_the_results_service(
     assert result.structured_content == {
         "stepId": 42,
         "format": "tab",
-        "downloadUrl": "https://plasmodb.org/temporary-results/42.tab",
+        "downloadUrl": "https://qa.plasmodb.org/temporary-results/42.tab",
     }
 
 
@@ -702,7 +706,7 @@ _CRYPTO_CARD = ExperimentCard(
     organism="Cryptosporidium parvum Iowa II",
     assay="RNASeq",
     attribution="Lippuner et al. 2018",
-    record_url="https://cryptodb.org/cryptodb/app/record/dataset/DS_c1",
+    record_url="https://qa.cryptodb.org/cryptodb.qa/app/record/dataset/DS_c1",
 )
 
 

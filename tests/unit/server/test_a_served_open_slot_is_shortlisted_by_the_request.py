@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import pytest
 from veupathdb.domain.parameters import UnboundParameter
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKSearchResponse
 
@@ -60,6 +61,7 @@ async def _organism_slot(criterion: str) -> UnboundParameter:
     return next(s for s in resolved.open_slots if s.param_name == "organism")
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_a_sheet_sized_vocabulary_is_served_whole(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -71,6 +73,7 @@ async def test_a_sheet_sized_vocabulary_is_served_whole(
     assert slot.options.index(_PF3D7) == 25
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_a_longer_vocabulary_is_served_as_the_requests_shortlist(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -88,6 +91,7 @@ async def test_a_longer_vocabulary_is_served_as_the_requests_shortlist(
     assert "query=" in slot.question
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_a_contrast_slot_is_served_as_the_requests_shortlist(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

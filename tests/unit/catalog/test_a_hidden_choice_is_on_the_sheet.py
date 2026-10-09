@@ -3,12 +3,16 @@ with a vocabulary is on the sheet, marked hidden, because it takes any entry."""
 
 from __future__ import annotations
 
+import pytest
 from tests._support.recorded_searches import recorded_search
+from veupathdb.testing import NEEDS_QA_RECORDING
 
 from veupathdb_mcp import catalog
 from veupathdb_mcp.catalog.overview_formatting import format_search_overview
 from veupathdb_mcp.catalog.param_formatting import format_param_info_typed
 from veupathdb_mcp.catalog.param_sheet import build_sheet
+
+pytestmark = pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 
 
 def _infos(fixture: str) -> list[catalog.ParameterInfo]:

@@ -11,6 +11,7 @@ from typing import cast
 
 import pytest
 from tests._support.recorded_searches import recorded_search
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp import catalog
@@ -242,6 +243,7 @@ async def test_an_unreachable_index_leaves_every_similarity_unknown() -> None:
     assert scored[0][1].semantic_similarity is None
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_an_injected_hit_is_a_search_the_listings_offer() -> None:
     index = _StubIndex(
         hits=[

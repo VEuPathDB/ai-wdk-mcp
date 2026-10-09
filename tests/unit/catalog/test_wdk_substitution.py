@@ -200,7 +200,7 @@ _WDK_FILTER_ECHO = (
 WDK stores the stable value as the caller wrote it, so the echo carries the
 key order and the ``fieldDisplayName`` that ``FilterValue.to_wire`` drops::
 
-    curl -X POST -d @context.json 'https://plasmodb.org/plasmo/service/record-types/transcript/searches/GenesByNgsSnps?expandParams=true'
+    curl -X POST -d @context.json 'https://qa.plasmodb.org/plasmo.qa/service/record-types/transcript/searches/GenesByNgsSnps?expandParams=true'
 """
 
 
@@ -309,7 +309,7 @@ class TestAnInputStepIsNotReported:
     def test_an_echoed_step_id_the_caller_never_sent_is_not_substituted(self) -> None:
         filled = substituted_params(
             sent={},
-            echoed={"transcript_result": "330423363"},
+            echoed={"transcript_result": "900000005"},
             specs=_FILTER_SPECS,
             values_were_read=True,
         )

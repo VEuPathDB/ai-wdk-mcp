@@ -7,6 +7,7 @@ from collections.abc import Generator
 import pytest
 import structlog
 from veupathdb import VEuPathDBSettings, use_veupathdb_settings_source
+from veupathdb.testing import QA_SITES_FILE
 from veupathdb.wdk import reset_site_router
 
 from veupathdb_mcp.embeddings import embedder
@@ -27,8 +28,14 @@ os.environ["EMBEDDING_BACKEND"] = "fake"
 
 
 @pytest.fixture(autouse=True)
-def _settings_read_the_environment() -> Generator[None]:
-    """Every read builds a fresh instance, so a monkeypatched variable applies."""
+def _settings_read_the_environment(
+    monkeypatch: pytest.MonkeyPatch,
+) -> Generator[None]:
+    """Every read builds a fresh instance, so a monkeypatched variable applies.
+
+    The environment names the QA site list, so no test reads another.
+    """
+    monkeypatch.setenv("VEUPATHDB_SITES_CONFIG", str(QA_SITES_FILE))
     use_mcp_settings_source(McpSettings)
     use_research_settings_source(ResearchSettings)
     use_embedding_settings_source(EmbeddingSettings)

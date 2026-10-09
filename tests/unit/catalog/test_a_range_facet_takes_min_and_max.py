@@ -10,6 +10,7 @@ import pytest
 from veupathdb.devtools.wdk_capture import WDKExchange
 from veupathdb.domain.parameters import FilterValue
 from veupathdb.errors import ValidationError
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.wdk import WDKSearchResponse
 
 from veupathdb_mcp.catalog.param_dag import ParameterInfo, resolve_params_with_intent
@@ -64,6 +65,7 @@ async def _wire(info: ParameterInfo, override: str) -> list[dict[str, object]]:
     return clauses
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 @pytest.mark.parametrize(
     ("override", "bounds"),
     [
@@ -98,6 +100,7 @@ async def test_a_range_facet_is_written_as_min_and_max(
     assert clause["value"] == bounds
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 @pytest.mark.parametrize(
     "override",
     [
@@ -123,6 +126,7 @@ async def test_a_date_facet_is_written_as_min_and_max() -> None:
     assert clause["value"] == {"min": "2019-01-01", "max": "2020-12-31"}
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 @pytest.mark.parametrize(
     "override",
     [
@@ -144,6 +148,7 @@ async def test_a_range_facet_refuses_a_member_value_naming_both_forms(
     assert '{"min": <n>, "max": <n>}' in detail
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_a_member_facet_refuses_bounds_naming_both_forms() -> None:
     override = '{"filters": [{"field": "most_severe_impact", "value": {"max": 1}}]}'
 
@@ -155,11 +160,13 @@ async def test_a_member_facet_refuses_bounds_naming_both_forms() -> None:
     assert '["<m1>", "<m2>"]' in detail
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_filter_json_without_a_clause_list_is_refused() -> None:
     with pytest.raises(ValidationError, match="filters"):
         await _wire(_variant_stats(), '{"max_minor_allele_frequency": {"max": 0.05}}')
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_a_bare_list_is_refused_naming_both_facet_forms() -> None:
     info = _variant_stats()
 
@@ -175,6 +182,7 @@ async def test_a_bare_list_is_refused_naming_both_facet_forms() -> None:
     assert "'<facet>=<lo>..<hi>'" in detail
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 def test_the_sheet_states_the_member_and_the_range_form() -> None:
     value_format = _variant_stats().value_format
 

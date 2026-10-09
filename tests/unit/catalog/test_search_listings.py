@@ -12,11 +12,14 @@ from typing import cast
 
 import pytest
 from tests._support.recorded_searches import recorded_search
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog import searches
 from veupathdb_mcp.catalog.discovery_service import DiscoveryService
 from veupathdb_mcp.catalog.search_collection import collect_search_candidates
+
+pytestmark = pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 
 _LISTING = Path(__file__).parent / "fixtures" / "plasmodb_transcript_searches.json"
 

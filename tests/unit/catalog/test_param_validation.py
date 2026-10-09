@@ -175,7 +175,7 @@ async def _validate_organism() -> param_validation.ValidatedParams:
 class TestWdksOwnVerdictIsTheRefusal:
     """The bundle WDK answered with is the refusal the model reads.
 
-    Both message texts below are the bodies plasmodb.org returned on
+    Both message texts below are the bodies the site returned on
     2026-09-04 to a raw step create carrying the same values.
     """
 

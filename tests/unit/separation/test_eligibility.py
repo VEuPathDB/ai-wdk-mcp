@@ -7,6 +7,7 @@ from tests._support.recorded_searches import (
     recorded_search,
 )
 from veupathdb.domain.parameters import MultiPickValue
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog import ParameterInfo, format_param_info_typed
@@ -17,6 +18,8 @@ from veupathdb_mcp.separation.eligibility import (
     search_skip,
 )
 from veupathdb_mcp.separation.enumerate import CandidateSkippedError, Proposal, bind
+
+pytestmark = pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 
 FALCIPARUM = "Plasmodium falciparum 3D7"
 

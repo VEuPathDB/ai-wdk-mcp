@@ -21,7 +21,7 @@ from veupathdb_mcp.metadata import (
     protected_resource_routes,
 )
 
-BASE_URL = "https://wdk-mcp.veupathdb.org"
+BASE_URL = "https://wdk-mcp.test"
 MCP_PATH = "/mcp"
 METADATA_PATH = "/.well-known/oauth-protected-resource/mcp"
 SERVICE_SECRET = "wdk-mcp-service-secret-0123456789ab"
@@ -31,7 +31,7 @@ SERVICE_SECRET = "wdk-mcp-service-secret-0123456789ab"
 def mcp_deployment(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     monkeypatch.setenv("WDK_MCP_BASE_URL", BASE_URL)
     monkeypatch.setenv("WDK_MCP_SERVICE_TOKENS", f"gene-page:{SERVICE_SECRET}")
-    monkeypatch.setenv("VEUPATHDB_OAUTH_URL", "https://auth.veupathdb.org")
+    monkeypatch.setenv("VEUPATHDB_OAUTH_URL", "https://oauth.test")
     identity._subjects.clear()
     yield
     identity._subjects.clear()
@@ -67,7 +67,7 @@ async def test_the_metadata_document_carries_rfc_9728_required_fields(
     document = ProtectedResourceMetadata.model_validate_json(response.content)
     assert str(document.resource) == f"{BASE_URL}{MCP_PATH}"
     assert [str(server) for server in document.authorization_servers] == [
-        "https://auth.veupathdb.org/"
+        "https://oauth.test/"
     ]
     assert document.bearer_methods_supported == ["header"]
     assert document.resource_name == RESOURCE_NAME

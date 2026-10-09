@@ -16,7 +16,7 @@ from veupathdb_mcp.__main__ import HEALTH_PATH, ServerHealth, build_app
 from veupathdb_mcp.metadata import DEFAULT_MCP_PATH
 from veupathdb_mcp.server import SERVER_NAME, TOOLS, build_server
 
-BASE_URL = "https://wdk-mcp.veupathdb.org"
+BASE_URL = "https://wdk-mcp.test"
 METADATA_PATH = "/.well-known/oauth-protected-resource/mcp"
 SERVICE_SECRET = "wdk-mcp-service-secret-0123456789ab"
 UNSERVED_SITE = "not-a-veupathdb-site"

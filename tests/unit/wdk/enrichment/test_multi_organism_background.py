@@ -105,7 +105,7 @@ class TestAResultSpanningSeveralOrganisms:
         wdk = _install(monkeypatch, [EIMERIA, TOXO])
 
         results, errors = await EnrichmentService().run_batch(
-            site_id="toxodb", analysis_types=["go_process"], step_id=440274393
+            site_id="toxodb", analysis_types=["go_process"], step_id=900000008
         )
 
         assert wdk.analyses == []

@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 STALE_DATASET_REFUSAL = (
-    r"""POST /users/1202189953/steps/440118373/reports/standard -> HTTP 422 """
+    r"""POST /users/1000000101/steps/900000004/reports/standard -> HTTP 422 """
     r"""(UNSPECIFIED): This step is not runnable for the following reasons: """
     r"""{"keyedErrors":{"bq_right_op_TranscriptRecordClasses_TranscriptRecordClass":"""
-    r"""["The step referenced by ID '440118363' is not runnable because: """
+    r"""["The step referenced by ID '900000003' is not runnable because: """
     r"""{\n \"keyedErrors\": {\n \"samples_percentile_generic\": """
     r"""[\"At least one parameter that 'samples_percentile_generic' depends on """
     r"""is invalid or missing. Errors: \\n{\\n profileset_generic => Invalid """
@@ -22,17 +22,17 @@ STALE_DATASET_REFUSAL = (
 STALE_VALUE = "P. falciparum Su Strand Specific RNA Seq data - - Sense"
 
 OWN_VALUE_REFUSAL = (
-    "POST /users/1202189953/steps/440118373/reports/standard -> HTTP 422 "
+    "POST /users/1000000101/steps/900000004/reports/standard -> HTTP 422 "
     "(UNSPECIFIED): This step is not runnable for the following reasons: "
     '{"keyedErrors":{"organism":["Invalid value \'Plasmodium berghei ANKA\'."]},'
     '"validationLevel":"RUNNABLE","validationStatus":"FAILED","errors":[]}'
 )
 
 FIRST_INPUT_REFUSAL = (
-    "POST /users/1202189953/steps/440118373/reports/standard -> HTTP 422 "
+    "POST /users/1000000101/steps/900000004/reports/standard -> HTTP 422 "
     "(UNSPECIFIED): This step is not runnable for the following reasons: "
     '{"keyedErrors":{"bq_left_op_TranscriptRecordClasses_TranscriptRecordClass":'
-    "[\"The step referenced by ID '440118363' is not runnable because: "
+    "[\"The step referenced by ID '900000003' is not runnable because: "
     '{\\"keyedErrors\\":{\\"organism\\":[\\"Invalid value '
     '\'Plasmodium berghei ANKA\'.\\"]},\\"validationLevel\\":\\"RUNNABLE\\",'
     '\\"validationStatus\\":\\"FAILED\\"}"]},'
@@ -40,7 +40,7 @@ FIRST_INPUT_REFUSAL = (
 )
 
 UNREADABLE_REFUSAL = (
-    "POST /users/1202189953/steps/440118373/reports/standard -> HTTP 422 "
+    "POST /users/1000000101/steps/900000004/reports/standard -> HTTP 422 "
     "(UNSPECIFIED): This step is not runnable for the following reasons: "
     '{"keyedErrors":{"samples_fold_change_generic":'
     '["The referenced result is no longer available."]},'
@@ -48,12 +48,12 @@ UNREADABLE_REFUSAL = (
 )
 
 NOT_A_VALIDATION_REFUSAL = (
-    "GET /users/1202189953/steps/440118373 -> HTTP 404: "
-    '{"status":"not-found","message":"Step 440118373 not found."}'
+    "GET /users/1000000101/steps/900000004 -> HTTP 404: "
+    '{"status":"not-found","message":"Step 900000004 not found."}'
 )
 
 MARKUP_VALUE_REFUSAL = (
-    "POST /users/1202189953/steps/440118373/reports/standard -> HTTP 422 "
+    "POST /users/1000000101/steps/900000004/reports/standard -> HTTP 422 "
     "(UNSPECIFIED): This step is not runnable for the following reasons: "
     '{"keyedErrors":{"incoming":'
     '["Invalid value \'{\\"entityId\\":\\"OBI_0002695\\"}\'."]},'
@@ -61,10 +61,10 @@ MARKUP_VALUE_REFUSAL = (
 )
 
 TRANSFORM_INPUT_REFUSAL = (
-    "POST /users/1202189953/steps/440118373/reports/standard -> HTTP 422 "
+    "POST /users/1000000101/steps/900000004/reports/standard -> HTTP 422 "
     "(UNSPECIFIED): This step is not runnable for the following reasons: "
     '{"keyedErrors":{"gene_result":'
-    "[\"The step referenced by ID '440118363' is not runnable because: "
+    "[\"The step referenced by ID '900000003' is not runnable because: "
     '{\\"keyedErrors\\":{\\"organism\\":[\\"Invalid value '
     '\'Plasmodium berghei ANKA\'.\\"]},\\"validationLevel\\":\\"RUNNABLE\\",'
     '\\"validationStatus\\":\\"FAILED\\"}"]},'

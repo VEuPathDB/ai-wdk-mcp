@@ -48,6 +48,11 @@ jobs:
       - name: Run the index suite
         run: uv run pytest tests/integration
 
+      - name: Check that no test, recorder or default names a production site
+        run: |
+          node scripts/check-test-sites.mjs
+          node --test scripts/check-test-sites.test.mjs
+
       # The checkouts the citation check reads are not present here, so a
       # citation of another repository is reported as unverified, not failed.
       - name: Check the knowledge bundle
@@ -129,6 +134,7 @@ jobs:
       # to answer, so the lane reaches no site.
       - name: Serve veupathdb-wdk-mcp
         run: |
+          VEUPATHDB_SITES_CONFIG="$(uv run python -c 'from veupathdb.testing import QA_SITES_FILE; print(QA_SITES_FILE)')" \
           WDK_MCP_SERVICE_TOKENS="ci:$MCP_CONFORMANCE_BEARER" \
             uv run python -m veupathdb_mcp > wdk-mcp.log 2>&1 &
           for _ in $(seq 1 30); do

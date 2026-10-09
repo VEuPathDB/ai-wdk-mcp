@@ -1,7 +1,9 @@
-"""Record one site's AllDatasets standard report as a test fixture.
+"""Record one QA site's AllDatasets standard report as a test fixture.
 
-The dataset record type answers without a token. Run it from the repository
-root: ``uv run python scripts/record_all_datasets.py plasmodb``.
+The site comes from the QA list whatever the environment names, so no
+recording reaches a production site. The dataset record type answers without a
+token. Run it from the repository root:
+``uv run python scripts/record_all_datasets.py plasmodb``.
 """
 
 import asyncio
@@ -10,6 +12,7 @@ import time
 from pathlib import Path
 
 import httpx
+from veupathdb.devtools import use_qa_sites
 from veupathdb.devtools.wdk_capture import wdk_record
 from veupathdb.wdk import get_site_router
 
@@ -22,7 +25,8 @@ _FIXTURES = Path(__file__).resolve().parent.parent / "tests/unit/catalog/fixture
 
 
 async def record(site_id: str) -> Path:
-    """Post the report the catalog build posts, and write the exchange."""
+    """Post the report the catalog build posts to the QA site, and write the exchange."""
+    use_qa_sites()
     url = get_site_router().get_site(site_id).base_url + DATASET_REPORT_PATH
     started = time.perf_counter()
     async with httpx.AsyncClient(timeout=300) as client:
@@ -35,6 +39,7 @@ async def record(site_id: str) -> Path:
         response_body=response.content,
         ms=(time.perf_counter() - started) * 1000.0,
     )
+    _FIXTURES.mkdir(parents=True, exist_ok=True)
     path = _FIXTURES / f"{site_id}_all_datasets.json"
     path.write_text(exchange.model_dump_json(indent=1) + "\n")
     return path

@@ -2,6 +2,7 @@
 
 import pytest
 from tests._support.control_run_wdk import RunFakeAPI, patch_control_account
+from veupathdb.testing import NEEDS_QA_RECORDING
 
 from veupathdb_mcp.controls import (
     CONTROLS_PARAM,
@@ -9,6 +10,8 @@ from veupathdb_mcp.controls import (
     IntersectionConfig,
     run_positive_negative_controls,
 )
+
+pytestmark = pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 
 POSITIVES = ["PF3D7_0100100", "PF3D7_0100200", "PF3D7_0100300"]
 NEGATIVES = ["PF3D7_0200100", "PF3D7_0200200"]

@@ -141,7 +141,9 @@ async def test_a_query_no_engine_finds_a_page_for_answers_nothing(
 
     monkeypatch.setattr(WebSearchService, "_ddgs_text", staticmethod(every_empty))
 
-    resp = await WebSearchService().search("site:plasmodb.org 3D7 gene count", limit=5)
+    resp = await WebSearchService().search(
+        "site:qa.plasmodb.org 3D7 gene count", limit=5
+    )
 
     assert resp.results == []
     assert resp.error is None

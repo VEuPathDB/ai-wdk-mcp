@@ -9,6 +9,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from tests._support.recorded_searches import recorded_search
 from veupathdb.domain import SearchContext
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.wdk import WDKSearchResponse
 
 from veupathdb_mcp import catalog
@@ -35,6 +36,7 @@ def _infos(fixture: str) -> list[catalog.ParameterInfo]:
     return format_param_info_typed(definition.parameters or [])
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 @pytest.mark.parametrize(("fixture", "marked"), MARKED)
 def test_only_the_marked_parameter_is_the_organism_parameter(
     fixture: str, marked: str
@@ -44,6 +46,7 @@ def test_only_the_marked_parameter_is_the_organism_parameter(
     assert [info.name for info in infos if info.organism_param] == [marked]
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 def test_the_mark_travels_on_the_wire() -> None:
     by_name = {info.name: info for info in _infos("search_genes_by_ngs_snps")}
 
@@ -51,6 +54,7 @@ def test_the_mark_travels_on_the_wire() -> None:
     assert not by_name["snp_class"].model_dump(by_alias=True)["organismParam"]
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 @pytest.mark.parametrize(("fixture", "marked"), MARKED)
 def test_the_sheet_names_the_organism_parameter(fixture: str, marked: str) -> None:
     sheet = build_sheet(_infos(fixture), query="genes")
@@ -58,6 +62,7 @@ def test_the_sheet_names_the_organism_parameter(fixture: str, marked: str) -> No
     assert [entry.name for entry in sheet if entry.organism_param] == [marked]
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 def test_the_overview_names_the_organism_parameter() -> None:
     response = recorded_search("search_genes_by_gene_model_chars")
 
@@ -116,6 +121,7 @@ class TestOrganismParameter:
         assert catalog.organism_parameter is searches.organism_parameter
         assert "organism_parameter" in catalog.__all__
 
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     @pytest.mark.parametrize(("fixture", "marked"), MARKED)
     async def test_it_names_the_marked_parameter(
         self, monkeypatch: pytest.MonkeyPatch, fixture: str, marked: str
@@ -133,6 +139,7 @@ class TestOrganismParameter:
             )
         )
 
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     async def test_a_search_with_no_mark_has_none(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -144,6 +151,7 @@ class TestOrganismParameter:
 
         assert name is None
 
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     async def test_a_marked_tree_whose_leaves_name_no_organism_has_none(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -156,6 +164,7 @@ class TestOrganismParameter:
 
         assert name is None
 
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     async def test_the_organism_search_names_its_own_parameter(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:

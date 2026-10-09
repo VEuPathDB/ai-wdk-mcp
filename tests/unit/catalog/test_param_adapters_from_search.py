@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 
+import pytest
 from veupathdb.domain.parameters import (
     FilterTermClause,
     FilterValue,
@@ -19,6 +20,7 @@ from veupathdb.domain.parameters import (
     topological_fill_order,
 )
 from veupathdb.domain.strategy import StepValidation
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import (
     WDKFilterValue,
@@ -50,6 +52,7 @@ def _specs_with_dependents(
     }
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 class TestWdkParam011HiddenIsPresentationOnly:
     def test_wdk_param_011_a_hidden_parameter_is_published(self) -> None:
         search = _search("search_with_a_hidden_required_parameter")
@@ -89,6 +92,7 @@ class TestWdkParam011HiddenIsPresentationOnly:
 
 
 class TestWdkVocab003DependentParamsPointsAtChildren:
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     def test_wdk_vocab_003_the_field_lists_the_parameters_that_depend_on_it(
         self,
     ) -> None:
@@ -96,12 +100,14 @@ class TestWdkVocab003DependentParamsPointsAtChildren:
 
         assert specs["organismSinglePick"].dependent_params == ("chromosomeOptional",)
 
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     def test_wdk_vocab_003_the_parameter_that_depends_reports_nothing(self) -> None:
         # To find a parameter's parents you invert the map; no field gives them.
         specs = adapt_param_specs_from_search(_search("search_genes_by_location"))
 
         assert specs["chromosomeOptional"].dependent_params == ()
 
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     def test_wdk_vocab_003_the_parents_come_from_inverting_the_map(self) -> None:
         specs = adapt_param_specs_from_search(_search("search_genes_by_location"))
 

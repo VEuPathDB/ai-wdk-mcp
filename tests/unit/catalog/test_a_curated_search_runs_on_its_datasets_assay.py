@@ -8,6 +8,7 @@ from unittest.mock import MagicMock
 
 import pytest
 from tests._support.recorded_catalog import recorded_catalog
+from veupathdb.testing import NEEDS_QA_RECORDING
 
 from veupathdb_mcp import catalog
 from veupathdb_mcp.catalog import searches
@@ -19,6 +20,7 @@ _UV_MICROARRAY = (
 )
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 class TestTheCatalogMarksTheAssayASearchRunsOn:
     async def test_a_search_one_dataset_names_has_its_category(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
@@ -60,6 +62,7 @@ class TestTheCatalogMarksTheAssayASearchRunsOn:
         assert cryptodb.dataset_assay("GenesByText") is None
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 class TestTheCatalogMarksTheAssayOfAStudy:
     async def test_a_study_has_the_category_of_its_dataset_record(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
@@ -95,6 +98,7 @@ class TestAHostReadsTheAssay:
         )
         assert {"dataset_assay", "study_assay"} <= set(catalog.__all__)
 
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     async def test_from_the_catalog_of_the_site(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     ) -> None:

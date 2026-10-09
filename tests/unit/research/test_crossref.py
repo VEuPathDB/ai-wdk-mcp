@@ -11,7 +11,7 @@ from pydantic import JsonValue
 from veupathdb_mcp.research.literature.clients import crossref
 from veupathdb_mcp.research.literature.clients.crossref import CrossrefClient
 
-MAILBOX = "help@veupathdb.org"
+MAILBOX = "help@example.org"
 
 
 class _StubResponse:

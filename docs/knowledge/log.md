@@ -1,5 +1,18 @@
 # Knowledge log
 
+## 2026-10-09
+
+- Tests run against QA and a deployment names its site list
+  ([the decision](decisions/tests-run-against-qa-and-a-deployment-names-its-sites.md)).
+  `tests/conftest.py` puts the client's QA list in force for every test, the fourteen
+  recordings made on production moved to `fixtures-production-backup-2026-10-09/`, the
+  tests that read them (or the client's moved recordings, or the `data/catalogs/`
+  snapshot) are skipped with `NEEDS_QA_RECORDING`, `scripts/record_all_datasets.py`
+  records from the QA list only, and `scripts/check-test-sites.mjs` runs in CI and
+  pre-commit. Test hosts that are not sites (this server's address, the OAuth server, a
+  mailbox) are `.test` or `example.org` names. The WDK admission lane serves the client's
+  QA list.
+
 ## 2026-10-08
 
 - An open slot carries its whole vocabulary: `_open_slot` and `_contrast_open_slot` kept

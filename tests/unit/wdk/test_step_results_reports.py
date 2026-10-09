@@ -151,13 +151,13 @@ class TestACountAsksForZeroRecords:
 
         async def get(path: str, **_: object) -> Any:
             del path
-            return {"id": 4315616, "isGuest": False}
+            return {"id": 1000000104, "isGuest": False}
 
         monkeypatch.setattr(client, "get", get)
         monkeypatch.setattr(client, "post", recorder)
 
-        assert await StrategyAPI(client).get_step_count(440085983) == 132
-        assert recorder.paths == ["/users/4315616/steps/440085983/reports/standard"]
+        assert await StrategyAPI(client).get_step_count(900000001) == 132
+        assert recorder.paths == ["/users/1000000104/steps/900000001/reports/standard"]
 
 
 class TestOnlyTheJsonReporterHonoursThePage:

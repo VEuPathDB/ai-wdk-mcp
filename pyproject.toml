@@ -26,7 +26,7 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-veupathdb-py = { git = "https://github.com/VEuPathDB/ai-veupathdb-client", tag = "v0.1.0b3" }
+veupathdb-py = { git = "https://github.com/VEuPathDB/ai-veupathdb-client", tag = "v0.1.0b4" }
 
 [build-system]
 requires = ["hatchling"]
@@ -37,6 +37,9 @@ path = "src/veupathdb_mcp/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/veupathdb_mcp"]
+
+[tool.hatch.build.targets.sdist]
+exclude = ["fixtures-production-backup-2026-10-09"]
 
 [dependency-groups]
 dev = [

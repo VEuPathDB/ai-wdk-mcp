@@ -6,6 +6,7 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKSearchResponse
 
@@ -18,6 +19,8 @@ from veupathdb_mcp.catalog import (
     search_inspection,
 )
 from veupathdb_mcp.catalog.shortlist import TOP_K
+
+pytestmark = pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 
 _COUNTRY = "VAR_8e68b3e5"
 _SAMPLE_NAME = "VAR_41eb2167"

@@ -14,6 +14,7 @@ from veupathdb.domain.parameters import (
     collect_leaf_terms,
 )
 from veupathdb.errors import WDKError
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKSearchResponse
 
@@ -42,6 +43,7 @@ def _stub_client(monkeypatch: pytest.MonkeyPatch, fixture: str) -> MagicMock:
 
 
 class TestInspectSearch:
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     async def test_it_returns_the_overview_and_the_definition_it_came_from(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -70,6 +72,7 @@ class TestInspectSearch:
         ]
         assert result.overview.optional == []
 
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     async def test_it_ranks_without_a_query(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -85,6 +88,7 @@ class TestInspectSearch:
             "max_molecular_weight",
         ]
 
+    @pytest.mark.skip(reason=NEEDS_QA_RECORDING)
     async def test_it_resolves_the_record_type_when_none_is_given(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -140,6 +144,7 @@ def _raw(name: str) -> Any:
     return raw
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 class TestReadParameterOptions:
     async def test_it_formats_one_parameter(
         self, monkeypatch: pytest.MonkeyPatch

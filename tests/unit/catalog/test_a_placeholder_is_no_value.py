@@ -6,6 +6,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKSearchResponse
 
@@ -32,6 +34,7 @@ def _go_term_sheet() -> dict[str, ParameterInfo]:
     return _sheet_of(WDKSearchResponse.model_validate(body.get("body", body)))
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 def test_an_example_the_site_prints_is_a_placeholder() -> None:
     sequence = _recorded("search_genes_by_location")["sequenceId"]
 
@@ -39,6 +42,7 @@ def test_an_example_the_site_prints_is_a_placeholder() -> None:
     assert sequence.is_placeholder(sequence.default_value)
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 def test_the_off_value_a_radio_half_publishes_is_a_placeholder() -> None:
     go_term = _go_term_sheet()["go_term"]
 
@@ -47,6 +51,7 @@ def test_the_off_value_a_radio_half_publishes_is_a_placeholder() -> None:
     assert go_term.is_placeholder(" n/a ")
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 def test_a_value_a_researcher_types_is_no_placeholder() -> None:
     sequence = _recorded("search_genes_by_location")["sequenceId"]
     go_term = _go_term_sheet()["go_term"]

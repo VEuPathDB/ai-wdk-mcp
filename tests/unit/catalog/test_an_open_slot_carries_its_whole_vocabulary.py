@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKSearchResponse
 
@@ -11,6 +13,8 @@ from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,
     format_param_info_typed,
 )
+
+pytestmark = pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 
 
 def _recorded(name: str, param: str) -> ParameterInfo:

@@ -9,12 +9,14 @@ from unittest.mock import MagicMock
 
 import pytest
 from tests._support.recorded_catalog import recorded_catalog
+from veupathdb.testing import NEEDS_QA_RECORDING
 
 from veupathdb_mcp import catalog
 from veupathdb_mcp.catalog import searches
 from veupathdb_mcp.catalog.discovery import SearchCatalog
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_a_study_runs_on_the_organisms_of_its_dataset_record(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -31,6 +33,7 @@ def test_a_host_reads_it_from_the_package() -> None:
     assert "study_organisms" in catalog.__all__
 
 
+@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 async def test_a_host_reads_it_from_the_catalog_of_the_site(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:

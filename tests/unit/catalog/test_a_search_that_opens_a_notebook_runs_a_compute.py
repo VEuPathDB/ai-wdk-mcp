@@ -6,9 +6,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog import eda_backed_guidance, eda_backed_search
+
+pytestmark = pytest.mark.skip(reason=NEEDS_QA_RECORDING)
 
 _LISTING = Path(__file__).parent / "fixtures" / "plasmodb_eda_backed_searches.json"
 

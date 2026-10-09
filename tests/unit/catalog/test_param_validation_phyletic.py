@@ -32,7 +32,7 @@ from .conftest import (
 _CTX = SearchContext(
     site_id="plasmodb", record_type="transcript", search_name="GenesByOrthologPattern"
 )
-# Live on plasmodb.org 2026-09-04: this value was answered 200, stored, and
+# Live on the site: this value was answered 200, stored, and
 # reported valid at RUNNABLE.
 _PROSE = "Plasmodium falciparum AND NOT Homo sapiens"
 _CENSUS = "%hsap:N%pfal:Y%"
