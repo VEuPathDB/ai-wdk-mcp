@@ -2,6 +2,11 @@
 
 ## 2026-10-10
 
+- A search property every search of a site shares stays out of the indexed text. A site
+  sets `organisms` to one value on every search, so it named the same organism on every
+  entry and separated none of them; a property whose value differs between searches is
+  kept.
+
 - A service token setting that is refused names no secret. A malformed entry is named by
   its position, and a validation error of a token or of the registry carries no input.
 

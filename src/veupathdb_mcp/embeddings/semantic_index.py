@@ -65,6 +65,15 @@ class SearchIndexEntry:
         return f"{self.record_type}/{self.search_name}"
 
 
+def _shared_properties(searches: list[WDKSearch]) -> frozenset[str]:
+    names = {name for search in searches for name in search.properties}
+    return frozenset(
+        name
+        for name in names
+        if len({tuple(search.properties.get(name, [])) for search in searches}) == 1
+    )
+
+
 @dataclass
 class SemanticSearchIndex:
     """One site's searches, ranked by cosine similarity in Postgres."""
@@ -79,12 +88,15 @@ class SemanticSearchIndex:
     ) -> None:
         """Hold one entry per search. Reads no store and opens no connection."""
         cats = category_labels or {}
+        shared = _shared_properties(
+            [search for searches in searches_by_rt.values() for search in searches]
+        )
         self.entries = sorted(
             (
                 SearchIndexEntry(
                     search_name=search.url_segment,
                     record_type=rt_name,
-                    enriched_text=self._build_enriched_text(search, cats),
+                    enriched_text=self._build_enriched_text(search, cats, shared),
                 )
                 for rt_name, searches in searches_by_rt.items()
                 for search in searches
@@ -137,6 +149,7 @@ class SemanticSearchIndex:
         self,
         search: WDKSearch,
         category_labels: dict[str, str],
+        shared_properties: frozenset[str],
     ) -> str:
         """Build the enriched text for a search.
 
@@ -150,8 +163,8 @@ class SemanticSearchIndex:
 
         parts.extend(
             " ".join(str(v) for v in prop_values)
-            for prop_values in search.properties.values()
-            if prop_values
+            for name, prop_values in search.properties.items()
+            if prop_values and name not in shared_properties
         )
 
         parts.append(search.display_name)
