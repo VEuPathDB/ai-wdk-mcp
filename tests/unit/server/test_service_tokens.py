@@ -83,3 +83,27 @@ class TestServiceTokenRegistry:
 
         assert registry.secret_for("gene-page") == OTHER_SECRET
         assert registry.secret_for("pathfinder") is None
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        "given-value-without-separator-0123456789",
+        "analytics:given-value-short",
+        "analytics:given-value-long-enough-0123456789,given-value-second-entry",
+    ],
+)
+def test_a_refused_setting_does_not_echo_its_secrets(raw: str) -> None:
+    with pytest.raises(
+        ValueError, match=r"application_id:secret|at least 32 characters"
+    ) as refused:
+        ServiceTokenRegistry.parse(raw)
+
+    assert "given-value" not in str(refused.value)
+
+
+def test_a_malformed_entry_is_named_by_its_position() -> None:
+    with pytest.raises(ValueError, match="entry 2 must read application_id:secret"):
+        ServiceTokenRegistry.parse(
+            "analytics:analytics-secret-0123456789abcdef,no-separator-here"
+        )

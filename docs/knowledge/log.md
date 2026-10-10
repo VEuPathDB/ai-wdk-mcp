@@ -2,6 +2,9 @@
 
 ## 2026-10-10
 
+- A service token setting that is refused names no secret. A malformed entry is named by
+  its position, and a validation error of a token or of the registry carries no input.
+
 - A range parameter binds. A `number-range` or `date-range` parameter with no stated value
   takes the site's default, like the other single-value kinds. A stated value its kind
   cannot read raises `UnreadableValueError`, which names the parameter and its

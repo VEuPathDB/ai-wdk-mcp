@@ -13,7 +13,7 @@ _FIELD_SEPARATOR = ":"
 class ServiceToken(BaseModel):
     """One application identity and the shared secret that proves it."""
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, hide_input_in_errors=True)
 
     application_id: str = Field(min_length=1)
     secret: str = Field(min_length=_MIN_SERVICE_SECRET_LENGTH, repr=False)
@@ -22,7 +22,7 @@ class ServiceToken(BaseModel):
 class ServiceTokenRegistry(BaseModel):
     """The configured application identities."""
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, hide_input_in_errors=True)
 
     tokens: tuple[ServiceToken, ...] = ()
 
@@ -45,10 +45,10 @@ class ServiceTokenRegistry(BaseModel):
             entry.strip() for entry in raw.split(_ENTRY_SEPARATOR) if entry.strip()
         ]
         tokens: list[ServiceToken] = []
-        for entry in entries:
+        for position, entry in enumerate(entries, start=1):
             application_id, separator, secret = entry.partition(_FIELD_SEPARATOR)
             if not separator:
-                msg = f"Service token entry must read application_id:secret: {entry!r}"
+                msg = f"Service token entry {position} must read application_id:secret."
                 raise ValueError(msg)
             tokens.append(
                 ServiceToken(
