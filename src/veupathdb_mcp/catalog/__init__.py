@@ -1,6 +1,6 @@
 """The site catalog: sites, record types, searches and parameter metadata."""
 
-from veupathdb_mcp.catalog._param_binding import OverrideMap
+from veupathdb_mcp.catalog._param_binding import OverrideMap, UnreadableValueError
 from veupathdb_mcp.catalog._param_filters import has_contrast_sibling
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service
 from veupathdb_mcp.catalog.eda_backed import (
@@ -165,6 +165,7 @@ __all__ = [
     "UnknownExperimentError",
     "UnknownParameterError",
     "UnknownSearchError",
+    "UnreadableValueError",
     "VagueSearchQueryError",
     "ValidatedParams",
     "ValidationCallbacks",

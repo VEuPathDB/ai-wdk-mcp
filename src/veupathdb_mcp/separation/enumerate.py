@@ -19,6 +19,7 @@ from veupathdb_mcp.catalog import (
     ParamFetcher,
     ParamIntent,
     UnknownParameterError,
+    UnreadableValueError,
     VagueSearchQueryError,
     get_discovery_service,
     radio_pairs,
@@ -207,7 +208,7 @@ async def bind(
             intent=ParamIntent(text=proposal.intent),
             overrides=_overrides(search, infos, proposal, organisms),
         )
-    except UnknownParameterError as exc:
+    except (UnknownParameterError, UnreadableValueError) as exc:
         raise CandidateSkippedError(reason="unbound_required", detail=str(exc)) from exc
     gap = binding_gap(resolved)
     if gap:

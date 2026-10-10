@@ -13,6 +13,7 @@ from veupathdb.domain.parameters import (
     match_exact_option,
     param_value_from_raw,
 )
+from veupathdb.errors import ValidationError
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
@@ -25,7 +26,15 @@ from veupathdb_mcp.catalog.param_intent import (
 )
 
 _SCALAR_DEFAULTABLE: frozenset[str] = frozenset(
-    {"number", "string", "date", "timestamp", "single-pick-vocabulary"}
+    {
+        "number",
+        "string",
+        "date",
+        "timestamp",
+        "single-pick-vocabulary",
+        "number-range",
+        "date-range",
+    }
 )
 # A vocabulary needs two or more options before a shared value is a real choice.
 _MIN_VOCAB_SIZE_FOR_DEGENERACY = 2
@@ -80,6 +89,20 @@ class Unread(CamelModel):
     """
 
     param_name: str
+
+
+class UnreadableValueError(ValidationError):
+    def __init__(self, info: ParameterInfo, value: OverrideValue) -> None:
+        self.param_name = info.name
+        self.value = value
+        super().__init__(
+            title="Unreadable parameter value",
+            detail=(
+                f"{info.name} is a {info.type} parameter and cannot read {value!r}. "
+                f"Pass it as {info.value_format}."
+            ),
+            errors=[{"param": info.name}],
+        )
 
 
 def _build_value(info: ParameterInfo, value: OverrideValue | None) -> ParamValue | None:
@@ -359,6 +382,8 @@ def _resolve_nonfilter(
     if value is None and held_back:
         return Unread(param_name=info.name)
     resolved = _build_value(info, value)
+    if resolved is None and is_user_choice and value is not None:
+        raise UnreadableValueError(info, value)
     if resolved is None or value is None:
         return _open_slot(info) if info.required else None
     signature = _vocab_signature(info)

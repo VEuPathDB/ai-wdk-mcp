@@ -1,5 +1,14 @@
 # Knowledge log
 
+## 2026-10-10
+
+- A range parameter binds. A `number-range` or `date-range` parameter with no stated value
+  takes the site's default, like the other single-value kinds. A stated value its kind
+  cannot read raises `UnreadableValueError`, which names the parameter and its
+  `value_format`; before, the value was dropped and the parameter came back as an open slot
+  with no options, which no answer could fill. Separation skips such a candidate as
+  `unbound_required`.
+
 ## 2026-10-09
 
 - An expensive search holds one line on the database

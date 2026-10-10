@@ -180,13 +180,24 @@ class TestANamedValueTakesTheKindItsFormDeclares:
     def test_a_number_takes_its_canonical_form(self) -> None:
         assert encode_named_param_value(_form(), "pValueCutoff", "1.0") == "1"
 
-    def test_a_range_handed_over_as_a_wire_string_is_refused(self) -> None:
+    def test_a_range_handed_over_as_a_wire_string_takes_its_canonical_form(
+        self,
+    ) -> None:
+        span = TypeAdapter(WDKParameter).validate_python(
+            {"name": "span", "type": "number-range", "displayName": "Span"}
+        )
+
+        assert encode_named_param_value(
+            [span], "span", '{"min": "2", "max": "4"}'
+        ) == encode_named_param_value([span], "span", {"min": 2, "max": 4})
+
+    def test_a_range_handed_over_as_other_text_is_refused(self) -> None:
         span = TypeAdapter(WDKParameter).validate_python(
             {"name": "span", "type": "number-range", "displayName": "Span"}
         )
 
         with pytest.raises(ValueError, match="number-range"):
-            encode_named_param_value([span], "span", '{"min": 2, "max": 4}')
+            encode_named_param_value([span], "span", "2-4")
 
     def test_a_name_the_form_does_not_carry_stands_as_written(self) -> None:
         assert encode_named_param_value(_form(), "goSubset", "No") == "No"

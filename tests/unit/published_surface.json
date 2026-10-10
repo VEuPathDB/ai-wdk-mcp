@@ -50,6 +50,7 @@
     "UnknownExperimentError",
     "UnknownParameterError",
     "UnknownSearchError",
+    "UnreadableValueError",
     "VagueSearchQueryError",
     "ValidatedParams",
     "ValidationCallbacks",
