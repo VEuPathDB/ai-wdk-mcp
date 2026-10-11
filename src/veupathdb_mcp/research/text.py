@@ -294,10 +294,15 @@ async def _read_public_page(
         address = await _public_address(url)
         if address is None:
             return None
+        client.cookies.clear()
         async with client.stream(
             "GET",
             url.copy_with(host=address),
-            headers={"Referer": "https://duckduckgo.com/", "Host": url.netloc.decode()},
+            headers={
+                "Referer": "https://duckduckgo.com/",
+                "Host": url.netloc.decode(),
+                "Connection": "close",
+            },
             extensions={"sni_hostname": url.host},
             follow_redirects=False,
         ) as resp:

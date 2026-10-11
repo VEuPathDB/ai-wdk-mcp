@@ -27,6 +27,8 @@ _ADDRESSES = {
     "mapped.example.org": ["::ffff:10.0.0.5"],
     "nat64.example.org": ["64:ff9b::a00:5"],
     "rebinding.example.org": ["93.184.215.20", "127.0.0.1"],
+    "shop.example.org": ["93.184.215.30"],
+    "journal.example.org": ["93.184.215.30"],
 }
 
 _PAGE = (
@@ -63,6 +65,8 @@ def _serving(
 
 class _RefusingClient:
     """Stands in for ``httpx.AsyncClient``; every stream is refused outright."""
+
+    cookies = httpx.Cookies()
 
     @asynccontextmanager
     async def stream(self, *args: Any, **kwargs: Any) -> AsyncIterator[None]:
@@ -173,3 +177,25 @@ async def test_the_request_goes_to_the_address_that_was_checked() -> None:
     await fetch_page_summary(client, "https://papers.example.org/atlas", max_chars=200)
 
     assert sent_to == [("93.184.215.15", "papers.example.org")]
+
+
+async def test_no_connection_or_cookie_is_carried_from_one_page_to_the_next() -> None:
+    seen: list[tuple[str | None, str | None]] = []
+
+    def _handle(request: httpx.Request) -> httpx.Response:
+        seen.append((request.headers.get("connection"), request.headers.get("cookie")))
+        if request.headers["host"] == "shop.example.org":
+            return httpx.Response(
+                302,
+                headers={
+                    "location": "https://journal.example.org/atlas",
+                    "set-cookie": "session=from-the-first-site; Path=/",
+                },
+            )
+        return httpx.Response(200, text=_PAGE)
+
+    client = httpx.AsyncClient(transport=httpx.MockTransport(_handle))
+
+    await fetch_page_summary(client, "https://shop.example.org/x", max_chars=200)
+
+    assert seen == [("close", None), ("close", None)]
