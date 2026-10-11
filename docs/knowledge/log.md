@@ -2,6 +2,11 @@
 
 ## 2026-10-11
 
+- A page summary's request goes to the address that was checked. The host is resolved
+  once, every address must be global, an IPv4 address carried inside a NAT64 or an
+  IPv4-compatible IPv6 address must be global too, and the request connects to that
+  address with the host's name as `Host` and as the TLS server name.
+
 - A web result's page summary is read only from a public address. `fetch_page_summary`
   follows a redirect itself, at most five, and checks before each request that the host
   resolves only to global addresses; a loopback, private, link-local or non-http address

@@ -257,15 +257,33 @@ async def _addresses(host: str, port: int) -> list[str]:
     return [str(info[4][0]) for info in infos]
 
 
-async def _is_public(url: httpx.URL) -> bool:
+_EMBEDS_IPV4 = (
+    ipaddress.IPv6Network("64:ff9b::/96"),
+    ipaddress.IPv6Network("::/96"),
+)
+
+
+def _is_global(address: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
+    if isinstance(address, ipaddress.IPv6Address) and any(
+        address in network for network in _EMBEDS_IPV4
+    ):
+        embedded = ipaddress.IPv4Address(int(address) & 0xFFFFFFFF)
+        return address.is_global and embedded.is_global
+    return address.is_global
+
+
+async def _public_address(url: httpx.URL) -> str | None:
+    """The one address the request may go to, or None when any address is not public."""
     if url.scheme not in ("http", "https") or not url.host:
-        return False
+        return None
     port = url.port or (443 if url.scheme == "https" else 80)
     try:
         found = [ipaddress.ip_address(url.host)]
     except ValueError:
         found = [ipaddress.ip_address(a) for a in await _addresses(url.host, port)]
-    return bool(found) and all(address.is_global for address in found)
+    if not found or not all(_is_global(address) for address in found):
+        return None
+    return str(found[0])
 
 
 async def _read_public_page(
@@ -273,12 +291,14 @@ async def _read_public_page(
 ) -> tuple[str, bool] | None:
     """The page's head, following redirects only to public addresses."""
     for _ in range(_MAX_REDIRECTS + 1):
-        if not await _is_public(url):
+        address = await _public_address(url)
+        if address is None:
             return None
         async with client.stream(
             "GET",
-            url,
-            headers={"Referer": "https://duckduckgo.com/"},
+            url.copy_with(host=address),
+            headers={"Referer": "https://duckduckgo.com/", "Host": url.netloc.decode()},
+            extensions={"sni_hostname": url.host},
             follow_redirects=False,
         ) as resp:
             if resp.is_redirect:

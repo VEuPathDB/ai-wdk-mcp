@@ -24,6 +24,9 @@ _ADDRESSES = {
     "papers.example.org": ["93.184.215.15"],
     "intranet.example.org": ["10.0.0.5"],
     "metadata.example.org": ["169.254.169.254"],
+    "mapped.example.org": ["::ffff:10.0.0.5"],
+    "nat64.example.org": ["64:ff9b::a00:5"],
+    "rebinding.example.org": ["93.184.215.20", "127.0.0.1"],
 }
 
 _PAGE = (
@@ -41,12 +44,17 @@ def _known_addresses(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(text, "_addresses", _resolve)
 
 
+sent_to: list[tuple[str, object]] = []
+
+
 def _serving(
     pages: dict[str, httpx.Response], asked: list[str], *, follows: bool = False
 ) -> httpx.AsyncClient:
     def _handle(request: httpx.Request) -> httpx.Response:
-        asked.append(str(request.url))
-        return pages[str(request.url)]
+        asked_for = f"{request.url.scheme}://{request.headers['host']}{request.url.raw_path.decode()}"
+        asked.append(asked_for)
+        sent_to.append((request.url.host, request.extensions.get("sni_hostname")))
+        return pages[asked_for]
 
     return httpx.AsyncClient(
         transport=httpx.MockTransport(_handle), follow_redirects=follows
@@ -120,6 +128,11 @@ async def test_a_public_page_after_a_public_redirect_is_summarized() -> None:
         "http://[::1]/",
         "http://intranet.example.org/",
         "http://metadata.example.org/latest/meta-data/",
+        "http://mapped.example.org/",
+        "http://nat64.example.org/",
+        "http://rebinding.example.org/",
+        "http://[64:ff9b::7f00:1]/",
+        "http://[::127.0.0.1]/",
         "file:///etc/passwd",
     ],
 )
@@ -148,3 +161,15 @@ async def test_a_redirect_into_the_network_is_not_followed(follows: bool) -> Non
     summary = await fetch_page_summary(client, "https://example.org/x", max_chars=200)
 
     assert (summary, asked) == (None, ["https://example.org/x"])
+
+
+async def test_the_request_goes_to_the_address_that_was_checked() -> None:
+    asked: list[str] = []
+    sent_to.clear()
+    client = _serving(
+        {"https://papers.example.org/atlas": httpx.Response(200, text=_PAGE)}, asked
+    )
+
+    await fetch_page_summary(client, "https://papers.example.org/atlas", max_chars=200)
+
+    assert sent_to == [("93.184.215.15", "papers.example.org")]
