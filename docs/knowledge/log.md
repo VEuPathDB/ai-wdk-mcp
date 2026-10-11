@@ -1,5 +1,12 @@
 # Knowledge log
 
+## 2026-10-11
+
+- A web result's page summary is read only from a public address. `fetch_page_summary`
+  follows a redirect itself, at most five, and checks before each request that the host
+  resolves only to global addresses; a loopback, private, link-local or non-http address
+  is never requested, whatever the client's own redirect setting.
+
 ## 2026-10-10
 
 - A search property every search of a site shares stays out of the indexed text. A site

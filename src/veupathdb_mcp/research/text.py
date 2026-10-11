@@ -1,7 +1,10 @@
 """Text normalization, fuzzy ranking, filtering, and page summary extraction."""
 
+import asyncio
 import html
+import ipaddress
 import re
+import socket
 from dataclasses import dataclass
 from difflib import SequenceMatcher
 from urllib.parse import parse_qs, unquote, urlparse
@@ -244,6 +247,55 @@ def _extract_best_paragraph(text: str) -> str | None:
     return best
 
 
+_MAX_REDIRECTS = 5
+
+
+async def _addresses(host: str, port: int) -> list[str]:
+    infos = await asyncio.get_running_loop().getaddrinfo(
+        host, port, type=socket.SOCK_STREAM
+    )
+    return [str(info[4][0]) for info in infos]
+
+
+async def _is_public(url: httpx.URL) -> bool:
+    if url.scheme not in ("http", "https") or not url.host:
+        return False
+    port = url.port or (443 if url.scheme == "https" else 80)
+    try:
+        found = [ipaddress.ip_address(url.host)]
+    except ValueError:
+        found = [ipaddress.ip_address(a) for a in await _addresses(url.host, port)]
+    return bool(found) and all(address.is_global for address in found)
+
+
+async def _read_public_page(
+    client: httpx.AsyncClient, url: httpx.URL
+) -> tuple[str, bool] | None:
+    """The page's head, following redirects only to public addresses."""
+    for _ in range(_MAX_REDIRECTS + 1):
+        if not await _is_public(url):
+            return None
+        async with client.stream(
+            "GET",
+            url,
+            headers={"Referer": "https://duckduckgo.com/"},
+            follow_redirects=False,
+        ) as resp:
+            if resp.is_redirect:
+                url = url.join(resp.headers["location"])
+                continue
+            resp.raise_for_status()
+            buf = ""
+            async for chunk in resp.aiter_text():
+                buf += chunk
+                if "</head>" in buf.lower():
+                    return buf, True
+                if len(buf) >= _HEAD_LIMIT:
+                    break
+            return buf, False
+    return None
+
+
 async def fetch_page_summary(
     client: httpx.AsyncClient, url: str | None, *, max_chars: int
 ) -> str | None:
@@ -258,30 +310,14 @@ async def fetch_page_summary(
     if is_skippable:
         return None
 
-    buf = ""
-    head_closed = False
-    fetch_error = False
     try:
-        async with client.stream(
-            "GET",
-            u,
-            follow_redirects=True,
-            headers={"Referer": "https://duckduckgo.com/"},
-        ) as resp:
-            resp.raise_for_status()
-            async for chunk in resp.aiter_text():
-                buf += chunk
-                if "</head>" in buf.lower():
-                    head_closed = True
-                    break
-                if len(buf) >= _HEAD_LIMIT:
-                    break
+        page = await _read_public_page(client, httpx.URL(u))
     except (httpx.HTTPError, httpx.InvalidURL, ValueError, TypeError, OSError) as exc:
         logger.debug("Failed to fetch page for summary extraction", error=str(exc))
-        fetch_error = True
-
-    if fetch_error:
         return None
+    if page is None:
+        return None
+    buf, head_closed = page
     search_region = buf[: buf.lower().find("</head>") + 7] if head_closed else buf
     desc = _extract_meta_description(search_region)
     text = desc or _extract_best_paragraph(buf)
