@@ -382,3 +382,49 @@ class TestWdkSearch003AvailabilityIsADeploymentFact:
 
         assert plasmo.find_record_type_for_search("GenesBySpanLogic") == "transcript"
         assert toxo.find_record_type_for_search("GenesBySpanLogic") is None
+
+
+class _SearchListing:
+    """Answers a per-type search listing and records the types it was asked for."""
+
+    def __init__(self) -> None:
+        self.asked: list[str] = []
+
+    async def get_searches(self, record_type: str) -> list[WDKSearch]:
+        self.asked.append(record_type)
+        return []
+
+
+async def test_an_empty_expanded_search_list_makes_no_per_type_call() -> None:
+    listing = _SearchListing()
+    catalog = _catalog("plasmodb")
+    record_types = [
+        WDKRecordType.model_validate({"urlSegment": "dataset", "searches": []}),
+        WDKRecordType.model_validate({"urlSegment": "organism", "searches": []}),
+    ]
+
+    await catalog._populate_from_record_types(
+        listing,
+        record_types,
+        expanded_supported=True,
+    )
+
+    assert listing.asked == []
+    assert catalog.get_searches("dataset") == []
+    assert [rt.url_segment for rt in catalog.get_record_types()] == [
+        "dataset",
+        "organism",
+    ]
+
+
+async def test_absent_searches_are_fetched_per_type() -> None:
+    listing = _SearchListing()
+    catalog = _catalog("plasmodb")
+
+    await catalog._populate_from_record_types(
+        listing,
+        [WDKRecordType.model_validate({"urlSegment": "transcript"})],
+        expanded_supported=False,
+    )
+
+    assert listing.asked == ["transcript"]

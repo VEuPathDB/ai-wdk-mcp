@@ -142,11 +142,14 @@ uv run python -m veupathdb_mcp.research
 
 | mode | what the caller sends | what it may reach |
 | --- | --- | --- |
-| `service` | a secret from `WDK_MCP_SERVICE_TOKENS`, as `app_id:secret` | the catalog reads, on the deployment's own WDK service token |
+| `service` | a secret from `WDK_MCP_SERVICE_TOKENS`, as `app_id:secret` | the paths VEuPathDB opens to a guest, as the one shared guest token; a tool that needs a registered user is refused as login required |
 | `veupathdb_user` | a registered VEuPathDB bearer | every tool, acting as that user |
 
-A guest bearer verifies as nothing: VEuPathDB refuses guest and anonymous
-service calls, so the server mints no identity of its own. The bearer's
+A guest bearer verifies as nothing: most VEuPathDB paths serve registered users
+only, so the server mints no identity of its own for a caller. The server holds
+no VEuPathDB account: a call with no user bearer reads the open paths as the
+client library's shared guest token, and a gene lookup or any other keyed read
+needs a user bearer. The bearer's
 signature is checked against the OAuth server's published key
 (`VEUPATHDB_OAUTH_URL`, default `https://auth.veupathdb.org`) and the verified
 subject is cached for 300 seconds. **The server reads no application table and
@@ -164,7 +167,6 @@ because a document naming the wrong host sends a client to the wrong authority.
 | `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | the same address in parts, in place of `DATABASE_URL`; setting `POSTGRES_PASSWORD` and `DATABASE_URL` together fails startup |
 | `OPENAI_API_KEY`, `EMBEDDING_*` | the embedder behind semantic search |
 | `VEUPATHDB_SITES_CONFIG` | the `sites.yaml` this deployment serves; required, because the client library ships no default list and the first site read fails without one |
-| `VEUPATHDB_AUTH_TOKEN` | the deployment's service credential for user-independent reads |
 | `VEUPATHDB_OAUTH_URL` | the OAuth server that signs VEuPathDB bearers |
 | `WDK_MCP_BASE_URL` | the URL a client reads the RFC 9728 document at |
 | `WDK_MCP_SERVICE_TOKENS` | `app_id:secret[,app_id:secret...]`; empty admits user bearers only |

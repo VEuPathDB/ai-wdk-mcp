@@ -88,7 +88,7 @@ def replay(monkeypatch: pytest.MonkeyPatch) -> Iterator[_Replay]:
     real = httpx.AsyncClient
 
     def replaying(*args: Any, **kwargs: Any) -> httpx.AsyncClient:
-        return real(*args, transport=httpx.MockTransport(answering), **kwargs)
+        return real(*args, **{**kwargs, "transport": httpx.MockTransport(answering)})
 
     monkeypatch.setattr(httpx, "AsyncClient", replaying)
     token = veupathdb_auth_token_ctx.set("recorded-account")

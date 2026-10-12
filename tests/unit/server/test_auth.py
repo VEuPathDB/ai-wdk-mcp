@@ -5,11 +5,14 @@ from __future__ import annotations
 from collections.abc import Iterator
 from http import HTTPStatus
 
+import httpx
 import pytest
+import respx
 import structlog.testing
 from veupathdb.auth_context import veupathdb_auth_token_ctx
-from veupathdb.errors import ExternalServiceError
-from veupathdb.wdk import VEuPathDBClaims
+from veupathdb.errors import ExternalServiceError, WDKLoginRequiredError
+from veupathdb.testing import HERMETIC_GUEST_TOKEN
+from veupathdb.wdk import VEuPathDBClaims, VEuPathDBClient
 
 from veupathdb_mcp import identity
 from veupathdb_mcp.auth import (
@@ -179,6 +182,42 @@ def test_the_service_mode_leaves_the_wdk_request_token_empty() -> None:
 
     with wdk_identity(credential):
         assert veupathdb_auth_token_ctx.get() is None
+
+
+@respx.mock
+async def test_the_service_mode_reads_open_paths_as_the_guest_and_no_more() -> None:
+    """A path that needs a registered user is refused as login required."""
+    service = "https://qa.plasmodb.org/plasmo.qa/service"
+    respx.get("https://qa.plasmodb.org/plasmo.qa/app").mock(
+        return_value=httpx.Response(200, text="ok")
+    )
+    open_read = respx.get(f"{service}/record-types").mock(
+        return_value=httpx.Response(200, json=[])
+    )
+    respx.get(f"{service}/record-types/transcript/searches").mock(
+        return_value=httpx.Response(403, text="registered users only")
+    )
+    credential = McpCredential(
+        token=SERVICE_SECRET,
+        client_id="gene-page",
+        scopes=[],
+        mode=CredentialMode.SERVICE,
+    )
+    client = VEuPathDBClient(base_url=service)
+
+    try:
+        with wdk_identity(credential):
+            assert await client.get("/record-types") == []
+            with pytest.raises(WDKLoginRequiredError):
+                await client.get("/record-types/transcript/searches")
+    finally:
+        await client.close()
+
+    assert open_read.calls.last.request.headers["cookie"] == (
+        f"Authorization={HERMETIC_GUEST_TOKEN}"
+    )
+    sent = [value for call in respx.calls for value in call.request.headers.values()]
+    assert [value for value in sent if SERVICE_SECRET in value] == []
 
 
 async def test_a_refusal_names_the_mode_and_never_the_credential(

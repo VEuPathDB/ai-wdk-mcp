@@ -267,7 +267,7 @@ class SearchCatalog:
             rt_name = typed_rt.url_segment
             self._record_types.append(typed_rt)
 
-            if searches is not None and len(searches) > 0:
+            if searches is not None:
                 self._searches[rt_name] = searches
             else:
                 fetched = await load_searches_for_rt(client, rt_name)

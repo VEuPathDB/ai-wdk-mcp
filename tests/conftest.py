@@ -7,7 +7,8 @@ from collections.abc import Generator
 import pytest
 import structlog
 from veupathdb import VEuPathDBSettings, use_veupathdb_settings_source
-from veupathdb.testing import QA_SITES_FILE
+from veupathdb.guest_token import use_guest_tokens
+from veupathdb.testing import QA_SITES_FILE, hermetic_guest_tokens
 from veupathdb.wdk import reset_site_router
 
 from veupathdb_mcp.embeddings import embedder
@@ -30,7 +31,11 @@ os.environ["VEUPATHDB_SITES_CONFIG"] = str(QA_SITES_FILE)
 
 @pytest.fixture(autouse=True)
 def _settings_read_the_environment() -> Generator[None]:
-    """Every read builds a fresh instance, so a monkeypatched variable applies."""
+    """Every read builds a fresh instance, so a monkeypatched variable applies.
+
+    The guest token is minted without a network.
+    """
+    use_guest_tokens(hermetic_guest_tokens())
     use_mcp_settings_source(McpSettings)
     use_research_settings_source(ResearchSettings)
     use_embedding_settings_source(EmbeddingSettings)

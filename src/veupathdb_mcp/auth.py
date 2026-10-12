@@ -93,7 +93,8 @@ def wdk_identity(credential: McpCredential) -> Iterator[None]:
     """Act on WDK as the credential names.
 
     Only a user credential travels. A service credential leaves the request token
-    empty, so the transport guard refuses a call under ``/users/``.
+    empty, so a call reads the open paths as the shared guest and a path that
+    needs a registered user is refused as login required.
     """
     acts_as_user = credential.mode is CredentialMode.VEUPATHDB_USER
     reset = veupathdb_auth_token_ctx.set(credential.token if acts_as_user else None)

@@ -3,8 +3,9 @@
 import json
 from dataclasses import dataclass
 
-from veupathdb import JSONObject, get_logger, get_veupathdb_settings, strip_html_tags
-from veupathdb.errors import VEuPathDBError
+from veupathdb import JSONObject, get_logger, strip_html_tags
+from veupathdb.auth_context import veupathdb_auth_token_ctx
+from veupathdb.errors import VEuPathDBError, WDKLoginRequiredError
 from veupathdb.wdk import (
     StrategyAPI,
     VEuPathDBClient,
@@ -222,24 +223,22 @@ async def resolve_gene_ids(
     """Resolve gene IDs to full records through the WDK standard reporter.
 
     The client is short-lived and private, because WDK ties a dataset to the
-    session that created it and a shared cookie jar breaks that affinity.
+    session that created it and a shared cookie jar breaks that affinity. The
+    lookup serves registered users only, so it needs the researcher's token.
     """
     if not gene_ids:
         return _empty_gene_result()
+    if not veupathdb_auth_token_ctx.get():
+        raise WDKLoginRequiredError
 
     router = get_site_router()
     site = router.get_site(site_id)
-    settings = get_veupathdb_settings()
     routing = router._config.routing
     timeout = float(
         routing.portal_timeout if site.is_portal else routing.component_timeout
     )
 
-    client = VEuPathDBClient(
-        base_url=site.service_url,
-        timeout=timeout,
-        auth_token=settings.veupathdb_auth_token,
-    )
+    client = VEuPathDBClient(base_url=site.service_url, timeout=timeout)
     attrs = attributes or DEFAULT_GENE_ATTRIBUTES
 
     try:

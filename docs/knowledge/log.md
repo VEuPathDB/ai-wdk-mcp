@@ -1,5 +1,17 @@
 # Knowledge log
 
+## 2026-10-12
+
+- The server holds no VEuPathDB account and the `VEUPATHDB_AUTH_TOKEN` setting is gone. A
+  service-mode call reads the paths VEuPathDB opens to a guest as the client library's
+  shared guest token, and a path that needs a registered user is refused as
+  `WDKLoginRequiredError`. `resolve_gene_ids` raises `WDKLoginRequiredError` before any
+  request when the call carries no researcher token.
+
+- An expanded record-types answer that lists no searches for a record type means the type
+  has none: the catalog stores the empty list and asks no per-type search listing. A
+  listing is asked for only when the answer carries no `searches` at all.
+
 ## 2026-10-11
 
 - A page summary's request goes to the address that was checked. The host is resolved
