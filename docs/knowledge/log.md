@@ -1,5 +1,10 @@
 # Knowledge log
 
+## 2026-10-15
+
+- veupathdb-py 0.1.0b10: a cleaned value keeps one line per line of the site's text,
+  one space between words and no blank line.
+
 ## 2026-10-14
 
 - `lookup_phyletic_codes` answers on OrthoMCL as well. A site whose catalog holds
