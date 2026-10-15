@@ -146,10 +146,11 @@ async def lookup_phyletic_codes(
     query: str,
     record_type: str = "transcript",
 ) -> JSONObject:
-    """Look up the species and clade codes GenesByOrthologPattern accepts.
+    """Look up species and clade codes: the ones GenesByOrthologPattern's species
+    lists accept, or on OrthoMCL the ones a phyletic_expression names.
 
     Args:
-        site_id: VEuPathDB site, for example 'plasmodb'.
+        site_id: VEuPathDB site, for example 'plasmodb' or 'orthomcl'.
         query: Species or clade name, for example 'falciparum' or 'Apicomplexa'.
         record_type: Record type. Gene searches are 'transcript'.
     """

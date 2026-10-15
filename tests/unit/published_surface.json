@@ -96,6 +96,7 @@
     "make_record_type_resolver",
     "make_validation_callbacks",
     "organism_parameter",
+    "phyletic_tree_for_search",
     "radio_pairs",
     "rank_experiments_elsewhere",
     "read_experiment",

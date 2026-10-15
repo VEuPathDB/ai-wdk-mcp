@@ -31,6 +31,7 @@ from veupathdb_mcp.catalog.models import (
     RecordTypeInfo,
     SearchMatch,
 )
+from veupathdb_mcp.catalog.ortho_taxonomy import phyletic_tree_for_search
 from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
@@ -211,6 +212,7 @@ __all__ = [
     "make_record_type_resolver",
     "make_validation_callbacks",
     "organism_parameter",
+    "phyletic_tree_for_search",
     "radio_pairs",
     "rank_experiments_elsewhere",
     "read_experiment",

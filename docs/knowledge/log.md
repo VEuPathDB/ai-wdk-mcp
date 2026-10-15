@@ -1,5 +1,24 @@
 # Knowledge log
 
+## 2026-10-14
+
+- `lookup_phyletic_codes` answers on OrthoMCL as well. A site whose catalog holds
+  `GroupsByPhyleticPattern` is looked up in its own taxonomy, read once per site from the
+  helper record's two taxon tables, and the hint names `phyletic_expression`; every other
+  site still reads `GenesByOrthologPattern`'s tree. Both are one `PhyleticTree`.
+
+- A stated `phyletic_expression` is parsed and its codes are checked against that taxonomy
+  before the criterion is accepted, and the value is held in the site's spelling. OrthoMCL
+  answers a malformed expression with a 500, so a refusal here is the only readable one.
+  The sheet's help states the grammar, including "some but not all of a list"
+  (`list>=1T AND list<NT`) and "absent from at least k of N" (`list<=(N-k)T`). A unit
+  every group meets or none can, such as `<=17T` over 17 codes, is refused: it states no
+  constraint.
+
+- `lookup_phyletic_codes` returns, before its semantic matches and past their cap, every
+  entry whose label holds each query word some label holds. A list of strains is only
+  usable whole, and a word no label holds, such as "strains", narrows nothing.
+
 ## 2026-10-12
 
 - The server holds no VEuPathDB account and the `VEUPATHDB_AUTH_TOKEN` setting is gone. A

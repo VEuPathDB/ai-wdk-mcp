@@ -7,6 +7,7 @@ from typing import Annotated, Literal, Self
 
 from pydantic import Field, TypeAdapter, ValidationError, model_validator
 from veupathdb.domain.parameters import (
+    PHYLETIC_EXPRESSION_PARAM,
     PHYLETIC_LIST_PARAMS,
     PHYLETIC_MAP_PARAMS,
     ParamKind,
@@ -41,6 +42,18 @@ _PHYLETIC_LIST_HELP = (
     "Species or clade codes from the phyletic tree, comma-separated or a list; "
     "a clade selects all of its species; profile_pattern is derived from these "
     "two lists."
+)
+
+
+_PHYLETIC_EXPRESSION_HELP = (
+    "OrthoMCL phyletic pattern expression. A unit is codes joined by '+', then an "
+    "operator (>, <, =, >= or <=), then a count: a bare count counts sequences, and "
+    "a count ending in T counts taxa. AND and OR join units; when both appear, "
+    "parentheses state which binds first. ALL is every taxon. Find codes with "
+    "lookup_phyletic_codes. Some but not all of a list: list>=1T AND list<NT, where N "
+    "is the number of codes in the list. Absent from at least k of N: list<=(N-k)T. "
+    "Example: present in pfal, absent from at least 2 of pfag, pfhb, pfad: "
+    "pfal>=1T AND pfag+pfhb+pfad<=1T."
 )
 
 
@@ -344,6 +357,8 @@ def format_typed_param(
     help_text = param.help or ""
     if name == "profile_pattern":
         help_text = _PROFILE_PATTERN_HELP
+    if name == PHYLETIC_EXPRESSION_PARAM:
+        help_text = _PHYLETIC_EXPRESSION_HELP
     if phyletic_options is not None:
         help_text = "\n".join(filter(None, (help_text, _PHYLETIC_LIST_HELP)))
 

@@ -7,11 +7,15 @@ from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
 from veupathdb import JSONObject, get_logger
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
+    PHYLETIC_EXPRESSION_PARAM,
     PHYLETIC_PARAM_NAMES,
     ParameterCanonicalizer,
     ParamSpecNormalized,
     ParamValue,
+    PhyleticExpression,
+    StringValue,
     census_states,
+    check_expression,
     fill_hidden_required_defaults,
     filled_hidden_defaults,
     to_decoded_map,
@@ -30,6 +34,7 @@ from veupathdb.wdk import (
 
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service
 from veupathdb_mcp.catalog.eda_backed import check_eda_parameters
+from veupathdb_mcp.catalog.ortho_taxonomy import ortho_taxonomy
 from veupathdb_mcp.catalog.param_adapters import (
     adapt_param_from_wdk,
     adapt_param_specs_from_search,
@@ -281,7 +286,28 @@ def _refuse_bad_census_pattern(
     states = census_states(pattern)
     tree = phyletic_tree_of(specs)
     if states and tree is not None:
-        validate_phyletic_codes(list(states), {node.code for node in tree.nodes()})
+        validate_phyletic_codes(list(states), tree.codes())
+
+
+async def _checked_phyletic_expression(
+    site_id: str, response: WDKSearchResponse, stated: dict[str, ParamValue]
+) -> dict[str, ParamValue]:
+    """Judge a stated ``phyletic_expression`` against its grammar and the site's
+    taxonomy, and hold it in the site's spelling. OrthoMCL answers a fault with a 500."""
+    specs = response.search_data.parameters or []
+    if PHYLETIC_EXPRESSION_PARAM not in {spec.name for spec in specs}:
+        return stated
+    text = encode_wdk_params(stated).get(PHYLETIC_EXPRESSION_PARAM)
+    if text is None:
+        return stated
+    expression = PhyleticExpression.parse(text)
+    tree = await ortho_taxonomy(site_id)
+    if tree is not None:
+        check_expression(expression, tree)
+    return {
+        **stated,
+        PHYLETIC_EXPRESSION_PARAM: StringValue(value=expression.render()),
+    }
 
 
 async def validate_parameters(
@@ -312,6 +338,7 @@ async def validate_parameters(
     check_eda_parameters(response.search_data, encode_wdk_params(parameters))
 
     param_spec_map = adapt_param_specs_from_search(response.search_data)
+    parameters = await _checked_phyletic_expression(ctx.site_id, response, parameters)
     canonicalizer = ParameterCanonicalizer(param_spec_map)
     canonical: dict[str, ParamValue] = canonicalizer.canonicalize(parameters)
     _refuse_bad_census_pattern(response, canonical)
