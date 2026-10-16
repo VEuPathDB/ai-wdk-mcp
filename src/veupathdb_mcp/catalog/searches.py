@@ -277,8 +277,13 @@ async def organism_parameter(
     marked = await _marked(site_id, record_type, search_name)
     if marked is None or search_name == ORGANISM_SEARCH:
         return None if marked is None else marked.name
+    listed_under = await find_record_type_for_search(
+        SearchContext(
+            site_id=site_id, record_type="transcript", search_name=ORGANISM_SEARCH
+        )
+    )
     try:
-        listing = await _marked(site_id, record_type, ORGANISM_SEARCH)
+        listing = await _marked(site_id, listed_under, ORGANISM_SEARCH)
     except VEuPathDBError:
         listing = None
     organisms = vocab_keys(None if listing is None else listing.vocabulary)

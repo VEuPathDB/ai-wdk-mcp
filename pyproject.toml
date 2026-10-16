@@ -26,7 +26,7 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-veupathdb-py = { git = "https://github.com/VEuPathDB/ai-veupathdb-client", tag = "v0.1.0b10" }
+veupathdb-py = { git = "https://github.com/VEuPathDB/ai-veupathdb-client", tag = "v0.1.0b11" }
 
 [build-system]
 requires = ["hatchling"]

@@ -109,8 +109,11 @@ def _serving(
     async def _details(ctx: SearchContext) -> WDKSearchResponse:
         return served[ctx.search_name]
 
+    listing = MagicMock()
+    listing.find_record_type_for_search = MagicMock(return_value="transcript")
     discovery = MagicMock()
     discovery.get_search_details = AsyncMock(side_effect=_details)
+    discovery.get_catalog = AsyncMock(return_value=listing)
     monkeypatch.setattr(searches, "get_discovery_service", lambda: discovery)
     return discovery
 

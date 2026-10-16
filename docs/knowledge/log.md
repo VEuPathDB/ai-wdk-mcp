@@ -1,5 +1,15 @@
 # Knowledge log
 
+## 2026-10-16 - The organism list is read where it lives
+
+`organism_parameter` checks a search's organism values against `GenesByTaxon`, and reads that
+search under the record type the catalog lists it under. A search of another record type, a
+dataset search for one, is checked like a gene search, and no request names a record type
+that has no `GenesByTaxon`.
+
+- veupathdb-py 0.1.0b11: a site-search query is six words at most, the service's limit, so
+  the search finder and the gene lookup no longer fall back on a long query.
+
 ## 2026-10-15
 
 - veupathdb-py 0.1.0b10: a cleaned value keeps one line per line of the site's text,
