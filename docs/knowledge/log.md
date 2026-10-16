@@ -1,5 +1,11 @@
 # Knowledge log
 
+## 2026-10-16 - veupathdb-py 0.1.0b12
+
+- veupathdb-py 0.1.0b12: `run_search_column_report` counts a search's records by each value
+  of one column, and `WDKAttributeField.tools` names the column tools an attribute offers.
+  This release changes no code here.
+
 ## 2026-10-16 - The organism list is read where it lives
 
 `organism_parameter` checks a search's organism values against `GenesByTaxon`, and reads that
