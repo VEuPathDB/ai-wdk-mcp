@@ -179,14 +179,23 @@ def _assembled_row(request: SeparationRequest, assembly: Assembly) -> Separation
     return SeparationUpdate(
         phase="assembled",
         message=message,
-        data={"mode": request.mode, "leaves": leaves},
+        data={"mode": request.mode, "leaves": leaves, "tree": _tree_of(assembly)},
     )
 
 
-def _confirmed_row(read: _Read, budget: WdkCallBudget) -> SeparationUpdate:
+def _tree_of(assembly: Assembly) -> JsonValue:
+    if assembly.tree is None:
+        return None
+    return assembly.tree.model_dump(by_alias=True, mode="json")
+
+
+def _confirmed_row(
+    read: _Read, budget: WdkCallBudget, assembly: Assembly
+) -> SeparationUpdate:
     cost: dict[str, JsonValue] = {
         "chargedRequests": budget.spent,
         "budget": budget.limit,
+        "tree": _tree_of(assembly),
     }
     if read.positive is None or read.negative is None:
         return SeparationUpdate(
@@ -228,7 +237,7 @@ async def _measure_and_assemble(
     assembly = assemble(measured, request.mode, controls.positives)
     await progress(_assembled_row(request, assembly))
     read = await _confirm(api, assembly, candidates, controls, budget)
-    await progress(_confirmed_row(read, budget))
+    await progress(_confirmed_row(read, budget, assembly))
     return measured, refused, assembly, read
 
 

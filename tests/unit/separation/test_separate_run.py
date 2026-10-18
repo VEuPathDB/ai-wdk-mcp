@@ -205,6 +205,27 @@ async def test_each_phase_reports_one_row_and_each_candidate_its_own(
     ),
     reason=NEEDS_QA_RECORDING,
 )
+async def test_the_rows_name_each_search_and_carry_the_tree(account: _Account) -> None:
+    result, rows = await _run(_request())
+    measured, assembled = rows[3], rows[4]
+
+    candidate = result.measured[0].candidate
+    assert (measured.data["displayName"], measured.data["basis"]) == (
+        candidate.display_name,
+        candidate.basis,
+    )
+    tree = {"kind": "leaf", "candidateId": "c1", "operator": None, "inputs": []}
+    assert assembled.data["tree"] == tree
+    assert rows[5].data["tree"] == tree
+
+
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_the_result_serializes_with_its_verdict(account: _Account) -> None:
     result, _ = await _run(_request())
 

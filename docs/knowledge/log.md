@@ -1,5 +1,11 @@
 # Knowledge log
 
+## 2026-10-18 - A separation run's rows name each search and carry the tree
+
+- 0.2.0b25: a `measured` row carries the candidate's `displayName` and `basis`, and the
+  `assembled` and `confirmed` rows carry the assembled tree as `tree`, so a host can draw
+  what the run builds before the result arrives.
+
 ## 2026-10-18 - No test writes the warm catalog cache
 
 - 0.2.0b24: every test run reads and writes catalogs in a temporary directory, so a live

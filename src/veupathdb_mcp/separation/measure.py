@@ -110,6 +110,8 @@ def _measured_row(m: MeasuredCandidate) -> SeparationUpdate:
         ),
         data={
             "search": c.search_name,
+            "displayName": c.display_name,
+            "basis": c.basis,
             "source": c.source.value,
             "recovered": m.positive.intersection_count,
             "admitted": m.negative.intersection_count,
@@ -178,7 +180,12 @@ async def measure_candidates(
                         phase="measured",
                         candidate_id=candidate.id,
                         message=f"{candidate.search_name}: skipped: WDK refused {detail}",
-                        data={"search": candidate.search_name, "refused": detail},
+                        data={
+                            "search": candidate.search_name,
+                            "displayName": candidate.display_name,
+                            "basis": candidate.basis,
+                            "refused": detail,
+                        },
                     )
                 )
                 return
