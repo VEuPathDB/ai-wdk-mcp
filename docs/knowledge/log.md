@@ -1,5 +1,14 @@
 # Knowledge log
 
+## 2026-10-18 - A separation run is charged what it now sends
+
+- 0.2.0b27 takes veupathdb-py 0.1.0b14, whose site client keeps the user id each login
+  token names and each record type's boolean search. A later measurement is charged 8
+  requests (`MEASURE_REQUESTS`), the first measurement 3 more (`FIRST_INTERSECTION_REQUESTS`),
+  an assembled tree `3 * leaves + 5` (`confirm_requests`) and an enrichment 30
+  (`ENRICHMENT_REQUESTS`). The recorded run drops the six requests the client no longer
+  sends: three reads of the boolean search and three of the user.
+
 ## 2026-10-18 - An excluding search that holds a few positives is subtracted as a branch
 
 - 0.2.0b26: exact mode also subtracts a branch of two measured searches, an excluding
