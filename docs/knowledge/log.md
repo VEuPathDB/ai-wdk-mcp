@@ -1,5 +1,12 @@
 # Knowledge log
 
+## 2026-10-18 - No test writes the warm catalog cache
+
+- 0.2.0b24: every test run reads and writes catalogs in a temporary directory, so a live
+  run's background refresh no longer replaces a file of the `data/catalogs/` snapshot.
+  0.2.0b23 shipped the QA PlasmoDB catalog in place of the snapshot's; this release
+  restores the snapshot.
+
 ## 2026-10-18 - The recordings are QA recordings
 
 - veupathdb-py 0.1.0b13: every recorded body is a QA recording, and `wdk_record` keeps a

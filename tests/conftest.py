@@ -1,7 +1,10 @@
 """The process-wide state a test must not inherit: settings, the log and the embedder."""
 
+import atexit
 import logging
 import os
+import shutil
+import tempfile
 from collections.abc import Generator
 
 import pytest
@@ -27,6 +30,10 @@ from veupathdb_mcp.settings import McpSettings, use_mcp_settings_source
 # No test embeds against a paid API.
 os.environ["EMBEDDING_BACKEND"] = "fake"
 os.environ["VEUPATHDB_SITES_CONFIG"] = str(QA_SITES_FILE)
+# No test reads or writes the warm catalog cache the image serves.
+_CATALOGS = tempfile.mkdtemp(prefix="veupathdb-mcp-catalogs-")
+atexit.register(shutil.rmtree, _CATALOGS, ignore_errors=True)
+os.environ["CATALOG_CACHE_DIR"] = _CATALOGS
 
 
 @pytest.fixture(autouse=True)
