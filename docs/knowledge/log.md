@@ -1,5 +1,20 @@
 # Knowledge log
 
+## 2026-10-18 - The recordings are QA recordings
+
+- veupathdb-py 0.1.0b13: every recorded body is a QA recording, and `wdk_record` keeps a
+  JSON list answer as JSON.
+- The fourteen recordings under `tests/unit/` are recorded again on QA and the production
+  backup is deleted. QA matches production on the two Pfam refreshes (2441 and 3745
+  entries) and on the separation run's 81 requests stage by stage; QA's PlasmoDB publishes
+  337 datasets where production published 323, IEDB among them without a type.
+- The attributes each site's gene and transcript record types declare are read from
+  `tests/unit/fixtures/gene_record_attributes.json`, recorded on QA, so the test that
+  checks the sample's attributes no longer waits on the warm cache.
+- The live lane acts as the registered account for every check, through the client
+  library's `registered_wdk_token` (a named token, or a sign-in): QA refuses an
+  unauthenticated search read.
+
 ## 2026-10-16 - veupathdb-py 0.1.0b12
 
 - veupathdb-py 0.1.0b12: `run_search_column_report` counts a search's records by each value

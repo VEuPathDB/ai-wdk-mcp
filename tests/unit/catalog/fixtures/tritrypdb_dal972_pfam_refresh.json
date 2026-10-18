@@ -1,8 +1,8 @@
 {
  "method": "POST",
- "url": "https://tritrypdb.org/tritrypdb/service/record-types/transcript/searches/GenesByInterproDomain/refreshed-dependent-params",
+ "url": "https://qa.tritrypdb.org/tritrypdb.qa/service/record-types/transcript/searches/GenesByInterproDomain/refreshed-dependent-params",
  "status": 200,
- "ms": 1137.6011371612549,
+ "ms": 1196.716667036526,
  "request_json": {
   "changedParam": {
    "name": "domain_database",

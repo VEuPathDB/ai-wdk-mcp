@@ -97,10 +97,7 @@ async def _leftovers(api: StrategyAPI) -> list[int]:
     ]
 
 
-async def test_both_sets_file_as_the_whole_answer_and_as_two_runs(
-    wdk_identity: str,
-) -> None:
-    del wdk_identity
+async def test_both_sets_file_as_the_whole_answer_and_as_two_runs() -> None:
     api = get_strategy_api(SITE)
 
     both = await run_positive_negative_controls(

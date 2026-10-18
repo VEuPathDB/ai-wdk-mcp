@@ -53,10 +53,7 @@ async def _leftovers(api: StrategyAPI) -> list[int]:
     ]
 
 
-async def test_a_genome_union_samples_distinct_genes_in_seconds(
-    wdk_identity: str,
-) -> None:
-    del wdk_identity
+async def test_a_genome_union_samples_distinct_genes_in_seconds() -> None:
     api = get_strategy_api(SITE)
     left = await _genome_step(api, "genome left")
     right = await _genome_step(api, "genome right")

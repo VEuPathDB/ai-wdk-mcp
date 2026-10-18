@@ -54,7 +54,7 @@ def _named(cards: list[ExperimentCard], name: str) -> ExperimentCard:
 def test_the_recording_is_the_request_the_build_posts() -> None:
     recorded = WDKExchange.model_validate_json(_RECORDED.read_text())
 
-    assert recorded.url.endswith(f"/plasmo/service{DATASET_REPORT_PATH}")
+    assert recorded.url.endswith(f"/plasmo.qa/service{DATASET_REPORT_PATH}")
     assert recorded.request_json == dataset_report_request()
 
 
@@ -88,8 +88,8 @@ async def test_the_build_asks_for_the_attributes_and_tables_a_card_reads() -> No
     reason=NEEDS_QA_RECORDING,
 )
 def test_the_report_has_one_card_per_dataset(plasmodb: list[ExperimentCard]) -> None:
-    assert len(plasmodb) == 323
-    assert len({card.dataset_id for card in plasmodb}) == 323
+    assert len(plasmodb) == 337
+    assert len({card.dataset_id for card in plasmodb}) == 337
     assert {card.site_id for card in plasmodb} == {"plasmodb"}
 
 
@@ -161,6 +161,7 @@ def test_a_dataset_without_a_category_takes_its_type(
     assert len([card for card in plasmodb if card.assay == "feature"]) == 16
     assert unnamed == [
         "Chabbert_TSS",
+        "Immune Epitope Database (IEDB)",
         "The Database of Expressed Sequence Tags (dbEST)",
     ]
 

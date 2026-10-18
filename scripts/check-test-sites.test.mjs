@@ -61,7 +61,6 @@ test("each offence names the file, the line and the host", () => {
 test("only the allowlisted paths are exempt", () => {
   assert.ok(isAllowed("docs/knowledge/log.md"));
   assert.ok(isAllowed("data/catalogs/plasmodb.json"));
-  assert.ok(isAllowed("fixtures-production-backup-2026-10-09/tests/unit/catalog/fixtures/plasmodb_genes_by_taxon.json"));
   assert.equal(isAllowed("data/other.json"), false);
   assert.equal(isAllowed("tests/unit/catalog/fixtures/plasmodb_genes_by_taxon.json"), false);
   assert.equal(isAllowed("scripts/record_all_datasets.py"), false);

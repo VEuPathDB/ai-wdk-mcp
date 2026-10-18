@@ -1,8 +1,8 @@
 {
  "method": "GET",
- "url": "https://vectorbase.org/vectorbase/service/record-types/transcript/searches/GenesByTaxon?expandParams=true",
+ "url": "https://qa.vectorbase.org/vectorbase.qa/service/record-types/transcript/searches/GenesByTaxon?expandParams=true",
  "status": 200,
- "ms": 0,
+ "ms": 892.2462909249589,
  "request_json": null,
  "request_text": null,
  "response_json": {
@@ -1541,7 +1541,7 @@
        "FILL"
       ],
       "maxRecommendedMsg": [
-       "<p>\n          You are selecting more than five organisms.\n        </p>\n        <p>\n          Selecting a large number of organisms may impact performance and make results harder to interpret.\n        </p>\n        <p>\n          <b>Please select five or fewer organisms where possible.</b>\n        </p>\n        <p>\n          For the best experience, use <i>My Organism Preferences</i> in the page header to focus on the organisms you care about most.\n        </p>"
+       "<p>\n          <b>Please select five or fewer organisms where possible.</b>\n        </p>\n        <p>\n          Selecting a large number of organisms may impact performance and make results harder to interpret.\n        </p>\n        <p>\n          For the best experience, use <i>My Organism Preferences</i> in the page header to focus on the organisms you care about most.\n        </p>"
       ],
       "specificAttribution": [],
       "organismProperties": [

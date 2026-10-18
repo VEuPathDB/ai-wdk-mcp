@@ -9,7 +9,6 @@ export const ALLOWED = [
   "README.md",
   "data/catalogs/",
   "docs/",
-  "fixtures-production-backup-2026-10-09/",
 ];
 
 export const SITE_DOMAINS = [

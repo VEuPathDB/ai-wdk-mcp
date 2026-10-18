@@ -1,8 +1,8 @@
 {
  "method": "POST",
- "url": "https://amoebadb.org/amoeba/service/record-types/transcript/searches/GenesByInterproDomain/refreshed-dependent-params",
+ "url": "https://qa.amoebadb.org/amoeba.qa/service/record-types/transcript/searches/GenesByInterproDomain/refreshed-dependent-params",
  "status": 200,
- "ms": 1168.3049201965332,
+ "ms": 1321.8524170806631,
  "request_json": {
   "changedParam": {
    "name": "domain_database",

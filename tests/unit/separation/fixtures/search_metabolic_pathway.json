@@ -1,15 +1,95 @@
 {
- "method": "GET",
- "url": "https://plasmodb.org/plasmo/service/record-types/transcript/searches/GenesByTaxon?expandParams=true",
- "status": 200,
- "ms": 0,
- "request_json": null,
- "request_text": null,
- "response_json": {
+ "provenance": {
+  "site": "plasmodb",
+  "method": "GET",
+  "url": "https://qa.plasmodb.org/plasmo.qa/service/record-types/transcript/searches/GenesByMetabolicPathway?expandParams=true",
+  "status": 200,
+  "recorded_at": "2026-10-18",
+  "trimmed": "metabolic_pathway_id_with_genes keeps the entries the separation tests name, in the order WDK sent them"
+ },
+ "body": {
   "searchData": {
-   "summary": "Find all genes from one or more species/organism.",
-   "urlSegment": "GenesByTaxon",
+   "summary": "Find genes involved in a selected metabolic pathway from KEGG or BioCyc.",
+   "urlSegment": "GenesByMetabolicPathway",
    "dynamicAttributes": [
+    {
+     "isInReport": true,
+     "formats": [],
+     "truncateTo": 100,
+     "displayName": "Met Search Criteria",
+     "name": "matched_result",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "columnDataType": "STRING",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    },
+    {
+     "isInReport": true,
+     "formats": [],
+     "truncateTo": 100,
+     "displayName": "EC Numbers Assigned To Gene",
+     "name": "ec_gene",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "columnDataType": "STRING",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    },
+    {
+     "isInReport": true,
+     "formats": [],
+     "truncateTo": 100,
+     "displayName": "EC Number Matched in Pathway",
+     "name": "ec_pathway",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "columnDataType": "STRING",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    },
     {
      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
      "isInReport": true,
@@ -49,23 +129,20 @@
    ],
    "defaultSorting": [
     {
-     "attributeName": "organism",
-     "direction": "ASC"
-    },
-    {
      "attributeName": "gene_location_text",
      "direction": "ASC"
     }
    ],
    "isAnalyzable": true,
-   "displayName": "Organism",
-   "fullName": "GeneQuestions.GenesByTaxon",
-   "description": "Find all genes from one or more species/organism.",
+   "displayName": "Metabolic Pathway",
+   "fullName": "GeneQuestions.GenesByMetabolicPathway",
+   "description": "Find genes involved in a selected metabolic pathway from KEGG or BioCyc. \n          <br><br>",
    "defaultAttributes": [
     "primary_key",
-    "organism",
     "gene_location_text",
-    "gene_product"
+    "gene_product",
+    "ec_gene",
+    "ec_pathway"
    ],
    "groups": [
     {
@@ -75,7 +152,12 @@
      "description": "",
      "isVisible": true,
      "parameters": [
-      "organism"
+      "organism",
+      "pathways_source",
+      "metabolic_pathway_id_with_genes",
+      "pathway_wildcard",
+      "exact_match_only",
+      "exclude_incomplete_ec"
      ]
     }
    ],
@@ -94,14 +176,20 @@
      "name": "genesByPathway"
     }
    ],
-   "shortDisplayName": "Organism",
+   "newBuild": "17",
+   "shortDisplayName": "Metabol Path",
    "paramNames": [
-    "organism"
+    "organism",
+    "pathways_source",
+    "metabolic_pathway_id_with_genes",
+    "pathway_wildcard",
+    "exact_match_only",
+    "exclude_incomplete_ec"
    ],
    "isCacheable": true,
    "outputRecordClassName": "transcript",
    "noSummaryOnSingleRecord": false,
-   "queryName": "GenesByTaxon",
+   "queryName": "GenesByMetabolicPathway",
    "defaultSummaryView": "_default",
    "parameters": [
     {
@@ -794,7 +882,7 @@
        "P. knowlesi"
       ],
       "maxRecommendedMsg": [
-       "<p>\n          You are selecting more than five organisms.\n        </p>\n        <p>\n          Selecting a large number of organisms may impact performance and make results harder to interpret.\n        </p>\n        <p>\n          <b>Please select five or fewer organisms where possible.</b>\n        </p>\n        <p>\n          For the best experience, use <i>My Organism Preferences</i> in the page header to focus on the organisms you care about most.\n        </p>"
+       "<p>\n          <b>Please select five or fewer organisms where possible.</b>\n        </p>\n        <p>\n          Selecting a large number of organisms may impact performance and make results harder to interpret.\n        </p>\n        <p>\n          For the best experience, use <i>My Organism Preferences</i> in the page header to focus on the organisms you care about most.\n        </p>"
       ],
       "specificAttribution": [],
       "organismProperties": [
@@ -805,6 +893,251 @@
       "maxRecommended": [
        "5"
       ]
+     },
+     "group": "empty"
+    },
+    {
+     "displayName": "Pathway Source",
+     "minSelectedCount": 1,
+     "maxSelectedCount": 1,
+     "isVisible": true,
+     "type": "single-pick-vocabulary",
+     "help": "Use only pathways from the selected source in this query.",
+     "dependentParams": [
+      "metabolic_pathway_id_with_genes"
+     ],
+     "displayType": "select",
+     "isReadOnly": false,
+     "vocabulary": [
+      [
+       "KEGG",
+       "KEGG",
+       null
+      ],
+      [
+       "BioCyc_TrypanoCyc",
+       "BioCyc_TrypanoCyc",
+       null
+      ],
+      [
+       "BioCyc_MetaCyc",
+       "BioCyc_MetaCyc",
+       null
+      ],
+      [
+       "Any",
+       "Any",
+       null
+      ],
+      [
+       "BioCyc_LeishCyc",
+       "BioCyc_LeishCyc",
+       null
+      ]
+     ],
+     "allowEmptyValue": false,
+     "name": "pathways_source",
+     "initialDisplayValue": "Any",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     },
+     "group": "empty"
+    },
+    {
+     "displayName": "Pathway Name or ID",
+     "minSelectedCount": 1,
+     "maxSelectedCount": 1,
+     "isVisible": true,
+     "type": "single-pick-vocabulary",
+     "help": "Enter a Pathway ID (e.g. \"ec00061\") or Pathway name (e.g. \"Fatty acid biosynthesis\").",
+     "dependentParams": [],
+     "displayType": "typeAhead",
+     "isReadOnly": false,
+     "vocabulary": [
+      [
+       "(PWY-7022) (BioCyc_MetaCyc)",
+       "paromamine biosynthesis II (PWY-7022) (BioCyc_MetaCyc)",
+       null
+      ],
+      [
+       "(ec00790) (KEGG)",
+       "Folate biosynthesis (ec00790) (KEGG)",
+       null
+      ],
+      [
+       "(PWY-702) (BioCyc_TrypanoCyc)",
+       "methionine biosynthesis II (PWY-702) (BioCyc_TrypanoCyc)",
+       null
+      ],
+      [
+       "(PWY-7029) (BioCyc_MetaCyc)",
+       "terminal olefins biosynthesis II (PWY-7029) (BioCyc_MetaCyc)",
+       null
+      ],
+      [
+       "(PWY-7025) (BioCyc_MetaCyc)",
+       "gentamicin biosynthesis (PWY-7025) (BioCyc_MetaCyc)",
+       null
+      ],
+      [
+       "(PWY-7024) (BioCyc_MetaCyc)",
+       "superpathway of the 3-hydroxypropanoate cycle (PWY-7024) (BioCyc_MetaCyc)",
+       null
+      ],
+      [
+       "(PWY-7028) (BioCyc_MetaCyc)",
+       "UDP-<i>N,N'</i>-diacetylbacillosamine biosynthesis (PWY-7028) (BioCyc_MetaCyc)",
+       null
+      ],
+      [
+       "(PWY-702) (BioCyc_MetaCyc)",
+       "L-methionine biosynthesis II (PWY-702) (BioCyc_MetaCyc)",
+       null
+      ],
+      [
+       "(PWY-7027) (BioCyc_MetaCyc)",
+       "hentriaconta-3,6,9,12,15,19,22,25,28-nonaene biosynthesis (PWY-7027) (BioCyc_MetaCyc)",
+       null
+      ],
+      [
+       "(PWY-7020) (BioCyc_MetaCyc)",
+       "superpathway of butirocin biosynthesis (PWY-7020) (BioCyc_MetaCyc)",
+       null
+      ],
+      [
+       "(ec00512) (KEGG)",
+       "Mucin type O-glycan biosynthesis (ec00512) (KEGG)",
+       null
+      ],
+      [
+       "(PWY-7021) (BioCyc_MetaCyc)",
+       "superpathway of neomycin biosynthesis (PWY-7021) (BioCyc_MetaCyc)",
+       null
+      ]
+     ],
+     "allowEmptyValue": false,
+     "name": "metabolic_pathway_id_with_genes",
+     "initialDisplayValue": "(PWY-7006) (BioCyc_MetaCyc)",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     },
+     "group": "empty"
+    },
+    {
+     "displayName": "Pathway wildcard search",
+     "length": 0,
+     "isVisible": true,
+     "isMultiLine": false,
+     "type": "string",
+     "help": "Asterisks can be used as wildcard characters in a Pathway (e.g. \"ec001* or glyco*\")",
+     "dependentParams": [],
+     "isReadOnly": false,
+     "isNumber": false,
+     "allowEmptyValue": false,
+     "name": "pathway_wildcard",
+     "initialDisplayValue": "N/A",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     },
+     "group": "empty"
+    },
+    {
+     "displayName": "EC Exact Match Only",
+     "minSelectedCount": 1,
+     "maxSelectedCount": 1,
+     "isVisible": true,
+     "type": "single-pick-vocabulary",
+     "help": "Choose whether or not to only use exact EC Number matches in this query. Choosing No will match 2.7.1.1 with incomplete partial matches such as 2.7.-.-.  Yes will ONLY match 2.7.1.1 with itself.",
+     "dependentParams": [],
+     "displayType": "select",
+     "isReadOnly": false,
+     "vocabulary": [
+      [
+       "Yes",
+       "Yes",
+       null
+      ],
+      [
+       "No",
+       "No",
+       null
+      ]
+     ],
+     "allowEmptyValue": false,
+     "name": "exact_match_only",
+     "initialDisplayValue": "Yes",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     },
+     "group": "empty"
+    },
+    {
+     "displayName": "Exclude Incomplete EC Numbers",
+     "minSelectedCount": 1,
+     "maxSelectedCount": 1,
+     "isVisible": true,
+     "type": "single-pick-vocabulary",
+     "help": "Choose whether to exclude incomplete EC numbers from this query. Choosing yes will exclude incomplete EC numbers such as 1.-.-.-",
+     "dependentParams": [],
+     "displayType": "select",
+     "isReadOnly": false,
+     "vocabulary": [
+      [
+       "No",
+       "No",
+       null
+      ],
+      [
+       "Yes",
+       "Yes",
+       null
+      ]
+     ],
+     "allowEmptyValue": false,
+     "name": "exclude_incomplete_ec",
+     "initialDisplayValue": "No",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
      },
      "group": "empty"
     }
@@ -818,7 +1151,11 @@
      "P. chabaudi",
      "P. knowlesi"
     ],
-    "specificAttribution": []
+    "specificAttribution": [],
+    "radio-params": [
+     "metabolic_pathway_id_with_genes",
+     "pathway_wildcard"
+    ]
    },
    "summaryViewPlugins": [
     {
@@ -837,6 +1174,5 @@
    "level": "DISPLAYABLE",
    "isValid": true
   }
- },
- "response_text": null
+ }
 }

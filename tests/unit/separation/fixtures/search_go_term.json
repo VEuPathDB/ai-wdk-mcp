@@ -2,9 +2,9 @@
  "provenance": {
   "site": "plasmodb",
   "method": "GET",
-  "url": "https://plasmodb.org/plasmo/service/record-types/transcript/searches/GenesByGoTerm?expandParams=true",
+  "url": "https://qa.plasmodb.org/plasmo.qa/service/record-types/transcript/searches/GenesByGoTerm?expandParams=true",
   "status": 200,
-  "recorded_at": "2026-09-24",
+  "recorded_at": "2026-10-18",
   "trimmed": "go_typeahead keeps the entries the separation tests name, in the order WDK sent them"
  },
  "body": {
@@ -867,7 +867,7 @@
        "P. knowlesi"
       ],
       "maxRecommendedMsg": [
-       "<p>\n          You are selecting more than five organisms.\n        </p>\n        <p>\n          Selecting a large number of organisms may impact performance and make results harder to interpret.\n        </p>\n        <p>\n          <b>Please select five or fewer organisms where possible.</b>\n        </p>\n        <p>\n          For the best experience, use <i>My Organism Preferences</i> in the page header to focus on the organisms you care about most.\n        </p>"
+       "<p>\n          <b>Please select five or fewer organisms where possible.</b>\n        </p>\n        <p>\n          Selecting a large number of organisms may impact performance and make results harder to interpret.\n        </p>\n        <p>\n          For the best experience, use <i>My Organism Preferences</i> in the page header to focus on the organisms you care about most.\n        </p>"
       ],
       "specificAttribution": [],
       "organismProperties": [

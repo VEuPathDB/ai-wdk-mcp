@@ -6,9 +6,8 @@ import inspect
 from pathlib import Path
 
 import pytest
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel
 from veupathdb.domain.parameters import StringValue
-from veupathdb.testing import NEEDS_QA_RECORDING
 from veupathdb.wdk import WDKStrategySummary
 
 from veupathdb_mcp import tool_payloads
@@ -34,7 +33,9 @@ from veupathdb_mcp.tool_payloads import (
 )
 
 SITE = "plasmodb"
-CATALOGS = Path(__file__).resolve().parents[2] / "data" / "catalogs"
+GENE_RECORD_ATTRIBUTES = (
+    Path(__file__).parent / "fixtures" / "gene_record_attributes.json"
+)
 
 
 def _control_test_result() -> ControlTestResult:
@@ -117,47 +118,29 @@ def test_gene_sample_attributes_are_requested_for_gene_record_types() -> None:
     assert gene_sample_attributes("gene") == ["product", "name", "organism"]
 
 
-class _RecordedAttribute(BaseModel):
-    model_config = ConfigDict(extra="ignore")
+class _GeneRecordAttributes(BaseModel):
+    """The attribute names each site's gene and transcript record types declare."""
 
-    name: str
-
-
-class _RecordedRecordType(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-
-    url_segment: str = Field(alias="urlSegment")
-    attributes: list[_RecordedAttribute]
+    sites: dict[str, dict[str, list[str]]]
 
 
-class _RecordedCatalog(BaseModel):
-    model_config = ConfigDict(extra="ignore")
+_DECLARED = _GeneRecordAttributes.model_validate_json(
+    GENE_RECORD_ATTRIBUTES.read_text()
+).sites
 
-    record_types: list[_RecordedRecordType]
 
-
-@pytest.mark.skip(reason=NEEDS_QA_RECORDING)
-@pytest.mark.parametrize(
-    "catalog", sorted(CATALOGS.glob("*.json")), ids=lambda path: path.stem
-)
+@pytest.mark.parametrize("site", sorted(_DECLARED))
 def test_each_gene_record_type_declares_the_attributes_its_sample_reads(
-    catalog: Path,
+    site: str,
 ) -> None:
     """A record type answers 400 to an attribute it does not declare."""
-    recorded = _RecordedCatalog.model_validate_json(catalog.read_text())
-    declared = {
-        record_type.url_segment: {
-            attribute.name for attribute in record_type.attributes
-        }
-        for record_type in recorded.record_types
-    }
-    sampled = [name for name in ("gene", "transcript") if name in declared]
+    declared = _DECLARED[site]
     missing = {
-        name: sorted(set(gene_sample_attributes(name) or []) - declared[name])
-        for name in sampled
+        name: sorted(set(gene_sample_attributes(name) or []) - set(attributes))
+        for name, attributes in declared.items()
     }
 
-    assert missing == {name: [] for name in sampled}
+    assert missing == {name: [] for name in declared}
 
 
 def test_gene_sample_attributes_are_absent_for_a_non_gene_record_type() -> None:

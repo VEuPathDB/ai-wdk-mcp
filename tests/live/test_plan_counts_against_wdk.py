@@ -28,10 +28,7 @@ def _weight_step(step_id: str, low: str, high: str) -> StrategyStepNode:
     )
 
 
-async def test_a_leaf_only_plan_counts_without_creating_anything(
-    wdk_identity: str,
-) -> None:
-    del wdk_identity
+async def test_a_leaf_only_plan_counts_without_creating_anything() -> None:
     plan = StrategyAst(
         record_type="transcript", root=_weight_step("light", "10000", "20000")
     )
@@ -42,10 +39,7 @@ async def test_a_leaf_only_plan_counts_without_creating_anything(
     assert 0 < counts["light"] < 100_000
 
 
-async def test_a_combine_plan_counts_and_deletes_its_strategy(
-    wdk_identity: str,
-) -> None:
-    del wdk_identity
+async def test_a_combine_plan_counts_and_deletes_its_strategy() -> None:
     plan = StrategyAst(
         record_type="transcript",
         root=StrategyStepNode(

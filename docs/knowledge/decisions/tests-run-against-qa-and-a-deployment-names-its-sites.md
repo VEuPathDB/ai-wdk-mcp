@@ -17,16 +17,15 @@ status: stable
 - **Recording reads QA only.** `scripts/record_all_datasets.py` installs the QA list
   through `veupathdb.devtools.use_qa_sites` before it posts, whatever the environment
   names. No option points it at another list.
-- **No production recording stays where a test reads it.** The recordings made on
-  production moved to `fixtures-production-backup-2026-10-09/`, which no test, image or
-  build reads. A test that read one is skipped with
-  `veupathdb.testing.NEEDS_QA_RECORDING` while `needs_qa_recording` finds the recordings
-  it reads absent, so a QA recording lifts the skip with no change to the test
-  ([the backlog item](../backlog/the-production-recordings-are-recorded-again-on-qa.md)).
+- **Every recording a test reads is a QA recording.** A test whose recording is absent is
+  skipped with `veupathdb.testing.NEEDS_QA_RECORDING` while `needs_qa_recording` finds it
+  absent, so a QA recording lifts the skip with no change to the test. The attributes a
+  record type declares are read from `tests/unit/fixtures/gene_record_attributes.json`,
+  recorded on QA, and not from the warm cache.
 - **The guard.** `scripts/check-test-sites.mjs` fails on a production host (a site
   domain whose nearest label is not `qa` or `q2`: bare, `www.`, `beta.`, a numbered
-  server or any other subdomain) in any file outside `README.md`, `data/catalogs/`,
-  `docs/` and the backup directory. It is the client library's script with its own
+  server or any other subdomain) in any file outside `README.md`, `data/catalogs/` and
+  `docs/`. It is the client library's script with its own
   allowlist. CI and pre-commit run it with its test.
 - **CI.** The WDK admission lane serves the QA list the client ships. The `live` job
   runs only on a schedule, and the workflow names none, so no job reaches a site.
@@ -42,9 +41,8 @@ status: stable
 # What this costs
 
 The `data/catalogs/` snapshot is production data the image serves as a warm cache; it
-stays, and no test reads it. Every test that read a production recording is skipped
-until QA answers automated clients, and every value a live test pins was measured on
-production.
+stays, and no test reads it. The client library's cached AI expression summary has no QA
+recording, so the tests that read it are skipped.
 
 # What proves it wrong
 

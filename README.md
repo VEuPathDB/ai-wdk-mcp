@@ -298,11 +298,10 @@ node scripts/check-test-sites.mjs && node --test scripts/check-test-sites.test.m
 Every test, the live lane included, reads the QA site list the client library ships
 (`veupathdb.testing.QA_SITES_FILE`), and `scripts/record_all_datasets.py` records from
 it whatever the environment names. `check-test-sites.mjs` fails on a production or beta
-host anywhere outside `README.md`, `docs/`, the catalog cache under `data/catalogs/` and
-the backup of the production recordings.
-A test whose recording was made on production is skipped with
+host anywhere outside `README.md`, `docs/` and the catalog cache under `data/catalogs/`.
+Every recording is made on QA. A test whose recording is absent is skipped with
 `veupathdb.testing.NEEDS_QA_RECORDING` while `veupathdb.testing.needs_qa_recording`
-finds the recording absent, so a QA recording lifts the skip with no change to the test
+finds it absent, so a recording lifts the skip with no change to the test
 ([the decision](docs/knowledge/decisions/tests-run-against-qa-and-a-deployment-names-its-sites.md)).
 
 ## Images
