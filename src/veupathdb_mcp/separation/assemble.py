@@ -1,7 +1,8 @@
 """The boolean the measured sets assemble by direction, and the gaps it leaves.
 
-A recovering candidate covers and intersects, an excluding one is subtracted,
-and one that informs neither way never enters a tree. Set algebra on the
+A recovering candidate covers and intersects, an excluding one is subtracted
+alone or as a branch that keeps the positives it holds, and one that informs
+neither way never enters a tree. Set algebra on the
 control ids predicts each combine and only chooses; the confirm read of the
 assembled tree is what a run reports.
 """
@@ -64,6 +65,53 @@ def leaf_ids(node: SeparationNode | None) -> list[str]:
     return [cid for child in node.inputs for cid in leaf_ids(child)]
 
 
+def _combined(
+    operator: SeparationOperator, left: frozenset[str], right: frozenset[str]
+) -> frozenset[str]:
+    if operator == CombineOp.UNION:
+        return left | right
+    if operator == CombineOp.INTERSECT:
+        return left & right
+    return left - right
+
+
+@dataclass(frozen=True)
+class _Part:
+    node: SeparationNode
+    recovered: frozenset[str]
+    admitted: frozenset[str]
+    used: tuple[str, ...]
+    size: int
+
+    @classmethod
+    def leaf(cls, m: MeasuredCandidate) -> "_Part":
+        return cls(
+            node=SeparationNode(kind="leaf", candidate_id=m.candidate.id),
+            recovered=_recovered(m),
+            admitted=_admitted(m),
+            used=(m.candidate.id,),
+            size=m.result_size,
+        )
+
+    @classmethod
+    def branch(
+        cls,
+        operator: SeparationOperator,
+        left: MeasuredCandidate,
+        right: MeasuredCandidate,
+    ) -> "_Part":
+        first, second = cls.leaf(left), cls.leaf(right)
+        return cls(
+            node=SeparationNode(
+                kind="combine", operator=operator, inputs=[first.node, second.node]
+            ),
+            recovered=_combined(operator, first.recovered, second.recovered),
+            admitted=_combined(operator, first.admitted, second.admitted),
+            used=(*first.used, *second.used),
+            size=left.result_size,
+        )
+
+
 @dataclass
 class _Tree:
     node: SeparationNode
@@ -73,31 +121,30 @@ class _Tree:
 
     @classmethod
     def start(cls, m: MeasuredCandidate) -> "_Tree":
+        part = _Part.leaf(m)
         return cls(
-            node=SeparationNode(kind="leaf", candidate_id=m.candidate.id),
-            recovered=_recovered(m),
-            admitted=_admitted(m),
-            used=[m.candidate.id],
+            node=part.node,
+            recovered=part.recovered,
+            admitted=part.admitted,
+            used=list(part.used),
         )
 
-    def add(self, operator: SeparationOperator, m: MeasuredCandidate) -> None:
-        leaf = SeparationNode(kind="leaf", candidate_id=m.candidate.id)
+    def add(self, operator: SeparationOperator, part: _Part) -> None:
         self.node = SeparationNode(
-            kind="combine", operator=operator, inputs=[self.node, leaf]
+            kind="combine", operator=operator, inputs=[self.node, part.node]
         )
-        self.used.append(m.candidate.id)
-        if operator == CombineOp.UNION:
-            self.recovered |= _recovered(m)
-            self.admitted |= _admitted(m)
-        elif operator == CombineOp.INTERSECT:
-            self.recovered &= _recovered(m)
-            self.admitted &= _admitted(m)
-        else:
-            self.recovered -= _recovered(m)
-            self.admitted -= _admitted(m)
+        self.used.extend(part.used)
+        self.recovered = _combined(operator, self.recovered, part.recovered)
+        self.admitted = _combined(operator, self.admitted, part.admitted)
 
     def full(self) -> bool:
         return len(self.used) >= MAX_CRITERIA
+
+    def fits(self, part: _Part) -> bool:
+        return len(self.used) + len(part.used) <= MAX_CRITERIA
+
+    def unused(self, m: MeasuredCandidate) -> bool:
+        return m.candidate.id not in self.used
 
 
 def _cover(
@@ -127,36 +174,69 @@ def _cover(
         if tree is None:
             tree = _Tree.start(best)
         else:
-            tree.add(CombineOp.UNION, best)
+            tree.add(CombineOp.UNION, _Part.leaf(best))
         covered = tree.recovered
     return tree, False
+
+
+def _branches(
+    tree: _Tree,
+    recovering: list[MeasuredCandidate],
+    excluding: list[MeasuredCandidate],
+) -> list[_Part]:
+    """Each excluding candidate less another candidate, and each two excluding
+    candidates intersected."""
+    noisy = [m for m in excluding if tree.unused(m)]
+    others = [m for m in (*recovering, *excluding) if tree.unused(m)]
+    branches = [
+        _Part.branch(CombineOp.MINUS, left, right)
+        for left in noisy
+        for right in others
+        if right is not left
+    ]
+    branches.extend(
+        _Part.branch(CombineOp.INTERSECT, left, right)
+        for index, left in enumerate(noisy)
+        for right in noisy[index + 1 :]
+    )
+    return [branch for branch in branches if tree.fits(branch)]
 
 
 def _best_move(
     tree: _Tree,
     recovering: list[MeasuredCandidate],
     excluding: list[MeasuredCandidate],
-) -> tuple[SeparationOperator, MeasuredCandidate, int] | None:
+) -> tuple[SeparationOperator, _Part, int] | None:
     """The move that removes the most negatives and keeps every recovered positive.
 
-    A tie goes to an intersection, then to the smaller result.
+    A tie goes to one candidate over a branch of two, then to an intersection,
+    then to the smaller result.
     """
-    moves: list[tuple[SeparationOperator, MeasuredCandidate, int]] = [
-        (CombineOp.INTERSECT, m, len(tree.admitted - _admitted(m)))
-        for m in recovering
-        if m.candidate.id not in tree.used and _recovered(m) >= tree.recovered
+    offered: list[tuple[SeparationOperator, _Part]] = [
+        (CombineOp.INTERSECT, _Part.leaf(m)) for m in recovering if tree.unused(m)
     ]
-    moves.extend(
-        (CombineOp.MINUS, m, len(tree.admitted & _admitted(m)))
-        for m in excluding
-        if m.candidate.id not in tree.used and not _recovered(m) & tree.recovered
+    offered.extend(
+        (CombineOp.MINUS, _Part.leaf(m)) for m in excluding if tree.unused(m)
     )
+    offered.extend(
+        (CombineOp.MINUS, branch) for branch in _branches(tree, recovering, excluding)
+    )
+    moves: list[tuple[SeparationOperator, _Part, int]] = [
+        (
+            operator,
+            part,
+            len(tree.admitted - _combined(operator, tree.admitted, part.admitted)),
+        )
+        for operator, part in offered
+        if _combined(operator, tree.recovered, part.recovered) == tree.recovered
+    ]
     return max(
         moves,
         key=lambda move: (
             move[2],
+            len(move[1].used) == 1,
             move[0] == CombineOp.INTERSECT,
-            -move[1].result_size,
+            -move[1].size,
         ),
         default=None,
     )
@@ -184,7 +264,7 @@ def assemble(
     """COVER the positives with recovering candidates, then remove negatives.
 
     Both modes intersect with recovering candidates; exact mode also subtracts
-    excluding ones.
+    excluding ones, alone or in a branch that keeps the positives they hold.
     """
     recovering = rank(m for m in measured if m.informs == "recovering")
     excluding = (

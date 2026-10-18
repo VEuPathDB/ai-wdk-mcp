@@ -1,5 +1,12 @@
 # Knowledge log
 
+## 2026-10-18 - An excluding search that holds a few positives is subtracted as a branch
+
+- 0.2.0b26: exact mode also subtracts a branch of two measured searches, an excluding
+  search less another search or two excluding searches intersected, when the branch holds
+  none of the tree's recovered positives. A tie goes to one search over a branch, and a
+  branch needs room for both its searches under `MAX_CRITERIA`.
+
 ## 2026-10-18 - A separation run's rows name each search and carry the tree
 
 - 0.2.0b25: a `measured` row carries the candidate's `displayName` and `basis`, and the
