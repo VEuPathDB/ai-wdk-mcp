@@ -18,36 +18,36 @@ CLEANUP_REQUESTS = 3
 UPLOAD_REQUESTS = 2
 """The controls parameter-type read and the one dataset of every control."""
 
-MEASURE_REQUESTS = 8
-"""Three steps, the read of the candidate's search, the strategy, the count, the
-answer and the delete. The controls step holds no term list, so it reads no
-search, and the site client keeps the combine's boolean search once it is read."""
+MEASURE_REQUESTS = 7
+"""Three steps, the strategy, the count, the answer and the delete. A run reads each
+search definition once, so the candidate's search and the controls search are read
+before, and the site client keeps the combine's boolean search once it is read."""
 
 SEARCH_READ_REQUESTS = 1
 """One read of a search: its definition, first read by the catalog or by the
 first step of it, or its parameters under a context."""
 
-FIRST_INTERSECTION_REQUESTS = 3
-"""The second read of the controls search, the search listing and the read of the
-boolean search, once a site client."""
+FIRST_INTERSECTION_REQUESTS = 2
+"""The search listing and the read of the boolean search, once a site client."""
 
-ENRICHMENT_REQUESTS = 30
+ENRICHMENT_REQUESTS = 29
 """One by-value enrichment of the GO and pathway analyses a run asks for.
 
 Each analysis polls its status, so a slow site answers with more requests. The
-site client keeps the user id an earlier stage of the run read.
+site client keeps the user id an earlier stage of the run read, and the run keeps
+the definition of the id search the upload read.
 """
 
 
 def confirm_requests(leaves: int) -> int:
     """The requests that build and read an assembled tree of ``leaves`` criteria.
 
-    Each leaf is a step and a read of its search, and each combine a step; then the
-    controls step, which holds no term list and reads no search, its combine, the
-    strategy, the count, the answer and the delete. The site client already holds
-    the boolean search a combine names, because a measurement read it.
+    Each leaf is a step and each combine a step; then the controls step, its
+    combine, the strategy, the count, the answer and the delete. The run already
+    holds every leaf's search definition and the site client the boolean search a
+    combine names, because a measurement read them.
     """
-    return 3 * leaves + 5
+    return 2 * leaves + 5
 
 
 CONFIRM_RESERVATION = confirm_requests(MAX_CRITERIA)

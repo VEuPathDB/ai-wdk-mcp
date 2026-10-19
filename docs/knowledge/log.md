@@ -1,5 +1,16 @@
 # Knowledge log
 
+## 2026-10-19 - A separation run reads each search definition once
+
+- 0.2.0b28 takes veupathdb-py 0.1.0b15. `separate` runs inside
+  `search_definitions_read_once`, so a run reads each search definition once. A later
+  measurement is charged 7 requests (`MEASURE_REQUESTS`), the first measurement 2 more
+  (`FIRST_INTERSECTION_REQUESTS`), an assembled tree `2 * leaves + 5` (`confirm_requests`)
+  and an enrichment 29 (`ENRICHMENT_REQUESTS`). The recorded run drops the six reads of a
+  definition the run already read.
+- The catalog keeps sharing one copy of a definition across logins
+  (`decisions/the-catalog-shares-a-search-definition-across-logins.md`).
+
 ## 2026-10-18 - A separation run is charged what it now sends
 
 - 0.2.0b27 takes veupathdb-py 0.1.0b14, whose site client keeps the user id each login

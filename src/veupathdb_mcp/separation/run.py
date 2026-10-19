@@ -6,7 +6,11 @@ from itertools import batched
 
 from pydantic import JsonValue
 from veupathdb.errors import WDKError
-from veupathdb.wdk import StrategyAPI, get_strategy_api
+from veupathdb.wdk import (
+    StrategyAPI,
+    get_strategy_api,
+    search_definitions_read_once,
+)
 
 from veupathdb_mcp.controls import (
     ControlsSearch,
@@ -251,8 +255,22 @@ async def separate(
     """Find the strategy that separates the positives from the negatives on the site.
 
     Every count is read from WDK. ``strategy_name`` names the internal strategies
-    the run writes and the leftovers its cleanup deletes.
+    the run writes and the leftovers its cleanup deletes. The run reads each search
+    definition once.
     """
+    with search_definitions_read_once():
+        return await _separate(
+            site_id, request, strategy_name=strategy_name, progress=progress
+        )
+
+
+async def _separate(
+    site_id: str,
+    request: SeparationRequest,
+    *,
+    strategy_name: str,
+    progress: SeparationProgress,
+) -> SeparationResult:
     budget = WdkCallBudget(limit=request.budget)
     budget.reserve(CONFIRM_RESERVATION)
     positives, negatives = await _resolve_both(site_id, request, budget)

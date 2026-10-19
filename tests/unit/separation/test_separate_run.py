@@ -8,7 +8,12 @@ from tests._support.separation_site import FALCIPARUM, patch_site
 from veupathdb.domain.parameters import MultiPickValue, StringValue
 from veupathdb.errors import WDKError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
-from veupathdb.wdk import WDKStrategySummary, tag_internal_wdk_strategy_name
+from veupathdb.testing.wdk_fixtures import load_recorded
+from veupathdb.wdk import (
+    VEuPathDBClient,
+    WDKStrategySummary,
+    tag_internal_wdk_strategy_name,
+)
 
 from veupathdb_mcp.gene_lookup import GeneResolveResult, GeneResult
 from veupathdb_mcp.separation import (
@@ -288,3 +293,36 @@ def test_a_budget_below_the_confirm_reservation_is_refused() -> None:
     with pytest.raises(ValidationError, match="budget"):
         _request(budget=CONFIRM_RESERVATION - 1)
     assert _request(budget=CONFIRM_RESERVATION).budget == confirm_requests(MAX_CRITERIA)
+
+
+@pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_molecular_weight.json",
+        "wdk/search_genes_by_orthologs.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
+async def test_a_run_reads_each_search_definition_once(
+    account: _Account, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    reads: list[str] = []
+    client = VEuPathDBClient("https://example.invalid/service")
+    body = load_recorded("search_genes_by_molecular_weight").json_body()
+
+    async def get(path: str, **_: object) -> dict:
+        reads.append(path)
+        return body
+
+    monkeypatch.setattr(client, "get", get)
+    resolving = separation_run._resolve_both
+
+    async def read_twice_then_resolve(*args: object) -> object:
+        for _ in range(2):
+            await client.get_search_details("transcript", "GenesByMolecularWeight")
+        return await resolving(*args)
+
+    monkeypatch.setattr(separation_run, "_resolve_both", read_twice_then_resolve)
+
+    await _run(_request())
+
+    assert reads == ["/record-types/transcript/searches/GenesByMolecularWeight"]

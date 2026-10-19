@@ -15,7 +15,11 @@ from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.domain.parameters import MultiPickValue, SinglePickValue
 from veupathdb.domain.strategy import CombineOp
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
-from veupathdb.wdk import get_strategy_api, get_wdk_client
+from veupathdb.wdk import (
+    get_strategy_api,
+    get_wdk_client,
+    search_definitions_read_once,
+)
 
 from veupathdb_mcp.controls import ControlsSearch, upload_controls
 from veupathdb_mcp.gene_lookup import resolve_gene_ids
@@ -117,6 +121,26 @@ async def _ignore(update: SeparationUpdate) -> None:
 async def test_every_stage_costs_the_requests_its_charge_names(
     replay: _Replay,
 ) -> None:
+    with search_definitions_read_once():
+        await _one_run()
+
+    assert replay.stages() == {
+        "resolve_positives": RESOLVE_REQUESTS,
+        "resolve_negatives": RESOLVE_REQUESTS,
+        "list": CLEANUP_REQUESTS,
+        "upload": UPLOAD_REQUESTS,
+        "measure1": MEASURE_REQUESTS
+        + SEARCH_READ_REQUESTS
+        + FIRST_INTERSECTION_REQUESTS,
+        "measure2": MEASURE_REQUESTS,
+        "confirm2": confirm_requests(2),
+        "param_read": SEARCH_READ_REQUESTS,
+        "enrich": ENRICHMENT_REQUESTS,
+    }
+    assert len(replay.seen) == len(_recorded())
+
+
+async def _one_run() -> None:
     exchanges = _recorded()
     positives = _uploaded(exchanges, "resolve_positives")
     negatives = _uploaded(exchanges, "resolve_negatives")
@@ -162,21 +186,6 @@ async def test_every_stage_costs_the_requests_its_charge_names(
         BackgroundSource(organism=ORGANISM),
         ["go_process", "go_function", "go_component", "pathway"],
     )
-
-    assert replay.stages() == {
-        "resolve_positives": RESOLVE_REQUESTS,
-        "resolve_negatives": RESOLVE_REQUESTS,
-        "list": CLEANUP_REQUESTS,
-        "upload": UPLOAD_REQUESTS,
-        "measure1": MEASURE_REQUESTS
-        + SEARCH_READ_REQUESTS
-        + FIRST_INTERSECTION_REQUESTS,
-        "measure2": MEASURE_REQUESTS,
-        "confirm2": confirm_requests(2),
-        "param_read": SEARCH_READ_REQUESTS,
-        "enrich": ENRICHMENT_REQUESTS,
-    }
-    assert len(replay.seen) == len(exchanges)
 
 
 def _uploaded(exchanges: list[dict[str, Any]], stage: str) -> list[str]:
