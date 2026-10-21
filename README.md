@@ -35,7 +35,7 @@ than from a file inside it.
 | `veupathdb_mcp.research` | the research server, its settings and its two tools |
 | `veupathdb_mcp.separation` | the separation run, its request, its progress rows, its result, the request charges it makes and the hypergeometric tail it reads controls by |
 | `veupathdb_mcp.tools` | the forty-one served tools |
-| `veupathdb_mcp.wdk` | step trees, sizes, the sample of a built step (`step_sample_records`), downloads, expression, the vocabulary and defaults a form offers, and the AST a saved strategy converts into |
+| `veupathdb_mcp.wdk` | step trees, sizes, the sample of a built step (`step_sample_records`), a step's gene ids read up to a limit the caller names (`StepTooLargeError` past it), an OrthoMCL group's proteins per genome (`group_genome_counts`, from its `TaxonCounts` table), downloads, expression, the vocabulary and defaults a form offers, and the AST a saved strategy converts into |
 | `veupathdb_mcp.wdk.enrichment` | over-representation analysis, its result shapes and its parser |
 
 `tests/unit/test_cold_import.py` holds the line: it imports every module of the
@@ -141,6 +141,22 @@ strategy. WDK offers no delete for a dataset, so the dataset stays.
 A published call this list does not serve is an in-process import, and
 `docs/knowledge/decisions/what-the-wire-serves-and-what-a-host-imports.md`
 states the property that decides which is which.
+
+`lookup_phyletic_codes` gives each match its code, its label, `leaf` and
+`genomes`, the number of genomes under it, and groups the genomes the query names
+by species under `species`. On OrthoMCL it reads the site's taxonomy, and the
+`phyletic_expression` help states the counting, absence and precedence rules the
+site was measured to follow.
+
+A search the site publishes no description for may carry a measured note in its
+place (`catalog/search_notes.py`); a note never replaces a description the site
+publishes. OrthoMCL's `GroupsBySingleCopy` carries the only one: it runs the
+query of `GroupsByGenomeCount`, and one protein in every genome of a list is a
+`GroupsByPhyleticPattern` expression.
+
+`get_step_gene_ids` answers at most 200 gene ids. It asks the site for one record
+more, refuses a larger step by its id and the limit, and names
+`get_step_download_url`, which reads the whole step.
 
 ## The two research tools
 
@@ -358,7 +374,7 @@ tag.
 than a lint rule.
 
 The lock names `veupathdb-py` by the client repository
-(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, `v0.1.0b16`,
+(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, `v0.1.0b18`,
 so a checkout of this repository alone installs and tests. To take a newer client:
 change `tag` in `[tool.uv.sources]`, run `uv lock --upgrade-package veupathdb-py`,
 then `uv sync`. Every name `src/` and `tests/` reads from the client comes from a client

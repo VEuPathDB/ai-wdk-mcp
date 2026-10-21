@@ -33,9 +33,9 @@ internal strategy. Every step and the strategy are registered as they are writte
 (`veupathdb_mcp/controls/account_writes.py`, `run_writes`), and one cleanup deletes them in
 the reverse order of creation: the strategy first, then each step that no strategy holds,
 one request at a time. A step the deleted strategy held is not deleted on its own, because
-WDK refuses to delete a step that a strategy holds (WDK-STEP-007). Whether WDK's strategy
-delete also removes those steps is not measured yet; either way they belong to a deleted
-strategy and are not listed on the site. The cleanup runs when the run ends in any way, a
+WDK refuses to delete a step that a strategy holds (WDK-STEP-007). WDK's strategy delete
+removes the steps the strategy holds: measured on QA plasmodb, each of them then answers 404
+to a read and to a delete. The cleanup runs when the run ends in any way, a
 refusal or a cancellation included. It is shielded from a second cancellation and held by
 a strong reference until it ends, and a write still in flight is awaited so that its id is
 known. A failed delete is logged and does not replace the error that ended the run. WDK

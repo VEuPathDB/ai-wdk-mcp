@@ -1,5 +1,30 @@
 # Knowledge log
 
+## 2026-10-22 - 0.2.0b33
+
+- 0.2.0b33 ships the entry below, the control runs that delete every step and strategy
+  they write, the measured note for `GroupsBySingleCopy` and the recipes of the
+  `phyletic_expression` help
+  ([a search note fills only an empty description](decisions/a-search-note-fills-only-an-empty-description.md)),
+  and the genome count of each `lookup_phyletic_codes` match with the species its genome
+  matches fall in. It pins veupathdb-py 0.1.0b18, whose taxonomy nodes state `clade` and
+  whose tree groups genomes by species.
+- Live on QA with this release's source and no embedder (56 WDK requests, no embedding
+  request): on orthomcl a clade lookup answers the clade with its genome count, a genus
+  lookup groups its genomes by species as the recorded taxonomy does, and the listing,
+  the index text, the overview and the definition of `GroupsBySingleCopy` carry the note.
+  `OG8_0003303` reads as 736 genomes and 1,068 proteins, its `number_of_members`. QA
+  orthomcl serves no `dataset` record type: the dataset report answers 404 and the
+  catalog build holds no experiments.
+- On QA plasmodb, a control run on the first leaf of a three-step strategy (312 genes,
+  315 transcripts) files one positive control as recovered and one negative as excluded,
+  as the step's answer holds them. `duplicated-step-tree` answers
+  `{"stepTree": {"stepId", "primaryInput": {"stepId"}, "secondaryInput": {"stepId"}}}`,
+  a leaf with no input keys; the run deletes the two copies outside the leaf, and the
+  strategy delete removes the copy, the controls step and the combine, each answering 404
+  after it. The strategy list then holds no internal strategy. `get_step_gene_ids` on a
+  step of 783 genes is refused by name after one step read and one report of 201 records.
+
 ## 2026-10-22 - A step read is bounded by its caller
 
 - `group_genome_counts` reads an OrthoMCL group's `TaxonCounts` table as proteins per
