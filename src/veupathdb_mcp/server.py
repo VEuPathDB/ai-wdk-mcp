@@ -76,7 +76,7 @@ ENRICHMENT_MAX_CALL_SECONDS = 600
 CONTROL_TESTS_MAX_CALL_SECONDS = 180
 # A combined plan creates one WDK step per node before it reads a count.
 PLAN_COUNTS_MAX_CALL_SECONDS = 180
-PSEUDOGENE_AUDIT_MAX_CALL_SECONDS = 120
+AUDIT_MAX_CALL_SECONDS = 120
 
 _NO_CREDENTIAL = "The call carried no verified credential."
 
@@ -210,9 +210,13 @@ TOOLS: tuple[_ToolRow, ...] = (
     _ToolRow(
         audit_pseudogene_call,
         _READ,
-        {MAX_CALL_SECONDS_META_KEY: PSEUDOGENE_AUDIT_MAX_CALL_SECONDS},
+        {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
     ),
-    _ToolRow(audit_selenoprotein_end, _READ),
+    _ToolRow(
+        audit_selenoprotein_end,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
+    ),
 )
 
 

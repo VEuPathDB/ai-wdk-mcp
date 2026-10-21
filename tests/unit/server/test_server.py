@@ -1131,12 +1131,18 @@ async def test_an_audit_call_answers_the_check_with_the_genes_it_named(
     }
 
 
-async def test_the_pseudogene_audit_declares_a_budget_over_the_default() -> None:
+async def test_both_audits_declare_one_budget_over_the_default() -> None:
     tools = await _list_tools()
 
-    meta = tools["audit_pseudogene_call"].meta
-    assert meta is not None
-    assert meta[MAX_CALL_SECONDS_META_KEY] > 60
+    pseudogene = tools["audit_pseudogene_call"].meta
+    selenoprotein = tools["audit_selenoprotein_end"].meta
+    assert pseudogene is not None
+    assert selenoprotein is not None
+    assert pseudogene[MAX_CALL_SECONDS_META_KEY] > 60
+    assert (
+        selenoprotein[MAX_CALL_SECONDS_META_KEY]
+        == pseudogene[MAX_CALL_SECONDS_META_KEY]
+    )
     schema = tools["audit_pseudogene_call"].outputSchema
     assert schema is not None
     assert {"strainGene", "referenceGene", "residueDifferences"} <= set(

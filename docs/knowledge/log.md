@@ -1,5 +1,15 @@
 # Knowledge log
 
+## 2026-10-21 - An audit check reads a bounded window in a bounded thread
+
+- 0.2.0b30: each audit genome window is at most `AUDIT_MAX_WINDOW_BASES` (250,000) bases, and a
+  longer one is refused before any gene record or genome read, naming the gene, the
+  window length and the limit.
+- The selenoprotein check runs in a worker thread like the pseudogene check, and a
+  process runs at most two audit checks at once on each event loop. A further call
+  waits for a slot, and both served rows declare the 120 s budget
+  (`decisions/an-audit-check-reads-its-genome-from-the-site.md`).
+
 ## 2026-10-21 - Two gene-model checks are served
 
 - 0.2.0b29 serves `audit_pseudogene_call` and `audit_selenoprotein_end`, both read-only,

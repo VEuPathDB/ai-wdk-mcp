@@ -15,6 +15,7 @@ from veupathdb_mcp.audit.pseudogene import PseudogeneCheck, ReferenceGene
 from veupathdb_mcp.audit.selenocysteine import SecCheck, sec_tail
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
 
+AUDIT_MAX_WINDOW_BASES = 250_000
 PSEUDOGENE_PAD = 3000
 PSEUDOGENE_MAX_CELLS = 200_000_000
 SELENOPROTEIN_PAD = 300
@@ -59,6 +60,14 @@ async def _located(
     return rows
 
 
+def _window_refusal(gene: str, length: int) -> ToolErrorPayload:
+    return tool_error(
+        VEuPathDBErrorCode.VALIDATION_ERROR,
+        f"the {gene} window spans {length} bases; an audit reads at most "
+        f"{AUDIT_MAX_WINDOW_BASES} bases of genome per window",
+    )
+
+
 async def pseudogene_inputs(
     site_id: str, strain_gene: str, reference_gene: str
 ) -> PseudogeneInputs | ToolErrorPayload:
@@ -69,6 +78,12 @@ async def pseudogene_inputs(
             strain, reference = rows[strain_gene], rows[reference_gene]
     reference_length = reference.end - reference.start + 1
     strain_length = strain.end - strain.start + 1 + 2 * PSEUDOGENE_PAD
+    for gene, length in (
+        (reference_gene, reference_length),
+        (strain_gene, strain_length),
+    ):
+        if length > AUDIT_MAX_WINDOW_BASES:
+            return _window_refusal(gene, length)
     if reference_length * strain_length > PSEUDOGENE_MAX_CELLS:
         return tool_error(
             VEuPathDBErrorCode.VALIDATION_ERROR,
@@ -130,6 +145,9 @@ async def selenoprotein_inputs(
             f"{reference_gene} has no selenocysteine on {site_id}",
         )
     pad = SELENOPROTEIN_PAD + 3 * len(tail)
+    length = row.end - row.start + 1 + 2 * pad
+    if length > AUDIT_MAX_WINDOW_BASES:
+        return _window_refusal(gene, length)
     model = await gene_model(site_id, gene)
     window = await GenomeReader(get_jbrowse_client(site_id)).window(
         model.organism, row.sequence_id, row.start - pad, row.end + pad

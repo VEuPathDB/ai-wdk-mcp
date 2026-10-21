@@ -8,6 +8,7 @@
     "tool_error"
   ],
   "veupathdb_mcp.audit": [
+    "AUDIT_MAX_WINDOW_BASES",
     "CdsPart",
     "FOUND",
     "Frame",

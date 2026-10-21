@@ -37,6 +37,7 @@ from veupathdb_mcp.audit.selenocysteine import (
     sec_tail,
 )
 from veupathdb_mcp.audit.served import (
+    AUDIT_MAX_WINDOW_BASES,
     PSEUDOGENE_MAX_CELLS,
     PSEUDOGENE_PAD,
     SELENOPROTEIN_PAD,
@@ -59,6 +60,7 @@ from veupathdb_mcp.audit.windows import (
 )
 
 __all__ = [
+    "AUDIT_MAX_WINDOW_BASES",
     "FOUND",
     "GENE_ATTRIBUTES",
     "MISSING",

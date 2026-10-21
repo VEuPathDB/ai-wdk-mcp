@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Awaitable
+import weakref
+from collections.abc import Awaitable, Callable
 
 import httpx
 from fastmcp.exceptions import ToolError
@@ -22,6 +23,26 @@ from veupathdb_mcp.tool_errors import ToolErrorPayload
 from veupathdb_mcp.tools.refusals import payload_or_error
 
 _CODE = GeneticCode.STANDARD
+_CHECKS_AT_ONCE = 2
+_SLOTS: weakref.WeakKeyDictionary[asyncio.AbstractEventLoop, asyncio.Semaphore] = (
+    weakref.WeakKeyDictionary()
+)
+
+
+def _slots() -> asyncio.Semaphore:
+    return _SLOTS.setdefault(
+        asyncio.get_running_loop(), asyncio.Semaphore(_CHECKS_AT_ONCE)
+    )
+
+
+async def _in_a_slot[**P, T](
+    check: Callable[P, T], *args: P.args, **kwargs: P.kwargs
+) -> T:
+    slots = _slots()
+    await slots.acquire()
+    work = asyncio.ensure_future(asyncio.to_thread(check, *args, **kwargs))
+    work.add_done_callback(lambda _: slots.release())
+    return await asyncio.shield(work)
 
 
 async def _read[T](site_id: str, inputs: Awaitable[T | ToolErrorPayload]) -> T:
@@ -53,7 +74,7 @@ async def audit_pseudogene_call(
     inputs = await _read(
         site_id, pseudogene_inputs(site_id, strain_gene, reference_gene)
     )
-    check = await asyncio.to_thread(
+    check = await _in_a_slot(
         check_pseudogene_call, inputs.reference, inputs.strain_coding_dna, _CODE
     )
     return PseudogeneCallAudit.model_validate(
@@ -82,7 +103,8 @@ async def audit_selenoprotein_end(
         reference_gene: A gene whose protein holds the selenocysteine.
     """
     inputs = await _read(site_id, selenoprotein_inputs(site_id, gene, reference_gene))
-    check = check_sec_stop(
+    check = await _in_a_slot(
+        check_sec_stop,
         inputs.model_protein,
         inputs.reference_protein,
         inputs.dna,
