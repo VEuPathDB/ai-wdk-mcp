@@ -27,6 +27,7 @@ from veupathdb_mcp.catalog.search_collection import (
     collect_search_candidates,
     resolve_record_types,
 )
+from veupathdb_mcp.catalog.search_notes import described
 from veupathdb_mcp.catalog.search_offer import (
     is_boolean_search,
     is_listed_search,
@@ -249,7 +250,7 @@ async def read_search_definition(
     details = await get_wdk_client(site_id).get_search_details(
         record_type, search_name, expand_params=True
     )
-    return details.search_data
+    return described(site_id, details.search_data)
 
 
 # The search whose marked parameter lists every organism of a site.

@@ -11,11 +11,7 @@ from veupathdb.domain.parameters import PhyleticBinding, PhyleticNode, PhyleticT
 from veupathdb.wdk import WDKEnumParam, WDKParameter, WDKStringParam, phyletic_tree_of
 
 from veupathdb_mcp.catalog import param_phyletic
-from veupathdb_mcp.catalog.param_formatting import (
-    _PROFILE_PATTERN_HELP,
-    ParamDependencies,
-    format_typed_param,
-)
+from veupathdb_mcp.catalog.param_formatting import _PROFILE_PATTERN_HELP
 from veupathdb_mcp.catalog.param_phyletic import (
     LOOKUP_HINT,
     PhyleticNoSelection,
@@ -334,25 +330,3 @@ class TestEveryPhyleticStringSaysThePatternIsDerived:
         assert "profile_pattern is derived from the two lists; never write it" in hint
         assert "included_species" in hint
         assert "excluded_species" in hint
-
-
-class TestTheExpressionSheetStatesTheGrammar:
-    """OrthoMCL's own help names no operator a count needs, so the sheet states them."""
-
-    def test_the_help_states_the_units_the_joins_and_the_two_count_patterns(
-        self,
-    ) -> None:
-        info = format_typed_param(
-            WDKStringParam(
-                name="phyletic_expression", help="Phyletic Pattern Expression"
-            ),
-            ParamDependencies(),
-        )
-
-        assert "'+'" in info.help
-        assert "T counts taxa" in info.help
-        assert "AND" in info.help
-        assert "OR" in info.help
-        assert "list>=1T AND list<NT" in info.help
-        assert "list<=(N-k)T" in info.help
-        assert "lookup_phyletic_codes" in info.help

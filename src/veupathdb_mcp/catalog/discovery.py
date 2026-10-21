@@ -22,6 +22,7 @@ from veupathdb_mcp.catalog.disk_cache import (
     try_load_catalog_cache,
 )
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
+from veupathdb_mcp.catalog.search_notes import described
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
 from veupathdb_mcp.embeddings.experiment_index import sync_experiments
 from veupathdb_mcp.embeddings.semantic_index import SemanticSearchIndex
@@ -218,7 +219,10 @@ class SearchCatalog:
         it answers, so a sync is neither awaited nor allowed to fail a load.
         """
         index = SemanticSearchIndex(site_id=self.site_id)
-        index.collect(self._searches, category_labels=self._search_category_labels)
+        index.collect(
+            {rt: self.get_searches(rt) for rt in self._searches},
+            category_labels=self._search_category_labels,
+        )
         self._semantic_index = index
         if self._policy.sync and (index.entries or self._datasets):
             self._index_sync = self._spawn(
@@ -283,8 +287,11 @@ class SearchCatalog:
         return self._record_types
 
     def get_searches(self, record_type: str) -> list[WDKSearch]:
-        """Get searches for a record type."""
-        return self._searches.get(record_type, [])
+        """Get searches for a record type, an undescribed one with its note."""
+        return [
+            described(self.site_id, search)
+            for search in self._searches.get(record_type, [])
+        ]
 
     def get_semantic_index(self) -> SemanticSearchIndex | None:
         """Get the semantic search index, or None if not available."""

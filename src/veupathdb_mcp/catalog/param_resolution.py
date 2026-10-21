@@ -35,6 +35,7 @@ from veupathdb_mcp.catalog.param_formatting import (
     format_param_info_typed,
 )
 from veupathdb_mcp.catalog.search_context import context_for_metadata_read
+from veupathdb_mcp.catalog.search_notes import described
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
 
 from .searches import find_record_type_for_search
@@ -83,7 +84,7 @@ async def get_search_parameters(ctx: SearchContext) -> SearchParametersResult:
     return SearchParametersResult(
         search_name=ctx.search_name,
         display_name=response.search_data.display_name or ctx.search_name,
-        description=response.search_data.description,
+        description=described(ctx.site_id, response.search_data).description,
         parameters=param_info,
         resolved_record_type=resolved_record_type,
     )

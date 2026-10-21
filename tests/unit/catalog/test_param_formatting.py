@@ -425,3 +425,116 @@ class TestTheDependencyLinks:
             "PfTaxonA",
             "PfTaxonB",
         ]
+
+
+class TestTheExpressionSheetStatesTheGrammarAndTheRecipes:
+    @staticmethod
+    def _help() -> str:
+        return format_typed_param(
+            WDKStringParam(
+                name="phyletic_expression", help="Phyletic Pattern Expression"
+            ),
+            ParamDependencies(),
+        ).help
+
+    def test_a_count_with_t_counts_genomes_and_a_bare_count_counts_proteins(
+        self,
+    ) -> None:
+        help_text = self._help()
+
+        assert "'+'" in help_text
+        assert "a count ending in T counts the genomes that hold a protein" in help_text
+        assert "a bare count counts proteins over the listed genomes" in help_text
+        assert "T counts taxa" not in help_text
+        assert "lookup_phyletic_codes" in help_text
+
+    def test_it_states_the_precedence_the_site_reads(self) -> None:
+        help_text = self._help()
+
+        assert (
+            "The site drops parentheses and reads AND before OR, so write an OR of "
+            "AND terms." in help_text
+        )
+        assert "parentheses state which binds first" not in help_text
+
+    def test_two_or_conditions_in_one_and_term_multiply_out(self) -> None:
+        assert (
+            "Two OR conditions in one AND term multiply out into every pairing of "
+            "their terms, each term repeating the shared units." in self._help()
+        )
+
+    def test_an_upper_bound_never_matches_an_absent_list(self) -> None:
+        help_text = self._help()
+
+        assert (
+            "<, <= and >= count only groups with at least one protein in the list; "
+            "write absence as L=0T." in help_text
+        )
+        assert "absence L=0T" in help_text
+        assert "list<=(N-k)T" not in help_text
+
+    def test_absence_from_k_repeats_the_other_units_of_its_and_term(self) -> None:
+        help_text = self._help()
+
+        assert "X AND L<=(N-k)T OR X AND L=0T" in help_text
+        assert "with X the other units of the same AND term" in help_text
+        assert "L<=(N-k)T OR L=0T when there are none" in help_text
+        assert "X the rest of the expression" not in help_text
+
+    def test_it_declares_no_length_limit(self) -> None:
+        assert "The parameter declares no length limit." in self._help()
+
+    def test_it_states_the_presence_recipes_over_a_list_of_n_genomes(self) -> None:
+        help_text = self._help()
+
+        assert "For a list L of N genomes: presence in every genome L=NT" in help_text
+        assert "in at least p percent L>=ceil(pN/100)T" in help_text
+        assert "in some but not all L>=1T AND L<NT" in help_text
+
+    def test_a_species_is_present_when_at_least_half_its_genomes_are(self) -> None:
+        help_text = self._help()
+
+        assert "a species present when at least half its genomes are" in help_text
+        assert "one unit S>=ceil(k/2)T per species S of k genomes" in help_text
+
+    def test_single_copy_is_one_protein_in_every_genome(self) -> None:
+        help_text = self._help()
+
+        assert "Single copy, one protein in every genome: L=NT AND L=N" in help_text
+        assert "no share or species form" in help_text
+
+    def test_a_ratio_of_copy_numbers_is_a_sum_of_bands(self) -> None:
+        help_text = self._help()
+
+        assert "L1>=c*N1 AND L1<(c+1)*N1 AND L2>=r*c*N2" in help_text
+        assert "the bands joined with OR" in help_text
+        assert "c from 1 to the largest band the request asks" in help_text
+        assert (
+            "Band c selects the groups whose L2 protein total is at least r times c "
+            "times N2 while the L1 total is from c times N1 up to below (c+1) times "
+            "N1, so it compares list totals band by band, not each genome." in help_text
+        )
+        assert (
+            "Band c=0, under N1 proteins in L1, is L1<N1 AND Y OR L1=0T AND Y, "
+            "with Y the L2 condition; the second term keeps a group absent from L1, "
+            "because < never matches a group with no protein in L1." in help_text
+        )
+        assert "average per genome" not in help_text
+        assert "c=0 band is the absence form" not in help_text
+
+    def test_one_genome_with_more_proteins_than_another_is_a_ladder(self) -> None:
+        assert (
+            "Genome A has more proteins than genome B: B=0 AND A>=1 OR B=1 AND A>=2 "
+            "OR ... OR B=K AND A>=K+1, where K is the smallest count for which "
+            "B>=K+1 returns no group; it is exact for two single genomes."
+            in self._help()
+        )
+
+    def test_the_example_writes_absence_as_two_and_terms(self) -> None:
+        help_text = self._help()
+
+        assert (
+            "present in genomes a and b and absent from at least 3 of genomes c, d, e "
+            "and f: a+b=2T AND c+d+e+f<=1T OR a+b=2T AND c+d+e+f=0T" in help_text
+        )
+        assert "b+c+d" not in help_text
