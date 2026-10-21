@@ -1,6 +1,8 @@
 """WDK-based gene search and ID resolution."""
 
 import json
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from dataclasses import dataclass
 
 from veupathdb import JSONObject, get_logger, strip_html_tags
@@ -211,6 +213,23 @@ async def _fetch_gene_answer(
         return None
 
 
+@asynccontextmanager
+async def dataset_client(site_id: str) -> AsyncIterator[VEuPathDBClient]:
+    if not veupathdb_auth_token_ctx.get():
+        raise WDKLoginRequiredError
+    router = get_site_router()
+    site = router.get_site(site_id)
+    routing = router._config.routing
+    timeout = float(
+        routing.portal_timeout if site.is_portal else routing.component_timeout
+    )
+    client = VEuPathDBClient(base_url=site.service_url, timeout=timeout)
+    try:
+        yield client
+    finally:
+        await client.close()
+
+
 async def resolve_gene_ids(
     site_id: str,
     gene_ids: list[str],
@@ -228,32 +247,20 @@ async def resolve_gene_ids(
     """
     if not gene_ids:
         return _empty_gene_result()
-    if not veupathdb_auth_token_ctx.get():
-        raise WDKLoginRequiredError
-
-    router = get_site_router()
-    site = router.get_site(site_id)
-    routing = router._config.routing
-    timeout = float(
-        routing.portal_timeout if site.is_portal else routing.component_timeout
-    )
-
-    client = VEuPathDBClient(base_url=site.service_url, timeout=timeout)
     attrs = attributes or DEFAULT_GENE_ATTRIBUTES
 
-    try:
-        answer = await _fetch_gene_answer(
-            client, gene_ids, record_type, search_name, param_name, attrs
-        )
-    except VEuPathDBError as exc:
-        logger.warning(
-            "Gene ID resolution via standard reporter failed",
-            site_id=site_id,
-            gene_ids_count=len(gene_ids),
-            error=str(exc),
-        )
-        return _empty_gene_result(f"WDK lookup failed: {exc}")
-    finally:
-        await client.close()
+    async with dataset_client(site_id) as client:
+        try:
+            answer = await _fetch_gene_answer(
+                client, gene_ids, record_type, search_name, param_name, attrs
+            )
+        except VEuPathDBError as exc:
+            logger.warning(
+                "Gene ID resolution via standard reporter failed",
+                site_id=site_id,
+                gene_ids_count=len(gene_ids),
+                error=str(exc),
+            )
+            return _empty_gene_result(f"WDK lookup failed: {exc}")
 
     return _build_gene_result_from_answer(answer)

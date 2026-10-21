@@ -27,6 +27,10 @@ from veupathdb_mcp.tool_meta import (
     MAX_CALL_SECONDS_META_KEY,
     STREAM_PART_META_KEY,
 )
+from veupathdb_mcp.tools.audit_tools import (
+    audit_pseudogene_call,
+    audit_selenoprotein_end,
+)
 from veupathdb_mcp.tools.catalog_tools import (
     browse_search_categories,
     get_parameter_options,
@@ -72,6 +76,7 @@ ENRICHMENT_MAX_CALL_SECONDS = 600
 CONTROL_TESTS_MAX_CALL_SECONDS = 180
 # A combined plan creates one WDK step per node before it reads a count.
 PLAN_COUNTS_MAX_CALL_SECONDS = 180
+PSEUDOGENE_AUDIT_MAX_CALL_SECONDS = 120
 
 _NO_CREDENTIAL = "The call carried no verified credential."
 
@@ -202,6 +207,12 @@ TOOLS: tuple[_ToolRow, ...] = (
             MAX_CALL_SECONDS_META_KEY: ENRICHMENT_MAX_CALL_SECONDS,
         },
     ),
+    _ToolRow(
+        audit_pseudogene_call,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: PSEUDOGENE_AUDIT_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(audit_selenoprotein_end, _READ),
 )
 
 

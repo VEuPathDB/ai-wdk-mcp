@@ -30,6 +30,7 @@ from veupathdb.wdk import (
 )
 
 from veupathdb_mcp import server
+from veupathdb_mcp.audit import SelenoproteinInputs
 from veupathdb_mcp.auth import CredentialMode, McpCredential
 from veupathdb_mcp.catalog import experiments, search_inspection, sites
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
@@ -51,7 +52,7 @@ from veupathdb_mcp.tool_meta import (
     MAX_CALL_SECONDS_META_KEY,
     STREAM_PART_META_KEY,
 )
-from veupathdb_mcp.tools import catalog_tools, user_tools
+from veupathdb_mcp.tools import audit_tools, catalog_tools, user_tools
 from veupathdb_mcp.wdk import ai_expression, gene_set_steps, step_preview
 
 SITE = "plasmodb"
@@ -92,6 +93,8 @@ EXPECTED_ANNOTATIONS: dict[str, dict[str, bool]] = {
     "create_gene_set_step": ADDITIVE_WRITE,
     "run_control_tests_on_search": ADDITIVE_WRITE,
     "enrich_gene_ids": ADDITIVE_WRITE,
+    "audit_pseudogene_call": READ_ONLY,
+    "audit_selenoprotein_end": READ_ONLY,
 }
 
 # The in-process names the inventory renamed. A served copy would be a second name.
@@ -1090,4 +1093,52 @@ async def test_an_override_that_names_no_parameter_is_a_tool_error(
     assert result.is_error
     assert _error_text(result) == (
         "No such parameter(s) on this search: ['orgnism']. Valid names: ['organism']."
+    )
+
+
+async def test_an_audit_call_answers_the_check_with_the_genes_it_named(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def inputs(
+        site_id: str, gene: str, reference_gene: str
+    ) -> SelenoproteinInputs:
+        del site_id, gene, reference_gene
+        return SelenoproteinInputs(
+            model_protein="MKLVCGGGG",
+            reference_protein="MKLVCGGGGUG",
+            dna="ATGAAACTGGTTTGTGGCGGCGGCGGCTGAGGTTAA",
+            strand="+",
+        )
+
+    monkeypatch.setattr(audit_tools, "selenoprotein_inputs", inputs)
+
+    async with _served(_user_credential("user-bearer")) as client:
+        result = await client.call_tool(
+            "audit_selenoprotein_end",
+            {
+                "site_id": "toxodb",
+                "gene": "TGGT1_316600",
+                "reference_gene": "TGME49_316600",
+            },
+        )
+
+    assert result.structured_content == {
+        "verdict": "STOPS_AT_SEC",
+        "afterModelEnd": "*G*",
+        "referenceTail": "UG",
+        "gene": "TGGT1_316600",
+        "referenceGene": "TGME49_316600",
+    }
+
+
+async def test_the_pseudogene_audit_declares_a_budget_over_the_default() -> None:
+    tools = await _list_tools()
+
+    meta = tools["audit_pseudogene_call"].meta
+    assert meta is not None
+    assert meta[MAX_CALL_SECONDS_META_KEY] > 60
+    schema = tools["audit_pseudogene_call"].outputSchema
+    assert schema is not None
+    assert {"strainGene", "referenceGene", "residueDifferences"} <= set(
+        schema["properties"]
     )

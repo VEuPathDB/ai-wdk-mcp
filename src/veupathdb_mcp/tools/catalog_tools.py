@@ -35,7 +35,6 @@ from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
 from veupathdb_mcp.embeddings.record_manager import IndexHit, search_index
 from veupathdb_mcp.embeddings.semantic_index import catalog_index_id
-from veupathdb_mcp.tool_errors import ToolErrorPayload
 from veupathdb_mcp.tool_payloads import (
     SearchCategory,
     SearchListing,
@@ -45,15 +44,7 @@ from veupathdb_mcp.tool_payloads import (
     list_transform_listings,
     rank_example_plans,
 )
-
-
-def _payload_or_error(result: JSONObject | ToolErrorPayload) -> JSONObject:
-    """Turn a service's error payload into a tool error that names its cause."""
-    match result:
-        case ToolErrorPayload():
-            raise ToolError(result.message)
-        case _:
-            return result
+from veupathdb_mcp.tools.refusals import payload_or_error
 
 
 async def list_record_types(site_id: str) -> list[RecordTypeInfo]:
@@ -154,7 +145,7 @@ async def lookup_phyletic_codes(
         query: Species or clade name, for example 'falciparum' or 'Apicomplexa'.
         record_type: Record type. Gene searches are 'transcript'.
     """
-    return _payload_or_error(
+    return payload_or_error(
         await parameters.lookup_phyletic_codes(site_id, record_type, query)
     )
 

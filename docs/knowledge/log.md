@@ -1,5 +1,21 @@
 # Knowledge log
 
+## 2026-10-21 - Two gene-model checks are served
+
+- 0.2.0b29 serves `audit_pseudogene_call` and `audit_selenoprotein_end`, both read-only,
+  on `veupathdb-py` 0.1.0b16. Each reads its inputs from the site the call names and
+  refuses an input the site cannot give as a tool error
+  (`decisions/an-audit-check-reads-its-genome-from-the-site.md`).
+- `veupathdb_mcp.audit` publishes the readers (`gene_rows`, `gene_model`,
+  `pseudogene_inputs`, `selenoprotein_inputs`) and the two answers
+  (`PseudogeneCallAudit`, `SelenoproteinEndAudit`). `gene_rows` and `proteins_of` share
+  one `GeneByLocusTag` reader on the private dataset client.
+- Both answers serialize camelCase. Both checks read the transcript with the longest
+  CDS. A selenoprotein window is padded past the reference tail, a second selenocysteine
+  in the tail reads as a stop, and a reference with none is refused. A pseudogene pair
+  over `PSEUDOGENE_MAX_CELLS` is refused, and its served row declares a 120 s budget. A
+  site that does not answer is a tool error naming it.
+
 ## 2026-10-19 - A separation run reads each search definition once
 
 - 0.2.0b28 takes veupathdb-py 0.1.0b15. `separate` runs inside

@@ -15,6 +15,7 @@ from veupathdb_mcp.gene_lookup.site_search import (
 from veupathdb_mcp.gene_lookup.wdk import (
     MAX_GENE_IDS,
     GeneResolveResult,
+    dataset_client,
     normalize_gene_ids,
     resolve_gene_ids,
 )
@@ -26,6 +27,7 @@ __all__ = [
     "GeneResolveResult",
     "GeneResult",
     "GeneSearchResult",
+    "dataset_client",
     "fetch_site_search_genes",
     "list_organisms",
     "lookup_genes_by_text",

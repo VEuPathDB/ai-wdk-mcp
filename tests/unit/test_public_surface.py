@@ -13,6 +13,7 @@ import pytest
 
 PACKAGES = (
     "veupathdb_mcp",
+    "veupathdb_mcp.audit",
     "veupathdb_mcp.catalog",
     "veupathdb_mcp.controls",
     "veupathdb_mcp.embeddings",
