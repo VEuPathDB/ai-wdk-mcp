@@ -1,0 +1,1199 @@
+[
+ {
+  "organism": "Plasmodium malariae UG01",
+  "gene": {
+   "displayText": "PmUG01_10043600.1",
+   "url": "/plasmo.qa/app/record/gene/PmUG01_10043600"
+  },
+  "ortho_source_id": "PmUG01_10043600.1",
+  "ortho_gene_source_id": "PmUG01_10043600",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pmug01_10043600                                                                 ",
+  "protein_length": "459",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PmUG01_10043600#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PmUG01_10043600\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium yoelii yoelii 17XNL",
+  "gene": {
+   "displayText": "PY03143-t26_1",
+   "url": "/plasmo.qa/app/record/gene/PY03143"
+  },
+  "ortho_source_id": "PY03143-t26_1",
+  "ortho_gene_source_id": "PY03143",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no py03143                                                                         ",
+  "protein_length": "376",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PY03143#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PY03143\">",
+  "gene_product": "Arabidopsis thaliana At3g45100/T14D3_40-related",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium inui San Antonio 1",
+  "gene": {
+   "displayText": "C922_03356-t30_1",
+   "url": "/plasmo.qa/app/record/gene/C922_03356"
+  },
+  "ortho_source_id": "C922_03356-t30_1",
+  "ortho_gene_source_id": "C922_03356",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no c922_03356                                                                      ",
+  "protein_length": "464",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/C922_03356#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"C922_03356\">",
+  "gene_product": "phosphatidylinositol glycan, class A",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium falciparum ML01",
+  "gene": {
+   "displayText": "PfML01_100036500-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfML01_100036500"
+  },
+  "ortho_source_id": "PfML01_100036500-t41_1",
+  "ortho_gene_source_id": "PfML01_100036500",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfml01_100036500                                                                ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfML01_100036500#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfML01_100036500\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium chabaudi chabaudi CB",
+  "gene": {
+   "displayText": "PCHCB_000081900-t70_1",
+   "url": "/plasmo.qa/app/record/gene/PCHCB_000081900"
+  },
+  "ortho_source_id": "PCHCB_000081900-t70_1",
+  "ortho_gene_source_id": "PCHCB_000081900",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pchcb_000081900                                                                 ",
+  "protein_length": "452",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PCHCB_000081900#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PCHCB_000081900\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium falciparum HB3",
+  "gene": {
+   "displayText": "PfHB3_100036700-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfHB3_100036700"
+  },
+  "ortho_source_id": "PfHB3_100036700-t41_1",
+  "ortho_gene_source_id": "PfHB3_100036700",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfhb3_100036700                                                                 ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfHB3_100036700#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfHB3_100036700\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium ovale curtisi GH01",
+  "gene": {
+   "displayText": "PocGH01_06025500.1",
+   "url": "/plasmo.qa/app/record/gene/PocGH01_06025500"
+  },
+  "ortho_source_id": "PocGH01_06025500.1",
+  "ortho_gene_source_id": "PocGH01_06025500",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pocgh01_06025500                                                                ",
+  "protein_length": "459",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PocGH01_06025500#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PocGH01_06025500\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium knowlesi strain A1H1",
+  "gene": {
+   "displayText": "PKA1H_060022500.1",
+   "url": "/plasmo.qa/app/record/gene/PKA1H_060022500"
+  },
+  "ortho_source_id": "PKA1H_060022500.1",
+  "ortho_gene_source_id": "PKA1H_060022500",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pka1h_060022500                                                                 ",
+  "protein_length": "456",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PKA1H_060022500#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PKA1H_060022500\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium vinckei Cameroon EL",
+  "gene": {
+   "displayText": "PVSEL_1304190_t1",
+   "url": "/plasmo.qa/app/record/gene/PVSEL_1304190"
+  },
+  "ortho_source_id": "PVSEL_1304190_t1",
+  "ortho_gene_source_id": "PVSEL_1304190",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pvsel_1304190                                                                   ",
+  "protein_length": "452",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PVSEL_1304190#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVSEL_1304190\">",
+  "gene_product": "Glycosyl transferases group 1 | PIGA (GPI anchor biosynthesis) | domain-containing protein",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium falciparum CD01",
+  "gene": {
+   "displayText": "PfCD01_100037500-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfCD01_100037500"
+  },
+  "ortho_source_id": "PfCD01_100037500-t41_1",
+  "ortho_gene_source_id": "PfCD01_100037500",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfcd01_100037500                                                                ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfCD01_100037500#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfCD01_100037500\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium cynomolgi strain M",
+  "gene": {
+   "displayText": "PcyM_0621500-t36_1",
+   "url": "/plasmo.qa/app/record/gene/PcyM_0621500"
+  },
+  "ortho_source_id": "PcyM_0621500-t36_1",
+  "ortho_gene_source_id": "PcyM_0621500",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pcym_0621500                                                                    ",
+  "protein_length": "456",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PcyM_0621500#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PcyM_0621500\">",
+  "gene_product": "phosphatidylinositol N- acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium falciparum GA01",
+  "gene": {
+   "displayText": "PfGA01_100037600-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfGA01_100037600"
+  },
+  "ortho_source_id": "PfGA01_100037600-t41_1",
+  "ortho_gene_source_id": "PfGA01_100037600",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfga01_100037600                                                                ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfGA01_100037600#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfGA01_100037600\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium cynomolgi strain B",
+  "gene": {
+   "displayText": "PCYB_062670-t26_1",
+   "url": "/plasmo.qa/app/record/gene/PCYB_062670"
+  },
+  "ortho_source_id": "PCYB_062670-t26_1",
+  "ortho_gene_source_id": "PCYB_062670",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pcyb_062670                                                                     ",
+  "protein_length": "266",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PCYB_062670#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PCYB_062670\">",
+  "gene_product": "phosphatidyl inositol glycan class A",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium yoelii yoelii 17XNL 2023",
+  "gene": {
+   "displayText": "Py17XNL_000504528_t1",
+   "url": "/plasmo.qa/app/record/gene/Py17XNL_000504528"
+  },
+  "ortho_source_id": "Py17XNL_000504528_t1",
+  "ortho_gene_source_id": "Py17XNL_000504528",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no py17xnl_000504528                                                               ",
+  "protein_length": "409",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/Py17XNL_000504528#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Py17XNL_000504528\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium relictum SGS1-like",
+  "gene": {
+   "displayText": "PRELSG_0616100.1",
+   "url": "/plasmo.qa/app/record/gene/PRELSG_0616100"
+  },
+  "ortho_source_id": "PRELSG_0616100.1",
+  "ortho_gene_source_id": "PRELSG_0616100",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no prelsg_0616100                                                                  ",
+  "protein_length": "455",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PRELSG_0616100#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PRELSG_0616100\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium falciparum TG01",
+  "gene": {
+   "displayText": "PfTG01_100037600-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfTG01_100037600"
+  },
+  "ortho_source_id": "PfTG01_100037600-t41_1",
+  "ortho_gene_source_id": "PfTG01_100037600",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pftg01_100037600                                                                ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfTG01_100037600#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfTG01_100037600\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium falciparum SN01",
+  "gene": {
+   "displayText": "PfSN01_100037700-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfSN01_100037700"
+  },
+  "ortho_source_id": "PfSN01_100037700-t41_1",
+  "ortho_gene_source_id": "PfSN01_100037700",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfsn01_100037700                                                                ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfSN01_100037700#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfSN01_100037700\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium vivax Sal-1",
+  "gene": {
+   "displayText": "PVX_111105.1",
+   "url": "/plasmo.qa/app/record/gene/PVX_111105"
+  },
+  "ortho_source_id": "PVX_111105.1",
+  "ortho_gene_source_id": "PVX_111105",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pvx_111105                                                                      ",
+  "protein_length": "457",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PVX_111105#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVX_111105\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium falciparum Dd2",
+  "gene": {
+   "displayText": "PfDd2_100037600-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfDd2_100037600"
+  },
+  "ortho_source_id": "PfDd2_100037600-t41_1",
+  "ortho_gene_source_id": "PfDd2_100037600",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfdd2_100037600                                                                 ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfDd2_100037600#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfDd2_100037600\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium berghei ANKA",
+  "gene": {
+   "displayText": "PBANKA_0516200.1",
+   "url": "/plasmo.qa/app/record/gene/PBANKA_0516200"
+  },
+  "ortho_source_id": "PBANKA_0516200.1",
+  "ortho_gene_source_id": "PBANKA_0516200",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pbanka_0516200                                                                  ",
+  "protein_length": "452",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PBANKA_0516200#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PBANKA_0516200\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Hepatocystis sp. ex Piliocolobus tephrosceles 2019",
+  "gene": {
+   "displayText": "HEP_00028600_t1",
+   "url": "/plasmo.qa/app/record/gene/HEP_00028600"
+  },
+  "ortho_source_id": "HEP_00028600_t1",
+  "ortho_gene_source_id": "HEP_00028600",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no hep_00028600                                                                    ",
+  "protein_length": "333",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/HEP_00028600#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"HEP_00028600\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium adleri G01",
+  "gene": {
+   "displayText": "PADL01_1030800-t36_1",
+   "url": "/plasmo.qa/app/record/gene/PADL01_1030800"
+  },
+  "ortho_source_id": "PADL01_1030800-t36_1",
+  "ortho_gene_source_id": "PADL01_1030800",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no padl01_1030800                                                                  ",
+  "protein_length": "459",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PADL01_1030800#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PADL01_1030800\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium falciparum KH02",
+  "gene": {
+   "displayText": "PfKH02_100037700-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfKH02_100037700"
+  },
+  "ortho_source_id": "PfKH02_100037700-t41_1",
+  "ortho_gene_source_id": "PfKH02_100037700",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfkh02_100037700                                                                ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfKH02_100037700#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfKH02_100037700\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium falciparum GB4",
+  "gene": {
+   "displayText": "PfGB4_100037300-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfGB4_100037300"
+  },
+  "ortho_source_id": "PfGB4_100037300-t41_1",
+  "ortho_gene_source_id": "PfGB4_100037300",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfgb4_100037300                                                                 ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfGB4_100037300#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfGB4_100037300\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium ovale wallikeri PowCR01",
+  "gene": {
+   "displayText": "POWCR01_060020300_t1",
+   "url": "/plasmo.qa/app/record/gene/POWCR01_060020300"
+  },
+  "ortho_source_id": "POWCR01_060020300_t1",
+  "ortho_gene_source_id": "POWCR01_060020300",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no powcr01_060020300                                                               ",
+  "protein_length": "459",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/POWCR01_060020300#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"POWCR01_060020300\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium fragile strain nilgiri",
+  "gene": {
+   "displayText": "AK88_03701-t30_1",
+   "url": "/plasmo.qa/app/record/gene/AK88_03701"
+  },
+  "ortho_source_id": "AK88_03701-t30_1",
+  "ortho_gene_source_id": "AK88_03701",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no ak88_03701                                                                      ",
+  "protein_length": "457",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/AK88_03701#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"AK88_03701\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium vinckei vinckei CY",
+  "gene": {
+   "displayText": "PVVCY_0501670_t1",
+   "url": "/plasmo.qa/app/record/gene/PVVCY_0501670"
+  },
+  "ortho_source_id": "PVVCY_0501670_t1",
+  "ortho_gene_source_id": "PVVCY_0501670",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pvvcy_0501670                                                                   ",
+  "protein_length": "452",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PVVCY_0501670#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVVCY_0501670\">",
+  "gene_product": "Glycosyl transferases group 1 | PIGA (GPI anchor biosynthesis) | domain-containing protein",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium blacklocki G01",
+  "gene": {
+   "displayText": "PBLACG01_1031000-t36_1",
+   "url": "/plasmo.qa/app/record/gene/PBLACG01_1031000"
+  },
+  "ortho_source_id": "PBLACG01_1031000-t36_1",
+  "ortho_gene_source_id": "PBLACG01_1031000",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pblacg01_1031000                                                                ",
+  "protein_length": "458",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PBLACG01_1031000#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PBLACG01_1031000\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium vinckei brucechwatti DA",
+  "gene": {
+   "displayText": "PVBDA_0501680_t1",
+   "url": "/plasmo.qa/app/record/gene/PVBDA_0501680"
+  },
+  "ortho_source_id": "PVBDA_0501680_t1",
+  "ortho_gene_source_id": "PVBDA_0501680",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pvbda_0501680                                                                   ",
+  "protein_length": "452",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PVBDA_0501680#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVBDA_0501680\">",
+  "gene_product": "Glycosyl transferases group 1 | PIGA (GPI anchor biosynthesis) | domain-containing protein",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium vinckei petteri strain CR",
+  "gene": {
+   "displayText": "YYG_04363-t30_1",
+   "url": "/plasmo.qa/app/record/gene/YYG_04363"
+  },
+  "ortho_source_id": "YYG_04363-t30_1",
+  "ortho_gene_source_id": "YYG_04363",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no yyg_04363                                                                       ",
+  "protein_length": "452",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/YYG_04363#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"YYG_04363\">",
+  "gene_product": "phosphatidylinositol glycan, class A",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium falciparum SD01",
+  "gene": {
+   "displayText": "PfSD01_100036900-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfSD01_100036900"
+  },
+  "ortho_source_id": "PfSD01_100036900-t41_1",
+  "ortho_gene_source_id": "PfSD01_100036900",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfsd01_100036900                                                                ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfSD01_100036900#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfSD01_100036900\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium praefalciparum strain G01",
+  "gene": {
+   "displayText": "PPRFG01_1033500_t1",
+   "url": "/plasmo.qa/app/record/gene/PPRFG01_1033500"
+  },
+  "ortho_source_id": "PPRFG01_1033500_t1",
+  "ortho_gene_source_id": "PPRFG01_1033500",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pprfg01_1033500                                                                 ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PPRFG01_1033500#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PPRFG01_1033500\">",
+  "gene_product": "PIGA (GPI anchor biosynthesis) | Glycosyl transferases group 1 | domain-containing protein",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Haemoproteus tartakovskyi strain SISKIN1",
+  "gene": {
+   "displayText": "Htart_000293500.1",
+   "url": "/plasmo.qa/app/record/gene/Htart_000293500"
+  },
+  "ortho_source_id": "Htart_000293500.1",
+  "ortho_gene_source_id": "Htart_000293500",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no htart_000293500                                                                 ",
+  "protein_length": "123",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/Htart_000293500#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Htart_000293500\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium brasilianum strain Bolivian I",
+  "gene": {
+   "displayText": "MKS88_003385_t1",
+   "url": "/plasmo.qa/app/record/gene/MKS88_003385"
+  },
+  "ortho_source_id": "MKS88_003385_t1",
+  "ortho_gene_source_id": "MKS88_003385",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no mks88_003385                                                                    ",
+  "protein_length": "471",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/MKS88_003385#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"MKS88_003385\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium vivax P01",
+  "gene": {
+   "displayText": "PVP01_0617500.1",
+   "url": "/plasmo.qa/app/record/gene/PVP01_0617500"
+  },
+  "ortho_source_id": "PVP01_0617500.1",
+  "ortho_gene_source_id": "PVP01_0617500",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pvp01_0617500                                                                   ",
+  "protein_length": "457",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PVP01_0617500#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVP01_0617500\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium vinckei vinckei strain vinckei",
+  "gene": {
+   "displayText": "YYE_03893-t30_1",
+   "url": "/plasmo.qa/app/record/gene/YYE_03893"
+  },
+  "ortho_source_id": "YYE_03893-t30_1",
+  "ortho_gene_source_id": "YYE_03893",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no yye_03893                                                                       ",
+  "protein_length": "452",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/YYE_03893#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"YYE_03893\">",
+  "gene_product": "phosphatidylinositol glycan, class A",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium falciparum 7G8",
+  "gene": {
+   "displayText": "Pf7G8_100036700-t41_1",
+   "url": "/plasmo.qa/app/record/gene/Pf7G8_100036700"
+  },
+  "ortho_source_id": "Pf7G8_100036700-t41_1",
+  "ortho_gene_source_id": "Pf7G8_100036700",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pf7g8_100036700                                                                 ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/Pf7G8_100036700#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Pf7G8_100036700\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium vivax PvW1",
+  "gene": {
+   "displayText": "PVW1_060024000_t1",
+   "url": "/plasmo.qa/app/record/gene/PVW1_060024000"
+  },
+  "ortho_source_id": "PVW1_060024000_t1",
+  "ortho_gene_source_id": "PVW1_060024000",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pvw1_060024000                                                                  ",
+  "protein_length": "457",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PVW1_060024000#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVW1_060024000\">",
+  "gene_product": "Glycosyl transferases group 1 | PIGA (GPI anchor biosynthesis) | domain-containing protein",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium falciparum GN01",
+  "gene": {
+   "displayText": "PfGN01_100037800-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfGN01_100037800"
+  },
+  "ortho_source_id": "PfGN01_100037800-t41_1",
+  "ortho_gene_source_id": "PfGN01_100037800",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfgn01_100037800                                                                ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfGN01_100037800#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfGN01_100037800\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium gaboni strain SY75",
+  "gene": {
+   "displayText": "PGSY75_1032400-t31_1",
+   "url": "/plasmo.qa/app/record/gene/PGSY75_1032400"
+  },
+  "ortho_source_id": "PGSY75_1032400-t31_1",
+  "ortho_gene_source_id": "PGSY75_1032400",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pgsy75_1032400                                                                  ",
+  "protein_length": "461",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PGSY75_1032400#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PGSY75_1032400\">",
+  "gene_product": "putative phosphatidylinositol N- acetylglucosaminyltransferase subunit A",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium yoelii yoelii YM",
+  "gene": {
+   "displayText": "PYYM_0516700_t1",
+   "url": "/plasmo.qa/app/record/gene/PYYM_0516700"
+  },
+  "ortho_source_id": "PYYM_0516700_t1",
+  "ortho_gene_source_id": "PYYM_0516700",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pyym_0516700                                                                    ",
+  "protein_length": "452",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PYYM_0516700#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PYYM_0516700\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium vinckei lentum DE",
+  "gene": {
+   "displayText": "PVLDE_0501650_t1",
+   "url": "/plasmo.qa/app/record/gene/PVLDE_0501650"
+  },
+  "ortho_source_id": "PVLDE_0501650_t1",
+  "ortho_gene_source_id": "PVLDE_0501650",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pvlde_0501650                                                                   ",
+  "protein_length": "452",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PVLDE_0501650#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVLDE_0501650\">",
+  "gene_product": "Glycosyl transferases group 1 | PIGA (GPI anchor biosynthesis) | domain-containing protein",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium chabaudi chabaudi",
+  "gene": {
+   "displayText": "PCHAS_0516300.1",
+   "url": "/plasmo.qa/app/record/gene/PCHAS_0516300"
+  },
+  "ortho_source_id": "PCHAS_0516300.1",
+  "ortho_gene_source_id": "PCHAS_0516300",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pchas_0516300                                                                   ",
+  "protein_length": "452",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PCHAS_0516300#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PCHAS_0516300\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium vinckei petteri CR 2020",
+  "gene": {
+   "displayText": "PVPCR_1304300_t1",
+   "url": "/plasmo.qa/app/record/gene/PVPCR_1304300"
+  },
+  "ortho_source_id": "PVPCR_1304300_t1",
+  "ortho_gene_source_id": "PVPCR_1304300",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pvpcr_1304300                                                                   ",
+  "protein_length": "452",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PVPCR_1304300#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVPCR_1304300\">",
+  "gene_product": "Glycosyl transferases group 1 | PIGA (GPI anchor biosynthesis) | domain-containing protein",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium yoelii yoelii 17X",
+  "gene": {
+   "displayText": "PY17X_0517300.1",
+   "url": "/plasmo.qa/app/record/gene/PY17X_0517300"
+  },
+  "ortho_source_id": "PY17X_0517300.1",
+  "ortho_gene_source_id": "PY17X_0517300",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no py17x_0517300                                                                   ",
+  "protein_length": "452",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PY17X_0517300#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PY17X_0517300\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium knowlesi strain H",
+  "gene": {
+   "displayText": "PKNH_0617200.1",
+   "url": "/plasmo.qa/app/record/gene/PKNH_0617200"
+  },
+  "ortho_source_id": "PKNH_0617200.1",
+  "ortho_gene_source_id": "PKNH_0617200",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pknh_0617200                                                                    ",
+  "protein_length": "456",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PKNH_0617200#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PKNH_0617200\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium falciparum KE01",
+  "gene": {
+   "displayText": "PfKE01_100037600-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfKE01_100037600"
+  },
+  "ortho_source_id": "PfKE01_100037600-t41_1",
+  "ortho_gene_source_id": "PfKE01_100037600",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfke01_100037600                                                                ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfKE01_100037600#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfKE01_100037600\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium reichenowi G01",
+  "gene": {
+   "displayText": "PRG01_1030900-t36_1",
+   "url": "/plasmo.qa/app/record/gene/PRG01_1030900"
+  },
+  "ortho_source_id": "PRG01_1030900-t36_1",
+  "ortho_gene_source_id": "PRG01_1030900",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no prg01_1030900                                                                   ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PRG01_1030900#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PRG01_1030900\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium falciparum IT",
+  "gene": {
+   "displayText": "PfIT_100036300-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfIT_100036300"
+  },
+  "ortho_source_id": "PfIT_100036300-t41_1",
+  "ortho_gene_source_id": "PfIT_100036300",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfit_100036300                                                                  ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfIT_100036300#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfIT_100036300\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium billcollinsi G01",
+  "gene": {
+   "displayText": "PBILCG01_1031400_t1",
+   "url": "/plasmo.qa/app/record/gene/PBILCG01_1031400"
+  },
+  "ortho_source_id": "PBILCG01_1031400_t1",
+  "ortho_gene_source_id": "PBILCG01_1031400",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pbilcg01_1031400                                                                ",
+  "protein_length": "461",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PBILCG01_1031400#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PBILCG01_1031400\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium knowlesi strain Malayan Strain Pk1 A",
+  "gene": {
+   "displayText": "PKNOH_S03332000-t35_1",
+   "url": "/plasmo.qa/app/record/gene/PKNOH_S03332000"
+  },
+  "ortho_source_id": "PKNOH_S03332000-t35_1",
+  "ortho_gene_source_id": "PKNOH_S03332000",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pknoh_s03332000                                                                 ",
+  "protein_length": "456",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PKNOH_S03332000#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PKNOH_S03332000\">",
+  "gene_product": "putative Phosphatidylinositol N-acetylglucosaminyltransferase subunit A",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium gallinaceum 8A",
+  "gene": {
+   "displayText": "PGAL8A_00491800.1",
+   "url": "/plasmo.qa/app/record/gene/PGAL8A_00491800"
+  },
+  "ortho_source_id": "PGAL8A_00491800.1",
+  "ortho_gene_source_id": "PGAL8A_00491800",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pgal8a_00491800                                                                 ",
+  "protein_length": "456",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PGAL8A_00491800#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PGAL8A_00491800\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium falciparum KH01",
+  "gene": {
+   "displayText": "PfKH01_100036800-t41_1",
+   "url": "/plasmo.qa/app/record/gene/PfKH01_100036800"
+  },
+  "ortho_source_id": "PfKH01_100036800-t41_1",
+  "ortho_gene_source_id": "PfKH01_100036800",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pfkh01_100036800                                                                ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PfKH01_100036800#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfKH01_100036800\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium gaboni strain G01",
+  "gene": {
+   "displayText": "PGABG01_1030300-t36_1",
+   "url": "/plasmo.qa/app/record/gene/PGABG01_1030300"
+  },
+  "ortho_source_id": "PGABG01_1030300-t36_1",
+  "ortho_gene_source_id": "PGABG01_1030300",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pgabg01_1030300                                                                 ",
+  "protein_length": "459",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PGABG01_1030300#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PGABG01_1030300\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ },
+ {
+  "organism": "Plasmodium coatneyi Hackeri",
+  "gene": {
+   "displayText": "PCOAH_00013800-t30_1",
+   "url": "/plasmo.qa/app/record/gene/PCOAH_00013800"
+  },
+  "ortho_source_id": "PCOAH_00013800-t30_1",
+  "ortho_gene_source_id": "PCOAH_00013800",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pcoah_00013800                                                                  ",
+  "protein_length": "457",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PCOAH_00013800#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PCOAH_00013800\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium reichenowi CDC",
+  "gene": {
+   "displayText": "PRCDC_1031700.1",
+   "url": "/plasmo.qa/app/record/gene/PRCDC_1031700"
+  },
+  "ortho_source_id": "PRCDC_1031700.1",
+  "ortho_gene_source_id": "PRCDC_1031700",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no prcdc_1031700                                                                   ",
+  "protein_length": "462",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PRCDC_1031700#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PRCDC_1031700\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "yes"
+ },
+ {
+  "organism": "Plasmodium vivax PAM",
+  "gene": {
+   "displayText": "PVPAM_060028600_t1",
+   "url": "/plasmo.qa/app/record/gene/PVPAM_060028600"
+  },
+  "ortho_source_id": "PVPAM_060028600_t1",
+  "ortho_gene_source_id": "PVPAM_060028600",
+  "sort_key": "pf3d7_1032400                                                                   8yes9no pvpam_060028600                                                                 ",
+  "protein_length": "457",
+  "comment_link": {
+   "displayText": "no",
+   "url": "/plasmo.qa/app/record/gene/PVPAM_060028600#UserComments"
+  },
+  "is_syntenic": "yes",
+  "has_comment": "no",
+  "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVPAM_060028600\">",
+  "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+  "source_id": "PF3D7_1032400",
+  "is_reference_strain": "no"
+ }
+]

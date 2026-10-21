@@ -10,6 +10,7 @@ from veupathdb_mcp.audit.gene_models import (
     ModelRow,
     coding_parts,
     gene_model,
+    gene_record,
 )
 from veupathdb_mcp.audit.pseudogene import CdsPart
 
@@ -114,7 +115,7 @@ def test_a_model_without_cds_rows_has_no_coding_parts() -> None:
 def test_a_gene_model_reads_its_organism_and_its_coding_parts() -> None:
     model = GeneModel.from_record(record("pfal3D7", MODEL))
 
-    assert model.organism == "pfal3D7"
+    assert model.organism_abbrev == "pfal3D7"
     assert model.cds == [
         CdsPart(start=1302594, end=1302660),
         CdsPart(start=1304710, end=1304881),
@@ -151,7 +152,7 @@ async def test_a_gene_model_is_one_gene_record_read(
 
     model = await gene_model("plasmodb", PIGA)
 
-    assert model.organism == "pfal3D7"
+    assert model.organism_abbrev == "pfal3D7"
     assert len(model.cds) == 2
     assert records.reads == [
         (
@@ -162,6 +163,28 @@ async def test_a_gene_model_is_one_gene_record_read(
             ],
             ["organismAbbrev"],
             ["GeneModelDump"],
+        )
+    ]
+
+
+async def test_a_gene_record_is_read_by_source_id_and_project(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    records = _Records(record("pfal3D7", MODEL))
+    monkeypatch.setattr(gene_models, "get_strategy_api", lambda site_id: records)
+
+    read = await gene_record("toxodb", "TGME49_316600", ["a"], ["T"])
+
+    assert read == records.answer
+    assert records.reads == [
+        (
+            "gene",
+            [
+                {"name": "source_id", "value": "TGME49_316600"},
+                {"name": "project_id", "value": "ToxoDB"},
+            ],
+            ["a"],
+            ["T"],
         )
     ]
 

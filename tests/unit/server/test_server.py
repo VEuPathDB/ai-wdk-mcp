@@ -30,7 +30,7 @@ from veupathdb.wdk import (
 )
 
 from veupathdb_mcp import server
-from veupathdb_mcp.audit import SelenoproteinInputs
+from veupathdb_mcp.audit import LengthInputs, LengthScreen, SelenoproteinInputs
 from veupathdb_mcp.auth import CredentialMode, McpCredential
 from veupathdb_mcp.catalog import experiments, search_inspection, sites
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
@@ -95,6 +95,8 @@ EXPECTED_ANNOTATIONS: dict[str, dict[str, bool]] = {
     "enrich_gene_ids": ADDITIVE_WRITE,
     "audit_pseudogene_call": READ_ONLY,
     "audit_selenoprotein_end": READ_ONLY,
+    "audit_gene_length": READ_ONLY,
+    "audit_gene_split": READ_ONLY,
 }
 
 # The in-process names the inventory renamed. A served copy would be a second name.
@@ -1131,20 +1133,71 @@ async def test_an_audit_call_answers_the_check_with_the_genes_it_named(
     }
 
 
-async def test_both_audits_declare_one_budget_over_the_default() -> None:
+async def test_every_audit_declares_one_budget_over_the_default() -> None:
     tools = await _list_tools()
 
-    pseudogene = tools["audit_pseudogene_call"].meta
-    selenoprotein = tools["audit_selenoprotein_end"].meta
-    assert pseudogene is not None
-    assert selenoprotein is not None
-    assert pseudogene[MAX_CALL_SECONDS_META_KEY] > 60
-    assert (
-        selenoprotein[MAX_CALL_SECONDS_META_KEY]
-        == pseudogene[MAX_CALL_SECONDS_META_KEY]
-    )
+    audits = ["audit_pseudogene_call", "audit_selenoprotein_end"]
+    audits += ["audit_gene_length", "audit_gene_split"]
+    budgets = set()
+    for name in audits:
+        meta = tools[name].meta
+        assert meta is not None
+        budgets.add(meta[MAX_CALL_SECONDS_META_KEY])
+    [budget] = budgets
+    assert budget > 60
     schema = tools["audit_pseudogene_call"].outputSchema
     assert schema is not None
     assert {"strainGene", "referenceGene", "residueDifferences"} <= set(
         schema["properties"]
     )
+    length_schema = tools["audit_gene_length"].outputSchema
+    assert length_schema is not None
+    assert {"lengthClass", "groupMedian", "codeInferred", "nsInWindow"} <= set(
+        length_schema["properties"]
+    )
+
+
+async def test_a_length_audit_the_group_cannot_judge_answers_camel_case(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def inputs(site_id: str, genes: list[str]) -> LengthInputs:
+        del site_id
+        return LengthInputs(
+            screen=LengthScreen(
+                genes=genes,
+                length_class="UNQUALIFIED",
+                ratio=0.5,
+                group_median=400.0,
+                group_copies=1.0,
+                group_spread=0.05,
+                organisms=5,
+                reference_gene="PF3D7_1032400",
+            ),
+            dna=None,
+        )
+
+    monkeypatch.setattr(audit_tools, "length_inputs", inputs)
+
+    async with _served(_user_credential("user-bearer")) as client:
+        result = await client.call_tool(
+            "audit_gene_length", {"site_id": "plasmodb", "gene": "PCYB_062670"}
+        )
+
+    assert result.structured_content == {
+        "verdict": "NOT_CHECKED",
+        "windows": 0,
+        "counts": {},
+        "track": "",
+        "nsInWindow": None,
+        "atContigEdge": None,
+        "genes": ["PCYB_062670"],
+        "lengthClass": "UNQUALIFIED",
+        "ratio": 0.5,
+        "groupMedian": 400.0,
+        "groupCopies": 1.0,
+        "groupSpread": 0.05,
+        "organisms": 5,
+        "referenceGene": "PF3D7_1032400",
+        "code": None,
+        "codeInferred": False,
+    }

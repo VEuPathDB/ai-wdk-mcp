@@ -1,38 +1,7 @@
+from tests._support.proteins import PROTEIN, back_translate
+
 from veupathdb_mcp.audit.codes import GeneticCode, reverse_complement
 from veupathdb_mcp.audit.windows import STEP, WINDOW, best_identity, confirm_in_dna
-
-PROTEIN = (
-    "MMFPCDVENWCTHCDQQDIDVQCWEIWCWWPCICVFLQFVEWLVGEWWHNEVDWCYHSVQMRWRNLIGIDWLTSMRLYDETQ"
-    "GMFSQCDVWMMNYSWRDDKSDCLWRLPNARNGYESCHLFIPPSDGRPVKFQVKQNPIFDGFIIASWGKLAFQVNYWMFTYC"
-    "RVPPPPESPCHDHRGEMYCEAWFVENYADHYPFKNYN"
-)
-
-CODON = {
-    "A": "GCT",
-    "C": "TGT",
-    "D": "GAT",
-    "E": "GAA",
-    "F": "TTT",
-    "G": "GGT",
-    "H": "CAT",
-    "I": "ATT",
-    "K": "AAA",
-    "L": "TTA",
-    "M": "ATG",
-    "N": "AAT",
-    "P": "CCT",
-    "Q": "CAA",
-    "R": "AGA",
-    "S": "TCT",
-    "T": "ACT",
-    "V": "GTT",
-    "W": "TGG",
-    "Y": "TAT",
-}
-
-
-def back_translate(protein: str) -> str:
-    return "".join(CODON[a] for a in protein)
 
 
 def test_identity_is_the_best_ungapped_window_match() -> None:

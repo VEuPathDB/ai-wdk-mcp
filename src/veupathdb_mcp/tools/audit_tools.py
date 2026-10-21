@@ -11,11 +11,15 @@ from fastmcp.exceptions import ToolError
 from veupathdb.errors import VEuPathDBError
 
 from veupathdb_mcp.audit import (
+    GeneLengthAudit,
     GeneticCode,
+    LengthCheck,
     PseudogeneCallAudit,
     SelenoproteinEndAudit,
+    check_length,
     check_pseudogene_call,
     check_sec_stop,
+    length_inputs,
     pseudogene_inputs,
     selenoprotein_inputs,
 )
@@ -114,3 +118,76 @@ async def audit_selenoprotein_end(
     return SelenoproteinEndAudit.model_validate(
         {**check.model_dump(), "gene": gene, "reference_gene": reference_gene}
     )
+
+
+async def _length_audit(site_id: str, genes: list[str]) -> GeneLengthAudit:
+    inputs = await _read(site_id, length_inputs(site_id, genes))
+    dna = inputs.dna
+    if dna is None:
+        check = LengthCheck.not_checked()
+    else:
+        check = await _in_a_slot(
+            check_length,
+            dna.reference_protein,
+            dna.model_proteins,
+            dna.window,
+            dna.code,
+        )
+    return GeneLengthAudit.model_validate(
+        {
+            **check.model_dump(),
+            **inputs.screen.model_dump(),
+            "code": dna.code if dna else None,
+            "code_inferred": dna.code_inferred if dna else False,
+        }
+    )
+
+
+async def audit_gene_length(site_id: str, gene: str) -> GeneLengthAudit:
+    """Check whether a protein is much shorter or longer than its orthologs, and why.
+
+    The protein length is read against the median of the other organisms of
+    its genus in its ortholog group (the group median when the genus has
+    fewer than two others). SHORT is under 0.7 of it and LONG over 1.5.
+    The class is UNQUALIFIED when the group has under 8 organisms, a median
+    under 80 residues, an interquartile range over 0.3 of the median, more
+    than one copy per organism or no single-copy member in another organism;
+    when the group is residual (OGR); when a genus relative is itself under
+    0.85 (for SHORT) or over 1.15 (for LONG) of the median; or when the
+    gene's own organism holds another member of the group (check that pair
+    with audit_gene_split). Only a SHORT gene's genome region is read, for
+    the protein of the closest single-copy ortholog: GENOME_ENCODES means
+    the genome holds the missing segment on the gene's strand, so the model
+    misses it; ASSEMBLY means a gap or a contig end can explain it; ABSENT
+    means the genome lacks it; NOT_SHORT means the model holds every window.
+    Every other class answers NOT_CHECKED with no genome read, and then
+    nsInWindow and atContigEdge are null; organisms, groupMedian,
+    groupCopies and groupSpread show what the group holds.
+
+    Args:
+        site_id: VEuPathDB site, for example 'plasmodb'.
+        gene: The gene whose protein length is checked.
+    """
+    return await _length_audit(site_id, [gene])
+
+
+async def audit_gene_split(site_id: str, gene_a: str, gene_b: str) -> GeneLengthAudit:
+    """Check whether two neighbouring gene models are one gene split in two.
+
+    Both genes must be coding members of gene_a's ortholog group, next to
+    each other in position among their organism's members, on one strand of
+    one sequence and at most 20,000 bases apart. The pair is a SPLIT when
+    each protein is under 0.85 of its genus median and the two sum to 0.8
+    to 1.35 of it. The genome region of a SPLIT pair is then read for the
+    protein of the closest single-copy ortholog: SPLIT_CONFIRMED means each
+    model holds at least 3 of its windows and the two together hold 60% of
+    them; SPLIT_UNCLEAR means they do not. A pair that is not a SPLIT, or
+    that the group cannot judge (UNQUALIFIED), answers NOT_CHECKED and reads
+    no genome.
+
+    Args:
+        site_id: VEuPathDB site, for example 'plasmodb'.
+        gene_a: One of the two models, whose ortholog group is read.
+        gene_b: The neighbouring model on the same strand.
+    """
+    return await _length_audit(site_id, [gene_a, gene_b])

@@ -1,9 +1,9 @@
-import json
 import random
 from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
+from scripts.record_audit_fixtures import Region
 
 from veupathdb_mcp.audit.codes import GeneticCode, reverse_complement
 from veupathdb_mcp.audit.pseudogene import (
@@ -43,26 +43,24 @@ def two_exon_gene() -> tuple[ReferenceGene, int]:
     return reference, len(exon1)
 
 
-def region(name: str) -> dict[str, object]:
-    return json.loads((FIXTURES / name).read_text())
+def region(name: str) -> Region:
+    return Region.model_validate_json((FIXTURES / name).read_text())
 
 
-def coding(strain: dict[str, object]) -> str:
-    sequence = str(strain["sequence"])
-    return sequence if strain["strand"] == "+" else reverse_complement(sequence)
+def coding(strain: Region) -> str:
+    sequence = strain.sequence
+    return sequence if strain.strand == "+" else reverse_complement(sequence)
 
 
 def run(reference_name: str, strain_name: str):
     ref = region(reference_name)
     strain = region(strain_name)
-    reference = ReferenceGene.model_validate(
-        {
-            "dna": ref["sequence"],
-            "cds": [CdsPart(start=a, end=b) for a, b in ref["cds"]],
-            "start": ref["start"],
-            "end": ref["end"],
-            "strand": ref["strand"],
-        }
+    reference = ReferenceGene(
+        dna=ref.sequence,
+        cds=[CdsPart(start=a, end=b) for a, b in ref.cds],
+        start=ref.start,
+        end=ref.end,
+        strand=ref.strand,
     )
     return check_pseudogene_call(reference, coding(strain), GeneticCode.STANDARD)
 

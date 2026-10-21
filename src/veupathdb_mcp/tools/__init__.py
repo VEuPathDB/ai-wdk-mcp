@@ -1,6 +1,8 @@
 """The tools the WDK server serves, callable by a host in its own process."""
 
 from veupathdb_mcp.tools.audit_tools import (
+    audit_gene_length,
+    audit_gene_split,
     audit_pseudogene_call,
     audit_selenoprotein_end,
 )
@@ -37,6 +39,8 @@ from veupathdb_mcp.tools.user_tools import (
 )
 
 __all__ = [
+    "audit_gene_length",
+    "audit_gene_split",
     "audit_pseudogene_call",
     "audit_selenoprotein_end",
     "browse_search_categories",

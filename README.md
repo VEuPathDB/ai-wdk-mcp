@@ -27,14 +27,14 @@ than from a file inside it.
 | package | what it publishes |
 | --- | --- |
 | `veupathdb_mcp` | the version, the service-token registry, the tool error payload, the tool metadata keys |
-| `veupathdb_mcp.audit` | the gene-model checks: genetic codes and translation, protein windows confirmed in DNA, a genome's gene rows and a gene list's proteins, a gene's model, the pseudogene-call and selenoprotein-end checks and the inputs their served tools read |
+| `veupathdb_mcp.audit` | the gene-model checks: genetic codes and translation, protein windows confirmed in DNA, a genome's gene rows and a gene list's proteins, a gene's model, ortholog-group length statistics, the pseudogene-call, selenoprotein-end, protein-length and split checks and the inputs their served tools read |
 | `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation, the shortlist a long vocabulary is shown as, and other sites' experiment cards |
 | `veupathdb_mcp.controls` | the control-test runners, their context and their result shapes |
 | `veupathdb_mcp.embeddings` | the embedder, its three tables, the record manager and the indexes on them |
 | `veupathdb_mcp.gene_lookup` | text lookup, id resolution and the organism list |
 | `veupathdb_mcp.research` | the research server, its settings and its two tools |
 | `veupathdb_mcp.separation` | the separation run, its request, its progress rows, its result, the request charges it makes and the hypergeometric tail it reads controls by |
-| `veupathdb_mcp.tools` | the twenty-nine served tools |
+| `veupathdb_mcp.tools` | the thirty-one served tools |
 | `veupathdb_mcp.wdk` | step trees, sizes, the sample of a built step (`step_sample_records`), downloads, expression, the vocabulary and defaults a form offers, and the AST a saved strategy converts into |
 | `veupathdb_mcp.wdk.enrichment` | over-representation analysis, its result shapes and its parser |
 
@@ -89,7 +89,7 @@ The two servers share no setting: the WDK server reads `WDK_MCP_*` and
 `VEUPATHDB_*`, the research server reads `RESEARCH_MCP_*`. A secret configured
 for one admits nothing on the other.
 
-## The twenty-nine WDK tools
+## The thirty-one WDK tools
 
 Catalog reads (service or user credential):
 
@@ -111,12 +111,13 @@ carries):
 
 Gene-model checks (the VEuPathDB user whose bearer the call carries):
 
-`audit_pseudogene_call`, `audit_selenoprotein_end`.
+`audit_pseudogene_call`, `audit_selenoprotein_end`, `audit_gene_length`,
+`audit_gene_split`.
 
-Five of them declare a call budget over the default in tool `_meta`
+Eight of them declare a call budget over the default in tool `_meta`
 (`org.veupathdb.assistant/maxCallSeconds`): the two control runs, the plan
-count, `audit_pseudogene_call`, and `enrich_gene_ids`, which also declares the
-stream part its result carries (`org.veupathdb.assistant/streamPart`).
+count, the four gene-model checks, and `enrich_gene_ids`, which also declares
+the stream part its result carries (`org.veupathdb.assistant/streamPart`).
 
 `count_plan_steps` and `create_gene_set_step` write into the calling user's
 account, which is what their `readOnlyHint: false` states. Both hold their work

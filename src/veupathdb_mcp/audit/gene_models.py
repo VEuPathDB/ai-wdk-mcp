@@ -42,13 +42,13 @@ class _RecordParts(BaseModel):
 class GeneModel(BaseModel):
     model_config = ConfigDict(frozen=True)
 
-    organism: str
+    organism_abbrev: str
     cds: list[CdsPart]
 
     @classmethod
     def from_record(cls, record: WDKRecordInstance) -> GeneModel:
         parts = _RecordParts.model_validate({**record.attributes, **record.tables})
-        return cls(organism=parts.organism, cds=coding_parts(parts.rows))
+        return cls(organism_abbrev=parts.organism, cds=coding_parts(parts.rows))
 
 
 def coding_parts(rows: list[ModelRow]) -> list[CdsPart]:
@@ -68,16 +68,22 @@ def coding_parts(rows: list[ModelRow]) -> list[CdsPart]:
     ]
 
 
-async def gene_model(site_id: str, gene: str) -> GeneModel:
-    record = await get_strategy_api(site_id).get_single_record(
+async def gene_record(
+    site_id: str, gene: str, attributes: list[str], tables: list[str]
+) -> WDKRecordInstance:
+    return await get_strategy_api(site_id).get_single_record(
         "gene",
         [
             {"name": "source_id", "value": gene},
             {"name": "project_id", "value": get_site(site_id).project_id},
         ],
-        attributes=[ORGANISM_ATTRIBUTE],
-        tables=[MODEL_TABLE],
+        attributes=attributes,
+        tables=tables,
     )
+
+
+async def gene_model(site_id: str, gene: str) -> GeneModel:
+    record = await gene_record(site_id, gene, [ORGANISM_ATTRIBUTE], [MODEL_TABLE])
     try:
         return GeneModel.from_record(record)
     except ValidationError as exc:

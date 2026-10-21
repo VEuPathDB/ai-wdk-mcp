@@ -1,5 +1,78 @@
 # Knowledge log
 
+## 2026-10-21 - Two length checks are served
+
+- 0.2.0b31: `audit_gene_length` and `audit_gene_split` are served read-only with the 120 s audit
+  budget. Each reads the gene's ortholog group, classes its protein length against the
+  genus median of the group, and reads the genome around a `SHORT` or `SPLIT`
+  gene for the closest single-copy ortholog's protein
+  (`decisions/an-audit-check-reads-its-genome-from-the-site.md`).
+- `veupathdb_mcp.audit` publishes the group statistics (`lengths`: `GroupProfile`,
+  `call_length`, `Confirmable`, `NotChecked`, `classify`, `closest_reference`,
+  `relatives_median`, `species_of`, `genus_of`), the verdict (`length`: `check_length`,
+  `DnaWindow`, `LengthCheck`), the reader (`length_inputs`, `LengthInputs`,
+  `LengthScreen`, `LengthDna`, `GeneLengthAudit`, `LENGTH_EDGE`, `LENGTH_MAX_FLANK`,
+  `SPLIT_MAX_GAP`) and `locus_tag_answers`, the `GeneByLocusTag` reports the gene rows
+  and proteins are read from.
+- Only a `SHORT` gene or a `SPLIT` pair reads the genome. `TYPICAL`, `LONG` and
+  `UNQUALIFIED` answer `NOT_CHECKED` with `nsInWindow` and `atContigEdge` null. A gene
+  whose organism holds another member of the group, a split pair that is not two
+  adjacent members of the group, and a residual (`OGR`) group are `UNQUALIFIED`.
+- The length checks infer the genetic code from the audited gene's own CDS and protein,
+  and answer the code and whether it was inferred. The pseudogene and selenoprotein
+  checks still translate with the standard code.
+- A `SHORT` or `LONG` call needs the genus relatives to agree (each at 0.85 of the
+  median or more, or at 1.15 or less), and a group whose median is under 80 residues
+  cannot judge. On the recorded PIGA group this makes PCYB_062670 (266 aa) `UNQUALIFIED`,
+  because PY03143 is 376 aa.
+- `GeneRow.pseudo` is `None` when the site serves no `is_pseudo` value: the site does
+  not say. QA plasmodb serves it null for P. chabaudi chabaudi CB and P. vivax-like
+  Pvl01 genes, and the strict read refused every ortholog group that holds one. The
+  group statistics exclude only rows whose flag is `True`.
+- `rows_of(answer, search_name)` refuses a record that is not a gene row with a
+  `DataParsingError` that names the search, the record ids and the unreadable fields,
+  so a served check answers a named tool error.
+- A length answer carries `groupCopies` and `groupSpread` beside `organisms` and
+  `groupMedian`, so an `UNQUALIFIED` answer shows why.
+- `pcynM_pkac_length.json` is written by `record_audit_fixtures.py length` on QA
+  plasmodb and holds the wire bodies: the gene records of PcyM_0736700 with its
+  `Orthologs` and `GeneModelDump` tables, the `GeneByLocusTag` reports of the gene and
+  of its group (523 genes, 63 organisms), the protein report of the gene and
+  PCYB_074210, the contig length and the gene with 30,000 bases on each side.
+
+## 2026-10-21 - The audit infers a gene's genetic code from the site's own protein
+
+- `GeneticCode` adds NCBI table 3 (`YEAST_MITOCHONDRIAL`: TGA W, ATA M, CTN T) and table 5
+  (`INVERTEBRATE_MITOCHONDRIAL`: TGA W, ATA M, AGA and AGG S), as NCBI's genetic code page
+  lists them.
+- `infer_code(cds, protein)` tries STANDARD, CTG_SERINE, UGA_TRYPTOPHAN, table 3 and
+  table 5 in that order and returns the first whose translation of the CDS equals the
+  served protein, or `None`. The first codon reads as M, one trailing stop codon is
+  dropped, a `U` matches only a TGA under a code that reads TGA as a stop, and a CDS
+  whose length is not a multiple of 3 infers no code.
+- The served checks still translate with the standard code
+  (`decisions/an-audit-check-reads-its-genome-from-the-site.md`).
+
+## 2026-10-21 - The audit reads a gene's orthologs and a region's genes
+
+- `orthologs_of` reads the `Orthologs` table of the gene record ("Orthologs and
+  Paralogs within this website"), then the rows of those genes and the gene itself with
+  `gene_rows`. `GenesOrthologousToAGivenGene` is not a search on plasmodb (404). The table
+  is served on plasmodb (57 rows for PF3D7_1032400) and toxodb (19 rows for TGME49_316600).
+  `is_syntenic` is `yes` or `no`, and any other value is refused. A table gene that
+  `gene_rows` does not return is a refusal that names it.
+- `genes_in_region` reads `GenesByLocation` by sequence id: `organismSinglePick` is a
+  JSON list of one organism and `chromosomeOptional` is `Choose chromosome`. A gene that
+  overlaps an end of the region is in the answer. A start under 1, or an end before the
+  start, is refused before any read; an end of 0 is the end of the sequence.
+- The two context fixtures hold the bodies as served: the `Orthologs` rows of the gene
+  record and the `GenesByLocation` report records.
+- `GeneRow.organism` is the transcript attribute `organism_full`. The attribute
+  `organism` serves the name in `<i>` markup, so it does not match the organism of an
+  `Orthologs` row or a search vocabulary term.
+- The published field `GeneModel.organism` is renamed `organism_abbrev`: it holds the
+  organism abbreviation of the gene record, and `GeneRow.organism` holds the full name.
+
 ## 2026-10-21 - An audit check reads a bounded window in a bounded thread
 
 - 0.2.0b30: each audit genome window is at most `AUDIT_MAX_WINDOW_BASES` (250,000) bases, and a

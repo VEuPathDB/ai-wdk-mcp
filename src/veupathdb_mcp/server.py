@@ -28,6 +28,8 @@ from veupathdb_mcp.tool_meta import (
     STREAM_PART_META_KEY,
 )
 from veupathdb_mcp.tools.audit_tools import (
+    audit_gene_length,
+    audit_gene_split,
     audit_pseudogene_call,
     audit_selenoprotein_end,
 )
@@ -214,6 +216,16 @@ TOOLS: tuple[_ToolRow, ...] = (
     ),
     _ToolRow(
         audit_selenoprotein_end,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(
+        audit_gene_length,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(
+        audit_gene_split,
         _READ,
         {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
     ),
