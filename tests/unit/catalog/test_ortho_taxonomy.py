@@ -5,10 +5,10 @@ from __future__ import annotations
 from typing import Any
 
 import pytest
-from veupathdb.domain.parameters import PhyleticTree, TaxonEntry
+from veupathdb.domain.parameters import PhyleticNode, PhyleticTree, TaxonEntry
 from veupathdb.wdk import WDKAnswer, WDKRecordType, WDKSearch, WDKStringParam
 
-from veupathdb_mcp.catalog import ortho_taxonomy, param_phyletic
+from veupathdb_mcp.catalog import param_phyletic, taxonomy
 from veupathdb_mcp.catalog.param_phyletic import EXPRESSION_LOOKUP_HINT, LOOKUP_HINT
 
 _TABLES = {
@@ -53,13 +53,13 @@ class _Client:
 @pytest.fixture
 def client(monkeypatch: pytest.MonkeyPatch) -> _Client:
     served = _Client()
-    monkeypatch.setattr(ortho_taxonomy, "get_wdk_client", lambda _site: served)
-    monkeypatch.setattr(ortho_taxonomy, "_HELD", {})
+    monkeypatch.setattr(taxonomy, "get_wdk_client", lambda _site: served)
+    monkeypatch.setattr(taxonomy, "_HELD", {})
     return served
 
 
 async def test_the_taxonomy_is_the_helper_records_tables(client: _Client) -> None:
-    tree = await ortho_taxonomy.ortho_taxonomy("orthomcl")
+    tree = await taxonomy.ortho_taxonomy("orthomcl")
 
     assert tree is not None
     assert [node.code for node in tree.nodes()] == ["HAEM", "pfal"]
@@ -67,8 +67,8 @@ async def test_the_taxonomy_is_the_helper_records_tables(client: _Client) -> Non
 
 
 async def test_the_taxonomy_is_read_once_per_site(client: _Client) -> None:
-    await ortho_taxonomy.ortho_taxonomy("orthomcl")
-    await ortho_taxonomy.ortho_taxonomy("orthomcl")
+    await taxonomy.ortho_taxonomy("orthomcl")
+    await taxonomy.ortho_taxonomy("orthomcl")
 
     assert len(client.reports) == 1
 
@@ -93,7 +93,11 @@ def _tree() -> PhyleticTree:
     return PhyleticTree.from_taxa(
         [
             TaxonEntry(
-                id="3", parent_id=None, code="pfal", label="Plasmodium falciparum 3D7"
+                id="3",
+                parent_id=None,
+                code="pfal",
+                label="Plasmodium falciparum 3D7",
+                clade=False,
             )
         ]
     )
@@ -102,8 +106,8 @@ def _tree() -> PhyleticTree:
 @pytest.fixture
 def unranked(monkeypatch: pytest.MonkeyPatch) -> None:
     async def _tree_order(
-        _query: str, candidates: list[tuple[str, str, bool]]
-    ) -> list[tuple[str, str, bool]]:
+        _query: str, candidates: list[PhyleticNode]
+    ) -> list[PhyleticNode]:
         return candidates
 
     monkeypatch.setattr(param_phyletic, "_rank_by_semantic_similarity", _tree_order)
@@ -127,8 +131,14 @@ async def test_a_site_with_the_expression_search_looks_codes_up_in_its_taxonomy(
     assert found == {
         "query": "3D7",
         "matches": [
-            {"code": "pfal", "label": "Plasmodium falciparum 3D7", "leaf": True}
+            {
+                "code": "pfal",
+                "label": "Plasmodium falciparum 3D7",
+                "leaf": True,
+                "genomes": 1,
+            }
         ],
+        "species": [{"species": "Plasmodium falciparum", "genomes": ["pfal"]}],
         "total": 1,
         "hint": EXPRESSION_LOOKUP_HINT,
     }
@@ -138,6 +148,18 @@ def test_the_two_hints_name_the_parameter_each_search_takes() -> None:
     assert "phyletic_expression" in EXPRESSION_LOOKUP_HINT
     assert "included_species" not in EXPRESSION_LOOKUP_HINT
     assert "included_species" in LOOKUP_HINT
+
+
+def test_the_expression_hint_counts_genomes_and_names_species() -> None:
+    assert EXPRESSION_LOOKUP_HINT == (
+        "Write codes in phyletic_expression, joined with '+'. A code with leaf=true "
+        "is one genome (one proteome), and a count ending in T counts genomes: "
+        "several strains of one species are several genomes, grouped under species. "
+        "A code with leaf=false is a clade, and genomes is the number of genomes "
+        "under it. A clade is only what its label names, so a genus with no clade "
+        "of its own is the list of its genome codes. The parameter's help states "
+        "the recipes."
+    )
 
 
 async def test_every_entry_that_names_each_known_query_word_is_returned_past_the_cap(
@@ -152,15 +174,22 @@ async def test_every_entry_that_names_each_known_query_word_is_returned_past_the
                 parent_id=None,
                 code="ppra",
                 label="Plasmodium praefalciparum G01",
+                clade=False,
             ),
             *(
-                TaxonEntry(id=str(n), parent_id=None, code=f"pf{n:02d}", label=label)
+                TaxonEntry(
+                    id=str(n),
+                    parent_id=None,
+                    code=f"pf{n:02d}",
+                    label=label,
+                    clade=False,
+                )
                 for n, label in enumerate(strains)
             ),
         ]
     )
 
-    matches = await param_phyletic._match_phyletic_entries(
+    matches, _ = await param_phyletic._match_phyletic_entries(
         tree, "plasmodium falciparum"
     )
 
@@ -178,7 +207,7 @@ async def test_the_expression_search_names_its_codes_from_the_taxonomy(
         parameters=[WDKStringParam(name="phyletic_expression")],
     )
 
-    tree = await ortho_taxonomy.phyletic_tree_for_search("orthomcl", definition)
+    tree = await taxonomy.phyletic_tree_for_search("orthomcl", definition)
 
     assert tree is not None
     assert tree.codes() == {"HAEM", "pfal"}
@@ -192,5 +221,5 @@ async def test_a_search_with_no_species_codes_has_no_tree(client: _Client) -> No
         parameters=[WDKStringParam(name="text_expression")],
     )
 
-    assert await ortho_taxonomy.phyletic_tree_for_search("orthomcl", definition) is None
+    assert await taxonomy.phyletic_tree_for_search("orthomcl", definition) is None
     assert client.reports == []

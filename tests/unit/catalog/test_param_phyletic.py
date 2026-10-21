@@ -7,8 +7,20 @@ from collections.abc import Sequence
 from typing import Any
 
 import pytest
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import PhyleticBinding, PhyleticNode, PhyleticTree
-from veupathdb.wdk import WDKEnumParam, WDKParameter, WDKStringParam, phyletic_tree_of
+from veupathdb.testing.wdk_fixtures import load_recorded
+from veupathdb.wdk import (
+    WDKAnswer,
+    WDKEnumParam,
+    WDKParameter,
+    WDKRecordType,
+    WDKSearch,
+    WDKSearchResponse,
+    WDKStringParam,
+    ortho_taxonomy_of,
+    phyletic_tree_of,
+)
 
 from veupathdb_mcp.catalog import param_phyletic
 from veupathdb_mcp.catalog.param_formatting import _PROFILE_PATTERN_HELP
@@ -17,11 +29,13 @@ from veupathdb_mcp.catalog.param_phyletic import (
     PhyleticNoSelection,
     PhyleticUnresolvedProposal,
     derive_phyletic_overrides,
+    genome_names,
     is_phyletic_sheet,
+    lookup_phyletic_codes,
 )
 from veupathdb_mcp.embeddings.embedder import EmbeddingUnavailableError
 
-from .conftest import param_info, vocab, vocab_terms
+from .conftest import param_info, vocab, vocab_terms, wdk_search_response
 
 _TERMS = (
     ("ALL", "Root"),
@@ -223,8 +237,8 @@ class TestTheMatchesDescribeTheTree:
         """Rank by tree order, so the test asserts the entries and not the model."""
 
         async def _tree_order(
-            _query: str, candidates: list[tuple[str, str, bool]]
-        ) -> list[tuple[str, str, bool]]:
+            _query: str, candidates: list[PhyleticNode]
+        ) -> list[PhyleticNode]:
             return candidates
 
         monkeypatch.setattr(param_phyletic, "_rank_by_semantic_similarity", _tree_order)
@@ -233,7 +247,8 @@ class TestTheMatchesDescribeTheTree:
     async def _matches(params: list[WDKParameter]) -> list[Any]:
         tree = phyletic_tree_of(params)
         assert tree is not None
-        return await param_phyletic._match_phyletic_entries(tree, "mammal")
+        matches, _ = await param_phyletic._match_phyletic_entries(tree, "mammal")
+        return matches
 
     @staticmethod
     async def _by_code(params: list[WDKParameter]) -> dict[str, Any]:
@@ -286,7 +301,10 @@ class TestTheRankingSurvivesAnUnreachableEmbeddingApi:
         monkeypatch.setattr(param_phyletic, "get_embedder", _RefusingEmbedder)
 
     async def test_the_ranking_falls_back_to_tree_order(self) -> None:
-        candidates = [("hsap", "Homo sapiens", True), ("pfal", "P. falciparum", True)]
+        candidates = [
+            PhyleticNode(code="hsap", label="Homo sapiens", depth=1, clade=False),
+            PhyleticNode(code="pfal", label="P. falciparum", depth=1, clade=False),
+        ]
 
         ranked = await param_phyletic._rank_by_semantic_similarity("mammal", candidates)
 
@@ -300,12 +318,17 @@ class TestTheRankingSurvivesAnUnreachableEmbeddingApi:
                     code="MAMM",
                     label="Mammals",
                     depth=1,
-                    children=[PhyleticNode(code="hsap", label="Homo sapiens", depth=2)],
+                    clade=True,
+                    children=[
+                        PhyleticNode(
+                            code="hsap", label="Homo sapiens", depth=2, clade=False
+                        )
+                    ],
                 )
             ]
         )
 
-        matches = await param_phyletic._match_phyletic_entries(tree, "mammal")
+        matches, _ = await param_phyletic._match_phyletic_entries(tree, "mammal")
 
         assert [match["code"] for match in matches] == ["MAMM", "hsap"]
 
@@ -330,3 +353,153 @@ class TestEveryPhyleticStringSaysThePatternIsDerived:
         assert "profile_pattern is derived from the two lists; never write it" in hint
         assert "included_species" in hint
         assert "excluded_species" in hint
+
+
+def _recorded_tree() -> PhyleticTree:
+    tree = ortho_taxonomy_of(
+        WDKAnswer.model_validate(load_recorded("orthomcl_taxonomy").body)
+    )
+    assert tree is not None
+    return tree
+
+
+class _Discovery:
+    def __init__(self, searches: dict[str, list[str]]) -> None:
+        self._searches = searches
+
+    async def get_record_types(self, site_id: str) -> list[WDKRecordType]:
+        del site_id
+        return [WDKRecordType(url_segment=name) for name in self._searches]
+
+    async def get_searches(self, site_id: str, record_type: str) -> list[WDKSearch]:
+        del site_id
+        return [
+            WDKSearch(url_segment=name, full_name=name, display_name=name)
+            for name in self._searches[record_type]
+        ]
+
+
+def _serve(
+    monkeypatch: pytest.MonkeyPatch, searches: dict[str, list[str]]
+) -> list[str]:
+    read: list[str] = []
+    tree = _recorded_tree()
+
+    async def _taxonomy(site_id: str) -> PhyleticTree:
+        read.append(site_id)
+        return tree
+
+    discovery = _Discovery(searches)
+    monkeypatch.setattr(param_phyletic, "get_discovery_service", lambda: discovery)
+    monkeypatch.setattr(param_phyletic, "ortho_taxonomy", _taxonomy)
+    monkeypatch.setattr(param_phyletic, "get_embedder", _RefusingEmbedder)
+    return read
+
+
+@pytest.fixture
+def orthomcl(monkeypatch: pytest.MonkeyPatch) -> list[str]:
+    return _serve(monkeypatch, {"group": ["GroupsByPhyleticPattern"], "sequence": []})
+
+
+@pytest.fixture
+def plasmodb(monkeypatch: pytest.MonkeyPatch) -> list[str]:
+    return _serve(monkeypatch, {"transcript": ["GenesByOrthologPattern"]})
+
+
+@pytest.mark.usefixtures("orthomcl")
+async def test_a_clade_match_names_its_genome_count() -> None:
+    result = await lookup_phyletic_codes("orthomcl", "group", "Apicomplexa")
+
+    assert next(m for m in result["matches"] if m["code"] == "APIC") == {
+        "code": "APIC",
+        "label": "Apicomplexa",
+        "leaf": False,
+        "genomes": 139,
+    }
+
+
+@pytest.mark.usefixtures("orthomcl")
+async def test_a_genome_match_is_one_genome() -> None:
+    result = await lookup_phyletic_codes("orthomcl", "group", "Apicomplexa")
+
+    assert {(m["leaf"], m["genomes"]) for m in result["matches"] if m["leaf"]} == {
+        (True, 1)
+    }
+
+
+@pytest.mark.usefixtures("orthomcl")
+async def test_a_genus_lists_its_genomes_by_species() -> None:
+    result = await lookup_phyletic_codes("orthomcl", "group", "Plasmodium")
+
+    sizes = {s["species"]: len(s["genomes"]) for s in result["species"]}
+    assert (sum(sizes.values()), len(sizes), sizes["Plasmodium falciparum"]) == (
+        61,
+        23,
+        20,
+    )
+
+
+@pytest.mark.usefixtures("orthomcl")
+async def test_the_species_are_only_the_genomes_the_label_names() -> None:
+    result = await lookup_phyletic_codes("orthomcl", "group", "Apicomplexa")
+
+    assert result["species"] == []
+
+
+@pytest.mark.usefixtures("orthomcl")
+async def test_a_species_lists_its_genome_codes() -> None:
+    result = await lookup_phyletic_codes("orthomcl", "group", "Cryptosporidium parvum")
+
+    assert result["species"] == [
+        {"species": "Cryptosporidium parvum", "genomes": ["cpia", "cpib", "cpar"]}
+    ]
+
+
+@pytest.mark.usefixtures("orthomcl")
+async def test_an_empty_clade_counts_no_genome() -> None:
+    result = await lookup_phyletic_codes("orthomcl", "group", "Bacillariophyta")
+
+    baci = next(m for m in result["matches"] if m["code"] == "BACI")
+    assert (baci["leaf"], baci["genomes"]) == (False, 0)
+
+
+async def test_genome_names_are_the_genomes_of_the_taxonomy(
+    orthomcl: list[str],
+) -> None:
+    names = await genome_names("orthomcl")
+
+    assert (len(names), names["atum"]) == (857, "Agrobacterium fabrum str. C58")
+    assert "APIC" not in names
+    assert orthomcl == ["orthomcl"]
+
+
+async def test_genome_names_are_empty_off_orthomcl(plasmodb: list[str]) -> None:
+    assert await genome_names("plasmodb") == {}
+    assert plasmodb == []
+
+
+async def test_a_genomics_site_names_genome_counts_and_species(
+    monkeypatch: pytest.MonkeyPatch, plasmodb: list[str]
+) -> None:
+    async def _details(
+        ctx: SearchContext, *, record_types: list[WDKRecordType]
+    ) -> tuple[WDKSearchResponse, None]:
+        del record_types
+        assert ctx.search_name == "GenesByOrthologPattern"
+        return wdk_search_response(ctx.search_name, _phyletic_params()), None
+
+    monkeypatch.setattr(param_phyletic, "fetch_search_details", _details)
+
+    result = await lookup_phyletic_codes("plasmodb", "transcript", "Homo sapiens")
+
+    by_code = {m["code"]: (m["leaf"], m["genomes"]) for m in result["matches"]}
+    assert by_code == {
+        "hsap": (True, 1),
+        "EUKA": (False, 3),
+        "MAMM": (False, 2),
+        "mmus": (True, 1),
+        "pfal": (True, 1),
+    }
+    assert result["species"] == [{"species": "Homo sapiens", "genomes": ["hsap"]}]
+    assert result["hint"] == LOOKUP_HINT
+    assert plasmodb == []

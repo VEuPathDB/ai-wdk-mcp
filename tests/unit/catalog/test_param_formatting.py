@@ -479,6 +479,8 @@ class TestTheExpressionSheetStatesTheGrammarAndTheRecipes:
         assert "X AND L<=(N-k)T OR X AND L=0T" in help_text
         assert "with X the other units of the same AND term" in help_text
         assert "L<=(N-k)T OR L=0T when there are none" in help_text
+        assert "absence from at least k, for k below N," in help_text
+        assert "absence from all N genomes is X AND L=0T" in help_text
         assert "X the rest of the expression" not in help_text
 
     def test_it_declares_no_length_limit(self) -> None:
@@ -508,6 +510,8 @@ class TestTheExpressionSheetStatesTheGrammarAndTheRecipes:
 
         assert "L1>=c*N1 AND L1<(c+1)*N1 AND L2>=r*c*N2" in help_text
         assert "the bands joined with OR" in help_text
+        assert "each product rounded up to a whole number" in help_text
+        assert "written as one integer" not in help_text
         assert "c from 1 to the largest band the request asks" in help_text
         assert (
             "Band c selects the groups whose L2 protein total is at least r times c "
@@ -516,9 +520,12 @@ class TestTheExpressionSheetStatesTheGrammarAndTheRecipes:
         )
         assert (
             "Band c=0, under N1 proteins in L1, is L1<N1 AND Y OR L1=0T AND Y, "
-            "with Y the L2 condition; the second term keeps a group absent from L1, "
-            "because < never matches a group with no protein in L1." in help_text
+            "with Y the condition L2>=1, at least one protein in L2, because at "
+            "least r times 0 proteins states nothing; the second term keeps a group "
+            "absent from L1, because < never matches a group with no protein in L1."
+            in help_text
         )
+        assert "with Y the L2 condition" not in help_text
         assert "average per genome" not in help_text
         assert "c=0 band is the absence form" not in help_text
 

@@ -1363,3 +1363,12 @@ async def test_the_audits_that_infer_no_code_say_they_read_the_standard_code() -
         True,
         True,
     ]
+
+
+async def test_the_phyletic_lookup_says_each_match_counts_its_genomes() -> None:
+    tools = await _list_tools()
+
+    text = " ".join((tools["lookup_phyletic_codes"].description or "").split())
+
+    assert "genomes, the number of genomes under it" in text
+    assert "species groups the genomes the query names by species" in text

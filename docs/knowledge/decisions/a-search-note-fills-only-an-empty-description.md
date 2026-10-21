@@ -56,11 +56,19 @@ was measured to do on build 8.2, from the OrthoMCLModel source at commit `fcc9de
 # What the help needs from the client
 
 The help tells a model to write an OR of AND terms without parentheses. The parameter
-check reads each stated expression with the client's `PhyleticExpression.parse`, and
-`veupathdb-py` 0.1.0b17 refuses AND and OR side by side without parentheses. The help
-therefore ships only in the same release as the repin to the client release that
-accepts an OR of AND terms without parentheses, and that release's test runs the help's
-example through the client's parser and its evaluation of an expression on one group.
+check reads each stated expression with the client's `PhyleticExpression.parse` and
+judges it with `check_expression`. `veupathdb-py` 0.1.0b17 refuses AND and OR side by
+side without parentheses, so the help ships with the pin to 0.1.0b18, which accepts an
+OR of AND terms and refuses an upper bound of zero (`<=0` or `<1`), because such a unit
+matches no group. Each recipe and the example pass the served check and select, with
+the client's evaluation of an expression on one group, the groups their words describe:
+each instance has groups it must select and groups it must reject, and every one-edit
+change of an instance (an operator, a count up or down by one, T added or removed, a unit
+or an OR term dropped) that selects other groups fails on one of them. Two recipe forms
+reach a bound of zero at an edge, so the help names the edge: absence from at least k is
+for k below N, and absence from all N genomes is `X AND L=0T`; band c=0 over one genome
+in L1 is `L1=0T AND Y` alone. In band c=0, Y is `L2>=1`, because at least r times 0
+proteins states nothing and the check refuses `L2>=0`.
 
 # When to measure again
 
@@ -76,5 +84,6 @@ spans, which is what it counts.
 searches; a note fills only a gap, and a site that starts to describe the search
 retires the note without a release.
 
-Falsified by `tests/unit/catalog/test_search_notes.py` and
-`tests/unit/catalog/test_param_formatting.py::TestTheExpressionSheetStatesTheGrammarAndTheRecipes`.
+Falsified by `tests/unit/catalog/test_search_notes.py`,
+`tests/unit/catalog/test_param_formatting.py::TestTheExpressionSheetStatesTheGrammarAndTheRecipes`
+and `tests/unit/catalog/test_the_help_recipes_parse.py`.

@@ -14,6 +14,7 @@ from veupathdb.domain.parameters import (
     PHYLETIC_EXPRESSION_SEARCH,
     PHYLETIC_LIST_PARAMS,
     PhyleticBinding,
+    PhyleticNode,
     PhyleticTree,
     PhyleticUnresolved,
     derive_binding,
@@ -30,9 +31,9 @@ from veupathdb.wdk import (
 from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,
 )
-from veupathdb_mcp.catalog.ortho_taxonomy import ortho_taxonomy
 from veupathdb_mcp.catalog.param_discovery import fetch_search_details
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
+from veupathdb_mcp.catalog.taxonomy import ortho_taxonomy
 from veupathdb_mcp.embeddings.embedder import (
     EmbeddingUnavailableError,
     get_embedder,
@@ -54,8 +55,12 @@ LOOKUP_HINT = (
 )
 
 EXPRESSION_LOOKUP_HINT = (
-    f"Write a code in {PHYLETIC_EXPRESSION_PARAM}, joined to others with '+'. A code "
-    "with leaf=false is a clade and counts every species under it."
+    f"Write codes in {PHYLETIC_EXPRESSION_PARAM}, joined with '+'. A code with "
+    "leaf=true is one genome (one proteome), and a count ending in T counts genomes: "
+    "several strains of one species are several genomes, grouped under species. A "
+    "code with leaf=false is a clade, and genomes is the number of genomes under it. "
+    "A clade is only what its label names, so a genus with no clade of its own is the "
+    "list of its genome codes. The parameter's help states the recipes."
 )
 
 
@@ -130,33 +135,50 @@ def derive_phyletic_overrides(
     return binding
 
 
-async def _match_phyletic_entries(tree: PhyleticTree, query: str) -> list[JSONObject]:
-    """Every node whose label holds each query word some label holds, in tree
-    order, then the nodes nearest the query by semantic similarity up to the cap.
-
-    A list of strains is only usable whole, so a label match is never capped.
-    A node with children is a group, so it expands to its species.
-    """
-    all_entries = [(node.code, node.label, not node.children) for node in tree.nodes()]
-    if not all_entries:
-        return []
-
-    known = {word for _, label, _ in all_entries for word in _words(label)}
+def _named_nodes(tree: PhyleticTree, query: str) -> list[PhyleticNode]:
+    known = {word for node in tree.nodes() for word in _words(node.label)}
     asked = [word for word in _words(query) if word in known]
-    named = [
-        entry
-        for entry in all_entries
-        if asked and all(word in _words(entry[1]) for word in asked)
-    ]
-    ranked = await _rank_by_semantic_similarity(query, all_entries)
-    nearest = [entry for entry in ranked if entry not in named]
+    if not asked:
+        return []
     return [
-        {"code": code, "label": label, "leaf": is_leaf}
-        for code, label, is_leaf in [
-            *named,
-            *nearest[: max(_MAX_TREE_MATCHES - len(named), 0)],
-        ]
+        node
+        for node in tree.nodes()
+        if all(word in _words(node.label) for word in asked)
     ]
+
+
+async def _match_phyletic_entries(
+    tree: PhyleticTree, query: str
+) -> tuple[list[JSONObject], list[JSONObject]]:
+    """The matches and the species they name.
+
+    The matches are every node whose label holds each query word some label holds,
+    in tree order, then the nodes nearest the query by semantic similarity up to
+    the cap. A list of strains is only usable whole, so a label match is never
+    capped. The species group the genomes of the label matches only.
+    """
+    nodes = list(tree.nodes())
+    if not nodes:
+        return [], []
+    named = _named_nodes(tree, query)
+    held = {node.code for node in named}
+    ranked = await _rank_by_semantic_similarity(query, nodes)
+    nearest = [node for node in ranked if node.code not in held]
+    matches: list[JSONObject] = [
+        {
+            "code": node.code,
+            "label": node.label,
+            "leaf": not node.clade,
+            "genomes": len(tree.genomes_under([node.code])),
+        }
+        for node in [*named, *nearest[: max(_MAX_TREE_MATCHES - len(named), 0)]]
+    ]
+    genomes = [node.code for node in named if not node.clade]
+    species: list[JSONObject] = [
+        {"species": group.species, "genomes": list(group.genomes)}
+        for group in tree.species_groups(genomes)
+    ]
+    return matches, species
 
 
 def _words(text: str) -> set[str]:
@@ -165,8 +187,8 @@ def _words(text: str) -> set[str]:
 
 async def _rank_by_semantic_similarity(
     query: str,
-    candidates: list[tuple[str, str, bool]],
-) -> list[tuple[str, str, bool]]:
+    candidates: list[PhyleticNode],
+) -> list[PhyleticNode]:
     """Ranks the candidates by cosine similarity to the query.
 
     An unreachable embedding API leaves the candidates in tree order.
@@ -175,7 +197,7 @@ async def _rank_by_semantic_similarity(
     try:
         query_vector = await embedder.embed_query(query)
         label_vectors = await embedder.embed_documents(
-            [label for _, label, _ in candidates],
+            [node.label for node in candidates],
         )
     except EmbeddingUnavailableError as exc:
         logger.warning(
@@ -209,6 +231,18 @@ async def _takes_an_expression(
     return False
 
 
+async def genome_names(site_id: str) -> dict[str, str]:
+    discovery = get_discovery_service()
+    if not await _takes_an_expression(
+        site_id, await discovery.get_record_types(site_id)
+    ):
+        return {}
+    tree = await ortho_taxonomy(site_id)
+    if tree is None:
+        return {}
+    return {node.code: node.label for node in tree.nodes() if not node.clade}
+
+
 async def lookup_phyletic_codes(
     site_id: str,
     record_type: str,
@@ -230,11 +264,14 @@ async def lookup_phyletic_codes(
             )
             tree = phyletic_tree_of(response.search_data.parameters or [])
             hint = LOOKUP_HINT
-        matches = await _match_phyletic_entries(tree, query) if tree is not None else []
+        matches, species = await _match_phyletic_entries(
+            PhyleticTree() if tree is None else tree, query
+        )
 
         return {
             "query": query,
             "matches": cast("JsonValue", matches),
+            "species": cast("JsonValue", species),
             "total": len(matches),
             "hint": hint,
         }

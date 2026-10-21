@@ -31,7 +31,6 @@ from veupathdb_mcp.catalog.models import (
     RecordTypeInfo,
     SearchMatch,
 )
-from veupathdb_mcp.catalog.ortho_taxonomy import phyletic_tree_for_search
 from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
@@ -64,6 +63,7 @@ from veupathdb_mcp.catalog.param_phyletic import (
     PhyleticNoSelection,
     PhyleticUnresolvedProposal,
     derive_phyletic_overrides,
+    genome_names,
     is_phyletic_sheet,
 )
 from veupathdb_mcp.catalog.param_resolution import SearchParametersResult
@@ -125,6 +125,10 @@ from veupathdb_mcp.catalog.shortlist import shortlist, shortlist_slot
 from veupathdb_mcp.catalog.sites import (
     get_record_types,
     list_sites,
+)
+from veupathdb_mcp.catalog.taxonomy import (
+    ortho_taxonomy,
+    phyletic_tree_for_search,
 )
 from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
 from veupathdb_mcp.catalog.vocab_lookup import PhrasingMatch, VocabLookup
@@ -190,6 +194,7 @@ __all__ = [
     "fetch_search_details",
     "format_param_info_typed",
     "format_search_overview",
+    "genome_names",
     "get_discovery_service",
     "get_raw_record_types",
     "get_raw_searches",
@@ -212,6 +217,7 @@ __all__ = [
     "make_record_type_resolver",
     "make_validation_callbacks",
     "organism_parameter",
+    "ortho_taxonomy",
     "phyletic_tree_for_search",
     "radio_pairs",
     "rank_experiments_elsewhere",

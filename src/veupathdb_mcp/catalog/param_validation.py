@@ -34,12 +34,12 @@ from veupathdb.wdk import (
 
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service
 from veupathdb_mcp.catalog.eda_backed import check_eda_parameters
-from veupathdb_mcp.catalog.ortho_taxonomy import ortho_taxonomy
 from veupathdb_mcp.catalog.param_adapters import (
     adapt_param_from_wdk,
     adapt_param_specs_from_search,
 )
 from veupathdb_mcp.catalog.search_context import context_for_metadata_read
+from veupathdb_mcp.catalog.taxonomy import ortho_taxonomy
 from veupathdb_mcp.catalog.wdk_substitution import substituted_params
 from veupathdb_mcp.tool_errors import ToolErrorPayload
 

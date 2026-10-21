@@ -26,9 +26,26 @@ _CTX = SearchContext(
 def _tree() -> PhyleticTree:
     return PhyleticTree.from_taxa(
         [
-            TaxonEntry(id="2", parent_id=None, code="HAEM", label="Haemosporida"),
-            TaxonEntry(id="3", parent_id="2", code="pfal", label="P. falciparum 3D7"),
-            TaxonEntry(id="4", parent_id="2", code="pfag", label="P. falciparum 7G8"),
+            TaxonEntry(
+                id="2", parent_id=None, code="HAEM", label="Haemosporida", clade=True
+            ),
+            TaxonEntry(
+                id="3",
+                parent_id="2",
+                code="pfal",
+                label="P. falciparum 3D7",
+                clade=False,
+            ),
+            TaxonEntry(
+                id="4",
+                parent_id="2",
+                code="pfag",
+                label="P. falciparum 7G8",
+                clade=False,
+            ),
+            TaxonEntry(
+                id="5", parent_id="2", code="pber", label="P. berghei ANKA", clade=False
+            ),
         ]
     )
 
@@ -87,10 +104,10 @@ async def test_a_code_the_taxonomy_lacks_is_refused() -> None:
 
 
 async def test_a_valid_expression_is_held_in_the_sites_spelling() -> None:
-    validated = await _validate("pfal >= 1t and pfag+HAEM <= 1t")
+    validated = await _validate("pfal >= 1t and pfag+pber <= 1t")
 
     assert validated.params["phyletic_expression"] == StringValue(
-        value="pfal>=1T AND pfag+HAEM<=1T"
+        value="pfal>=1T AND pfag+pber<=1T"
     )
 
 

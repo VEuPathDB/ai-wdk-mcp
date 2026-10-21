@@ -140,6 +140,10 @@ async def lookup_phyletic_codes(
     """Look up species and clade codes: the ones GenesByOrthologPattern's species
     lists accept, or on OrthoMCL the ones a phyletic_expression names.
 
+    Each match gives its code, its label, leaf (true for one genome) and
+    genomes, the number of genomes under it. species groups the genomes the query
+    names by species, so the strains of one species are listed together.
+
     Args:
         site_id: VEuPathDB site, for example 'plasmodb' or 'orthomcl'.
         query: Species or clade name, for example 'falciparum' or 'Apicomplexa'.
