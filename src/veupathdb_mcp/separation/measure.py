@@ -20,7 +20,9 @@ from veupathdb_mcp.controls import (
     IntersectionTarget,
     NegativeControls,
     PositiveControls,
+    RunWrites,
     intersect_with_controls,
+    run_writes,
 )
 from veupathdb_mcp.separation.budget import (
     FIRST_INTERSECTION_REQUESTS,
@@ -58,25 +60,30 @@ class _NoCountError(Exception):
     """WDK built the target but answered no count for it."""
 
 
-async def _leaf_step(api: StrategyAPI, candidate: Candidate) -> WDKStepTree:
-    step = await api.create_step(
-        NewStepSpec(
-            search_name=candidate.search_name,
-            search_config=WDKSearchConfig(
-                parameters=encode_params(candidate.parameters)
+async def _leaf_step(
+    api: StrategyAPI, writes: RunWrites, candidate: Candidate
+) -> WDKStepTree:
+    step = await writes.step(
+        api.create_step(
+            NewStepSpec(
+                search_name=candidate.search_name,
+                search_config=WDKSearchConfig(
+                    parameters=encode_params(candidate.parameters)
+                ),
+                custom_name=candidate.display_name,
             ),
-            custom_name=candidate.display_name,
-        ),
-        record_type=GENE_RECORD_CLASS,
+            record_type=GENE_RECORD_CLASS,
+        )
     )
-    return WDKStepTree(step_id=step.id)
+    return WDKStepTree(step_id=step)
 
 
 async def _intersect(
-    api: StrategyAPI, tree: WDKStepTree, controls: ControlsUnderTest
+    api: StrategyAPI, writes: RunWrites, tree: WDKStepTree, controls: ControlsUnderTest
 ) -> Intersection:
     return await intersect_with_controls(
         api,
+        writes,
         IntersectionTarget(tree=tree, record_type=GENE_RECORD_CLASS),
         controls.dataset,
         strategy_name=controls.strategy_name,
@@ -86,7 +93,10 @@ async def _intersect(
 async def _measure_one(
     api: StrategyAPI, candidate: Candidate, controls: ControlsUnderTest
 ) -> MeasuredCandidate:
-    run = await _intersect(api, await _leaf_step(api, candidate), controls)
+    async with run_writes(api) as writes:
+        run = await _intersect(
+            api, writes, await _leaf_step(api, writes, candidate), controls
+        )
     if run.target_count is None:
         msg = "WDK answered no count for the step"
         raise _NoCountError(msg)
@@ -200,28 +210,33 @@ async def measure_candidates(
 
 
 async def _build(
-    api: StrategyAPI, node: SeparationNode, by_id: dict[str, Candidate]
+    api: StrategyAPI,
+    writes: RunWrites,
+    node: SeparationNode,
+    by_id: dict[str, Candidate],
 ) -> WDKStepTree:
     match node:
         case SeparationNode(
             kind="combine", operator=CombineOp() as operator, inputs=[left, right]
         ):
-            primary = await _build(api, left, by_id)
-            secondary = await _build(api, right, by_id)
-            combined = await api.create_combined_step(
-                CombinedStepSpec(
-                    primary_step_id=primary.step_id,
-                    secondary_step_id=secondary.step_id,
-                    boolean_operator=operator,
-                    custom_name=operator.value,
-                ),
-                record_type=GENE_RECORD_CLASS,
+            primary = await _build(api, writes, left, by_id)
+            secondary = await _build(api, writes, right, by_id)
+            combined = await writes.step(
+                api.create_combined_step(
+                    CombinedStepSpec(
+                        primary_step_id=primary.step_id,
+                        secondary_step_id=secondary.step_id,
+                        boolean_operator=operator,
+                        custom_name=operator.value,
+                    ),
+                    record_type=GENE_RECORD_CLASS,
+                )
             )
             return WDKStepTree(
-                step_id=combined.id, primary_input=primary, secondary_input=secondary
+                step_id=combined, primary_input=primary, secondary_input=secondary
             )
         case _:
-            return await _leaf_step(api, by_id[str(node.candidate_id)])
+            return await _leaf_step(api, writes, by_id[str(node.candidate_id)])
 
 
 async def read_tree(
@@ -232,4 +247,7 @@ async def read_tree(
 ) -> Intersection:
     """Build the assembled tree as steps and read its count and its controls from WDK."""
     by_id = {c.id: c for c in candidates}
-    return await _intersect(api, await _build(api, tree, by_id), controls)
+    async with run_writes(api) as writes:
+        return await _intersect(
+            api, writes, await _build(api, writes, tree, by_id), controls
+        )

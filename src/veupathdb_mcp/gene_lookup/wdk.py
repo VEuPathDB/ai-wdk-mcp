@@ -30,6 +30,8 @@ WDK_WILDCARD_LIMIT = 50
 MAX_GENE_IDS = 200
 """The largest identifier list one resolve call accepts."""
 
+TRANSCRIPTS_PER_GENE = 8
+
 
 def normalize_gene_ids(gene_ids: list[str]) -> list[str]:
     """Trim a gene identifier list, drop the blanks, and keep the first of each."""
@@ -179,6 +181,15 @@ def _empty_gene_result(error: str | None = None) -> GeneResolveResult:
     return GeneResolveResult(records=[], total_count=0, error=error)
 
 
+def _record_bound(gene_ids: list[str]) -> int:
+    return len(gene_ids) * TRANSCRIPTS_PER_GENE
+
+
+def _past_the_bound(answer: WDKAnswer) -> bool:
+    total = answer.meta.total_count
+    return total is None or total > len(answer.records)
+
+
 async def _fetch_gene_answer(
     client: VEuPathDBClient,
     gene_ids: list[str],
@@ -201,7 +212,11 @@ async def _fetch_gene_answer(
     except VEuPathDBError:
         return None
 
-    report_config: JSONObject = {"attributes": list(attrs), "tables": []}
+    report_config: JSONObject = {
+        "attributes": list(attrs),
+        "tables": [],
+        "pagination": {"offset": 0, "numRecords": _record_bound(gene_ids)},
+    }
     try:
         return await client.run_search_report(
             record_type=record_type,
@@ -263,4 +278,10 @@ async def resolve_gene_ids(
             )
             return _empty_gene_result(f"WDK lookup failed: {exc}")
 
+    if answer is not None and _past_the_bound(answer):
+        return _empty_gene_result(
+            f"the {search_name} answer for {len(gene_ids)} ids holds "
+            f"{answer.meta.total_count} records, more than the "
+            f"{_record_bound(gene_ids)} one read takes"
+        )
     return _build_gene_result_from_answer(answer)

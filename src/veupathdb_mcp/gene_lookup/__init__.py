@@ -14,6 +14,7 @@ from veupathdb_mcp.gene_lookup.site_search import (
 )
 from veupathdb_mcp.gene_lookup.wdk import (
     MAX_GENE_IDS,
+    TRANSCRIPTS_PER_GENE,
     GeneResolveResult,
     dataset_client,
     normalize_gene_ids,
@@ -24,6 +25,7 @@ __all__ = [
     "MAX_GENE_IDS",
     "SITE_SEARCH_PAGE_LIMIT",
     "SITE_SEARCH_STREAM_LIMIT",
+    "TRANSCRIPTS_PER_GENE",
     "GeneResolveResult",
     "GeneResult",
     "GeneSearchResult",

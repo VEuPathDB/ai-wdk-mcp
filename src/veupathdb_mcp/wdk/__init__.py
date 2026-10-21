@@ -1,4 +1,4 @@
-"""WDK reads: plan counts, sizes, previews, gene sets and expression."""
+"""WDK reads: plan counts, sizes, previews, gene sets, group genomes and expression."""
 
 from veupathdb_mcp.wdk.ai_expression import (
     NO_SUMMARY_ON_THE_SITE,
@@ -9,10 +9,17 @@ from veupathdb_mcp.wdk.gene_set_steps import (
     DEFAULT_GENE_SET_STRATEGY_NAME,
     GeneSetWdkContext,
     SetOperation,
+    StepTooLargeError,
     build_enrichment_params_from_gene_ids,
     fetch_gene_ids_from_step,
     frozen_step_id,
     resolve_wdk_context,
+)
+from veupathdb_mcp.wdk.group_genomes import (
+    GROUP_GENOME_TABLE,
+    GenomeProteins,
+    GroupGenomeCounts,
+    group_genome_counts,
 )
 from veupathdb_mcp.wdk.helpers import (
     extract_pk,
@@ -40,12 +47,16 @@ from veupathdb_mcp.wdk.strategy_snapshot import (
 
 __all__ = [
     "DEFAULT_GENE_SET_STRATEGY_NAME",
+    "GROUP_GENOME_TABLE",
     "NO_SUMMARY_ON_THE_SITE",
     "GeneExpressionSummary",
     "GeneSetWdkContext",
+    "GenomeProteins",
+    "GroupGenomeCounts",
     "SampleRecordsResult",
     "SetOperation",
     "StepCountResult",
+    "StepTooLargeError",
     "build_enrichment_params_from_gene_ids",
     "build_snapshot_from_wdk",
     "canonicalize_synced_parameters",
@@ -61,6 +72,7 @@ __all__ = [
     "frozen_step_id",
     "get_estimated_size_for_site",
     "get_gene_expression_summary",
+    "group_genome_counts",
     "order_primary_key",
     "resolve_wdk_context",
     "step_download_url",

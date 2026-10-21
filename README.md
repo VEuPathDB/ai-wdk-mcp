@@ -130,9 +130,13 @@ and `enrich_gene_ids`, which also declares the stream part its result carries
 `audit_gene_evidence` and `audit_genome_provenance` read no DNA (one organism
 report, or the gene record type and one gene record) and keep the default.
 
-`count_plan_steps` and `create_gene_set_step` write into the calling user's
-account, which is what their `readOnlyHint: false` states. Both hold their work
-in an internal strategy, and the plan count deletes what it created.
+`count_plan_steps`, `create_gene_set_step`, `run_control_tests_on_search` and
+`run_control_tests_on_step` write into the calling user's account, which is what
+their `readOnlyHint: false` states. Each holds its work in an internal strategy.
+The plan count deletes what it created. Both control runs upload the control ids
+as a dataset and delete every step and strategy they created, also when the run
+fails or is cancelled; the step run first copies the tested step out of its
+strategy. WDK offers no delete for a dataset, so the dataset stays.
 
 A published call this list does not serve is an in-process import, and
 `docs/knowledge/decisions/what-the-wire-serves-and-what-a-host-imports.md`

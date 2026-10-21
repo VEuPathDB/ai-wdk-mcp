@@ -8,7 +8,7 @@ from cachetools import LRUCache
 from veupathdb import get_logger
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.domain.parameters import InputDatasetValue, ParamValue
-from veupathdb.errors import VEuPathDBError, WDKLoginRequiredError
+from veupathdb.errors import ValidationError, VEuPathDBError, WDKLoginRequiredError
 from veupathdb.wdk import (
     NewStepSpec,
     StrategyAPI,
@@ -71,27 +71,46 @@ async def build_enrichment_params_from_gene_ids(
     )
 
 
-async def resolve_root_step_id(api: StrategyAPI, *, strategy_id: int) -> int | None:
+async def resolve_root_step_id(api: StrategyAPI, *, strategy_id: int) -> int:
     """Get the root step ID from a WDK strategy."""
     strategy = await api.get_strategy(strategy_id)
     return strategy.root_step_id
 
 
+class StepTooLargeError(ValidationError):
+    def __init__(self, step_id: int, limit: int) -> None:
+        self.step_id = step_id
+        self.limit = limit
+        super().__init__(
+            title="Step holds more records than the read allows",
+            detail=f"step {step_id} holds more than {limit} records",
+        )
+
+
+def _require_a_positive_limit(limit: int) -> None:
+    if limit < 1:
+        msg = f"a step read limit must be at least 1, not {limit}"
+        raise ValueError(msg)
+
+
 async def fetch_gene_ids_from_step(
-    api: StrategyAPI, *, step_id: int, limit: int | None = None
+    api: StrategyAPI, *, step_id: int, limit: int
 ) -> list[str]:
     """Fetch gene IDs from a WDK step via the standard report endpoint.
 
-    ``limit`` asks for one id more than the bound, so a caller can tell a step
-    that fits from one that does not. None asks for every id the step holds.
+    The read asks for one record more than ``limit``, and a step that holds
+    more than ``limit`` records raises ``StepTooLargeError``.
     A transcript step answers one row per gene.
     """
+    _require_a_positive_limit(limit)
     answer = await api.get_step_answer(
         step_id,
         attributes=["primary_key"],
-        pagination={"offset": 0, "numRecords": -1 if limit is None else limit + 1},
+        pagination={"offset": 0, "numRecords": limit + 1},
         view_filters=await step_view_filters(api, step_id),
     )
+    if len(answer.records) > limit:
+        raise StepTooLargeError(step_id, limit)
     return extract_record_ids(answer.records)
 
 
@@ -104,24 +123,30 @@ async def resolve_wdk_context(
     site_id: str,
     gene_ids: list[str],
     ctx: GeneSetWdkContext,
+    *,
+    limit: int,
 ) -> tuple[list[str], GeneSetWdkContext, int]:
     """Resolve gene IDs and search context from a WDK strategy."""
+    _require_a_positive_limit(limit)
     wdk_strategy_id = ctx.wdk_strategy_id
     if gene_ids or wdk_strategy_id is None:
         return gene_ids, ctx, 1
 
     api = get_strategy_api(site_id)
-    wdk_step_id = ctx.wdk_step_id
     search_name = ctx.search_name
     record_type = ctx.record_type
     parameters = ctx.parameters
-    step_count = 1
 
-    wdk_step_id = await _resolve_root_step(api, wdk_strategy_id, wdk_step_id)
-    gene_ids = await _fetch_step_genes(api, wdk_step_id)
+    wdk_step_id = ctx.wdk_step_id
+    if wdk_step_id is None:
+        wdk_step_id = await resolve_root_step_id(api, strategy_id=wdk_strategy_id)
+    gene_ids = await fetch_gene_ids_from_step(api, step_id=wdk_step_id, limit=limit)
+    logger.info(
+        "Fetched gene IDs from WDK step", step_id=wdk_step_id, gene_count=len(gene_ids)
+    )
     step_count = await _count_strategy_steps(api, wdk_strategy_id)
 
-    if wdk_step_id is not None and search_name is None and step_count == 1:
+    if search_name is None and step_count == 1:
         (
             search_name,
             record_type,
@@ -136,50 +161,6 @@ async def resolve_wdk_context(
         parameters=parameters,
     )
     return gene_ids, updated, step_count
-
-
-async def _resolve_root_step(
-    api: StrategyAPI, strategy_id: int, step_id: int | None
-) -> int | None:
-    if step_id is not None:
-        return step_id
-    try:
-        resolved = await resolve_root_step_id(api, strategy_id=strategy_id)
-    except VEuPathDBError as exc:
-        logger.warning(
-            "Failed to resolve root step from strategy",
-            strategy_id=strategy_id,
-            error=str(exc),
-        )
-        return step_id
-    else:
-        logger.info(
-            "Resolved root step from strategy",
-            strategy_id=strategy_id,
-            step_id=resolved,
-        )
-        return resolved
-
-
-async def _fetch_step_genes(api: StrategyAPI, step_id: int | None) -> list[str]:
-    if step_id is None:
-        return []
-    try:
-        gene_ids = await fetch_gene_ids_from_step(api, step_id=step_id)
-    except VEuPathDBError as exc:
-        logger.warning(
-            "Failed to fetch gene IDs from WDK step",
-            step_id=step_id,
-            error=str(exc),
-        )
-        return []
-    else:
-        logger.info(
-            "Fetched gene IDs from WDK step",
-            step_id=step_id,
-            gene_count=len(gene_ids),
-        )
-        return gene_ids
 
 
 async def _count_strategy_steps(api: StrategyAPI, strategy_id: int) -> int:

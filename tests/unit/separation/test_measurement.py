@@ -40,7 +40,10 @@ def _controls() -> ControlsUnderTest:
         positives=POSITIVES,
         negatives=NEGATIVES,
         dataset=ControlsDataset(
-            search_name=CONTROLS_SEARCH, parameters={}, record_type="transcript"
+            search_name=CONTROLS_SEARCH,
+            parameters={},
+            record_type="transcript",
+            id_count=len(POSITIVES) + len(NEGATIVES),
         ),
         strategy_name="control separation",
     )

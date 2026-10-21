@@ -1,5 +1,12 @@
 # Knowledge log
 
+## 2026-10-22 - A step read is bounded by its caller
+
+- `group_genome_counts` reads an OrthoMCL group's `TaxonCounts` table as proteins per
+  genome. `fetch_gene_ids_from_step` and `resolve_wdk_context` take a required record limit
+  and raise `StepTooLargeError` past it, so no step read asks for every record. See
+  [a step read is bounded by its caller](decisions/a-step-read-is-bounded-by-its-caller.md).
+
 ## 2026-10-21 - 0.2.0b32
 
 - 0.2.0b32 ships the two entries below, the gene-id resolver and the ten new gene-model

@@ -1,6 +1,6 @@
 """Control tests: file known positive and negative genes by what a step returns.
 
-A search test runs temporary WDK steps inside an internal strategy it deletes.
+Each test runs temporary WDK steps inside an internal strategy it deletes.
 """
 
 from collections.abc import Set
@@ -8,8 +8,8 @@ from collections.abc import Set
 from veupathdb import get_logger
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import ParamValue, StringValue
-from veupathdb.domain.strategy import DEFAULT_COMBINE_OPERATOR, CombineOp
-from veupathdb.errors import VEuPathDBError
+from veupathdb.domain.strategy import CombineOp
+from veupathdb.errors import DataParsingError, ValidationError, VEuPathDBError
 from veupathdb.wdk import (
     CombinedStepSpec,
     NewStepSpec,
@@ -18,19 +18,22 @@ from veupathdb.wdk import (
     WDKDatasetIdListContent,
     WDKParameter,
     WDKSearchConfig,
+    WDKStep,
     WDKStepTree,
     encode_params,
     get_strategy_api,
+    walk_wdk_step_tree,
 )
 
 from veupathdb_mcp.catalog.searches import find_record_type_for_search
+from veupathdb_mcp.controls.account_writes import RunWrites, run_writes
 from veupathdb_mcp.controls.control_helpers import (
     _encode_id_list,
     _get_total_count_for_step,
-    cleanup_internal_control_test_strategies,
-    delete_temp_strategy,
+    delete_leftover_strategies,
 )
 from veupathdb_mcp.controls.control_types import (
+    DEFAULT_CONTROL_TEST_STRATEGY_NAME,
     ControlsDataset,
     ControlsSearch,
     ControlTargetData,
@@ -41,8 +44,9 @@ from veupathdb_mcp.controls.control_types import (
     NegativeControls,
     PositiveControls,
 )
+from veupathdb_mcp.gene_lookup import TRANSCRIPTS_PER_GENE
 from veupathdb_mcp.wdk.helpers import extract_record_ids
-from veupathdb_mcp.wdk.step_report_filters import step_view_filters, view_filters_for
+from veupathdb_mcp.wdk.step_report_filters import view_filters_for
 
 __all__ = [
     "intersect_with_controls",
@@ -54,7 +58,7 @@ __all__ = [
 
 logger = get_logger(__name__)
 
-_STEP_PAGE_RECORDS = 50000
+_GENE_IDS = ControlsSearch()
 
 
 def _positive_controls(
@@ -71,22 +75,51 @@ def _negative_controls(
     return NegativeControls.filed(controls, returned) if controls else None
 
 
-async def _read_step_ids(api: StrategyAPI, step_id: int) -> tuple[set[str], int]:
-    """Read every record of a step, one page at a time, and the step's count."""
-    view_filters = await step_view_filters(api, step_id)
-    ids: set[str] = set()
-    offset = 0
-    while True:
-        answer = await api.get_step_answer(
-            step_id,
-            pagination={"offset": offset, "numRecords": _STEP_PAGE_RECORDS},
-            view_filters=view_filters,
+def _tested_record_type(step: WDKStep, controls: ControlsSearch) -> str:
+    if step.record_class_name != controls.record_type:
+        raise ValidationError(
+            title="Controls search reads another record type",
+            detail=(
+                f"step {step.id} returns {step.record_class_name} records and "
+                f"{controls.search_name} reads {controls.record_type} records"
+            ),
         )
-        ids.update(record.display_name for record in answer.records)
-        offset += len(answer.records)
-        count = answer.meta.records_returned()
-        if not answer.records or offset >= count:
-            return ids, count
+    return controls.record_type
+
+
+def _strategy_of(step: WDKStep) -> int:
+    if step.strategy_id is None:
+        raise ValidationError(
+            title="Step is not in a strategy",
+            detail=f"step {step.id} belongs to no strategy, so WDK cannot copy it",
+        )
+    return step.strategy_id
+
+
+async def _copied_subtree(
+    api: StrategyAPI, writes: RunWrites, step_id: int, strategy_id: int
+) -> WDKStepTree:
+    strategy = await api.get_strategy(strategy_id)
+    originals = walk_wdk_step_tree(strategy.step_tree)
+    copies = walk_wdk_step_tree(
+        await writes.steps(api.get_duplicated_step_tree(strategy_id))
+    )
+    if len(originals) != len(copies):
+        msg = f"the copy of strategy {strategy_id} has another shape"
+        raise DataParsingError(msg)
+    matches = [
+        copy
+        for original, copy in zip(originals, copies, strict=True)
+        if original.step_id == step_id
+    ]
+    if not matches:
+        msg = f"step {step_id} is not in the tree of strategy {strategy_id}"
+        raise DataParsingError(msg)
+    kept = {node.step_id for node in walk_wdk_step_tree(matches[0])}
+    await writes.delete_steps(
+        [node.step_id for node in copies if node.step_id not in kept]
+    )
+    return matches[0]
 
 
 async def run_step_control_tests(
@@ -94,15 +127,37 @@ async def run_step_control_tests(
     wdk_step_id: int,
     positive_controls: list[str] | None = None,
     negative_controls: list[str] | None = None,
+    *,
+    controls: ControlsSearch = _GENE_IDS,
 ) -> ControlTestResult:
     """File every control by whether an already-built step returns it."""
-    result_ids, count = await _read_step_ids(get_strategy_api(site_id), wdk_step_id)
-    return ControlTestResult(
-        site_id=site_id,
-        target=ControlTargetData(step_id=wdk_step_id, estimated_size=count),
-        positive=_positive_controls(positive_controls or [], result_ids),
-        negative=_negative_controls(negative_controls or [], result_ids),
-    )
+    api = get_strategy_api(site_id)
+    target = ControlTargetData(step_id=wdk_step_id)
+    result = ControlTestResult(site_id=site_id, target=target)
+    pos = _cleaned(positive_controls)
+    neg = _cleaned(negative_controls)
+    if not pos and not neg:
+        target.estimated_size = await _get_total_count_for_step(api, wdk_step_id)
+        return result
+
+    step = await api.find_step(wdk_step_id)
+    record_type = _tested_record_type(step, controls)
+    strategy_id = _strategy_of(step)
+    await _sweep_leftovers(api, site_id, DEFAULT_CONTROL_TEST_STRATEGY_NAME)
+    dataset = await upload_controls(api, controls, list(dict.fromkeys(pos + neg)))
+    async with run_writes(api) as writes:
+        tree = await _copied_subtree(api, writes, wdk_step_id, strategy_id)
+        run = await intersect_with_controls(
+            api,
+            writes,
+            IntersectionTarget(tree=tree, record_type=record_type),
+            dataset,
+            strategy_name=DEFAULT_CONTROL_TEST_STRATEGY_NAME,
+        )
+    target.estimated_size = run.target_count
+    result.positive = _positive_controls(pos, run.returned_ids)
+    result.negative = _negative_controls(neg, run.returned_ids)
+    return result
 
 
 def _find_param_type(params: list[WDKParameter], param_name: str) -> str | None:
@@ -165,73 +220,84 @@ async def upload_controls(
         search_name=search.search_name,
         parameters=parameters,
         record_type=search.record_type,
+        id_count=len(ids),
     )
+
+
+def _answer_bound(dataset: ControlsDataset) -> int:
+    return dataset.id_count * TRANSCRIPTS_PER_GENE
 
 
 async def intersect_with_controls(
     api: StrategyAPI,
+    writes: RunWrites,
     target: IntersectionTarget,
     dataset: ControlsDataset,
     *,
     strategy_name: str,
-    boolean_operator: CombineOp = DEFAULT_COMBINE_OPERATOR,
     id_field: str | None = None,
 ) -> Intersection:
-    """Combine a target tree with the controls and read every control it returns.
+    """Intersect a target tree with the controls and read every control it returns.
 
-    Six calls: the controls step, the combine, the internal strategy, the
-    target's count, the combine's answer, and the delete.
+    Five calls: the controls step, the combine, the internal strategy, the
+    target's count and the combine's answer. ``writes`` deletes what they made.
     """
-    controls_step = await api.create_step(
-        NewStepSpec(
-            search_name=dataset.search_name,
-            search_config=WDKSearchConfig(parameters=encode_params(dataset.parameters)),
-            custom_name="Controls",
-        ),
-        record_type=dataset.record_type,
+    controls_step = await writes.step(
+        api.create_step(
+            NewStepSpec(
+                search_name=dataset.search_name,
+                search_config=WDKSearchConfig(
+                    parameters=encode_params(dataset.parameters)
+                ),
+                custom_name="Controls",
+            ),
+            record_type=dataset.record_type,
+        )
     )
-    combined_step = await api.create_combined_step(
-        CombinedStepSpec(
-            primary_step_id=target.tree.step_id,
-            secondary_step_id=controls_step.id,
-            boolean_operator=boolean_operator,
-            custom_name=f"{boolean_operator} controls",
-        ),
-        record_type=target.record_type,
+    combined_step = await writes.step(
+        api.create_combined_step(
+            CombinedStepSpec(
+                primary_step_id=target.tree.step_id,
+                secondary_step_id=controls_step,
+                boolean_operator=CombineOp.INTERSECT,
+                custom_name=f"{CombineOp.INTERSECT} controls",
+            ),
+            record_type=target.record_type,
+        )
     )
     # WDK counts a step only inside a strategy (WDK-STEP-005).
-    root = WDKStepTree(
-        step_id=combined_step.id,
-        primary_input=target.tree,
-        secondary_input=WDKStepTree(step_id=controls_step.id),
+    await writes.strategy(
+        WDKStepTree(
+            step_id=combined_step,
+            primary_input=target.tree,
+            secondary_input=WDKStepTree(step_id=controls_step),
+        ),
+        strategy_name,
     )
-    temp_strategy_id: int | None = None
-    try:
-        created = await api.create_strategy(
-            step_tree=root, name=strategy_name, description=None, is_internal=True
-        )
-        temp_strategy_id = created.id
-        target_count = await _get_total_count_for_step(api, target.tree.step_id)
-        # The intersection lies inside the controls step, so one read of
-        # every record reads no more records than the call names controls.
-        answer = await api.get_step_answer(
-            combined_step.id,
-            pagination={"offset": 0, "numRecords": -1},
-            view_filters=view_filters_for(target.record_type),
-        )
-        return Intersection(
-            target_count=target_count,
-            returned_ids=frozenset(
-                extract_record_ids(answer.records, preferred_key=id_field)
+    target_count = await _get_total_count_for_step(api, target.tree.step_id)
+    bound = _answer_bound(dataset)
+    answer = await api.get_step_answer(
+        combined_step,
+        pagination={"offset": 0, "numRecords": bound + 1},
+        view_filters=view_filters_for(target.record_type),
+    )
+    if len(answer.records) > bound:
+        raise ValidationError(
+            title="Controls answer holds more records than its ids allow",
+            detail=(
+                f"{dataset.search_name} answered more than {bound} records for "
+                f"{dataset.id_count} control ids"
             ),
         )
-    finally:
-        await delete_temp_strategy(api, temp_strategy_id)
+    return Intersection(
+        target_count=target_count,
+        returned_ids=frozenset(
+            extract_record_ids(answer.records, preferred_key=id_field)
+        ),
+    )
 
 
-async def _cleanup_internal_control_test_strategies(
-    api: StrategyAPI, config: IntersectionConfig
-) -> None:
+async def _sweep_leftovers(api: StrategyAPI, site_id: str, strategy_name: str) -> None:
     """Delete internal control-test strategies left by an interrupted run.
 
     A control test creates a temporary strategy under the current user
@@ -244,7 +310,9 @@ async def _cleanup_internal_control_test_strategies(
             "Failed to list strategies for control-test cleanup", error=str(exc)
         )
         return
-    await cleanup_internal_control_test_strategies(api, strategies, config)
+    await delete_leftover_strategies(
+        api, strategies, site_id=site_id, strategy_name=strategy_name
+    )
 
 
 def _cleaned(ids: list[str] | None) -> list[str]:
@@ -265,7 +333,7 @@ async def run_positive_negative_controls(
     """
     api = get_strategy_api(config.site_id)
     if not skip_cleanup:
-        await _cleanup_internal_control_test_strategies(api, config)
+        await _sweep_leftovers(api, config.site_id, config.internal_strategy_name)
 
     target = ControlTargetData(
         search_name=config.target_search_name,
@@ -300,27 +368,30 @@ async def run_positive_negative_controls(
         ),
         list(dict.fromkeys(pos + neg)),
     )
-    target_step = await api.create_step(
-        NewStepSpec(
-            search_name=config.target_search_name,
-            search_config=WDKSearchConfig(
-                parameters=encode_params(config.target_parameters),
+    async with run_writes(api) as writes:
+        target_step = await writes.step(
+            api.create_step(
+                NewStepSpec(
+                    search_name=config.target_search_name,
+                    search_config=WDKSearchConfig(
+                        parameters=encode_params(config.target_parameters),
+                    ),
+                    custom_name="Target",
+                ),
+                record_type=target_rt,
+            )
+        )
+        run = await intersect_with_controls(
+            api,
+            writes,
+            IntersectionTarget(
+                tree=WDKStepTree(step_id=target_step), record_type=target_rt
             ),
-            custom_name="Target",
-        ),
-        record_type=target_rt,
-    )
-    run = await intersect_with_controls(
-        api,
-        IntersectionTarget(
-            tree=WDKStepTree(step_id=target_step.id), record_type=target_rt
-        ),
-        dataset,
-        strategy_name=config.internal_strategy_name,
-        boolean_operator=config.boolean_operator,
-        id_field=config.id_field,
-    )
-    target.step_id = target_step.id
+            dataset,
+            strategy_name=config.internal_strategy_name,
+            id_field=config.id_field,
+        )
+    target.step_id = target_step
     target.estimated_size = run.target_count
     result.positive = _positive_controls(pos, run.returned_ids)
     result.negative = _negative_controls(neg, run.returned_ids)

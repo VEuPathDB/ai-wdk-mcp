@@ -1,7 +1,9 @@
 """Formatting and parsing utilities for control-test evaluation."""
 
 import json
+from datetime import UTC, datetime, timedelta
 
+import pydantic
 from veupathdb import get_logger
 from veupathdb.errors import VEuPathDBError
 from veupathdb.wdk import (
@@ -17,6 +19,12 @@ from veupathdb_mcp.controls.control_types import (
 )
 
 logger = get_logger(__name__)
+
+CLEANUP_FAILURES = (VEuPathDBError, OSError, RuntimeError)
+
+LEFTOVER_AGE = timedelta(days=2)
+
+_WDK_TIME = pydantic.TypeAdapter(datetime)
 
 
 def _encode_id_list(ids: list[str], fmt: ControlValueFormat) -> str:
@@ -38,7 +46,7 @@ async def delete_temp_strategy(api: StrategyAPI, strategy_id: int | None) -> Non
         return
     try:
         await api.delete_strategy(strategy_id)
-    except (VEuPathDBError, RuntimeError) as exc:
+    except CLEANUP_FAILURES as exc:
         logger.warning(
             "Failed to delete temp WDK strategy during cleanup",
             temp_strategy_id=strategy_id,
@@ -69,6 +77,50 @@ def leftover_strategy_ids(
     ]
 
 
+def _created(item: WDKStrategySummary) -> datetime | None:
+    try:
+        created = _WDK_TIME.validate_python(item.created_time)
+    except pydantic.ValidationError:
+        return None
+    return created if created.tzinfo is not None else created.replace(tzinfo=UTC)
+
+
+def stale_leftover_ids(
+    wdk_items: list[WDKStrategySummary], strategy_name: str
+) -> list[int]:
+    now = datetime.now(UTC)
+    stale = {
+        item.strategy_id
+        for item in wdk_items
+        if (created := _created(item)) is not None and now - created > LEFTOVER_AGE
+    }
+    return [i for i in leftover_strategy_ids(wdk_items, strategy_name) if i in stale]
+
+
+async def delete_leftover_strategies(
+    api: StrategyAPI,
+    wdk_items: list[WDKStrategySummary],
+    *,
+    site_id: str,
+    strategy_name: str,
+) -> None:
+    for strategy_id in stale_leftover_ids(wdk_items, strategy_name):
+        try:
+            await api.delete_strategy(strategy_id)
+            logger.info(
+                "Deleted leaked internal control-test WDK strategy",
+                site_id=site_id,
+                wdk_strategy_id=strategy_id,
+            )
+        except CLEANUP_FAILURES as e:
+            logger.warning(
+                "Failed to delete leaked internal control-test strategy",
+                site_id=site_id,
+                wdk_strategy_id=strategy_id,
+                error=str(e),
+            )
+
+
 async def cleanup_internal_control_test_strategies(
     api: StrategyAPI,
     wdk_items: list[WDKStrategySummary],
@@ -80,18 +132,9 @@ async def cleanup_internal_control_test_strategies(
     then pass it here with the config a run was given. The config carries the
     name the run wrote, so a match can never drift from a write.
     """
-    for strategy_id in leftover_strategy_ids(wdk_items, config.internal_strategy_name):
-        try:
-            await api.delete_strategy(strategy_id)
-            logger.info(
-                "Deleted leaked internal control-test WDK strategy",
-                site_id=config.site_id,
-                wdk_strategy_id=strategy_id,
-            )
-        except VEuPathDBError as e:
-            logger.warning(
-                "Failed to delete leaked internal control-test strategy",
-                site_id=config.site_id,
-                wdk_strategy_id=strategy_id,
-                error=str(e),
-            )
+    await delete_leftover_strategies(
+        api,
+        wdk_items,
+        site_id=config.site_id,
+        strategy_name=config.internal_strategy_name,
+    )

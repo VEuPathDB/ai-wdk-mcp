@@ -201,7 +201,7 @@ TOOLS: tuple[_ToolRow, ...] = (
     _ToolRow(get_step_gene_ids, _READ),
     _ToolRow(
         run_control_tests_on_step,
-        _READ,
+        _ADDITIVE_WRITE,
         {MAX_CALL_SECONDS_META_KEY: CONTROL_TESTS_MAX_CALL_SECONDS},
     ),
     _ToolRow(

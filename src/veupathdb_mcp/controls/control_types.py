@@ -7,7 +7,6 @@ from typing import Literal, Self
 
 from pydantic import ConfigDict, Field, model_validator
 from veupathdb.domain.parameters import ParamValue
-from veupathdb.domain.strategy import DEFAULT_COMBINE_OPERATOR, CombineOp
 from veupathdb.model import CamelModel
 from veupathdb.wdk import WDKStepTree
 
@@ -155,6 +154,7 @@ class ControlsDataset:
     search_name: str
     parameters: dict[str, ParamValue]
     record_type: str
+    id_count: int
 
 
 @dataclass(frozen=True)
@@ -198,7 +198,6 @@ class IntersectionConfig:
     controls_param_name: str
     controls_value_format: ControlValueFormat = "newline"
     controls_extra_parameters: dict[str, ParamValue] | None = None
-    boolean_operator: CombineOp = DEFAULT_COMBINE_OPERATOR
     id_field: str | None = None
     # The name of the internal strategy a run writes, and the name its cleanup
     # matches. One value, so a renamed run still recognises its own leftovers.

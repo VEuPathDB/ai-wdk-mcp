@@ -67,6 +67,7 @@ from veupathdb_mcp.tools import (
     user_tools,
 )
 from veupathdb_mcp.wdk import (
+    StepTooLargeError,
     ai_expression,
     gene_record_type,
     gene_set_steps,
@@ -107,7 +108,7 @@ EXPECTED_ANNOTATIONS: dict[str, dict[str, bool]] = {
     "rank_experiments_elsewhere": READ_ONLY,
     "read_experiment": READ_ONLY,
     "get_step_gene_ids": READ_ONLY,
-    "run_control_tests_on_step": READ_ONLY,
+    "run_control_tests_on_step": ADDITIVE_WRITE,
     "count_plan_steps": ADDITIVE_WRITE,
     "create_gene_set_step": ADDITIVE_WRITE,
     "run_control_tests_on_search": ADDITIVE_WRITE,
@@ -837,9 +838,7 @@ async def test_an_unknown_dataset_is_a_tool_error_that_names_dataset_id(
 async def test_a_step_gene_read_answers_from_the_strategy_api(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    async def fetch(
-        api: object, *, step_id: int, limit: int | None = None
-    ) -> list[str]:
+    async def fetch(api: object, *, step_id: int, limit: int) -> list[str]:
         del api
         assert (step_id, limit) == (42, 200)
         return ["PF3D7_1222600", "PF3D7_0709000"]
@@ -860,12 +859,9 @@ async def test_a_step_past_the_gene_bound_is_refused_naming_the_download(
 ) -> None:
     """The wire answer is bounded, and a step past the bound is refused by name."""
 
-    async def fetch(
-        api: object, *, step_id: int, limit: int | None = None
-    ) -> list[str]:
-        del api, step_id
-        assert limit == 200
-        return [f"PF3D7_{index:06d}" for index in range(limit + 1)]
+    async def fetch(api: object, *, step_id: int, limit: int) -> list[str]:
+        del api
+        raise StepTooLargeError(step_id, limit)
 
     monkeypatch.setattr(user_tools, "get_strategy_api", lambda site_id: site_id)
     monkeypatch.setattr(user_tools, "fetch_gene_ids_from_step", fetch)
@@ -879,7 +875,7 @@ async def test_a_step_past_the_gene_bound_is_refused_naming_the_download(
 
     assert result.is_error
     text = _error_text(result)
-    assert "200" in text
+    assert "step 42 holds more than 200 records" in text
     assert "get_step_download_url" in text
 
 

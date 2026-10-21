@@ -1,9 +1,11 @@
 """Positive and negative control tests, run against a step or a search."""
 
+from veupathdb_mcp.controls.account_writes import RunWrites, run_writes
 from veupathdb_mcp.controls.control_helpers import (
     cleanup_internal_control_test_strategies,
     delete_temp_strategy,
     leftover_strategy_ids,
+    stale_leftover_ids,
 )
 from veupathdb_mcp.controls.control_tests import (
     intersect_with_controls,
@@ -44,6 +46,7 @@ __all__ = [
     "IntersectionTarget",
     "NegativeControls",
     "PositiveControls",
+    "RunWrites",
     "cleanup_internal_control_test_strategies",
     "delete_temp_strategy",
     "intersect_with_controls",
@@ -51,5 +54,7 @@ __all__ = [
     "resolve_controls_param_type",
     "run_positive_negative_controls",
     "run_step_control_tests",
+    "run_writes",
+    "stale_leftover_ids",
     "upload_controls",
 ]

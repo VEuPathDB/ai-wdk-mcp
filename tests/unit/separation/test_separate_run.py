@@ -1,8 +1,10 @@
 """One run end to end: resolve, clean up, upload, collect, measure, assemble, confirm."""
 
+from datetime import timedelta
+
 import pytest
 from pydantic import ValidationError
-from tests._support.control_run_wdk import RunFakeAPI
+from tests._support.control_run_wdk import RunFakeAPI, wdk_time
 from tests._support.recorded_searches import gene_list_search, recorded_search
 from tests._support.separation_site import FALCIPARUM, patch_site
 from veupathdb.domain.parameters import MultiPickValue, StringValue
@@ -74,6 +76,7 @@ class _Account(RunFakeAPI):
                 strategy_id=77,
                 name=tag_internal_wdk_strategy_name(NAME),
                 root_step_id=1,
+                created_time=wdk_time(timedelta(days=3)),
             )
         ]
 
@@ -170,7 +173,10 @@ async def test_every_call_is_charged_and_the_leftover_is_deleted(
 
     assert account.deleted[0] == 77
     assert account.datasets == [POSITIVES + NEGATIVES]
-    assert account.created_strategy_names == [NAME, NAME]
+    first, second = account.created_strategy_names
+    assert first != second
+    assert first.startswith(f"{NAME} ")
+    assert second.startswith(f"{NAME} ")
     assert (result.charged_requests, result.budget) == (CHARGED, 400)
 
 

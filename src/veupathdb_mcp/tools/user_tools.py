@@ -42,6 +42,7 @@ from veupathdb_mcp.wdk.enrichment.types import (
 )
 from veupathdb_mcp.wdk.gene_set_steps import (
     DEFAULT_GENE_SET_STRATEGY_NAME,
+    StepTooLargeError,
     fetch_gene_ids_from_step,
     frozen_step_id,
 )
@@ -286,17 +287,17 @@ async def get_step_gene_ids(site_id: str, wdk_step_id: int) -> list[str]:
         site_id: VEuPathDB site, for example 'plasmodb'.
         wdk_step_id: WDK step id.
     """
-    gene_ids = await fetch_gene_ids_from_step(
-        get_strategy_api(site_id), step_id=wdk_step_id, limit=MAX_GENE_IDS
-    )
-    if len(gene_ids) > MAX_GENE_IDS:
+    try:
+        return await fetch_gene_ids_from_step(
+            get_strategy_api(site_id), step_id=wdk_step_id, limit=MAX_GENE_IDS
+        )
+    except StepTooLargeError as exc:
         msg = (
-            f"step {wdk_step_id} holds more than {MAX_GENE_IDS} genes; one call "
+            f"step {exc.step_id} holds more than {exc.limit} records; one call "
             "answers at most that many. Read the whole step with "
             "get_step_download_url."
         )
-        raise ToolError(msg)
-    return gene_ids
+        raise ToolError(msg) from exc
 
 
 async def run_control_tests_on_step(
@@ -306,6 +307,9 @@ async def run_control_tests_on_step(
     negative_controls: list[str] | None = None,
 ) -> ControlTestResult:
     """Intersect a step that is already built in WDK with known control genes.
+
+    Creates a copy of the step, a controls step and a temporary WDK strategy in
+    the calling user's account, and deletes them when the test ends.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.

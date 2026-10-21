@@ -31,7 +31,7 @@ from veupathdb.wdk import (
 )
 
 from veupathdb_mcp.audit.gene_models import gene_record
-from veupathdb_mcp.gene_lookup import dataset_client
+from veupathdb_mcp.gene_lookup import TRANSCRIPTS_PER_GENE, dataset_client
 
 GENE_ATTRIBUTES = (
     "organism_full",
@@ -54,7 +54,6 @@ ID_CHUNK = 150
 LOCUS_TAG = "GeneByLocusTag"
 _MAX_RECORDS = 400000
 _MAX_ORGANISMS = 2000
-_TRANSCRIPTS_PER_GENE = 8
 _PSEUDO: TypeAdapter[bool | Literal["Yes", "No"]] = TypeAdapter(
     bool | Literal["Yes", "No"]
 )
@@ -287,6 +286,6 @@ async def _locus_tag_answer(
         "transcript",
         LOCUS_TAG,
         WDKSearchConfig(parameters={"ds_gene_ids": str(dataset)}),
-        report_of(attributes, len(gene_ids) * _TRANSCRIPTS_PER_GENE),
+        report_of(attributes, len(gene_ids) * TRANSCRIPTS_PER_GENE),
     )
     return complete_answer(answer, LOCUS_TAG)

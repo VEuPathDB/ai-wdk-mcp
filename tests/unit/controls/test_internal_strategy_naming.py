@@ -1,9 +1,15 @@
 """The name a control run writes into WDK is the name its cleanup matches."""
 
+from datetime import timedelta
 from typing import Any
 
 import pytest
-from tests._support.control_run_wdk import FakeCleanupAPI, RunFakeAPI, patch_control_run
+from tests._support.control_run_wdk import (
+    FakeCleanupAPI,
+    RunFakeAPI,
+    patch_control_run,
+    wdk_time,
+)
 from veupathdb.wdk import WDKStrategySummary, tag_internal_wdk_strategy_name
 
 from veupathdb_mcp.controls.control_helpers import (
@@ -23,7 +29,11 @@ def _summary(strategy_id: int, name: str, **kwargs: Any) -> WDKStrategySummary:
 
 
 def _internal(strategy_id: int, display_name: str) -> WDKStrategySummary:
-    return _summary(strategy_id, tag_internal_wdk_strategy_name(display_name))
+    return _summary(
+        strategy_id,
+        tag_internal_wdk_strategy_name(display_name),
+        created_time=wdk_time(timedelta(days=3)),
+    )
 
 
 def _config(**kwargs: Any) -> IntersectionConfig:
@@ -103,7 +113,8 @@ class TestTheRunWritesTheNameItWasGiven:
             _config(), positive_controls=["PF3D7_0100100"]
         )
 
-        assert run_api.created_strategy_names == [DEFAULT_CONTROL_TEST_STRATEGY_NAME]
+        [written] = run_api.created_strategy_names
+        assert written.startswith(f"{DEFAULT_CONTROL_TEST_STRATEGY_NAME} ")
 
     async def test_a_caller_supplied_name_reaches_wdk(
         self, run_api: RunFakeAPI
@@ -113,7 +124,8 @@ class TestTheRunWritesTheNameItWasGiven:
             positive_controls=["PF3D7_0100100"],
         )
 
-        assert run_api.created_strategy_names == ["Pathfinder control test"]
+        [written] = run_api.created_strategy_names
+        assert written.startswith("Pathfinder control test ")
 
 
 class TestOneConfigWritesAndMatches:

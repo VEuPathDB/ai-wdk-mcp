@@ -42,7 +42,7 @@ class TestGeneIdsOfAStepAreOnePerGene:
     ) -> None:
         api, wire = wire_api(monkeypatch, "transcript")
 
-        ids = await fetch_gene_ids_from_step(api, step_id=9)
+        ids = await fetch_gene_ids_from_step(api, step_id=9, limit=10)
 
         assert ids == ["PF3D7_0100100"]
         assert _last(wire.bodies)["viewFilters"] == REPRESENTATIVE_TRANSCRIPT_ONLY_WIRE

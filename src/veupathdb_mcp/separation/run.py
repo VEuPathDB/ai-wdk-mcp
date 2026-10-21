@@ -17,7 +17,7 @@ from veupathdb_mcp.controls import (
     NegativeControls,
     PositiveControls,
     delete_temp_strategy,
-    leftover_strategy_ids,
+    stale_leftover_ids,
     upload_controls,
 )
 from veupathdb_mcp.gene_lookup import (
@@ -103,9 +103,7 @@ async def _clean_up(
 ) -> None:
     """Delete the internal strategies an interrupted run under this name left."""
     budget.charge(CLEANUP_REQUESTS)
-    for strategy_id in leftover_strategy_ids(
-        await api.list_strategies(), strategy_name
-    ):
+    for strategy_id in stale_leftover_ids(await api.list_strategies(), strategy_name):
         budget.charge(1)
         await delete_temp_strategy(api, strategy_id)
 

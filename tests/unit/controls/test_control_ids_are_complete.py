@@ -2,14 +2,12 @@
 
 import pytest
 from pydantic import ValidationError
-from tests._support.control_run_wdk import RunFakeAPI, patch_control_run
-from veupathdb.wdk import (
-    WDKAnswer,
-    WDKAnswerMeta,
-    WDKFilterValue,
-    WDKRecordInstance,
-    WDKSearchConfig,
-    WDKStep,
+from tests._support.control_run_wdk import (
+    RunFakeAPI,
+    StepRunFakeAPI,
+    gene_records,
+    patch_control_run,
+    patch_step_run,
 )
 
 from veupathdb_mcp.controls import (
@@ -21,54 +19,15 @@ from veupathdb_mcp.controls import (
 )
 from veupathdb_mcp.tool_payloads import ControlOutcome
 
-RUNNER = "veupathdb_mcp.controls.control_tests"
 POSITIVES = [f"PF3D7_01{i:05d}" for i in range(25)]
 NEGATIVES = [f"PF3D7_02{i:05d}" for i in range(30)]
 OTHER_GENES = [f"PF3D7_03{i:05d}" for i in range(100)]
 STEP_GENES = POSITIVES[:23] + OTHER_GENES + NEGATIVES[:4]
 
 
-class _PagedStepAPI:
-    """A gene step that answers each page of its records by offset."""
-
-    def __init__(self, gene_ids: list[str]) -> None:
-        self._gene_ids = gene_ids
-        self.pages: list[tuple[int, int]] = []
-
-    async def find_step(self, step_id: int) -> WDKStep:
-        return WDKStep(
-            id=step_id,
-            search_name="GenesByMolecularWeight",
-            search_config=WDKSearchConfig(),
-            record_class_name="gene",
-        )
-
-    async def get_step_answer(
-        self,
-        step_id: int,
-        attributes: list[str] | None = None,
-        pagination: dict[str, int] | None = None,
-        *,
-        view_filters: list[WDKFilterValue] | None = None,
-    ) -> WDKAnswer:
-        del step_id, attributes, view_filters
-        page = pagination or {}
-        offset, size = page["offset"], page["numRecords"]
-        self.pages.append((offset, size))
-        rows = self._gene_ids[offset : offset + size]
-        return WDKAnswer(
-            meta=WDKAnswerMeta(
-                total_count=len(self._gene_ids), response_count=len(rows)
-            ),
-            records=[WDKRecordInstance(display_name=gene_id) for gene_id in rows],
-        )
-
-
 @pytest.fixture
-def step_api(monkeypatch: pytest.MonkeyPatch) -> _PagedStepAPI:
-    api = _PagedStepAPI(STEP_GENES)
-    monkeypatch.setattr(f"{RUNNER}.get_strategy_api", lambda site_id: api)
-    return api
+def step_api(monkeypatch: pytest.MonkeyPatch) -> StepRunFakeAPI:
+    return patch_step_run(monkeypatch, StepRunFakeAPI(gene_records(*STEP_GENES)))
 
 
 async def _run_on_step() -> ControlOutcome:
@@ -82,7 +41,7 @@ async def _run_on_step() -> ControlOutcome:
 
 
 async def test_every_positive_is_filed_as_recovered_or_missed(
-    step_api: _PagedStepAPI,
+    step_api: StepRunFakeAPI,
 ) -> None:
     result = await run_step_control_tests(
         site_id="plasmodb", wdk_step_id=4242, positive_controls=POSITIVES
@@ -94,7 +53,7 @@ async def test_every_positive_is_filed_as_recovered_or_missed(
 
 
 async def test_every_negative_is_filed_as_admitted_or_excluded(
-    step_api: _PagedStepAPI,
+    step_api: StepRunFakeAPI,
 ) -> None:
     result = await run_step_control_tests(
         site_id="plasmodb", wdk_step_id=4242, negative_controls=NEGATIVES
@@ -106,7 +65,7 @@ async def test_every_negative_is_filed_as_admitted_or_excluded(
 
 
 async def test_the_counts_and_the_rates_are_read_from_the_lists(
-    step_api: _PagedStepAPI,
+    step_api: StepRunFakeAPI,
 ) -> None:
     outcome = await _run_on_step()
 
@@ -118,7 +77,7 @@ async def test_the_counts_and_the_rates_are_read_from_the_lists(
     assert outcome.negative_false_positive_rate == pytest.approx(4 / 30)
 
 
-async def test_the_dict_form_carries_every_id(step_api: _PagedStepAPI) -> None:
+async def test_the_dict_form_carries_every_id(step_api: StepRunFakeAPI) -> None:
     result = await run_step_control_tests(
         site_id="plasmodb",
         wdk_step_id=4242,
@@ -144,7 +103,7 @@ async def test_the_dict_form_carries_every_id(step_api: _PagedStepAPI) -> None:
     }
 
 
-async def test_the_flat_dict_form_carries_every_id(step_api: _PagedStepAPI) -> None:
+async def test_the_flat_dict_form_carries_every_id(step_api: StepRunFakeAPI) -> None:
     wire = (await _run_on_step()).model_dump(by_alias=True, mode="json")
 
     assert wire["positiveRecoveredIds"] == POSITIVES[:23]
@@ -156,21 +115,20 @@ async def test_the_flat_dict_form_carries_every_id(step_api: _PagedStepAPI) -> N
 
 
 async def test_the_flat_dict_form_reads_back_as_the_same_outcome(
-    step_api: _PagedStepAPI,
+    step_api: StepRunFakeAPI,
 ) -> None:
     outcome = await _run_on_step()
 
     assert ControlOutcome.model_validate(outcome.model_dump(by_alias=True)) == outcome
 
 
-async def test_a_step_past_one_page_is_read_to_its_last_record(
-    step_api: _PagedStepAPI, monkeypatch: pytest.MonkeyPatch
+async def test_a_step_is_read_only_through_the_controls(
+    step_api: StepRunFakeAPI,
 ) -> None:
-    monkeypatch.setattr(f"{RUNNER}._STEP_PAGE_RECORDS", 50)
-
     outcome = await _run_on_step()
 
-    assert step_api.pages == [(0, 50), (50, 50), (100, 50)]
+    assert step_api.datasets == [POSITIVES + NEGATIVES]
+    assert step_api.answer_calls == [step_api.trees[0].step_id]
     assert outcome.negative_admitted_ids == NEGATIVES[:4]
     assert outcome.positive_missed_ids == POSITIVES[23:]
 
