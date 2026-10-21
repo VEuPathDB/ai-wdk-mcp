@@ -1,8 +1,9 @@
 from pathlib import Path
 
 from scripts.record_audit_fixtures import ProteinRegion, Region
+from veupathdb.jbrowse import GenomeWindow
 
-from veupathdb_mcp.audit.codes import reverse_complement
+from veupathdb_mcp.audit.gene_ids import GeneId
 from veupathdb_mcp.audit.pseudogene import CdsPart, ReferenceGene
 from veupathdb_mcp.audit.served import PseudogeneInputs, SelenoproteinInputs
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
@@ -10,6 +11,7 @@ from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
 FIXTURES = Path(__file__).resolve().parents[1] / "unit/audit/fixtures"
 PIGA = "PF3D7_1032400"
 NF54_PIGA = "PfNF54_100037200"
+NF54_PIGA_ID = "PfNF54_100037200:pseudogene"
 GT1_SELK = "TGGT1_316600"
 ME49_SELK = "TGME49_316600"
 
@@ -47,7 +49,14 @@ async def piga_inputs(
     strain = load("pfalNF54_piga.json")
     return PseudogeneInputs(
         reference=reference_piga(),
-        strain_coding_dna=reverse_complement(strain.sequence),
+        strain_window=GenomeWindow(
+            seqid=strain.seqid, start=strain.start, sequence=strain.sequence
+        ),
+        strand="-",
+        gene_ids=[
+            GeneId(given=strain_gene, resolved=NF54_PIGA_ID),
+            GeneId(given=reference_gene, resolved=reference_gene),
+        ],
     )
 
 
@@ -60,4 +69,8 @@ async def selk_inputs(
         reference_protein=reference_protein("tgonME49_selk.json"),
         dna=gt1.sequence,
         strand="+",
+        gene_ids=[
+            GeneId(given=gene, resolved=gene),
+            GeneId(given=reference_gene, resolved=reference_gene),
+        ],
     )

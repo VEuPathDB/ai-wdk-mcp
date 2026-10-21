@@ -58,3 +58,7 @@ def row(
         pseudo=False,
         gene_type="protein coding gene",
     )
+
+
+def tight(count: int = 9, length: int = 400) -> list[GeneRow]:
+    return [row(f"G{i}", f"Plasmodium species{i} X", length) for i in range(count)]

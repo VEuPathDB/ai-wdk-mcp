@@ -12,6 +12,7 @@ from tests._support.audit_fixtures import (
     piga_inputs,
     selk_inputs,
 )
+from tests._support.audit_site import own_id
 from tests._support.proteins import PROTEIN, back_translate
 
 from veupathdb_mcp.audit.codes import GeneticCode
@@ -188,6 +189,7 @@ async def test_the_length_check_runs_off_the_event_loop(
     async def inputs(site_id: str, genes: list[str]) -> LengthInputs:
         return LengthInputs(
             screen=LengthScreen(
+                gene_ids=[own_id(gene) for gene in genes],
                 genes=genes,
                 length_class="SHORT",
                 ratio=0.7,

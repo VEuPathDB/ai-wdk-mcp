@@ -1,0 +1,926 @@
+[
+ {
+  "displayName": "<i>Toxoplasma gondii</i> ARI",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_1074872"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii ARI",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  81.6%[S:  81.6%,D:   0.0%],F:  15.0%,M:   3.5%,n:461",
+   "busco_genome": "C:  98.5%[S:  98.5%,D:   0.0%],F:   1.3%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> COUG",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_1074873"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii COUG",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  85.5%[S:  85.2%,D:   0.2%],F:  13.0%,M:   1.5%,n:461",
+   "busco_genome": "C:  99.3%[S:  99.3%,D:   0.0%],F:   0.7%,M:   0.0%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> GAB2-2007-GAL-DOM2",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_1130820"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii GAB2-2007-GAL-DOM2",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  88.5%[S:  88.5%,D:   0.0%],F:   9.8%,M:   1.7%,n:461",
+   "busco_genome": "C:  99.3%[S:  99.3%,D:   0.0%],F:   0.4%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> TgCatPRC2",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_1130821"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii TgCatPRC2",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  81.6%[S:  81.6%,D:   0.0%],F:  16.1%,M:   2.4%,n:461",
+   "busco_genome": "C:  98.9%[S:  98.9%,D:   0.0%],F:   1.1%,M:   0.0%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> CtCo5",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_1194599"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii CtCo5",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": null,
+   "busco_genome": "C:  82.2%[S:  82.2%,D:   0.0%],F:  14.3%,M:   3.5%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> RH-88",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_1208370"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii RH-88",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C: 100.0%[S: 100.0%,D:   0.0%],F:   0.0%,M:   0.0%,n:461",
+   "busco_genome": "C:  99.3%[S:  99.3%,D:   0.0%],F:   0.4%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria tenella</i> strain Houghton",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_413949"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria tenella strain Houghton",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  83.9%[S:  83.3%,D:   0.7%],F:  11.1%,M:   5.0%,n:461",
+   "busco_genome": "C:  85.9%[S:  85.7%,D:   0.2%],F:  11.7%,M:   2.4%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> VEG",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_432359"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii VEG",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  99.1%[S:  98.9%,D:   0.2%],F:   0.7%,M:   0.2%,n:461",
+   "busco_genome": "C:  99.3%[S:  99.3%,D:   0.0%],F:   0.4%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> GT1",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_507601"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii GT1",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  99.1%[S:  99.1%,D:   0.0%],F:   0.7%,M:   0.2%,n:461",
+   "busco_genome": "C:  99.3%[S:  99.3%,D:   0.0%],F:   0.4%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> ME49",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_508771"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii ME49",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C: 100.0%[S:  99.1%,D:   0.9%],F:   0.0%,M:   0.0%,n:461",
+   "busco_genome": "C:  99.6%[S:  99.6%,D:   0.0%],F:   0.4%,M:   0.0%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Neospora caninum</i> Liverpool",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_572307"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Neospora caninum Liverpool",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  96.7%[S:  96.7%,D:   0.0%],F:   3.0%,M:   0.2%,n:461",
+   "busco_genome": "C:  98.7%[S:  98.7%,D:   0.0%],F:   1.1%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> VAND",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_933077"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii VAND",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  85.0%[S:  84.8%,D:   0.2%],F:  12.6%,M:   2.4%,n:461",
+   "busco_genome": "C:  99.1%[S:  99.1%,D:   0.0%],F:   0.9%,M:   0.0%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> RUB",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_935652"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii RUB",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  82.6%[S:  82.4%,D:   0.2%],F:  13.4%,M:   3.9%,n:461",
+   "busco_genome": "C:  98.7%[S:  98.7%,D:   0.0%],F:   1.1%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> MAS",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_943118"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii MAS",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  78.3%[S:  78.1%,D:   0.2%],F:  17.6%,M:   4.1%,n:461",
+   "busco_genome": "C:  98.3%[S:  98.3%,D:   0.0%],F:   1.5%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> p89",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_943119"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii p89",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  81.6%[S:  81.6%,D:   0.0%],F:  15.6%,M:   2.8%,n:461",
+   "busco_genome": "C:  98.5%[S:  98.5%,D:   0.0%],F:   1.3%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> TgCATBr9",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_943120"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii TgCATBr9",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  77.9%[S:  77.7%,D:   0.2%],F:  15.4%,M:   6.7%,n:461",
+   "busco_genome": "C:  97.2%[S:  97.2%,D:   0.0%],F:   2.4%,M:   0.4%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> TgCATBr5",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_943121"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii TgCATBr5",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": null,
+   "busco_genome": "C:  76.6%[S:  76.6%,D:   0.0%],F:  17.6%,M:   5.9%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> CAST",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_943122"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii CAST",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  85.7%[S:  85.7%,D:   0.0%],F:  10.8%,M:   3.5%,n:461",
+   "busco_genome": "C:  99.3%[S:  99.3%,D:   0.0%],F:   0.4%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> FOU",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_943167"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii FOU",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  78.1%[S:  78.1%,D:   0.0%],F:  15.4%,M:   6.5%,n:461",
+   "busco_genome": "C:  97.0%[S:  97.0%,D:   0.0%],F:   2.4%,M:   0.7%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Besnoitia besnoiti</i> strain Bb-Ger1",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_bbesBbGer1"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Besnoitia besnoiti strain Bb-Ger1",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  99.6%[S:  99.6%,D:   0.0%],F:   0.4%,M:   0.0%,n:461",
+   "busco_genome": "C:  99.6%[S:  99.6%,D:   0.0%],F:   0.4%,M:   0.0%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Cyclospora cayetanensis</i> strain CHN_HEN01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_ccayCHN_HEN01"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Cyclospora cayetanensis strain CHN_HEN01",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  77.0%[S:  76.8%,D:   0.2%],F:  15.4%,M:   7.6%,n:461",
+   "busco_genome": "C:  93.5%[S:  93.5%,D:   0.0%],F:   5.9%,M:   0.7%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Cyclospora cayetanensis</i> isolate NF1_C8",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_ccayNF1_C8"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Cyclospora cayetanensis isolate NF1_C8",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  94.8%[S:  94.8%,D:   0.0%],F:   3.5%,M:   1.7%,n:461",
+   "busco_genome": "C:  98.0%[S:  98.0%,D:   0.0%],F:   1.5%,M:   0.4%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Cystoisospora suis</i> strain Wien I",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_csuiWienI"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Cystoisospora suis strain Wien I",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  78.7%[S:  78.5%,D:   0.2%],F:  14.8%,M:   6.5%,n:461",
+   "busco_genome": "C:  83.9%[S:  83.7%,D:   0.2%],F:  13.0%,M:   3.0%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria acervulina</i> Houghton",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_eaceHoughton"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria acervulina Houghton",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  89.4%[S:  89.2%,D:   0.2%],F:   9.1%,M:   1.5%,n:461",
+   "busco_genome": "C:  95.4%[S:  95.4%,D:   0.0%],F:   4.3%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria brunetti</i> Houghton",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_ebruHoughton"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria brunetti Houghton",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  75.9%[S:  75.9%,D:   0.0%],F:  15.8%,M:   8.2%,n:461",
+   "busco_genome": "C:  92.6%[S:  92.6%,D:   0.0%],F:   6.7%,M:   0.7%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria falciformis</i> Bayer Haberkorn 1970",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_efalBayerHaberkorn1970"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria falciformis Bayer Haberkorn 1970",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  78.7%[S:  72.9%,D:   5.9%],F:  11.3%,M:  10.0%,n:461",
+   "busco_genome": "C:  96.1%[S:  95.7%,D:   0.4%],F:   3.0%,M:   0.9%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria flavescens</i> A23",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_eflaA23"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria flavescens A23",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  89.6%[S:  89.6%,D:   0.0%],F:   6.3%,M:   4.1%,n:461",
+   "busco_genome": "C:  97.4%[S:  97.4%,D:   0.0%],F:   2.4%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria intestinalis</i> P0_A24",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_eintP0_A24"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria intestinalis P0_A24",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  51.8%[S:  51.6%,D:   0.2%],F:  21.0%,M:  27.1%,n:461",
+   "busco_genome": "C:  94.6%[S:  94.4%,D:   0.2%],F:   4.8%,M:   0.7%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria magna</i> A19",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_emagA19"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria magna A19",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  58.8%[S:  58.1%,D:   0.7%],F:  17.4%,M:  23.9%,n:461",
+   "busco_genome": "C:  97.4%[S:  97.4%,D:   0.0%],F:   2.4%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria maxima</i> Weybridge",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_emaxWeybridge"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria maxima Weybridge",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  69.8%[S:  69.8%,D:   0.0%],F:  15.0%,M:  15.2%,n:461",
+   "busco_genome": "C:  87.4%[S:  87.4%,D:   0.0%],F:  10.4%,M:   2.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria media</i> PL19_A22",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_emedPL19_A22"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria media PL19_A22",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  67.9%[S:  67.2%,D:   0.7%],F:  14.8%,M:  17.4%,n:461",
+   "busco_genome": "C:  98.0%[S:  97.8%,D:   0.2%],F:   1.5%,M:   0.4%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria mitis</i> Houghton",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_emitHoughton"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria mitis Houghton",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  57.0%[S:  56.4%,D:   0.7%],F:  22.3%,M:  20.6%,n:461",
+   "busco_genome": "C:  75.1%[S:  74.2%,D:   0.9%],F:  20.8%,M:   4.1%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria necatrix</i> Houghton",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_enecHoughton"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria necatrix Houghton",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  85.9%[S:  85.7%,D:   0.2%],F:  11.3%,M:   2.8%,n:461",
+   "busco_genome": "C:  92.2%[S:  92.2%,D:   0.0%],F:   6.3%,M:   1.5%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria praecox</i> Houghton",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_epraHoughton"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria praecox Houghton",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  53.8%[S:  53.8%,D:   0.0%],F:  18.2%,M:  28.0%,n:461",
+   "busco_genome": "C:  76.1%[S:  76.1%,D:   0.0%],F:  17.8%,M:   6.1%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria stiedai</i> A26",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_estiA26"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria stiedai A26",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  91.5%[S:  91.3%,D:   0.2%],F:   4.8%,M:   3.7%,n:461",
+   "busco_genome": "C:  97.4%[S:  97.2%,D:   0.2%],F:   2.0%,M:   0.7%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Eimeria tenella</i> Houghton 2021",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_etenHoughton2021"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Eimeria tenella Houghton 2021",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  98.7%[S:  98.3%,D:   0.4%],F:   0.7%,M:   0.7%,n:461",
+   "busco_genome": "C:  98.7%[S:  98.3%,D:   0.4%],F:   0.7%,M:   0.7%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Hammondia hammondi</i> strain H.H.34",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_hhamHH34"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Hammondia hammondi strain H.H.34",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  99.6%[S:  99.6%,D:   0.0%],F:   0.2%,M:   0.2%,n:461",
+   "busco_genome": "C:  99.6%[S:  99.6%,D:   0.0%],F:   0.4%,M:   0.0%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Neospora caninum</i> Liverpool 2019",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_ncanLiverpool2019"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Neospora caninum Liverpool 2019",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  98.0%[S:  97.8%,D:   0.2%],F:   1.5%,M:   0.4%,n:461",
+   "busco_genome": "C:  98.9%[S:  98.7%,D:   0.2%],F:   1.1%,M:   0.0%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Sarcocystis neurona</i> SN3",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_sneuSN3"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Sarcocystis neurona SN3",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  81.6%[S:  80.9%,D:   0.7%],F:   6.5%,M:  11.9%,n:461",
+   "busco_genome": "C:  93.5%[S:  92.8%,D:   0.7%],F:   4.1%,M:   2.4%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Sarcocystis neurona</i> SO SN1",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_sneuSOSN1"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Sarcocystis neurona SO SN1",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": "C:  63.8%[S:  63.6%,D:   0.2%],F:  19.3%,M:  16.9%,n:461",
+   "busco_genome": "C:  83.1%[S:  83.1%,D:   0.0%],F:  10.6%,M:   6.3%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> strain ME49xCTG F1 S27",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_tgonME49xCTG"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii strain ME49xCTG F1 S27",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": null,
+   "busco_genome": "C:  99.6%[S:  99.6%,D:   0.0%],F:   0.2%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Toxoplasma gondii</i> RH 2016",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_tgonRH2016"
+   },
+   {
+    "name": "project_id",
+    "value": "ToxoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Toxoplasma gondii RH 2016",
+   "busco_lineage_dataset": "coccidia_odb12",
+   "busco_protein": null,
+   "busco_genome": "C:  98.9%[S:  98.5%,D:   0.4%],F:   0.9%,M:   0.2%,n:461"
+  },
+  "tables": {},
+  "tableErrors": []
+ }
+]

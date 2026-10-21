@@ -5,10 +5,12 @@ from __future__ import annotations
 import asyncio
 import weakref
 from collections.abc import Awaitable, Callable
+from enum import StrEnum
 
 import httpx
 from fastmcp.exceptions import ToolError
 from veupathdb.errors import VEuPathDBError
+from veupathdb.jbrowse import JBrowseError
 
 from veupathdb_mcp.audit import (
     GeneLengthAudit,
@@ -33,30 +35,47 @@ _SLOTS: weakref.WeakKeyDictionary[asyncio.AbstractEventLoop, asyncio.Semaphore] 
 )
 
 
-def _slots() -> asyncio.Semaphore:
+def audit_slots() -> asyncio.Semaphore:
     return _SLOTS.setdefault(
         asyncio.get_running_loop(), asyncio.Semaphore(_CHECKS_AT_ONCE)
     )
 
 
-async def _in_a_slot[**P, T](
+async def run_in_a_slot[**P, T](
     check: Callable[P, T], *args: P.args, **kwargs: P.kwargs
 ) -> T:
-    slots = _slots()
+    slots = audit_slots()
     await slots.acquire()
     work = asyncio.ensure_future(asyncio.to_thread(check, *args, **kwargs))
     work.add_done_callback(lambda _: slots.release())
     return await asyncio.shield(work)
 
 
-async def _read[T](site_id: str, inputs: Awaitable[T | ToolErrorPayload]) -> T:
+def site_failure(
+    site_id: str, exc: VEuPathDBError[StrEnum] | httpx.HTTPError, reads: str
+) -> str:
+    match exc:
+        case JBrowseError(upstream_status=status):
+            return f"{site_id} answered {status} to the {reads}: {exc.detail}"
+        case VEuPathDBError(__cause__=httpx.HTTPStatusError(response=response)):
+            return f"{site_id} answered {response.status_code} to the {reads}: {exc.detail}"
+        case VEuPathDBError(__cause__=httpx.HTTPError() as cause):
+            return (
+                f"{site_id} did not answer the {reads}: {type(cause).__name__} {cause}"
+            )
+        case VEuPathDBError():
+            return exc.detail or exc.title
+        case httpx.HTTPStatusError(response=response):
+            return f"{site_id} answered {response.status_code} to the {reads}: {exc}"
+        case _:
+            return f"{site_id} did not answer the {reads}: {type(exc).__name__} {exc}"
+
+
+async def read_inputs[T](site_id: str, inputs: Awaitable[T | ToolErrorPayload]) -> T:
     try:
         return payload_or_error(await inputs)
-    except VEuPathDBError as exc:
-        raise ToolError(exc.detail or exc.title) from exc
-    except httpx.HTTPError as exc:
-        msg = f"{site_id} did not answer the audit reads: {type(exc).__name__} {exc}"
-        raise ToolError(msg) from exc
+    except (VEuPathDBError, httpx.HTTPError) as exc:
+        raise ToolError(site_failure(site_id, exc, "audit reads")) from exc
 
 
 async def audit_pseudogene_call(
@@ -66,26 +85,35 @@ async def audit_pseudogene_call(
 ) -> PseudogeneCallAudit:
     """Check whether a strain gene called a pseudogene is an intact coding sequence.
 
-    The strain's genome around the gene is aligned to the reference gene's
-    coding sequence and translated. INTACT means one open frame from start to
-    stop; the other verdicts name what breaks it.
+    The strain gene must be one the site flags as a pseudogene (is_pseudo
+    Yes); any other gene is refused. The strain's genome around the gene is
+    aligned to the reference gene's coding sequence and translated. INTACT
+    means one open frame from start to stop; the other verdicts name what
+    breaks it. The check translates with the standard genetic code; it does
+    not infer the gene's code, so a gene of a clade that reads TGA or CTG
+    otherwise can read a stop or a substitution here.
+    geneIds pairs each id given with the site's own gene id it names (the
+    same id, an alias, a transcript id, or the one gene whose own id is the
+    id with a ":" qualifier added); every other gene field holds that id.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
         strain_gene: The gene the strain annotates as a pseudogene.
         reference_gene: The coding gene of the reference strain it is read against.
     """
-    inputs = await _read(
+    inputs = await read_inputs(
         site_id, pseudogene_inputs(site_id, strain_gene, reference_gene)
     )
-    check = await _in_a_slot(
+    check = await run_in_a_slot(
         check_pseudogene_call, inputs.reference, inputs.strain_coding_dna, _CODE
     )
+    strain, reference = inputs.gene_ids
     return PseudogeneCallAudit.model_validate(
         {
             **check.model_dump(),
-            "strain_gene": strain_gene,
-            "reference_gene": reference_gene,
+            "gene_ids": inputs.gene_ids,
+            "strain_gene": strain.resolved,
+            "reference_gene": reference.resolved,
         }
     )
 
@@ -97,17 +125,32 @@ async def audit_selenoprotein_end(
 ) -> SelenoproteinEndAudit:
     """Check whether a gene model ends at the TGA that encodes its selenocysteine.
 
-    STOPS_AT_SEC means the model stops at a TGA and the genome after it
-    encodes the reference protein's tail. CONTAINS_SEC means the model
-    already holds the selenocysteine.
+    The model protein is aligned to the reference protein: secAligned is
+    true when the model's last residue, read along the last stretch of
+    identical residues that ends at most 3 residues before it, falls on the
+    residue just before the reference's first selenocysteine (U). tailIdentity is the share of
+    the reference tail after that U (to its stop) that the genome after the
+    model end encodes, residue by residue, up to the first stop the genome
+    reads there. STOPS_AT_SEC means secAligned is true, the model stops at a
+    TGA and tailIdentity is 0.8 or more, so the tail may differ across
+    species. NOT_AT_SEC means the model end was found in the genome but not
+    so; MODEL_NOT_FOUND means it was not found. CONTAINS_SEC means the model
+    already holds the selenocysteine, and then nothing is aligned or compared.
+    The check translates with the standard genetic code; it does not infer
+    the gene's code.
+    geneIds pairs each id given with the site's own gene id it names (the
+    same id, an alias, a transcript id, or the one gene whose own id is the
+    id with a ":" qualifier added); every other gene field holds that id.
 
     Args:
         site_id: VEuPathDB site, for example 'toxodb'.
         gene: The gene whose model is checked.
         reference_gene: A gene whose protein holds the selenocysteine.
     """
-    inputs = await _read(site_id, selenoprotein_inputs(site_id, gene, reference_gene))
-    check = await _in_a_slot(
+    inputs = await read_inputs(
+        site_id, selenoprotein_inputs(site_id, gene, reference_gene)
+    )
+    check = await run_in_a_slot(
         check_sec_stop,
         inputs.model_protein,
         inputs.reference_protein,
@@ -115,18 +158,24 @@ async def audit_selenoprotein_end(
         inputs.strand,
         _CODE,
     )
+    named, reference = inputs.gene_ids
     return SelenoproteinEndAudit.model_validate(
-        {**check.model_dump(), "gene": gene, "reference_gene": reference_gene}
+        {
+            **check.model_dump(),
+            "gene_ids": inputs.gene_ids,
+            "gene": named.resolved,
+            "reference_gene": reference.resolved,
+        }
     )
 
 
 async def _length_audit(site_id: str, genes: list[str]) -> GeneLengthAudit:
-    inputs = await _read(site_id, length_inputs(site_id, genes))
+    inputs = await read_inputs(site_id, length_inputs(site_id, genes))
     dna = inputs.dna
     if dna is None:
         check = LengthCheck.not_checked()
     else:
-        check = await _in_a_slot(
+        check = await run_in_a_slot(
             check_length,
             dna.reference_protein,
             dna.model_proteins,
@@ -163,6 +212,9 @@ async def audit_gene_length(site_id: str, gene: str) -> GeneLengthAudit:
     Every other class answers NOT_CHECKED with no genome read, and then
     nsInWindow and atContigEdge are null; organisms, groupMedian,
     groupCopies and groupSpread show what the group holds.
+    geneIds pairs each id given with the site's own gene id it names (the
+    same id, an alias, a transcript id, or the one gene whose own id is the
+    id with a ":" qualifier added); every other gene field holds that id.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
@@ -174,9 +226,10 @@ async def audit_gene_length(site_id: str, gene: str) -> GeneLengthAudit:
 async def audit_gene_split(site_id: str, gene_a: str, gene_b: str) -> GeneLengthAudit:
     """Check whether two neighbouring gene models are one gene split in two.
 
-    Both genes must be coding members of gene_a's ortholog group, next to
-    each other in position among their organism's members, on one strand of
-    one sequence and at most 20,000 bases apart. The pair is a SPLIT when
+    Both genes must be coding members of gene_a's ortholog group, and the
+    only two coding members of it in their organism, on one strand of one
+    sequence and at most 20,000 bases apart; three or more coding members in
+    the organism make the pair UNQUALIFIED. The pair is a SPLIT when
     each protein is under 0.85 of its genus median and the two sum to 0.8
     to 1.35 of it. The genome region of a SPLIT pair is then read for the
     protein of the closest single-copy ortholog: SPLIT_CONFIRMED means each
@@ -184,6 +237,9 @@ async def audit_gene_split(site_id: str, gene_a: str, gene_b: str) -> GeneLength
     them; SPLIT_UNCLEAR means they do not. A pair that is not a SPLIT, or
     that the group cannot judge (UNQUALIFIED), answers NOT_CHECKED and reads
     no genome.
+    geneIds pairs each id given with the site's own gene id it names (the
+    same id, an alias, a transcript id, or the one gene whose own id is the
+    id with a ":" qualifier added); every other gene field holds that id.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.

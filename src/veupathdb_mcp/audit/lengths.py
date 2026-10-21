@@ -3,7 +3,6 @@ member it is read against."""
 
 from __future__ import annotations
 
-import itertools
 import statistics
 from collections import defaultdict
 from typing import Literal
@@ -13,6 +12,7 @@ from pydantic import BaseModel, ConfigDict
 from veupathdb_mcp.audit.genes import GeneRow
 
 type LengthClass = Literal["SHORT", "LONG", "TYPICAL", "SPLIT", "UNQUALIFIED"]
+type RelativeTier = Literal["SAME_GENUS", "OTHER_GENERA"]
 
 MIN_ORGANISMS = 8
 MAX_SPREAD = 0.3
@@ -24,6 +24,7 @@ MIN_RELATIVES = 2
 MIN_MEDIAN = 80
 RELATIVE_SHORT_SHARE = 0.85
 RELATIVE_LONG_SHARE = 1.15
+ORTHOLOGY_GROUP = "OG"
 RESIDUAL_GROUP = "OGR"
 
 
@@ -35,9 +36,20 @@ def genus_of(organism: str) -> str:
     return organism.split(maxsplit=1)[0]
 
 
+def is_residual_group(group: str) -> bool:
+    return group.startswith(RESIDUAL_GROUP)
+
+
+def is_orthology_group(group: str) -> bool:
+    return group.startswith(ORTHOLOGY_GROUP) and not is_residual_group(group)
+
+
+def is_coding(row: GeneRow) -> bool:
+    return not row.pseudo and "protein" in row.gene_type
+
+
 def _coding_length(row: GeneRow) -> int | None:
-    coding = not row.pseudo and "protein" in row.gene_type
-    return row.protein_length if coding and row.protein_length else None
+    return row.protein_length if is_coding(row) and row.protein_length else None
 
 
 def _members(rows: list[GeneRow]) -> dict[str, dict[str, int]]:
@@ -132,15 +144,10 @@ def _lengths(parts: list[GeneRow]) -> list[int] | None:
 
 
 def _placed(parts: list[GeneRow], rows: list[GeneRow]) -> bool:
-    own = sorted(
-        (r for r in rows if r.organism == parts[0].organism and _coding_length(r)),
-        key=lambda r: (r.sequence_id, r.start, r.gene),
-    )
-    genes = [r.gene for r in own]
-    if len(parts) == 1:
-        return genes == [parts[0].gene]
-    first, second = parts[0].gene, parts[1].gene
-    return any({a, b} == {first, second} for a, b in itertools.pairwise(genes))
+    own = [
+        r.gene for r in rows if r.organism == parts[0].organism and _coding_length(r)
+    ]
+    return sorted(own) == sorted(part.gene for part in parts)
 
 
 def _single_class(length: int, expected: _Expectation) -> LengthClass:
@@ -167,7 +174,7 @@ def _split_class(lengths: list[int], expected: _Expectation) -> LengthClass:
 def _judgeable(parts: list[GeneRow], rows: list[GeneRow]) -> bool:
     return (
         GroupProfile.of(rows).qualifies
-        and not parts[0].ortholog_group.startswith(RESIDUAL_GROUP)
+        and is_orthology_group(parts[0].ortholog_group)
         and _placed(parts, rows)
     )
 
@@ -239,17 +246,46 @@ def closest_reference(gene: GeneRow, rows: list[GeneRow]) -> GeneRow | None:
     )
 
 
-def relatives_median(reference: GeneRow, rows: list[GeneRow]) -> float | None:
-    tops = _longest(rows)
+class Relatives(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    tier: RelativeTier
+    lengths: dict[str, int]
+
+    @property
+    def median(self) -> float:
+        return statistics.median(self.lengths.values())
+
+
+def relatives_of(
+    reference: GeneRow, model: GeneRow, rows: list[GeneRow]
+) -> Relatives | None:
+    left_out = {reference.organism, model.organism}
+    tops = {
+        organism: n
+        for organism, n in _longest(rows).items()
+        if organism not in left_out
+    }
     genus = genus_of(reference.organism)
     species = species_of(reference.organism)
-    same_genus = [
-        n
-        for organism, n in tops.items()
-        if genus_of(organism) == genus and species_of(organism) != species
-    ]
-    other_genera = [n for organism, n in tops.items() if genus_of(organism) != genus]
-    for relatives in (same_genus, other_genera):
-        if len(relatives) >= MIN_RELATIVES:
-            return statistics.median(relatives)
+    tiers: dict[RelativeTier, dict[str, int]] = {
+        "SAME_GENUS": {
+            organism: n
+            for organism, n in tops.items()
+            if genus_of(organism) == genus and species_of(organism) != species
+        },
+        "OTHER_GENERA": {
+            organism: n for organism, n in tops.items() if genus_of(organism) != genus
+        },
+    }
+    for tier, lengths in tiers.items():
+        if len(lengths) >= MIN_RELATIVES:
+            return Relatives(tier=tier, lengths=lengths)
     return None
+
+
+def relatives_median(
+    reference: GeneRow, model: GeneRow, rows: list[GeneRow]
+) -> float | None:
+    found = relatives_of(reference, model, rows)
+    return None if found is None else found.median

@@ -1,0 +1,1899 @@
+{
+ "case": {
+  "file": "missing_tgonGT1_nac.json",
+  "site": "toxodb",
+  "example_gene": "TGARI_257090",
+  "absent_organism": "Toxoplasma gondii GT1"
+ },
+ "calls": [
+  {
+   "kind": "dataset",
+   "ids": [
+    "TGARI_257090"
+   ],
+   "dataset": 202394000
+  },
+  {
+   "kind": "search",
+   "record_type": "transcript",
+   "search_name": "GeneByLocusTag",
+   "parameters": {
+    "ds_gene_ids": "202394000"
+   },
+   "report": {
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type",
+     "input_id"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 8
+    }
+   },
+   "records": [
+    {
+     "displayName": "TGARI_257090",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257090"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257090-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0003979",
+      "protein_length": "359",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "829583",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "NAC domain-containing protein",
+      "gene_end_max": "830662",
+      "strand_plus_minus": "-",
+      "input_id": "TGARI_257090"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ],
+   "served_total": 1,
+   "kept": null
+  },
+  {
+   "kind": "dataset",
+   "ids": [
+    "TGARI_257090"
+   ],
+   "dataset": 202394000
+  },
+  {
+   "kind": "search",
+   "record_type": "transcript",
+   "search_name": "GeneByLocusTag",
+   "parameters": {
+    "ds_gene_ids": "202394000"
+   },
+   "report": {
+    "attributes": [
+     "protein_sequence"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 8
+    }
+   },
+   "records": [
+    {
+     "displayName": "TGARI_257090",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257090"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257090-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "protein_sequence": "MGSPSPLSPPTVSPHFVSPEIGRRPGFCAFTDLLRTLTGVSNWRTLSNARRRIFSPVLSTLFTTHSFREVFEEGSFSSFSPRVAAVCLGVKAVASVQRRPVVQSASLRFLQPVLSRITTALFKGTRHTAGSAVARFAPQTFRVFLVLEFLWWGAGGSRARAPCENGSQKMEEELTPEILAARAKLRERFGQASQQLGGKGTARRKTKKAHKSVVVDDKKLQLTLKRLGVSTIYGIEEVLMIQDNGKALQFLTPKVQAAPAANTYVVSGHYEERPNMFPGGLPGMFSQRGAGAGGMNFDTSLITPEMLRQLQQHMSALKTGAGGAEGAAAGEGAETGDASKKGDDDVPELVQNFEDVSEQ"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ],
+   "served_total": 1,
+   "kept": null
+  },
+  {
+   "kind": "search",
+   "record_type": "transcript",
+   "search_name": "GenesByTaxon",
+   "parameters": {
+    "organism": "[\"Toxoplasma gondii GT1\"]"
+   },
+   "report": {
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 400000
+    }
+   },
+   "records": [
+    {
+     "displayName": "TGGT1_200295",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_200295"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_200295-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "313",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "6757771",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIII",
+      "is_pseudo": "No",
+      "gene_product": "GAF domain | domain-containing protein",
+      "gene_end_max": "6761695",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_200300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_200300"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_200300-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "218",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "6762422",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIII",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "6764853",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_201260",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_201260"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_201260-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000408",
+      "protein_length": "693",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "3829167",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIa",
+      "is_pseudo": "No",
+      "gene_product": "sugar transporter ST3",
+      "gene_end_max": "3834859",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_202540",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_202540"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_202540-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1670",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "3136489",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIa",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "3147196",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_214320",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_214320"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_214320-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000408",
+      "protein_length": "568",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "6138702",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrX",
+      "is_pseudo": "No",
+      "gene_product": "facilitative glucose transporter GT1",
+      "gene_end_max": "6140408",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_220420",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_220420"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_220420-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1040",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "259068",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrV",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "269900",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_224840",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_224840"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_224840-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1324",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "2697726",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrX",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "2709949",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_226755",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_226755"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_226755-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "3476",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "1280069",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrX",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "1293657",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_228500",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_228500"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_228500-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "311",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "196978",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrX",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "199951",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_228510",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_228510"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_228510-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "959",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "188728",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrX",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "195365",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_229405",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_229405"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_229405-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1037",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "228092",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIII",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "241426",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_233040",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_233040"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_233040-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1731",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "2353743",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIII",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "2371272",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_233065",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_233065"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_233065-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "829",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "2378978",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIII",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "2389709",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_241880",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_241880"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_241880-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1281",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "1724772",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVI",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "1737127",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_257030",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_257030"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_257030-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0009580",
+      "protein_length": "510",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "4204334",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "Histone PARylation factor 1 | domain-containing protein",
+      "gene_end_max": "4207518",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_257040",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_257040"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_257040-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0001746",
+      "protein_length": "217",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "4200936",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "TB2/DP1, HVA22 family protein",
+      "gene_end_max": "4202881",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_257050",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_257050"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_257050-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0006228",
+      "protein_length": "969",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "4188575",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "3-methyl-2-oxobutanoate hydroxymethyltransferase",
+      "gene_end_max": "4198391",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_257060",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_257060"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_257060-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005485",
+      "protein_length": "282",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "4182663",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "translation initiation factor sui1 protein",
+      "gene_end_max": "4185551",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_257070",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_257070"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_257070-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0034394",
+      "protein_length": "484",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "4176004",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "4180213",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_257080",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_257080"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_257080-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1656",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "4162664",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "4173163",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_257100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_257100"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_257100-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0169913",
+      "protein_length": "564",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "4153116",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "4154810",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_257110",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_257110"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_257110-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005539",
+      "protein_length": "526",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "4149291",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "Peptidase M76 family | domain-containing protein",
+      "gene_end_max": "4151532",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_257120",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_257120"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_257120-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000408",
+      "protein_length": "601",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "4138584",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "sugar transporter ST1",
+      "gene_end_max": "4145407",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_257130",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_257130"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_257130-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0037186",
+      "protein_length": "822",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "4132403",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "zinc finger (CCCH type) motif-containing protein",
+      "gene_end_max": "4136059",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_257150",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_257150"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_257150-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0004195",
+      "protein_length": "499",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "4123567",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "NOT2 / NOT3 / NOT5 family protein",
+      "gene_end_max": "4127399",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_258508",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_258508"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_258508-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "609",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "3341296",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "3346172",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_258512",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_258512"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_258512-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "381",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "3339119",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIb",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "3340906",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_266920",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_266920"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_266920-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1065",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "734519",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrIX",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "741861",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_272500",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_272500"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_272500-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000408",
+      "protein_length": "689",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "3928572",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIII",
+      "is_pseudo": "No",
+      "gene_product": "sugar transporter ST2",
+      "gene_end_max": "3933833",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_272650",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_272650"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_272650-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1294",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "3812437",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIII",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "3818063",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_280410",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_280410"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_280410-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1085",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "411701",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIIa",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "421290",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_293000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_293000"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_293000-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "2238",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "58977",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrIa",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "74026",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_310520",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_310520"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_310520-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1579",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "1357489",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrXI",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "1371525",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_318675",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_318675"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_318675-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1123",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "1095403",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrIV",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "1105205",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_462970",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_462970"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_462970-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "70",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "6756304",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrVIII",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "6757543",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ],
+   "served_total": 8637,
+   "kept": "records in the kept example genes' groups or the window"
+  },
+  {
+   "kind": "search",
+   "record_type": "transcript",
+   "search_name": "GenesByTaxon",
+   "parameters": {
+    "organism": "[\"Toxoplasma gondii ARI\"]"
+   },
+   "report": {
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 400000
+    }
+   },
+   "records": [
+    {
+     "displayName": "TGARI_257030",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257030"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257030-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0009580",
+      "protein_length": "510",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "779898",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "putative C4orf27-like protein",
+      "gene_end_max": "783079",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_257040",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257040"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257040-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0001746",
+      "protein_length": "217",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "784516",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "TB2/DP1, HVA22 family protein",
+      "gene_end_max": "786460",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_257050",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257050"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257050-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0006228",
+      "protein_length": "969",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "789005",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "3-methyl-2-oxobutanoate hydroxymethyltransferase",
+      "gene_end_max": "798814",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_257060",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257060"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257060-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005485",
+      "protein_length": "282",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "801838",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "translation initiation factor sui1 protein",
+      "gene_end_max": "804718",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_257070",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257070"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257070-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0034394",
+      "protein_length": "484",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "807168",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "putative major ampullate spidroin 2",
+      "gene_end_max": "811346",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_257080",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257080"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257080-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000543",
+      "protein_length": "1656",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "814185",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "3'5'-cyclic nucleotide phosphodiesterase domain-containing protein",
+      "gene_end_max": "824683",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_257090",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257090"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257090-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0003979",
+      "protein_length": "359",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "829583",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "NAC domain-containing protein",
+      "gene_end_max": "830662",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_257100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257100"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257100-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0169913",
+      "protein_length": "564",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "832529",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "putative transcription factor btf3",
+      "gene_end_max": "834223",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_257110",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257110"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257110-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005539",
+      "protein_length": "618",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "835528",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M76 family protein",
+      "gene_end_max": "838045",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_257120",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257120"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257120-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000408",
+      "protein_length": "601",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "841928",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "sugar transporter ST1",
+      "gene_end_max": "848748",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_257130",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257130"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257130-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0037186",
+      "protein_length": "822",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "851263",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "zinc finger (CCCH type) motif-containing protein",
+      "gene_end_max": "854919",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_369000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_369000"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_369000-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+      "protein_length": null,
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "857669",
+      "gene_type": "ncRNA gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "tRNA-Met",
+      "gene_end_max": "857741",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_257150",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_257150"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_257150-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0004195",
+      "protein_length": "499",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "860091",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ976331",
+      "is_pseudo": "No",
+      "gene_product": "NOT2 / NOT3 / NOT5 family protein",
+      "gene_end_max": "863927",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ],
+   "served_total": 10148,
+   "kept": "the example and the 6 genes on each side of it"
+  },
+  {
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "TGARI_257090"
+    },
+    {
+     "name": "project_id",
+     "value": "ToxoDB"
+    }
+   ],
+   "attributes": [
+    "organismAbbrev"
+   ],
+   "tables": [
+    "GeneModelDump"
+   ],
+   "record": {
+    "displayName": "TGARI_257090",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "TGARI_257090"
+     },
+     {
+      "name": "project_id",
+      "value": "ToxoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {
+     "organismAbbrev": "tgonARI"
+    },
+    "tables": {
+     "GeneModelDump": [
+      {
+       "strand": "-",
+       "sequence_id": "KQ976331",
+       "source_id": "TGARI_257090",
+       "transcript_ids": "TGARI_257090-t30_1",
+       "type": "CDS",
+       "gm_end": "830662",
+       "gm_start": "829583"
+      },
+      {
+       "strand": "-",
+       "sequence_id": "KQ976331",
+       "source_id": "TGARI_257090",
+       "type": "Exon",
+       "transcript_ids": "TGARI_257090-t30_1",
+       "gm_end": "830662",
+       "gm_start": "829583"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "window",
+   "abbrev": "tgonARI",
+   "seqid": "KQ976331",
+   "start": 829583,
+   "end": 830662,
+   "served_start": 829583,
+   "sequence": "TCATTGCTCTGAAACATCCTCGAAGTTCTGCACAAGCTCGGGGACGTCATCATCTCCCTTCTTGCTGGCGTCGCCAGTCTCGGCGCCTTCGCCTGCGGCCGCTCCTTCAGCACCGCCCGCACCCGTCTTCAAGGCAGACATGTGCTGCTGCAGCTGGCGGAGCATCTCCGGAGTGATCAGGGAAGTGTCAAAGTTCATTCCCCCCGCTCCGGCGCCTCGCTGGGAGAACATGCCCGGAAGTCCGCCGGGAAACATATTCGGCCTCTCCTCGTAGTGGCCCGAAACGACGTAAGTGTTGGCCGCAGGGGCGGCTTGCACCTTGGGGGTAAGGAATTGAAGAGCCTTGCCGTTGTCCTGAATCATGAGAACCTCCTCGATGCCATAGATGGTCGAGACTCCCAGCCGTTTCAGTGTGAGCTGGAGCTTTTTGTCGTCAACGACGACCGACTTGTGGGCCTTCTTGGTCTTTCTGCGAGCAGTCCCCTTGCCGCCGAGCTGCTGGGAAGCCTGTCCAAACCGCTCCCGCAGCTTCGCGCGGGCGGCGAGTATTTCTGGGGTCAATTCCTCTTCCATTTTCTGTGAACCGTTCTCACAAGGCGCACGCGCGCGAGAGCCGCCAGCGCCCCACCACAAAAACTCGAGAACGAGGAAAACACGAAATGTCTGCGGGGCAAAACGAGCAACAGCAGACCCTGCTGTGTGTCGCGTGCCCTTAAAAAGAGCGGTGGTGATACGCGACAAAACTGGTTGAAGAAACCGCAGACTGGCACTTTGCACAACGGGTCTACGCTGTACCGATGCAACCGCTTTCACCCCCAAGCAAACCGCCGCAACCCTTGGAGAGAACGAAGAGAAACTTCCCTCTTCAAAAACTTCCCGAAAAGAGTGCGTGGTGAACAAAGTGGAGAGCACGGGAGAAAAAATCCGCCGCCGCGCGTTCGAAAGCGTCCGCCAGTTGCTCACTCCGGTCAATGTACGCAGAAGATCCGTAAACGCGCAGAACCCTGGCCGCCGCCCAATTTCGGGGGAAACGAAGTGGGGAGAAACGGTGGGGGGAGAGAGGGGGGAAGGAGACCCCAT"
+  },
+  {
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "TGGT1_257070"
+    },
+    {
+     "name": "project_id",
+     "value": "ToxoDB"
+    }
+   ],
+   "attributes": [
+    "organismAbbrev"
+   ],
+   "tables": [],
+   "record": {
+    "displayName": "TGGT1_257070",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "TGGT1_257070"
+     },
+     {
+      "name": "project_id",
+      "value": "ToxoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {
+     "organismAbbrev": "tgonGT1"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "window",
+   "abbrev": "tgonGT1",
+   "seqid": "TGGT1_chrVIIb",
+   "start": 4151810,
+   "end": 4179004,
+   "served_start": 4151810,
+   "sequence": "GTAGACAGAACCACACCTTCGCAGTGAAACAGAGAGAGAGTTACGAGGGGAGCAACACAAGTTGTACGTCGAGAACAAACAGAGAGTCGCCGCCAGGTGGTCTTGACACGCTTGACCGCGGCCAGATATTCGCGCCCATTCAGCGTCTGGCCGCGAGTGGTCCGAGAAACGAGAAACGCGGGGGGTCTGAGTGGCACATATATCACCTAGATATCATCGTTATGTGAAAGGCTCGCCACATAAGAGACATACAGGTCACTGTACGGCAAAGGATGGGACGTATTAAATGAGCCGCTTCCCGGAAAGGGCGTCCGCAGAGGCTGCGGAGACAGAGACACGCGACAGGTGTCCACGGATGTTGCGCTCTCCCGGTTGCGAAGTTCGGCAAACAACACACAAAAGAAGAGCCCTCAGTGGATGCGTGAAATACAGGCCTTCTCGCTAAAGTGAAGATACTTCTCACGCAGAATGAAGAGGTTCGCTTTCTAACCAGAGACAGAACAGTGGTCCTCAGGATGGCATTTATCGACCCAGGTTGCATGCATGCTCCGGTGAGACCCTGGATAGTTCGGACAGTCGTAGGTGAAGGGTGTGTTAGAGACTTAGACTCGTGTCACCGATTGTCGCCGTTTGATTCACCGCAGCATCTAACCTTGTTTCCTTTTGTGTTTAAGGCCGTGATCCGTGTTAAAAGTTGCAAACAGGCGTGGATTCTCATCCTGTTGCGCGTGCTGGACAGGTAAACAACTCCGTGCCTGGGAGAGCGCGCTTCGTTGTTTTTTCGTATTTCTCCTTTTACATTCACAAGCAGCTGCTGTATGTGGCATTGAACCCTGTAGTCGCGGATCTGTTTTACCGCGTTGCAACGCTGACGCTTTTTACCCGATCCAGCCTCTGTCGGCGCTTCTAGTCCAGCTGTGTAAACGCGCGACCGCAACATGGCAACGCTGAGAGACTGAAACGCTCCAGAAGACCTCCGTGTTTCACAAAATCCCCAATTGTCAGACAGGAGAGTGTGTGTGTACACGTTCCGACGCGTAACCATTTGCGTCAGCGAGCCGGTCGGGATGATCAGGTACTTAAGCTTCCTTTACATCCGAGGGAGTAGTTGCATGTACACGAAGGGCGCGCACATATCTGCGCGTGTAAACACTTCGAGGCATGCGTACGGTTGCAAATATTTTGCATGCGATTTTTAGGCGGCTTGCTTTTTTGCCTCATTGTTTCTCTAGGTGGTCTCTTGTGACGTGTCTGAGTGCCCCCGGTGTATGCCCTGGGGAACTAGTCACTGCAGGTTCTCTCCATCATGCAGGGGTCTTCCGCGCCGGCGGAGATAGGCGACTGTTTATTCGCGATATCTGCCGATAGCATTGGACGCATAGAGGATTCTCTGCGTACGCCAGGAGCACTGTCTTCACGAAAGTCGTCTGGATCTGGACACTGTGAAAGGGGTTTTTCGGCATGCTTTAGCGACAGACAGACGGTGGGCTGTTACTCATGGATTGCTCGCGACGATGAACACACGCTTGCGGCGCCGGGCCTCCCGCCTGTTGTGTCTAGGGCAATAAGCGTGTCACGTGGCCAGTCGTTGAGGGGCCGGGTGATTAAAAAGAGCAGCAGACTGGAGTTCTGTGACGAGAACGCGTACCACGATCCCGACCATCCTGTCGAGCAGCTCATGTGCTCTGTCGATTCGTGTCAGAGACGGTGGGTATCGAAAGCGGAAGCTTTGGAGCCGCCATGCCCGTGCGTCCATGTCCTGCGAGAGAAGGCAAATAGGCCAAGGCTTTCCCTGCATCAAGGGTGGAAGCGCGACGAGGCGTTTTCTGGAGAAGGACAGACGCAGGCGACAGCTTGTGCAATAACCCACGAGGAAACGGGTGTGAAGGGAGGTGGTTTGTGCTTGGGTCAGTTTGATTTTATCACTGACAGGACGAATTTACGGGCAATGCTGCGTTTCCTGTATCCAGGCCTCACGCGCTACTCTCGACAGGCTTCCATCGATCTCGATGTGTATGGGAACGTATGTGTGATGACGCGGATTTCTGCCGAAACCCGTGCTCCGGATGTCGGCTACGGGCACAGTTTTGAACACTGCTGCTGCGAGACCCAGACGATTTCACTGGGTGAGAAGGACGCTGTTAAAGACGACACGTACGAGTTCGTGGACCTTTCGTCTTTCCACTTGATCCAGGCCTTCACACTGTGTGACGCGGTTCGTGTCCTTGTTCGCAGCGAAGTTGACGCCTGCAGCCACCCTGTGGCTCTGAGCGTGCCTGAATGTGCAGAAACGTTTCAAGAAAATCGGTTTTTCGGACGGTGCGGTGCGGGCGTTCCCAATCCCGAGTACATTCCACTGGCTCAGCAAGGGCCCACTCTGTATTTGTCTCGGCAAGAACCGGCGAACCTCACGCCGTTTGAAAGGGCGCTACTTGCTCGGGACGAAAGGCTGCTCATGGAACTGAAGAGTGTGTCTGAGCGATACGTAAGCGCTATACCGTGGCTAGACATTTATATCCAGATGCGGCTCGGGGATGTCCACAGGCTTCTTGTGGGGTGTCACACGCAGGGAAAAATTGGGAGAATGGAGCTTCTAACACTCTCCTCTGTAGCGGAAAGGGTTTTCCGGCAGCAGCTGCACACACCGACCGTGGCAAGACCTGATCCCGTGAATGACAACCGCCGGTCTCCATGGACAAGCCATGAGTCGAGAAATACTAACAGTTCACGTGCAGAACCGGAGTGCGCTGCTGAGGTTGTCTACTGGTCGAGGCTGACGTCGCTGTTGTTGCAATTGAAAGAGTTCGCCCTCCAGCACAGGGACGACGACGGAAAGGCATTTCTTAGAATTGAACTGACTGACGAGACTACGTTTCGCGTCTACCGCCGAGCACATTCCCAACCTCGCGTATCCGTTGAGATTGGCTCGGCCATATTGAAGTGCTCGTTATCACCGACGAGGTACGGTAGCCAGTCCATTGGTTGCCCCTCTTTGCAGTGACCAGATTTCCTCTGCAATTTTGTGGTGAAACAAACGCAGAACATCTCCGCGTCATGCAAACGTCAATAAAGGTGGCTTCTGGGAATATTTGTTTGCACACCAAACAGCGCAAGCCGGAGTTTTTGTGGTCAGTTTCCTCTGTTGCAGGTACCATTTGAGGGGTGTGCTATTTCGTTGACACCACTGCGCAAAAACGGGATTGCAGATCTGTCCCATTGTTCACTGTGTGCTACGACATGTGCTCCTGTGGCATTCTCCCGTATCAATCCTGCCTTGAGTTCGAGAAGGCTCTTAACGCTGTCTCGAAGAAGCTCCCCTGCGTCTTGGATTCGGATCCGGTCCGCATGTGACCGGGCGACATCCCCATGCGCCGCTTTTTACGCCCTAGAGCTGCTCCACGAATCTTTGCCAATGAAAGTATGATATCATCAGGCTTGCTGAACCCGGAGGAGGGAGGTGCCACTACTTATCTGAATCCTGCTGGAGGTTCTGTGAAGCAGTCGTTGCCCTCCCGGAAGCAGCCCATACTTCCTGGAACGTTTCGTAAATATCGTTGTTCTTGCTTAGCCCAAAAGCTGTTTTCCTCTAGAGACAGCGATAAAACGGTTTTTACTCAACTTCAGTGTAGGCGACGTCCTAAAATGAGCGTTGCTACGGGTCATTCCTGGAGCGAGACACATTCCGTCGAGCCTCGTATTGGTATGTCACAGTCAGAACTCCCGCCAGAAGACTAGAATATCAAGGTGCGTGAGGAAGGCACTTGTGAGTGTTGCTGTGTCTTCTCAAAATGACAAAGGAAAACGCGGGGAATACAGATGAGATCATGGACGCCGCATGGGGGTGCCCACTCCTAATTCCCTCCCTTGTATGCCTGCCGTTACACAAACAACAGTATTCAGTAACGGTTTGCATCGACTAGTGGGTGGTTGTAAAAATCATAGGGGAGAGACGTCGAAACAGCAATACAGCGTATTATCTCCCTATCGCGATGTTTCAATGGCACACTGCGGTGGGCTGCTTCATGAGAGTTGCGTTCTCCACAGCCAGATTCTGGTAGGCCTTGTGCCATCATACACGCGTCACGCAGGAACACTCGGATCTCATGAACTTCGAATTTTATGTGAAGGAGGAATAAACACCGGGATTTGTGAGAACGCGACGGCTGGCTGCAGCATCCGTTCGTATGAAACACACGGGGACCATGCTTCGCCACTACGGTGTGTAGTTCTCCGGTCATCAAGCCTTGGAGCCTTCTCCAGAAGTCTCAGTTGATATGGCCACACAAGAACTTTTATGGAGTCCATTCCATTCGCCTAGTCTCTTTTGGCAGGCAGTTCTGTGACATGAAAGTGGTCGTCGCACGTACGTGCCATCTCTCGCGAAACCATGTCAGGTGGTTCGCTCTTTCGTGGTACGAGCTAGCCTCTGGGACCACCTCCCGAGAAAGTGGCACCTTGTGTGTGTGGTGGCCAGAGGAGCCCATAAAGAAGCATCTGACAGCCTTGGATGCTATTTTGCCTCCTGGAAACACGATGACCTTGAAATTCACGGTAAAACATATATCCTGCGCCCTCCCCCCACCCAGTTGGACGGTGTTGTTCGAGCGGAAGGCGGCAGGATCAGCTGCGAAGAGACGTCACTCGACGGCGCCCCACAAAGGGAGAATAGGGAGACCTGTCGGAGCGCCCCAGTGAATCGTTAAGCTTGATCCACATCTTTTCCCGTCTCTTCGAACACCACAGTTTGCGGCCGGCGTGGGGTGTCTGAGTCGCGCGCGCTGTGCGAGGGGTGATACGCGCCATCCGCGCGCTGTGCTGAAACTGTGAAAAAGCCAACGACTTCTTCGCCTTTTGCGCAGTGCAAAGGCACATGGGGTCTCCTTCCCCCCTCTCTCCCCCCACCGTTTCTCCCCACTTCGTTTCCCCCGAAATTGGGCGGCGGCCAGGGTTCTGCGCGTTTACGGATCTTCTGCGTACATTGACCGGAGTGAGCAACTGGCGGACGCTTTCGAACGCGCGGCGGCGGATTTTTTCTCCCGTGCTCTCCACTTTGTTCACCACGCACTCTTTTCGGGAAGTTTTTGAAGAGGGAAGTTTCTCTTCGTTCTCTCCAAGGGTTGCGGCGGTTTGCTTGGGGGTGAAAGCGGTTGCATCGGTACAGCGTAGACCCGTTGTGCAAAGTGCCAGTCTGCGGTTTCTTCAACCAGTTTTGTCGCGTATCACCACCGCTCTTTTTAAGGGCACGCGACACACAGCAGGGTCTGCTGTTGCTCGTTTTGCCCCGCAGACATTTCGTGTTTTCCTCGTTCTCGAGTTTTTGTGGTGGGGCGCTGGCGGCTCTCGCGCGCGTGCGCCTTGAGAGAACGGTTCACAGAAAATGGAAGAGGAATTGACCCCAGAAATACTCGCCGCCCGCGCGAAGCTGCGGGAGCGGTTTGGACAGGCTTCCCAGCAGCTCGGCGGCAAGGGGACTGCTCGCAGAAAGACCAAGAAGGCCCACAAGTCGGTCGTCGTTGACGACAAAAAGCTCCAGCTCACACTGAAACGGCTGGGAGTCTCGACCATCTATGGCATCGAGGAGGTTCTCATGATTCAGGACAACGGCAAGGCTCTTCAATTCCTTACCCCCAAGGTGCAAGCCGCCCCTGCGGCCAACACTTACGTCGTTTCGGGCCACTACGAGGAGAGGCCGAATATGTTTCCCGGCGGACTTCCGGGCATGTTCTCCCAGCGAGGCGCCGGAGCGGGGGGAATGAACTTTGACACTTCCCTGATCACTCCGGAGATGCTCCGCCAGCTGCAGCAGCACATGTCTGCCTTGAAGACGGGTGCGGGCGGTGCTGAAGGAGCGGCCGCAGGCGAAGGCGCCGAGACTGGCGACGCCAGCAAGAAGGGAGATGATGACGTCCCCGAGCTTGTGCAGAACTTCGAGGATGTTTCAGAGCAATGAAGGCTCGCGGATCCAGTTGCCCAAGTTTATGACATGTTGCTCAACACAAGAATGTACACGAACAGTTTCGACGATGTCGAGGATTGAGATGCTCGTCAAAAAACTCTTGCTGCGACTCTAATTTCTTGTTTGCCATGCAGCAAAAGCGACACGGTGCCTGCGGTCTACATTTTCCAGAGATGCAACCTTCGTGTTCCACTTACCTCCCTGGTTACTGGGGAGCTGACGCCCAAGCGGAAGATATAGGAAAGACAGCGAGTCACTACTGGGTCAACACTTCGTCAGGGAGAGTAGGATGCTATTAGGCAGGTTGCTTAGTAACGCCGTTATGACAACTTTTGTGGAGACGATTAGTAAGAGTCGGGGCAGTAAAAAGCAGGTGTTAGCGACACTGACAGTGACGGGGCAGCGTCAGACCGGGGAACCCGCTGTACGTAGCTAGGTGGTGTCTGAGCACCGCTGAACACTTAGACTGAATCAGTTTCGAAGAATCACTAATTGTACGACAGTGACCTGCGGTGAAATGAAGAGCCAAAATGTTAACATTTAGATGCGCCATTAGTCATGGGCACTGATACGTAGCGATAGAATGTCCTATCTAGCAGAGGGCGTGTAAACTTTCGCTGACAGCTGAGATTGATGGAGAGGCCCACAAACAACACAATTGCTGTCAGCACGTGACGTTCTGAAGGTCAGCTCGTAGAAGTGCTGTATCGAGGTCGAGTTGGTGACCGGGTGATACAGAGTGCGTTAGTGAACACAGAAAGCTGGTGGATTTGGCCATTTCTATGCTATGCTACTGCATCGTAGCAAAACACTGAATCTCAGCATTTACCGAGAAACTTCACCTGCCAGTTGGTATACGATGGCCGGTTGCGATGTATCAAATGAGGCAGTGTAACAAAGCACCGCTAATGATCTTTGTAGGGCGCGGCGGTGTCCAGTGAAACAGAAGTTAGGTACAGGTCTGAGAAAGTCTGCGCAGAAGCTTTCTGTGAACGAAAGCAACGCGTTCAATCTCTTGGCCGCTTTCTTGTAGCTCCATCTGTCTCGCAGAGGCGTTCCTTCGCGTGCACAGGATCATTTCGAGAGCGAAGACCCGCTGTGCATAGGCTGCTCACCCCCAAATTCAGATTTTGGTTATCACCCTTCGTTCCTTTCGAATGGCGAATGGTAGAGGGAGGCATATCGTCATCACCGAGGAATTACTTTCCGTGAAACGATGGATACAGCTTGCAAGTGCCTGCAACAACGTTATATCGTTCATTTAGACGTAGTGTTCTTTTGCCGAGCCTCATGCCAACATCCTCCCTGTCCGCTTGTCGACATTAGTCGTAATCGGAACAGACTTCAGTGTATTCACCTCTTTTTGAGTACTCAGATCTCTTCGAGTGAATTTTCGGGCACGCTGTACAATCACTCTGTTCTGAATCCAAAGCTGGCTCGAGCGTTTGATGTTGTCGGCACCGCAGAAGTCTGCGCCTGCTGCGGCCACACATCACATGGGAATTTAGGTCGCTGAAATGCCTTGCCAGGAAATCCAGTGTTCTGCTGACAAATTTGCCATCCCTATCAATGAGCCAAACATCGCCTGGTGATTCATGACCTAAGCGACCCAGGCGCCCCGTACTCATATACGTCCGAAACATCTATAGTGTGGATGGAAAAAATTCATTAACCCTATATCCTAAAGCGACCTGCACAGGAAGCGACGGTTCTCTGTGTTTGGCTAGGCTTTTAGATTCGTCCCTCGCTAAAATAACTTATCGCGGAGACAAGCACGACTTCTCGGGTGTCACGAGAGCGATAACAGCCAATAGTATTTTTTAAAGCTGGGAAACGGGCTGGACTCATACAATTTTAATTACCATTACACCACCATCAGCCAGTTGCGACACTAGGTGACTGCCAATCTCGCCCTTCCTTTGCCCAGAATCTGGGGTCTCGTTGCACTGGTGCTGTACTGACTGCTTCATTTTCCCCTTGCGAATGAAGAATCTGTCACACACAGTGGAAAAAGCTTGATAAAGTAGTCTTTTTAGTCTGCCTATGAGTGTAACAGCCTCACGGAAAGCGGGCAAACTCCGATGGAACCATGGTCTCCAGCTCGCTTACTGGCCGCGCCCAGGTTCCGAGAAGTCACAACCTCGCACCTGTACAGCGCTTTCTGAGCAGCTCTGCGTTTCCCAACGCTTGCAGACACATGTTGAAACGAAGGTGAGACAATTTACTAGACGGCTTCACTTCAAAAGCTTGCGAGGCTTCTAGGCTGGGGCTCAACGGTTAGCCTATCATTTCTGCCCCCCCCCCCCCCCACATTTACCCAGCAGGGTCCGGTGCGCAGTCGGCCAAAAACCCATTTTTCTGAGAAGCCGTAAGTTCCTTTGGAGGCAACCGAGATCCGTTAGAAACTCTTGCATGCGTCTCCCTATCACCATCTTTTCTGACTCAGTGTGAATTCCACGAGGACTGCTACCAGTGTCAGGCAGGGGCCACTTTCCCGGAGTGGCATTTTAGTTGCCGTTCGCCGCCAGGTCCCGAAAGGGGACCTGCGTTCGACTTTTCTCTCGCGCGCCCGGACACCGTTATCCTCGATTCGATGCTACTTACCCGACCAATACCTCTCTCCTTTTCTTTTGTCTGGCTTTTTCTTTTCTGAGTAGGAGATAATTTGCAGCGAACGCAGAGGAGTGACAATGCGGCGTGGCTGCGAAAGAACACGCTGAACAGCTGATGCGCGTTCGTCCGTTGGTGAGAAAACACGCAACCGTGTAAAATTCGGAGACCGTTGACGTAGAGTCGATGCAACACCGCGACGGGGGTAGAATCTTTTCTAGCCAGAGAGGGGGCTGACCTTTGCAACTCCGACAGCGTGGCAAGATTCCGTGTTAACGCCCGCTCGTGGCCTCAGGCATCACCGAGAGTTTTTCATAGAGGTGGAGTCTCCTTTCCGGTTTGTTCTTTTTTGTAACGCGCTTGGCCGTAATTTGTCAGCCGCCTTGACCGGATGCAAGCCCTGCAGGACGGCAGAACGCGTTTGGGCCCTGCGAGTCTCGAAAGTGCCTTTCCTCCATACCTCCGCGATCCATGTGGATGCGACAACGTACGATCTTCTAGGCAGTTTCCCCCCGTTATTCAGACCCATTGTCGCGTCGAGCATATTCCCATCTGTTTGAAGTGTATATTGAGGGGCCCTGCCAACCGGTGAATTTTGTAGCAACGGGGGGATTGCCGCTCGCGATAGACTGTTCTCGAAGACCGTACTTCACTCCGCTCTTTGCTTTTCCCGGCTTTGTTGCCCTATCCTGCATCGCGAACGTCCCCATACGCTTGTCATTTTTGTGTGTCTTCTTCGTTTTTTTTGTTGGCGTCCAAGCCCTGTCGGCTGAGACGGGTACTTCTTGGGCGCCCCGGGAGTTGAGCCAGTCGAAAGGCCGCGAACGATCCATCGGTCTCAGTTCCGAAGTTTTTGTTTTCCCCAGAATTATTCATCTCCATTTTGCGTCCTTCGTTGTGCTGATGTCCAACGTGGCCTCGTGGCTTTCGACTCTCGTCTCGTGAAGCAAGATCCCTACTGTCTACCCCCTCGAAGGTGTGCCCGCCGCGGAGGTGGGGGAGTTACACACTGTCTAGGAATTTCTGAAGCTTGAAGCCGTGCATTGTCGATAGGTTTTTTCTCGCTCTTGTCCCTTTTGTCTAAATTGCTTGTCTTTTCGGTCAGAGATCGGTGCAAACCCTTCCTGACCTCCGTCTGCTTTTCCTCGCTGTCCACAATCCCCTGCACTCCCCGGTTTACCTTAGATAGTACACACTGACTAGGTCCGTTGACCGGCGTCTATTTTCAATGGAAGTTCCACGTCGTGTGGAGTTGCTTGAACCTTTCTTGGCGCTTTTAGTAGAGTTATTTTAGATAAGGCGAAAGCCTCGACGGTGGTCTACGTGGCGAGATCATTCGCGCAGTCGCTGCTCACACACTCCAGTTTCCCCTGGGTTTCGTTCGCGACAGTATTTGTTTCTAACTATTTGCGATTCAGTCGGCACTGCGACAAGAAGTCAAACAGTCGTTCATGTTTGCACACAAAGCGCGTTCACGGCCAATCTTTTCTCAAGAGGCGGTACTGAGACCATTGTACGGGACTGTTTCCGCGCGGGGTCGGTGTTCGTGTCCCAATCCTCCTGTGAGAGACGCATCGTCCCGTCTTTACTGGGCAGAGATTCTTACAGAGGTGCGACCGCGCGAGAAGTCAGCTTGAATCCATAAATAACCTTTCACCTGGCCACGGACGCAAATTCTCGGATCGATCTGGGCGTTTGCGCGCGCTCTCCCGTCCCGCTGCCCCATATCTCCCTACTCCAATCGAGGGCGTCTCGTAGGGAAAGGATGGTGTGAACGAGACTGGGCGTCAGCGTGTCGAGGTTCCCCGTCGTCCCTTGTCCCGACAATATTGACTGCGACAGAGACGAACGCGTTTTTCTGCGCCTGAGGGGGAATCTCACAGACAGTTGGCTGCCCTCTGATGGATCTACGAGGACGAGGCAAACAGCAAACGATCAACGCGTTTTCTCTCCCTTCTTTCGCGGGGAAACTCTAAACCCTAGCCCCCCAGTCCCGCCCTGACTTCGCATCTTGCATACCACTCGTGGCTCTCTTGCCCACGCTAAATTCGAAAGTTGAAACCCTTGGCATTGGCGGATCTGGGGAAACTCGGGAAGTTGTTCGCCGTTCCACAGAGCGGCCTAGAGTCTGCGCAGAGCTCTGCCGCGCCGGGGGTTTCCTGTTCAACTCCGTGTGTACCAGCGCCCCGGAGGCCTCTGACAGGAACGCGGTCGAGAGACCATGTCTCGAGCATGAGCGAAGACGCCCGGTTCCCTACTCGCAGCTGGATGATTCGTCACCAGGGCACATGGAGCGGCGAGGCCATCTGGGCGAATGTCAGCGCTCTCCACCGTCTGCGCCTTCGTCTACCCTTCTGCCAGGCTCCGCGCCTGAGGCTAAAATGCTTAGTTGTGTAGACCTAGAACGCGCGGGGAGCGACGTGACTGTCGCACCCGGTCCTGCTGGCTCAGACAGTGTGACTTCACCGTATGCAGACCCTTTCCGAGATCGGTTTGCGGTGGGGCGGGGCTCTGTATTAGAGCACGAGCGATGTTTGAGACGGAGAAGATCGGATTCTACAGCTGACGACACGGCCATGCCGGAAATCTGTGTCGACAAACACAGACCCTCGCCGAAACTGACGGCCGCGTCCACTTTGCCTCGAAACGCAGAGGACCTTCATCACGGATACCACGATGTGGAGGCCGCTGGTGAGCCCTATGGAGAGATGAACAACGCGTCAGAAGATCGGTCTTCGAACTCGCAGTTCAGACTCCGTTGCGGCCGCCAAGCTTGGGAGACTCGCCCCAACTCTGCTGCATTCGTGACTGCGCTGAGAGCGCTTCCGTGGGCCTCTGCATTGGTGCATGCGCCGCCGGTCGAGCACGCCCCGATCCAGCCGTCGCCTGGAGGCGGGGTGCCAGACGCCGGAGCGAACCGCTGTTTGCACATTGATGACACTGGAGCAACGGATAACGACTCCATTCGGCCTCCGTCGCTTGCCACCATTGCACTGTCTCCGTCGTCGTCGGGATCTCGGTCTCCGCATCCGGAGAGCATTGAGGGTGCAGACTTTCGATTAAGGGAAGTAGGCACCGGAGGCGACTCGTCCCCAGCTTCCTCTCTGGAGTCGATGTCGTCGCCAAGCTGCGTGTGCCACTCCACGGGCTCCGATACCTTTGTTTCCGCGCGCTCAGACGAAACCCCTCGCTTCCTTGCTCTAGTGGCTGTCCACGGGAAGCCGAGGCCTACAAACTCGAACTGTCGGCTTCCACCTGCACAGGCGTCTGAATCCTGCGCAGGAAGTGGCTGGCGTGAAGAAAATAGGAAGTCCTCAGCTATCCGCGGCAGCGGGCGGCTTTCCGAGGTAACTGCCAACCAAAGGAAGACTCGGTCTGGGCAGAACAGTGGACAGAGGAATCAAGGAGCAAGGAAGAGTTTAATTTTGTCAGAAAACCTCGAGGGCGGATTGCCTGCGAGGGTACCCAACCGAGTGGACGAAAGCGATCTCGAGCTGGCCGTCGCATCACCGGTCTCGTCTGTGTTCCACCAGAGCGACTCCCGTGGTAAGAGATGTTGCAGCAAAGAGAACGAGGACTCCAGAGGGCCTCAGACATGCTTCCGTTGCATCGGGAGCTCGAAGAAATTGCATGTGAGACAACACAGAAACGGCGAGTCGGCAGGTGACGCTGGACATGCAGAGAATCCCCAAGAAGCTGAGTGGCGGGACTCAAGGACGGTCACGACACCCTCGAAAGATGCACAGCTTTCCGGCGTGAACGCGCTCCACACTGTCCCGCGCATGCACCGGAAAAAAGGCGCCAAAGAGCTGCCCGAACCTTCCAGTCCCTTGGAGACTTGCCGAGACCGCGAAGCCGAGAAGGTCGCGTTCTGCCTGTCCGGCGCCGACCAGGGCCGCCAGCTGGGGGGCGACCCTCCAGGGCCCATTCGACGTTATGTCTCGCGCTTTCTCGAGATGTGGGGCGGCGACGACTGGGGTTCGACGTACTATGACTCGTTTTCGGGAAGCAGAGGCGACATCGACGCGGTTGCACACTGCTTCGAAGGATCCGTGGCGGCGGACCATCAGTGGAACGCCGCGCGCAGACACACGAGAAGCCGGTCGCCTGCAGGCTGTGGAAGACACAGGTCCTCTTCCGCGGATGGCTGCCTCGTGGTCGCCGCCCACGAGGCAGGAGCGTCGCCCCGGCGAGGTGTCTTCGAAGGCCGCCACACACATTCCCAAACATTCAGTCTTGTCAAACCCGCTTCGTTTCAGTGGGCAACGACCCAACCGTTGGAACAGGAGTGTGCGTCGGAGGCAGTGGATTGCGGCGGGGGGGACGCGAAAGCGACGGCGAATGAGGAGCCAGTGGACCAAAACCACTTACGCAGGAAAGTGATGCTTCTCGCGGAAAGGAACCGAGAAGACTTCCGATGCGGGTGGAGACACGGAGCAGAAAGCGCAGGTGGGCATACTGGAGACGGAGACGCCGCTCTCGCATTGCCGACGCAAACCAAGAGTCGACACGGGCGCGGCCGGGCTTCCGTGTGGAGTTCGCGAGGATCATCGCCTCTTGCCTTCGAATATCGAACTGAGGAAGAAGCGTATCGCCAATACCTCAACCGACTTTTTCCGTTCCGTCTCATGGTTGTAGGAATGGTTCTGCTGCTCGTCGAAATCCTGCAAATCTCCTGGCGACTTGTTCAAAGAAGTAAGTGACCTTCATCCGTGCGACCCCGCGAAGGGGGAGGACCCAAATCTCCTAGATCAATACCAACAACGGGGAATGAGAACAGGGCGGGCCAATAGCGAGAGACAACAGATCTCTGCTACCCGAGAGAATAAGCAAGACGGAGACAGAGTTGGGATGAGGTTCGAAAGAGGCGGAGCGCGAGATTATGGTTCCCGCCTGTGGAGCCACCGGAGGATGACTTACGCAAAAACAGATGTGAATTCTGGTCGCCATGTCGCCAAGTGTGCAGCGAAGGATTCGCTCTAGAGCCACACCCGCTTTTCTACGCTCGCTTGGATCATTTTGCGTCTGGAAGCGTGTCTTCCGCATTTGCGGGTGTCACATATGTGGACCACAACGCCCAAGTCTTCAGGGATTGTTCTATGTCTGGGATGCTTTTTTTGTTGTATCCTTTGTTCCATAATGCATCATCGCGACGGACATACATGTTGGATTACGGACGCGACTGTCCTCACGGTCACGCAGAAAACCAGCCTATCCGTTTTCTGTATTCGGGGCTGCGGTATTCTCACAGTATCATTGTCGTTGACGTGGTTCCTCGTTTCTCTTTCCAGCGTTCTCTCTGGTGTCTCCAAGCCGACTTGTGTTCTGTTCCTTGTTTGCCAGGCTTCCTCGTCGATAGCCAGGGACAGTACTCGTACTACGGACTTGTCAACTTTGACCTCATCTTCGTCGTTATCGCCGTTTGCCTAGTGATTCACATCATCGTCTACAGCTTGCTGGCAGCGGGGGGCCGCATTCCGGGTGTGAAGAATCGTCTCGAGAGTTGGTCGTTTACGATGATTGTACTAGTAAGTGCTGTGGAGAAAAAAGTGACACGCGGGTGAGGTGCATGGCGATGCTGTTGAAAGCCTGCGCCGAATATGTCAAGGCAGACCTGAACAGGACATGCACACATGTCACTGGGAACTTCTTCGTGACAGGAAAAGGACACACGCCTTTATAGAGACAAACGCGTTTGTCTCGCATGCGCGCAGACGCTTTTGCACTGCACCGTTGAGCCTTAATATTCACAATCCTAAACCTGCGACGCCAGGGTGAAGCGCCTCTAGTGTGCTCGGACACGCTAAACTCTAAATCATAAGCATTCGGTGGACGCGCCGTGAGGCTTCACTGGGGGCGAGGAGACTTGTGGGGACGTCTTTGATACCGGCGTTGTGATTGGAGGATGCATATTTCTTTCAGCCATCGAGTATGCACGAGTGGTAGATTAACTACTGTCTTTCACGTTAAAATACCTGATTTGTTCTATCCGTATTTCTATACCAACAAAGCGAATCTAATTTTTGCTTTATACGTTGTTCTAACTGAGGATATCTGATGTGCATGTTTCGCTACATAAACATAAATTATATTCAAGAATGTTCTTCCAAAAGTATTTAAATCGTTGAAACATAACAGTTGTCTTCCAACTTTTTGCAAACGCATTCTTAGGCACTCTTGGCGCGCATCTGCGGGATGGTCTGCGTGGCCTTCATGAGCGAAGGAATTGGAGACGCAGACGCCGTGGTAGCTGGAGGTAAGCCTCTCTTGAGTTCCGGTTTTTGTGGGCGCCACTTGTAAAAACGGATAAATGTTCTTCTCAGGTTTCGCTCGAGTTGCGTCCCCACTCTGGAGCCGAGGCAGGCTGCTTTTCTCGTCGTAGAGTGGAACCACATGACGTGCAACAATGCAGGTATTCCCCCCACCCCCTCCTCCCCAAGCAGTAGCGGCTAAGCTGTGAGTCACTTTAGTAGTATCCATGTGTATCAATCGTAACAAGCGTGCGATGAAATTCGGAAGCTCTTTGACAGGAATGGTGTCAGGTGCCGGTTGTGCTGTGCTTTTGCAGACGGTGAAGAGAGACCAGTCGTGTTTACTTCCGCGCCGCGAGCGCTTTCCTCGGAGCTTGTTCTGCTATCGCTCTGTTGTCTCTTCCACGTCATCGTCATCGATATGATGCTGCCTGTTAGGTGCGTTTGGCTTTTGCCTTCCTGGTCTTGGCGCATAGGAACGCGCCTGCGGGGGATCCAGTGAAGTTGTGGCGGCACGTTTCTTCTATTGTTTTCCGGTTCACTTTGAGGCCGTTGCAACGTCCCTGCGCTGCCTGCGTGTTTCTCACTAAATCCGCACGCAGGACATCAGCAGAGCACTTGTCGTTTGCGGAAAATCGAAGCCACAAAGTAGAATATGGAGACCCGCTTACGTCCTCGCTCGTAGTCGTGTGTTCTTCATTTCACATGACGCAATAACTGTGCAACTTGAGTTATACTCTCCAGCGATACTAGCAAACAGCAGCGACGCGCTACATTTCTTGCCTGCTCTTCGCTTCTTCGAGGGTACTTCTCGAGACGCAGTGTCGTCTGCGCGGGCGACAAGAAATGTTCTGAAATTTGTAATTATCGACCTGTGCGTTGAGTGTCTGAGCTTTGTGGCACTGGATTGAACCATAAGTCGCGGACGCTTTCGCCTTTAGTTTTGTGGGTTCCTTCCCCCGACTCAGCTGCTCTCTTTGGATTCACTAACGGTTTCGTGTTCGGTTCACCTCGTTGTCTTCTCCGGTTCTCTTGCTGTCTTCTCTGCAGGACACTACCATCGATGGCTATGCATACGGTCCACATCCTCGGGTGTATCGGCTGCTGCGTGCTCTCCGTCTGTCTCTACCCTCAGTGTATTTCGTCAGATGGGTACGCGCCTCCCTTCCCTCCCCGGCAGCTGCGGCGAACTGTGATTCACTCTAAAAAGAGACCATGCCAAAACACGATGCTGTCTCACAGAAGCGCTCTGGGACACTGAGCGGTCATGCGTAGCCCCTATTTTCCTTCTTTTGTCGCGCCCGAAAACGAGGTGTGTATGCGCCAATCGCGTCCAAGTTTTTGAGAGTGCCAACTCTTTCGAGAAGGACACGGACACAAAACGCATTTGAGACAAGAGTGTTGTTCCCACGATGCTCTCCCTCAGCGTAGTCCGCAGTCAGACATTTGTCAAATGAGGTGACAAAGCGTCTTCAAGTTGCGTCTTCGCGTTCGCACGATGCGCCAGAACCAGGGTGACCGTCTTTTTTTGTGTCGTTACTTCGAGGCACCTCGTGGCTGTTTAGTCTGGTCAGGAGAGGAAAGCGGTGGCAAAAACATCGGATTGGACGCGCGTGCCTGTCCAGCATCTGCCTACTGTCTGGTCATCCGGATACAGATTTCGTGAACGATTGGATGTTTTTTCTTTAGGCCAATCTGTGCGGTGAGCACATGCCTTTTCATCGTCTGCGGCTTCTTGGGGCGCGCTCAGATGGAGGTTGCTCATCGGCAACTCTACATGAGATGGAAGGTGCGTCTCAGATTCACTTCTAGATTGAGACCACACCTTTGGCATAAACTTGCAAGGCAGAAGGACCAATAGGAAAGGAAACCGGAACCGCCTGCTAAGAGAGAGCTCTTTGAGGTCGGCGGTGTTCAAGAGAAATTCATTTCAATCCATGTACAAATGCACACGTGTACTGGCACGGGTCCCCGTAGTTTATGACTCACTCCGGGATTCCATGCGGAATCAGGAAACATGCAGGTCGCTGAGAGCGGTTAAATTGCCGCTGCATGCGGTTGGGAGATTCTCTTCCAACATGGGATAGGATAGACGCGTATGGCGAGTTTCACTGTTCTTTTCTTTATCGTTGGAACGAGAGAGACAGACGCGAAAACCGAATCTCTCGACCGTCGCAGACAGATGTGGCAGATCGTTTCGTTCACCCATTTGATATGTTCAGGATGGCTTGGAACGGTTACGAGCAGCGGAACAGAAGCTGCACTCGCACCGGACCTCGAAAACAGGCATCGAGCAGTTAGCAATGCTTGTGCGTCAATCGCAAGTCCTTCTGCGTCACGCATGCGTCAGCGGCTCCAGTCGACAAAGCAAGCAGCTGGCTCTCGAGCAAGTGGCTGACATTCAAGGACAGTACGTTCGACGGGGGAGACAGAAGCTGTTGGTTCATTCGCCGTTCTGTCCATGCTCGCACTTTAGTGTTGATTGTGGCATAGTGATGTCTTCGACTACTGAAATTCAACCATTCTGTGTATCGTAAAAACCAGTTCAGTGGAGTAGAAAAAAAAGATATGTGCCTGTCTTAACTGACACTCCACTGGGTTGGTAGCAACACTGTCAGCCGCTTTAACATGCCGTCCAGTGAGGGAGTGCTTTGTTTCCACGTCGGTCGCGGCTGTTCCTTGCTGCACCTTATCAATGACAAGGAGATGCATTTTAGGCGGCTGTGCCCTCTAGGAGGGCTAGCAGTTCCCGAAGCTGATGAAGAAACTGCTTTAACTGCGACTCGCCGTCTGGGAGAGTCTGCGCATTCGCTTGCTGGCTCTTTAATTCTCGATGATCGTTGATGCGTCTGCGTCCTCGTCAATGTTGCGCGGTTTCTCACACTGCACGCGCTGGGTTTCTATGTTCCCCTATCGCAGAGTGCTGGACATTGTGACGAACGTCAACAACCTGTATCACGCCCAAATGAACACGGAGGAAATGAGTGAGCTTCTTCGGTTTCTCCCCGAGGGCCAGGACGACGCTCAGCGGTCGCTGCTGCGCGACTGGCGAGGGCGTAGCGCGTCCTTCAGCGGCTGCGGGCCGGTGGGAAGGGACTCGGAGCAGAATGCATGCACTCTGAATTCGTCGATTCTGCAGTCGACATGTTCTACGCTGTGTCTGGGGAACGTGGCACCGCGGAATGTGACGGTCGATGCACCTCTGACAGCCTCCACGCATGCGCTTCCAAGCAGTCGGTACCACGATGCTGCGGCAGGCCATTCATGCGTCACAGCGCCGGAGGGAGGCGTGCTCGGAGAAGGTTTTGGAAAAACTTCGAAAGACGTTTCTCCCCGTCACGCGGAGAGTACCTCAGGCGACCTGGCGGTGACGAGCAATGGGAAACACGATTTGCGAGAAAAATCCGAGTGTGACGCTACTCGAACTCTACGCCAGGATCCCATGATCGACCTGCCCGATCACATGAAGGCCGCCATTGGAGTTGCCTGGGATCTGGACTTCTTTGAGGTATGATCGCGCTGAAGGTCGTTTTCCAAGATGTGGAGCGTCTCCTGAGTTGGTTTCTGCTCGTGTCGTAGAAGTGGATCTATCATTGGAACCGTAAAATGTCGGTATGTGGAGACTGGACATTCAAGCTACCGAGTGACCGTTACGGATCACAGAATGAGAAATCGTAGGTTTTGGAAACCTACCTTCTGCTGAGAAGTATGTACCACGAGGTGGACCACATATTTGGATCTCGAATGTATTTTTTACTGAATCCAAGGGCTATTGCGTTGCCCTAGTTACAATGGTAACGTTTTATCTGATTTTGTTCTGTTTTGCGCATCTGCTTTGTCTCTCAGCTCAACGAACGCGTGAACAACAACGCCCTCTTGGTGACTGGCCAAGTTCAGCTTCTCCCGCTGCTGCGGCCAGAAGGTCTTCGGTGTAGCCCGCAGGTCGTGCGGTGTTATCTCAGGTGTCTTCAGCAACAGTACTGCCCCAGTAATCCTTACCACAATCAACTGCATGCAGCTATGGTTTCTCATTGCTGCTTGATCATTGTAAACGAAGTTCTGCCCTCCAAACAAGCGTAAGCGCCGCTCCACAAAGACACACATTATCTGAAACTCGCACGCTTAACACAGGTTTGCTTTGAGACCGAGATAACAACCACAGCGGGTGGTTTCTTTACACACCTGACTTCTTGCATGTCGTCTACGGTCGTTTGTTGGCCTGTCGGAGAAGACAAGTCTACTTTCAAGTTTCTGTCGAACTTCGCCTGTTTGATCCTATTCGCGTTACACGTATCTTAGATTGTACTTCCAGCTTCGTATGTGCGTTTTATTCGTTTTGGCGTTCACTACGATTTTCGCGTTTCAAGATTTCCTGTGTCCATGTTTCCACTGGGGTGCCTTTTCGCCTCTGTTTTAGCCTTTGTCTCGATTCAGTTTGCCCGCATTTTCCCTGGAAGGTGCATGCATGCGTCGCCTGTCCGGTTTCAGTACAGATATTTCGGTTGCTTTTCAGCTTGAGGGCGTTGTGTTTTCTGGTAGCTGTCCGTGGTACCGGCGCCCCTGCTCCAACGTCCACACGCCAGCGCTTCCGGAAAACGACTGTGGTTTCCTTTCCACACTACACATGCCAGGAGCTCCTTCTCCAAGGTGCCCGTCTTCCAGGATTCCATGCTCTGGTGTTTCCTGTCTGCATGCAGTCTGACGTACGTCGACGAACTGTGTCTGATCATTGCATCTGTGGCGCACGACGTGGGCCATCCGGGTTTGAACAACCAGTATCTCATTAGTTCACAGTCCCTGCTCGCGACGACTTACAACGACATTGCTGTCCTGGAGAACTACCACGCTGCCTGCTGTTTCCGAACGGCGGGCATCAACGAAGACCACAACATCTTCAGCGGCCTCGCGAAGGAAGTCTACCAGTACATGCGACAAAACATCATTGGCCTTATTCTCTCCACGGATATGAGCAAACACATATCCTACGTCAGCCGGCTAAGGGTAAGCACGGAAAACGAGGGAAGCTACGGGAAGGCGGACATGCCACATTTTTTTTCACTTTAGCGAACTCCGCTCCGAGAGAGCGACAACTTAGGCTCGCGAACATATGGCGCGTCCACAAATGTGCAACAACTCCTGGGGTTGGAGAACGGCTCTCGCGGTAGAGTCCTATTCTCACTGTCCTTGAGTGGTTGTATGCATGCCACAAAGGGCTACCGAGAGGCCTCTCTTGAGGGCACGAAAAGACAGACACATTTTTATCGTGCGGAAGCTGGAGGTTGAGCAAGGCAACCCAGTTGGGTTTTGCGAGCTGAAGAAATTACTGCGTTGTTGCAGTTGAAGTGGATTGATCTGCTACCATTAGTTTCCCTACGTTCGCCTCAATTATCACGGCTGGAAACGGACAGCCGAGTATGCGGGCATGCTTCCCATGAAACTGTCCATATATGACTTGGTGTCTCCAGGTACGCGCGGAATCCGGAAACTTCGACGTGACCAACGAAGGCGACCGGTGGTTGCTTTTCCAAGGGTGCATCAAGGCAGCCGATCTTGCGCATACTGCAACGTTTTGGGATAACCACAAACGCTGGGCCGAGTGTCTCTGCGAAGAGTTTTTCAAGCAGGTAGGCAAACCGAACCAACACGCGATGCCGACGATCGTGCAGGGTATTCTGGAAGTTCCGTGCGTCTGTAGAGCCTTCGTGAATCTGTTTTCGAAAGTGTGCTTTTCGGTCGATTCGTTCTTTCTGTGCCTTGTCTGCTTGACCAGAGCAAAGAACCATTCGCTGATGAATGGGCGCAACGCGTCTGAGTTGATTCCGCATGGACAGCTCTTTGTATCCCCTGGTTGATCGTTTGTCTCATCAACTCCCACTGTTCACTGTTCGGTTTGTAGAAACGAGGTGTGCTGGCGCTGTCTTGTGTCGACTTCGCGCCCTGCTGTCCGCGTGTGATACCAAAAGGCTTTTGAGTGGCACCATGTTTCGCGTTTGCTTCAAAGGGCATATTTTTTTCGCAACTGACCTCTGTGTGCAGGGTGACGAAGAACGTCGGCAGGGAATGAACGTGATGGATATTTTTGACCGTCGACAGAAAGATCGGTTCCCTCAGTCCCAGTACCGCTTCATCGAGTTGGTGGTGGAACCGCTCTTCAACAGCGTGTGCAGTATCGAAGATTTGCTGAAGGGGCGCGGGGGCGTGCGTGGGAAGATTTGTAAAACGCTGTCGTCGAACCTCGCCCGGTGGAAGGAGGCGGCTGAGGCGTTGGAAAAGCCGGCGGCCGGGAATTCGCCAAAATCCTCTGAAGCAAAGACGACCGAGGAAGGCGGCGAGACCCGGAAAGCGGGTGGCGCGGAAAGCGCCGAAAAGAAAGAGTCTGAAGCAGGCGCATGCACTCCAAAGTCCGCTGGGGCCGTCGGCTCGAAGACAGGCGACCGCAGACGAAGCAGGATTGCGGGGGCGGATGCTAGCGGGAAGGAGGCGGAGAGCCAGGGGAAGCGTCGCGACGAGAAGAAGCCCGAGAAGAGCAAGACATGATGCCTATATCGAGAGCCAAAAGCGCTTTCAGGGACAGATCTACCAACAGCCATTTGCGGGAATGCGGCATTTTTCCACAATGACTTGCGCGCGTTCTCGTACAAATTTATACAGTATAGCGTAGCACGCGCTTCTGCGGCCGGCGCGGGAAGGTTCCCTTGGTAACGCCGACACTCTCACTGTCACTCAAGTTGTCGTTTTTGGTCCCGTCGTGCGGGGCGACCAGGATGTTGTGTTCTTGCGCTCTGTCGCCGCCTCTGACGCGCACAGCCGTGGGACTACTTTTGTCTCGGCAGTGTGTAGACGCGGCGAGCCACGGGGTTGCATATAGCTTGTGAATCAAATATGTTGAGGTGTGCAAGCGGTGCGAGTCGTTTTTTGGATTTCAGAGCATCAAAGCGATTGAAATTTGAATCGTCTGCATTCCTGTGCACACCCAAGTCAGGTTTTTCCACGTACCGTACAGTCATAGGTTCGACGCACCTCCTCCGGGCGAAGAAAGACGAGAGAGCGCTTCGCCTGGGGGGGTCACGTCGGTTTTTCTCCGGTGTCTCTTGACAACAGACATATAACAGACATCGAAACATGTGAAATGTGTCGCCACTGACCTCCGGGGCAGTTTCGCAAACGCGACACCAGCCCCAGCAAAATAAACACCGGGTGGGCTCTTGCTGGCAGCCCTCTGGACAATGAATGGTGGATCTGGATTTTAAACACACCTCGCTCCTCGCCGTTTGCACGATCTCTCATTTCCAGAAACCGTGTTGTCTGTTCGCAGTGAGCTGAACAGATACAAGGGATTTGACAAGGTTTACCAGCTTTATACAAAGGAGAAGAAGACCTTGACGCTGATGACGCTTTCACGAGCAGCAGTCTGGCACCAAAGACTTTTGTACAAATGGTTCTGAGTTTTTCTCGTCTAGAGCGAAACTCGTATCACCCACAGATATCAGTTATCTTCTAGACGTAATATCTGGAGTACTCTAATCACTCTTGTTGACAGCGAAAGAAAACTGCTGCTCAAATGTTAGTATGGTCAGAACCAGCCACCTGGAACCAATAATCTCGAGCCGTTCTCCTAGTAGGTCTTTCCGAAACAAGACAAAAGACAGGACCCCGCGGAGCCAGCCGGCCAGTCTTTCAGCGACTAACAGCGTACATCGAAATGGTAAACGGAACCCGCACAGCAGTTGATGGCCGCCTCTGCGTTTAAATCTGTTAGACGCTAACTTCCCGGTTGATCTTCGGTATTTCATTTATTCCGTTTGTTTCTGTGGCATCGACACCTGAAACAATCATGATCAGAGACGGTCGCGCTTCTCGCCTTTTTCTCCGTACTTTACACTTCGCTCTCCGCTGCACTATTAATAGATCTCCTGAAACACTAGATAGGAAAACAGAGACGCTGGGAGGCAGCGCAGAGAAAGTGACGTTCGAGCCGAAAGGACGCTTCCCGGTTTACGCTGTCTTCCCAGTGTCTCTTTCTCATCGGCATGTGGCAGGACCCTGTGAAAAAGGATCTTACTCTTGATGAAAGAAGTGACACACCGGGATTCCACCGAAACAGAGGCAACCGAACAGCTAGAGTGCCGGGACCCGGGACGACTTAAGGTTGCACCCTCCGCAGTCCGTTGAATGAGTTCAGCCCGGTGGACTGGAACAGAGAAAAAGTTCTTTGACAAAAGGATGCGACTGCGTTGTGGGTGCTTGTGCAGCGACAGCCGGCGTGTTTAACCGTTTACTCTGTATCGGACGTGCCTAATCGTTTCCTCTTAGGTGGAATATGTCTGACCATTTACTGTGAGGATGCGCCTAATCTTTTACCGTAACTGAACGTGTCTCATCGGTTACTTTGTGTGATTGTGCCTCACCGTTTACTCTATCTGAATATGTTTAATCATTTACTCCCAGTGGGACGACAACCAAACCGGCACGATACGCGACGAGGAGGTCCAGAGTAACATAGAATGCTTAGGGTTTAGAAAACGGTGATAGTTGTGGGTGCTCAGCAAAACGCGGACGTCTCATAGGTGTGGGAACGATGCAAAACCCCTGGGTTTATAAAACGCTCGCACTGAGGACGCGTCAATCCCCTCACGCAACCAGTGGGGGCGAGCGAAGTGGTTAAACCCCCGTTGGCGTGACATTGGGTTTGCCTGCACACGTGTGTTACAAGAACTGAAATTGAGAGGGGGTTTAAAGAAATACGAAAGAATAGCGATTGGGTCGCGACATCCACATATGCAAGACACTGATCGTGCATTTTGATGCATACGGCAGATTAAGGCAACTAGCGTACGTGTGGGTGCACTGTCCCTCGCGAACCCTCCGCTGCATGCATTCTTCCGACTTCGTCGAAAATGCGTCAGCCGGATACTAGTATCGGCATTTAAAAACACTCTAGCCACATCGCGCGAAATGCGAACATGCCTTGCTTTTCTTTGAAACCTGAAGATACCACAAGAAGCCTCCAACTCTGTCCACAAACGCCTCTACGTCCCTCTCGTGCCGGTTAAACAGGGAAAAATCTCTCTTCACAGCTGACGCTGTCTTCAAAACCCTTGAAAGAGAAGTTTTCATTCTCGACGCGCGGATGATTGACACAACACAGACCCCCTTACTCTCTCAATCCACACCTTGTCTGCTTTGTGTTTCGTGCCAGACGGGCCGGTCCCCTCAACGCTGTCTCTGCTCCACGAAACGAAGTGCATCATACAGGGAACGGTGATAAATACCTGATAGGAAAAACGGCCCGTATTGCCGATTTGCGTATTTATATATGCATATATATATATATATATATATATATATTCAACAAGAAGGAGATTTGTCAGAAACCATTACCACAGGGACGTGTTGTACGGGTTCCCGCCCACACCGCCTCCGGGCCTCGCCTCGTTCGTAAGGGCCATCGATCTGCGACAAAAGGCAGCACATACAAAAGCAACATGACAATGCGGCAACTGCAAGCAACCATGCAAGACTCAAAAATGCATCAAAGCCGGGAACACGGTGCCTGTGCCTCCCGACAATCTCGAGCACTATAGAGAACCGTTCAGGCAGCGCAACGGTGGCATTCTACACCTACACGTGTAACAGTTTCTGTCAGGCTCATTTGTCTCATGTCGCTCGAAAGGCTGGGTCCTTAGCTCGAGACCGGCTTGATGCGCCAACACACAACAACACCCGCCGCATGAAGATTTGGTCCGTGTCTTGTGGCACGGCGATTGACTTTAGATAATCCATCAGATTCTCGCGATTCACTCGTCCCTTTTCCACACCAGAACTGCTCGTCTCTACACACATTTCCTCTCGGATTCCCCCCACCACAATTAACATGTCCCATAAACCCCCACGACGATCATCTGCGCGAGGGTGGCTTTCACGGCTTCAGGATGCCCACGAAATATACACAGAACTACGTAGACATGGCCCGAAAGAGATATCCCGAAAACCAGTCGACCAAAGATGGGTGACCGCTTGTCGGCTGATACTCGTGCGTGAAAGTTGGTCCGAGTGTTTTTACGGGTCGTTTCTCTGAAACTCGATAAACAGGGTTGCCTTTGAATATGGGAATCGAAATGGTCCCCACCAACTCGACACTCACTGCTCGTTACAAACATCTGGTGACGCACGCCGTATCTATTGCCCCTTGTCCCCTCGTTTCCCTTCTTTCGATGCACAGGTCGTTACCTTTGCGGAGTGGCCACGCCCATGCTGCTGAACGGGTTGGGAGCCGCTGGAGGGCCTCCCCCAAAGTGCACAACGCCGGCTGCGCCCGGCCCCTGCTGTCGCATGTGCTGGGTCTGGTGTTGCGACGCAAAGTCGAGGCTGGTTCCTCCAAACATGCCCCCGTCTCCCAGGCCCCCAGTCGCCGTCGACGGCTTCTGCACCGAGAGGAAAGGATTCATCGGAGCACCTCCCATCGCGTTGCCCCCCACTTGGGTAGCGCCTGTGGGATGAAAAGCCTGGAAGGGCGAGGTCCCAGGGTGAGTCGCCTGCTGTCCCGCACCCATGGTCAAGAAAGGATTCACTCCGCGCTGGCCCGGCTGGGCCTGAGGCCCCGGGAAGTTCATAGGGGACGTGGGGCGCATGGGACCCGCTGCTCCAGCGAGCAGGTAGTTCGGACTCTGCCCCATCATGCCTGGGGGTTGGGCGGTGGGCCCAGATCCCGGAAACGCGACGCCCGCATCTCGCCCGGCCGCCCCGGGGAACTGCGGCCGCAGCATCGCCTGGTACTGCGACGCGAGGAAGGCGTTCTGGCCCCAAGCCTGAGGGCTTGCACCCTGAGCGGCTCCCATGAACGCGGGGTTCCCCATTCCAGCCATGCCCGGAAACTGGAACCCCTGCCCGAAAGAGGGAGCAGGCGCCACTGGAGCTAGACCCAGCATCCCCGCGGGGGAGGTCCCCTGGCCCCCGAGGCCCACCTGCGGAGCCCTCTGGGCCGCCCCCTGGCTGGACCCGAAATCGACTCCCCAAGCCGGTGCGGCGGCCTGAGCCGGTCCGCCCCAACTCGCGTTGCTGGCCTCTTCAAAAGTGTCAAACGGATCTGGACGATGCGACGAGCTTCGCTGGTAAGAATGACGCGGCGACCGTACAGACCCTCGGGGCATGGAGCGACTCCGACGCGGGGGCGGCGGGGAATCCTGGATACACACGAGAGAGAACCGACGAGGTGAAACCCATGTGCTCAGACTAGGTACACGGAGAAGCCTAGTTCACGCTAAAGCAATTGAGGACTCGAAACGGACAGGACACTGAATCGGTGAATACTTGGGTAAGAAGTATAATATTCTGATTTAGTGTTGTACGCCTCCCCAAGCAGCATACTTCTTACATCGGAGGCCTGTGTCATGGCAGGGAACGGAGGAACCAGTGGAGAACACTGCTCCGTTGGCATGCACGCTGGCTGAGACACGTTCAGGCACAATCCAAGGGATCTTGGCGACTAACAATGTCTGAGAAACATCCTCCAGGCGCACCAAGAGGACTCAACAGGGTATGGATCTATACTGCCGACGTCCTCTAACCATAGAAGCATAGCTCTGCATATAAATACGAGTATACTCAAAAACACATGTAAATCTTGAGAGTGAAGTGTCTACAGTGGTGAAGTAGTATATAGAGATAGAGAAGTATTACTGTGATTGTATCGCCATACATTCTGTGCCACGTTTGGCTTCATGTCCACCACGTAACACCATGTAAATAGTAGGAATGGAATTCAAATGAGAATCTACACACGTCTACGTGTTTAGGTCACTTTCCGCAGCATGTCTGTTGCGCTCTTGATTCAACATATCACGTACATCTCCAGAATCCGACTCGCTTCCTTCGGAGAGTTCTGGGACGGGAGGACGGTGGCTGCTGCGTCTCTCTCCTCGACGGTCGCTCCTTCGCGCGCCTCCACTTCCGGATGTTCCGCTTCGCGAATACGAGGCTGAAGATCGGCCTCTGTGAGTGTTTCTGAATAGAAGAAAGAACGCAACCCTCCGCTATTACCGCCCTCGAAAACATCCACGCCTTTTCTACTCGTTTTTCGCTATCAAGCACCAGACAGGCATTCCATCATGCATGCAGGCTTTTCCCGGCTCGCTGGCCATACCTAAAGAGCTTTGTTTTACTCCTTCAGCCGCGAAGGCTTCTCTCCCAACCAGGTCTTCCAGAGACCTACCCTAGTACCTATTACCTATATATATATATATATATATATATATATATATATATATATATATATATATATTGAACACATGCAGACACCCTAAGTACCTTATGTGCGCTGACAGTTCGTCCACATCCGTTTTTCCTTGTCCAGCGCGGATTATGATGCGTGTTGATTTC"
+  }
+ ]
+}

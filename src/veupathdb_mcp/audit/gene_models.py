@@ -32,11 +32,20 @@ class ModelRow(BaseModel):
                 return value
 
 
-class _RecordParts(BaseModel):
+class ModelTable(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    rows: list[ModelRow] = Field(default=[], validation_alias=MODEL_TABLE)
+
+
+class _RecordOrganism(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
     organism: str = Field(validation_alias=ORGANISM_ATTRIBUTE, min_length=1)
-    rows: list[ModelRow] = Field(default=[], validation_alias=MODEL_TABLE)
+
+
+class _RecordParts(ModelTable, _RecordOrganism):
+    pass
 
 
 class GeneModel(BaseModel):
@@ -51,20 +60,31 @@ class GeneModel(BaseModel):
         return cls(organism_abbrev=parts.organism, cds=coding_parts(parts.rows))
 
 
-def coding_parts(rows: list[ModelRow]) -> list[CdsPart]:
-    cds = [row for row in rows if row.type == "CDS"]
+def transcript_spans(
+    rows: list[ModelRow], kind: str, transcript: str
+) -> list[tuple[int, int]]:
+    return sorted(
+        (row.gm_start, row.gm_end)
+        for row in rows
+        if row.type == kind and transcript in row.transcript_ids
+    )
+
+
+def longest_transcript(rows: list[ModelRow], kind: str) -> list[tuple[int, int]]:
     lengths: Counter[str] = Counter()
-    for row in cds:
-        for transcript in row.transcript_ids:
-            lengths[transcript] += row.gm_end - row.gm_start + 1
+    for row in rows:
+        if row.type == kind:
+            for transcript in row.transcript_ids:
+                lengths[transcript] += row.gm_end - row.gm_start + 1
     if not lengths:
         return []
     longest = min(lengths, key=lambda transcript: (-lengths[transcript], transcript))
+    return transcript_spans(rows, kind, longest)
+
+
+def coding_parts(rows: list[ModelRow]) -> list[CdsPart]:
     return [
-        CdsPart(start=start, end=end)
-        for start, end in sorted(
-            (row.gm_start, row.gm_end) for row in cds if longest in row.transcript_ids
-        )
+        CdsPart(start=start, end=end) for start, end in longest_transcript(rows, "CDS")
     ]
 
 
@@ -82,13 +102,35 @@ async def gene_record(
     )
 
 
-async def gene_model(site_id: str, gene: str) -> GeneModel:
+async def gene_organism(site_id: str, gene: str) -> str:
+    record = await gene_record(site_id, gene, [ORGANISM_ATTRIBUTE], [])
+    try:
+        return _RecordOrganism.model_validate(record.attributes).organism
+    except ValidationError as exc:
+        msg = f"the gene record of {gene} on {site_id} gives no {ORGANISM_ATTRIBUTE}"
+        raise DataParsingError(msg) from exc
+
+
+class ModelRecord(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    model: GeneModel
+    rows: list[ModelRow]
+
+
+async def model_record(site_id: str, gene: str) -> ModelRecord:
     record = await gene_record(site_id, gene, [ORGANISM_ATTRIBUTE], [MODEL_TABLE])
     try:
-        return GeneModel.from_record(record)
+        parts = _RecordParts.model_validate({**record.attributes, **record.tables})
     except ValidationError as exc:
         msg = (
             f"the gene record of {gene} on {site_id} gives no organismAbbrev "
             f"or no readable {MODEL_TABLE}"
         )
         raise DataParsingError(msg) from exc
+    model = GeneModel(organism_abbrev=parts.organism, cds=coding_parts(parts.rows))
+    return ModelRecord(model=model, rows=parts.rows)
+
+
+async def gene_model(site_id: str, gene: str) -> GeneModel:
+    return (await model_record(site_id, gene)).model

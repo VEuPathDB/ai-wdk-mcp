@@ -49,22 +49,11 @@ def test_a_recorded_protein_joins_its_region(tmp_path: Path) -> None:
     assert "model_protein" not in read["plain.json"]
 
 
-def test_the_context_recording_reads_piga_orthologs_and_its_neighbourhood() -> None:
+def test_the_context_recording_reads_the_piga_orthologs() -> None:
     recording = MODES["context"]
     assert recording.site == "plasmodb"
     assert [(t.file, t.gene) for t in recording.orthologs] == [
         ("pfal3D7_piga_orthologs.json", "PF3D7_1032400")
-    ]
-    assert [
-        (t.file, t.organism, t.seqid, t.start, t.end) for t in recording.neighbourhoods
-    ] == [
-        (
-            "pfal3D7_piga_neighbours.json",
-            "Plasmodium falciparum 3D7",
-            "Pf3D7_10_v3",
-            1290000,
-            1320000,
-        )
     ]
 
 

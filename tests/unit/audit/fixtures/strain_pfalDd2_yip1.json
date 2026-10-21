@@ -1,0 +1,3759 @@
+{
+ "gene": "PfDd2_140076300",
+ "records": [
+  {
+   "displayName": "PF3D7_1472100",
+   "id": [
+    {
+     "name": "source_id",
+     "value": "PF3D7_1472100"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "GeneRecordClasses.GeneRecordClass",
+   "attributes": {},
+   "tables": {
+    "Orthologs": [
+     {
+      "organism": "Plasmodium falciparum TG01",
+      "gene": {
+       "displayText": "PfTG01_140077200-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfTG01_140077200"
+      },
+      "ortho_source_id": "PfTG01_140077200-t41_1",
+      "ortho_gene_source_id": "PfTG01_140077200",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pftg01_140077200                                                                ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfTG01_140077200#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfTG01_140077200\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium yoelii yoelii 17XNL 2023",
+      "gene": {
+       "displayText": "Py17XNL_001303257_t1",
+       "url": "/plasmo.qa/app/record/gene/Py17XNL_001303257"
+      },
+      "ortho_source_id": "Py17XNL_001303257_t1",
+      "ortho_gene_source_id": "Py17XNL_001303257",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no py17xnl_001303257                                                               ",
+      "protein_length": "288",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/Py17XNL_001303257#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Py17XNL_001303257\">",
+      "gene_product": "protein transport protein YIP1",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium falciparum 7G8 2019",
+      "gene": {
+       "displayText": "Pf7G8-2_000545700.1",
+       "url": "/plasmo.qa/app/record/gene/Pf7G8-2_000545700"
+      },
+      "ortho_source_id": "Pf7G8-2_000545700.1",
+      "ortho_gene_source_id": "Pf7G8-2_000545700",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pf7g8-2_000545700                                                               ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/Pf7G8-2_000545700#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Pf7G8-2_000545700\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium adleri G01",
+      "gene": {
+       "displayText": "PADL01_1472000-t36_1",
+       "url": "/plasmo.qa/app/record/gene/PADL01_1472000"
+      },
+      "ortho_source_id": "PADL01_1472000-t36_1",
+      "ortho_gene_source_id": "PADL01_1472000",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no padl01_1472000                                                                  ",
+      "protein_length": "320",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PADL01_1472000#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PADL01_1472000\">",
+      "gene_product": "Yip1 protein, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium fragile strain nilgiri",
+      "gene": {
+       "displayText": "AK88_00429-t30_1",
+       "url": "/plasmo.qa/app/record/gene/AK88_00429"
+      },
+      "ortho_source_id": "AK88_00429-t30_1",
+      "ortho_gene_source_id": "AK88_00429",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no ak88_00429                                                                      ",
+      "protein_length": "265",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/AK88_00429#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"AK88_00429\">",
+      "gene_product": "hypothetical protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium falciparum CD01",
+      "gene": {
+       "displayText": "PfCD01_140077200-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfCD01_140077200"
+      },
+      "ortho_source_id": "PfCD01_140077200-t41_1",
+      "ortho_gene_source_id": "PfCD01_140077200",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfcd01_140077200                                                                ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfCD01_140077200#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfCD01_140077200\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium praefalciparum strain G01",
+      "gene": {
+       "displayText": "PPRFG01_1472700_t1",
+       "url": "/plasmo.qa/app/record/gene/PPRFG01_1472700"
+      },
+      "ortho_source_id": "PPRFG01_1472700_t1",
+      "ortho_gene_source_id": "PPRFG01_1472700",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pprfg01_1472700                                                                 ",
+      "protein_length": "316",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PPRFG01_1472700#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PPRFG01_1472700\">",
+      "gene_product": "Yip1 domain | domain-containing protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium vinckei Cameroon EL",
+      "gene": {
+       "displayText": "PVSEL_1304000_t1",
+       "url": "/plasmo.qa/app/record/gene/PVSEL_1304000"
+      },
+      "ortho_source_id": "PVSEL_1304000_t1",
+      "ortho_gene_source_id": "PVSEL_1304000",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pvsel_1304000                                                                   ",
+      "protein_length": "281",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PVSEL_1304000#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVSEL_1304000\">",
+      "gene_product": "unspecified product",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium vinckei vinckei strain vinckei",
+      "gene": {
+       "displayText": "YYE_00363-t30_1",
+       "url": "/plasmo.qa/app/record/gene/YYE_00363"
+      },
+      "ortho_source_id": "YYE_00363-t30_1",
+      "ortho_gene_source_id": "YYE_00363",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no yye_00363                                                                       ",
+      "protein_length": "290",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/YYE_00363#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"YYE_00363\">",
+      "gene_product": "hypothetical protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium vivax PvW1",
+      "gene": {
+       "displayText": "PVW1_120049400_t1",
+       "url": "/plasmo.qa/app/record/gene/PVW1_120049400"
+      },
+      "ortho_source_id": "PVW1_120049400_t1",
+      "ortho_gene_source_id": "PVW1_120049400",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pvw1_120049400                                                                  ",
+      "protein_length": "292",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PVW1_120049400#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVW1_120049400\">",
+      "gene_product": "unspecified product",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium vinckei petteri strain CR",
+      "gene": {
+       "displayText": "YYG_04382-t30_1",
+       "url": "/plasmo.qa/app/record/gene/YYG_04382"
+      },
+      "ortho_source_id": "YYG_04382-t30_1",
+      "ortho_gene_source_id": "YYG_04382",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no yyg_04382                                                                       ",
+      "protein_length": "287",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/YYG_04382#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"YYG_04382\">",
+      "gene_product": "hypothetical protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium gaboni strain SY75",
+      "gene": {
+       "displayText": "PGSY75_1472100-t31_1",
+       "url": "/plasmo.qa/app/record/gene/PGSY75_1472100"
+      },
+      "ortho_source_id": "PGSY75_1472100-t31_1",
+      "ortho_gene_source_id": "PGSY75_1472100",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pgsy75_1472100                                                                  ",
+      "protein_length": "315",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PGSY75_1472100#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PGSY75_1472100\">",
+      "gene_product": "putative Yip1 protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium reichenowi G01",
+      "gene": {
+       "displayText": "PRG01_1472000-t36_1",
+       "url": "/plasmo.qa/app/record/gene/PRG01_1472000"
+      },
+      "ortho_source_id": "PRG01_1472000-t36_1",
+      "ortho_gene_source_id": "PRG01_1472000",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no prg01_1472000                                                                   ",
+      "protein_length": "307",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PRG01_1472000#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PRG01_1472000\">",
+      "gene_product": "Yip1 protein, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium falciparum NF166",
+      "gene": {
+       "displayText": "PfNF166_140074800.1",
+       "url": "/plasmo.qa/app/record/gene/PfNF166_140074800"
+      },
+      "ortho_source_id": "PfNF166_140074800.1",
+      "ortho_gene_source_id": "PfNF166_140074800",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfnf166_140074800                                                               ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfNF166_140074800#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfNF166_140074800\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium ovale curtisi GH01",
+      "gene": {
+       "displayText": "PocGH01_12042700.1",
+       "url": "/plasmo.qa/app/record/gene/PocGH01_12042700"
+      },
+      "ortho_source_id": "PocGH01_12042700.1",
+      "ortho_gene_source_id": "PocGH01_12042700",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pocgh01_12042700                                                                ",
+      "protein_length": "300",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PocGH01_12042700#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PocGH01_12042700\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium blacklocki G01",
+      "gene": {
+       "displayText": "PBLACG01_1471400-t36_1",
+       "url": "/plasmo.qa/app/record/gene/PBLACG01_1471400"
+      },
+      "ortho_source_id": "PBLACG01_1471400-t36_1",
+      "ortho_gene_source_id": "PBLACG01_1471400",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pblacg01_1471400                                                                ",
+      "protein_length": "311",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PBLACG01_1471400#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PBLACG01_1471400\">",
+      "gene_product": "Yip1 protein, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium falciparum GA01",
+      "gene": {
+       "displayText": "PfGA01_140077300-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfGA01_140077300"
+      },
+      "ortho_source_id": "PfGA01_140077300-t41_1",
+      "ortho_gene_source_id": "PfGA01_140077300",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfga01_140077300                                                                ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfGA01_140077300#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfGA01_140077300\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium yoelii yoelii 17XNL",
+      "gene": {
+       "displayText": "PY05360-t26_1",
+       "url": "/plasmo.qa/app/record/gene/PY05360"
+      },
+      "ortho_source_id": "PY05360-t26_1",
+      "ortho_gene_source_id": "PY05360",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no py05360                                                                         ",
+      "protein_length": "55",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PY05360#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PY05360\">",
+      "gene_product": "hypothetical protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium chabaudi chabaudi",
+      "gene": {
+       "displayText": "PCHAS_1339900.1",
+       "url": "/plasmo.qa/app/record/gene/PCHAS_1339900"
+      },
+      "ortho_source_id": "PCHAS_1339900.1",
+      "ortho_gene_source_id": "PCHAS_1339900",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pchas_1339900                                                                   ",
+      "protein_length": "344",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PCHAS_1339900#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PCHAS_1339900\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium ovale wallikeri PowCR01",
+      "gene": {
+       "displayText": "POWCR01_120038300_t1",
+       "url": "/plasmo.qa/app/record/gene/POWCR01_120038300"
+      },
+      "ortho_source_id": "POWCR01_120038300_t1",
+      "ortho_gene_source_id": "POWCR01_120038300",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no powcr01_120038300                                                               ",
+      "protein_length": "290",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/POWCR01_120038300#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"POWCR01_120038300\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium brasilianum strain Bolivian I",
+      "gene": {
+       "displayText": "MKS88_004376_t1",
+       "url": "/plasmo.qa/app/record/gene/MKS88_004376"
+      },
+      "ortho_source_id": "MKS88_004376_t1",
+      "ortho_gene_source_id": "MKS88_004376",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no mks88_004376                                                                    ",
+      "protein_length": "296",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/MKS88_004376#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"MKS88_004376\">",
+      "gene_product": "protein transport protein YIP1",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium vivax P01",
+      "gene": {
+       "displayText": "PVP01_1234700.1",
+       "url": "/plasmo.qa/app/record/gene/PVP01_1234700"
+      },
+      "ortho_source_id": "PVP01_1234700.1",
+      "ortho_gene_source_id": "PVP01_1234700",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pvp01_1234700                                                                   ",
+      "protein_length": "314",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PVP01_1234700#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVP01_1234700\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium falciparum 7G8",
+      "gene": {
+       "displayText": "Pf7G8_140077100-t41_1",
+       "url": "/plasmo.qa/app/record/gene/Pf7G8_140077100"
+      },
+      "ortho_source_id": "Pf7G8_140077100-t41_1",
+      "ortho_gene_source_id": "Pf7G8_140077100",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pf7g8_140077100                                                                 ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/Pf7G8_140077100#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Pf7G8_140077100\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium falciparum IT",
+      "gene": {
+       "displayText": "PfIT_140078300-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfIT_140078300"
+      },
+      "ortho_source_id": "PfIT_140078300-t41_1",
+      "ortho_gene_source_id": "PfIT_140078300",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfit_140078300                                                                  ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfIT_140078300#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfIT_140078300\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium yoelii yoelii YM",
+      "gene": {
+       "displayText": "PYYM_1337000_t1",
+       "url": "/plasmo.qa/app/record/gene/PYYM_1337000"
+      },
+      "ortho_source_id": "PYYM_1337000_t1",
+      "ortho_gene_source_id": "PYYM_1337000",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pyym_1337000                                                                    ",
+      "protein_length": "305",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PYYM_1337000#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PYYM_1337000\">",
+      "gene_product": "Yip1 protein, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium vinckei vinckei CY",
+      "gene": {
+       "displayText": "PVVCY_1303780_t1",
+       "url": "/plasmo.qa/app/record/gene/PVVCY_1303780"
+      },
+      "ortho_source_id": "PVVCY_1303780_t1",
+      "ortho_gene_source_id": "PVVCY_1303780",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pvvcy_1303780                                                                   ",
+      "protein_length": "339",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PVVCY_1303780#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVVCY_1303780\">",
+      "gene_product": "Yip1 domain | domain-containing protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium coatneyi Hackeri",
+      "gene": {
+       "displayText": "PCOAH_00043860-t30_1",
+       "url": "/plasmo.qa/app/record/gene/PCOAH_00043860"
+      },
+      "ortho_source_id": "PCOAH_00043860-t30_1",
+      "ortho_gene_source_id": "PCOAH_00043860",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pcoah_00043860                                                                  ",
+      "protein_length": "317",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PCOAH_00043860#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PCOAH_00043860\">",
+      "gene_product": "Uncharacterized protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium billcollinsi G01",
+      "gene": {
+       "displayText": "PBILCG01_1471300_t1",
+       "url": "/plasmo.qa/app/record/gene/PBILCG01_1471300"
+      },
+      "ortho_source_id": "PBILCG01_1471300_t1",
+      "ortho_gene_source_id": "PBILCG01_1471300",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pbilcg01_1471300                                                                ",
+      "protein_length": "313",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PBILCG01_1471300#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PBILCG01_1471300\">",
+      "gene_product": "Yip1 protein, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium inui San Antonio 1",
+      "gene": {
+       "displayText": "C922_00061-t30_1",
+       "url": "/plasmo.qa/app/record/gene/C922_00061"
+      },
+      "ortho_source_id": "C922_00061-t30_1",
+      "ortho_gene_source_id": "C922_00061",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no c922_00061                                                                      ",
+      "protein_length": "260",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/C922_00061#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"C922_00061\">",
+      "gene_product": "hypothetical protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium knowlesi strain H",
+      "gene": {
+       "displayText": "PKNH_1208900.1",
+       "url": "/plasmo.qa/app/record/gene/PKNH_1208900"
+      },
+      "ortho_source_id": "PKNH_1208900.1",
+      "ortho_gene_source_id": "PKNH_1208900",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pknh_1208900                                                                    ",
+      "protein_length": "319",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PKNH_1208900#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PKNH_1208900\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium falciparum KH02",
+      "gene": {
+       "displayText": "PfKH02_140077600-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfKH02_140077600"
+      },
+      "ortho_source_id": "PfKH02_140077600-t41_1",
+      "ortho_gene_source_id": "PfKH02_140077600",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfkh02_140077600                                                                ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfKH02_140077600#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfKH02_140077600\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium knowlesi strain Malayan Strain Pk1 A",
+      "gene": {
+       "displayText": "PKNOH_S110079400-t35_1",
+       "url": "/plasmo.qa/app/record/gene/PKNOH_S110079400"
+      },
+      "ortho_source_id": "PKNOH_S110079400-t35_1",
+      "ortho_gene_source_id": "PKNOH_S110079400",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pknoh_s110079400                                                                ",
+      "protein_length": "292",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PKNOH_S110079400#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PKNOH_S110079400\">",
+      "gene_product": "putative Yip1 protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium falciparum SD01",
+      "gene": {
+       "displayText": "PfSD01_140075200-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfSD01_140075200"
+      },
+      "ortho_source_id": "PfSD01_140075200-t41_1",
+      "ortho_gene_source_id": "PfSD01_140075200",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfsd01_140075200                                                                ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfSD01_140075200#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfSD01_140075200\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium falciparum GN01",
+      "gene": {
+       "displayText": "PfGN01_140077200-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfGN01_140077200"
+      },
+      "ortho_source_id": "PfGN01_140077200-t41_1",
+      "ortho_gene_source_id": "PfGN01_140077200",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfgn01_140077200                                                                ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfGN01_140077200#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfGN01_140077200\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium falciparum GB4",
+      "gene": {
+       "displayText": "PfGB4_140077900-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfGB4_140077900"
+      },
+      "ortho_source_id": "PfGB4_140077900-t41_1",
+      "ortho_gene_source_id": "PfGB4_140077900",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfgb4_140077900                                                                 ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfGB4_140077900#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfGB4_140077900\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium falciparum SN01",
+      "gene": {
+       "displayText": "PfSN01_140079100-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfSN01_140079100"
+      },
+      "ortho_source_id": "PfSN01_140079100-t41_1",
+      "ortho_gene_source_id": "PfSN01_140079100",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfsn01_140079100                                                                ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfSN01_140079100#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfSN01_140079100\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium falciparum ML01",
+      "gene": {
+       "displayText": "PfML01_140077700-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfML01_140077700"
+      },
+      "ortho_source_id": "PfML01_140077700-t41_1",
+      "ortho_gene_source_id": "PfML01_140077700",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfml01_140077700                                                                ",
+      "protein_length": "290",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfML01_140077700#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfML01_140077700\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium vivax-like Pvl01",
+      "gene": {
+       "displayText": "PVL_120023800-t42_1",
+       "url": "/plasmo.qa/app/record/gene/PVL_120023800"
+      },
+      "ortho_source_id": "PVL_120023800-t42_1",
+      "ortho_gene_source_id": "PVL_120023800",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pvl_120023800                                                                   ",
+      "protein_length": "291",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PVL_120023800#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVL_120023800\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Haemoproteus tartakovskyi strain SISKIN1",
+      "gene": {
+       "displayText": "Htart_000299200.1",
+       "url": "/plasmo.qa/app/record/gene/Htart_000299200"
+      },
+      "ortho_source_id": "Htart_000299200.1",
+      "ortho_gene_source_id": "Htart_000299200",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no htart_000299200                                                                 ",
+      "protein_length": "319",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/Htart_000299200#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Htart_000299200\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium falciparum Dd2",
+      "gene": {
+       "displayText": "PfDd2_140076300-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfDd2_140076300"
+      },
+      "ortho_source_id": "PfDd2_140076300-t41_1",
+      "ortho_gene_source_id": "PfDd2_140076300",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfdd2_140076300                                                                 ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfDd2_140076300#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfDd2_140076300\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium cynomolgi strain M",
+      "gene": {
+       "displayText": "PcyM_1239800-t36_1",
+       "url": "/plasmo.qa/app/record/gene/PcyM_1239800"
+      },
+      "ortho_source_id": "PcyM_1239800-t36_1",
+      "ortho_gene_source_id": "PcyM_1239800",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pcym_1239800                                                                    ",
+      "protein_length": "314",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PcyM_1239800#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PcyM_1239800\">",
+      "gene_product": "Yip1 protein, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Hepatocystis sp. ex Piliocolobus tephrosceles 2019",
+      "gene": {
+       "displayText": "HEP_00266400_t1",
+       "url": "/plasmo.qa/app/record/gene/HEP_00266400"
+      },
+      "ortho_source_id": "HEP_00266400_t1",
+      "ortho_gene_source_id": "HEP_00266400",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no hep_00266400                                                                    ",
+      "protein_length": "277",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/HEP_00266400#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"HEP_00266400\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium chabaudi chabaudi CB",
+      "gene": {
+       "displayText": "PCHCB_000391400-t70_1",
+       "url": "/plasmo.qa/app/record/gene/PCHCB_000391400"
+      },
+      "ortho_source_id": "PCHCB_000391400-t70_1",
+      "ortho_gene_source_id": "PCHCB_000391400",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pchcb_000391400                                                                 ",
+      "protein_length": "336",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PCHCB_000391400#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PCHCB_000391400\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium vivax Sal-1",
+      "gene": {
+       "displayText": "PVX_116875.1",
+       "url": "/plasmo.qa/app/record/gene/PVX_116875"
+      },
+      "ortho_source_id": "PVX_116875.1",
+      "ortho_gene_source_id": "PVX_116875",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pvx_116875                                                                      ",
+      "protein_length": "314",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PVX_116875#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVX_116875\">",
+      "gene_product": "hypothetical protein, conserved",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium reichenowi CDC",
+      "gene": {
+       "displayText": "PRCDC_1471300.1",
+       "url": "/plasmo.qa/app/record/gene/PRCDC_1471300"
+      },
+      "ortho_source_id": "PRCDC_1471300.1",
+      "ortho_gene_source_id": "PRCDC_1471300",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no prcdc_1471300                                                                   ",
+      "protein_length": "307",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PRCDC_1471300#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PRCDC_1471300\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium yoelii yoelii 17X",
+      "gene": {
+       "displayText": "PY17X_1340000.1",
+       "url": "/plasmo.qa/app/record/gene/PY17X_1340000"
+      },
+      "ortho_source_id": "PY17X_1340000.1",
+      "ortho_gene_source_id": "PY17X_1340000",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no py17x_1340000                                                                   ",
+      "protein_length": "305",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PY17X_1340000#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PY17X_1340000\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium falciparum NF54",
+      "gene": {
+       "displayText": "PfNF54_140075600.1",
+       "url": "/plasmo.qa/app/record/gene/PfNF54_140075600"
+      },
+      "ortho_source_id": "PfNF54_140075600.1",
+      "ortho_gene_source_id": "PfNF54_140075600",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfnf54_140075600                                                                ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfNF54_140075600#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfNF54_140075600\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium falciparum KH01",
+      "gene": {
+       "displayText": "PfKH01_140077400-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfKH01_140077400"
+      },
+      "ortho_source_id": "PfKH01_140077400-t41_1",
+      "ortho_gene_source_id": "PfKH01_140077400",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfkh01_140077400                                                                ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfKH01_140077400#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfKH01_140077400\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium cynomolgi strain B",
+      "gene": {
+       "displayText": "PCYB_124290-t26_1",
+       "url": "/plasmo.qa/app/record/gene/PCYB_124290"
+      },
+      "ortho_source_id": "PCYB_124290-t26_1",
+      "ortho_gene_source_id": "PCYB_124290",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pcyb_124290                                                                     ",
+      "protein_length": "261",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PCYB_124290#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PCYB_124290\">",
+      "gene_product": "hypothetical protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium gaboni strain G01",
+      "gene": {
+       "displayText": "PGABG01_1470800-t36_1",
+       "url": "/plasmo.qa/app/record/gene/PGABG01_1470800"
+      },
+      "ortho_source_id": "PGABG01_1470800-t36_1",
+      "ortho_gene_source_id": "PGABG01_1470800",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pgabg01_1470800                                                                 ",
+      "protein_length": "317",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PGABG01_1470800#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PGABG01_1470800\">",
+      "gene_product": "Yip1 protein,putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium falciparum NF135.C10",
+      "gene": {
+       "displayText": "PfNF135_140076000.1",
+       "url": "/plasmo.qa/app/record/gene/PfNF135_140076000"
+      },
+      "ortho_source_id": "PfNF135_140076000.1",
+      "ortho_gene_source_id": "PfNF135_140076000",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfnf135_140076000                                                               ",
+      "protein_length": "291",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfNF135_140076000#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfNF135_140076000\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium vinckei brucechwatti DA",
+      "gene": {
+       "displayText": "PVBDA_1304000_t1",
+       "url": "/plasmo.qa/app/record/gene/PVBDA_1304000"
+      },
+      "ortho_source_id": "PVBDA_1304000_t1",
+      "ortho_gene_source_id": "PVBDA_1304000",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pvbda_1304000                                                                   ",
+      "protein_length": "321",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PVBDA_1304000#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVBDA_1304000\">",
+      "gene_product": "Yip1 domain | domain-containing protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium berghei ANKA",
+      "gene": {
+       "displayText": "PBANKA_1335300.1",
+       "url": "/plasmo.qa/app/record/gene/PBANKA_1335300"
+      },
+      "ortho_source_id": "PBANKA_1335300.1",
+      "ortho_gene_source_id": "PBANKA_1335300",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pbanka_1335300                                                                  ",
+      "protein_length": "314",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PBANKA_1335300#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PBANKA_1335300\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium falciparum KE01",
+      "gene": {
+       "displayText": "PfKE01_140076700-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfKE01_140076700"
+      },
+      "ortho_source_id": "PfKE01_140076700-t41_1",
+      "ortho_gene_source_id": "PfKE01_140076700",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfke01_140076700                                                                ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfKE01_140076700#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfKE01_140076700\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium vinckei lentum DE",
+      "gene": {
+       "displayText": "PVLDE_1304250_t1",
+       "url": "/plasmo.qa/app/record/gene/PVLDE_1304250"
+      },
+      "ortho_source_id": "PVLDE_1304250_t1",
+      "ortho_gene_source_id": "PVLDE_1304250",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pvlde_1304250                                                                   ",
+      "protein_length": "335",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PVLDE_1304250#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVLDE_1304250\">",
+      "gene_product": "Yip1 domain | domain-containing protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium relictum SGS1-like",
+      "gene": {
+       "displayText": "PRELSG_1208600.1",
+       "url": "/plasmo.qa/app/record/gene/PRELSG_1208600"
+      },
+      "ortho_source_id": "PRELSG_1208600.1",
+      "ortho_gene_source_id": "PRELSG_1208600",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no prelsg_1208600                                                                  ",
+      "protein_length": "305",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PRELSG_1208600#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PRELSG_1208600\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium vivax PAM",
+      "gene": {
+       "displayText": "PVPAM_120039700_t1",
+       "url": "/plasmo.qa/app/record/gene/PVPAM_120039700"
+      },
+      "ortho_source_id": "PVPAM_120039700_t1",
+      "ortho_gene_source_id": "PVPAM_120039700",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pvpam_120039700                                                                 ",
+      "protein_length": "314",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PVPAM_120039700#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVPAM_120039700\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium gallinaceum 8A",
+      "gene": {
+       "displayText": "PGAL8A_00231600.1",
+       "url": "/plasmo.qa/app/record/gene/PGAL8A_00231600"
+      },
+      "ortho_source_id": "PGAL8A_00231600.1",
+      "ortho_gene_source_id": "PGAL8A_00231600",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pgal8a_00231600                                                                 ",
+      "protein_length": "294",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PGAL8A_00231600#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PGAL8A_00231600\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium malariae UG01",
+      "gene": {
+       "displayText": "PmUG01_12044800.1",
+       "url": "/plasmo.qa/app/record/gene/PmUG01_12044800"
+      },
+      "ortho_source_id": "PmUG01_12044800.1",
+      "ortho_gene_source_id": "PmUG01_12044800",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pmug01_12044800                                                                 ",
+      "protein_length": "349",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PmUG01_12044800#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PmUG01_12044800\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "yes"
+     },
+     {
+      "organism": "Plasmodium falciparum HB3",
+      "gene": {
+       "displayText": "PfHB3_140077600-t41_1",
+       "url": "/plasmo.qa/app/record/gene/PfHB3_140077600"
+      },
+      "ortho_source_id": "PfHB3_140077600-t41_1",
+      "ortho_gene_source_id": "PfHB3_140077600",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pfhb3_140077600                                                                 ",
+      "protein_length": "289",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PfHB3_140077600#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfHB3_140077600\">",
+      "gene_product": "protein transport protein YIP1, putative",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     },
+     {
+      "organism": "Plasmodium vinckei petteri CR 2020",
+      "gene": {
+       "displayText": "PVPCR_1304110_t1",
+       "url": "/plasmo.qa/app/record/gene/PVPCR_1304110"
+      },
+      "ortho_source_id": "PVPCR_1304110_t1",
+      "ortho_gene_source_id": "PVPCR_1304110",
+      "sort_key": "pf3d7_1472100                                                                   8yes9no pvpcr_1304110                                                                   ",
+      "protein_length": "340",
+      "comment_link": {
+       "displayText": "no",
+       "url": "/plasmo.qa/app/record/gene/PVPCR_1304110#UserComments"
+      },
+      "is_syntenic": "yes",
+      "has_comment": "no",
+      "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVPCR_1304110\">",
+      "gene_product": "Yip1 domain | domain-containing protein",
+      "source_id": "PF3D7_1472100",
+      "is_reference_strain": "no"
+     }
+    ]
+   },
+   "tableErrors": []
+  },
+  {
+   "displayName": "PfDd2_140076300",
+   "id": [
+    {
+     "name": "source_id",
+     "value": "PfDd2_140076300"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "GeneRecordClasses.GeneRecordClass",
+   "attributes": {
+    "organismAbbrev": "pfalDd2"
+   },
+   "tables": {
+    "GeneModelDump": [
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "type": "Exon",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "gm_end": "2921032",
+      "gm_start": "2920518"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "type": "CDS",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "gm_end": "2921032",
+      "gm_start": "2920518"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "type": "Intron",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "gm_end": "2920517",
+      "gm_start": "2920389"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "type": "Exon",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "gm_end": "2920388",
+      "gm_start": "2920307"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "type": "CDS",
+      "gm_end": "2920388",
+      "gm_start": "2920307"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "type": "Intron",
+      "gm_end": "2920306",
+      "gm_start": "2920214"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "type": "Exon",
+      "gm_end": "2920213",
+      "gm_start": "2920127"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "type": "CDS",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "gm_end": "2920213",
+      "gm_start": "2920127"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "type": "Intron",
+      "gm_end": "2920126",
+      "gm_start": "2920014"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "type": "Exon",
+      "gm_end": "2920013",
+      "gm_start": "2919916"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "type": "CDS",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "gm_end": "2920013",
+      "gm_start": "2919916"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "type": "Intron",
+      "gm_end": "2919915",
+      "gm_start": "2919677"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "type": "CDS",
+      "gm_end": "2919676",
+      "gm_start": "2919589"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "PfDd2_14",
+      "source_id": "PfDd2_140076300",
+      "transcript_ids": "PfDd2_140076300-t41_1",
+      "type": "Exon",
+      "gm_end": "2919676",
+      "gm_start": "2919589"
+     }
+    ]
+   },
+   "tableErrors": []
+  }
+ ],
+ "gene_answers": [
+  {
+   "meta": {
+    "totalCount": 2,
+    "responseCount": 2,
+    "displayTotalCount": 2,
+    "viewTotalCount": 2,
+    "displayViewTotalCount": 2,
+    "recordClassName": "transcript",
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type",
+     "input_id"
+    ],
+    "tables": []
+   },
+   "records": [
+    {
+     "displayName": "PF3D7_1472100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PF3D7_1472100"
+      },
+      {
+       "name": "source_id",
+       "value": "PF3D7_1472100.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "314",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum 3D7",
+      "gene_start_min": "2941398",
+      "gene_type": "protein coding gene",
+      "sequence_id": "Pf3D7_14_v3",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2945279",
+      "strand_plus_minus": "-",
+      "input_id": "PF3D7_1472100"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfDd2_140076300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfDd2_140076300"
+      },
+      {
+       "name": "source_id",
+       "value": "PfDd2_140076300-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum Dd2",
+      "gene_start_min": "2919589",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfDd2_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2921032",
+      "strand_plus_minus": "-",
+      "input_id": "PfDd2_140076300"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ]
+  }
+ ],
+ "row_answers": [
+  {
+   "meta": {
+    "totalCount": 64,
+    "responseCount": 64,
+    "displayTotalCount": 62,
+    "viewTotalCount": 64,
+    "displayViewTotalCount": 62,
+    "recordClassName": "transcript",
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type"
+    ],
+    "tables": []
+   },
+   "records": [
+    {
+     "displayName": "AK88_00429",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_00429"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_00429-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "265",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "493940",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001647",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "495185",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "C922_00061",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "C922_00061"
+      },
+      {
+       "name": "source_id",
+       "value": "C922_00061-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "260",
+      "gene_name": null,
+      "organism_full": "Plasmodium inui San Antonio 1",
+      "gene_start_min": "260387",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KI965460",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "261650",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "HEP_00266400",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "HEP_00266400"
+      },
+      {
+       "name": "source_id",
+       "value": "HEP_00266400_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "277",
+      "gene_name": null,
+      "organism_full": "Hepatocystis sp. ex Piliocolobus tephrosceles 2019",
+      "gene_start_min": "13527",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CABPSV020000431",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "15433",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Htart_000299200",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Htart_000299200"
+      },
+      {
+       "name": "source_id",
+       "value": "Htart_000299200.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "319",
+      "gene_name": null,
+      "organism_full": "Haemoproteus tartakovskyi strain SISKIN1",
+      "gene_start_min": "9654",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LSRZ01000539",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "11410",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "MKS88_004376",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "MKS88_004376"
+      },
+      {
+       "name": "source_id",
+       "value": "MKS88_004376_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "296",
+      "gene_name": null,
+      "organism_full": "Plasmodium brasilianum strain Bolivian I",
+      "gene_start_min": "1849217",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CM043780",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1",
+      "gene_end_max": "1850590",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PADL01_1472000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PADL01_1472000"
+      },
+      {
+       "name": "source_id",
+       "value": "PADL01_1472000-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "320",
+      "gene_name": null,
+      "organism_full": "Plasmodium adleri G01",
+      "gene_start_min": "2810563",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PADLG01_14",
+      "is_pseudo": "No",
+      "gene_product": "Yip1 protein, putative",
+      "gene_end_max": "2812522",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PBANKA_1335300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PBANKA_1335300"
+      },
+      {
+       "name": "source_id",
+       "value": "PBANKA_1335300.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "314",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium berghei ANKA",
+      "gene_start_min": "1407099",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PbANKA_13_v3",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "1408783",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PBILCG01_1471300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PBILCG01_1471300"
+      },
+      {
+       "name": "source_id",
+       "value": "PBILCG01_1471300_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "313",
+      "gene_name": null,
+      "organism_full": "Plasmodium billcollinsi G01",
+      "gene_start_min": "3044384",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LT990243",
+      "is_pseudo": "No",
+      "gene_product": "Yip1 protein, putative",
+      "gene_end_max": "3046239",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PBLACG01_1471400",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PBLACG01_1471400"
+      },
+      {
+       "name": "source_id",
+       "value": "PBLACG01_1471400-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "311",
+      "gene_name": null,
+      "organism_full": "Plasmodium blacklocki G01",
+      "gene_start_min": "2870017",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PBLACG01_14",
+      "is_pseudo": "No",
+      "gene_product": "Yip1 protein, putative",
+      "gene_end_max": "2871884",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCHAS_1339900",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCHAS_1339900"
+      },
+      {
+       "name": "source_id",
+       "value": "PCHAS_1339900.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "344",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium chabaudi chabaudi",
+      "gene_start_min": "1498815",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PCHAS_13_v3",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "1500565",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCHCB_000391400",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCHCB_000391400"
+      },
+      {
+       "name": "source_id",
+       "value": "PCHCB_000391400-t70_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "336",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium chabaudi chabaudi CB",
+      "gene_start_min": "1387813",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LT608165",
+      "is_pseudo": null,
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "1389352",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00043860",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00043860"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00043860-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "317",
+      "gene_name": null,
+      "organism_full": "Plasmodium coatneyi Hackeri",
+      "gene_start_min": "3188114",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP016250",
+      "is_pseudo": "No",
+      "gene_product": "Uncharacterized protein",
+      "gene_end_max": "3189915",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCYB_124290",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCYB_124290"
+      },
+      {
+       "name": "source_id",
+       "value": "PCYB_124290-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "261",
+      "gene_name": null,
+      "organism_full": "Plasmodium cynomolgi strain B",
+      "gene_start_min": "1422880",
+      "gene_type": "protein coding gene",
+      "sequence_id": "DF157104",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "1424213",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PcyM_1239800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PcyM_1239800"
+      },
+      {
+       "name": "source_id",
+       "value": "PcyM_1239800-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "314",
+      "gene_name": null,
+      "organism_full": "Plasmodium cynomolgi strain M",
+      "gene_start_min": "1575739",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PcyM_12",
+      "is_pseudo": "No",
+      "gene_product": "Yip1 protein, putative",
+      "gene_end_max": "1577709",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PF3D7_1472100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PF3D7_1472100"
+      },
+      {
+       "name": "source_id",
+       "value": "PF3D7_1472100.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "314",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum 3D7",
+      "gene_start_min": "2941398",
+      "gene_type": "protein coding gene",
+      "sequence_id": "Pf3D7_14_v3",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2945279",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Pf7G8_140077100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Pf7G8_140077100"
+      },
+      {
+       "name": "source_id",
+       "value": "Pf7G8_140077100-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum 7G8",
+      "gene_start_min": "2945797",
+      "gene_type": "protein coding gene",
+      "sequence_id": "Pf7G8_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2947226",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Pf7G8-2_000545700",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Pf7G8-2_000545700"
+      },
+      {
+       "name": "source_id",
+       "value": "Pf7G8-2_000545700.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum 7G8 2019",
+      "gene_start_min": "2945388",
+      "gene_type": "protein coding gene",
+      "sequence_id": "VBRD01000020.1",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2946813",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfCD01_140077200",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfCD01_140077200"
+      },
+      {
+       "name": "source_id",
+       "value": "PfCD01_140077200-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum CD01",
+      "gene_start_min": "2975872",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfCD01_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2977318",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfDd2_140076300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfDd2_140076300"
+      },
+      {
+       "name": "source_id",
+       "value": "PfDd2_140076300-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum Dd2",
+      "gene_start_min": "2919589",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfDd2_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2921032",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfGA01_140077300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfGA01_140077300"
+      },
+      {
+       "name": "source_id",
+       "value": "PfGA01_140077300-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum GA01",
+      "gene_start_min": "2960436",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfGA01_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2961883",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfGB4_140077900",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfGB4_140077900"
+      },
+      {
+       "name": "source_id",
+       "value": "PfGB4_140077900-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum GB4",
+      "gene_start_min": "2977767",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfGB4_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2979199",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfGN01_140077200",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfGN01_140077200"
+      },
+      {
+       "name": "source_id",
+       "value": "PfGN01_140077200-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum GN01",
+      "gene_start_min": "2973005",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfGN01_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2974425",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfHB3_140077600",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfHB3_140077600"
+      },
+      {
+       "name": "source_id",
+       "value": "PfHB3_140077600-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum HB3",
+      "gene_start_min": "2974724",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfHB3_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2976131",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfIT_140078300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfIT_140078300"
+      },
+      {
+       "name": "source_id",
+       "value": "PfIT_140078300-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum IT",
+      "gene_start_min": "3007447",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfIT_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "3008874",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfKE01_140076700",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfKE01_140076700"
+      },
+      {
+       "name": "source_id",
+       "value": "PfKE01_140076700-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum KE01",
+      "gene_start_min": "2960808",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfKE01_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2962220",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfKH01_140077400",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfKH01_140077400"
+      },
+      {
+       "name": "source_id",
+       "value": "PfKH01_140077400-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum KH01",
+      "gene_start_min": "2965081",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfKH01_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2966513",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfKH02_140077600",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfKH02_140077600"
+      },
+      {
+       "name": "source_id",
+       "value": "PfKH02_140077600-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum KH02",
+      "gene_start_min": "2981506",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfKH02_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2982943",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfML01_140077700",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfML01_140077700"
+      },
+      {
+       "name": "source_id",
+       "value": "PfML01_140077700-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "290",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum ML01",
+      "gene_start_min": "2950309",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfML01_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2951758",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfNF135_140076000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfNF135_140076000"
+      },
+      {
+       "name": "source_id",
+       "value": "PfNF135_140076000.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "291",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum NF135.C10",
+      "gene_start_min": "2974526",
+      "gene_type": "protein coding gene",
+      "sequence_id": "VBRG01000021.1",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2975961",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfNF166_140074800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfNF166_140074800"
+      },
+      {
+       "name": "source_id",
+       "value": "PfNF166_140074800.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum NF166",
+      "gene_start_min": "2917175",
+      "gene_type": "protein coding gene",
+      "sequence_id": "VBRE01000024.1",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2918605",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfNF54_140075600",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfNF54_140075600"
+      },
+      {
+       "name": "source_id",
+       "value": "PfNF54_140075600.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum NF54",
+      "gene_start_min": "2986546",
+      "gene_type": "protein coding gene",
+      "sequence_id": "VBRF01000027.1",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2987988",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfSD01_140075200",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfSD01_140075200"
+      },
+      {
+       "name": "source_id",
+       "value": "PfSD01_140075200-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum SD01",
+      "gene_start_min": "2881762",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfSD01_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2883199",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfSN01_140079100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfSN01_140079100"
+      },
+      {
+       "name": "source_id",
+       "value": "PfSN01_140079100-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum SN01",
+      "gene_start_min": "3051984",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfSN01_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "3053419",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfTG01_140077200",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfTG01_140077200"
+      },
+      {
+       "name": "source_id",
+       "value": "PfTG01_140077200-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "289",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium falciparum TG01",
+      "gene_start_min": "2965154",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfTG01_14",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2966584",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PGABG01_1470800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PGABG01_1470800"
+      },
+      {
+       "name": "source_id",
+       "value": "PGABG01_1470800-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "317",
+      "gene_name": null,
+      "organism_full": "Plasmodium gaboni strain G01",
+      "gene_start_min": "2783219",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PGABG01_14",
+      "is_pseudo": "No",
+      "gene_product": "Yip1 protein,putative",
+      "gene_end_max": "2785215",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PGAL8A_00231600",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PGAL8A_00231600"
+      },
+      {
+       "name": "source_id",
+       "value": "PGAL8A_00231600.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "294",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium gallinaceum 8A",
+      "gene_start_min": "1611087",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PGAL8A_union_v1_archived_contig_76",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "1612453",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PGSY75_1472100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PGSY75_1472100"
+      },
+      {
+       "name": "source_id",
+       "value": "PGSY75_1472100-t31_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "315",
+      "gene_name": null,
+      "organism_full": "Plasmodium gaboni strain SY75",
+      "gene_start_min": "2708235",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CM003869.1",
+      "is_pseudo": "No",
+      "gene_product": "putative Yip1 protein",
+      "gene_end_max": "2710117",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PKNH_1208900",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PKNH_1208900"
+      },
+      {
+       "name": "source_id",
+       "value": "PKNH_1208900.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "319",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium knowlesi strain H",
+      "gene_start_min": "396313",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PKNH_12_v2",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "398297",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PKNOH_S110079400",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PKNOH_S110079400"
+      },
+      {
+       "name": "source_id",
+       "value": "PKNOH_S110079400-t35_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "292",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium knowlesi strain Malayan Strain Pk1 A",
+      "gene_start_min": "405561",
+      "gene_type": "protein coding gene",
+      "sequence_id": "NETL01000025",
+      "is_pseudo": "No",
+      "gene_product": "putative Yip1 protein",
+      "gene_end_max": "407273",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PmUG01_12044800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PmUG01_12044800"
+      },
+      {
+       "name": "source_id",
+       "value": "PmUG01_12044800.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "349",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium malariae UG01",
+      "gene_start_min": "1633297",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PmUG01_12_v1",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "1635580",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PocGH01_12042700",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PocGH01_12042700"
+      },
+      {
+       "name": "source_id",
+       "value": "PocGH01_12042700.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "300",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium ovale curtisi GH01",
+      "gene_start_min": "1312579",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PocGH01_12_v2",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "1314200",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "POWCR01_120038300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "POWCR01_120038300"
+      },
+      {
+       "name": "source_id",
+       "value": "POWCR01_120038300_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "290",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium ovale wallikeri PowCR01",
+      "gene_start_min": "1394365",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LT594516",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "1395811",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PPRFG01_1472700",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PPRFG01_1472700"
+      },
+      {
+       "name": "source_id",
+       "value": "PPRFG01_1472700_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "316",
+      "gene_name": null,
+      "organism_full": "Plasmodium praefalciparum strain G01",
+      "gene_start_min": "2942254",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LT963427",
+      "is_pseudo": "No",
+      "gene_product": "Yip1 domain | domain-containing protein",
+      "gene_end_max": "2943949",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PRCDC_1471300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PRCDC_1471300"
+      },
+      {
+       "name": "source_id",
+       "value": "PRCDC_1471300.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "307",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium reichenowi CDC",
+      "gene_start_min": "2903222",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PrCDC_14_v3",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "2904863",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PRELSG_1208600",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PRELSG_1208600"
+      },
+      {
+       "name": "source_id",
+       "value": "PRELSG_1208600.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "305",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium relictum SGS1-like",
+      "gene_start_min": "326314",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PRELSG_12_v1",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "327684",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PRG01_1472000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PRG01_1472000"
+      },
+      {
+       "name": "source_id",
+       "value": "PRG01_1472000-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "307",
+      "gene_name": null,
+      "organism_full": "Plasmodium reichenowi G01",
+      "gene_start_min": "2928888",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PRG01_14",
+      "is_pseudo": "No",
+      "gene_product": "Yip1 protein, putative",
+      "gene_end_max": "2930495",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVBDA_1304000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVBDA_1304000"
+      },
+      {
+       "name": "source_id",
+       "value": "PVBDA_1304000_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "321",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei brucechwatti DA",
+      "gene_start_min": "1511497",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LR865391",
+      "is_pseudo": "No",
+      "gene_product": "Yip1 domain | domain-containing protein",
+      "gene_end_max": "1513180",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVL_120023800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVL_120023800"
+      },
+      {
+       "name": "source_id",
+       "value": "PVL_120023800-t42_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "291",
+      "gene_name": null,
+      "organism_full": "Plasmodium vivax-like Pvl01",
+      "gene_start_min": "983252",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PVL_12_v1",
+      "is_pseudo": null,
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "984829",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVLDE_1304250",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVLDE_1304250"
+      },
+      {
+       "name": "source_id",
+       "value": "PVLDE_1304250_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "335",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei lentum DE",
+      "gene_start_min": "1595752",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LR865375",
+      "is_pseudo": "No",
+      "gene_product": "Yip1 domain | domain-containing protein",
+      "gene_end_max": "1597476",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVP01_1234700",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVP01_1234700"
+      },
+      {
+       "name": "source_id",
+       "value": "PVP01_1234700.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "314",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium vivax P01",
+      "gene_start_min": "1384130",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PvP01_12_v2",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "1386945",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVPAM_120039700",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVPAM_120039700"
+      },
+      {
+       "name": "source_id",
+       "value": "PVPAM_120039700_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "314",
+      "gene_name": null,
+      "organism_full": "Plasmodium vivax PAM",
+      "gene_start_min": "1370610",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CASCJQ010000012",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "1372424",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVPCR_1304110",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVPCR_1304110"
+      },
+      {
+       "name": "source_id",
+       "value": "PVPCR_1304110_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "340",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei petteri CR 2020",
+      "gene_start_min": "1558692",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LR865418",
+      "is_pseudo": "No",
+      "gene_product": "Yip1 domain | domain-containing protein",
+      "gene_end_max": "1560429",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVSEL_1304000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVSEL_1304000"
+      },
+      {
+       "name": "source_id",
+       "value": "PVSEL_1304000_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "281",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei Cameroon EL",
+      "gene_start_min": "1530198",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LR865434",
+      "is_pseudo": "No",
+      "gene_product": "unspecified product",
+      "gene_end_max": "1531379",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVVCY_1303780",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVVCY_1303780"
+      },
+      {
+       "name": "source_id",
+       "value": "PVVCY_1303780_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "339",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei vinckei CY",
+      "gene_start_min": "1415773",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LR215069",
+      "is_pseudo": "No",
+      "gene_product": "Yip1 domain | domain-containing protein",
+      "gene_end_max": "1417485",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVW1_120049400",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVW1_120049400"
+      },
+      {
+       "name": "source_id",
+       "value": "PVW1_120049400_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "292",
+      "gene_name": null,
+      "organism_full": "Plasmodium vivax PvW1",
+      "gene_start_min": "1852555",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CAJZCX010000004",
+      "is_pseudo": "No",
+      "gene_product": "unspecified product",
+      "gene_end_max": "1854162",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVX_116875",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVX_116875"
+      },
+      {
+       "name": "source_id",
+       "value": "PVX_116875.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "314",
+      "gene_name": null,
+      "organism_full": "Plasmodium vivax Sal-1",
+      "gene_start_min": "1354673",
+      "gene_type": "protein coding gene",
+      "sequence_id": "Pv_Sal1_chr12",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein, conserved",
+      "gene_end_max": "1356514",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PY05360",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PY05360"
+      },
+      {
+       "name": "source_id",
+       "value": "PY05360-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "55",
+      "gene_name": null,
+      "organism_full": "Plasmodium yoelii yoelii 17XNL",
+      "gene_start_min": "3964",
+      "gene_type": "protein coding gene",
+      "sequence_id": "AABL01001690",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "4131",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PY17X_1340000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PY17X_1340000"
+      },
+      {
+       "name": "source_id",
+       "value": "PY17X_1340000.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "305",
+      "gene_name": "YIP1",
+      "organism_full": "Plasmodium yoelii yoelii 17X",
+      "gene_start_min": "1790421",
+      "gene_type": "protein coding gene",
+      "sequence_id": "Py17X_13_v3",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1, putative",
+      "gene_end_max": "1792065",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Py17XNL_001303257",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Py17XNL_001303257"
+      },
+      {
+       "name": "source_id",
+       "value": "Py17XNL_001303257_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "288",
+      "gene_name": null,
+      "organism_full": "Plasmodium yoelii yoelii 17XNL 2023",
+      "gene_start_min": "1790686",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP115537",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1",
+      "gene_end_max": "1792765",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Py17XNL_001303257",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Py17XNL_001303257"
+      },
+      {
+       "name": "source_id",
+       "value": "Py17XNL_001303257_t2"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "252",
+      "gene_name": null,
+      "organism_full": "Plasmodium yoelii yoelii 17XNL 2023",
+      "gene_start_min": "1790686",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP115537",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1",
+      "gene_end_max": "1792765",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Py17XNL_001303257",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Py17XNL_001303257"
+      },
+      {
+       "name": "source_id",
+       "value": "Py17XNL_001303257_t3"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "197",
+      "gene_name": null,
+      "organism_full": "Plasmodium yoelii yoelii 17XNL 2023",
+      "gene_start_min": "1790686",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP115537",
+      "is_pseudo": "No",
+      "gene_product": "protein transport protein YIP1",
+      "gene_end_max": "1792765",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PYYM_1337000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PYYM_1337000"
+      },
+      {
+       "name": "source_id",
+       "value": "PYYM_1337000_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "305",
+      "gene_name": null,
+      "organism_full": "Plasmodium yoelii yoelii YM",
+      "gene_start_min": "1449388",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LK934641",
+      "is_pseudo": "No",
+      "gene_product": "Yip1 protein, putative",
+      "gene_end_max": "1451032",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "YYE_00363",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "YYE_00363"
+      },
+      {
+       "name": "source_id",
+       "value": "YYE_00363-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "290",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei vinckei strain vinckei",
+      "gene_start_min": "1400449",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KL446944",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "1401754",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "YYG_04382",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "YYG_04382"
+      },
+      {
+       "name": "source_id",
+       "value": "YYG_04382-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0005198",
+      "protein_length": "287",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei petteri strain CR",
+      "gene_start_min": "315527",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KI965405",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "316726",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ]
+  }
+ ],
+ "protein_answers": [
+  {
+   "meta": {
+    "totalCount": 2,
+    "responseCount": 2,
+    "displayTotalCount": 2,
+    "viewTotalCount": 2,
+    "displayViewTotalCount": 2,
+    "recordClassName": "transcript",
+    "attributes": [
+     "protein_sequence"
+    ],
+    "tables": []
+   },
+   "records": [
+    {
+     "displayName": "PF3D7_1472100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PF3D7_1472100"
+      },
+      {
+       "name": "source_id",
+       "value": "PF3D7_1472100.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "protein_sequence": "MSYYNQKIMNRMNRNEGEPFYQNNNDNKSNNNNNNNLYINKKNYDTNYNVNNNMHIPNNPFQNNDYSSNIEGINKIDTNIMNNNFINNNNNIITTNPFGNTTSNINDNNKINKDPFSNNFQMTNKNIMNDHMINKKYINNDDNEEESPLLEELGINFDLISKRMKSVFLFYKIDHTLFENSDLSGPLIIVLSLGFILLLAGKASFSYIYLIGIVSSLSIYLLLNMMSQNSTVDLYRTISMLGYALLPLVILSLISIIINLRSKKGYCISFFCILWSALTASRFFEVALRMNSQRYLVAYPIFLLYSCFALIIIF"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfDd2_140076300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfDd2_140076300"
+      },
+      {
+       "name": "source_id",
+       "value": "PfDd2_140076300-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "protein_sequence": "MSYYNQKIMNRMNRNEGEPFYQNNNDNKSNNNNNNNLYINKKNYDTNYNVNNNMHIPNNPFQNNDYSSNIEGINKIDTNIMNNNFINNNNNIITTNPFGNTTSNINDNNKINKDPFSNNFQMTNKNIMNDHMINKKYINNDDNEEESPLLEELGINFDLISKRMKSVFLFYKIDHTLFENSDLSGPLIIVLSLGFILLLAGKASFSYIYLIGIVSSLSIYLLLNMMSQNSTVDLYRTISMLGYALLPLVILSLISIIINLRSKKGYCISFFCILWSALTASRFFEVVII"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ]
+  }
+ ],
+ "contig_length": 3257645,
+ "window_start": 2889589,
+ "window": "TTCTTATCCCAAGAGAATGAATATAAGAAAAAACAGAGAAGAGAAAAGTAAACAAAAAAAAAAATTATTCATTAAAAGTTTTAAAAAAAAAAAAAAAAAAACGAGAAAGTAAAAGATATAATATATTAATAACTTATGAAGATATTTGGAAATATTAAAAAGAGGATACATTTGGTAAATATATAAATTATTAAAGAGAAAGAAAAATAAAAAACAAAAGAAACATTTATAAAGGTGTATACACACGTAAAATAAATAAATAAATAAATATATATATATATATATATATATTTGTAGCTGTTTCAAGAAGATATTAAAACGTCTAACATTTTTTTTGAAATACAAAAAAAAGAAAGTATATACATATTTAATAATTCGTTGGAATTTTTTCTGACGAATAATAAATAATATTATTATAGTAATTATTAGACTTATAATTATTTATACATACATATATATTTATTTATTTTATTTTTTTTGTTCATATTATTTTATTTAATTTTTCTACATATCATTATTTAAAAAAAAGAAAAATTATACCAAATAAGAATAAATTAATATTAATTTGTTTTAAAAAAAATTCAAAGTATAAATTAATATATATGTATATATATTTACATATATATCAATAAAAATAAAGTATATAAATATATAAATATATATATATATATATATACATATATATATATATATATGGTAAGAAATTTTTAAAATGCTTGAAACAAATAAAGTTGAAGACGCAACTGTTAACGAATATGTAGAAAGACCAGAAGAATTTAATAAACTTGATGAATCTGTAGAAAGAACAAAATTATTTCATAATGATGTGTATGACAATGATATAAAAATATGTTTACCTACAAGAATTGGATTTTCGAAAGCTTTTATGTCTATGGTGGACGGTATAAAATGGGGATGGGGATTTACTAATACACCTAAAGAAACTTCTAAATATTATATAAATGAAATATTATGTGGATGTATATTATGTTTAACTATGTTACCAGAAATGATTTCTTTTTGTATGATAGCAAAAATACCACCATATCTTGGTTTACAAGGAGCTTCTTTTTTATCTTTAATAACATCAATTTTTGGTGGTTCTCCTGCAGTGATACATGGTGTTACAGGAGCTTTTGCATCTGTTTGCTCCAAATATTTAGTTGAAAATAATAATGTTGATTTATTACCAGATGGAATTGAACGATTATATATTTGTATATTCATATGTTCAGTGATGTTATTTTTTTTTTCGTATTTCCATATGTCTGCTTTAATTCAATTAATACCTACACCAGTCTTTATTGGTTACTGTAATGGCCTTTCCATTATTTTTTTAAGAGCTCAATTACATAACTTAAAAAATCCATATACTCATGAATATATTAAGGGACACTATTTGCTTTTTTTTATCATCATATGTACGTTGGTGGTTTTGATCGTGGAGTTATGGAAAAAAATACCAAAGGTAATATTAAAATTAAAAGGAAAATTAAAAGGAAAATTAAAAAGAAATGTTATATGTATATAAAACATAAATATGTAAATATATAAATATATATATGTATTTTATTTTATGATTAGCTAGCCATATTTAAATTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTATTTTGGCTACCTGTTTATAGGTTGGTCAGAAAATTCCTTCCTCCCTGATAGCCATAACTGTAACTATATTTGTGGAGTTTGTCATTTTGAGAAAGTTTTTACATAACAATTTTGCTTCCTTCAAAGATGTGAAATCATTTACAGTAGGGGATATGTTTTCGTTTACTTCTGATAAAGCAAAACCGACATTTTTGTTTACGAATAAAGATTTAAATTTTTCAAAGGTGGAATTTAATATGGACTTGATCAAACAAGGTAATAAAAAAAAAAAATATATACATATATATATATATAGTGAGAATAACATTATGATGTGCATAAGAGAATATATATATTTTTATGTGTATACAGGTATTTTTTTTTTTATTATTATTTTTTTTTTTAATATTACTATCTATGCATATATATAATTATATATATATATATATATATATATATTGTTTACTTTTATTTAATTTTTGTGTTTTCTTGGTATAATTTTAATTATATGAACAAAAAAAATGAATATATAAAAATTAGTTTGTCATATATTATTTTTCACTGTAACTGTTTTTTTTTTTTTTATCCTTTTAGTTGCGAACATGTTCACTGTCCTTCTTGTTGAAGCATTAATGGTTAGTGAAGTTATAAAAGATATGGGAGGTGCTGAATGTGATACGAATGAAACAATTTTTTCTCTTTTTATTGGGAACGTTTTAGCATCATTAGGTAGTGCAGTAGGTGGTAGTAGTTTATTAGGATTGTCTGTTTTAAATTATAGAAATGGAGCAAGGGGTAAAGAGAGTGGAGTGGTGGCTTCTATTTTGATATATGCTATTTTATTGTTTGGATACTCATTATTAAATTATATACCTTTATCTTTTCTTTGTGGAATTATGATAACTGTGTTTATTCATTGCTTCAAGTGGTTTTCTATTCCGATAGTCTTTTTTACATTTTGTCCAGGTTATATAAGAAATTGTCATCCATGTATGAGTAGAAAAATTTCAAGATGGGATGCCTTCATCATAGTTCTTGTAACAGTTTTATGTGTAAGTAGAATGAATATGTAAATATATACAGATAGATGTATATTTTTATTATATATATATATATATATATATATATATTTCATTACACAGGTATTTGTTAGTGTACCAAATGGTGTGTTAACTGGAATAATTTTGTCAGCCTTAGTTTATGTATGGCAAAGCAAATCAACATTTAAATTTGAAATATTTTATGATAGAGATACAGATACGAAGGTATTAGAAAAAAAAAAAAAATATATATAATATATATATTATAGGTGTAGCTATTCCGTGTAACACATTTTTGAAAAGAAATAATATATATATATATATATATATATATATTTTATTTATTTATATTTATTTTTTTTAATTTTTCGATTTAGTATTACGAAATTGAGGGTCATCTTTTTTATGCTTCTAAGAAAATGTTTACAAGATTGTTCAATTACGAAAATGACAGCTCAACTGTGAATATTGTTCTTAAAGGTAAAAGTACTTTATTTGATTATACAGCAATAGAAGCTTTAACATCGGTAAAACAACAATACAATGTTAATAATAAGAATGTGACTATACATGGATTAAGTCATGAATGTATTAAGAAAATAGCCAAAATGAATCACTTATGTAAACAAATTGATGTTGATTTAGTAAAAGTGGAGGCCCCAGTTGTGCCTTTACTATACAAACCTTTACAAACCATCTTCCAAGTAATATATACTTTTTATAACATATCAATTTTACATTTGTAATTATTACACATAAATGTAAAAAATTGGAAATGTTATACCATATGTATATAAATATATAAATATATTAATATATTAATATATTAATATATATATATATATATATGTGTATATTTAATTTTTTTTTTTTTTTTTTTTTTTTTCACAGAAACAAAGAACGATTAGAAGAAAAATGTCCTTCAAAATAAAAAAAAAGAAAAAGGAAAAAGTAGAGGAAAATTTAAATGATATAGAACAACCATAATTTTTTTTTTTTTTTTCTTTTTTTTATTATATAATTGTATATAAAATTATAATTTTCGTATGTTTTTATTTTTATATTTTTTATTTAATTTTTTTCTTTTTCTTTATTTAAATTTAATTTTATATAATTTTATTATAATATACTTATTTATTATTTTTTTTTTTTTTTTTGTTTTTAATATACATATAAAAAAAAAAAAAAAATAATAAATAAAATCATGAAATAATAATTCTATATTATCACCTTATATATATATGATACATTTATATGTAGACATGTTTCATACAATATTAAATGTACATATATATATATATATATATATATATATATATATATATATAGATAGATAGATAATTTTTTCCTCTTTTTTTGCTTTTTAATTTGTCATTTCATAAATTCACGCTGTTCATGTTCTTTTACGCTTTTAAATTTTTTTTTTATGTATTCCAATTTTTCATCAAAATTCCTGTTAAAAAAATAATATGATAAACCTTAATATATATATATATATATATATTTTTTAATTTTTTAAATATATTTGTTGATGCTTACCTTAGCGCCTTCCATTCATACTCATATAAGATGATAACATTCCTAAGAAGATAAAATAAGTAAATCATATATGAACGTATATATAAATGTATATATATTTTCTTTTGTGTGTGTGATTAAAAAATGTGTACCATCCAAGAAATTGAAGATGTTTTATTTTATGGTTAATATAATTTTTATGTAACTTATTTGGACTGTCCTTCATTTTTTTGTTAATAGAAATATTGTGGATGAGTTCTACGCAGGTATTCTTGTAGTTAGTTAGTTTAACGATTGGATATATATGAACGATGTTGTGTGATATTTTTAACCTTAACGAAAAATAAAGAAATGTAAGTAAATATATATATATATAAATATATATATATATATAAATATTTTATTTTACCCGCTTTCCTTAAGAAAAAATTTCACGTGCTTGCTGAATATGGTTTCCTTGATTTTTATATCTACAAATAATTGGGAAGGATAATATTTAAATTGTAACAACATATATATATAAATATATATATATATATATATATATTATACAGTGTATTTATATTATAATAGAAAAGAATAAGAAAATATTTTTACTTGCTCTCAAATTTACTTCACATATATATATCATTATATAATATATTATTTTATATATATATATATATATATATATGTATTTTTTTTTTTTTTTTTTTTTTTTTTTTTTGTTGTTGTAACCTTTTATGTGGATATCCCTTATTACATCGAAAAAGTTTGCATTGGATGTATAAAAATTGTTAAATAGATAATTATCAGAAGTAATTAATAAATATATATATTTAAGACGATATATATTAATATAGCTGATTGTATCTGCACGAGATATAATATTTTTATATTTATTTTGTTGTTTATAAAAATAGAGTTGATTTATATTATTAATATTATCATTAGATATATAATTTGAAGAGATATTATGTTTTTGTTGTTCATTATTATAATTTATATTATTATCTAATATAATATTATTATTATAATTATATTTATGATATATTGGATATTCTTTTTGTGCTTCATTAGGACATAGATATATTTTTAATAAATATAATAATTGGTTCATATGTTTATAATTATGATAATTACATAAGAATAAATTATAAATAATTTTTATTAACATATGTATATTTTCATTATTCACTTGGTTATCATTATTATTATCATTAATTTGATTATTTTGATTATCATAATTTTCTGTTTTTTGTTGATATATATTTTTAAAATTGTCTAACAAAATTTGTATATCATTAATTTCGTAATTAAGACGTGAACATGCTTTTATAATATTAATAATTACATTATTATGAATATTATTTATATGTTGATTTGTAATTATTATATCTTTATATTTATTGATTATTTCGTTTATGCATCTAGTAAAAATTTTATGATTTATCCATTTTTTATTTTTAATATTAGATAACAATTTTACACATACATTTAATTCTTCCAAAGAATATAAATCTATATAATTATTTAATTCTTGATATATATGATTAAAGATATATTTATCGTAATCTACATTTAAATGGAATATATATTTTAAAATTAATAATAATTCTTTTGCTTTTTCTTTTGCTTTTTCTTTTTGATCATATGTATTATCATCTGTATAATTATCATTATGATTATTATTTACAAGTTTCTCTTTCTTATCAATATTATGATCAATATATAAAAGTAATAAATTTTTTTTTTCATTGTGTGGAAAAGATATCCTATTACATAATAAAACACTATATGTAAAGATACTTAATAAATTATTTGTATTTAACCTTTTTAATGATTCTTCTTTGAATAAAAAATGAACCACATCTTTTATTTCTTTTTTATAGTTTATATAATTTTTGAAGGAAATCACTTTATCCTTTTTATATTTTTCTATACACTCAATTAAATTTTCTGAGTATGTTTTAAACTTTTCAAAATATGAAGAACCTTCAAATATATCAGCTTCGCAAGTTGTAACGCTTGAATTCCATCGTCTCAAATAAGGCCACCAAGCCTTTTTCTTAATAACCCTCATAACATGTTATATATTAACATAAATATAAAAAATAAAATAAATATTAAAAAAAATAAATAAATAAAAATAAATAAAAATAATATTTAGGTATATATCATCTATAATAAACCTTCAACTTATAAACAAACATATAGTATCACCTTAATAATATACATAAAAAAAAAAAAAAAAAAAATATATTAGTGCTCAATAATATAATATATATATAAAATATATATTATATATATTATATATATTATATATATTATAGATATAATTTTTTATCAAATCGTGAAACATTAGGAATACCTGTTTTATGAAAATAATTTATTATATGTGTGTAGCTAGATGAAATATATATATTACTTAAAAAAATTAAATAACATAAATTAATATAAAATATTATTATATATATATATATATATATATATATATATTTTGTACATTTATTCATTTATAAATTTATATATTTATATCCTTTTATAAAAGCAACCAATGTAAATATAATTATATAATTATATATTTTTTTCTTTTTTTTAAAAAGGACTATAATGTTTTGGTGCGTCATGTTATGGTCATCATATAAATCAAAAGAATCATGAAAAAAAATAAAATAACATAAAATAAAATAAAAATAAAAAATAAAAATAATAAAATAATAATAATAAATGAGTATAAATATATATATATATTTTATTTTGTTTAAAAAAAAAGAAATAAACAAATTTACTATTTTTTTTTTTTTAATAGTACATTTTTAATTTTTTTTCCTTAATAAACTAAAAAATATCTAAATGAAAAAAAAAAAAAAATATATATATATATATATATATAATTTATAAAAAATAATAAATGTGTATATTTTAATAAAAACATGGTGGATATAATAATCCTATAATTATCATAGCACTATTATATATATTATTTTCCCAAAAGAAAGAAATAAAATAAAAAAATTTATTTAAATAATTAAATATATATATATATATATATATATATATATATGTGCGTTATATAATATAAGCATGATATGACACTTTTCGTTATCTGTACTCTATTTTTAGCATTTTATTTTTTTGAATTTACAAAAATCATTTTATTTCATTTCGTTTCATTTCGTTTCATCTCGTTTCATCTCGTTTCATCTCGTTTCATTTCATTCCATTTCGTTTCAATTTATTTTTTTTTTTTTTTTTTTGGTATGTTTTCGATGAGACTACAAAATATTTTTCAAGACATTTATCTTTTTATAATGCTCAATAGATATATAATCTGGTAGGGACATAAGGTAGTACTCTCCATCAACTTGAAAGTAAACATTATATTTTTGTTCCTTGAAAAGTAATTTCCATGGTCCAAATCCTTGATGAACTCTATAAGCTCTACCTTTCAAGGTGAATTCTAATCCTAGATCTACACCAGATTGGTATATAACAAATTCTAATATTCCATCTCCTACTTCTTGTTTTGTTTTTTTTAATTTTTGGTATTGCTCTTTTTGATCATTCGTAATATTTTTCGGTAGGATTAATCCAATTTTGTGTGTATAATTCCATATATCGTTACCCGAAGAATAAGAAGGTATATTAATACATATGATACTCATAGCTTTTTTTAATAAAGGATATGATTCGTTATGATTCGTCGTGAAAATTACATTATTATTATCATTACCATCATTATTATTATCATTACCATCAATATTATTATCATTATCATTATTATCATTATTATTATCCATATTAATCATTTTATCTATAATTAAATTTATTGGTGTATTTTTTTTAAAAGAAACTTTTTTAAATCCTTCAACAGCATATATAAATTTATTACACACTGCGCTTTTCTGTCTATGTCTTTCAAATCCTCTACCTATACGTGAATCTATACCTATACTAAAATAATTACTCATACATAATTTCATTTCATGTAAATTTTCTTTATCATCATTTAATAAAGTTTCTTTCTTTTTTGTTCTTGAATTAATTTTATTAAAATATCCTTGCTCTTTTAATACAACATGGATATTCCAATAATCATGTTTTTCAACTTTTGATTTAAATGTTTGATCCACAATCTTTTTTAGAACATCAAATAAAAAAGAATGATTTAGCATTCTATCAATTTTTTTCCAGCCAAATGCTTTAGCAAAATCATTACCAGTACCAAAGGGTATAACACCGATAGCAAAATTATTGTCATTAATATTATAATACTCAGCTTCTTTAAGAACCCAATTAAGTGTTCCATCACCTCCAGCAACCAAAACGTAGACAAAAATATCTTTATGTCCTAAAGTTTTTTTTGTCTCAATTTTTTTATTATTAAAATAATTCATATTATTATTATTGTTTTTACTATTATATATATTTTTATCTTCTTCATCAACTTTCGAAGATCCATTTAATATACCCTCTCCTTCCATTTCTTTCTTTTCATTTCCACATGTTATCTTATCATTTGTCATACTAAAACTTTTGTTGTTAAGCGAACTAGCCGAAAAACCCTTACTTTCATACTTATTATGATTATTCATAATATTACTTAGGTTAATAAATCCTGGCTTCTTTCCTTTCTCTCCTTCTAAAATGTTGTATATAAAAAAGTGACATTTGTGAGGTTTGTGAAATATTATCTCATTTACTCCAAACTAAAGAGAAAAAAAAAAAAAAAAAAAAAAAAATATATAAACATATAAAAATATAAAAATATATGAGAAGATAAAAGTATATGGGACAAAAAGGAATATCACGCACTCATTCAAACATACACCATAATTATATATATATATATATATATATATATCCTTATTTACTTCGTTCTTACTTCTGTAAATATCGAGGCTTTGTTTCCCCCCGAAGTAGGATTAACAAACAAAAAAATGTACTTCATCTTTTAGTTTTATCCACATAATAAAAAGCAAAAAAAATATATATATATATATATATATATATATATATATTAAAAATATAAAATAAAATCATATATGTATATTAATAATATATACACACATAAGTATTGTATATATATAAATATATGCATATGTTTTTTTTTTTGATAAATAACAATTATTCATAAAGAAAACCAAGTGGTGCATTTTCGTTACTTCATCGTCATTACAAATGGAAGAATAACGAAAAATATATCTCTTTAAAATATATCTTTTTAAAATATATCTCTTCAAAATATATCTCTTCAAAATATATCTCTTCAAAATATATCTCTTCAAAATATATCTCTTCAAAATATATCTCTTCAAAATATATCTCTTCAAAATATATATTTTTAAAATATATATTTTTAAAGTTTTTAAAAATATACTAAATATATAAATGAGTATATATATAATGATATATTTATATACTTCTATATATTTTTAGTTTTTTAAATAGTTATTAAAAATTTTCTTATCTTTTATTATATTTAAAAAAAAAAAAAAAAAAAAAAATCCATTTCATTCTTTTACAACATATATATATATATATATATATATATAATCTAAACACAAAACAAACAAAAAAAAAAAAAAAAAAAAAGTAAAAAAAAAAAAAAATTTTATAAATATATATAATATATATATTTCTTATTATTTATAAAATTGTCATTTTTTTTAATTTATATAAGGAAAAATATAAAAAAAAATTATAATAATAAAATAAATGTTTTTAGACAATATTTGAAATTTTTTTCTTTTTTAAAAAATAATTTCCACAGAAAAAATAATAATAAAAATAAAAATAAATAAATGTAAATAAATATAAATAAATAAATAAATATAAATATAAAAAATATATATATGTACAATATATACTATAATATTTTGTATATATATTACATATATAATATATAATTATATATATTCATTTGTTTATTTAATTATTTACCTATTGCATATTTTTAAAGTGTTCCATGTGTATATTATACACTATACACATAACTCGAAGAACAAAATAATAAAAAGAAAGAAATAAAGAAAGAAAGAAAACATTGAAAATAAAACAATATATATAAATATATAATATATAATATATAATATATAATATATATTATATACATTTATTTATATTGCTTAATTATAAAATAATAAAAAAAGTATATGCATTATATATATATATATATATATATATATATATAAAATATGTTTAATATATATAATTTTAAAAAATATACAAAAAAAAAAAATAAAATATATATTTAATTTATATATATTAAAATTATTTATTCTTTTATTTTTAATTAGTAACAAATGTATAATAATTATTCAAATGACATTTATATTGTAATATTAAATAGTAGATGAAAAAATATATAAATATATATCATTAATATATATATATATATATATATATTGTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTGTTATCATATATATGCAGGGGATGATTCAAACTTCCCTCCTGGTTGTTTGCTAAGTGAAAGGGTATAGGAAACGTCACTATTTGATTCGAGGTTATTATTATTAACTTTATTTTTTCCATAATTAAATTCTTCATATGCCCCTGTACAAGTATCTGTCACATTTAAAAATGTATAATTTGTAGTATCCCTAACAGGTTTCTTCATATAATTTTTGAGTTCCTTATAATCCTTTTCTATTTCAGTATTATAAATATATAATAGAAATAATGACATGATAAAAAGAAAAATTAATAAAAATAAAAAAATGGCAGTATCACAAAATATCCAAAACACACATGGGAAAATTGTTAATATTATGGAAGAAGTTGAACAACTCACAGCAATTCTCCACATAAGGTTCTAAAAATGAAATATAATAAACAATTGAAACGTGTGAATTATACAAACATATATATATATATATATATATATATATATATATATATAATATAATATATTTTTTTTTGTTTTGTGTGTGTGTTATATTTTTATTGTTTTACGTTTGATGTTCCTATCAGTATATAATAAAATTCTGTACAGAGAATCAAATATGTAATTATTCTAAAAAACCACAAAGAGGTTATATTTCCATAATTTTTATTTATAAAATGCTTGGTCTTATTAATCATCATTCTGTTTTCTTCTGATACTAAAACTATATTGCGTTTCAATAAATTCACGCCTTCAATTTCAAAAATACTATTCAGTAGTCTAGATGTTTGAACCCCTATAACAGTGGCATGCGTAGAGGCATTTCCATAAAAAGACACTCTTATGTCCCCTACCTAAAAATGCGAAAACCACGAAAAAAAAAAAAATAAATAAAATATATAAGGAAGCTTTGGAATTATACATATATATATATATATATATATATTATAGATAATGTTGGGATATATTTCGAATATAATAAAAATAAGCATCGTTTGTAATATTAAAGGCTACACATATATACAAATACATTATATGCATATTATATTTTTTAATTTTTTTTTTTTCCCAACTTCCATTTTATGTATATGTTTACCTGGGGATTTAATGGATCTCCTGTATACAAATAATCATTAAAAACATTTGTATTTAAATGATCAACGGTAAAAGGAGGTTTTATCTCAGATTCTGTAAACCATCCATCGTCTACCAATTCTAATTTTTTTTTTTTCTGAAAGTTTATGAGTGAATTTTTGGACAACCTGTAGCTACCAGCTTTTGCATAATTTGCATACTTTACATTCGGGGAAAAAAAAAGAAAAAAAAAAAAAGAAAAAAAAAAAAAATTATATATAAATAAATAAATAAATATATATATATATATATATATATATATATATATATATATATATGTTATTACTTTACGTCCTATATTTCCAATGGAAGGAAAGTAGGTAGGGTTTTGTGGGGTTTTATAAAAAAATAAAAAATTGGAAGGTGTGCTTACTATATGATCCATAAACTTTCCCCTAGCGTATAACCCCAGATATCTATTACTTCTTATCCATTGGTACATTTCTATTTTTATTTCAAAGAATACACCTCTGAAAGAATATATGTTACTACTAAATTGTGCGGGTGCATAAAAGGTTTCGAGATCTTGTAATGGACAATTCTTTTTAGAAAAATAAAGAAAAAATAAAATAAAATAATAAAGGCGAAAAGAAAAATTATTTAAATAGAGCATGTTTTGTGTAAGCACATTTTTTTTATTAAAAGGAATAACAAGTAAATATATTTATATATATATATATATATATATATTTTATCTTTTACTATGTGTATAATTTTTCCATTGTTTTCTTCTAATGGAATGCATGAAACCTATCATAAAAAAGTAAACATATATTTATTATAATAAACATATCACTTGTAAAAATATTTATATCATTAATATATTAAACAGTCTATAATTATATATATATATATATATTTGTTTAATTTATTACACGTTAATTTTTTTTTTTTTTTCTTTTTTTTTTTTTTTTTTTTTGTTATCCCCTACTGGTATAGCATTTTTTATTATTGGCCTTAATTCTTTTGAATATGTTACATACTTATATTCGTGGAATATTGTAATAATAATAAATATAATAGTAAATGCAAAGGCAGATATAGATAAAATCTGTTTAGGAATAAAAATTTCTTCATTCATAAACATTTTTAATTTTGTAAAATTTTAAATAAAAATAAAAAACAATTCAAAAAAGAAAAAAAGAAAAAAAGAAAAAAAGAAAAATATATAACAAAAAAAAAAAAAAAAAAAAATATATATTTTTTATAGCAATTTTAATAAACTTTAGACAATCATTTGACAAAAAGGGAAAGATAAAATAAAATATAAAATTAAGAAAATTTTACAAAAATTTATAAGACATAACAATTTATAATTATAAAAAAAGGTAAAAGACAAAAACATATGTTTAAATTTATACATAGAGAAAAAATAAAATAAAAAATAAATAAAAAAGATTAATGGAAAAGTATCAAGTTAAAACTCATTAAAATTAAAAATAGAAATGTATTTAAAAATAGAATATATAAATAAAAATATTTATGAAAAATTATATAAATATGTGTAGAAATTAATTTTTCTATTTCTACATTTTAACAATACTATAAATATATTAATATATAAATATAAAATTATGAATATATATATATATATATATATATATATATATATATGTATGCACCAAATATTTTTTGGTTTATGGACTATACATATATAATTCATAAAAGAAAAAGAAAAAACAATTTTTTTTCAAAATATAATGCAATATTTGTTTTCAATTATTTTGTTATATAAACACTTATTATGTTTATTTCATTGGTATATATGCCTCTATTTCATAATCATATATAATAAGTTTTAAAATGTATCGAAAATATGAAGACAATCCTTATAAATAAATAAGGAAATATATATATATATATATATATATATATATATATATATATATGTATATATGTATGTACGTACATATTGTTGTAAACACATATAACATTTAACCAGTCTACATTATTCTTAATAGATAATAGACTTTCTTATTGTTTCTTGTTTTGTTTAAGGTATAAGATAAAATAAATATCATTCCTTTTAATTAAAATTGTAGTTTATTAAATTAAAAATCATTAAATGGACATATATATTTGAAATGGTTCCACCATAAAAAAAATAAAGAAATATATATATATTTGAAAAATAGCTACACGCTTAGATTAATATTTATTTCATTTTTTTTTTTTTTTTTTTTTTTGTTTTTTCTGAACGGGTAAGGCAAACAGCGAAAAATTTTATTTTCAAACAGAAAAAAAAAAAAAATAATAAAAAAAAATAAATAAATAAAATAAATAATTGTATAAACCACGGTTAGACATAATAAAACAATGTGTAATATATTTTAAATTTCATTTGTTATATAGGAAGGTATTTATTCCTATGTATATATAATTAACTGTTTTGAAGGAATATATTGTTTTTAAAATTATTTTTATAAAAATTAATATAACATAGATTATTCCTTCTTTATCTTTATATATATATAAACATTGATATAAATTGAAATCACACAAATATTCTTATACTATATATTTGTCTTATAATTTGATATATTTATATGTACTATTTTATACTTATTATTGTCTTTATTTTACATTAATTGTTACATATATATATATATATATATATATATATATATATATATATATATATATATATATTTATTTATTTATTTATTTTATGTTGTGGGTTGTTCTTAATGAGAACGCAAAGCGAAATTATAAAACCATTAGTTCCCCTTCGGAGAATACCGAAGAACAGAGGAACCGTTGTGCGAAATGTTACCGAAATAAATCCGTTGTCTGAAAAAGAAATAAAAAATGTGGTGGAAGTATATTCTGAAGCTAATAAAGCATATTATAAAAATTATTTACAAAAAGAACGACAAAAGAAAAATAAAAATAAGGGAAAGAAGAAAAAAAGTAATTTAGCCTACACTTCGAAAAAGTCACAAAGTGAAGAATTTGATCCTTTGAGTCTTAATCCATTAGATTTTAGAAATAATAAATTTGAAGAGAACGGATCACTTTTACATTTACCAGGTTCTAATATAAATGCGAAATATGTACCTCATAATATAAATTCAGAATATGGAATATGTAGTATGTCATATGGAACGCTTCATAAATCTAATCCTTTATTATGGGGCAAGGATTATAAAAATCATTATGAATTACCTACAATATGTTCAATAGTAAAATCAAAACATCCTATATATTCCAAGCCTAATGTTGCTAAAATGTTCAGTAAATTATCGAATAATAAAAAAATTGACGAACAAGAAAACAAAATGAATAATAATAATAATAAAATGATGAAAGAGAAAAAGATGAGGAAGGAAACGTTTACTATTAATAATAATAATAATAATAATAATAATAGGAAGAGTAATAATAATATTAATTTATCCATGAAAGAGTATCCTCATATAAATGTTAAAAAAGTCCCAACATTCGGTAATTATAAAGACGAAAGTGATTTTCCTGATCTTTCAACAGAATTATGCAAAACATATAATGATACTTATACAAATAGTAACTATGATGAAAGCACTATGCAAACGGATGGGAATTATAAAGCACAAAAAAATTTAGATAATTTTAAAGAAAGTACAGATGAAGGTACATATGATTATTCCGATTTTTTTGATGAGAAGCAAAGGGATTGTAAAAATGAGAAAAAGGAAGAAATTAACAATGTGGAATTTATTACAGATTCGTATAAAAATAAATTTCCGAATTTCCATCAAAATGGTAAGGTAGATGAAAATTTTACAAAAAATAATATAGACAAAAATATTTCTGTTGAACATAATAATAAAACAAAATGTATGTTTACAAAAAGCGATAACAACAATAAACTTGGAAATAAAATTTGCACTAAGAAAAATATGGAAAATAAAAAAAATGCACAAAAGAATTATAAACATTGTGATAAAGAAATAAAGGGGAAACCTTTTTTAAATCAAGTTCCTCTTATGTCAACTAGTAAAAAAAAAATTAATCATATATATAATGATTTTAAAGAAAAAAATAACGAAAATTATTTATTAAAGAATGAGAAATGTTCTATTAATATAGATTGCGAAGATATATCAGATAAGAAAATAAAAAAATTGAAAAAAAAAAAGTTGAATAAACAAATTGAAGGAGATAAATATATTACGAATATTATTGAAAAGGAGGAATGTTGCTTATCAAATGAAAATATAAATGATGATAATATAAGCAAAAGTAGGAAAAAAAAAAAAAAAAAAGGTATTAAAAAAAAGATAAAAAATAATTCAAATTTAAAAATGGATCAATATAAAAATTCGTTAAATATTAAATATTTCCCTATTAAAAAATTAAATGAGATAAAAAAGGATATTACGAATGATACGAATATATCAAGCATTATAAAAAATTATAACACAAAAGAGTTAAATAAACCAACCATATATGAATATAACAAAATGGATGCAAATAAGGATATGGAAACAAAAAGGGAAATAAGTAATCCTATAAATGTATGTGTACCTGATAATTCATCTACGTTTTTAAAAGATAGACCAGAAGTCAAAATCGCAGAAGGTATGTGTCTACGTAATATGTTTAAAGACAAATATTCTACAAATATTTACAAGGGGAATAATATTATCCCTAATAAAAATCAAATATATATATCTAGAGGTATTAATAATAGTAATATTTATGATAATCAAAATATGGGATTGAGACAAAAAGGATATTATCCATTATTTGGTGATATACCTAAATGTAAAGTACAAATACTACCATCCCAAATATGTTCACCAGGAGTATCATCACCATTTATAAGTGCTCCAAAGCAAGCTTTATCTTCAATAACCCATTCACAATTATCCATTCCGGATATTATTAATGGTGGTCATAATTCAAATCAAATATCTTATATAACACCTGATGTAAATGTATTAAAAGGAAATTTATCTAGCCAAATTAAAAATACAAATTTGTATAGCCAAATTAATACTGGTGTTAATAATGGTATATCAGTAATATCTGAGCCTATCATAATAGATCAAAATCCTATATCTAATATAAATCTAAATAGGATAAATGTACAAGATGTTGGAGGTGTGTGTGAGAAGAATATGTACAACATGGTTCCATGGACAAAATCGTTAGTTGAGTACAAGAATTATAATAATGTGGATAGTTCTTTTGTTAATATGGGAAAATATTCTATCAGGGATTTGGATGTAAATACAAGAAGTTTATATAGTAATATAAAAAATGATATATTTGGAAACTTGGTTTTCTTGGATGGGTCTTATAAAAACATGACGAATAAGATGAATAATGATGTTGTTACGGAGAGGAATGGTTTGATTCAAGAAGGTAAGTTGGGAGGAATATGTTTGGAAAATAATAATATGAATAAAAATAATAATATGAATAATAATAATAATAGTATTAGTAATAATATTAGTAATAATAATATTAGTAATAATAACCATTCTGCTGTTCAGCACTTTAATTTTGAAAAGGACGTTTCTTCTGTAGGTAGTCCATCATATATATATTTAGAGAGAAATCATAAGATAAATGAAAACTATAAGGGTAATACATTTAAAGGATTTGGAAGTGTCGATATTAATGATAAGGTAAATTATAATATGAATAATACAGCTTCGATACATAGAAACCTAAACATAGAAGAATATGATATGGATAGAAGAAATAAATCTGACGTGAATGAATTAATTAAAATATCTAATGATAACTTATTAAATATACAAAAGAAAGAATTATTAGATATTTTAAATGAGGAAAATAAAAAGAAGGGAGATATACATAATAAAAATAATTTAGATATTCTATTAAGTGAGGTAAATAACAAAATGTGTAATGATAACAATGTTGGAATTAAAGGTATATGTCATAATAATATTGAAAAAACAAATACCTTTGTATCACCTAATACGTATGTAAATCCGTTGAGTATATCTGATGGGAATACAATAGGAGGTAGTAATAAACATGATAAGAAGGATCATATAAATGGTATGGATAAATACATTTATAATAAGAAGAGTAAAATTAATGATTGTAATAATTATAATAACAAGGAGATGATTCATTCTCGTATATTTGATGAGAAAAATATAAATGTATCATCAGATATGGTACAAATAAATAGAAAAAGGGCTGATGAAAAATATTTAAACTAATAAATCCCTCCCCTAAGGAAATCCAAATAAATGAAAATAATCCAGGGGAGGGGGATATAGAAAATTTATACAAGAGTATAAATAAGCACAATTCGGAAATAGATAATTCATTGAATAATTTGTTATTTTATGACAACAAAAAGGAAGATATGGGTGTATATTTTAGTGAGGCTAAAGTTTATATTTATGATGATATAAAAGGGAACGATATTTATGATAACATTAAAAATAATAATGAAAATATTCATGTTAGTATATATGGTGGTCAAAAGAAACGTCATGTGGAAAAACGCAAGCACCAAATGAAATGTAGTGATGAAGAAAATATATTATATGATTCCAAAGTTGAAAAAGAAAATTGTAATGACACTATAGAGGGAGAAGAAAGTAATCATAATATGAATATTGAAAAGGAAGATATTCCATCTAAAGGAAGTATAAAGAAAAGTAAAATTCTTTATAAAGAATGCATATCTCATGAGGAAGATGAAATAAAGAATGTAAGGAATGAAAATAATATAGTTGATAAAATTGTAGTAAAATTGAGAGATAGGACATGTACATATGAGGAAGATGATTATATAAATAATATGACTATAAAGAAAAAAGAGAATATAGAAGAAGGAATAAAATTATTATGTAATTTGAAGGATGATTTTGTGATAGGCAGTATGGAAAATAAAGAAGATAAGGATAAAATAAAGATATCACAATGTAATTATGATAAAATGAGAGTAAGATATAATGAGTGTAAATATAATGGATATGTAAAAGATGGTGATAAATATAATGATAGTAATAATATTGATAGTAATAATAATGATAGTAGTAGTCATATTCATGGTAATAATGTGAAGGGTTTTTTATATGATAATAGTACTGATACAGGTGGCGCCTCAACTTTTTCAGCTCTTATAAATAAAGATAAGATATACCATTATGACAAGCCAGATTTATATAATAAAAGAAATTTTGTAGAACCTGAAAAAAAATTAGAACCCAAAAAGGAAACTATAACATTTTCCTTTAGAGATAAATATTATGAGGAATTGAAAGATGTTGATCCTAGGGGTAGTAAATTTTTTCAGAACGACAAGGATGAATATACAAATTATATGTTAATAAATGATGAACATATAAAAGATCATGGTTTGAAAGAAAACAAGGAGAAATCATCTGTTCTTTGTAAAGGGTATGATTTATATGGTAATAAATCTGTTGAAAGGTTATATAATAACAAATGTATAAATAATTACATAAAAGGTAAGATGAAAGACAATAAGATAAATAAAATAAAAGGAATATCATGTGAAAAGAATATATATTCTATACATAATAAAATAAGAAAGAAGGAAGAGGATATTTGTGTAAAGGATGGTATGCAAAATGGAAAAAAGATAAAAGAGAAAAACAAAATACATATTAAATTACAAGATGTTTTTGATATGAAGACTTGTAAGAACAATGATATGTTTACATGTCCTATGAAAAAAGAGAAACCGATTGATGCTTATAAGAATTATGGAAATACATTATATAGTTGGATTGTAAAAAAAAAAAATTTTAATTATCCTACTTCGATTAAAGGAAAAGATAAGAAGGTGTATAATATTGATGATGTTGAAAAAAAATCCGTGCAAAGAATATATGAAAGTAAATTATCTGAAAAAAGTAAGGAGGAAAAGAAAAATGGAAGTTTGAATAATAGGACTGATATTAAGAATAAAAAGGGCATTTTAAAAAATAAATCTATCGTCTATAAAGATAATAAAACTATGAATCCATTTAATCTGAGAAACAATTTGTTGAACATTTTAGATACATCAAAATTGTATCCTAAATGTGAGTTAATCTGTAGAATTAAGAAGTCATAAAGTTTTTTTTTTTTTTTCTCTCTTTTTTTTTTTTTTTTTTTTTTTTTTTTAATTCTCCGATGAATTGTGAAACGAAAAAATTATATAAATATAAAATGAATAAATAAATAAATAAATAAATATATATATATATATATATAATATATATATTTATATATTTGTTGTTGTATGTACAGTGAAAAAAAAAAAATATATATATATATATATATATATAATGCCACATGAGAAAGTATTTACATTTTGATATTCCCAATTGTTTTGTTTTGTTTTTTTAATAACATTAATATTATATTTTTTATATTTTTTTTATTGTGTTTATTTTTTTTTATTTTTTTTATTTTTTTTATTTTGTTTATTTTTTATTTTTTTTGTTAAATGTTTGACGTTCAAGGGTATAAATATATTACACATATACAAAAACATTTTGTATAAAATAAATTAGAAAAAAAAAAAAAAAAAAAACAAGAAATGAATAAATTTGAAAATTTTTATAAAGTACCTATTTCATATAAAAATAGAAAAAATGAAATATATAAATATGATAATTTAGAATATAATAAAATGAAATACGGTATGCCTGAATATTACAGGTGTCCATATTACATGCATGAGAATAGGAATTTATATAATACTGAATCATGTTATACACCGAATATAAATGTAGGTAGAAATTCATTTTATGGAAAGACTCTAGATCCTAATGATAAGATATGTGAAGAGAATGATTCTGTATATAATATTTTAGAAGAGGATCATAAAGAGGAGTCATTTAAAAAAATAGAATGTATGAATAAAGAAGATGATAGGAAGAAGATATATAATAAAGTTGAAAAAAATGACGATGAGAATATAGATAATAAGAAACATAATTATTGTGAAAAATATGAAGAGGTATATCCAAAGGATAGGTCAAGTATAAAAATTATATATAATGATGTTGATCAACAAATAGATCATAATTTATATGATGATGAAAATGAAATTGTATGTGATAATGAGATAAAGAAAAGGAAAAAAAGGGATAGGAAAGTGTTTATGGGAAAGTATTTTTTTTCTGATATTATAAATACTATTATATATCCTTGTACAAATAAATCATTACAAAAGTATCAATATGGTTCTGTTGAGAATATGGATTATTCGCTATATAATGATATTCAAAAGGGTCAGAAAATACAGAAGGTAGACAAAATAAAAAATAAAAAGGCACCCCAAATTATTGTTAAATTTTGATCACGATATGGAAAATATAAAAAAATAAGCATTTATGAGGTTAAAATAATGTTAGCTTTTTAATTTTTTTTTTTTTTTTCTAATTTTATGTGTTATAATTATTTTGTGATTTGCGTACATTTCGTATATCACCAACTAGTACATATAAATAAATAAATATATATATATATATTTAATATTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTAAGTATGTGGATATAATATAACATGAATTATATTATACAATTTATTAAAAAAACAATAGAATATGATTTAAAAAGTGAGAATATATGTGATATACATAAATAATATATTTTTATATATATATATTATTTTAGCCAACTTATATTTTTATTTATTATTATTATTATGTTATTTTTTTTTGTTGTTCTTTTAATTTATGATTATTTATTATATCATATAGTTGTGTAGAGTCCTTGTATATATTTTGATAATTTTCATTTAATTGTATGTCATGTATATTTGTTATTAAATGAGTACACTTATTATATAGATGAATAAATATATTTTGATCTGTTATAATATCATTAATTTGAATATCTTGAAAATTATTTGTATATTTTTTTTTTTTCCATTCTACATTTTTAATTAATGTTTTTATTTGATTTAATAAATTAAAAATATGAATATATTGTTTGATAATTTGTATATATTCTTGATTATAAATATGTAAACTCAATTGTAATGCTTTACTATATAAATTATTAAATTCTTTATCATTCAATTTTTTTAATTTTTTTTGCTTGATATTATTTTTAAAATTGGAAAGGAATATTTTCCTCTCTTTTATAGTTTTTGTAATTTTTTTGTTAATCTCTTTTAAATAATACAAATCGAAATTATTTTCTATATTATGTGTAATATTTATTAGATCATTTATATTATTTATTGGTCTATCAATTTTGATATGTTTGTATGACTTGCAATATTTTTGTTTTATATAATTTGAATGGTTACATGATTTGTTTTTTGTTTGTTTTTCTGTATCTTTTTCTATACCTTTTTGTGTCTCTTTTTCACTACCTTTTTGTGTTTGCTTTTGTGTATTTTTTTGTGTATGTTTTTGTGTATGTTTTTCTTTTTCTTTTTCTTTTTCTTTATAATTATTAATAATTATATACTTTATTTGTTTCATTATTTTTTTCTTTATAAAAATTTGTGTATTATAATTTTTTCTTATATTCTTAAAATTCAAAGTAGAAGAATTCCAAATACATTTTTCATTTAATTGTAATTCAGCATCTACTTTGAATTTTAATATATTGATATCTTTATTTTTTATTTTATAAAAGTTTATAATATCATTAATAATATTTTGTGTTTTCTTTCCATATGTGAAGATTCCGTCAAATAATATATCTGTATTATGATTTATAATATGGTTTTCATCATTATACATTATTTTTTTTTTTATATCATAATGGTTGTTATTATGGAAATTGTTATTATCTAGCGATATAAAAAAAACATGATTCTTGTCGATTTTTTCTTCTATTTTTATTAAAAAAGAACAATTTTTAATATTTTCCAAGTTTTCGATATTTTTACACATTTCTATAAATTCGTTCATATTTATTTGTTGTATATCATTTTCAAAAAATTTATAAAATATATAACGGAGGGATTCTTCATCGTATTTTAAAACATTTGATGCCAAATAATAAAATAAGTTTTTATTCATATACAAATTATTAATTTCTTGAAATAATCTTTTACTATTATTTATATTATAAGCACCTTTTTTATTTTGACTATTCATATGATCAATTTGTATATTTTTATTTCTTTCATTCATTTGGTTGATACATAACTTTTCATTACTTACATTTTGTTTTTTATCATTTAACATTTTTATATTTTCCCTTTCAATCCTTTTTTCTTCTTCATCTTCTTCATTATTATTATTATTATTATTATTCAAATCACATATCATGTTTGTTATATTCATATAAATATTTTCATAATCTCTTTTAAAACAAAATAACATTTCATTTTTAAAATCAAAAATATTTCCAAGCACATTTTGAGTAAAACAAACGTTTAATTGTTCTATATCAATTTTTTTAATCTCCTTATATTTATTAACTTCTCTATCGATATCTTCATATGTTGTATCATCTAACAATTGAACATCTTCATCAAAATTTAGTAATATATCCATAATAATTATATCATTATTTGAATTTATTTGTTCAATTTTATAAATGTTTTCATTATGATTTTTTTTTTCTTTTTCATCTCTCTGAAATAATGATTTATTTAATGGTATATCGTTTTTATTACATGTTGATGTATAGGTATTTTTATTTATGATCTTTAAATCTAATTTAGGAGAATTAAGATGATTCTTAATTTTGACCTTTATAAGTATAAAATATGTATCATTTGTATTTAATATTACATGTTTAAAAAATATAACTTTTTTTTTTTTTTTTTTTGCAAATATAACTTTTCTTATATAATTTTTTAAAATAAAATCCACATTAAAATTATCTTCCGTCATTTTTCTTTTTATGGCTTTTTCGACTTTTATAATTTTGGCTTCTATATATTCATATAGATGATAATTTTTTAATTGTATGAATATATTACCATAAGTGTATTCATTTTTATTTTTTATAATTATTTTTTTCAAAATTTGAATTGTATTCTTCCCAGATAAATTATGATGATCCTTCTTATTCATCTCATCATAGCTACATGTGTGTTCGACATTTGGATCATTTTCTATATTCTTTTTATTATTATCACCCTGTAATATATTGATATCCACAGGATTATCTGTATTCCTTTCTTCTGTGTTCTTTATATCTTTACCTATTTCTGTTTGTTCTGTTGGAAATGTATAAGTATAATTTAAACAATAGGATGGCACTTCAATAATATCTAGGTCTATTTTGTTTTTCCTATTTTGTGAATTCACATAATGAGTACTATTTATAATATCATCCTCTTTAGGATATGCTACTTTTATGGAAATATTAAAATTTACATTATATCTCCATAGTATCTTTTTTGTTACTAATAAAAACAGATAATTATGATGCTTATTTATTTGATCAAATGGGATATATATTTTGAAAATTAATTTATCTAATGAATATTTATAAAATGTACTTACAATATTAATATATTCGTCACCATCATATATGGAATCATTCTTTTTAGATAGAAATTTTTTAATTTTTTTATTTTTTATTTTTTTTTTTTCTTCTAAATTATTCTGAATATGTAACATATCATCATCCTTTATTCTACACATATATAAATTTAAATATGGAACTATATTCAAATTATTAATTTTTACTATAAGATAAAAATGGAAATTATTCAATTCTTTACAACAATGTGGTTGTTGTAATAGGTCCTGCTTTATTCTTCCTATGTTCGTATGATTTGAATTTATATTTATATCTTGTCCATGTTCATCATTTCCTTCTTTTTGATCATTCATATTTATGTTGATTACAAATTTTAATAAGACCTTGTTATTCAAGGTTTGATTTTTTAAAGAAATTTCTTTTTTCGGTAAAATTGTCATGGACATTTTCATAAATTTCTCTAGATATTCCTCAATCGTTATAAATGAGCTACTTATCATATAACTGCTCTCGAAATTTTTCTTTTCGTTTATCCATTCAATGTAGAAATCATTATAGTCAAACCTTTTTGTGTACAAAATAAAAAAGTGTTCTTTGTTTTTTTCAAGACGTATTTTCCGTTTCACGATTTTGTTAAAAAAAAAATAATTTTTATAATCATTATTATTTAATATTTGTTGTAAAAAATTATTACAAGGTATAAAAGGAATAATATCTTCGTTATGATTCCGTTCACCTATTTTTTTAAAAAATAAATTACAATTATACATATCATTTAAAAAGAATATTTTATGGTACTTTTTTTTTTTTTTTGTTGCTACTAATAATTGGCTAGCTGGTAATTTGTTTTTTTTATCCTTTTTTTTTTTTTTTTTTTTTATTTTTTTTTTATTTTTTTTTTTTTTCTTTCTGATTTGTTCAGAATTTTTCTCCTCATTTGCAAATTTATATTTTTCTATATTACGATACTTACACATATGATGAGGAAAAAAGTAGATAAAAAAATCAAAAAAATTATTTATGTTTCCATTATCTTTTTCACATGTTATATTATCATTTTGTATGATTTGATTTGTTTCTGTTTTGTTATTTTCTGTTGTTTGTTCTTTGATTGATATGTAACAAATTAATATAAGATATGGACAATCATTTGATGGGTCAGACATATTAGGATTACAAACAGTGTCATTATTTTCGGTATTATCATATACATTTTTGTTCTGATTATTTTTTCCTTTTTTTTTTTTTTCGATATGTATATGTTGAACAGATTTTGGTATATTATTTTTTACACTGTTACTTTTATGTAGTGCTTTAAAAGGTTTTAACTTATTTTTGATATATTCATTTAATGATATTAATTCAAATTTATTTTTACTCAGATAAGAGATGATTTTATTATTTTTTAGAGATTCATCTATTTTTATTATATATTCTGATGAATAATTTATATTTATTAGTTGAAGGATTTTTTCAATTTCATTGTCTTTAAACCATATACAAATGTCTTTATAATTCTGATAAGTAAGTATGGCAGTTAATATATATATGTATATATATATATATATATGTATATATGTGAATAATTAAATATTATAATAATATAATAATATAATAATTATTATGTTAATTATAATTTAAGACTACATTATTATTTAAGTCACATGATTTTTAATATTACACATACATACATACATAAACATATGTATATTTATATATATATGTTGAGATAAAATTTATGTTTACCTTTTTATTATCTTTTTTCAAATGAATGTTTTTAGTACTACTTTTATCTGACTCCTCGTTACTTTTTATTTTTTGAACATTATTAGTTTCGCTGGATAATATATCTTTAATATACTGAATAACATTTTGCGTATTTTCATTTATTACAATATTGTATTTCTTATATGTCTGTTTATTATGGTTACATATATTTTTAATATCATGTTCATTTTTTGATATAGTAGATGTTTTAATATATTTTTCAGATGAATCTGAATCAGATGTATTTTTAAAAAGTGGTACTAATTGAGCGTTAGAAATTTGAATATTTCCTTTTGTATTTATATATTTATATCCTTTGAGTAAATTTGTTTCTTCTTTTTTTTGTTTAATTACATTGTTGCACGTTTGTATGTTGTTGTATGACTTTATGTCACAACATCTTACATGTATAAATTGTTTATCTTGAAAGGAGCATATTAAATAATAGAATACGTGATTATTTTTTATAGATATGGAAGTATTTGTTTGGTTGTAAATATTTTGCATATTATCTGTTATTTCTTTTACATATTTATTACTATTATTATTATTTTTATTATCATTATTTTTATTTTTATTATCATCATTATTATTTTTATTATCATTATTTTTATTTTTATTATCATTATTTTTATTTTTATTATCATTATTTTTATTTTTATTATCATCATTTTTATTTTTATTATCATTATTTTTTTTTTTATTATCATCATTTTTATTTTTATTATCATCATTTTTATTTTTATTATCATCATTTTTATTTTTATTATCATCATTTTTATTTTTATTATCATCATTTTTATTTTTATTATCATCATTTTTATTTTTATTATCATCATTTTCATTGTGACAATATGTGTTGTGTTTCATACTTGTAATGTCCCTATTAAAATTTTGAACATTTTTATTATCATTTTCCATATTCGTATTATTTGTGGACTCAATTTTTTGGTGTTGATTTAAAATGATACACTGAATATAATTATTTTGATAGTTATTTATGATTTTATTTATATTAAAAGGTGATTTAATATATTTAAGACCTGTTAACATCTCGATAATATGCATGTGATAATTTTTAAAATGGAAAATATGAAAACATTTATATAATGCTTTTATTAAAATATGTGTCCATATTTCTTGTGTAAAAGTTGAATAACATGACAAAATTTGATTATTGTTTTTATTATAAGGTAAATACAAGTTAACAAATATTAGGTACCATTTATTATTTATAAAGAGTTTAACAAAATAATAATTAAATTTATTAATAACAGGAAAGGAATGAATAGTTTGTGGATATATTAATTCATATAGATAAGAACCTTTAGGTATAATGATTTTATTTTCTTTTATTATATTTATACAAGAATAAAAATATGTTAAAAAAGTAATATTTTCTTTATATATTATATTAATATCTCTATTAATAAAATTATTATATGTAACAATACATGTCTGATATTCTTTTAAATTTTTTTCGATATTTTTATTTAAACTTTCAATATATTTTTCATATAAATGTATATAATTTTCATTTGATAATACTTTATTATTTATTTTCATATTATCTATATGTTTATTACTTTTTGTGCTTTGATCATTATTAATTATTTTTGATGATTTTTTTGTATCATCATATTGGTTGTATATAATTTCGTTATTTTCATCTTGCTTTAATTTTTCGCTTTCTGATTGTAAATCACTTTTTTTTTCATCTTTATCACATAGTTCTTTTCTATTCTTAATATGTCTCTCTTTTTTAATAACTTTATAATTATTATAAATATGTTCGTTACATTCTGATGATATTTGTAGTTCTTTCCATTCGTCCACATATTTATGAAAGTGTTTTATTGATTTTATATGATTACATTTTTGGGTATTCTCATAATATATATTAAATATATTATTATTATATGTATTTTTTCTTTTTTGATTATTATTACATGTGTTGTTTTTGTTCGTTATATTTTCTTCTGAGTGCATTAAGTTTAATCCTTCTGTTACATATTCTTTCCATATTTCTAATATATTTTTTTGGTGAGCTTGAAATTCAATAATTTTATTTATAGTAAAAATATCTTTATCCATTAAAAAAATATAAATGAATTGAAAAAAAAAATTATACTATTTATTAATACACTATTTTTTATATACATAATGTAATAATATGACATTGTATTTATATATAATACGTATTATATAATATATATTATATAATATATATAGATTGATTTAGCATATGAGTATATAATACGCATAAAAAGAAAAATATACATATATATATATATATATATATAATATATAATATTTAATATATATATAATATAATTATATTATGTATTTATAGTTGCCTTAATTTTTTTTATTATAATTAATATATATAAAAAAATAAAAATAAATATATTATATTCACATATTAAATGTGATAATATATATATATATATTATATATATATATATTATATATATATATATATTATATATATATATATATATTTTGTAAATAAGCAAAAATTTCTACAAAATATTTATATCATTACGTTTTAATAATATATATTTATATAAATACATTTAAAATAAAGTATTTATAATATAAATATATATATAATATTTTTTTCATAGTATTACAATTATAATTTATATTTAAATAAATAAATAAATATATATATATATATATATATATATATATATATATTTATATATTTATATGTTTAATTAATCGTTTAGTAGAGCGTAGATATATTATTTTTATATTATTTTTTCTTTTTTATTTGTATTATATAAAATGGCGAGAAATGTAGAAAAAGGAAAATCTATGTTAAATCAGTGGATTAAGGCAAAAGAAATATCTGATAAAAGAGAGTTTTTTAAAATACCAAAAAATATTGATGAAGTTGAAAATTTGGACGACGCCCTTAAATAGTAATATATATATATATATATATATATATATGTATTTATTTATTTATTTATTTATTTATATATTATAGTTATGTGCTTATGTGCTCTTCCTTAATTTTTTGTCTTCTTAATTATCATTCAAACATGTCTATATTTTTTAATTATTTATTATTTTTTTTTTAATACCATATTTGTAGTCGAATATATATTATCAAAGAAATGTGTAAGAAGATAAAGGAAATCCAAAATCATAGTTTGAGTGATCAGCATATTAGGGAATTGAATGACCAGATCAACAAACTCATTTTTATAAAGAACAAATGGGAAGCAAGAATAGTAGAGGTATGTAAAAATATAAATAAATAAATATATAAATATATACATACATATATATTTATATATATATATATATATTATGTTTTTTTTATAATCTTTCATTTTATTTTATTATATCCTTTTTTTTTTTTTTTTTTTTTAGCTTGGAGGAAGGGATTACTCCAAGGAGTCTAACCTTTTAATAAATGCTCATTGTAAGTATACAAAAAAAATATATAAATATATTTCCAATATATTTAATAAATAAATGATTATTCACAAAATTTACCTATGATATTATAATATTTATATGAATGGATCTATGACATACAACCTCAGATATGCTTATACATATATATATATATATATATATATATAAATATATTTATATATGTATTTTTTTTTTTTTAGCGAGCGAACTAAGGGGAAGCAGCAACTATAAATATTTCGGAGCTGCGAAAAACTTGAAGGGTGTGAGGGAACTACTATTTAAAGAAAATGAAGACAAAAAACAACTTAATATAAAAAAGAAAAAGGATGCAAGAAATTTCGAAAAAGTTATTAATATTCATTACTTCGGTTATTGTGATGAAGCAAATGAACATCTTTTACAACAAGAAGTTAAAATTCAGAAAAAATTAGAAAAAATGGATTTAAAAATATTAAAAAAATATAAACACTAAAAAATTATAATTAAGGCAAAACATGAATATAATAAAAATATAGGATAAGCCACAAGGTATCTTTGACTATTCATACGCAATGCCTAAAAAAAAAAAACAAAAATTATATGGAAAATTAAAAATATATATATATATATATATGTATATAATATTATCATACAATTATATATATTTATCTTCATATATATAATATAATATAATCATATTATTACCACTTCAAAAAATCGAGAAGCTGTTAAAGCTGACCATAAAATACAAAAAAAAGATATACAATATCCTTTTTTAGATCTGCAAAAAAAAAAAAAAAAAAAGGAAAATAAAGTTTAATATTATATATAATTATTTATTTTTTTTTTTTTTTTTTTTGATTGATTGATTTATTTTATTTTTTTTTTGTTTATTCAATTATTATTTTATTTTTATTTTTTTTTTTTTTTTTGTATCTTCATCAATTTCCTTTTTTTTTTTTTTTTGTTTATTTGAATTTATATATTTCTTTATTTACAAAAACATGGTTAATTATTTACCTTAAATTAATAATTATAGATATTAATGATAATATGACTAGAGGTAACAGAGCATAACCGAGCATACTAATGGTTCGATATAAATCCACAGTTGAATTCTATAAAGTAAATAAATCAATATATATATATATATATATATATATATATATATATATATATGATTTATCTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTATTTTTATTCTCACTTGACTCATCATATTAAGAAGTAAATATATACTCAGGCTACTTACAATACCAATCAAATAAATATAACTAAAGGAAGCTTTTCCAGCCTAGAAAAAAAAAGACACACATATAAATATATATATATATATATAAATATACATATATTTATTTATTTATTTATATGTGTTTGTTCTTTTTACTAGTAATAAAATAAATCCTAGGGAAAGCACAATTATTAGGGGTCCCGATAAGTCTGAGTTCTCAAATAATGTATGATCAATTCTGCAAAAGGAATGTATATCAAACATATAAATATATAAATATATATATATATATATATAATGATTTAATATAGTAGAAAGAATTAATAAATAATTATACAAATAATATATATTTTATTATGTATGTTACTTATAAAATAAAAAAACAGATTTCATTCTTTTAGATATAAGATCAAAATTAATTCCCAATTCTTCCAATAAGGGTGATTCTTCTTCATTATCATCATTATTTATGTATTTTTTATTTATCATATGGTCATTCATAATATTTTTATTTGTCATTTGAAAATTATTTGAGAAGGGGTCTTTATTAATTTTATTATTGTCATTTATATTTGATGTTGTATTACCAAAGGGATTTGTCGTAATTATATTATTATTATTATTTATAAAATTATTATTCATAATATTTGTATCTATTTTATTAATTCCCTCGATATTGGATGAGTAATCATTGTTTTGAAAAGGATTGTTTGGGATATGCATATTATTATTTACATTATAATTAGTATCATAATTTTTTTTATTTATATATAAATTATTATTATTATTATTATTACTTTTGTTATCATTATTATTTTGGTAAAAGGGTTCCCCCTCATTACGGTTCATACGATTCATTATTTTTTGATTGTAGTAACTCATTTTTAAAATAAACTTATAATATATTTAAATAAATAAATAAATAAATAAATAAATAAATACGTACATATATATATATATATATATATATAGAATAACCCAATAATTTAAAACAAAACAAACTTAAAATTTAAAACAAACCAGATAAATATATTTTTATGTTCCTAATAATATCTTTTTTTTTAATATTGTATATCTATATTACGTTTTAAGATCTTAATAAATATAAAATATACATATATATATATATATATATATATTATATATATATTTTATATATATATATATTATGTGTATTTATTTTGTATGTCCTACTTTTATAAATATGATTATATATAGGTCCCTCATACGGACAAAAAAAAAAAAAAAGAAAATTAAATAAAAGATACGAGTACGTATGATGTTAACCTCTTTAATCAGCTTCTTTCCTTTTTTCTTATTTGTTTTATTTTGTGTACTCCTAAAAATAATAAAAATGAATACTGGAACAGCAAGAAGATATTATATGTACGCTTTTGACGAATTCAAAAATATAGAGATATATAATCACATATTACTTGAAAAAAATAAGTACACGGGAAAATAATTATATATAAAAAAAAGAAAAACATAATAAAATAAATAAAAATAAAACGTATTAAATATCATAATTTTATATTAAAAATATATTTTTTATACATATATATGTTTTATTTACATGGAAAAAATTAAAAAAAGTTTATATTTATTATTATATAAATATATATTTTATATAAAATATATATAAAAATATTTCTTTTTTTTTTTTTTTTTATTTAATTATAAATAAAATTATTTTATAATTTTAATAAATTATATATTTTATTTTTATTTTTATTTTTACTTTTAATTTTATTTTTATTTTTATTTTTACTTTTAATTTTATTTTTACTTTTAATTTTACTTTTACTTTTAATTTTACTTTTACTTTTAATTTTATTTTTATATTAAAAAAAAAAAAATTTGGTAAATCTTTATTTTTTTTTTCAGATATAAAAATATAATATTCTTCTTTATAATATTAATTGAAATATATATTTAGTAGTAATTATTCTGAATATAAAAAATAATAATATTATTATATATATATATATATACTTGTTATTTTTTATATTAAAAAAAAAAAAATATATATATATAATAATATATAATATATATATATATATATATATATATAAATATATTATTATATGTTTTTTATATATTATATTATATTATATATAATACTAATATATATAATGGCACTTACAATATTATATACAGATATATAAAATATTTATATATATTATATTATATATAATATTAATATATATAATGGCACTTACAATATTATATACAGAGATATATAAATAAAATATATATATATATATATATATATAGATATATATATATATATATTATATTTATATGTTTATATTTATATTTATATTTGTTCCATAGAATAATAAAAAAAGAAAAAAAAATAAAAAAAGAAAAAATAAAAAAAAAATAATACATAGTGATAATAATAGTATATAAATTATTAAGATCTGTTATATATATAATATTTAGGGGAATATATTTTTTGATAGTACATGCTTATTATATATGAATACGGATCTTATGTTTATATAAATATATATATATATATATATATATATATATAATATATATATATATATATATATCCATATATATTTTAAAATATATATTATTTTCTTTTCCTTTTTGACATGTTTGTAATTTGTATTATATAGAAATATTGTTCTTTTATATATATATATGTGGTTCTTTTAAGGAAAATGACAAAAAAAAAAAAATTATAAAAATTATAAAAAATATAAAAATTATAAAAATTATAAAAAATATAAAAGTTACAAAAACTACAAAAAATACAAAACATAGAAAAAATTCAAAAAAAATACAAAAAGTACAAAAAATACAAAAAAAAAAAAAAAAAAAAAGGACAAAAAATATAAAAAATAATAAATGTATATTATTATATATATATATTTAAAAATATAATGAAAGCAATATATGATATATGCACCTGTAGACACATATACAGATTAAATAGAATCTATACATAGATATATATATATATATATATATATATATATATATATATATATATATATATATTTATTTATTTATTTATATATTTATATATTTATTTATATATTTATTTATATATTTATATATTTATTTATATATTTATTTATAATTTATTTTTATTTTTGATTATACTTTTATAAATGTTTGTATATAATTTTATTACATAAAATGGATATCGTTAAGGATGAAAGAAATATTCGTTATGAATACGAATTAGATAAAATAAAAAAGAAGAAGAAGGATAACCTTTTAATTATGAATATATTGTATAATAAGATAAATTATATATGTTATATATTAAAAAGCAATCATCGAGATATATTGAATGATATAAACTTTGAGAATAGAACGGCTATAGAAATATGTTTATATTATTGTAAATCATATATATTATTTTTATTATTATTTTATCCATATTTACATAATTATATAAGAATTTTAAAAAATAATGATTTACGATTATATAAGAATTTTTATAAGTATATATTAAAAAGACGAAATAATTTGCATATCTTATTATTAAAATATCGAATACTTGAATGCATGAAATTAAAAGATAAGGATGTTAATGATTCAAATACTATTAGCTACATCGACGTGTATAGTATGAATAGATATATGAATGATGAAGATGATATCGACAAATATTATTATAAACCTAAATTTTCGTATAAAAATAATAATATGAATAATTTACTTTTATTAAATGTATATTTTAAGGATATCATGTCTAAGAACAATTTCATATGCATACTTTTTTCAAGAATATATATAAAGAAATATCATAAAAAAATATTCCGTATACTTTTGCTTATACTCTTTTATTTTTCCTTACCTACCTTTCCTTTCTCCAAAAAATTCTTTATCACATATCATAATTGGAGGGACACAGAAAAAGATAAAATTAAAGAGGAAAATGAGGAGAACCACACAAATACAAAAGGAATAAATAACAGTACTTATGATAATATTTACAGAAGTGTATTAGAGGATAAGGTTGAAGGAAAATTAATTGAGCATAATAAGAATATATCCAAAAATAATGTGGGCGTGCAAGCTGTACAAGAGGGAGTAGTTTATGGTACAGAAGAAATATTAAAAAATGAGAATAAAGGAACGGGTGGTATGCAAGGAAATAATATAAAGAAGAAAAAAGATAGAGGAAAAAAAAAAGATATGGATGAGGACTTCTCTTTTTATTGTAAAAGAAAATATTTCACTACACCTTTCTTTGAACATATTAATATTCCTACTATACATATTAATGACTATTTTTGTAGTGGTAACAAAATTTTTGAAAGAGAAGAATTTAAGGTTATTAATGAAAAGAAGAATAAAAAAAAGAAAGACAATACAAATAAATATGAAAGTAATTATGACAGTAAATATGATAATAATAATAGTAGAGATCATTATAATAATTTCAGAACATATGAAGAGAACAATATATATAATTCAGATAGTAGCAGCAGCGTGTCGAGTAGCTTAAGTGATGATATTCTATCCGATATCGAAGATGAAAATATGCTAAAAGAATTATTCAAAAACGAAAATAAGATATATTCAAAGGAAGAGAGTAAAAAGAATGATAATGAAAAAGAAAGAAATATAAAGAATTTAATGAAAGAGAAGCAAAATATATTAAATGAGAAATTGAAAGATATAGATACTAACTATTCTAAATCTACATTAAATGATTTGAAGAACGATTTTTTCCAAATGAATATAAAAGAATATGATTGGTATGATGATAATAATATAATAAGAAGAGTATATAGAAAGGAGGATGATATTATAGATAACTTTACATTGAAAAAGGAACCATTTGTTAGCGAATTATGGATTAATGTAATAAATTTTAATGTGGAGGATGATAATAAAAATACATTGATACATAAAGCATGTCTTGTAGGTAATTTGAATATTATATATATTTTATTATATTTAAATGTAGATCTTTTTATTTATAATTATAAGAGTGAATTACCTGTACATTGTACAATTTATAATTGTGATAAATATATTTTTCTTTTACTTTTACATAATACAATTGAATGCATATTTTATGTATTATTGGAAGAATATAAAAGATGGAACAAAACTCATAACATGTTAAATACAAAGACAGAAAGCGAAAAAATGAAAATTCAAAATAGAAAAAACAAATTGAAAGAAAAAAAAAAAAATAAAAAAAAAAATAAAAATAAAAAAAATAAAAATAAAAAAAATAAAAATAAAAAAAAAATAAACAAAAGTAGAATAAATTACAACAACAAAAAAAAAAACAACAAAAAGAACAATCAAAATGTACAAAATGTTCAGAATGTACAAAATGTTCAGAATGTACAAAATGTTCAGAATGTACAGAATGCACAAAATGTACAGAATGTACAGAATGCACAAAATAACATTGACTCATTTAATTCAAGCGAAAAACATGACGAGGATATTGAGGAAGTAAACGAAATGTATAAAAAATATATTAAAGATGGGAAATTCTTTTATTATAAAAATATAAATGACAAATTCCTTTATAACGTAATACAATTATATTTAAGTGTTATCGTTAAAATAATTGAATTGGGGAATTTTGAATTTTTAAAAATACTTTTTAATTATAATAGTTCGATATTTTCCTATATCTTCTTAAATAAAAATATGTTTTCTTTTTTATGTTCAATAGCTTGTATGTACAATTGTTTGAATGTTTTTATTTTTTATTGTGGTAATATTATAAAGTGGTCTGTATTTGAAACATATGTGGAGGAACAAAAACTCAATTTTTTAGAAAGAACAAAGAAAAGGAAAAATGTATCGACATATGGAACCAATAATAATGATGAAAACCAATATAATTTTTATGATATGAATAATGACAAGAAAAGAAACGAATTCCAAAATAATAATCTTTTTCAAACTGGTCCTTGTAGTAGCATAAAAAAGAATAAAACGAATTTGGACACATCGAAAGATACTTCTTGTTTTATAAATAGTTATGAGAAAATTGAAGATGTACATCAACAGGATTTTTTTAATATATTGAAGTGCGTACCTTATATAATTAACAACGGAAGGATGAGTGGCATTGGAAACAATATGGATGATAATAATATAAGTGGTGAGAACAATATGAGTCGTGAGAACAATATGAGTCGTGAGAACAATATGAGTCGTGAGAACAATATGAGTCGTGAGAACAATATGAGTCGTGAGAACAATATGAGTCGTGAGAATAATATGAGTAGTGAGAATAATATGAGTAGTGAGAATAATATGAGTAGTGAGAATAATATGAGTAGTGAGAATAATATAAGTGGTGAGAACAATATAAGTGGTGAGAATAATATAAGTGGTGAGAATAATATAAGTGGTGAGAATAATATAAGTGGTGAGAATAATATAAGTGGTGAGAACAATATGAGTCGTGAGAACAATATGAGTCGTGAGAACAATATGAGTCGTGAGAATAATATATGTTATCCGAACAATATGTATAATCAGAACAATATGTATAATCAGAACAATATGTATAATCAAAACAATATGTATAATCAAAACAATATGTATTATCCTAACAATATGTATAATCAAAACAATATGTATAATCAAAACAATATGTATAATCCGAACAATATGTATTATCAAAACAATATGTATAATCAAAACAATATGTATAATCAAAACAATATGTATTATCCTAACAATATGTGTAATCCGAACTATTTATATAATGATAATAATAACAACCTTTGTAATAATATGCTTTATCATTACTTCAAGATTAACAATATGGTAAATCATAGATTCCTTAATATATCCAATATTTCTTTTTATGATCCTCATGTAAATGCAATTCTTACCTGTAGAGCAAAGGACCCAATAGGAACTTTTTGCGAAATGTTATATAAAAAAGATAATAAACGTTTGATTAAAAATGATATTGTTAAAAAGTGCATTAATAAGAATAATAGCATAAAAATATTTTTCTCAAAAGAATGCTTTAAACATATATTCGTACCTGAACCATGCGATCATCCATATGAAAGAAATAAATTAAAAAATAATATTCCCGAAAATTCTACAAGATTAGATGTACTAATTTCTAATAAACATGGTATCTTAAATATAAATACTTTTGCTAAATTTAAAGTTAAATGTGTTGATAGGAAAGCGACCGTGAATGATATATTAAGAGTACATGATGTTTCTTATTTAAAATTTATCATAAATAAAATAAAGAATTTTAAAATGTCAGATGATGATCTTATGTATTTTGATGATTTCTTGACAAAAGCAAAAAAGAATTTTAAAAATTATTTATTAACAAATAATGGTAATGAAAATACAGGAAATCAAAATAACCCTATACAAAAGAATGAGATATTACAAACATTTTATTTAATAAATAAAAAAAGTGAATTAGAAAATATAATGTTAATTCGCATGAATAATAAGTTTATGGGAAATAGAGATTTGTATATACAAAATTATTTATCTAATATTCATACACCTATGCATGCAAATTTAAAAGATAAACCATTAGTTTCTCTTGAATTAAAGAAAATATTAAGTGACAGTGATTCTGAAGATAATAATAATAATGATATAGAAAATTATGAACCTGAAAAATATGTATATATGGAAAATGGTATCAGGATGAATATATTAACAGATGAAGGTTTAACCGAAGCGGCTAATGTACTTTATATTAATAATAGTATTCTTTATAATAATAATATATTTTTTAATAATAATTTACTTTATAATAATAATATTCTTATGAGTGAAAAGAATACCGATTATCCTTTTTTTCATAATGAAGATATTGTTGGTACAAATAAATCAGCAACTAATTTATTAATACAAGAGAAATTATCAAGCTATAATATTAATGTCAGGGAAAAAAAAAAAAAAAAAAATAAATGGAATAAAGATAAAATAGAAAAATTATTGTTAGTAGATAATGATACATTTGTTAATAAATATTCTTTTAACTGTGCCCTTAGTGCTAGTGGTGTTGTTTTGAAAGCAGTAGATTATGTACATAAACAAAAGAAAATCGTGAATTGTGGATATGAAAAATTGAAAAAATGCAAAAAATGTAAATATTGTAAGAAATGTGAAAATTGTAAAAAATGCAAAAATTCTGAGACATGTAAAAATTGTAAAAATTGTAAAAAATGTGAATATTGTAAAAAATGTAAAAAGTACAGAATACAAAACAATAGTATCATTCCAAATAATAGAAAGAAAATATTTTGTGTTGTACGTCCACCTGGTCATCATTTAGGTACCTTTGGTGCTGCTCAATTTAATTTAACCGATGAAGATGTTGCTGCAGGTAGCCAAGGTTTTTGTATATTAAACAATGTGGCCGTTGGTCTAGCTTATGCAAAATATACATACAAAAAATTTGAACGTATTGCCATTATAGATTTTGATGTTCATCATGGTAATGGTACAGAACAAATTATAAGAAATTTAGGATTAAAGAAATTAACCGTAAATGAATATATAGATATATATAGTTGGAAAGGGTGGAAAGATAATAATGATAAAAAAAATATATTCTTTAGTTCGGTACATGCATATGATGGATATTTTTATCCAGGTACAGGATATGATACGGTTGAATTAGAACCTTATATAATTAATGTTACATTAAAAAAGAATATGACTTCACTCGAATTTCTAAATATATTTCATAGTAAAATTTTAATACATCTTTATTATTTTAAACCAAATTTATTATTTTTATCTGCTGGTTTTGATGGACATCAACTTGATTATGTAAATAATGGATTTGTAAAAAAAAACACATCAACATATTTTTATTTAACAAAACTTGTCTTATCATTACAAAACAAATTGAATTTCCCTATCATCAGTGTTCTCGAGGGGGGGTATAATACTTCAAAGGATATGGCATCTGTTTTTAGTCTGTCTGTGCTCGAGCATGTGTTGTCCTTTTATTATAACGATATAAGTTTTTTTAGAAAAAAAGAAATAAAATTAAAAGACTTGAAAAAGAATATTGAAAGAATGGAAAGATATAAGAATGATTTGAAAAAATATAAAAATGATTTGAAAAAATATAAAGATGATTTGAAAGTATTTGAAGATTATTTGAAAGAAAATAAGAATCTTTTTGAAAATTATAAGAATGATTTGAAAAAACATAGGAATGATTTTAAAAAACATAAGAATGATTTGAAAATATTTAAGGATGATTTTAAAAAATATAAGGATGATTTTAAAATATATTGTGATTTCAACAATTACTATGATTTGAAAAAAAGTTGTAATTATTTTAGTATATATTATGACGATTTTAATAAATATTATGATAATTTAAATGTTCATGAGCATACGAATAATAACCAGACTACTCTTCAATCGAATACAGACAAAAACAACACAAGCATAGAAACATGTAATACAAATATAATAGATAAAATGAAAAACAAAATCAAAAAGAGCGAAAAAGAAAATAAAAAAATTAAGGAAACGCCTACTTTATACTATCCATTTATATGTATAGGAAAAAAGAAAATAATAAATATGTTCGAACGTTATTTCTCTGTTTTTAAAGAAAAAACAGAAGAAACACAAAATTTAAACTTATTTTATAAACTAGTGGAATATAACAATTTCTTGAAAATATATGATTTAAGAAATATAGATATGAAAAATAAAATGAATAAATTTATGCAGACACATGAAGCTGTTTTGAAAAATATTTTATTAGAATGTAATTATGATTATTCAAAAATCGATCCTATAATATTACCAAGTAATTGTTATTTTTATGAATTATTAAATTATCTTAAAATTAAAGGAATAAGTATGAAACCTAAAACACCTACAAAATTAGAAAAGAAGTTCTTTTCAGCAATCAACAATCCTTACGATTTTAATAAAATTGATCTTGAGAATTGTAAAAGGTAAAGTATATCAACATACACCATATGTGTATCATAAATATTAATATATATATATATATATATATAAATATATATTTATATATTCATTCATTTTTTTGATATTTTTTATTTTTTTTATTTTTTTTTGTGCAGACACCCGAAAAAGAATTTCGAATTCATAAATTTCTGGAATTAGGAAACCAAATTTTAAAGCATCAAAAAAATGTCTAATTAAATAGTTCCTTCTTTTATTATATCCCTATTCATATTATCTCACATATATATATATATATATATACATAAATAAATATATATATATATATATTTAATTAACAAATTAAAAGAATGTGTCAGAAAACAAAGTGTGAGAAACACTTGATATATATATATATATATATATATATATATATTTTATATATATATATGTTTATTATGAGAGAACAATATTTCATATAATATTTAAATTAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAACAATTAGAACGATTTATTCTTTTATATTTGACCATTTATTATTTTCCTATTCTCGTAAATATTTGAAAAAAATATTTTTTATACCAATTAAATATATATATATATATTTTTAATTCATTATATTTTTGATTTGATAGATTTCCTAATTCAGATAATGTTGTTTTTTTACATCATTTTCTTTTACCATTTTAATTACATATATTTTATTTTTTTATTATGTTCTGCGATTCGTTTTAATATTCTTATAATTTTATTTTTATTATGTTCTATATTTAGTTTAGTTTAATTTAATTTAATTTATTTTATTTTTCTTTCTTCGTGAAGTTTGAAATGATAATTAAGCATTATCATCATATATACTTAAATATATTATAATTTCAATCTTCATTTATTTTATTTTATATTATTTTATATCATTTTTTATTATATATTTGATATATATATATATATATTTATATATATGTATATTTTTTTTTTTTTTTCTTTTGAGTTTATATTATCGCAATAATATAAACTAAATATTTATATATATAATATTTTATATATATATATATATATATATATATATATATATATATATGTAGTGAATTATATATAAATATATATTATTATATATATATATATATATTAATTATATACGTGTGAATGTTTTAATTATTATATATATATATATATATAATAATATTTAGATTAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAACTACAAATAATTTAAAAATATAACTATATTATATAAAATATAAATATGACAATACAAAATCTTTTATAAAATTTAATTTTCTTTAACAATTTACAAAATTATATATGTTAATTTTAATTTAAACTTAAAATATAAATAAATAAATAAATAAATAAATAAATAAAGATTTTACAGAATAAAAATATATATACTTATATATATATATATATATATATATATATATATATATATATATATTTTTTTCTTCTTATCTTAGAAAAGAGTTTATTAAAATTATTGTAAAAAAATGATGAAAAATTATGATAATTTTTTATATAAAAGAACAGAAGAAAAATAACTGAAAAAAAAAAAAAAAATAAAATATAATAAAATAAAACATTTAGAGGAACATATAATAAATATATTATTACAATATATATATATATATATATATATATATTATACTATTATAATATAAAGAGGAATTATAAAAACGTGGTTTTTAAAAAGAAATATATATAAAAAAATAAAATAAAATAAAAATGTCATTTTAAAAATGAAATTAAAGAGTTATTACTTTTATATAGATATAATATTATTAATATTTATTTTATATTTGAAGAGATGTTGTAAAGGATATGTTTTGAATGTAAACGTTGTCGATAAAGATGACTTATTTGTTTTTTTGTATAAAAATGAACATTTACTAGCTTCAAGTTATTATAATTTAAAACCCTCCTATTTCTTTTCTTTCGACGAAGGTAAACATTGAAAGAAATAAGATATATATATATATATATATATATATATATATATGTATTTACTTATTTATTTATATATATTTTTTTTTTTTTTTTTTTTTTTTTTTTTCTTTTTTTTTGTGTGTGTGTGCGCACGTAACCATTCTTCTTCCTTTTTTTAACTTATGTATATCCAAACTTTTTTTTTTTATGTTTTCCTTTCCCATAGGAGAAATAAATATTAATATGAGTATTCATTTTAAGGAAAATACATATATCAAGAAAAGAAACATATCTCAAGAAGTGCAAGCCAAGTCAAATTTAAATTCAATAAACATACTAACCCACTTTAATATAAATGAAGAATACCTTAAAAGGTATAATTTTAAAAGGGATTATATATCTAAAGAAACATCTGCAACATATAACGATAATAATAATAATAATAATAAAGAAAATTATGATATAATTAAAAAAGTATATTATGATGATAAAAACGAGAATAATATTACTTGTGAAGAAGCTAGTGAGAAATTAATAAATGATAATTTGGATGAAAAAAATAAATCTAATAATCTATTCTTAGTTTTAATTACAGCAGATCAATGGCTTAATTACATAAGATTAAAAAATAAATTAGAACCTTCATTGCGTAATGATGAGAATTATATTTTTACTTCTCATTTTAATTGTATAAAAAGATATCCTTTAGATGAAGGGATAATTAAGAAAACAATAAAAATAGAACAGAAAAATAGATATATGTTAGTTTTAATAAATAATAACAAATTGAGAATTACATTAAAAGGAAATGTAGTTTTTTATGATTATAAAACCAAACATTTATCTTATGATTTCCTTTTTATCCCTGATGTTCTATATTTTACTTCTATCGTGTTGTTAATATTGGTTATAATCATTTCTTTATATTTTTTGAGATATAGAGAAAAATCAGATATATTTATGGTTCTTAACATGATCTTCTTTTTATTGTCAACATATTTAAATTATAAAAATATCAATTTTATAAAAGATATGGGTTATATGTACATGTATTACTGGTAAAATGAAGTCAAAAATAAAATAAATAAATAAATAAATAAATATATATATATATATATATATATATATATATATATATATGTGTATAATATTCACCATAATATATTTTTATTTTGCTTTATTTCATTTTTATAAATTTATTATTTTATTTTTTTTTTTTTTTGAAAGGATATCGGCCAATATCTTAAAGAAGATGCAAGAAATTGTAACATTTATTATATATTTGCAAGTATCTTTAGGTAATAAAATGAAAACATATTTTAAATAATTGTCCCAATATATTCATTTCATATCAAAATAAATTTGTTATTCATTTTGATGTATTATTTTATTATTCTCTCTTAGGTGACATGTATATAAGAACTCATTTAAGCAGAATAGAGATACAATTCATGATATGTTTTTCAGTCATTTCATTTTACACGGGACTGTTTGAAATATTTTTAGGAAATTTCCAAGTAAAAATAAATATATATATACATTATAATATGCTAATAATTTAAATAAATATATCAACAGACACACACATACACAAAAAAAAAAAAAAAAAAATATATATGTATATATATATATATATAAATGTACATATATATTTTTTTTAGGCTCCTAGATATATTTTACAAGCTTTTGCTTATCTATTTATTTTTATTGCCATTAATTTCACTTCAACATTTCTTTCAGTAAGGAAACAAACAAATTATATATATAAAAAAGCTAGTTATAAAATATATATATATATATATATATATATATATATATATATATGTATATATAACATATGTATATTATTTTTTTTTTTTTTTTAACAACTAGCCATATAATAAATAAAAAAATATAATATTTTATTAACAGTTCATAATTTATTTTATATATTTAAACCTTTTTTTTTTTTTTTTTTTTTGTTTGTTTTTATTTAGGCTCGTTTGGCAGAGGAAAATTTATCATTTCATGTAGCTGAATTGTATAAAAAATATGATATATACAAGTAGGGAATATTTGAAAAATAGAATAGAAATAATTTTAATAGAAAAGAGGAATACTTTCTTATATAATAATAATATTAATACGAGAAAAAATATTGATTGTATTCTAACGTATTATAATGTATACTTAACGTTCGCATTATATATGAATAAAATATATATATATATATATTTATTTATTTATATAAATTTTTTTATTTTACAGAAAATATAGGTTAATATTTTTTGCTGTAATTTTGAAACCGATATTGTTAATTATTTACAAGGTTTTGTGTTTATCACCTTCAAATATTGATTTATATAGTTCCCATGAGTTTCTATATATTTTTTTTGATATAAATTTTGATATTATTGTATATGTATTGGTAAGTAAAAAAATATATAAAAGGAAAAATGATTATTGATACATTTACCTAACATGTACGTGATACGAATATGTATAAATAAAAATATGTATGCGTAAAACATATATATATATATATATATATATTTTTTTTTTCCCTTTTGTAGCTTTTCATTTTATTTAGAACAGTCGAGCCTATTAAATTTTTAAAGGTAATATATAATTACATTTTGAAATAATTATTCAATATATATGTATTAATTCTGTTTTTATATTTTATAAATGAATTATATTAGATGTAATAATATTTATGTTTATTTATTATGTTGTATAATATATATATATTAAATAATTATATATAATTTTTTTCATTTCCTTTCTTTCAGCACATTTTAAGCAATGAAAATTTCCACATAGATTAATCAAAAGGTTACCTCATTTTCTTACCTTGTGTTTTATTTTGTTTAATTTAATTTTATTTTATTATATTATATTATATTTTATATTATATTATATTATATTATTTTATTATATTTTATTATATTATATTATATTATATTATATTATATTATATTATATTATATTATATTTTGTTTTGTTTTTTTTTTTTTTTTTTTTTTTTTTTTTAATTTATTTTTCTTTGTTGTAAATATCATATAAATAAAATATAATATATGTTTATATAAGTATTTATTTATATGTTTATTTTTCTCTCTCTATCTTTCTCTTTCTCTTTAATTTTTTTTTTTTTTTTTTTTTTTTTAAATGTTAATTTATTTTTGTAAATTTTTTTTTTTTTAATAATGAAAACTAAACAATTCCATTTGTATCATTTAAGAAAAAAGCTTAATTTGAATAAAAAAATAAAACCCCTAAAGTATTATTATATATATATAGATATATATATATAATTTTTTTTTGTTTACAAAATAAATAATGATGAAGAGATCTACATATATATAAATACTTATAAACGTATTATATATTTATATTTTTATATGAATTTATTTTTATTTGTTTTTTTTTTTTTCTAGGTATAAAGTACATTTAATATTTTTAGCACTATATCCTAATTTAAAATATTATGGATACTGTGTGATCTATTTCTTGAAGTTGTCAAAATGCGTTGAAGAGAAGATAAGTGTTTATATACATGGAGAATACTTACGTGTATTAAAATGTTTTTATATATGTCCACGTAATATAGAAAGGAAAATAAAGAAGGAGGATATATATAAGAAGAGTGAATATATTGATATCTATTTAAAAAATTTTTCATTATGTGGTTTATATAAATTGGTAATATGGTTTTCTTATGAAAATATACAAGAAAGTATTGAAGGTATATATGTTTCTGGTGCATCTAAAGAAGGAGTAACAAATGAAAAAAGAAATAAAATAAAAAATGCAAATATAGTTGTAACATCTTTAGATAGTCAAAATAAGAATTACATAGAAAAGATAAATAAAAGAAGGAAACTATATTCTTTTAAATTTGGGAATGATAAGAATATTAAAAGATTATATTTTAAAAATGCATCTTTTCAAGATGACAAAAATTATAATTATATATCAACATTTTGTGAATTTTATTATTTACCATATATATTTCCATGTTTGCAAGATAATAATCATAAAGTGTATTTTTCATTATGTGTGTCTTTCGAAATCAAATTAATTGATTCTTTTTCTTTTTATAATAAAAAGATTAAATTGGATAATAGTACATTTTGGAAAAGATTATATAATTATATGAAAGTTGAAGAGAAATATGAGAAGAAAAGAAAAAGGAAAAGGAAAAAAAAAAGTAAAAAATGTGTTTTATACAATAAATTGCATGAAAAAAAAAAAAAAAAAAAAATTAAAAAATATTTGTATGAAAATTATAATAGATTTGATATTTTGCATCATTCTCCTTCTACATCTCCCCCTTCAGCTGTAAGTAATAGTAAAATAAAACGTATATATTATAATAAAAGAAAAATTCATTTTAATTCTTTCCTTTTGAACAAAAAATTGTTAACAAAGAAACTGCTTTTTCATTGTAGTAATAAATTGGAACATGGAAAATATAATGTTATGCGGATAATTGATAAGAATCCTGGGTATATTTTAAAGAAACATTTTGCTAGAAATAATAAAATATTAAAAAAAAAAAAAAAGAGTGGAATTATTAACAATAACTACATTTCTAATAATCATGATAATAATAGTTATGGTAAAAGAAATAAAAAATATTTGACGTATAAGTTTTATAATACACATAAAATTGTACATTACAATTTTTGTCTATTCATTGGTATTTACAACAAATTATATTTTAAGATGAATGGTATAGATATTTATATATATATTGAAAAAAAAAATGATAATTTTGAAATGATTAAAAGATCATATGAATATTTCTTAGGTTTATTAATTTTTATATTACATGTATTTATGAGGAAGAATATTTTTAAAAGGGAAATAAGGAAAAATGAATTTTTACAATTTATGATTGTAAGAAGATATAAATATGTAGGAGAAGAGAATGCAAATTGTCTTACTTTTCTTGAGTCTTTTATTTTAATAAATCAGAAGAGTAGGATATATGATATATATAATAGTATAAAATTAATGGTGCATGAAATATTTCATATTATATGGGGTAACAGTATATATATTAAAAAGGAAAAATATTTATGGTTGAAGGAGGGGTTAACAAGATATATGGAATATAAAATAGGTTACATGGTATTAAAAAAGCAAATAAGTAAGCAAATAAATGATAATAATAATATAAATAGTATTAATAGTAATAATAGTATAAATAGTATTAATAGTAATAATAGTATTAATAGTAATAATAGTATTAATAGTATTTGTAGTATTAATAGTATTTGTAGTAGTAGTGGTATTTTTTGTTGTTTGAGGCGTGATATGTATAGAATAAAACTTTGGAATATATTAAATTCCTATTTTTATGTTCATATTATTGATACGTTAAATATATATAACCACGCATTAAATATAGATAACAAAATATATAATAAGAAGAGTATGGGTAGAAAAAAGGTAACAAGCGAATATGACCATATATATGATAAAAATTACATATCATGTAAAAATAATGACATAAATTCTGTGTCACATGTAAAAGAAAGTAAATATAAAATAGAATATACACAAATGATGAATTATTTTTATAATAACCTTACATATAATAAAGGAATGAATATATTTAAATTAATATGCATATTATGTTATCCTTTTTTTAATATAATCCTTGAATTGTTGTATTTTACGTTTCATAATAATTCCATAACATATAAAAAAATATTAATATTTATTCATTTTTTTTTTAATTGTTTTGGTCTTAAGCCATGGTTTTTGTTATGCTCTGATAAAAATGGGGAGGCGAAAAATAATAGGAGAAAACTACAAGGGGTCGTTAGAAAGAGCAAATATATAAAATGTTTATCAACATATTTTAAGAAAAGAAAAAGAATTCGTAGTAATGATAATAAAAAATGTATATTATATAGAAGTTGTATTAAATGGGAGTGTCTAAAAAATAAAAAACAAAAATATAATAATTACAATAATTACAATAATTACAATAATTACAATAATTACAATAATTACAATATTTCATATAAATACCATCCTACATTTTACAAATGCGAATATTTCGGAACTTGTTGTTCCAACTTTTTGAAAGATTCATTCAAAAAGAAATTCCTACATTTTTATAAAATAATATGTACAGAGATAAAGGGAAAATATAAAAAGAAAAAAAAAAAACAAGAAAAGGTAAATGTAAAAGTAAAAGAAAAGCAAAAATGTAGATACCTTAAGAATAAGTGTACACATTTATATAATAAAAGAAATTTCTTTTGTTCATTATCTTATCGAAGGGTTACTATAAATAATGAGTTGTTAAAATATTCTCATGAAAGAAATATTTTTAAAGTCATATTACGAAATTATATAAATGTTGTAGGTCCTCCTAAAATATTTTTTAAATTTTTGAAAAAAAAAAAAAAATTATTAATTATACAAAAACATTTTTATTATGACAACTATGAGCAGAGGATTCTAGAGACTCCTATCCTTTTTCATATACCTCTTATATTTACGTTTAATAAAAAAAAGTATAAAGTATTATTAAATAAGAAGTATATGTTAATAGATTGTGTAAATGTAAACAATAAAACTATGAAGAGAATACATACGTTCAACATAAAATTTAATATGTTGAAAAAGAAAATACGAATTGAAAGAAGGAGAAGGTTTTTTTTAAAATTAAGAAACTGTGACGAATTCAAGTCAAAAGAAAAGAACCATATTAGTTTATTTATGAGATATAAAGACTGTGGTTATTTTTCTTTTCATTTTGTTGATATGTATACCTTTCGTTTTCTAATAAATGCAATGAAATACAATGCATATAAAATATGTGATATTTATTACGTTCTTATGAATATAATTTTGCAATATTTAACGTCTATAAAAACGTTAAAGGAAGCAAAGAGTTTGAATTCTTTAATATTGATGCAGATTCTGAGGGTATATATAAAAACTGAAAAGGTCTACATGTTTAAATATATATATATATATATATATATATATATATATGTGTATGTTTATTTCTTTTTATATTTATTTCTTTTTATATGTATCCTTCTACATGTTTTATTATTTTTTTTTTTAAGGTGCTGAGACTTTTGAGGAAGAATACGAACACTATGAATGGGTCCTTCGGATTAGCCAAAATTTTTATTATAGAATTTTTAAAATGCTATATTTATTTCAGCCCATATTTAAAAACAATTGAAAATAAAAAATTGACGTTGAAAGTAAAAAAAGAAATAAAGAGCAATGAGTACTATGAAAATGTTGAATCTAATGAAGAGTTGGATTTTTTATTTAAAGATATGAGGAAAAATTTATCTAAAATATTATTCTTTTTTAAAGAGTCCATAAATTTGTGTTCATAAATATATAAATATATATATATATATATATGTGTATATTTTTTTTTTTTTTTTTTTTTGTATATAAAAAAATTTCATATATTATTATTAAAATTAATATGTTCCTTTATAACATAACTATAAAGCTACATGATTCGTCATTATTAGAAGCCGATATATCTGATGCTATTCTTGTATGCAGTGATTTCATAACACTAAATCCAATGTGTCTAACTTGTTTTATATTAATAAATAGATTTCCTAGTCCTCCAATTTTTTTCCCGTCTGTAAAATATACGCCATAATGTCCATAACCTTCAAAAAAAAAAAAAAATAAAAAATATATATATATATATATATATATATATATATATATATATATTTATTTATATATATTTATTTATTTATATTTATATTATTACCTGTGCCATTTAATTTTTGTATTAAATTTTGATTGTATGTAATAATTATATAATGCTTACAATCATAATATGTAAGTAGACAATAATTTATAAAATTGTAAATATAGCTGTTTACCCAAAACCTTTCTTCATCAGATTTGGGTGTTTTTTTTGATGTTATACCTTTGCAGGAGAAAATGGAAAAGATTCATATTTAAAAAAGGGAAAATATATATATATATATATATATATATATATATATATATATATAATAATACATGTAATATGTTTATATTTTCCTTTTGGTGTTATTTTTTTATTTTTTATTTTTTTATTTTTTATTTTTTTATTTTTTATTTTTATTTTGTCTTGTTTTACCTATTTCACTTCTTACATTACTATCATTTTTTTTTACATAGGCCTTTACATATTTAGACATGTCTGATATAAAGAATTTGTTGATTATTTTTTTAAATTTTAATTCATTTTTTTTATTTTTTTTTTTTAATCTGAACAAGTTCTTTTCTGTATAATCATAGTCAACTTTGTCTTCCTTCCAATTTATATGAGGGAAGGAATTATATGTAGAAAAATCATTTGTTATATTTTTATTTTTTTTCGATTTATTATTATTTATCATGAAAGATCTCTCAACGCATAACAATTCCCACACACACTGAGACATAATTCGCAAAAGAAAGAAATTAAGAAAAAGAAAAAGAAAAAAATAATCAAAGAAGAATTAAGAGAATTATTTGATATATATATATATATATATATATATATTGAAATATTTATATTTTTATTATTTTACTTTTTTTAATATATTAACAGTTTTTAATTAACAAAAAAACAATTTTAAAAATTAAACTGTTATATCAAAAAATGCGGATAAATCGACATATATATTATATATATATATATATATATATATATATATGAATATATCAAAAAAAAAAAAAAAAAAATAAATAAATAAATATATATACATATGATATATTTTAATAAGTATAATTTATATATATATAAACGCATTTATAATTCTTCATAATTTTCAAATAGTTGTTCATTGTCAAGATCGATATTAAGAAATTCTGATATGTCTATATTTGATTGGGTCTAAAAAGATAAAAATTTTATTTATAAAATGTAATATAAATGTATAAATATAAATATATATATATATATATATATATATTTATTTATTTATTTATATTTGTGCATATTTTTACCTCTTTGCAAATCCACGTGATAATATTTTTGACGGTCCTTCCCTCCATATATCTTACAGGATTTAATTTGTCCCCCTTTTTATATAGATATATAGTAGGATATCCCTCTTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATATATATATATATATATATATATGTGTATAAATATTTAGATATATTTATTGTTTATCATTTATCATTTAATGGTATAATTTTTACCTATATGTATGTTATATATTTCATTATTTACGGCATCAATTTTACTTATAATAATATCATTTTTATAATTTTTGAACTTGGCTGCATACAAATTTAATCTTTTTCCTACTTCTCTATAAACAGGTTCGAATTTATAACAGTGTCCACACCAAGGAGCGTAATACAATACAATAACATTCATGTCATTTTTATAAACATATTGATCATAATTATCCGCGACAATAATTTTTATATATCCGTTGTTATATTCATCTGGTAAGGCTCGTTCACTTTTTCTATAAAAGTATTTTTTTTCTTGTAAATACCCATTAATAAAATCATCAATTGTCTGATAGGAATAAATATATATATATATATATATATATATGGAATATATAAAATGAATGTGTGTTATTAAAAATGTAAAAAAAAACAAATGAACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACATACACACATATATATATATTTATATTTACATGTTGTCACGTATGTTGTGTGTTTTACCTTTTCGTTTATTTCCTGGTCATCACTTTGTGGCTTATATTTATAAGGAAATCTTATATAATTTTTAAACTCTGTTATCCTCATAAGGGGTTTTTTAATATTATCCTCTATAAGCAACTCATTGAGTAATCGCTTTTCAAAAATTTGTGTCGTACCAGATATTGCAAATTTTATCTTATGATTATATTTCTTCGCGCATTTTATTATATCGTCTTTATTAATATTATTTATATTATTATAAATAATAAAAAGTGTAACAGCGTCATTTGAAAATAGCATAGAAAAGAAATGTTCAGAAAATTGTATAACTAATGGTTGTTCTCTTTCGTTTATCCAATTATATAAATGATCTATTTTTTCCTCGTTTGTATACTCATTATTACTTAACATATCTAATTCTTTTTTATTAAGAGGGAAGAAATAATCATCAAATTCATCATTTTTAAATAATATTGCATAATATGAATCTTGATTTATGTTTTTTAAATTATAATGATATTTATCCTGTATTATATTTTTTTCGAAATAATCTATAACATTATTTTCTTTTATATAATAACAAAGTGTTTTATTAGTTAGAAGACATATATTTATTAAATCATTTATTCTTGATATATTATTTATATTATTATTTGCTGTTCCTAAATCTTTAAATATAAAAAATAAAATGGTATTATTATATTCATTCAAATCTATAAAAACATCTAATCTCTCTATATTATTAATTTCATATATTTTAAAATCTAAGTATTGATATATCCATAATAATAATCCTCTAATATTATTCACACCATTATATCTATATATTTCTTTATTTCGAATCATAAATAAAGATGGATAACTATACACATCTAACTTATCTATAATAAATGTATTTGCTGCTGCATTTATTTTACATAACTTTATATTCTCTTCATACAATAAAAGTTTGGATAGTTTGTCTAGGTTTTCTAATAATAAATTTGAATTGTATGACCAGTGTGTGTACACTATTAAAAGTGTATAGTTTCCTTCGTCTTTTAAAATATTATTAAATTCATCAATATTTATAGAAACGATTTCCTTCTTAACTCCTTTTTCTGTATGGCACACACATAACTTTATTAAAAAAATAAAAACAATCAGCAACTTATCAATATGCATGGTAAAGGAGCAAGATGATAAATCTCCATAACTTTTTAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATGTAAAATGTATAAATATATAAATATAATAAAATATTAGTTTATTCGATATATTTATATATATATATCTTTTATATTTATGTGGGAATAAAAATACATAAATGTGGACAAAAAAAAAAAAAAAAAAAAAAAAATATAATATTTTAAGAAAATAAAAACAAAAGAAAAATTATATATATATATATATATATATATATATATATATATATAGGTGCTATAATTTATATACACACAAATATATACACATATAAATATATATATATGTATATTCTTTCAGTACACATAATGTTGTCATAAAAAATCTATATTTTATTTTTTAATATGAGTAATTCTTTAACATAAGAAATTTATTATTTTTTAATCTTTCATGAAATTTTTCTGGAGGATGAAAAAAGTACAAAAGGAGGAAATGTAAAATGAATAAATAAATAAATAAAAATATATATATATATATATATATATATATATATATATATATAATATGTGCATGTATAAAATTATATATATATATATATATATATATATATTTATAGATATTTTTATTAGAAACAATGAATATATTACTATAAAACAATAAAGAAATATATATATATATAAATACACATAAATTCGTAATTTTTTTTTTTTTTTTTTTTAAATGTTAATGACAACACAAATTAGCACATATATAGACGCCTTAAGTAATTTGTTGAGTTTTCAAAAAAAAAAAAAAAAAAAAAAAAAAAGAATCAATTATAATATAAAGAAAACATGACAAAAAAATAAAATAAAAATAAAATAATAAAAAAAGAATTTTATAATATATATATATATTTATATTTGGTACAATATATATATATATTTTTTTATTTATACCAATTCATAAAATTTTATGTAAAAGAAATCAAAAAAAGTCTTCTTAATTATTCACGTATGTATTTAACAAAAAATATTGTAAATATATATATTATATATATATATATATATTTATATGTTCAATTTTGTTTTGTTTTTATTTTATTTTCTTTCTGGTACAATAAAGGATATATGTCAACACATATATATATTTATATATATATATATATAATAGAAATAAAAAAAGAAAAAAAAAAAAAGAAACTAACGTCTTCATGAAAAAATAAAAGATAAAAATGTTAAATAATTATATGTAATATTAAAACATTTTATTAAAAAAAAATAAATTATAAAATCCATCAACAAGGGAAATGTATTATCATTAATATCATATATTATAAATATATACATATATATATATATATATGTGTATATATTATTATATATTTTATTTATTATAAATTAATTAAAAATGTAGTGGTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTGTTAAAATTAATTGGTAGTTCAAGATATTTTGGTGTCATAAGAAAAAGTATCAAAAATAAAAAAAGTAAAAATTTAATCATTTAAAGGTATAATCAAATTGATAGTGATTCATACACGAATACGATAAGTATTCTATAAAAATCTTTTCTTTTTTTTCCTTTCCTTTTTTTTTTTTTTTTTTTTTTTTTTTTATATGTATATGAAAGAGTATATTTCTTTTGTCAAACATCTTTACATATATATTTTTACTTATGTAATATGCCGTTTCTCGTCATTATTTCCATATGGTTACATACAATAATAGTAATATATAAATGTGTACATATTTTAAAATCTTCATATATTCCCAATGCTGAAAAATTGTTGATGTTTGAAAGGAAAAATAAAAGAGGAAAGATAAAATTGATTTTAAATAAAAATAAAGAAGAAAAAAGTATAAGAAGAAAATCATTAAAGAAATATATTGTTTATTCTATTAACAATGATAAAGAGTTTATACCGATAAATGATAATTATAAAATATTTCAAAAAAGAAATTTTATTAAAAAATATCATGTGAAGGATGAAGAAATAAAAGAATACATTGAAGAAATAAAGAAAAATAGAGCTAGTGGTTATGAACCTAAATTTCCTGAGGAGACCTTTCGAACGCCTGATGGATTAACAAATATAATATTAGATTATAAATATAAAAATGATAATTTAAGAATTCATAATTATTATTTTTTTTTCCTTTATTTTTTGAAGAAATTAGGTGATGAGGAGCAAAGGAAAATTAAATTAAGGAAAAGAATGGAAGGGAAGAACGATGAGTATGGTGATAGTATTAATGATGATGTTGACAATCGTATGATAAATGTTCAGGAGTTTTTATTTTTGAAGAAGAAAGGTTTTTTCGAGGGTGAGTTGTATACATGGAAAAATTGGGTTTTGTTGAACAGGGGTGAATGGAGAGATACAATAGTTTATGGTGACGAGGTTGATAATAATAATAATAATAATAATAGTAATAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAGTAATAGGAGTAGTAATTTTTGTGGTGATGATAATATATATAATGTATATAATAATTATGATGACGAATCATATGATATAAAAACTTTGAGACCTCTGGTAGAACCCAAAATGAAGAGAATGCCCATTGAATACTGGGGAAGTTTCCGAGCTATCGATTTTAATGTGAATCATTATCCAATATATAAAAAATTATTTGATTATTTTAATAAAGTGAATGTCAACGAAAATGACGAGAGGGGAAAATTTTATCCTTTTCTTTTTTTTCCTCGTTTTGGTGTTGGTAGGGATAGGTCAGGTTTAGGTTATGGTGATGCTCAATATTTTGGTAATTATGGAGATTTTTATGAAAAAAGGAAAGAAAGAGAAGAAAGAATAAGAAAAAGAAATATAGAGATGCAATTAAAAGAGAATGATAAGGATAAAGATATATATGATATGAATATAATAGACAATAAAAGTTCTGAGAGAATATTAAATACAAATATACATAAAGAAATTTTTATAGATAAGGATGATTTTGGACCAAATTTTATAAAGATTGAAGAGGCTACTGATATAATAAAATATCCACAGAATGGAAAATTATATCAGAAATTTTATATAGGACCTTTAAATATAACAGATGGACATACATTTGGTTCTTTAATAAAATATGTATGTCAAACTCAGATTTATGGATATGCAATTGTTGGGATAAAAGTTCATAATATGAATGAAGATACTAAAATTAATAATGTACAAGAAGATTTATTAGAAATAGCATTAAATATATCTGATGTATGTATATATAGTAAAGAAATAAATTTAGAGTCTAATATTAGATTAATTTTTAAAGGACCTTTAATGTTAGTTGCTGGTATGATACCATTACCTTCACATTTAAAAATAATAAACAAAGAACATTATATATGTACGATAAAAGAAGATGGATTTATAGATATATCCATAAAGATAGAATATGGAAAAGGGCATTGGTTAACATATGATAAAGGATTATATAAAAGAGAACGAGGATCAGATAATGATTGTATGAAAAAAAGAGAAATTAAGGAAGTAGTACATAAAAATTATATGCCTATTAGTTCTAGTTTTGGGGCATGTAGAATGATAAGATTAACTGTTCATAAAATTGCTACAAAATTTTGGTGTGAAGACAGATGTGAATTTACAGATCCAAAACAAATGTTAGTTGTCGAAATATGGACAGATTGTAGAATGCTACCAAAAAATGTTCTTTTATATGGTATTAAAAATATTAAAAAAATATTAAGAAAATTTAGAGAAATGATTGTGAAAGATACCGATTTTACATTTCAGGAAGAAGAACAAGAAATTAAAAATTTATGGCCAGCTATTGATAAATATAAATTTTTACAAACTAGACAAAAAATGGAAGGAGGACCACCTATACATAATATTGATGAAGATGTTCTTAGTGAACAAATACAAAAAAATAAATCACTTGATCCATTTTCTCAAGAACTTATGAATCCAGATAATTTTCCAAAACATTCAAATATACAATTACCTATACAAGACACACCACCACCTTTTCTAGATACATTGGAATGGTTAAAAATGGAAGTCAAGAAGGAAAATAACAAGAAAAATATAACACAATTCAAAAATACAAAAGGGAAAGGAACAAAATATAAAGATAAATTTAATAAAAACAAAACATATGATTATGATGAGTATTTAAATGAACGTTTATCAGATATATTAGACGAAAAATAAAAGGAATACATAAATATGTAAATATGTAAATATTTACATATCTAAATATTTATATATATATATATCTATTATTATTATTATTATTATTATCATTATTATTATCATTATTATTATTATTATCATTATTATTATTATTATCATTATTATTATCATTATCATAATCATTATCATTATTATTATTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTACATAGAAATAAAATAAAAATATATATAAACATATACATATATTAAACCCACATTTTAATATTTTTATGTTTATATCCTTGTTTATTTGTTTGTTAATTTTTTTTTTTTTTTTTTGTGACTACAATTTTTTATATCACTTTATTTTTCCTTTTTATTTGTCATATATATATATATATATATTATTTTATGATTTTTAAAAAAATATAATATTAGACTAATTTATGTTCACATAAAAATTTAAAAAAGAAAAAAATCAAAATTTATTTATATAAAAAAAAAAAAAAATTAAAACTAATAAAAAGGAAATATACATATATATATATATATATATATATATAATATATATATATTTTATATTTGTCATGTTTCTTTTCCGTCTTGTAAAAGCTTTTCCCATATATAATAATAACCACTCAATTTAGGTATAATCAAATTTATGTATTTTTTATTTTCTTTATATTCATTGCTTATAACCCAGTAGGCATCTGGATAACTTATTTTTCCGCACAGCTAAAAGGAAATAATAAAAAAAAAAAAATATATATATGTATATGTATACATGTTGAATAAATTATACATATGGCATTAATTACGAATTATACTTTTTCTTTTCTTTTTTCTTATAATGCGTACCATGTTATCTAGTAATAGTTCTTTTGTGTTGCCCTTGTTTATTTCGAGCTTTATATAATCATTTTTGAAATGAAACGATATATCTTCACAATTGGTTTCTTTATAAAAATAAAATAAAATAATATATTTATATATAATGAAATATATATATATATATATATATGTGTGTGTGTGTGTGTGTGTATATATTATTTGATTTACCATCATATATTGGTATATTCAATTCTATATATTCCAGAGATTCTCTCCAATCAAAACTAAAAAATATATATATAGATAATATGTGTTTATATGTATAAATATATACATTGGATATAAGGCACAATAAAAATATGAACAAACATATAAATGTATTTATATATATATATATATATATATATATATTTTTTTATTACGTATTATTATTTAGCAGTGGTCCTTTTTCAAAGGGCATGTGTAGCAATCCTTTATACTGTAAAAATAAAATATATTATTACATATATTAATAATTTTTGTTTTTATTTTATTTTATTTAATTTTTACCTTTAGCAATGACTTTGCCGTATCTGTAAAAGGATTTTTTTTTGGTTTATTATCTATTTTCATTGTTTTAATTTTATCATAAATATTTGTTATAGTTAATTTATCTTCTGGATAATTATCATCTTCAATTTCATCAAATGTTTTTTCAATTTTTTGCATTATGTCATATTCTTTTTTAACATCTGGATTTTGTTTCTCATTTATTTCGGTATTATAAAAAGCTTTCATTGCACATTGTTTTAATTTATCGTCTGTCTTGTTAATAACTTCATCAACATTTTTCATATCTATTTTCTTGTCTTGTTCTTCTAATCTCTTTATTTCTTCTTCTTCTTTTGCTTTAGAGTTGCTCTAATTAAATAAAAAAAAAAATAAAAAAAAAAAAAAATATGATAATACACATATATATATATATATATATATATGTATATGCATTTATTAAGGTAATGTCTTATTTATTTATTTTTTTTTATCCATTTACTTCAATTTCTTTAAACAATTTGAGAGATTCTTCTCCATATTTTCCATTTTCTATATCTTTAATAAGATTCTACATTTTAATAAAATGATTAAATATTATGTTCATGGCACAAAATTAAATATAAATTCACACACAAAAAAAAGAAAAAATAAATATAATATATTGTATATTAAATATATAACATGTACACATATATATATATATATATATATATATATATATATATATTTATTTATTTATTTATTTATTTTTTTTTTTTACATCAAGTTCTGGATCAAGATCGTCTATTTCATGATGTTCCTTTTCATCTGGTTTACTTTTAATACAATTTTTTATTTTTTTTTTATTTTTATTTTTTAATATAAATTCAAATGTTTTTTCACATTTAATAAAAGTGTATGATCTTGATCTTTTATTATCATATAAAAATATGTTCTCATTATTAAACATAAAAGATGCGTACTTTTTTCTAGCATTATTATATGATATTATATGAACACACTTTATTATATGAAATAAATAAAAAAATGTAATAACTTGGATATATATTATTCCTCTTAATATGTGTGACATAATTTGTTTTTCTTAATTCATAGGCATTACATAATATATATATATATATATATATATATGTATGTAATTACATATATAAATGTATATAATTTATTTTTATTTAATATTCATATTTTATATTAATATGCTACAAAAATATATTTATTAGTTTCGTACGTACATAGTTATTTTTTCAAATCAGCCAAATAAAAATATTGAGCACAAAGAAGAAATAACTATTATATATATATTTGCATTTTACACATTGTACTAAAAGAAAAAAAAATAAATAATAATAAAAATAACATAAAATAAAATAAAATAAAATTGGATCATATATATATAATATATATATAATGTATATATAATATATATATGTCAATATAAGTTATTTTTTACGCACCTGTATATAGATTCAAAATACGCGCATATTAATATTAACTAAATCAACATATTACAAAATTGTAATAGGCATAAAATAAAAAAAAATGTATATATAAAAATGATAAAATATTTAATAATATTGCAATTTAAAATGTAACATATAAATAAATAAATATTTATATATATATATATATATATATATATATATATATATATATTTTTTTTTTTTTTTTTTTTTTTTTTTTTATTTTTCCTTAAAGAAAAAATTATTATAATAAAATATTTTATTTAAAAATATTAAATATAATAAACTTACAACAAAAAAATACTTTAAAAAACATATAACAATATTCTATATAAATACTATATTTTTTTTTATTGCTACAAAAAAAAAATAAAGTAAAAAATACAAAATACTGTAAAATATATTATATATATATATATTTTCCCCTATTTTTAGCTTAATAAAACATATAAATTTATTTCTTTGGAATACTTTTCTTTCTTATAAGTATAATTTAATTATATATATATATATGTATTTTTTTTTTTTTTTTTTTTTTTTTTTTATATAATAAGGCATAAACTTATTTTTTCATATATATTGAATATAATTTATTTCATATATAATATTTGATATAAATATACCGTTTTATTTATATTTTTGAGAATATACCAATTTGAACATATGTATATATATATATATATATATTTTTTTTTTTTTTTTTTTTATTATTTATTTATTTAAAACTTACTTTGAGTAAGATTATATTTCTTTCTTTATTTTTCTCTTATTATTACAAAATGAAAAATTACTTTTATATTCCAATAGCTGATGACATGCACTGTCACTTAAGGCAAGGCGACATGCTGGATTTTACGGTAAATTCCATTAG",
+ "reference": "PF3D7_1472100"
+}

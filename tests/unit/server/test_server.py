@@ -30,7 +30,14 @@ from veupathdb.wdk import (
 )
 
 from veupathdb_mcp import server
-from veupathdb_mcp.audit import LengthInputs, LengthScreen, SelenoproteinInputs
+from veupathdb_mcp.audit import (
+    FusionInputs,
+    GeneId,
+    LengthInputs,
+    LengthScreen,
+    SelenoproteinInputs,
+    UncheckedIntrons,
+)
 from veupathdb_mcp.auth import CredentialMode, McpCredential
 from veupathdb_mcp.catalog import experiments, search_inspection, sites
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
@@ -52,8 +59,20 @@ from veupathdb_mcp.tool_meta import (
     MAX_CALL_SECONDS_META_KEY,
     STREAM_PART_META_KEY,
 )
-from veupathdb_mcp.tools import audit_tools, catalog_tools, user_tools
-from veupathdb_mcp.wdk import ai_expression, gene_set_steps, step_preview
+from veupathdb_mcp.tools import (
+    audit_fusion_tools,
+    audit_intron_tools,
+    audit_tools,
+    catalog_tools,
+    user_tools,
+)
+from veupathdb_mcp.wdk import (
+    ai_expression,
+    gene_record_type,
+    gene_set_steps,
+    step_preview,
+)
+from veupathdb_mcp.wdk.site_cache import SiteCache
 
 SITE = "plasmodb"
 
@@ -97,6 +116,16 @@ EXPECTED_ANNOTATIONS: dict[str, dict[str, bool]] = {
     "audit_selenoprotein_end": READ_ONLY,
     "audit_gene_length": READ_ONLY,
     "audit_gene_split": READ_ONLY,
+    "audit_strain_model": READ_ONLY,
+    "audit_missing_gene": READ_ONLY,
+    "audit_organelle_gene": READ_ONLY,
+    "audit_genome_priority": READ_ONLY,
+    "audit_pseudogene_anatomy": READ_ONLY,
+    "audit_genome_pseudogene_calls": READ_ONLY,
+    "audit_gene_evidence": READ_ONLY,
+    "audit_genome_provenance": READ_ONLY,
+    "audit_intron_support": READ_ONLY,
+    "audit_gene_fusion": READ_ONLY,
 }
 
 # The in-process names the inventory renamed. A served copy would be a second name.
@@ -305,8 +334,10 @@ async def test_a_summarized_gene_is_served_without_experiment_counts(
                 load_recorded("ai_expression_summary_present").json_body()
             )
 
-    monkeypatch.setattr(ai_expression, "_GENE_KEY_COLUMNS", {})
-    monkeypatch.setattr(ai_expression, "get_wdk_client", lambda _site: _Reporter())
+    reporter = _Reporter()
+    monkeypatch.setattr(gene_record_type, "_SERVED", SiteCache())
+    monkeypatch.setattr(gene_record_type, "get_wdk_client", lambda _site: reporter)
+    monkeypatch.setattr(ai_expression, "get_wdk_client", lambda _site: reporter)
 
     async with _served(_user_credential("user-bearer")) as client:
         result = await client.call_tool(
@@ -1098,18 +1129,22 @@ async def test_an_override_that_names_no_parameter_is_a_tool_error(
     )
 
 
-async def test_an_audit_call_answers_the_check_with_the_genes_it_named(
+async def test_an_audit_call_answers_the_check_with_the_ids_given_and_resolved(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     async def inputs(
         site_id: str, gene: str, reference_gene: str
     ) -> SelenoproteinInputs:
-        del site_id, gene, reference_gene
+        del site_id
         return SelenoproteinInputs(
             model_protein="MKLVCGGGG",
             reference_protein="MKLVCGGGGUG",
             dna="ATGAAACTGGTTTGTGGCGGCGGCGGCTGAGGTTAA",
             strand="+",
+            gene_ids=[
+                GeneId(given=gene, resolved=gene.upper()),
+                GeneId(given=reference_gene, resolved=reference_gene),
+            ],
         )
 
     monkeypatch.setattr(audit_tools, "selenoprotein_inputs", inputs)
@@ -1119,7 +1154,7 @@ async def test_an_audit_call_answers_the_check_with_the_genes_it_named(
             "audit_selenoprotein_end",
             {
                 "site_id": "toxodb",
-                "gene": "TGGT1_316600",
+                "gene": "tggt1_316600",
                 "reference_gene": "TGME49_316600",
             },
         )
@@ -1128,16 +1163,25 @@ async def test_an_audit_call_answers_the_check_with_the_genes_it_named(
         "verdict": "STOPS_AT_SEC",
         "afterModelEnd": "*G*",
         "referenceTail": "UG",
+        "tailIdentity": 1.0,
+        "secAligned": True,
+        "geneIds": [
+            {"given": "tggt1_316600", "resolved": "TGGT1_316600"},
+            {"given": "TGME49_316600", "resolved": "TGME49_316600"},
+        ],
         "gene": "TGGT1_316600",
         "referenceGene": "TGME49_316600",
     }
 
 
-async def test_every_audit_declares_one_budget_over_the_default() -> None:
+async def test_the_long_audits_declare_one_budget_and_the_short_ones_none() -> None:
     tools = await _list_tools()
 
     audits = ["audit_pseudogene_call", "audit_selenoprotein_end"]
-    audits += ["audit_gene_length", "audit_gene_split"]
+    audits += ["audit_gene_length", "audit_gene_split", "audit_strain_model"]
+    audits += ["audit_missing_gene", "audit_organelle_gene"]
+    audits += ["audit_pseudogene_anatomy", "audit_genome_pseudogene_calls"]
+    audits += ["audit_intron_support", "audit_gene_fusion"]
     budgets = set()
     for name in audits:
         meta = tools[name].meta
@@ -1145,6 +1189,9 @@ async def test_every_audit_declares_one_budget_over_the_default() -> None:
         budgets.add(meta[MAX_CALL_SECONDS_META_KEY])
     [budget] = budgets
     assert budget > 60
+    short = ["audit_genome_priority", "audit_gene_evidence", "audit_genome_provenance"]
+    declared = [MAX_CALL_SECONDS_META_KEY in (tools[name].meta or {}) for name in short]
+    assert declared == [False, False, False]
     schema = tools["audit_pseudogene_call"].outputSchema
     assert schema is not None
     assert {"strainGene", "referenceGene", "residueDifferences"} <= set(
@@ -1155,6 +1202,22 @@ async def test_every_audit_declares_one_budget_over_the_default() -> None:
     assert {"lengthClass", "groupMedian", "codeInferred", "nsInWindow"} <= set(
         length_schema["properties"]
     )
+    intron_schema = tools["audit_intron_support"].outputSchema
+    assert intron_schema is not None
+    assert {"unread", "bestJunctionReads", "otherTranscripts", "correctedCds"} <= set(
+        intron_schema["properties"]
+    )
+    fusion_schema = tools["audit_gene_fusion"].outputSchema
+    assert fusion_schema is not None
+    assert {"lengthClass", "referenceGene", "fusion"} <= set(
+        fusion_schema["properties"]
+    )
+    named = [name for name in audits if name != "audit_genome_pseudogene_calls"]
+    named.append("audit_gene_evidence")
+    for name in named:
+        served_schema = tools[name].outputSchema
+        assert served_schema is not None
+        assert "geneIds" in served_schema["properties"], name
 
 
 async def test_a_length_audit_the_group_cannot_judge_answers_camel_case(
@@ -1164,6 +1227,7 @@ async def test_a_length_audit_the_group_cannot_judge_answers_camel_case(
         del site_id
         return LengthInputs(
             screen=LengthScreen(
+                gene_ids=[GeneId(given=gene, resolved=gene) for gene in genes],
                 genes=genes,
                 length_class="UNQUALIFIED",
                 ratio=0.5,
@@ -1190,6 +1254,7 @@ async def test_a_length_audit_the_group_cannot_judge_answers_camel_case(
         "track": "",
         "nsInWindow": None,
         "atContigEdge": None,
+        "geneIds": [{"given": "PCYB_062670", "resolved": "PCYB_062670"}],
         "genes": ["PCYB_062670"],
         "lengthClass": "UNQUALIFIED",
         "ratio": 0.5,
@@ -1201,3 +1266,100 @@ async def test_a_length_audit_the_group_cannot_judge_answers_camel_case(
         "code": None,
         "codeInferred": False,
     }
+
+
+async def test_an_intron_audit_with_no_junction_track_answers_camel_case(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def inputs(site_id: str, gene: str) -> UncheckedIntrons:
+        del site_id
+        return UncheckedIntrons(
+            gene_ids=[GeneId(given=gene, resolved=gene)],
+            reason="plasmodb lists no RNA-seq junction track for pcynM",
+            transcript="PcyM_0736700-t36_1",
+            other_transcripts=0,
+        )
+
+    monkeypatch.setattr(audit_intron_tools, "intron_inputs", inputs)
+
+    async with _served(_user_credential("user-bearer")) as client:
+        result = await client.call_tool(
+            "audit_intron_support",
+            {"site_id": "plasmodb", "gene": "PcyM_0736700"},
+        )
+
+    assert result.structured_content == {
+        "verdict": "NOT_CHECKED",
+        "introns": None,
+        "unread": None,
+        "bestJunctionReads": None,
+        "unstrandedIgnored": 0,
+        "reason": "plasmodb lists no RNA-seq junction track for pcynM",
+        "geneIds": [{"given": "PcyM_0736700", "resolved": "PcyM_0736700"}],
+        "gene": "PcyM_0736700",
+        "transcript": "PcyM_0736700-t36_1",
+        "otherTranscripts": 0,
+        "tracksRefused": None,
+        "correctedCds": None,
+        "correctedProtein": None,
+        "frameKept": None,
+        "code": None,
+        "codeInferred": False,
+        "orthologs": None,
+        "correctionReason": None,
+    }
+
+
+async def test_a_fusion_audit_of_a_gene_that_is_not_long_answers_camel_case(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def inputs(site_id: str, gene: str) -> FusionInputs:
+        del site_id
+        return FusionInputs(
+            screen=LengthScreen(
+                gene_ids=[GeneId(given=gene, resolved=gene)],
+                genes=[gene],
+                length_class="UNQUALIFIED",
+                ratio=1.087,
+                group_median=1604.0,
+                group_copies=2.0,
+                group_spread=0.317,
+                organisms=38,
+                reference_gene="LOC34617740",
+            ),
+            reads=None,
+        )
+
+    monkeypatch.setattr(audit_fusion_tools, "read_fusion", inputs)
+
+    async with _served(_user_credential("user-bearer")) as client:
+        result = await client.call_tool(
+            "audit_gene_fusion", {"site_id": "toxodb", "gene": "TGME49_500302"}
+        )
+
+    assert result.structured_content == {
+        "geneIds": [{"given": "TGME49_500302", "resolved": "TGME49_500302"}],
+        "genes": ["TGME49_500302"],
+        "lengthClass": "UNQUALIFIED",
+        "ratio": 1.087,
+        "groupMedian": 1604.0,
+        "groupCopies": 2.0,
+        "groupSpread": 0.317,
+        "organisms": 38,
+        "referenceGene": "LOC34617740",
+        "fusion": None,
+    }
+
+
+async def test_the_audits_that_infer_no_code_say_they_read_the_standard_code() -> None:
+    tools = await _list_tools()
+
+    fixed = ["audit_pseudogene_call", "audit_selenoprotein_end"]
+    fixed += ["audit_pseudogene_anatomy"]
+    read = [" ".join((tools[name].description or "").split()) for name in fixed]
+
+    assert ["translates with the standard genetic code" in text for text in read] == [
+        True,
+        True,
+        True,
+    ]

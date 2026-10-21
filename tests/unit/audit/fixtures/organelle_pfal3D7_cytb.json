@@ -1,0 +1,106 @@
+{
+ "gene": "PF3D7_MIT02300",
+ "report": {
+  "meta": {
+   "totalCount": 1,
+   "responseCount": 1,
+   "displayTotalCount": 1,
+   "viewTotalCount": 1,
+   "displayViewTotalCount": 1,
+   "recordClassName": "transcript",
+   "attributes": [
+    "organism_full",
+    "gene_orthomcl_name",
+    "protein_length",
+    "gene_name",
+    "gene_product",
+    "sequence_id",
+    "gene_start_min",
+    "gene_end_max",
+    "strand_plus_minus",
+    "is_pseudo",
+    "gene_type",
+    "input_id",
+    "protein_sequence"
+   ],
+   "tables": []
+  },
+  "records": [
+   {
+    "displayName": "PF3D7_MIT02300",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_MIT02300"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_MIT02300.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "gene_name": "CYTB",
+     "organism_full": "Plasmodium falciparum 3D7",
+     "protein_sequence": "MNFYSINLVKAHLINYPCPLNINFLWNYGFLLGIIFFIQIITGVFLASRYTPDVSYAYYSIQHILRELWSGWCFRYMHATGASLVFLLTYLHILRGLNYSYMYLPLSWISGLILFMIFIVTAFVGYVLPWGQMSYWGATVITNLLSSIPVAVIWICGGYTVSDPTIKRFFVLHFILPFIGLCIVFIHIFFLHLHGSTNPLGYDTALKIPFYPNLLSLDVKGFNNVIILFLIQSLFGIIPLSHPDNAIVVNTYVTPSQIVPEWYFLPFYAMLKTVPSKPAGLVIVLLSLQLLFLLAEQRSLTTIIQFKMIFGARDYSVPIIWFMCAFYALLWIGCQLPQDIFILYGRLFIVLFFCSGLFVLVHYRRTHYDYSSQANI",
+     "gene_orthomcl_name": "OG8_0005317",
+     "protein_length": "376",
+     "gene_start_min": "3492",
+     "gene_type": "protein coding gene",
+     "sequence_id": "Pf3D7_MIT_v3",
+     "is_pseudo": "No",
+     "gene_product": "cytochrome b",
+     "gene_end_max": "4622",
+     "strand_plus_minus": "+",
+     "input_id": "PF3D7_MIT02300"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  ]
+ },
+ "record": {
+  "displayName": "PF3D7_MIT02300",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "PF3D7_MIT02300"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "GeneRecordClasses.GeneRecordClass",
+  "attributes": {
+   "organismAbbrev": "pfal3D7"
+  },
+  "tables": {
+   "GeneModelDump": [
+    {
+     "strand": "+",
+     "sequence_id": "Pf3D7_MIT_v3",
+     "source_id": "PF3D7_MIT02300",
+     "type": "CDS",
+     "transcript_ids": "PF3D7_MIT02300.1",
+     "gm_end": "4622",
+     "gm_start": "3492"
+    },
+    {
+     "strand": "+",
+     "sequence_id": "Pf3D7_MIT_v3",
+     "source_id": "PF3D7_MIT02300",
+     "transcript_ids": "PF3D7_MIT02300.1",
+     "type": "Exon",
+     "gm_end": "4622",
+     "gm_start": "3492"
+    }
+   ]
+  },
+  "tableErrors": []
+ }
+}

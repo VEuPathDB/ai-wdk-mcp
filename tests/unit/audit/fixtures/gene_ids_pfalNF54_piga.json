@@ -1,0 +1,1261 @@
+{
+ "site": "plasmodb",
+ "given": "PfNF54_100037200",
+ "batch": [
+  {
+   "meta": {
+    "totalCount": 1,
+    "responseCount": 1,
+    "displayTotalCount": 1,
+    "viewTotalCount": 1,
+    "displayViewTotalCount": 1,
+    "recordClassName": "transcript",
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type",
+     "input_id"
+    ],
+    "tables": []
+   },
+   "records": [
+    {
+     "displayName": "PF3D7_1032400",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PF3D7_1032400"
+      },
+      {
+       "name": "source_id",
+       "value": "PF3D7_1032400.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0001100",
+      "protein_length": "461",
+      "gene_name": "PIGA",
+      "organism_full": "Plasmodium falciparum 3D7",
+      "gene_start_min": "1302298",
+      "gene_type": "protein coding gene",
+      "sequence_id": "Pf3D7_10_v3",
+      "is_pseudo": "No",
+      "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+      "gene_end_max": "1305315",
+      "strand_plus_minus": "-",
+      "input_id": "PF3D7_1032400"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ]
+  }
+ ],
+ "search": {
+  "searchData": {
+   "summary": "Find genes with a text search against their product name, notes, GO, EC, Domains, NRDB, or metabolic pathways.",
+   "urlSegment": "GenesByText",
+   "dynamicAttributes": [
+    {
+     "isInReport": true,
+     "formats": [
+      {
+       "isInReport": true,
+       "displayName": "Histogram",
+       "name": "max_score-histogram",
+       "scopes": [],
+       "type": "histogram"
+      }
+     ],
+     "truncateTo": 100,
+     "displayName": "Score",
+     "name": "max_score",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "align": "center",
+     "columnDataType": "NUMBER",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    },
+    {
+     "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+     "isInReport": true,
+     "formats": [
+      {
+       "isInReport": true,
+       "displayName": "Histogram",
+       "name": "wdk_weight-histogram",
+       "description": "Display a histogram of weight distribution",
+       "scopes": [],
+       "type": "histogram"
+      }
+     ],
+     "truncateTo": 100,
+     "displayName": "Search Weight",
+     "name": "wdk_weight",
+     "isSortable": true,
+     "isDisplayable": true,
+     "isRemovable": true,
+     "columnDataType": "NUMBER",
+     "tools": {
+      "reports": [],
+      "filters": []
+     },
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     }
+    }
+   ],
+   "defaultSorting": [
+    {
+     "attributeName": "organism",
+     "direction": "ASC"
+    },
+    {
+     "attributeName": "gene_location_text",
+     "direction": "ASC"
+    }
+   ],
+   "isAnalyzable": true,
+   "displayName": "Text (product name, notes, etc.)",
+   "fullName": "GeneQuestions.GenesByText",
+   "description": "Find genes by searching text annotations.  The search compares your term against the text in the fields you specify, \n          returning genes that have a match. <br><br>\n          Select the Organism(s) you wish to query and enter your text term.  Surround your text term with quotation marks to find exact phrase matches. For example, searching <b>\"ABC transporter\"</b> will match the exact phrase 'ABC transporter', whereas searching <b>ABC transporter</b> will match <b>ABC</b> and/or <b>transporter</b>.  Use an asterisk (*) as a wild card character when looking for plural or compound words. For example, to find all compound words that start with phospho (ie. phosphodiesterase), type phospho<b>*</b> in the search window.<br><br>\n\n          <u><i>Hints</i></u>:  The search is similar to Google -- if you enter multiple words, genes that match more of those words will have a better score than those that match fewer of the words.  If the words are found close together, that also improves the score.  Higher scores appear at the top of your result list. <br><br> \n\n          <u><i>Looking for a list of genes?</i></u>:  If you need to query for a list of gene and you have each gene's ID, use the <a href=\"/a/app/search/transcript/GeneByLocusTag\">Identify Genes based on List of IDs</a> search categorized under Genes, Annotation curation and identifiers, List of IDs. <br><br> \n          \n          <u><i>Note about non-relevant results</i></u>:  \n          Depending on how you configure it, this text search may return \"non-relevant\" genes (false positives).  The search mechanically matches the term you supply against the Fields that you choose. The presence of your term in that field does not necessarily mean that the term <i>actually describes the gene</i>.  The term may be mentioned in that field for less relevant reasons.  To work around this, please carefully choose the Fields you want to search, and then, before drawing any conclusions, review the reference \n          to your term in all matched fields in the gene page to confirm the meaning of its mention. The \"Gene product\" field is the most stringent and is unlikely to return false positives.",
+   "defaultAttributes": [
+    "primary_key",
+    "organism",
+    "gene_location_text",
+    "gene_product",
+    "max_score"
+   ],
+   "groups": [
+    {
+     "displayType": "empty",
+     "displayName": "",
+     "name": "empty",
+     "description": "",
+     "isVisible": true,
+     "parameters": [
+      "text_search_organism",
+      "text_expression",
+      "text_fields"
+     ]
+    },
+    {
+     "displayType": "hidden",
+     "displayName": "",
+     "name": "_hidden",
+     "description": "",
+     "isVisible": false,
+     "parameters": [
+      "document_type"
+     ]
+    }
+   ],
+   "filters": [
+    {
+     "isViewOnly": false,
+     "name": "organismFilter"
+    },
+    {
+     "displayName": "Transcripts",
+     "isViewOnly": false,
+     "name": "matched_transcript_filter_array"
+    },
+    {
+     "isViewOnly": false,
+     "name": "genesByPathway"
+    }
+   ],
+   "shortDisplayName": "Text",
+   "paramNames": [
+    "text_search_organism",
+    "text_expression",
+    "document_type",
+    "text_fields"
+   ],
+   "isCacheable": true,
+   "outputRecordClassName": "transcript",
+   "noSummaryOnSingleRecord": false,
+   "queryName": "GenesByText",
+   "defaultSummaryView": "_default",
+   "parameters": [
+    {
+     "displayName": "Organism",
+     "minSelectedCount": 1,
+     "maxSelectedCount": -1,
+     "isVisible": true,
+     "type": "multi-pick-vocabulary",
+     "help": "Select the organism(s) you wish to query against. Click the [+] to expand taxon groupings.",
+     "depthExpanded": 0,
+     "dependentParams": [],
+     "displayType": "treeBox",
+     "isReadOnly": false,
+     "vocabulary": {
+      "data": {
+       "display": "@@fake@@",
+       "term": "@@fake@@"
+      },
+      "children": [
+       {
+        "data": {
+         "display": "Haemoproteidae",
+         "term": "Haemoproteidae"
+        },
+        "children": [
+         {
+          "data": {
+           "display": "Haemoproteus tartakovskyi strain SISKIN1",
+           "term": "Haemoproteus tartakovskyi strain SISKIN1"
+          },
+          "children": []
+         }
+        ]
+       },
+       {
+        "data": {
+         "display": "Plasmodiidae",
+         "term": "Plasmodiidae"
+        },
+        "children": [
+         {
+          "data": {
+           "display": "Hepatocystis",
+           "term": "Hepatocystis"
+          },
+          "children": [
+           {
+            "data": {
+             "display": "Hepatocystis sp. ex Piliocolobus tephrosceles 2019",
+             "term": "Hepatocystis sp. ex Piliocolobus tephrosceles 2019"
+            },
+            "children": []
+           }
+          ]
+         },
+         {
+          "data": {
+           "display": "Plasmodium",
+           "term": "Plasmodium"
+          },
+          "children": [
+           {
+            "data": {
+             "display": "Plasmodium adleri",
+             "term": "Plasmodium adleri"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium adleri G01",
+               "term": "Plasmodium adleri G01"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium berghei",
+             "term": "Plasmodium berghei"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium berghei ANKA",
+               "term": "Plasmodium berghei ANKA"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium billcollinsi",
+             "term": "Plasmodium billcollinsi"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium billcollinsi G01",
+               "term": "Plasmodium billcollinsi G01"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium blacklocki",
+             "term": "Plasmodium blacklocki"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium blacklocki G01",
+               "term": "Plasmodium blacklocki G01"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium brasilianum",
+             "term": "Plasmodium brasilianum"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium brasilianum strain Bolivian I",
+               "term": "Plasmodium brasilianum strain Bolivian I"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium chabaudi",
+             "term": "Plasmodium chabaudi"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium chabaudi chabaudi",
+               "term": "Plasmodium chabaudi chabaudi"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium chabaudi chabaudi CB",
+               "term": "Plasmodium chabaudi chabaudi CB"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium coatneyi",
+             "term": "Plasmodium coatneyi"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium coatneyi Hackeri",
+               "term": "Plasmodium coatneyi Hackeri"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium cynomolgi",
+             "term": "Plasmodium cynomolgi"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium cynomolgi strain B",
+               "term": "Plasmodium cynomolgi strain B"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium cynomolgi strain M",
+               "term": "Plasmodium cynomolgi strain M"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium falciparum",
+             "term": "Plasmodium falciparum"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium falciparum 3D7",
+               "term": "Plasmodium falciparum 3D7"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum 7G8",
+               "term": "Plasmodium falciparum 7G8"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum 7G8 2019",
+               "term": "Plasmodium falciparum 7G8 2019"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum CD01",
+               "term": "Plasmodium falciparum CD01"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum Dd2",
+               "term": "Plasmodium falciparum Dd2"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum GA01",
+               "term": "Plasmodium falciparum GA01"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum GB4",
+               "term": "Plasmodium falciparum GB4"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum GN01",
+               "term": "Plasmodium falciparum GN01"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum HB3",
+               "term": "Plasmodium falciparum HB3"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum IT",
+               "term": "Plasmodium falciparum IT"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum KE01",
+               "term": "Plasmodium falciparum KE01"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum KH01",
+               "term": "Plasmodium falciparum KH01"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum KH02",
+               "term": "Plasmodium falciparum KH02"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum ML01",
+               "term": "Plasmodium falciparum ML01"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum NF135.C10",
+               "term": "Plasmodium falciparum NF135.C10"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum NF166",
+               "term": "Plasmodium falciparum NF166"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum NF54",
+               "term": "Plasmodium falciparum NF54"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum SD01",
+               "term": "Plasmodium falciparum SD01"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum SN01",
+               "term": "Plasmodium falciparum SN01"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium falciparum TG01",
+               "term": "Plasmodium falciparum TG01"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium fragile",
+             "term": "Plasmodium fragile"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium fragile strain nilgiri",
+               "term": "Plasmodium fragile strain nilgiri"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium gaboni",
+             "term": "Plasmodium gaboni"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium gaboni strain G01",
+               "term": "Plasmodium gaboni strain G01"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium gaboni strain SY75",
+               "term": "Plasmodium gaboni strain SY75"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium gallinaceum",
+             "term": "Plasmodium gallinaceum"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium gallinaceum 8A",
+               "term": "Plasmodium gallinaceum 8A"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium inui",
+             "term": "Plasmodium inui"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium inui San Antonio 1",
+               "term": "Plasmodium inui San Antonio 1"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium knowlesi",
+             "term": "Plasmodium knowlesi"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium knowlesi strain A1H1",
+               "term": "Plasmodium knowlesi strain A1H1"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium knowlesi strain H",
+               "term": "Plasmodium knowlesi strain H"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium knowlesi strain Malayan Strain Pk1 A",
+               "term": "Plasmodium knowlesi strain Malayan Strain Pk1 A"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium malariae",
+             "term": "Plasmodium malariae"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium malariae UG01",
+               "term": "Plasmodium malariae UG01"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium ovale",
+             "term": "Plasmodium ovale"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium ovale curtisi GH01",
+               "term": "Plasmodium ovale curtisi GH01"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium ovale wallikeri PowCR01",
+               "term": "Plasmodium ovale wallikeri PowCR01"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium praefalciparum",
+             "term": "Plasmodium praefalciparum"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium praefalciparum strain G01",
+               "term": "Plasmodium praefalciparum strain G01"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium reichenowi",
+             "term": "Plasmodium reichenowi"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium reichenowi CDC",
+               "term": "Plasmodium reichenowi CDC"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium reichenowi G01",
+               "term": "Plasmodium reichenowi G01"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium relictum",
+             "term": "Plasmodium relictum"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium relictum SGS1-like",
+               "term": "Plasmodium relictum SGS1-like"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium vinckei",
+             "term": "Plasmodium vinckei"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium vinckei brucechwatti DA",
+               "term": "Plasmodium vinckei brucechwatti DA"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium vinckei Cameroon EL",
+               "term": "Plasmodium vinckei Cameroon EL"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium vinckei lentum DE",
+               "term": "Plasmodium vinckei lentum DE"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium vinckei petteri CR 2020",
+               "term": "Plasmodium vinckei petteri CR 2020"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium vinckei petteri strain CR",
+               "term": "Plasmodium vinckei petteri strain CR"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium vinckei vinckei CY",
+               "term": "Plasmodium vinckei vinckei CY"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium vinckei vinckei strain vinckei",
+               "term": "Plasmodium vinckei vinckei strain vinckei"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium vivax",
+             "term": "Plasmodium vivax"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium vivax P01",
+               "term": "Plasmodium vivax P01"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium vivax PAM",
+               "term": "Plasmodium vivax PAM"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium vivax PvW1",
+               "term": "Plasmodium vivax PvW1"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium vivax Sal-1",
+               "term": "Plasmodium vivax Sal-1"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium vivax-like sp.",
+             "term": "Plasmodium vivax-like sp."
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium vivax-like Pvl01",
+               "term": "Plasmodium vivax-like Pvl01"
+              },
+              "children": []
+             }
+            ]
+           },
+           {
+            "data": {
+             "display": "Plasmodium yoelii",
+             "term": "Plasmodium yoelii"
+            },
+            "children": [
+             {
+              "data": {
+               "display": "Plasmodium yoelii yoelii 17X",
+               "term": "Plasmodium yoelii yoelii 17X"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium yoelii yoelii 17XNL",
+               "term": "Plasmodium yoelii yoelii 17XNL"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium yoelii yoelii 17XNL 2023",
+               "term": "Plasmodium yoelii yoelii 17XNL 2023"
+              },
+              "children": []
+             },
+             {
+              "data": {
+               "display": "Plasmodium yoelii yoelii YM",
+               "term": "Plasmodium yoelii yoelii YM"
+              },
+              "children": []
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "allowEmptyValue": false,
+     "name": "text_search_organism",
+     "countOnlyLeaves": true,
+     "initialDisplayValue": "[]",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "maxRecommendedMsg": [
+       "<p>\n          <b>Please select five or fewer organisms where possible.</b>\n        </p>\n        <p>\n          Selecting a large number of organisms may impact performance and make results harder to interpret.\n        </p>\n        <p>\n          For the best experience, use <i>My Organism Preferences</i> in the page header to focus on the organisms you care about most.\n        </p>"
+      ],
+      "specificAttribution": [],
+      "organismProperties": [
+       "pruneNodesWithSingleExtendingChild",
+       "showOnlyPreferredOrganisms",
+       "highlightReferenceOrganisms"
+      ],
+      "maxRecommended": [
+       "5"
+      ]
+     },
+     "group": "empty"
+    },
+    {
+     "displayName": "Text term (use * as wildcard)",
+     "length": 1000,
+     "isVisible": true,
+     "isMultiLine": false,
+     "type": "string",
+     "help": "Enter the word or phrase that you wish to query. Genes returned by the search will contain\n        this word or phrase in their annotations. Use an asterisk as a wildcard to match partial words.\n        Use quotation marks around multiple words to match the exact phrase.",
+     "dependentParams": [],
+     "isReadOnly": false,
+     "isNumber": false,
+     "allowEmptyValue": false,
+     "name": "text_expression",
+     "initialDisplayValue": "*reductase",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     },
+     "group": "empty"
+    },
+    {
+     "displayName": "document_type",
+     "length": 0,
+     "isVisible": false,
+     "isMultiLine": false,
+     "type": "string",
+     "help": "document_type",
+     "dependentParams": [
+      "text_fields"
+     ],
+     "isReadOnly": true,
+     "isNumber": false,
+     "allowEmptyValue": false,
+     "name": "document_type",
+     "initialDisplayValue": "gene",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     },
+     "group": "_hidden"
+    },
+    {
+     "displayName": "Fields",
+     "minSelectedCount": 1,
+     "maxSelectedCount": -1,
+     "isVisible": true,
+     "type": "multi-pick-vocabulary",
+     "help": "Choose which text fields to search.",
+     "dependentParams": [],
+     "displayType": "checkBox",
+     "isReadOnly": false,
+     "vocabulary": [
+      [
+       "apolloCommentContent",
+       "Apollo Annotations",
+       null
+      ],
+      [
+       "ECNumbers",
+       "EC descriptions and numbers",
+       null
+      ],
+      [
+       "Epitopes",
+       "Epitopes from IEDB",
+       null
+      ],
+      [
+       "GeneLinkouts",
+       "External links",
+       null
+      ],
+      [
+       "primary_key",
+       "Gene ID",
+       null
+      ],
+      [
+       "name",
+       "Gene name or symbol",
+       null
+      ],
+      [
+       "gene_type",
+       "Gene type",
+       null
+      ],
+      [
+       "GeneModelCharacteristics",
+       "GeneModel Characteristics",
+       null
+      ],
+      [
+       "sequence_id",
+       "Genomic sequence ID",
+       null
+      ],
+      [
+       "GOTerms",
+       "GO terms",
+       null
+      ],
+      [
+       "InterPro",
+       "InterPro domains",
+       null
+      ],
+      [
+       "MetabolicPathways",
+       "Metabolic pathways",
+       null
+      ],
+      [
+       "Alias",
+       "Names, IDs, and aliases",
+       null
+      ],
+      [
+       "Notes",
+       "Notes from annotators",
+       null
+      ],
+      [
+       "organism_full",
+       "Organism",
+       null
+      ],
+      [
+       "orthomcl_name",
+       "Ortholog group",
+       null
+      ],
+      [
+       "Orthologs",
+       "Orthologs",
+       null
+      ],
+      [
+       "PdbSimilarities",
+       "PDB chains",
+       null
+      ],
+      [
+       "PhenotypeCategoricalValues",
+       "Phenotype values",
+       null
+      ],
+      [
+       "product",
+       "Product description",
+       null
+      ],
+      [
+       "Products",
+       "Product descriptions (all)",
+       null
+      ],
+      [
+       "PubMed",
+       "PubMed",
+       null
+      ],
+      [
+       "so_id",
+       "Sequence Ontology ID",
+       null
+      ],
+      [
+       "so_term_name",
+       "Sequence Ontology term",
+       null
+      ],
+      [
+       "GeneTranscripts",
+       "Transcripts",
+       null
+      ],
+      [
+       "UserCommentContent",
+       "User comments",
+       null
+      ]
+     ],
+     "allowEmptyValue": false,
+     "name": "text_fields",
+     "initialDisplayValue": "[\"apolloCommentContent\",\"ECNumbers\",\"Epitopes\",\"GeneLinkouts\",\"primary_key\",\"name\",\"gene_type\",\"GeneModelCharacteristics\",\"sequence_id\",\"GOTerms\",\"InterPro\",\"MetabolicPathways\",\"Alias\",\"Notes\",\"organism_full\",\"orthomcl_name\",\"Orthologs\",\"PdbSimilarities\",\"PhenotypeCategoricalValues\",\"product\",\"Products\",\"PubMed\",\"so_id\",\"so_term_name\",\"GeneTranscripts\",\"UserCommentContent\"]",
+     "properties": {
+      "organisms": [
+       "P. falciparum",
+       "P. vivax",
+       "P. yoelii",
+       "P. berghei",
+       "P. chabaudi",
+       "P. knowlesi"
+      ],
+      "specificAttribution": []
+     },
+     "group": "empty"
+    }
+   ],
+   "properties": {
+    "organisms": [
+     "P. falciparum",
+     "P. vivax",
+     "P. yoelii",
+     "P. berghei",
+     "P. chabaudi",
+     "P. knowlesi"
+    ],
+    "specificAttribution": []
+   },
+   "summaryViewPlugins": [
+    {
+     "displayName": "Gene Results",
+     "name": "_default",
+     "description": "View transcripts."
+    },
+    {
+     "displayName": "Genome View",
+     "name": "genomic-view",
+     "description": "View your hits mapped to their corresponding largest assembled genomic DNA segment, often a chromosome, but\n sometimes a contig or scaffold."
+    }
+   ]
+  },
+  "validation": {
+   "level": "DISPLAYABLE",
+   "isValid": true
+  }
+ },
+ "text": [
+  {
+   "meta": {
+    "totalCount": 1,
+    "responseCount": 1,
+    "displayTotalCount": 1,
+    "viewTotalCount": 1,
+    "displayViewTotalCount": 1,
+    "recordClassName": "transcript",
+    "attributes": [],
+    "tables": []
+   },
+   "records": [
+    {
+     "displayName": "PfNF54_100037200:pseudogene",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfNF54_100037200:pseudogene"
+      },
+      {
+       "name": "source_id",
+       "value": "PfNF54_100037200.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {},
+     "tables": {},
+     "tableErrors": []
+    }
+   ]
+  }
+ ],
+ "resolved": [
+  {
+   "meta": {
+    "totalCount": 1,
+    "responseCount": 1,
+    "displayTotalCount": 1,
+    "viewTotalCount": 1,
+    "displayViewTotalCount": 1,
+    "recordClassName": "transcript",
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type"
+    ],
+    "tables": []
+   },
+   "records": [
+    {
+     "displayName": "PfNF54_100037200:pseudogene",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfNF54_100037200:pseudogene"
+      },
+      {
+       "name": "source_id",
+       "value": "PfNF54_100037200.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "N/A (orthology not determined for pseudogenes)",
+      "protein_length": null,
+      "gene_name": null,
+      "organism_full": "Plasmodium falciparum NF54",
+      "gene_start_min": "1063699",
+      "gene_type": "pseudogene",
+      "sequence_id": "VBRF01000019.1",
+      "is_pseudo": "Yes",
+      "gene_product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+      "gene_end_max": "1065985",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ]
+  }
+ ]
+}

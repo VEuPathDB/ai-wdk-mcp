@@ -1,0 +1,4575 @@
+{
+ "case": {
+  "file": "fusion_pfraNilgiri_rpt6.json",
+  "site": "plasmodb",
+  "gene": "AK88_02763"
+ },
+ "calls": [
+  {
+   "kind": "dataset",
+   "ids": [
+    "AK88_02763"
+   ],
+   "dataset": 202394040
+  },
+  {
+   "kind": "search",
+   "record_type": "transcript",
+   "search_name": "GeneByLocusTag",
+   "parameters": {
+    "ds_gene_ids": "202394040"
+   },
+   "report": {
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type",
+     "input_id"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 8
+    }
+   },
+   "records": [
+    {
+     "displayName": "AK88_02763",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_02763"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_02763-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "1095",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "202826",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001672",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8",
+      "gene_end_max": "207689",
+      "strand_plus_minus": "+",
+      "input_id": "AK88_02763"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ],
+   "served_total": 1,
+   "kept": null
+  },
+  {
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "AK88_02763"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [],
+   "tables": [
+    "Orthologs"
+   ],
+   "record": {
+    "displayName": "AK88_02763",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "AK88_02763"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "Orthologs": [
+      {
+       "organism": "Plasmodium falciparum 3D7",
+       "gene": {
+        "displayText": "PF3D7_1248900.1",
+        "url": "/plasmo.qa/app/record/gene/PF3D7_1248900"
+       },
+       "ortho_source_id": "PF3D7_1248900.1",
+       "ortho_gene_source_id": "PF3D7_1248900",
+       "sort_key": "ak88_02763                                                                      8yes8yespf3d7_1248900                                                                   ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "yes",
+        "url": "/plasmo.qa/app/record/gene/PF3D7_1248900#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "yes",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PF3D7_1248900\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium yoelii yoelii 17X",
+       "gene": {
+        "displayText": "PY17X_1464400.1",
+        "url": "/plasmo.qa/app/record/gene/PY17X_1464400"
+       },
+       "ortho_source_id": "PY17X_1464400.1",
+       "ortho_gene_source_id": "PY17X_1464400",
+       "sort_key": "ak88_02763                                                                      8yes8yespy17x_1464400                                                                   ",
+       "protein_length": "422",
+       "comment_link": {
+        "displayText": "yes",
+        "url": "/plasmo.qa/app/record/gene/PY17X_1464400#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "yes",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PY17X_1464400\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium vinckei vinckei strain vinckei",
+       "gene": {
+        "displayText": "YYE_00713-t30_1",
+        "url": "/plasmo.qa/app/record/gene/YYE_00713"
+       },
+       "ortho_source_id": "YYE_00713-t30_1",
+       "ortho_gene_source_id": "YYE_00713",
+       "sort_key": "ak88_02763                                                                      8yes9no yye_00713                                                                       ",
+       "protein_length": "421",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/YYE_00713#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"YYE_00713\">",
+       "gene_product": "26S protease regulatory subunit 8 like A",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium brasilianum strain Bolivian I",
+       "gene": {
+        "displayText": "MKS88_005863_t1",
+        "url": "/plasmo.qa/app/record/gene/MKS88_005863"
+       },
+       "ortho_source_id": "MKS88_005863_t1",
+       "ortho_gene_source_id": "MKS88_005863",
+       "sort_key": "ak88_02763                                                                      8yes9no mks88_005863                                                                    ",
+       "protein_length": "422",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/MKS88_005863#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"MKS88_005863\">",
+       "gene_product": "26S protease regulatory subunit 8",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium ovale curtisi GH01",
+       "gene": {
+        "displayText": "PocGH01_14073400.1",
+        "url": "/plasmo.qa/app/record/gene/PocGH01_14073400"
+       },
+       "ortho_source_id": "PocGH01_14073400.1",
+       "ortho_gene_source_id": "PocGH01_14073400",
+       "sort_key": "ak88_02763                                                                      8yes9no pocgh01_14073400                                                                ",
+       "protein_length": "417",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PocGH01_14073400#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PocGH01_14073400\">",
+       "gene_product": "26S proteasome AAA-ATPase subunit RPT6, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium reichenowi CDC",
+       "gene": {
+        "displayText": "PRCDC_1248300.1",
+        "url": "/plasmo.qa/app/record/gene/PRCDC_1248300"
+       },
+       "ortho_source_id": "PRCDC_1248300.1",
+       "ortho_gene_source_id": "PRCDC_1248300",
+       "sort_key": "ak88_02763                                                                      8yes9no prcdc_1248300                                                                   ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PRCDC_1248300#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PRCDC_1248300\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium vivax-like Pvl01",
+       "gene": {
+        "displayText": "PVL_140050200-t42_1",
+        "url": "/plasmo.qa/app/record/gene/PVL_140050200"
+       },
+       "ortho_source_id": "PVL_140050200-t42_1",
+       "ortho_gene_source_id": "PVL_140050200",
+       "sort_key": "ak88_02763                                                                      8yes9no pvl_140050200                                                                   ",
+       "protein_length": "424",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PVL_140050200#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVL_140050200\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium inui San Antonio 1",
+       "gene": {
+        "displayText": "C922_04966-t30_1",
+        "url": "/plasmo.qa/app/record/gene/C922_04966"
+       },
+       "ortho_source_id": "C922_04966-t30_1",
+       "ortho_gene_source_id": "C922_04966",
+       "sort_key": "ak88_02763                                                                      8yes9no c922_04966                                                                      ",
+       "protein_length": "423",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/C922_04966#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"C922_04966\">",
+       "gene_product": "26S protease regulatory subunit 8 like A",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium knowlesi strain Malayan Strain Pk1 A",
+       "gene": {
+        "displayText": "PKNOH_S140287200-t35_1",
+        "url": "/plasmo.qa/app/record/gene/PKNOH_S140287200"
+       },
+       "ortho_source_id": "PKNOH_S140287200-t35_1",
+       "ortho_gene_source_id": "PKNOH_S140287200",
+       "sort_key": "ak88_02763                                                                      8yes9no pknoh_s140287200                                                                ",
+       "protein_length": "424",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PKNOH_S140287200#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PKNOH_S140287200\">",
+       "gene_product": "putative 26S protease regulatory subunit 8",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum SD01",
+       "gene": {
+        "displayText": "PfSD01_120053600-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfSD01_120053600"
+       },
+       "ortho_source_id": "PfSD01_120053600-t41_1",
+       "ortho_gene_source_id": "PfSD01_120053600",
+       "sort_key": "ak88_02763                                                                      8yes9no pfsd01_120053600                                                                ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfSD01_120053600#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfSD01_120053600\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium chabaudi chabaudi CB",
+       "gene": {
+        "displayText": "PCHCB_000486000-t70_1",
+        "url": "/plasmo.qa/app/record/gene/PCHCB_000486000"
+       },
+       "ortho_source_id": "PCHCB_000486000-t70_1",
+       "ortho_gene_source_id": "PCHCB_000486000",
+       "sort_key": "ak88_02763                                                                      8yes9no pchcb_000486000                                                                 ",
+       "protein_length": "421",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PCHCB_000486000#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PCHCB_000486000\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium gaboni strain SY75",
+       "gene": {
+        "displayText": "PGSY75_1248900-t31_1",
+        "url": "/plasmo.qa/app/record/gene/PGSY75_1248900"
+       },
+       "ortho_source_id": "PGSY75_1248900-t31_1",
+       "ortho_gene_source_id": "PGSY75_1248900",
+       "sort_key": "ak88_02763                                                                      8yes9no pgsy75_1248900                                                                  ",
+       "protein_length": "431",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PGSY75_1248900#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PGSY75_1248900\">",
+       "gene_product": "putative 26S protease regulatory subunit 8",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium falciparum ML01",
+       "gene": {
+        "displayText": "PfML01_120055000-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfML01_120055000"
+       },
+       "ortho_source_id": "PfML01_120055000-t41_1",
+       "ortho_gene_source_id": "PfML01_120055000",
+       "sort_key": "ak88_02763                                                                      8yes9no pfml01_120055000                                                                ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfML01_120055000#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfML01_120055000\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum KH02",
+       "gene": {
+        "displayText": "PfKH02_120053600-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfKH02_120053600"
+       },
+       "ortho_source_id": "PfKH02_120053600-t41_1",
+       "ortho_gene_source_id": "PfKH02_120053600",
+       "sort_key": "ak88_02763                                                                      8yes9no pfkh02_120053600                                                                ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfKH02_120053600#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfKH02_120053600\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum NF135.C10",
+       "gene": {
+        "displayText": "PfNF135_120053300.1",
+        "url": "/plasmo.qa/app/record/gene/PfNF135_120053300"
+       },
+       "ortho_source_id": "PfNF135_120053300.1",
+       "ortho_gene_source_id": "PfNF135_120053300",
+       "sort_key": "ak88_02763                                                                      8yes9no pfnf135_120053300                                                               ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfNF135_120053300#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfNF135_120053300\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Haemoproteus tartakovskyi strain SISKIN1",
+       "gene": {
+        "displayText": "Htart_000094500.1",
+        "url": "/plasmo.qa/app/record/gene/Htart_000094500"
+       },
+       "ortho_source_id": "Htart_000094500.1",
+       "ortho_gene_source_id": "Htart_000094500",
+       "sort_key": "ak88_02763                                                                      8yes9no htart_000094500                                                                 ",
+       "protein_length": "438",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/Htart_000094500#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Htart_000094500\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium billcollinsi G01",
+       "gene": {
+        "displayText": "PBILCG01_1248300_t1",
+        "url": "/plasmo.qa/app/record/gene/PBILCG01_1248300"
+       },
+       "ortho_source_id": "PBILCG01_1248300_t1",
+       "ortho_gene_source_id": "PBILCG01_1248300",
+       "sort_key": "ak88_02763                                                                      8yes9no pbilcg01_1248300                                                                ",
+       "protein_length": "432",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PBILCG01_1248300#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PBILCG01_1248300\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium falciparum IT",
+       "gene": {
+        "displayText": "PfIT_120054100-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfIT_120054100"
+       },
+       "ortho_source_id": "PfIT_120054100-t41_1",
+       "ortho_gene_source_id": "PfIT_120054100",
+       "sort_key": "ak88_02763                                                                      8yes9no pfit_120054100                                                                  ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfIT_120054100#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfIT_120054100\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium vinckei brucechwatti DA",
+       "gene": {
+        "displayText": "PVBDA_1406440_t1",
+        "url": "/plasmo.qa/app/record/gene/PVBDA_1406440"
+       },
+       "ortho_source_id": "PVBDA_1406440_t1",
+       "ortho_gene_source_id": "PVBDA_1406440",
+       "sort_key": "ak88_02763                                                                      8yes9no pvbda_1406440                                                                   ",
+       "protein_length": "421",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PVBDA_1406440#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVBDA_1406440\">",
+       "gene_product": "Proteasomal ATPase OB C-terminal domain | AAA+ lid domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum GB4",
+       "gene": {
+        "displayText": "PfGB4_120054100-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfGB4_120054100"
+       },
+       "ortho_source_id": "PfGB4_120054100-t41_1",
+       "ortho_gene_source_id": "PfGB4_120054100",
+       "sort_key": "ak88_02763                                                                      8yes9no pfgb4_120054100                                                                 ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfGB4_120054100#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfGB4_120054100\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum KH01",
+       "gene": {
+        "displayText": "PfKH01_120055000-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfKH01_120055000"
+       },
+       "ortho_source_id": "PfKH01_120055000-t41_1",
+       "ortho_gene_source_id": "PfKH01_120055000",
+       "sort_key": "ak88_02763                                                                      8yes9no pfkh01_120055000                                                                ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfKH01_120055000#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfKH01_120055000\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium cynomolgi strain B",
+       "gene": {
+        "displayText": "PCYB_147330-t26_1",
+        "url": "/plasmo.qa/app/record/gene/PCYB_147330"
+       },
+       "ortho_source_id": "PCYB_147330-t26_1",
+       "ortho_gene_source_id": "PCYB_147330",
+       "sort_key": "ak88_02763                                                                      8yes9no pcyb_147330                                                                     ",
+       "protein_length": "409",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PCYB_147330#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PCYB_147330\">",
+       "gene_product": "26S protease regulatory subunit 8",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium cynomolgi strain M",
+       "gene": {
+        "displayText": "PcyM_1472800-t36_1",
+        "url": "/plasmo.qa/app/record/gene/PcyM_1472800"
+       },
+       "ortho_source_id": "PcyM_1472800-t36_1",
+       "ortho_gene_source_id": "PcyM_1472800",
+       "sort_key": "ak88_02763                                                                      8yes9no pcym_1472800                                                                    ",
+       "protein_length": "424",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PcyM_1472800#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PcyM_1472800\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium vivax PvW1",
+       "gene": {
+        "displayText": "PVW1_140072500_t1",
+        "url": "/plasmo.qa/app/record/gene/PVW1_140072500"
+       },
+       "ortho_source_id": "PVW1_140072500_t1",
+       "ortho_gene_source_id": "PVW1_140072500",
+       "sort_key": "ak88_02763                                                                      8yes9no pvw1_140072500                                                                  ",
+       "protein_length": "424",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PVW1_140072500#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVW1_140072500\">",
+       "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium praefalciparum strain G01",
+       "gene": {
+        "displayText": "PPRFG01_1206500_t1",
+        "url": "/plasmo.qa/app/record/gene/PPRFG01_1206500"
+       },
+       "ortho_source_id": "PPRFG01_1206500_t1",
+       "ortho_gene_source_id": "PPRFG01_1206500",
+       "sort_key": "ak88_02763                                                                      8yes9no pprfg01_1206500                                                                 ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PPRFG01_1206500#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PPRFG01_1206500\">",
+       "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium relictum SGS1-like",
+       "gene": {
+        "displayText": "PRELSG_1464100.1",
+        "url": "/plasmo.qa/app/record/gene/PRELSG_1464100"
+       },
+       "ortho_source_id": "PRELSG_1464100.1",
+       "ortho_gene_source_id": "PRELSG_1464100",
+       "sort_key": "ak88_02763                                                                      8yes9no prelsg_1464100                                                                  ",
+       "protein_length": "422",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PRELSG_1464100#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PRELSG_1464100\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium vinckei lentum DE",
+       "gene": {
+        "displayText": "PVLDE_1406290_t1",
+        "url": "/plasmo.qa/app/record/gene/PVLDE_1406290"
+       },
+       "ortho_source_id": "PVLDE_1406290_t1",
+       "ortho_gene_source_id": "PVLDE_1406290",
+       "sort_key": "ak88_02763                                                                      8yes9no pvlde_1406290                                                                   ",
+       "protein_length": "421",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PVLDE_1406290#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVLDE_1406290\">",
+       "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum 7G8 2019",
+       "gene": {
+        "displayText": "Pf7G8-2_000398100.1",
+        "url": "/plasmo.qa/app/record/gene/Pf7G8-2_000398100"
+       },
+       "ortho_source_id": "Pf7G8-2_000398100.1",
+       "ortho_gene_source_id": "Pf7G8-2_000398100",
+       "sort_key": "ak88_02763                                                                      8yes9no pf7g8-2_000398100                                                               ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/Pf7G8-2_000398100#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Pf7G8-2_000398100\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium berghei ANKA",
+       "gene": {
+        "displayText": "PBANKA_1461800.1",
+        "url": "/plasmo.qa/app/record/gene/PBANKA_1461800"
+       },
+       "ortho_source_id": "PBANKA_1461800.1",
+       "ortho_gene_source_id": "PBANKA_1461800",
+       "sort_key": "ak88_02763                                                                      8yes9no pbanka_1461800                                                                  ",
+       "protein_length": "422",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PBANKA_1461800#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PBANKA_1461800\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium yoelii yoelii YM",
+       "gene": {
+        "displayText": "PYYM_1465800_t1",
+        "url": "/plasmo.qa/app/record/gene/PYYM_1465800"
+       },
+       "ortho_source_id": "PYYM_1465800_t1",
+       "ortho_gene_source_id": "PYYM_1465800",
+       "sort_key": "ak88_02763                                                                      8yes9no pyym_1465800                                                                    ",
+       "protein_length": "422",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PYYM_1465800#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PYYM_1465800\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium vinckei vinckei CY",
+       "gene": {
+        "displayText": "PVVCY_1406390_t1",
+        "url": "/plasmo.qa/app/record/gene/PVVCY_1406390"
+       },
+       "ortho_source_id": "PVVCY_1406390_t1",
+       "ortho_gene_source_id": "PVVCY_1406390",
+       "sort_key": "ak88_02763                                                                      8yes9no pvvcy_1406390                                                                   ",
+       "protein_length": "421",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PVVCY_1406390#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVVCY_1406390\">",
+       "gene_product": "Proteasomal ATPase OB C-terminal domain | AAA+ lid domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium malariae UG01",
+       "gene": {
+        "displayText": "PmUG01_14082100.1",
+        "url": "/plasmo.qa/app/record/gene/PmUG01_14082100"
+       },
+       "ortho_source_id": "PmUG01_14082100.1",
+       "ortho_gene_source_id": "PmUG01_14082100",
+       "sort_key": "ak88_02763                                                                      8yes9no pmug01_14082100                                                                 ",
+       "protein_length": "422",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PmUG01_14082100#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PmUG01_14082100\">",
+       "gene_product": "26S proteasome AAA-ATPase subunit RPT6, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium falciparum Dd2",
+       "gene": {
+        "displayText": "PfDd2_120054100-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfDd2_120054100"
+       },
+       "ortho_source_id": "PfDd2_120054100-t41_1",
+       "ortho_gene_source_id": "PfDd2_120054100",
+       "sort_key": "ak88_02763                                                                      8yes9no pfdd2_120054100                                                                 ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfDd2_120054100#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfDd2_120054100\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum NF54",
+       "gene": {
+        "displayText": "PfNF54_120052700.1",
+        "url": "/plasmo.qa/app/record/gene/PfNF54_120052700"
+       },
+       "ortho_source_id": "PfNF54_120052700.1",
+       "ortho_gene_source_id": "PfNF54_120052700",
+       "sort_key": "ak88_02763                                                                      8yes9no pfnf54_120052700                                                                ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfNF54_120052700#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfNF54_120052700\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium reichenowi G01",
+       "gene": {
+        "displayText": "PRG01_1252200-t36_1",
+        "url": "/plasmo.qa/app/record/gene/PRG01_1252200"
+       },
+       "ortho_source_id": "PRG01_1252200-t36_1",
+       "ortho_gene_source_id": "PRG01_1252200",
+       "sort_key": "ak88_02763                                                                      8yes9no prg01_1252200                                                                   ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PRG01_1252200#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PRG01_1252200\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium gallinaceum 8A",
+       "gene": {
+        "displayText": "PGAL8A_00469700.1",
+        "url": "/plasmo.qa/app/record/gene/PGAL8A_00469700"
+       },
+       "ortho_source_id": "PGAL8A_00469700.1",
+       "ortho_gene_source_id": "PGAL8A_00469700",
+       "sort_key": "ak88_02763                                                                      8yes9no pgal8a_00469700                                                                 ",
+       "protein_length": "422",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PGAL8A_00469700#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PGAL8A_00469700\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium vivax P01",
+       "gene": {
+        "displayText": "PVP01_1466000.1",
+        "url": "/plasmo.qa/app/record/gene/PVP01_1466000"
+       },
+       "ortho_source_id": "PVP01_1466000.1",
+       "ortho_gene_source_id": "PVP01_1466000",
+       "sort_key": "ak88_02763                                                                      8yes9no pvp01_1466000                                                                   ",
+       "protein_length": "424",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PVP01_1466000#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVP01_1466000\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium falciparum KE01",
+       "gene": {
+        "displayText": "PfKE01_120054200-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfKE01_120054200"
+       },
+       "ortho_source_id": "PfKE01_120054200-t41_1",
+       "ortho_gene_source_id": "PfKE01_120054200",
+       "sort_key": "ak88_02763                                                                      8yes9no pfke01_120054200                                                                ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfKE01_120054200#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfKE01_120054200\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum NF166",
+       "gene": {
+        "displayText": "PfNF166_120054500.1",
+        "url": "/plasmo.qa/app/record/gene/PfNF166_120054500"
+       },
+       "ortho_source_id": "PfNF166_120054500.1",
+       "ortho_gene_source_id": "PfNF166_120054500",
+       "sort_key": "ak88_02763                                                                      8yes9no pfnf166_120054500                                                               ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfNF166_120054500#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfNF166_120054500\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium coatneyi Hackeri",
+       "gene": {
+        "displayText": "PCOAH_00051830-t30_1",
+        "url": "/plasmo.qa/app/record/gene/PCOAH_00051830"
+       },
+       "ortho_source_id": "PCOAH_00051830-t30_1",
+       "ortho_gene_source_id": "PCOAH_00051830",
+       "sort_key": "ak88_02763                                                                      8yes9no pcoah_00051830                                                                  ",
+       "protein_length": "424",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PCOAH_00051830#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PCOAH_00051830\">",
+       "gene_product": "Tat-binding protein-like protein",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium chabaudi chabaudi",
+       "gene": {
+        "displayText": "PCHAS_1464100.1",
+        "url": "/plasmo.qa/app/record/gene/PCHAS_1464100"
+       },
+       "ortho_source_id": "PCHAS_1464100.1",
+       "ortho_gene_source_id": "PCHAS_1464100",
+       "sort_key": "ak88_02763                                                                      8yes9no pchas_1464100                                                                   ",
+       "protein_length": "421",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PCHAS_1464100#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PCHAS_1464100\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium falciparum TG01",
+       "gene": {
+        "displayText": "PfTG01_120053900-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfTG01_120053900"
+       },
+       "ortho_source_id": "PfTG01_120053900-t41_1",
+       "ortho_gene_source_id": "PfTG01_120053900",
+       "sort_key": "ak88_02763                                                                      8yes9no pftg01_120053900                                                                ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfTG01_120053900#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfTG01_120053900\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum GA01",
+       "gene": {
+        "displayText": "PfGA01_120054200-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfGA01_120054200"
+       },
+       "ortho_source_id": "PfGA01_120054200-t41_1",
+       "ortho_gene_source_id": "PfGA01_120054200",
+       "sort_key": "ak88_02763                                                                      8yes9no pfga01_120054200                                                                ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfGA01_120054200#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfGA01_120054200\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium knowlesi strain H",
+       "gene": {
+        "displayText": "PKNH_1468600.1",
+        "url": "/plasmo.qa/app/record/gene/PKNH_1468600"
+       },
+       "ortho_source_id": "PKNH_1468600.1",
+       "ortho_gene_source_id": "PKNH_1468600",
+       "sort_key": "ak88_02763                                                                      8yes9no pknh_1468600                                                                    ",
+       "protein_length": "424",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PKNH_1468600#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PKNH_1468600\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium vivax PAM",
+       "gene": {
+        "displayText": "PVPAM_140074800_t1",
+        "url": "/plasmo.qa/app/record/gene/PVPAM_140074800"
+       },
+       "ortho_source_id": "PVPAM_140074800_t1",
+       "ortho_gene_source_id": "PVPAM_140074800",
+       "sort_key": "ak88_02763                                                                      8yes9no pvpam_140074800                                                                 ",
+       "protein_length": "424",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PVPAM_140074800#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVPAM_140074800\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum GN01",
+       "gene": {
+        "displayText": "PfGN01_120055100-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfGN01_120055100"
+       },
+       "ortho_source_id": "PfGN01_120055100-t41_1",
+       "ortho_gene_source_id": "PfGN01_120055100",
+       "sort_key": "ak88_02763                                                                      8yes9no pfgn01_120055100                                                                ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfGN01_120055100#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfGN01_120055100\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum 7G8",
+       "gene": {
+        "displayText": "Pf7G8_120054600-t41_1",
+        "url": "/plasmo.qa/app/record/gene/Pf7G8_120054600"
+       },
+       "ortho_source_id": "Pf7G8_120054600-t41_1",
+       "ortho_gene_source_id": "Pf7G8_120054600",
+       "sort_key": "ak88_02763                                                                      8yes9no pf7g8_120054600                                                                 ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/Pf7G8_120054600#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Pf7G8_120054600\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium yoelii yoelii 17XNL 2023",
+       "gene": {
+        "displayText": "Py17XNL_001401466_t1",
+        "url": "/plasmo.qa/app/record/gene/Py17XNL_001401466"
+       },
+       "ortho_source_id": "Py17XNL_001401466_t1",
+       "ortho_gene_source_id": "Py17XNL_001401466",
+       "sort_key": "ak88_02763                                                                      8yes9no py17xnl_001401466                                                               ",
+       "protein_length": "422",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/Py17XNL_001401466#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Py17XNL_001401466\">",
+       "gene_product": "26S protease regulatory subunit 8",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Hepatocystis sp. ex Piliocolobus tephrosceles 2019",
+       "gene": {
+        "displayText": "HEP_00361900_t1",
+        "url": "/plasmo.qa/app/record/gene/HEP_00361900"
+       },
+       "ortho_source_id": "HEP_00361900_t1",
+       "ortho_gene_source_id": "HEP_00361900",
+       "sort_key": "ak88_02763                                                                      9no 9no hep_00361900                                                                    ",
+       "protein_length": "423",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/HEP_00361900#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"HEP_00361900\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium adleri G01",
+       "gene": {
+        "displayText": "PADL01_1249100-t36_1",
+        "url": "/plasmo.qa/app/record/gene/PADL01_1249100"
+       },
+       "ortho_source_id": "PADL01_1249100-t36_1",
+       "ortho_gene_source_id": "PADL01_1249100",
+       "sort_key": "ak88_02763                                                                      8yes9no padl01_1249100                                                                  ",
+       "protein_length": "433",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PADL01_1249100#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PADL01_1249100\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium vivax Sal-1",
+       "gene": {
+        "displayText": "PVX_101335.1",
+        "url": "/plasmo.qa/app/record/gene/PVX_101335"
+       },
+       "ortho_source_id": "PVX_101335.1",
+       "ortho_gene_source_id": "PVX_101335",
+       "sort_key": "ak88_02763                                                                      8yes9no pvx_101335                                                                      ",
+       "protein_length": "424",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PVX_101335#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVX_101335\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium vinckei Cameroon EL",
+       "gene": {
+        "displayText": "PVSEL_1406500_t1",
+        "url": "/plasmo.qa/app/record/gene/PVSEL_1406500"
+       },
+       "ortho_source_id": "PVSEL_1406500_t1",
+       "ortho_gene_source_id": "PVSEL_1406500",
+       "sort_key": "ak88_02763                                                                      8yes9no pvsel_1406500                                                                   ",
+       "protein_length": "421",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PVSEL_1406500#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVSEL_1406500\">",
+       "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium vinckei petteri strain CR",
+       "gene": {
+        "displayText": "YYG_00648-t30_1",
+        "url": "/plasmo.qa/app/record/gene/YYG_00648"
+       },
+       "ortho_source_id": "YYG_00648-t30_1",
+       "ortho_gene_source_id": "YYG_00648",
+       "sort_key": "ak88_02763                                                                      8yes9no yyg_00648                                                                       ",
+       "protein_length": "421",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/YYG_00648#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"YYG_00648\">",
+       "gene_product": "26S protease regulatory subunit 8 like A",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium gaboni strain G01",
+       "gene": {
+        "displayText": "PGABG01_1247300-t36_1",
+        "url": "/plasmo.qa/app/record/gene/PGABG01_1247300"
+       },
+       "ortho_source_id": "PGABG01_1247300-t36_1",
+       "ortho_gene_source_id": "PGABG01_1247300",
+       "sort_key": "ak88_02763                                                                      8yes9no pgabg01_1247300                                                                 ",
+       "protein_length": "431",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PGABG01_1247300#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PGABG01_1247300\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium ovale wallikeri PowCR01",
+       "gene": {
+        "displayText": "POWCR01_140067600_t1",
+        "url": "/plasmo.qa/app/record/gene/POWCR01_140067600"
+       },
+       "ortho_source_id": "POWCR01_140067600_t1",
+       "ortho_gene_source_id": "POWCR01_140067600",
+       "sort_key": "ak88_02763                                                                      8yes9no powcr01_140067600                                                               ",
+       "protein_length": "417",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/POWCR01_140067600#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"POWCR01_140067600\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium blacklocki G01",
+       "gene": {
+        "displayText": "PBLACG01_1248800-t36_1",
+        "url": "/plasmo.qa/app/record/gene/PBLACG01_1248800"
+       },
+       "ortho_source_id": "PBLACG01_1248800-t36_1",
+       "ortho_gene_source_id": "PBLACG01_1248800",
+       "sort_key": "ak88_02763                                                                      8yes9no pblacg01_1248800                                                                ",
+       "protein_length": "434",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PBLACG01_1248800#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PBLACG01_1248800\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Plasmodium falciparum CD01",
+       "gene": {
+        "displayText": "PfCD01_120053700-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfCD01_120053700"
+       },
+       "ortho_source_id": "PfCD01_120053700-t41_1",
+       "ortho_gene_source_id": "PfCD01_120053700",
+       "sort_key": "ak88_02763                                                                      8yes9no pfcd01_120053700                                                                ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfCD01_120053700#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfCD01_120053700\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum SN01",
+       "gene": {
+        "displayText": "PfSN01_120054300-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfSN01_120054300"
+       },
+       "ortho_source_id": "PfSN01_120054300-t41_1",
+       "ortho_gene_source_id": "PfSN01_120054300",
+       "sort_key": "ak88_02763                                                                      8yes9no pfsn01_120054300                                                                ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfSN01_120054300#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfSN01_120054300\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium yoelii yoelii 17XNL",
+       "gene": {
+        "displayText": "PY02897-t26_1",
+        "url": "/plasmo.qa/app/record/gene/PY02897"
+       },
+       "ortho_source_id": "PY02897-t26_1",
+       "ortho_gene_source_id": "PY02897",
+       "sort_key": "ak88_02763                                                                      8yes9no py02897                                                                         ",
+       "protein_length": "442",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PY02897#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PY02897\">",
+       "gene_product": "tat-binding protein homolog",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium vinckei petteri CR 2020",
+       "gene": {
+        "displayText": "PVPCR_1406510_t1",
+        "url": "/plasmo.qa/app/record/gene/PVPCR_1406510"
+       },
+       "ortho_source_id": "PVPCR_1406510_t1",
+       "ortho_gene_source_id": "PVPCR_1406510",
+       "sort_key": "ak88_02763                                                                      8yes9no pvpcr_1406510                                                                   ",
+       "protein_length": "421",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PVPCR_1406510#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PVPCR_1406510\">",
+       "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium knowlesi strain A1H1",
+       "gene": {
+        "displayText": "PKA1H_140074700.1",
+        "url": "/plasmo.qa/app/record/gene/PKA1H_140074700"
+       },
+       "ortho_source_id": "PKA1H_140074700.1",
+       "ortho_gene_source_id": "PKA1H_140074700",
+       "sort_key": "ak88_02763                                                                      8yes9no pka1h_140074700                                                                 ",
+       "protein_length": "424",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PKA1H_140074700#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PKA1H_140074700\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Plasmodium falciparum HB3",
+       "gene": {
+        "displayText": "PfHB3_120053700-t41_1",
+        "url": "/plasmo.qa/app/record/gene/PfHB3_120053700"
+       },
+       "ortho_source_id": "PfHB3_120053700-t41_1",
+       "ortho_gene_source_id": "PfHB3_120053700",
+       "sort_key": "ak88_02763                                                                      8yes9no pfhb3_120053700                                                                 ",
+       "protein_length": "435",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/plasmo.qa/app/record/gene/PfHB3_120053700#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"PfHB3_120053700\">",
+       "gene_product": "26S protease regulatory subunit 8, putative",
+       "source_id": "AK88_02763",
+       "is_reference_strain": "no"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "dataset",
+   "ids": [
+    "AK88_02763",
+    "C922_04966",
+    "HEP_00361900",
+    "Htart_000094500",
+    "MKS88_005863",
+    "PADL01_1249100",
+    "PBANKA_1461800",
+    "PBILCG01_1248300",
+    "PBLACG01_1248800",
+    "PCHAS_1464100",
+    "PCHCB_000486000",
+    "PCOAH_00051830",
+    "PCYB_147330",
+    "PF3D7_1248900",
+    "PGABG01_1247300",
+    "PGAL8A_00469700",
+    "PGSY75_1248900",
+    "PKA1H_140074700",
+    "PKNH_1468600",
+    "PKNOH_S140287200",
+    "POWCR01_140067600",
+    "PPRFG01_1206500",
+    "PRCDC_1248300",
+    "PRELSG_1464100",
+    "PRG01_1252200",
+    "PVBDA_1406440",
+    "PVLDE_1406290",
+    "PVL_140050200",
+    "PVP01_1466000",
+    "PVPAM_140074800",
+    "PVPCR_1406510",
+    "PVSEL_1406500",
+    "PVVCY_1406390",
+    "PVW1_140072500",
+    "PVX_101335",
+    "PY02897",
+    "PY17X_1464400",
+    "PYYM_1465800",
+    "PcyM_1472800",
+    "Pf7G8-2_000398100",
+    "Pf7G8_120054600",
+    "PfCD01_120053700",
+    "PfDd2_120054100",
+    "PfGA01_120054200",
+    "PfGB4_120054100",
+    "PfGN01_120055100",
+    "PfHB3_120053700",
+    "PfIT_120054100",
+    "PfKE01_120054200",
+    "PfKH01_120055000",
+    "PfKH02_120053600",
+    "PfML01_120055000",
+    "PfNF135_120053300",
+    "PfNF166_120054500",
+    "PfNF54_120052700",
+    "PfSD01_120053600",
+    "PfSN01_120054300",
+    "PfTG01_120053900",
+    "PmUG01_14082100",
+    "PocGH01_14073400",
+    "Py17XNL_001401466",
+    "YYE_00713",
+    "YYG_00648"
+   ],
+   "dataset": 202394050
+  },
+  {
+   "kind": "search",
+   "record_type": "transcript",
+   "search_name": "GeneByLocusTag",
+   "parameters": {
+    "ds_gene_ids": "202394050"
+   },
+   "report": {
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 504
+    }
+   },
+   "records": [
+    {
+     "displayName": "AK88_02763",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_02763"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_02763-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "1095",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "202826",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001672",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8",
+      "gene_end_max": "207689",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "C922_04966",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "C922_04966"
+      },
+      {
+       "name": "source_id",
+       "value": "C922_04966-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "423",
+      "gene_name": null,
+      "organism_full": "Plasmodium inui San Antonio 1",
+      "gene_start_min": "7900",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KI965492",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8 like A",
+      "gene_end_max": "9171",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "HEP_00361900",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "HEP_00361900"
+      },
+      {
+       "name": "source_id",
+       "value": "HEP_00361900_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "423",
+      "gene_name": null,
+      "organism_full": "Hepatocystis sp. ex Piliocolobus tephrosceles 2019",
+      "gene_start_min": "2047",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CABPSV020000733",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "3318",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Htart_000094500",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Htart_000094500"
+      },
+      {
+       "name": "source_id",
+       "value": "Htart_000094500.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "438",
+      "gene_name": null,
+      "organism_full": "Haemoproteus tartakovskyi strain SISKIN1",
+      "gene_start_min": "485",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LSRZ01000080",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "1801",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "MKS88_005863",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "MKS88_005863"
+      },
+      {
+       "name": "source_id",
+       "value": "MKS88_005863_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "422",
+      "gene_name": null,
+      "organism_full": "Plasmodium brasilianum strain Bolivian I",
+      "gene_start_min": "3076613",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CM043782",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8",
+      "gene_end_max": "3077881",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PADL01_1249100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PADL01_1249100"
+      },
+      {
+       "name": "source_id",
+       "value": "PADL01_1249100-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "433",
+      "gene_name": null,
+      "organism_full": "Plasmodium adleri G01",
+      "gene_start_min": "1959519",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PADLG01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "1960820",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PBANKA_1461800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PBANKA_1461800"
+      },
+      {
+       "name": "source_id",
+       "value": "PBANKA_1461800.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "422",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium berghei ANKA",
+      "gene_start_min": "2337461",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PbANKA_14_v3",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2338729",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PBILCG01_1248300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PBILCG01_1248300"
+      },
+      {
+       "name": "source_id",
+       "value": "PBILCG01_1248300_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "432",
+      "gene_name": null,
+      "organism_full": "Plasmodium billcollinsi G01",
+      "gene_start_min": "2030702",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LT990241",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2032000",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PBLACG01_1248800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PBLACG01_1248800"
+      },
+      {
+       "name": "source_id",
+       "value": "PBLACG01_1248800-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "434",
+      "gene_name": null,
+      "organism_full": "Plasmodium blacklocki G01",
+      "gene_start_min": "1950990",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PBLACG01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "1952294",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCHAS_1464100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCHAS_1464100"
+      },
+      {
+       "name": "source_id",
+       "value": "PCHAS_1464100.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "421",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium chabaudi chabaudi",
+      "gene_start_min": "2323057",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PCHAS_14_v3",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2324322",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCHCB_000486000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCHCB_000486000"
+      },
+      {
+       "name": "source_id",
+       "value": "PCHCB_000486000-t70_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "421",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium chabaudi chabaudi CB",
+      "gene_start_min": "2250176",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LT608166",
+      "is_pseudo": null,
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2251441",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051830",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051830"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051830-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "424",
+      "gene_name": null,
+      "organism_full": "Plasmodium coatneyi Hackeri",
+      "gene_start_min": "251514",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP016252",
+      "is_pseudo": "No",
+      "gene_product": "Tat-binding protein-like protein",
+      "gene_end_max": "252788",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCYB_147330",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCYB_147330"
+      },
+      {
+       "name": "source_id",
+       "value": "PCYB_147330-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "409",
+      "gene_name": null,
+      "organism_full": "Plasmodium cynomolgi strain B",
+      "gene_start_min": "2829790",
+      "gene_type": "protein coding gene",
+      "sequence_id": "DF157106",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8",
+      "gene_end_max": "2831064",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PcyM_1472800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PcyM_1472800"
+      },
+      {
+       "name": "source_id",
+       "value": "PcyM_1472800-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "424",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium cynomolgi strain M",
+      "gene_start_min": "2931090",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PcyM_14",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2932364",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PF3D7_1248900",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PF3D7_1248900"
+      },
+      {
+       "name": "source_id",
+       "value": "PF3D7_1248900.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum 3D7",
+      "gene_start_min": "2002325",
+      "gene_type": "protein coding gene",
+      "sequence_id": "Pf3D7_12_v3",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2004499",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Pf7G8_120054600",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Pf7G8_120054600"
+      },
+      {
+       "name": "source_id",
+       "value": "Pf7G8_120054600-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum 7G8",
+      "gene_start_min": "2060621",
+      "gene_type": "protein coding gene",
+      "sequence_id": "Pf7G8_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2061928",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Pf7G8-2_000398100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Pf7G8-2_000398100"
+      },
+      {
+       "name": "source_id",
+       "value": "Pf7G8-2_000398100.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum 7G8 2019",
+      "gene_start_min": "1107405",
+      "gene_type": "protein coding gene",
+      "sequence_id": "VBRD01000017.1",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "1108712",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfCD01_120053700",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfCD01_120053700"
+      },
+      {
+       "name": "source_id",
+       "value": "PfCD01_120053700-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum CD01",
+      "gene_start_min": "2025232",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfCD01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2026539",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfDd2_120054100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfDd2_120054100"
+      },
+      {
+       "name": "source_id",
+       "value": "PfDd2_120054100-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum Dd2",
+      "gene_start_min": "2004817",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfDd2_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2006124",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfGA01_120054200",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfGA01_120054200"
+      },
+      {
+       "name": "source_id",
+       "value": "PfGA01_120054200-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum GA01",
+      "gene_start_min": "2018405",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfGA01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2019712",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfGB4_120054100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfGB4_120054100"
+      },
+      {
+       "name": "source_id",
+       "value": "PfGB4_120054100-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum GB4",
+      "gene_start_min": "2002990",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfGB4_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2004297",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfGN01_120055100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfGN01_120055100"
+      },
+      {
+       "name": "source_id",
+       "value": "PfGN01_120055100-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum GN01",
+      "gene_start_min": "2050862",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfGN01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2052169",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfHB3_120053700",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfHB3_120053700"
+      },
+      {
+       "name": "source_id",
+       "value": "PfHB3_120053700-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum HB3",
+      "gene_start_min": "2007834",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfHB3_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2009141",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfIT_120054100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfIT_120054100"
+      },
+      {
+       "name": "source_id",
+       "value": "PfIT_120054100-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum IT",
+      "gene_start_min": "2034706",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfIT_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2036013",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfKE01_120054200",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfKE01_120054200"
+      },
+      {
+       "name": "source_id",
+       "value": "PfKE01_120054200-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum KE01",
+      "gene_start_min": "2031148",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfKE01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2032455",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfKH01_120055000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfKH01_120055000"
+      },
+      {
+       "name": "source_id",
+       "value": "PfKH01_120055000-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum KH01",
+      "gene_start_min": "2035067",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfKH01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2036374",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfKH02_120053600",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfKH02_120053600"
+      },
+      {
+       "name": "source_id",
+       "value": "PfKH02_120053600-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum KH02",
+      "gene_start_min": "2014955",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfKH02_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2016262",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfML01_120055000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfML01_120055000"
+      },
+      {
+       "name": "source_id",
+       "value": "PfML01_120055000-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum ML01",
+      "gene_start_min": "2020402",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfML01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2021709",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfNF135_120053300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfNF135_120053300"
+      },
+      {
+       "name": "source_id",
+       "value": "PfNF135_120053300.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum NF135.C10",
+      "gene_start_min": "2014681",
+      "gene_type": "protein coding gene",
+      "sequence_id": "VBRG01000018.1",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2015988",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfNF166_120054500",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfNF166_120054500"
+      },
+      {
+       "name": "source_id",
+       "value": "PfNF166_120054500.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum NF166",
+      "gene_start_min": "1981218",
+      "gene_type": "protein coding gene",
+      "sequence_id": "VBRE01000021.1",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "1982525",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfNF54_120052700",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfNF54_120052700"
+      },
+      {
+       "name": "source_id",
+       "value": "PfNF54_120052700.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum NF54",
+      "gene_start_min": "2007188",
+      "gene_type": "protein coding gene",
+      "sequence_id": "VBRF01000024.1",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2008495",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfSD01_120053600",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfSD01_120053600"
+      },
+      {
+       "name": "source_id",
+       "value": "PfSD01_120053600-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum SD01",
+      "gene_start_min": "1994243",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfSD01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "1995550",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfSN01_120054300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfSN01_120054300"
+      },
+      {
+       "name": "source_id",
+       "value": "PfSN01_120054300-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum SN01",
+      "gene_start_min": "2044255",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfSN01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2045562",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PfTG01_120053900",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PfTG01_120053900"
+      },
+      {
+       "name": "source_id",
+       "value": "PfTG01_120053900-t41_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium falciparum TG01",
+      "gene_start_min": "2019746",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PfTG01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2021053",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PGABG01_1247300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PGABG01_1247300"
+      },
+      {
+       "name": "source_id",
+       "value": "PGABG01_1247300-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "431",
+      "gene_name": null,
+      "organism_full": "Plasmodium gaboni strain G01",
+      "gene_start_min": "1898095",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PGABG01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "1899390",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PGAL8A_00469700",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PGAL8A_00469700"
+      },
+      {
+       "name": "source_id",
+       "value": "PGAL8A_00469700.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "422",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium gallinaceum 8A",
+      "gene_start_min": "755235",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PGAL8A_union_v1_archived_contig_130",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "756503",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PGSY75_1248900",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PGSY75_1248900"
+      },
+      {
+       "name": "source_id",
+       "value": "PGSY75_1248900-t31_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "431",
+      "gene_name": null,
+      "organism_full": "Plasmodium gaboni strain SY75",
+      "gene_start_min": "1703776",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CM003867.1",
+      "is_pseudo": "No",
+      "gene_product": "putative 26S protease regulatory subunit 8",
+      "gene_end_max": "1705071",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PKA1H_140074700",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PKA1H_140074700"
+      },
+      {
+       "name": "source_id",
+       "value": "PKA1H_140074700.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "424",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium knowlesi strain A1H1",
+      "gene_start_min": "3048500",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LT727661",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "3049774",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PKNH_1468600",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PKNH_1468600"
+      },
+      {
+       "name": "source_id",
+       "value": "PKNH_1468600.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "424",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium knowlesi strain H",
+      "gene_start_min": "3026246",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PKNH_14_v2",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "3027520",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PKNOH_S140287200",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PKNOH_S140287200"
+      },
+      {
+       "name": "source_id",
+       "value": "PKNOH_S140287200-t35_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "424",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium knowlesi strain Malayan Strain Pk1 A",
+      "gene_start_min": "3090093",
+      "gene_type": "protein coding gene",
+      "sequence_id": "NETL01000028",
+      "is_pseudo": "No",
+      "gene_product": "putative 26S protease regulatory subunit 8",
+      "gene_end_max": "3091367",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PmUG01_14082100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PmUG01_14082100"
+      },
+      {
+       "name": "source_id",
+       "value": "PmUG01_14082100.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "422",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium malariae UG01",
+      "gene_start_min": "3369528",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PmUG01_14_v1",
+      "is_pseudo": "No",
+      "gene_product": "26S proteasome AAA-ATPase subunit RPT6, putative",
+      "gene_end_max": "3370796",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PocGH01_14073400",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PocGH01_14073400"
+      },
+      {
+       "name": "source_id",
+       "value": "PocGH01_14073400.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "417",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium ovale curtisi GH01",
+      "gene_start_min": "2682798",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PocGH01_14_v2",
+      "is_pseudo": "No",
+      "gene_product": "26S proteasome AAA-ATPase subunit RPT6, putative",
+      "gene_end_max": "2684051",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "POWCR01_140067600",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "POWCR01_140067600"
+      },
+      {
+       "name": "source_id",
+       "value": "POWCR01_140067600_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "417",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium ovale wallikeri PowCR01",
+      "gene_start_min": "2714472",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LT594518",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2715725",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PPRFG01_1206500",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PPRFG01_1206500"
+      },
+      {
+       "name": "source_id",
+       "value": "PPRFG01_1206500_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": null,
+      "organism_full": "Plasmodium praefalciparum strain G01",
+      "gene_start_min": "2003345",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LT963425",
+      "is_pseudo": "No",
+      "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+      "gene_end_max": "2004652",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PRCDC_1248300",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PRCDC_1248300"
+      },
+      {
+       "name": "source_id",
+       "value": "PRCDC_1248300.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium reichenowi CDC",
+      "gene_start_min": "1970436",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PrCDC_12_v3",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "1971743",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PRELSG_1464100",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PRELSG_1464100"
+      },
+      {
+       "name": "source_id",
+       "value": "PRELSG_1464100.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "422",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium relictum SGS1-like",
+      "gene_start_min": "2432496",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PRELSG_14_v1",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2433764",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PRG01_1252200",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PRG01_1252200"
+      },
+      {
+       "name": "source_id",
+       "value": "PRG01_1252200-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "435",
+      "gene_name": null,
+      "organism_full": "Plasmodium reichenowi G01",
+      "gene_start_min": "2072326",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PRG01_12",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2073633",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVBDA_1406440",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVBDA_1406440"
+      },
+      {
+       "name": "source_id",
+       "value": "PVBDA_1406440_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "421",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei brucechwatti DA",
+      "gene_start_min": "2326092",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LR865392",
+      "is_pseudo": "No",
+      "gene_product": "Proteasomal ATPase OB C-terminal domain | AAA+ lid domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+      "gene_end_max": "2327357",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVL_140050200",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVL_140050200"
+      },
+      {
+       "name": "source_id",
+       "value": "PVL_140050200-t42_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "424",
+      "gene_name": null,
+      "organism_full": "Plasmodium vivax-like Pvl01",
+      "gene_start_min": "2339755",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PVL_14_v1",
+      "is_pseudo": null,
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2341029",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVLDE_1406290",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVLDE_1406290"
+      },
+      {
+       "name": "source_id",
+       "value": "PVLDE_1406290_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "421",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei lentum DE",
+      "gene_start_min": "2197424",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LR865376",
+      "is_pseudo": "No",
+      "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+      "gene_end_max": "2198689",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVP01_1466000",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVP01_1466000"
+      },
+      {
+       "name": "source_id",
+       "value": "PVP01_1466000.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "424",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium vivax P01",
+      "gene_start_min": "2813583",
+      "gene_type": "protein coding gene",
+      "sequence_id": "PvP01_14_v2",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2816392",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVPAM_140074800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVPAM_140074800"
+      },
+      {
+       "name": "source_id",
+       "value": "PVPAM_140074800_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "424",
+      "gene_name": null,
+      "organism_full": "Plasmodium vivax PAM",
+      "gene_start_min": "2935721",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CASCJQ010000014",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2936995",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVPCR_1406510",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVPCR_1406510"
+      },
+      {
+       "name": "source_id",
+       "value": "PVPCR_1406510_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "421",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei petteri CR 2020",
+      "gene_start_min": "2347568",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LR865419",
+      "is_pseudo": "No",
+      "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+      "gene_end_max": "2348833",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVSEL_1406500",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVSEL_1406500"
+      },
+      {
+       "name": "source_id",
+       "value": "PVSEL_1406500_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "421",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei Cameroon EL",
+      "gene_start_min": "2331998",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LR865435",
+      "is_pseudo": "No",
+      "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+      "gene_end_max": "2333263",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVVCY_1406390",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVVCY_1406390"
+      },
+      {
+       "name": "source_id",
+       "value": "PVVCY_1406390_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "421",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei vinckei CY",
+      "gene_start_min": "2296465",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LR215070",
+      "is_pseudo": "No",
+      "gene_product": "Proteasomal ATPase OB C-terminal domain | AAA+ lid domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+      "gene_end_max": "2297730",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVW1_140072500",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVW1_140072500"
+      },
+      {
+       "name": "source_id",
+       "value": "PVW1_140072500_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "424",
+      "gene_name": null,
+      "organism_full": "Plasmodium vivax PvW1",
+      "gene_start_min": "2878631",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CAJZCX010000003",
+      "is_pseudo": "No",
+      "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
+      "gene_end_max": "2879905",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PVX_101335",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PVX_101335"
+      },
+      {
+       "name": "source_id",
+       "value": "PVX_101335.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "424",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium vivax Sal-1",
+      "gene_start_min": "2806816",
+      "gene_type": "protein coding gene",
+      "sequence_id": "Pv_Sal1_chr14",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2808090",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PY02897",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PY02897"
+      },
+      {
+       "name": "source_id",
+       "value": "PY02897-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "442",
+      "gene_name": null,
+      "organism_full": "Plasmodium yoelii yoelii 17XNL",
+      "gene_start_min": "5708",
+      "gene_type": "protein coding gene",
+      "sequence_id": "AABL01000812",
+      "is_pseudo": "No",
+      "gene_product": "tat-binding protein homolog",
+      "gene_end_max": "7975",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PY17X_1464400",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PY17X_1464400"
+      },
+      {
+       "name": "source_id",
+       "value": "PY17X_1464400.1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "422",
+      "gene_name": "RPT6",
+      "organism_full": "Plasmodium yoelii yoelii 17X",
+      "gene_start_min": "2485707",
+      "gene_type": "protein coding gene",
+      "sequence_id": "Py17X_14_v3",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2486975",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Py17XNL_001401466",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Py17XNL_001401466"
+      },
+      {
+       "name": "source_id",
+       "value": "Py17XNL_001401466_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "422",
+      "gene_name": null,
+      "organism_full": "Plasmodium yoelii yoelii 17XNL 2023",
+      "gene_start_min": "2485575",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP115538",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8",
+      "gene_end_max": "2488034",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PYYM_1465800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PYYM_1465800"
+      },
+      {
+       "name": "source_id",
+       "value": "PYYM_1465800_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "422",
+      "gene_name": null,
+      "organism_full": "Plasmodium yoelii yoelii YM",
+      "gene_start_min": "2477805",
+      "gene_type": "protein coding gene",
+      "sequence_id": "LK934642",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8, putative",
+      "gene_end_max": "2479073",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "YYE_00713",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "YYE_00713"
+      },
+      {
+       "name": "source_id",
+       "value": "YYE_00713-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "421",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei vinckei strain vinckei",
+      "gene_start_min": "131001",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KL446945",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8 like A",
+      "gene_end_max": "132266",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "YYG_00648",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "YYG_00648"
+      },
+      {
+       "name": "source_id",
+       "value": "YYG_00648-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "421",
+      "gene_name": null,
+      "organism_full": "Plasmodium vinckei petteri strain CR",
+      "gene_start_min": "2322573",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KI965394",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8 like A",
+      "gene_end_max": "2323838",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ],
+   "served_total": 63,
+   "kept": null
+  },
+  {
+   "kind": "dataset",
+   "ids": [
+    "AK88_02763",
+    "PCOAH_00051830"
+   ],
+   "dataset": 202394060
+  },
+  {
+   "kind": "search",
+   "record_type": "transcript",
+   "search_name": "GeneByLocusTag",
+   "parameters": {
+    "ds_gene_ids": "202394060"
+   },
+   "report": {
+    "attributes": [
+     "protein_sequence"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 16
+    }
+   },
+   "records": [
+    {
+     "displayName": "AK88_02763",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_02763"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_02763-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "protein_sequence": "MNRHIVCLLVSGKLIEKKNIDKQIIQRNLEHVILHFHKYSQETGISALLKKIIPYTKNTFVGSVHLKYLYSHFVEPLLKEGNIDPACLPNLVHTFKKSEDCNFVVKKLNDYIACAIRAGKFSLQNDVHNWVSVVQVFSAKRRGINFVPLLRHLLVNDTSAPSLSGSTHNSHISEPGNVQAPIPNDIQIQHSALDQCNVVHPISSHDLRYETLESLSPRTFCILLNVLSKVKMQNTPDPSFTSFVREKTSQMLPYMSNIDLCQLTEALTQLICVDREILSALIEPEVIKRVMSFDLLQLSMIFHSLSQYWKDLKKKQLFCVLFMRKIKKYLALYSLHNQEEKYILRTRNKNTLIEIVPMFFLTYVKNAHNMFPHYPCLSKFILLQFSILSKWLHRSLCERNCQTGMPNQKFADKGERHPPSLRHINQTLSNLLYAFIGYLYNISTLQYKGEQSRSFTRHLHLTLDNIYQLLSHFILFYRHREVLTNGAQFMLPVHKSQLLIFLYTYWDFLLDLQSRVNYCTGMTKKKNVALTVQAKRHEKENTNLTADSFFFIKWENVKKVNFVLALLDDINLNSFMKETLEENNKYVSYIYSQILNVANNSVGVPHRTTLHFSRRVVGPYTISELCSGVKNPVPPAVAALATAKAIPGTSSAIYINGEEPVKTPHTYKNTHMAAVDMHMRSGELPEEAKKDQKKDPNGVNKSEEEMQSGIKTYYEMKIEEYESIINKKLQNKKRLEAQRNELNTRVRELCDEIQYLLEAASYVGEIVKPMGKNKVLVKINPEGKYVVDIAHSINIAQCTPNTRVALYNDSYKLHKILPSKVDPLVSLMKVEKVPDSTYEMVGGLDQQVKEVKEVIELPVKHPEIFESLGISQPKGVLLYGPPGTGKTLLARAVAHHTECTFIRVSGSELVQKYIGEGSRMVRELFVMAREHAPSIIFMDEIDSIGSQRIEGEHGDSEVQRTMMELLNQLDGFESTQNIKVIMCTNRIDILDEALLRPGRIDRKIEFPNPNVEARMEILKIHSRKMNLMRGIDMLKIATDMNNCSGAEVKAVCTEAGMFALRERRVHVTQEDFEMAVAKVMKQDAEKNFTLRKLWK"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051830",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051830"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051830-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "protein_sequence": "MATVDMQVQSGNLPEESRKDQKNDPNGVSKSEEEMQSGIKTYYEMKIEEYESIINKKLQNKKRLEAQRNELNTRVRELCDEIQYLLEAASYVGEIVKPMGKNKVLVKINPEGKYVVDIAHSINIAQCTPNTRVALYNDSYKLHKILPSKVDPLVSLMKVEKVPDSTYEMVGGLDQQVKEVKEVIELPVKHPEIFESLGISQPKGVLLYGPPGTGKTLLARAVAHHTECTFIRVSGSELVQKYIGEGSRMVRELFVMAREHAPSIIFMDEIDSIGSQRIEGEHGDSEVQRTMMELLNQLDGFESTQNIKVIMCTNRIDILDEALLRPGRIDRKIEFPNPNVEARMEILKIHSRKMNLMRGIDMLKIATDMNNCSGAEVKAVCTEAGMFALRERRVHVTQEDFEMAVAKVMKQDAEKNFTLRKLWK"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ],
+   "served_total": 2,
+   "kept": null
+  },
+  {
+   "kind": "search",
+   "record_type": "transcript",
+   "search_name": "GenesByTaxon",
+   "parameters": {
+    "organism": "[\"Plasmodium coatneyi Hackeri\"]"
+   },
+   "report": {
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 400000
+    }
+   },
+   "records": [
+    {
+     "displayName": "PCOAH_00019760",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00019760"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00019760-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0104241",
+      "protein_length": "384",
+      "gene_name": null,
+      "organism_full": "Plasmodium coatneyi Hackeri",
+      "gene_start_min": "251375",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP016246",
+      "is_pseudo": "No",
+      "gene_product": "Uncharacterized protein",
+      "gene_end_max": "252529",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051790",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051790"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051790-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000646",
+      "protein_length": "996",
+      "gene_name": null,
+      "organism_full": "Plasmodium coatneyi Hackeri",
+      "gene_start_min": "239068",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP016252",
+      "is_pseudo": "No",
+      "gene_product": "Protein phosphatase 2C",
+      "gene_end_max": "242186",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051800"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051800-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0104335",
+      "protein_length": "178",
+      "gene_name": null,
+      "organism_full": "Plasmodium coatneyi Hackeri",
+      "gene_start_min": "244076",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP016252",
+      "is_pseudo": "No",
+      "gene_product": "Uncharacterized protein",
+      "gene_end_max": "244731",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051810",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051810"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051810-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0006655",
+      "protein_length": "357",
+      "gene_name": null,
+      "organism_full": "Plasmodium coatneyi Hackeri",
+      "gene_start_min": "245450",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP016252",
+      "is_pseudo": "No",
+      "gene_product": "Uncharacterized protein",
+      "gene_end_max": "246848",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051820",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051820"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051820-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0090231",
+      "protein_length": "646",
+      "gene_name": null,
+      "organism_full": "Plasmodium coatneyi Hackeri",
+      "gene_start_min": "248191",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP016252",
+      "is_pseudo": "No",
+      "gene_product": "Uncharacterized protein",
+      "gene_end_max": "250131",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051830",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051830"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051830-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "424",
+      "gene_name": null,
+      "organism_full": "Plasmodium coatneyi Hackeri",
+      "gene_start_min": "251514",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP016252",
+      "is_pseudo": "No",
+      "gene_product": "Tat-binding protein-like protein",
+      "gene_end_max": "252788",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051840",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051840"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051840-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0103863",
+      "protein_length": "96",
+      "gene_name": null,
+      "organism_full": "Plasmodium coatneyi Hackeri",
+      "gene_start_min": "253249",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP016252",
+      "is_pseudo": "No",
+      "gene_product": "Uncharacterized protein",
+      "gene_end_max": "253539",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051850",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051850"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051850-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0031763",
+      "protein_length": "1782",
+      "gene_name": null,
+      "organism_full": "Plasmodium coatneyi Hackeri",
+      "gene_start_min": "254966",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP016252",
+      "is_pseudo": "No",
+      "gene_product": "Uncharacterized protein",
+      "gene_end_max": "260314",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051860",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051860"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051860-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0058670",
+      "protein_length": "687",
+      "gene_name": null,
+      "organism_full": "Plasmodium coatneyi Hackeri",
+      "gene_start_min": "264820",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP016252",
+      "is_pseudo": "No",
+      "gene_product": "Phosphatidylinositol-glycan biosynthesis class S protein | domain-containing protein",
+      "gene_end_max": "267139",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051870",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051870"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051870-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0002272",
+      "protein_length": "290",
+      "gene_name": null,
+      "organism_full": "Plasmodium coatneyi Hackeri",
+      "gene_start_min": "270731",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CP016252",
+      "is_pseudo": "No",
+      "gene_product": "nmda1-like protein",
+      "gene_end_max": "271603",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ],
+   "served_total": 5575,
+   "kept": "PCOAH_00051830, the 4 genes on each side of it on its sequence and the gene of another sequence that starts nearest to it"
+  },
+  {
+   "kind": "dataset",
+   "ids": [
+    "PCOAH_00051800",
+    "PCOAH_00051810",
+    "PCOAH_00051820",
+    "PCOAH_00051840",
+    "PCOAH_00051850",
+    "PCOAH_00051860"
+   ],
+   "dataset": 202394070
+  },
+  {
+   "kind": "search",
+   "record_type": "transcript",
+   "search_name": "GeneByLocusTag",
+   "parameters": {
+    "ds_gene_ids": "202394070"
+   },
+   "report": {
+    "attributes": [
+     "protein_sequence"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 48
+    }
+   },
+   "records": [
+    {
+     "displayName": "PCOAH_00051800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051800"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051800-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "protein_sequence": "MDVEKKLLKSFKEIRKKNVRRQGRQEQNVISDFPKWEDNFSCDEYSVDDVVRCVRKGGGEDDDTGKYKNVFNTFENEINYYLGEYVEEIICSSVTGRKDNGFPRWEEETLRKPTDVIFQHLIYGSLFGENLRRYECSSRYFKPTLVEDISDFSDASTSSNDAQRGKHSPVRDITHEVK"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051810",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051810"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051810-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "protein_sequence": "MEYKKTKRTNQYIFEGSRHQAKRQKINVNAECKGILISTLSPKRTNIGIKEFLNFLKVHFPSEADEASVKQGPSKEDHQKEENKPNGEQAEQEGEGGRMEKQLKDEIKKENMEYNRFAPLRNIVKNFTFIKFNNVTEKNPSDMVQQIFVLAHNKKEKYILRHLCKIIPLDCICKPHLSPFIKAILPVLKGNFPEGTCVKENFTFGHLFKLMNVSAEEEEKKEGEEEGDKVGDKEGDKEDDKKEDQTKDDQKMEENKPKEETAPSEDKNANGKKVSWALIYKCSNTKTLMKKDVLTVLDNCIGSNYSVNLSNPDLAVVVYVTEVRFACLKKEIMCGISIVKGYEKTRKFNIAAFNEDS"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051820",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051820"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051820-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "protein_sequence": "MNRHVVRLIVGGKLMEKKNIDKQIIQRNLEHVILHFDQYSQETGTSALLKKIIPYTKNTFLGSVHLKYLYSHVVEPLLKEGNIDPECLPNLVHTFKRNEDCNYMVKKLNDYITCAIGKGKISLQNDVNNWVSVVQVFSAKRRGINFVPLLRHLLVNDSFAPSHGGDTKHAQTSEPRNVEAPIPNDIQIEQNGPHQCKMFCPITLRELCYATLESLPPRTFCILLNVLSKVKMQNAPDPIFTSFLREKTFQMLPHMSNIDLCQLAEALPQLICVDREILSTLIEPEVLKRVTSFDVLQLSMIFHSLSKYWKDLKKKQLFCVLFMRKIEKYLALYSLHNQEEKYILHTRNKNTLIEIVPMFFLAYVKNAHYMFPHYSCFSKFVQLQFSILSKWLHRLKKCRSLLEGNYKSEMPNQQLERPSLTNNYHHLQLVDNRGSHPPCLRHTNQTLSNLLYAFIGYLYNITTLHYNDEQSRSFTRHLHLTLDNINQLLSHFILFYRHREVVTNGAQFILPVHKSQLLIFLYTYWGFLLDLHSHVDYYTRVKKKNNLALTVQAKRNEKENTMHTANPFFFIKLDNVKKVSFLFALLDDINLNALMKETLEENNKYVSHIYSQVLNVVNNSVGVPHRAALHFSRRVVGPYTISELCR"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051840",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051840"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051840-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "protein_sequence": "MQKLFRNFLRVVNAREKNKLDESALWELKKWGREKVLQNDQVLEEYLNYRQVLHDCTELLSASEGKSEEDKIEKVANYVGLTTTAAKGGKSTPVHT"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051850",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051850"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051850-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "protein_sequence": "MKSQERRSSNDSSVKSKSGGSFGGSSWNNNGEANSSRAESLTRRKSEKASEKNTEQGKSKSSSSSNTRSKMDSSKMENFKTNDKKEDLKNVKSLKSNASDSLKHKGSNSRESVKSNRSKSEKAGTAEDSKKDKSSHSNGDKKKKDPPNDKNDVKVNNKLISKNGKSKNVNGKGNSNNGSSTNHSNSSAKGGGDEKGTPSKGLPSKGSSSKNTPSKNTPSKSSSAKSTPSKSGSSKSGPSKNASQESLNSENVKKERKGSTASSSKEVGELMSSHTASSKEENSRASRSASKAEKKVKSEKSQKTDREKSIKSISESENEAPKQKNSKKKSGAASKEKDAVKNNPSKRSKSEAEEKANKKDVSKKGSAEEKKKKNNSKSSSKKDRRADSKSKSSKSNSKSKGGKYSEEEEVDTEEEDVEVDETENDDEEEEEEESEVDETENDDDEEDEDDDEEEEEEEDDDNNDDDDDEEEDDPKKRSSKQATKDSVTKKKKKKRTSFSLKKKKRNRKGSQQDGNKNGGKNVNKSISKNSSKSKKTVKEEKKKNSNKNNNKKEKNKKSVKSENASEEDEEEEEEEEENPYFDDKDYTVDARRSVLEERERKRNLKESYIKQMKVPTYADDESILFVNNPNYVMVLLFLTVYKDVLKMSWNFKDIDEMFQNKETTEFGRNFILKLFFFLGRYFNSKSIFMYRYISRIFEDKQASLVRVVNFNELFPVMETRRDRRSKSGGGGTTGGGSSSKKKRKNDKKRKTVKAEEDVKADELFEEEIIENDDVNEDANDEVNDEVNEFDEEEPDDGDDENESENEVDEMIDGEEVEDPPLNEANQTHGKSSSSGKADHSSGKLVNQEEKSNTGDRNPQMDGSPLGVTKDAAKREDADGLATQHGVTTAGTTITAGSGNDIGAAANDETANNPNGDHLPDGVKNEELQENKRLSKKLFLEWDDLSVISKLRIIRMLLNLVLCESNNLKKMLMEEKVDYNSGYLGRVNKEKYWLILNDTINIEFKLYVEKEEEGTFEFLCDNDDVLYSIGYNLMKDTETKTMGETIIERYNKICRERRNRSRILKQQKKLCSDFNLNGGSLVISKKRQHKQVEHFNFDNDKMRRKKNDGGGMYGVGGSNYGSGMSANNPYALQKNNYQKNDRSFRLAARNAQKGNGLVGELLDGIANQEYLQGGGTVVSVEGLIGKGGVADGAIMNSVGGTAVGGATGTLTHLQGVNAGALGAGGVVVKVPQKRGRKKKSEKKKRGRKKKILTEGGALIGGEGAPLSGLVVDPNNPLAAVTQVKETKKGTGTSTRGRKTPYSKRNTKPAVSIKYGTRSHSISKNRNDASHYGEFSLTHGVNTEPLYKNGNLDAKYFNPNMHVNNFMAPNMNSPYGMQTNMLNMRGNKMEGPPGSYNFPYMYNPQMYGQYYMYNGSMYMLNNAGGGMFSQSGGSPGGGGGTGKEIKGEGAFMSKGAVSSGNGTTVGNANTLKNSSMGPGGGSKSAMSGNEGEGEGSSEMSGQMNMMNSVGGADGMGGGLNYMDPINKYQPYVLNRNAMSNMPSNPMYNNLYNLKFPYLNNDLMNYNFNMSNFQNMNYEKMGKVGGGGGPGQPTGQSTGQPTGQPGGGPQTATGGMFKRYPNFMGGAFPPPYNNMNNPYANFNAYNMGYQRNEGYGSMPAGGAGTGASTSGGTTPGAGSFKSKLVDMNMSGEGSSGVGGVSGYHMTNVKSRIGNSAMHGAAPTQEKPAPLGEANQKEETHRIENLMSYMMMQQGGNADAPHGGNGKNSSSMTNVENSAVQNGPNG"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "PCOAH_00051860",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "PCOAH_00051860"
+      },
+      {
+       "name": "source_id",
+       "value": "PCOAH_00051860-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "protein_sequence": "MNSRTPCVILYAVSLVVCVFVIFSLNKYERQGVPLHKLSSTSVLLQELYNANRRERPTGERQNWSNGKVSHFSINLFIVSTGKERSTNSLGIEMKEYFSSQVQFEWKDKPAARSISDVQELFYVNPLLVSEDEMGSDNMRDIANVCLSSSPGEGSTHNILNNRYFICLSEKRQEEGTSVVFTLKGNNTIHVKFTQRDNNPTTYNHQLAEETWNIVKRVFFFKSKNRSLFFNPELDLNFYLASSLYNEGNYKVSKYKTGSRVSNDKTGDESKDPQSDDPNGYASPVNIATWDFYNDVYYPYLRNFIEQLLNLFQINVYTQIIANIDLFKISEKVKEVEGKRVIILDRVNKLTSIFDDVTFGDILRKPTYHIPKSINLVAVFPTGEEIFFYNPPTGKLETTVSFAEWGVFHINNAFQRGNMTRKRKKFVNVSGEAPFICGFFISHLRQYLGLGANFSDYVFTIFDADRYDVKYVRSESTDEGNSFLYAVQSEDQLNFYFSYDSPVRSGIFPFELLALMREAYLYYVVEALTNLGKFVSISNVSIYFRVPVHALHVFNDILDKVKCSLDLMRGADGCKMPHLGKSIREALHSYGHPIGGNANEGDNRTVEADLLRETYFRAAVVLAQSAYKDSLQLLSDDTFSIYDILSKDFLLASVLPVLIPYAIPVTFSLFRELFRSIKLAKEKQKVD"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ],
+   "served_total": 6,
+   "kept": null
+  },
+  {
+   "kind": "search",
+   "record_type": "transcript",
+   "search_name": "GenesByTaxon",
+   "parameters": {
+    "organism": "[\"Plasmodium fragile strain nilgiri\"]"
+   },
+   "report": {
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 400000
+    }
+   },
+   "records": [
+    {
+     "displayName": "AK88_02759",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_02759"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_02759-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0045496",
+      "protein_length": "140",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "189424",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001672",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "189846",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "AK88_02760",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_02760"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_02760-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000646",
+      "protein_length": "1059",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "190414",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001672",
+      "is_pseudo": "No",
+      "gene_product": "Protein phosphatase 2C | domain-containing protein",
+      "gene_end_max": "193709",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "AK88_02761",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_02761"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_02761-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0104335",
+      "protein_length": "156",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "199025",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001672",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "199495",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "AK88_02762",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_02762"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_02762-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0006655",
+      "protein_length": "346",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "200116",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001672",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "201516",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "AK88_02763",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_02763"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_02763-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0000315",
+      "protein_length": "1095",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "202826",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001672",
+      "is_pseudo": "No",
+      "gene_product": "26S protease regulatory subunit 8",
+      "gene_end_max": "207689",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "AK88_02764",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_02764"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_02764-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0103863",
+      "protein_length": "96",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "208086",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001672",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "208376",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "AK88_02765",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_02765"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_02765-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0031763",
+      "protein_length": "1913",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "210004",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001672",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "215745",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "AK88_02766",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_02766"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_02766-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0058670",
+      "protein_length": "692",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "219957",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001672",
+      "is_pseudo": "No",
+      "gene_product": "Phosphatidylinositol-glycan biosynthesis class S protein | domain-containing protein",
+      "gene_end_max": "222284",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "AK88_02767",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_02767"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_02767-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0002272",
+      "protein_length": "292",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "225297",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001672",
+      "is_pseudo": "No",
+      "gene_product": "Inhibitor of apoptosis-promoting Bax1 | domain-containing protein",
+      "gene_end_max": "226175",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "AK88_03653",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "AK88_03653"
+      },
+      {
+       "name": "source_id",
+       "value": "AK88_03653-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "PlasmoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0003168",
+      "protein_length": "1806",
+      "gene_name": null,
+      "organism_full": "Plasmodium fragile strain nilgiri",
+      "gene_start_min": "202825",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ001687",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "209722",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ],
+   "served_total": 5744,
+   "kept": "AK88_02763, the 4 genes on each side of it on its sequence and the gene of another sequence that starts nearest to it"
+  }
+ ]
+}

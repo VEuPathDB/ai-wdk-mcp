@@ -10,6 +10,7 @@ from veupathdb_mcp.audit.gene_models import (
     ModelRow,
     coding_parts,
     gene_model,
+    gene_organism,
     gene_record,
 )
 from veupathdb_mcp.audit.pseudogene import CdsPart
@@ -200,3 +201,76 @@ async def test_a_gene_record_without_an_organism_is_a_refusal_naming_the_gene(
 
     with pytest.raises(DataParsingError, match="gene record of PF3D7_1032400 on"):
         await gene_model("plasmodb", PIGA)
+
+
+async def test_a_gene_organism_is_one_record_read_with_no_table(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    records = _Records(record("pfalNF54", []))
+    monkeypatch.setattr(gene_models, "get_strategy_api", lambda site_id: records)
+
+    assert await gene_organism("plasmodb", PIGA) == "pfalNF54"
+    [(_, _, attributes, tables)] = records.reads
+    assert (attributes, tables) == (["organismAbbrev"], [])
+
+
+@pytest.mark.parametrize("organism", ["", None])
+async def test_a_gene_organism_the_record_does_not_give_is_a_refusal(
+    monkeypatch: pytest.MonkeyPatch, organism: str | None
+) -> None:
+    attributes = {} if organism is None else {"organismAbbrev": organism}
+    answer = record("pfal3D7", []).model_copy(update={"attributes": attributes})
+    monkeypatch.setattr(
+        gene_models, "get_strategy_api", lambda site_id: _Records(answer)
+    )
+
+    with pytest.raises(
+        DataParsingError,
+        match="gene record of PF3D7_1032400 on plasmodb gives no organismAbbrev",
+    ):
+        await gene_organism("plasmodb", PIGA)
+
+
+async def test_a_model_record_serves_the_model_and_its_rows_from_one_read(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    reads: list[tuple[str, list[str], list[str]]] = []
+
+    async def record(
+        site_id: str, gene: str, attributes: list[str], tables: list[str]
+    ) -> WDKRecordInstance:
+        reads.append((gene, attributes, tables))
+        return WDKRecordInstance.model_validate(
+            {
+                "attributes": {"organismAbbrev": "pfal3D7"},
+                "tables": {
+                    "GeneModelDump": [
+                        {
+                            "type": "CDS",
+                            "transcript_ids": "t1",
+                            "gm_start": 10,
+                            "gm_end": 30,
+                        },
+                        {
+                            "type": "Exon",
+                            "transcript_ids": "t1",
+                            "gm_start": 1,
+                            "gm_end": 40,
+                        },
+                    ]
+                },
+            }
+        )
+
+    monkeypatch.setattr(gene_models, "gene_record", record)
+
+    found = await gene_models.model_record("plasmodb", "G1")
+
+    assert found.model == GeneModel(
+        organism_abbrev="pfal3D7", cds=[CdsPart(start=10, end=30)]
+    )
+    assert [(row.type, row.gm_start) for row in found.rows] == [
+        ("CDS", 10),
+        ("Exon", 1),
+    ]
+    assert reads == [("G1", ["organismAbbrev"], ["GeneModelDump"])]

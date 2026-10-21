@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 
 import pytest
 from pydantic import ValidationError
+from tests._support.proteins import row
 from tests._support.wdk_genes import (
     PF3D7,
     PIGA,
@@ -21,16 +23,18 @@ from veupathdb import JSONObject
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.errors import (
     DataParsingError,
-    WDKError,
     WDKLoginRequiredError,
 )
 from veupathdb.wdk import (
+    WDKAnswer,
     WDKRecordInstance,
 )
 
+from veupathdb_mcp.audit import genes
 from veupathdb_mcp.audit.genes import (
     GENE_ATTRIBUTES,
     GeneRow,
+    contig_sides,
     gene_rows,
     genes_of_genome,
     proteins_of,
@@ -131,7 +135,10 @@ async def test_a_genome_report_short_of_its_total_is_refused(
 ) -> None:
     serve(monkeypatch, [answer_of([coding()], total=total)])
 
-    with pytest.raises(WDKError):
+    with pytest.raises(
+        DataParsingError,
+        match=f"GenesByTaxon report served 1 records of a total of {total}",
+    ):
         await genes_of_genome("plasmodb", "Plasmodium falciparum 3D7")
 
 
@@ -177,6 +184,19 @@ async def test_proteins_are_read_150_ids_per_dataset_longest_first(
     assert shared.datasets == []
 
 
+@pytest.mark.parametrize("order", [(".1", ".2"), (".2", ".1")])
+async def test_proteins_of_equal_length_take_the_lowest_transcript_id(
+    monkeypatch: pytest.MonkeyPatch, order: tuple[str, str]
+) -> None:
+    sequences = {".1": "MKVLA*", ".2": "MKVLG*"}
+    serve_private(
+        monkeypatch,
+        [answer_of([protein(PIGA, PIGA + end, sequences[end]) for end in order])],
+    )
+
+    assert await proteins_of("plasmodb", [PIGA]) == {PIGA: "MKVLA"}
+
+
 async def test_a_protein_report_short_of_its_total_is_refused(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -184,7 +204,9 @@ async def test_a_protein_report_short_of_its_total_is_refused(
         monkeypatch, [answer_of([protein(PIGA, f"{PIGA}.1", "MKV*")], total=9)]
     )
 
-    with pytest.raises(WDKError):
+    with pytest.raises(
+        DataParsingError, match="GeneByLocusTag report served 1 records of a total of 9"
+    ):
         await proteins_of("plasmodb", [PIGA])
 
 
@@ -247,8 +269,13 @@ async def test_a_gene_row_report_short_of_its_total_is_refused(
 ) -> None:
     serve_private(monkeypatch, [answer_of([coding()], total=3)])
 
-    with pytest.raises(WDKError):
+    with pytest.raises(DataParsingError) as refused:
         await gene_rows("plasmodb", [PIGA])
+
+    assert refused.value.detail == (
+        "WDK GeneByLocusTag report served 1 records of a total of 3"
+    )
+    assert refused.value.status == 500
 
 
 async def test_no_genes_read_no_rows(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -275,3 +302,44 @@ def test_a_record_without_an_organism_is_refused() -> None:
 
     with pytest.raises(ValidationError):
         GeneRow.from_record(WDKRecordInstance.model_validate(raw))
+
+
+def test_the_sides_of_a_gene_are_its_nearest_contig_neighbours_outward() -> None:
+    at = {
+        name: row(name, "Plasmodium falciparum 3D7", 30, start=start).model_copy(
+            update={"sequence_id": "contig"}
+        )
+        for name, start in [("A", 100), ("B", 200), ("G", 300), ("C", 400), ("D", 500)]
+    }
+    other = row("X", "Plasmodium falciparum 3D7", 300, start=250).model_copy(
+        update={"sequence_id": "elsewhere"}
+    )
+    genome = [at["D"], at["A"], other, at["G"], at["C"], at["B"]]
+
+    left, right = contig_sides(at["G"], genome, 1)
+    wide_left, wide_right = contig_sides(at["G"], genome, 5)
+
+    assert ([r.gene for r in left], [r.gene for r in right]) == (["B"], ["C"])
+    assert ([r.gene for r in wide_left], [r.gene for r in wide_right]) == (
+        ["B", "A"],
+        ["C", "D"],
+    )
+
+
+async def test_a_genome_report_is_parsed_off_the_event_loop(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    serve(monkeypatch, [answer_of([coding()])])
+    threads: list[int] = []
+
+    def parse(answer: WDKAnswer, search_name: str) -> list[GeneRow]:
+        threads.append(threading.get_ident())
+        return rows_of(answer, search_name)
+
+    monkeypatch.setattr(genes, "rows_of", parse)
+
+    rows = await genes_of_genome("plasmodb", "Plasmodium falciparum 3D7")
+
+    assert len(rows) == 1
+    [thread] = threads
+    assert thread != threading.get_ident()

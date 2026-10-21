@@ -1,0 +1,1410 @@
+[
+ {
+  "displayName": "<i>Plasmodium cynomolgi</i> strain B",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_1120755"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium cynomolgi strain B",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  86.4%[S:  86.4%,D:   0.0%],F:  11.9%,M:   1.7%,n:1378",
+   "busco_genome": "C:  98.7%[S:  98.7%,D:   0.0%],F:   0.9%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium inui</i> San Antonio 1",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_1237626"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium inui San Antonio 1",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.9%[S:  98.9%,D:   0.0%],F:   1.1%,M:   0.0%,n:1378",
+   "busco_genome": "C:  99.4%[S:  99.4%,D:   0.0%],F:   0.4%,M:   0.2%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vivax</i> Sal-1",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_126793"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vivax Sal-1",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.6%[S:  99.1%,D:   0.6%],F:   0.4%,M:   0.0%,n:1378",
+   "busco_genome": "C:  99.2%[S:  98.4%,D:   0.8%],F:   0.3%,M:   0.5%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium cynomolgi</i> strain M",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_1274352"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium cynomolgi strain M",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.7%[S:  99.7%,D:   0.0%],F:   0.3%,M:   0.0%,n:1378",
+   "busco_genome": "C:  99.2%[S:  99.2%,D:   0.0%],F:   0.4%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> HB3",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_137071"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum HB3",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.7%[S:  98.5%,D:   0.1%],F:   0.1%,M:   1.2%,n:1378",
+   "busco_genome": "C:  98.3%[S:  98.2%,D:   0.1%],F:   0.3%,M:   1.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium chabaudi</i> chabaudi",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_31271"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium chabaudi chabaudi",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.9%[S:  99.9%,D:   0.0%],F:   0.0%,M:   0.1%,n:1378",
+   "busco_genome": "C:  99.5%[S:  99.5%,D:   0.0%],F:   0.1%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium yoelii</i> yoelii 17XNL",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_352914"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium yoelii yoelii 17XNL",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  80.2%[S:  79.9%,D:   0.3%],F:   9.8%,M:  10.0%,n:1378",
+   "busco_genome": "C:  92.0%[S:  91.7%,D:   0.4%],F:   4.9%,M:   3.1%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> 3D7",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_36329"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum 3D7",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.1%[S:  98.0%,D:   1.0%],F:   0.1%,M:   0.9%,n:1378",
+   "busco_genome": "C:  98.3%[S:  98.2%,D:   0.1%],F:   0.2%,M:   1.5%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> 7G8",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_57266"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum 7G8",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.9%[S:  98.5%,D:   0.4%],F:   0.2%,M:   0.9%,n:1378",
+   "busco_genome": "C:  98.5%[S:  98.2%,D:   0.4%],F:   0.2%,M:   1.2%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> Dd2",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_57267"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum Dd2",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.8%[S:  98.7%,D:   0.1%],F:   0.1%,M:   1.1%,n:1378",
+   "busco_genome": "C:  98.4%[S:  98.3%,D:   0.1%],F:   0.3%,M:   1.3%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium berghei</i> ANKA",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_5823"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium berghei ANKA",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.8%[S:  99.7%,D:   0.1%],F:   0.1%,M:   0.1%,n:1378",
+   "busco_genome": "C:  99.8%[S:  99.8%,D:   0.0%],F:   0.1%,M:   0.1%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> NF54",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_5843"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum NF54",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  97.5%[S:  97.4%,D:   0.1%],F:   0.1%,M:   2.4%,n:1378",
+   "busco_genome": "C:  98.3%[S:  98.2%,D:   0.1%],F:   0.3%,M:   1.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium knowlesi</i> strain H",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "NCBITAXON_5851"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium knowlesi strain H",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.9%[S:  99.6%,D:   0.2%],F:   0.1%,M:   0.0%,n:1378",
+   "busco_genome": "C:  99.3%[S:  99.1%,D:   0.2%],F:   0.2%,M:   0.5%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Hepatocystis sp. ex Piliocolobus tephrosceles</i> 2019",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_hpil2019"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Hepatocystis sp. ex Piliocolobus tephrosceles 2019",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  90.7%[S:  89.4%,D:   1.3%],F:   6.4%,M:   2.9%,n:1378",
+   "busco_genome": "C:  90.9%[S:  89.5%,D:   1.4%],F:   6.0%,M:   3.2%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Haemoproteus tartakovskyi</i> strain SISKIN1",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_htarSISKIN1"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Haemoproteus tartakovskyi strain SISKIN1",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  57.9%[S:  57.8%,D:   0.1%],F:   4.9%,M:  37.2%,n:1378",
+   "busco_genome": "C:  84.9%[S:  84.8%,D:   0.1%],F:   4.3%,M:  10.8%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium adleri</i> G01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_padlG01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium adleri G01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.8%[S:  98.0%,D:   0.8%],F:   0.1%,M:   1.1%,n:1378",
+   "busco_genome": "C:  98.5%[S:  97.7%,D:   0.9%],F:   0.1%,M:   1.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium billcollinsi</i> G01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pbilG01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium billcollinsi G01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  94.1%[S:  94.0%,D:   0.1%],F:   0.9%,M:   5.0%,n:1378",
+   "busco_genome": "C:  94.2%[S:  93.9%,D:   0.3%],F:   0.8%,M:   5.0%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium blacklocki</i> G01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pblaG01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium blacklocki G01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  97.2%[S:  96.7%,D:   0.4%],F:   0.4%,M:   2.4%,n:1378",
+   "busco_genome": "C:  96.9%[S:  96.0%,D:   0.9%],F:   0.5%,M:   2.6%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium brasilianum</i> strain Bolivian I",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pbraBolivianI"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium brasilianum strain Bolivian I",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  94.3%[S:  94.2%,D:   0.1%],F:   1.8%,M:   3.9%,n:1378",
+   "busco_genome": "C:  99.3%[S:  99.2%,D:   0.1%],F:   0.1%,M:   0.7%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium chabaudi</i> chabaudi CB",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pchachabaudiCB"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium chabaudi chabaudi CB",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.3%[S:  99.3%,D:   0.0%],F:   0.1%,M:   0.6%,n:1378",
+   "busco_genome": "C:  99.5%[S:  99.5%,D:   0.0%],F:   0.1%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium coatneyi</i> Hackeri",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pcoaHackeri"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium coatneyi Hackeri",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.1%[S:  98.8%,D:   0.3%],F:   0.6%,M:   0.4%,n:1378",
+   "busco_genome": "C:  99.7%[S:  99.4%,D:   0.3%],F:   0.1%,M:   0.2%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> 7G8 2019",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfal7G8-2019"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum 7G8 2019",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  96.6%[S:  96.3%,D:   0.3%],F:   0.2%,M:   3.2%,n:1378",
+   "busco_genome": "C:  98.4%[S:  98.0%,D:   0.4%],F:   0.3%,M:   1.3%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> CD01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalCD01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum CD01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  97.2%[S:  97.1%,D:   0.1%],F:   0.1%,M:   2.7%,n:1378",
+   "busco_genome": "C:  98.5%[S:  98.3%,D:   0.1%],F:   0.2%,M:   1.3%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> GA01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalGA01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum GA01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  97.8%[S:  97.6%,D:   0.1%],F:   0.1%,M:   2.2%,n:1378",
+   "busco_genome": "C:  98.4%[S:  98.3%,D:   0.1%],F:   0.2%,M:   1.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> GB4",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalGB4"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum GB4",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.3%[S:  98.0%,D:   0.4%],F:   0.1%,M:   1.6%,n:1378",
+   "busco_genome": "C:  98.5%[S:  98.0%,D:   0.4%],F:   0.1%,M:   1.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> GN01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalGN01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum GN01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  97.9%[S:  97.8%,D:   0.1%],F:   0.1%,M:   2.0%,n:1378",
+   "busco_genome": "C:  98.6%[S:  98.5%,D:   0.1%],F:   0.1%,M:   1.2%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> IT",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalIT"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum IT",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.8%[S:  98.7%,D:   0.1%],F:   0.1%,M:   1.1%,n:1378",
+   "busco_genome": "C:  98.3%[S:  98.2%,D:   0.1%],F:   0.2%,M:   1.5%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> KE01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalKE01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum KE01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.5%[S:  98.4%,D:   0.1%],F:   0.1%,M:   1.4%,n:1378",
+   "busco_genome": "C:  98.4%[S:  98.3%,D:   0.1%],F:   0.2%,M:   1.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> KH01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalKH01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum KH01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  97.5%[S:  97.4%,D:   0.1%],F:   0.1%,M:   2.4%,n:1378",
+   "busco_genome": "C:  98.3%[S:  98.1%,D:   0.1%],F:   0.4%,M:   1.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> KH02",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalKH02"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum KH02",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.5%[S:  98.3%,D:   0.2%],F:   0.1%,M:   1.5%,n:1378",
+   "busco_genome": "C:  98.3%[S:  98.1%,D:   0.2%],F:   0.3%,M:   1.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> ML01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalML01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum ML01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  97.5%[S:  97.0%,D:   0.6%],F:   0.7%,M:   1.8%,n:1378",
+   "busco_genome": "C:  98.6%[S:  97.9%,D:   0.7%],F:   0.3%,M:   1.1%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> NF135.C10",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalNF135C10"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum NF135.C10",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  93.0%[S:  92.5%,D:   0.5%],F:   0.1%,M:   6.9%,n:1378",
+   "busco_genome": "C:  98.4%[S:  97.8%,D:   0.6%],F:   0.3%,M:   1.3%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> NF166",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalNF166"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum NF166",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  96.2%[S:  96.0%,D:   0.1%],F:   0.1%,M:   3.8%,n:1378",
+   "busco_genome": "C:  98.5%[S:  98.4%,D:   0.1%],F:   0.2%,M:   1.2%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> SD01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalSD01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum SD01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.9%[S:  98.8%,D:   0.1%],F:   0.2%,M:   0.9%,n:1378",
+   "busco_genome": "C:  98.5%[S:  98.3%,D:   0.1%],F:   0.2%,M:   1.3%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> SN01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalSN01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum SN01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.0%[S:  98.8%,D:   0.1%],F:   0.1%,M:   0.9%,n:1378",
+   "busco_genome": "C:  98.5%[S:  98.3%,D:   0.1%],F:   0.2%,M:   1.3%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium falciparum</i> TG01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfalTG01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium falciparum TG01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  97.5%[S:  96.9%,D:   0.6%],F:   0.2%,M:   2.3%,n:1378",
+   "busco_genome": "C:  98.7%[S:  97.8%,D:   0.9%],F:   0.2%,M:   1.1%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium fragile</i> strain nilgiri",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pfraNilgiri"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium fragile strain nilgiri",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.3%[S:  97.6%,D:   0.7%],F:   1.2%,M:   0.6%,n:1378",
+   "busco_genome": "C:  98.9%[S:  98.4%,D:   0.5%],F:   0.6%,M:   0.5%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium gaboni</i> strain G01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pgabG01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium gaboni strain G01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.5%[S:  97.7%,D:   0.8%],F:   0.2%,M:   1.3%,n:1378",
+   "busco_genome": "C:  98.3%[S:  97.2%,D:   1.0%],F:   0.1%,M:   1.6%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium gaboni</i> strain SY75",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pgabSY75"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium gaboni strain SY75",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  95.4%[S:  94.6%,D:   0.9%],F:   1.4%,M:   3.2%,n:1378",
+   "busco_genome": "C:  95.7%[S:  95.5%,D:   0.2%],F:   1.1%,M:   3.2%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium gallinaceum</i> 8A",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pgal8A"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium gallinaceum 8A",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.5%[S:  98.3%,D:   0.1%],F:   0.9%,M:   0.7%,n:1378",
+   "busco_genome": "C:  98.3%[S:  98.2%,D:   0.1%],F:   0.8%,M:   0.9%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium knowlesi</i> strain A1H1",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pknoA1H1"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium knowlesi strain A1H1",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  94.5%[S:  94.3%,D:   0.2%],F:   0.5%,M:   5.0%,n:1378",
+   "busco_genome": "C:  99.2%[S:  99.0%,D:   0.2%],F:   0.2%,M:   0.6%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium knowlesi</i> strain Malayan Strain Pk1 A",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pknoMalayanPk1A"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium knowlesi strain Malayan Strain Pk1 A",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.3%[S:  99.1%,D:   0.2%],F:   0.3%,M:   0.4%,n:1378",
+   "busco_genome": "C:  99.3%[S:  99.1%,D:   0.2%],F:   0.2%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium malariae</i> UG01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pmalUG01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium malariae UG01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.7%[S:  99.6%,D:   0.1%],F:   0.1%,M:   0.2%,n:1378",
+   "busco_genome": "C:  99.1%[S:  99.1%,D:   0.1%],F:   0.1%,M:   0.8%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium ovale</i> curtisi GH01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_povacurtisiGH01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium ovale curtisi GH01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.8%[S:  98.7%,D:   0.1%],F:   0.5%,M:   0.7%,n:1378",
+   "busco_genome": "C:  98.1%[S:  98.1%,D:   0.0%],F:   0.5%,M:   1.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium ovale</i> wallikeri PowCR01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_povawallikeriCR01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium ovale wallikeri PowCR01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  90.3%[S:  90.3%,D:   0.0%],F:   1.3%,M:   8.4%,n:1378",
+   "busco_genome": "C:  97.1%[S:  97.0%,D:   0.1%],F:   0.7%,M:   2.2%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium praefalciparum</i> strain G01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_ppraG01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium praefalciparum strain G01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.1%[S:  97.1%,D:   1.0%],F:   0.4%,M:   1.5%,n:1378",
+   "busco_genome": "C:  98.1%[S:  98.0%,D:   0.1%],F:   0.3%,M:   1.6%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium reichenowi</i> CDC",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_preiCDC"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium reichenowi CDC",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.8%[S:  98.0%,D:   0.8%],F:   0.3%,M:   0.9%,n:1378",
+   "busco_genome": "C:  98.5%[S:  98.4%,D:   0.1%],F:   0.1%,M:   1.3%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium reichenowi</i> G01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_preiG01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium reichenowi G01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.8%[S:  98.6%,D:   0.2%],F:   0.1%,M:   1.0%,n:1378",
+   "busco_genome": "C:  98.8%[S:  98.5%,D:   0.3%],F:   0.1%,M:   1.0%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium relictum</i> SGS1-like",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_prelSGS1-like"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium relictum SGS1-like",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.3%[S:  99.1%,D:   0.1%],F:   0.2%,M:   0.5%,n:1378",
+   "busco_genome": "C:  99.0%[S:  98.8%,D:   0.1%],F:   0.1%,M:   0.9%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vinckei</i> brucechwatti DA",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pvinbrucechwattiDA"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vinckei brucechwatti DA",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.1%[S:  99.1%,D:   0.0%],F:   0.5%,M:   0.4%,n:1378",
+   "busco_genome": "C:  99.5%[S:  99.5%,D:   0.0%],F:   0.1%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vinckei</i> Cameroon EL",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pvinCameroonEL"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vinckei Cameroon EL",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.0%[S:  98.0%,D:   0.0%],F:   1.3%,M:   0.7%,n:1378",
+   "busco_genome": "C:  99.4%[S:  99.4%,D:   0.0%],F:   0.1%,M:   0.5%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vinckei</i> lentum DE",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pvinlentumDE"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vinckei lentum DE",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.5%[S:  98.5%,D:   0.0%],F:   0.6%,M:   0.9%,n:1378",
+   "busco_genome": "C:  99.3%[S:  99.3%,D:   0.0%],F:   0.1%,M:   0.6%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vinckei</i> petteri strain CR",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pvinpetteriCR"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vinckei petteri strain CR",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.1%[S:  98.9%,D:   0.2%],F:   0.6%,M:   0.3%,n:1378",
+   "busco_genome": "C:  99.8%[S:  99.6%,D:   0.2%],F:   0.1%,M:   0.1%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vinckei</i> petteri CR 2020",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pvinpetteriCR2020"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vinckei petteri CR 2020",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.1%[S:  99.1%,D:   0.0%],F:   0.7%,M:   0.2%,n:1378",
+   "busco_genome": "C:  99.7%[S:  99.7%,D:   0.0%],F:   0.1%,M:   0.2%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vinckei</i> vinckei CY",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pvinvinckeiCY"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vinckei vinckei CY",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.4%[S:  99.3%,D:   0.1%],F:   0.3%,M:   0.3%,n:1378",
+   "busco_genome": "C:  99.5%[S:  99.3%,D:   0.1%],F:   0.1%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vinckei</i> vinckei strain vinckei",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pvinvinckeivinckei"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vinckei vinckei strain vinckei",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.5%[S:  98.4%,D:   0.1%],F:   1.0%,M:   0.5%,n:1378",
+   "busco_genome": "C:  99.6%[S:  99.5%,D:   0.1%],F:   0.0%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vivax</i> P01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pvivP01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vivax P01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.6%[S:  99.6%,D:   0.0%],F:   0.4%,M:   0.1%,n:1378",
+   "busco_genome": "C:  99.1%[S:  99.1%,D:   0.0%],F:   0.3%,M:   0.6%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vivax</i> PAM",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pvivPAM"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vivax PAM",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.9%[S:  98.7%,D:   0.2%],F:   0.5%,M:   0.6%,n:1378",
+   "busco_genome": "C:  99.3%[S:  99.3%,D:   0.0%],F:   0.3%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vivax-like sp.</i> Pvl01",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pvivPvl01"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vivax-like Pvl01",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  87.2%[S:  84.3%,D:   3.0%],F:   3.0%,M:   9.7%,n:1378",
+   "busco_genome": "C:  88.2%[S:  85.1%,D:   3.1%],F:   3.0%,M:   8.7%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vivax</i> PvSY56",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pvivPvSY56"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vivax PvSY56",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": null,
+   "busco_genome": "C:  94.3%[S:  94.3%,D:   0.0%],F:   2.9%,M:   2.8%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium vivax</i> PvW1",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pvivPvW1"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium vivax PvW1",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  98.9%[S:  98.9%,D:   0.0%],F:   0.4%,M:   0.7%,n:1378",
+   "busco_genome": "C:  99.2%[S:  99.2%,D:   0.0%],F:   0.4%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium yoelii</i> yoelii 17X",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pyoeyoelii17X"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium yoelii yoelii 17X",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.8%[S:  99.8%,D:   0.0%],F:   0.1%,M:   0.1%,n:1378",
+   "busco_genome": "C:  99.5%[S:  99.5%,D:   0.0%],F:   0.1%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium yoelii</i> yoelii 17XNL 2023",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pyoeyoelii17XNL2023"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium yoelii yoelii 17XNL 2023",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  94.0%[S:  84.0%,D:  10.1%],F:   3.0%,M:   2.9%,n:1378",
+   "busco_genome": "C:  99.5%[S:  99.5%,D:   0.0%],F:   0.1%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ },
+ {
+  "displayName": "<i>Plasmodium yoelii</i> yoelii YM",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "TMPTX_pyoeyoeliiYM"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+  "attributes": {
+   "organism_full": "Plasmodium yoelii yoelii YM",
+   "busco_lineage_dataset": "aconoidasida_odb12",
+   "busco_protein": "C:  99.7%[S:  99.7%,D:   0.0%],F:   0.1%,M:   0.1%,n:1378",
+   "busco_genome": "C:  99.5%[S:  99.5%,D:   0.0%],F:   0.1%,M:   0.4%,n:1378"
+  },
+  "tables": {},
+  "tableErrors": []
+ }
+]

@@ -1,11 +1,12 @@
-"""A genome's genes, a region's genes, a gene's orthologs and a gene list's proteins,
-read through WDK reports and gene records."""
+"""A genome's genes, a region's genes, a gene's orthologs, a gene list's proteins and
+the site's organism records, read through WDK reports and gene records."""
 
 from __future__ import annotations
 
+import asyncio
 import json
 from collections.abc import Sequence
-from typing import Literal, Self
+from typing import Literal
 
 import pydantic
 from pydantic import (
@@ -15,10 +16,9 @@ from pydantic import (
     JsonValue,
     TypeAdapter,
     field_validator,
-    model_validator,
 )
 from veupathdb import JSONObject
-from veupathdb.errors import DataParsingError, ValidationError, WDKError
+from veupathdb.errors import DataParsingError
 from veupathdb.wdk import (
     StrategyAPI,
     VEuPathDBClient,
@@ -46,11 +46,14 @@ GENE_ATTRIBUTES = (
     "is_pseudo",
     "gene_type",
 )
+PROTEIN_ATTRIBUTE = "protein_sequence"
 ORTHOLOG_TABLE = "Orthologs"
-REGION_SEARCH = "GenesByLocation"
+GENOME_SEARCH = "GenesByTaxon"
+ORGANISM_SEARCH = "GenomeDataTypes"
 ID_CHUNK = 150
-_LOCUS_TAG = "GeneByLocusTag"
+LOCUS_TAG = "GeneByLocusTag"
 _MAX_RECORDS = 400000
+_MAX_ORGANISMS = 2000
 _TRANSCRIPTS_PER_GENE = 8
 _PSEUDO: TypeAdapter[bool | Literal["Yes", "No"]] = TypeAdapter(
     bool | Literal["Yes", "No"]
@@ -128,21 +131,7 @@ class _OrthologTable(BaseModel):
     rows: list[OrthologRow] = Field(validation_alias=ORTHOLOG_TABLE)
 
 
-class _Region(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    start: int = Field(ge=1)
-    end: int = Field(ge=0)
-
-    @model_validator(mode="after")
-    def _ordered(self) -> Self:
-        if self.end and self.end < self.start:
-            msg = f"a region ends at {self.end}, before its start {self.start}"
-            raise ValueError(msg)
-        return self
-
-
-def _report(attributes: Sequence[str], count: int) -> JSONObject:
+def report_of(attributes: Sequence[str], count: int) -> JSONObject:
     return {
         "attributes": list(attributes),
         "tables": [],
@@ -150,14 +139,14 @@ def _report(attributes: Sequence[str], count: int) -> JSONObject:
     }
 
 
-def _complete(answer: WDKAnswer, search_name: str) -> WDKAnswer:
+def complete_answer(answer: WDKAnswer, search_name: str) -> WDKAnswer:
     total = answer.meta.total_count
     if total is None or total > len(answer.records):
         msg = (
             f"WDK {search_name} report served {len(answer.records)} records "
             f"of a total of {total}"
         )
-        raise WDKError(msg)
+        raise DataParsingError(msg)
     return answer
 
 
@@ -184,46 +173,42 @@ def rows_of(answer: WDKAnswer, search_name: str) -> list[GeneRow]:
     return list(best.values())
 
 
-async def genes_of_genome(site_id: str, organism: str) -> list[GeneRow]:
+def contig_sides(
+    gene: GeneRow, genome: list[GeneRow], reach: int
+) -> tuple[list[GeneRow], list[GeneRow]]:
+    ordered = sorted(
+        (row for row in genome if row.sequence_id == gene.sequence_id),
+        key=lambda row: (row.start, row.gene),
+    )
+    key = (gene.start, gene.gene)
+    left = [row for row in ordered if (row.start, row.gene) < key]
+    right = [row for row in ordered if (row.start, row.gene) > key]
+    return left[::-1][:reach], right[:reach]
+
+
+async def genome_answer(site_id: str, organism: str) -> WDKAnswer:
     answer = await get_wdk_client(site_id).run_search_report(
         "transcript",
-        "GenesByTaxon",
+        GENOME_SEARCH,
         WDKSearchConfig(parameters={"organism": json.dumps([organism])}),
-        _report(GENE_ATTRIBUTES, _MAX_RECORDS),
+        report_of(GENE_ATTRIBUTES, _MAX_RECORDS),
     )
-    return rows_of(_complete(answer, "GenesByTaxon"), "GenesByTaxon")
+    return complete_answer(answer, GENOME_SEARCH)
 
 
-async def region_answer(
-    site_id: str, organism: str, sequence_id: str, start: int, end: int
-) -> WDKAnswer:
-    try:
-        region = _Region(start=start, end=end)
-    except ValueError as exc:
-        msg = f"the region {start}-{end} of {sequence_id} is not one WDK reads"
-        raise ValidationError(detail=msg) from exc
+async def genes_of_genome(site_id: str, organism: str) -> list[GeneRow]:
+    answer = await genome_answer(site_id, organism)
+    return await asyncio.to_thread(rows_of, answer, GENOME_SEARCH)
+
+
+async def organism_report(site_id: str, attributes: Sequence[str]) -> WDKAnswer:
     answer = await get_wdk_client(site_id).run_search_report(
-        "transcript",
-        REGION_SEARCH,
-        WDKSearchConfig(
-            parameters={
-                "organismSinglePick": json.dumps([organism]),
-                "chromosomeOptional": "Choose chromosome",
-                "sequenceId": sequence_id,
-                "start_point": str(region.start),
-                "end_point": str(region.end),
-            }
-        ),
-        _report(GENE_ATTRIBUTES, _MAX_RECORDS),
+        "organism",
+        ORGANISM_SEARCH,
+        WDKSearchConfig(parameters={}),
+        report_of(attributes, _MAX_ORGANISMS),
     )
-    return _complete(answer, REGION_SEARCH)
-
-
-async def genes_in_region(
-    site_id: str, organism: str, sequence_id: str, start: int, end: int
-) -> list[GeneRow]:
-    answer = await region_answer(site_id, organism, sequence_id, start, end)
-    return sorted(rows_of(answer, REGION_SEARCH), key=lambda row: row.start)
+    return complete_answer(answer, ORGANISM_SEARCH)
 
 
 async def ortholog_table(site_id: str, gene: str) -> list[OrthologRow]:
@@ -255,21 +240,26 @@ async def gene_rows(site_id: str, gene_ids: list[str]) -> list[GeneRow]:
     if not gene_ids:
         return []
     answers = await locus_tag_answers(site_id, gene_ids, GENE_ATTRIBUTES)
-    return [row for answer in answers for row in rows_of(answer, _LOCUS_TAG)]
+    return [row for answer in answers for row in rows_of(answer, LOCUS_TAG)]
+
+
+def proteins_in(answers: list[WDKAnswer]) -> dict[str, str]:
+    found: dict[str, tuple[int, str, str]] = {}
+    for answer in answers:
+        for record in answer.records:
+            ids = {segment.name: segment.value for segment in record.id}
+            gene = ids["gene_source_id"]
+            sequence = (record.attribute_text(PROTEIN_ATTRIBUTE) or "").rstrip("*")
+            rank = (-len(sequence), ids["source_id"], sequence)
+            if sequence and (gene not in found or rank < found[gene]):
+                found[gene] = rank
+    return {gene: sequence for gene, (_, _, sequence) in found.items()}
 
 
 async def proteins_of(site_id: str, gene_ids: list[str]) -> dict[str, str]:
     if not gene_ids:
         return {}
-    found: dict[str, str] = {}
-    for answer in await locus_tag_answers(site_id, gene_ids, ["protein_sequence"]):
-        for record in answer.records:
-            ids = {segment.name: segment.value for segment in record.id}
-            gene = ids["gene_source_id"]
-            sequence = (record.attribute_text("protein_sequence") or "").rstrip("*")
-            if len(sequence) > len(found.get(gene, "")):
-                found[gene] = sequence
-    return found
+    return proteins_in(await locus_tag_answers(site_id, gene_ids, [PROTEIN_ATTRIBUTE]))
 
 
 async def locus_tag_answers(
@@ -295,8 +285,8 @@ async def _locus_tag_answer(
     )
     answer = await client.run_search_report(
         "transcript",
-        _LOCUS_TAG,
+        LOCUS_TAG,
         WDKSearchConfig(parameters={"ds_gene_ids": str(dataset)}),
-        _report(attributes, len(gene_ids) * _TRANSCRIPTS_PER_GENE),
+        report_of(attributes, len(gene_ids) * _TRANSCRIPTS_PER_GENE),
     )
-    return _complete(answer, _LOCUS_TAG)
+    return complete_answer(answer, LOCUS_TAG)

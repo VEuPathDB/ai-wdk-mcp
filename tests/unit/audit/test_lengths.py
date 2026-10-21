@@ -2,26 +2,24 @@ import json
 from pathlib import Path
 
 import pytest
-from tests._support.proteins import row
+from tests._support.proteins import row, tight
 
 from veupathdb_mcp.audit.genes import GeneRow
 from veupathdb_mcp.audit.lengths import (
     Confirmable,
     GroupProfile,
     NotChecked,
+    Relatives,
     call_length,
     classify,
     closest_reference,
     genus_of,
     relatives_median,
+    relatives_of,
     species_of,
 )
 
 FIXTURES = Path(__file__).parent / "fixtures"
-
-
-def tight(count: int = 9, length: int = 400) -> list[GeneRow]:
-    return [row(f"G{i}", f"Plasmodium species{i} X", length) for i in range(count)]
 
 
 def piga_group() -> list[GeneRow]:
@@ -205,7 +203,14 @@ def test_relatives_are_the_other_species_of_the_reference_genus() -> None:
         row("B", "Plasmodium knowlesi H", 470),
         row("T", "Toxoplasma gondii ME49", 900),
     ]
-    assert relatives_median(reference, rows) == 460
+    found = relatives_of(reference, rows[1], rows)
+    assert found is not None
+    assert found == Relatives(
+        tier="SAME_GENUS",
+        lengths={"Plasmodium vivax P01": 450, "Plasmodium knowlesi H": 470},
+    )
+    assert found.median == 460
+    assert relatives_median(reference, rows[1], rows) == 460
 
 
 def test_relatives_fall_back_to_other_genera() -> None:
@@ -216,7 +221,14 @@ def test_relatives_fall_back_to_other_genera() -> None:
         row("T", "Toxoplasma gondii ME49", 900),
         row("E", "Eimeria tenella H", 700),
     ]
-    assert relatives_median(reference, rows) == 800
+    found = relatives_of(reference, reference, rows)
+    assert found is not None
+    assert found == Relatives(
+        tier="OTHER_GENERA",
+        lengths={"Toxoplasma gondii ME49": 900, "Eimeria tenella H": 700},
+    )
+    assert found.median == 800
+    assert relatives_median(reference, reference, rows) == 800
 
 
 def test_fewer_than_two_relatives_give_no_median() -> None:
@@ -226,28 +238,29 @@ def test_fewer_than_two_relatives_give_no_median() -> None:
         row("A", "Plasmodium vivax P01", 450),
         row("T", "Toxoplasma gondii ME49", 900),
     ]
-    assert relatives_median(reference, rows) is None
+    assert relatives_of(reference, reference, rows) is None
+    assert relatives_median(reference, reference, rows) is None
 
 
-def test_two_short_neighbours_that_sum_to_the_median_are_a_split() -> None:
-    a = row("ME1", "Plasmodium speciesM X", 200)
-    b = row("ME2", "Plasmodium speciesM X", 220)
-    assert call_length([a, b], [*tight(), a, b]).length_class == "SPLIT"
+def test_the_median_leaves_out_the_model_organism_and_the_reference_organism() -> None:
+    reference = row("R", "Plasmodium vivax P01", 319)
+    model = row("M", "Plasmodium knowlesi H", 110)
+    rows = [
+        reference,
+        model,
+        row("F", "Plasmodium falciparum 3D7", 300),
+        row("T", "Toxoplasma gondii ME49", 310),
+        row("E", "Eimeria tenella H", 312),
+    ]
 
+    found = relatives_of(reference, model, rows)
 
-@pytest.mark.parametrize(("first", "second"), [(350, 100), (100, 150), (300, 300)])
-def test_parts_too_long_or_summing_outside_the_bounds_are_typical(
-    first: int, second: int
-) -> None:
-    a = row("ME1", "Plasmodium speciesM X", first)
-    b = row("ME2", "Plasmodium speciesM X", second)
-    assert call_length([a, b], [*tight(), a, b]).length_class == "TYPICAL"
-
-
-def test_a_split_in_a_small_group_cannot_judge() -> None:
-    a = row("ME1", "Plasmodium speciesM X", 200)
-    b = row("ME2", "Plasmodium speciesM X", 220)
-    assert call_length([a, b], [*tight(5), a, b]).length_class == "UNQUALIFIED"
+    assert found == Relatives(
+        tier="OTHER_GENERA",
+        lengths={"Toxoplasma gondii ME49": 310, "Eimeria tenella H": 312},
+    )
+    assert relatives_median(reference, model, rows) == 311.0
+    assert relatives_median(reference, reference, rows) == 205.0
 
 
 def test_the_piga_group_does_not_call_a_cynomolgi_b_model_short() -> None:
@@ -347,16 +360,6 @@ def test_a_group_without_another_single_copy_organism_cannot_judge() -> None:
     assert (call.length_class, call.reference) == ("UNQUALIFIED", None)
 
 
-def test_a_split_call_holds_its_reference_and_the_summed_ratio() -> None:
-    a = row("ME1", "Plasmodium speciesM X", 200)
-    b = row("ME2", "Plasmodium speciesM X", 220)
-
-    call = call_length([a, b], [*tight(), a, b])
-
-    assert type(call) is Confirmable
-    assert (call.length_class, call.reference.gene, call.ratio) == ("SPLIT", "G0", 1.05)
-
-
 def test_a_short_gene_beside_a_paralog_in_its_organism_cannot_judge() -> None:
     me = row("ME", "Plasmodium speciesM X", 200)
     paralog = row("ME_para", "Plasmodium speciesM X", 400)
@@ -367,32 +370,20 @@ def test_a_short_gene_beside_a_paralog_in_its_organism_cannot_judge() -> None:
     assert classify(me, [*tight(), me]) == "SHORT"
 
 
-def test_a_neighbour_outside_the_group_is_not_a_split() -> None:
-    me = row("ME", "Plasmodium speciesM X", 200)
-    neighbour = row("NB", "Plasmodium speciesM X", 220)
-
-    call = call_length([me, neighbour], [*tight(), me])
-
-    assert type(call) is NotChecked
-    assert call.length_class == "UNQUALIFIED"
-
-
-def test_a_pair_with_a_group_member_between_them_is_not_a_split() -> None:
-    a = row("ME1", "Plasmodium speciesM X", 200, start=1000)
-    between = row("ME2", "Plasmodium speciesM X", 150, start=3000)
-    b = row("ME3", "Plasmodium speciesM X", 220, start=5000)
-    same = {"sequence_id": "M_contig"}
-    a, between, b = (r.model_copy(update=same) for r in (a, between, b))
-
-    assert call_length([a, b], [*tight(), a, between, b]).length_class == (
-        "UNQUALIFIED"
-    )
-    assert call_length([a, b], [*tight(), a, b]).length_class == "SPLIT"
-
-
 def test_a_residual_group_is_not_used_as_orthology() -> None:
     rows = [
         r.model_copy(update={"ortholog_group": "OGR7_0001234"})
+        for r in [*tight(), row("ME", "Plasmodium speciesM X", 200)]
+    ]
+
+    assert classify(rows[-1], rows) == "UNQUALIFIED"
+
+
+def test_a_label_that_is_no_orthology_group_is_not_used_as_orthology() -> None:
+    rows = [
+        r.model_copy(
+            update={"ortholog_group": "N/A (orthology not determined for pseudogenes)"}
+        )
         for r in [*tight(), row("ME", "Plasmodium speciesM X", 200)]
     ]
 

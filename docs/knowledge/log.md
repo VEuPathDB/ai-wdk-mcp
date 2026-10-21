@@ -1,5 +1,233 @@
 # Knowledge log
 
+## 2026-10-21 - 0.2.0b32
+
+- 0.2.0b32 ships the two entries below, the gene-id resolver and the ten new gene-model
+  tools, and pins veupathdb-py 0.1.0b17, whose tabix reader the intron check reads
+  junctions with.
+- The missing-gene check reads the anchor's genome key with `gene_organism`
+  (`organismAbbrev`, no table). `missing_tgonGT1_nac.json` is recorded again on QA
+  toxodb (13 WDK requests); only that record read changed, and the answer stays
+  `IN_DNA_UNANNOTATED`, 34 of 34 windows.
+- The genome pseudogene-call description builds its word list from `FAMILY_WORDS`, so
+  the two cannot differ.
+- Live on QA plasmodb with this release's source: the NF54 CM019798.1 contig against
+  PF3D7_MIT02300 answers `SPLIT_AT_JOIN` (274 on the line, 376 on the circle, an
+  87-base end overlap); PfDd2_140076300 against PF3D7_1472100 loses 271-310,
+  `GENOME_ENCODES`, side `UNCLEAR` with a relatives median of 309; PcyM_0736700 answers
+  `UNSUPPORTED_MISSING_EXON` with corrected parts of 124, 158, 185, 160 and 399 bases
+  and 1970 best junction reads; the genome priority ranks 63 genomes, NF135.C10 sixth
+  at a gap of 5.4.
+
+## 2026-10-21 - The audit resolves a gene id and judges only what it was asked
+
+- Every gene-model tool that takes gene ids resolves each through the site and serves
+  `geneIds`, the id given beside the gene id it resolved to; every other gene field is
+  the resolved id, and an answer whose gene fields differ from them is invalid
+  (`veupathdb_mcp.audit.gene_ids`, `served.located`). The row read asks
+  `GeneByLocusTag` for `input_id`, which echoes each input that matched a transcript,
+  and every id takes only the genes echoed for it (its own id first). An id with no
+  echoed row goes to `GenesByText` on primary keys only, over every organism the search
+  lists (read once per site), and takes the one gene whose own id, without its `:` qualifier, is the id; an
+  id with `*` or a space, an answer over 50 transcripts and an id that names several
+  genes are refused. On QA plasmodb `PfNF54_100037200` beside `PF3D7_1032400` echoes
+  only PIGA and the text search names `PfNF54_100037200:pseudogene`
+  (`gene_ids_pfalNF54_piga.json`, `record_audit_gene_ids.py`); `resolve_gene_ids` does
+  not resolve it. The evidence tool now reads the gene's row first, and the missing-gene
+  tool resolves its example gene.
+- The row-read recordings were taken again with `input_id`
+  (`pcynM_pkac_length.json`, both `strain_*`, both `introns_*`, both `fusion_*`,
+  `missing_tgonGT1_nac.json`, `organelle_pfal3D7_cytb.json`); each equals its old
+  version as JSON apart from `input_id`, with its key order moved. The organelle recorder
+  also rewrote the five `organelle_*_mito.json` contigs, which equal their old versions
+  as JSON.
+- A site failure is labelled from the error the client raises: an HTTP status (WDK
+  cause or `JBrowseError.upstream_status`) reads "<site> answered <status> to the audit
+  reads: <detail>" (and "to the ortholog reads" in the intron check), a timeout or a
+  failed connection "did not answer".
+- A report served short of its total (`genes.complete_answer`) raises
+  `DataParsingError` naming the search and both counts, not `WDKError` with status 502:
+  it is a data fact, and a caller that retries outages does not retry it.
+- `gene_organism` reads a gene record's `organismAbbrev` and no table; the pseudogene
+  check's strain gene and the selenoprotein's gene use it. The anatomy reads each gene
+  record once and the strain window once, sharing `pseudogene_pair` and
+  `pseudogene_dna` with the pseudogene check: two record reads where it read four, and
+  one strain window where it read two.
+- The selenoprotein check reads both genes' rows and proteins in one `GeneByLocusTag`
+  report (`rows_and_proteins`). `proteins_of` takes the lowest transcript id on an exact
+  length tie; the one recorded tie (BDCG_01190, four 436-residue transcripts) holds one
+  sequence, so no recorded answer changes.
+- `STOPS_AT_SEC` needs `secAligned` (the model's last residue, projected along its last
+  identical block within 3 residues, falls on the residue before the reference's first
+  U) and `tailIdentity` 0.8 or more; a TGA after a model
+  that ends elsewhere is `NOT_AT_SEC`. The recorded GT1 SelK stays `STOPS_AT_SEC` (1.0,
+  aligned) and ME49 SelK `CONTAINS_SEC`.
+- The pseudogene check and the anatomy refuse a strain gene the site does not flag as a
+  pseudogene, naming the gene and its flag; the recorded NF54 PIGA stays `INTACT`.
+- A split pair is judged only when the two genes are the only coding members of the
+  group in their organism; three members give no pair.
+
+## 2026-10-21 - Ten more gene-model tools are served
+
+- `audit_strain_model`, `audit_missing_gene`, `audit_organelle_gene`,
+  `audit_pseudogene_anatomy`, `audit_genome_pseudogene_calls`, `audit_intron_support` and
+  `audit_gene_fusion` are served read-only with the 120 s audit budget; `audit_genome_priority`,
+  `audit_gene_evidence` and `audit_genome_provenance` are served read-only with the
+  default budget
+  (`decisions/an-audit-check-reads-its-genome-from-the-site.md`). Every tool that names
+  an organism takes its full name.
+- `audit_strain_model` serves check 4, a strain's gene model against its species
+  reference: lost and extra runs, the strain's genome read for a lost run unless the
+  group is residual or another group member lies in the window, the relatives it
+  compares with, and a side judged only where the strain's genome encodes the lost run.
+  Recorded on QA plasmodb: PcyM_0736700 against PCYB_074210 lost 41-100 and its genome
+  encodes it (no side: 8 copies per organism); PfDd2_140076300 against PF3D7_1472100
+  lost 271-310, encoded, side unclear (40 relatives, median 309).
+- `audit_gene_fusion` serves check 3, a `LONG` gene against its closest single-copy
+  ortholog: the extra runs of its protein, the neighbour of the reference within 3 genes
+  on its sequence that holds the most extra windows (`EXTRA_MATCHES_NEIGHBOUR` at 3
+  windows and 40%: a protein fact, with no claim about how the model was built), and
+  for a match the models of that neighbour's group beside the gene. Only a
+  match names a `partner` (with its group and product); an unexplained answer names its
+  `closestNeighbour`. A gene of
+  any other class answers its class and reads nothing more. Recorded on QA plasmodb
+  (`scripts/record_audit_fusion.py`, every read in order, each genome report trimmed to
+  the gene, 4 genes on each side and the nearest gene of another sequence, so the
+  recording pins the reach of 3 and the sequence filter): AK88_02763 against
+  PCOAH_00051830 is
+  `EXTRA_MATCHES_NEIGHBOUR` with PCOAH_00051820, 56 of 66 windows, no separate model beside it;
+  on QA toxodb TGME49_500302 is `UNQUALIFIED` (two copies per organism in its group) and
+  no protein is read. The length screen is public as `served.length_screen`, and the
+  missing-gene wire replay takes a list of calls so both recordings replay through it.
+- The length check's genome read takes the window and the proteins its caller holds
+  (`length_window`, `length_dna`, `length_flank`, `read_proteins`), so a strain check
+  reads its two proteins once. `relatives_of(reference, model, rows)` names the
+  relatives and their tier, and `relatives_median(reference, model, rows)` stays
+  published as their median; both leave out the organisms of the reference and of the
+  audited model (reference P. vivax 319, model P. knowlesi 110, P. falciparum 300 and
+  two other genera at 310 and 312 give 311.0, where counting the model gave 205.0).
+  The recorded YIP1 side stays `UNCLEAR` at 309 and PKAc `NO_RELATIVES`.
+- `audit_missing_gene` finds two anchors around an example gene whose `OG` ortholog
+  groups have one gene each in the absent genome, reads the DNA between them with the
+  code inferred from the example's CDS, and answers whether it holds the example
+  protein (`IN_DNA_UNANNOTATED`, `IN_DNA_OTHER_MODEL` with the overlapping models'
+  pseudogene flag, `GAP`, `PARTIAL`, `NOT_IN_DNA`, or `NO_SYNTENY` with no genome read
+  and no genome fact served), with the stops inside the stretch the found windows cover
+  and whether one frame holds the protein without a stop.
+- `audit_organelle_gene` resolves the genome key from the first protein-coding gene on
+  the named sequence, reads the whole contig, joins the longest end overlap of 20 bases
+  or more whose two copies agree at 99% of positions once (`overlapBases`,
+  `overlapMismatches`), and asks whether one open frame holds 95% of a reference
+  protein on the contig as stored (`INTACT_ON_THE_LINE`) or only on the circle turned
+  by half its length (`SPLIT_AT_JOIN`), with the code inferred from the reference
+  gene's CDS. NF54, 7G8 and 7G8 2019 CYTB read `SPLIT_AT_JOIN` (7G8's 127-base end
+  overlap has one differing base).
+- `audit_genome_priority` ranks a site's genomes by the gap between their BUSCO genome
+  and protein completeness, largest first. The organism's full name is
+  `organism_full`; the record id `source_id` is a taxon id (`NCBITAXON_36329`,
+  `TMPTX_pfalNF135C10`), not the organism abbreviation.
+- `audit_pseudogene_anatomy` states a pseudogene's `Exon` segments; for each junction
+  the gap, the gap modulo 3, the longest single-base run within 5 positions of either
+  gap end and the Ns within 100 positions; the gene's contig distances and Ns; the
+  reference's `Exon` count; and the pseudogene check of the genome window.
+- `audit_genome_pseudogene_calls` (named apart from the one-gene
+  `audit_pseudogene_call`) pairs each pseudogene of a genome with one single-copy coding
+  reference gene, by ortholog group first and by identical product otherwise; a product
+  that holds a word of `FAMILY_WORDS` does not pair. A coding reference gene is flagged
+  not pseudo, protein-coding (`is_coding`) and in an `OG` group that is not residual
+  (`is_orthology_group`). `basis` is `ORTHOLOG_GROUP` or `PRODUCT`, and `unpairedGenes`
+  names every unpaired pseudogene with its reason and, for a listed word, the word. QA plasmodb serves no ortholog group
+  for a pseudogene ("N/A (orthology not determined for pseudogenes)"), so P. falciparum
+  calls pair by product, and no recording yet exercises the ortholog-group step on
+  served rows. On the recorded NF54 and 3D7 reports the rule gives 26 calls of 229
+  pseudogenes; 160 hold a listed word, 35 have no coding 3D7 gene with their product and
+  8 a product that several hold. The answer counts the genes whose pseudogene flag the
+  site does not serve, and says when the genome flags none of its genes.
+  `rate_with_bounds` states a rate with its Wilson interval, floor and ceiling.
+- `audit_gene_evidence` returns a gene's transcripts, PDB similarities (one per
+  structure, its chains, identity, the site's protein-covered percent and e-value; no
+  positions are served), mass-spec peptides with their positions on their transcript
+  (from `MassSpecDownload`), AlphaFold models, cross-references, sequence edits, the
+  counts of user comments, PubMed articles and notes, the phenotype tables named for
+  the gene's organism with their rows, the phenotype tables named for no organism apart
+  (`unprefixedTables`), and the tables the site does not serve.
+  `audit_genome_provenance` returns an organism's genome source and version, annotation
+  source and version, genome date and builds from the organism report.
+- `audit_intron_support` judges every unread annotated intron of the longest-CDS
+  transcript against every RNA-seq junction track of the organism, and serves the
+  corrected model when strong junctions explain them all. On QA, PcyM_0736700 answers
+  `UNSUPPORTED_MISSING_EXON` with the corrected CDS [124,158,185,160,399] (341 aa) and
+  Afu2g18040 `UNSUPPORTED_SHIFTED` with 459 aa. A gene whose every annotated intron is
+  unread is judged when a Strong Evidence junction of 50 reads or more lies inside it on
+  its strand; the prototype skipped it. A gene with a read annotated intron keeps the
+  prototype gate (best annotated intron, 50 reads). The RNA-seq junction model is
+  `RnaJunction`. The check reads junctions with the client's tabix reader
+  (`TabixReader`, `SequenceNotIndexedError`, `parse_gff_line`): the pin moves to
+  veupathdb-py 0.1.0b17.
+- `GenesByLocation` reads only some genomes of a site: on QA toxodb its organism
+  vocabulary holds the 8 chromosome-level genomes, and on QA plasmodb it lacks
+  P. falciparum NF54, 7G8 2019, NF135 and NF166; any other organism answers 422.
+  `GenesBySequenceSourceId` answers 500 on QA toxodb. No served check calls
+  `genes_in_region`, and it is removed with `region_answer`; the missing-gene,
+  organelle, genome pseudogene-call and gene-fusion checks read whole genomes with
+  `GenesByTaxon` (`genome_answer`), parsed in a worker thread.
+- One reader serves the site's organism records (`organism_report`, `GenomeDataTypes`)
+  to the genome priority and the provenance, and one per-site, per-process read of the
+  gene record type (`veupathdb_mcp.wdk.gene_record_type`) serves the evidence tables and
+  the expression summary's key columns.
+- `gene_models.longest_transcript` picks the rows of the transcript with the largest
+  summed length for any row type: `coding_parts` reads `CDS` rows with it and the
+  anatomy reads `Exon` rows. `lengths.is_orthology_group` (an `OG` group that is not
+  residual) is the one orthology rule of the anchors, the pseudogene pairing, the
+  fusion copies, the length screen and the intron ortholog count;
+  `lengths.is_residual_group` names the residual case the strain check serves. A strain
+  pair under an `N/A` label is refused. `lengths.is_coding` is the coding rule of the
+  length statistics, the pseudogene pairing's reference genes and the organelle's first
+  coding gene.
+- The helpers the checks share are public: `served.located`, `window_refusal`,
+  `coding_dna`, `read_proteins`; `audit_tools.run_in_a_slot`, `read_inputs`,
+  `audit_slots`; the recorder's `served_body` and `served_answers`.
+- `gene_models.transcript_spans` and `ModelTable` are the one reading of a transcript's
+  rows and of the `GeneModelDump` table, and `model_record` is the one read of a gene's
+  model record for `gene_model`, the anatomy and the intron check.
+- `audit_gene_fusion` answers `EXTRA_MATCHES_NEIGHBOUR` (constants `NEIGHBOUR_WINDOWS`,
+  `NEIGHBOUR_SHARE`): the model's extra residues match the protein of the neighbour
+  `partner` names, a protein fact with no claim about how the model was built.
+- `audit_missing_gene` answers `ANNOTATED_IN_GENOME` when the absent genome annotates
+  genes of the example's `OG` group anywhere, the syntenic locus included
+  (`annotatedMembers`: id, sequence, start), and reads no other genome and no DNA. An
+  answer that reads no genome serves `overlapping` null and `codeInferred` false, as the
+  other audits do.
+- `audit_intron_support` keeps its judgement when the correction's protein or window
+  cannot be read and says why (`correctionReason`); `NOT_EXPRESSED` serves `unread`
+  null, `NOT_CHECKED` serves `introns` and `unread` null, and `tracksRefused` names
+  every refused track when no track indexes the sequence and is null when no track was
+  read. Every recorded intron number stays.
+- `audit_genome_priority` serves `{siteId, genomes}`; `audit_strain_model` serves its
+  relatives' median once, as `relatives.median`. The pseudogene-call, selenoprotein-end
+  and anatomy descriptions say they read the standard code; the provenance description
+  names every served field; the anatomy description names the transcripts its segments
+  and `dnaCheck` come from.
+- One `SiteCache` holds a per-site value for a process: the parsed gene record type
+  and the `GenesByText` organisms. One tabix reader serves every intron audit on a
+  JBrowse client. The organelle check reads only the organism of its first coding gene
+  (`gene_organism`). `contig_sides` is the one contig walk of the fusion and
+  missing-gene checks, and `length_span` the one window span of the length, split and
+  strain reads.
+- `covered` and the recorder's region mode (`pfal3D7_piga_neighbours.json`) are
+  removed: nothing called them. `rate_with_bounds` stays for PathFinder's audit pass.
+- Fixtures written on QA by their recorders: `strain_pcynM_pkac.json` and
+  `strain_pfalDd2_yip1.json` (`record_audit_strain.py`); `missing_tgonGT1_nac.json`
+  (`record_audit_missing.py tgonGT1_nac`, every read in order, the two whole-genome
+  reports trimmed to the records the check reads); `organelle_pfal3D7_cytb.json` and the
+  five `organelle_*_mito.json` contigs (`record_audit_organelle.py`); `busco_plasmodb.json`
+  and `busco_toxodb.json` (`record_audit_busco`); `anatomy_pfalNF54_piga.json` and
+  `anatomy_pfalNF54_pagm.json` (`record_audit_anatomy.py`);
+  `pseudogene_calls_pfalNF54.json` and `pseudogene_calls_pfal3D7.json`
+  (`record_audit_pseudogene_calls.py`); the `evidence_*.json` record types, gene
+  records and organism report (`record_audit_evidence.py`); `introns_pcynM_pkac.json`
+  and `introns_afumAf293_dmaw.json` (`record_audit_introns`).
+
 ## 2026-10-21 - Two length checks are served
 
 - 0.2.0b31: `audit_gene_length` and `audit_gene_split` are served read-only with the 120 s audit

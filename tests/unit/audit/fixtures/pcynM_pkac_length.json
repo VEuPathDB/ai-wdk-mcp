@@ -11005,8 +11005,8 @@
       "strand": "+",
       "sequence_id": "PcyM_07",
       "source_id": "PcyM_0736700",
-      "type": "CDS",
       "transcript_ids": "PcyM_0736700-t36_1",
+      "type": "CDS",
       "gm_end": "1381745",
       "gm_start": "1381622"
      },
@@ -11023,8 +11023,8 @@
       "strand": "+",
       "sequence_id": "PcyM_07",
       "source_id": "PcyM_0736700",
-      "transcript_ids": "PcyM_0736700-t36_1",
       "type": "Intron",
+      "transcript_ids": "PcyM_0736700-t36_1",
       "gm_end": "1382305",
       "gm_start": "1381746"
      },
@@ -11032,8 +11032,8 @@
       "strand": "+",
       "sequence_id": "PcyM_07",
       "source_id": "PcyM_0736700",
-      "transcript_ids": "PcyM_0736700-t36_1",
       "type": "CDS",
+      "transcript_ids": "PcyM_0736700-t36_1",
       "gm_end": "1382465",
       "gm_start": "1382306"
      },
@@ -11041,8 +11041,8 @@
       "strand": "+",
       "sequence_id": "PcyM_07",
       "source_id": "PcyM_0736700",
-      "transcript_ids": "PcyM_0736700-t36_1",
       "type": "Exon",
+      "transcript_ids": "PcyM_0736700-t36_1",
       "gm_end": "1382465",
       "gm_start": "1382306"
      },
@@ -11050,8 +11050,8 @@
       "strand": "+",
       "sequence_id": "PcyM_07",
       "source_id": "PcyM_0736700",
-      "transcript_ids": "PcyM_0736700-t36_1",
       "type": "Intron",
+      "transcript_ids": "PcyM_0736700-t36_1",
       "gm_end": "1382630",
       "gm_start": "1382466"
      },
@@ -11068,8 +11068,8 @@
       "strand": "+",
       "sequence_id": "PcyM_07",
       "source_id": "PcyM_0736700",
-      "transcript_ids": "PcyM_0736700-t36_1",
       "type": "Exon",
+      "transcript_ids": "PcyM_0736700-t36_1",
       "gm_end": "1382790",
       "gm_start": "1382631"
      },
@@ -11077,8 +11077,8 @@
       "strand": "+",
       "sequence_id": "PcyM_07",
       "source_id": "PcyM_0736700",
-      "transcript_ids": "PcyM_0736700-t36_1",
       "type": "Intron",
+      "transcript_ids": "PcyM_0736700-t36_1",
       "gm_end": "1383063",
       "gm_start": "1382791"
      },
@@ -11095,8 +11095,8 @@
       "strand": "+",
       "sequence_id": "PcyM_07",
       "source_id": "PcyM_0736700",
-      "transcript_ids": "PcyM_0736700-t36_1",
       "type": "Exon",
+      "transcript_ids": "PcyM_0736700-t36_1",
       "gm_end": "1383462",
       "gm_start": "1383064"
      }
@@ -11125,7 +11125,8 @@
      "gene_end_max",
      "strand_plus_minus",
      "is_pseudo",
-     "gene_type"
+     "gene_type",
+     "input_id"
     ],
     "tables": []
    },
@@ -11158,7 +11159,8 @@
       "is_pseudo": "No",
       "gene_product": "cAMP-dependent protein kinase catalytic subunit, putative",
       "gene_end_max": "1383462",
-      "strand_plus_minus": "+"
+      "strand_plus_minus": "+",
+      "input_id": "PcyM_0736700"
      },
      "tables": {},
      "tableErrors": []

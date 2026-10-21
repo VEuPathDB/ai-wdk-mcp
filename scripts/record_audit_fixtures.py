@@ -1,4 +1,4 @@
-"""Record the genome regions, proteins, ortholog tables, gene neighbourhoods and
+"""Record the genome regions, proteins, ortholog tables and
 length-check reads the gene-model audit tests read from QA sites.
 
 Run it from the repository root as the test account (WDK_TEST_TOKEN, or
@@ -26,6 +26,7 @@ from veupathdb.wdk import WDKAnswer, WDKRecordInstance, close_all_clients
 from veupathdb_mcp.audit import (
     GENE_ATTRIBUTES,
     LENGTH_MAX_FLANK,
+    LOCATED_ATTRIBUTES,
     MODEL_TABLE,
     ORGANISM_ATTRIBUTE,
     ORTHOLOG_TABLE,
@@ -35,7 +36,6 @@ from veupathdb_mcp.audit import (
     gene_record,
     locus_tag_answers,
     proteins_of,
-    region_answer,
     rows_of,
 )
 
@@ -109,16 +109,6 @@ class OrthologTarget(BaseModel):
     gene: str
 
 
-class NeighbourTarget(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    file: str
-    organism: str
-    seqid: str
-    start: int
-    end: int
-
-
 class LengthTarget(BaseModel):
     model_config = ConfigDict(frozen=True)
 
@@ -148,7 +138,6 @@ class Recording(BaseModel):
     strains: list[StrainTarget] = []
     proteins: list[ProteinTarget] = []
     orthologs: list[OrthologTarget] = []
-    neighbourhoods: list[NeighbourTarget] = []
     lengths: list[LengthTarget] = []
 
 
@@ -205,15 +194,6 @@ MODES: dict[str, Recording] = {
         site="plasmodb",
         orthologs=[
             OrthologTarget(file="pfal3D7_piga_orthologs.json", gene="PF3D7_1032400")
-        ],
-        neighbourhoods=[
-            NeighbourTarget(
-                file="pfal3D7_piga_neighbours.json",
-                organism="Plasmodium falciparum 3D7",
-                seqid="Pf3D7_10_v3",
-                start=1290000,
-                end=1320000,
-            )
         ],
     ),
     "length": Recording(
@@ -299,16 +279,16 @@ def write_lengths(into: Path, recordings: Mapping[str, LengthWire]) -> None:
         (into / name).write_text(recorded.model_dump_json(indent=1) + "\n")
 
 
-def _served(record: WDKRecordInstance) -> JsonValue:
+def served_body(record: WDKRecordInstance) -> JsonValue:
     return record.model_dump(mode="json", by_alias=True)
 
 
-def _answers(answers: list[WDKAnswer]) -> list[JsonValue]:
+def served_answers(answers: list[WDKAnswer]) -> list[JsonValue]:
     return [answer.model_dump(mode="json", by_alias=True) for answer in answers]
 
 
 async def _length(site: str, reader: GenomeReader, target: LengthTarget) -> LengthWire:
-    gene_answers = await locus_tag_answers(site, [target.gene], GENE_ATTRIBUTES)
+    gene_answers = await locus_tag_answers(site, [target.gene], LOCATED_ATTRIBUTES)
     orthologs = await gene_record(site, target.gene, [], [ORTHOLOG_TABLE])
     table = ServedTable.model_validate(orthologs.tables).rows
     named = {OrthologRow.model_validate(served).gene for served in table}
@@ -333,10 +313,10 @@ async def _length(site: str, reader: GenomeReader, target: LengthTarget) -> Leng
     )
     return LengthWire(
         gene=target.gene,
-        records=[_served(orthologs), _served(model_record)],
-        gene_answers=_answers(gene_answers),
-        row_answers=_answers(row_answers),
-        protein_answers=_answers(protein_answers),
+        records=[served_body(orthologs), served_body(model_record)],
+        gene_answers=served_answers(gene_answers),
+        row_answers=served_answers(row_answers),
+        protein_answers=served_answers(protein_answers),
         contig_length=contig_length,
         window_start=window.start,
         window=window.sequence,
@@ -348,13 +328,6 @@ async def _context(site: str, recording: Recording) -> dict[str, list[JsonValue]
     for target in recording.orthologs:
         record = await gene_record(site, target.gene, [], [ORTHOLOG_TABLE])
         bodies[target.file] = ServedTable.model_validate(record.tables).rows
-    for place in recording.neighbourhoods:
-        answer = await region_answer(
-            site, place.organism, place.seqid, place.start, place.end
-        )
-        bodies[place.file] = [
-            record.model_dump(mode="json", by_alias=True) for record in answer.records
-        ]
     return bodies
 
 

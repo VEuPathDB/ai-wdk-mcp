@@ -1,0 +1,1458 @@
+{
+ "organism": "Plasmodium falciparum 3D7",
+ "abbrev": "pfal3D7",
+ "seqid": "Pf3D7_MIT_v3",
+ "length": 5967,
+ "sequence": "AAGCTTTTGGTATCTCGTAATGTAGAACAATATTGAGTTGACCGTCAAATCCTTTTCATTAAAAGAGTGGATTAAATGCCCAGCCAACACCATCCAATTTGATTGGGAATTATCTGTGTTACAAATTTTTGATCCCAGGCTGGTAAAAAATGTAAACTTTTAGCCCATAAGAATAGAAACAGATGCCAGGCCAATAACTCAAACAGAGCTATGACGCTATCAATTTTTAGCAAGACGGATAAATTTTTCATAGAACTTAACGTATCATCATCCATGCAAAGATAAAACGGTAGATAGGGAACAAACTGCCTCAAGACGTTCTTAACCCAGCTCACGCATCGCTTCTAACGGTGAACTCTCATTCCAATGGAACCTTGTTCAAGTTCAAATAGATTGGTAAGGTATAGTGTTTACTATCAAATGAAACAATGTGTTCCACCGCTAGTGTTTGCTTCTAACATTCCACTTGCTTATAACTGTATGGACGTAACCTCCAGGCAAAGAAAATGACCGGTCAAAACGGAATCAATTAACTATGGATAGCTGATACTATCAATTTATCATTACTCAAGTCAGCATAGTATATATGAAGGTTTCTATGGAAACACACTTCCCTTCTCGCCATTTGATAGCGGTTAACCTTTCCTTTTCCTTACGTACTCTAGCTATGAACACAATTGTCTATTCGTACAATTATTCATATATATATTTGAAACAGGACATACATGTTCATTTATTCTGAATAGAATAAGAACTCTATAAATAACCAGACTATTTCAACAAAATGCCAATATAAAATTGTAATTTGATCAGTGTGAGGTATAACAATATATGATATACCGAAAGAATTTATAAACCATTCGGTAGAAGTATCATATATTTCTATTATTCTTATAAAGTATATTATTAATAATAATAAACCTATTACTACATGAGAAAAATGTAATCCTGTAACACAATAAAATAATGTAGTATATACAGTATCATTTATATGATATGATAAATGTAAATACTCTGTAGTTTGTAGAGATGCAAAACATTCTCCTAATAAGTATATTATACAAATAATACTAGAGATTTCAAAACTCATTCCTTTTTCTATAAATACTTGTAAACATGCAGTCATACATGATGCACTAGCTAATATAAATGTAATTGTTAAGATTAACATTCTTGATGAAGTAATGATAATACCTTCATTACTTAATGGATATGGTGATAAACTAAAATGTAATATACCCCAAAAATATGTAAAGAATAATAAAGCTTCTGATATTATGATAGATAACATACCAGAAGTTAAAGATGAAAATACAGAATAAAAACTTTCTCGAATAGAATATACAAATATTAATAGGATTATAGGGTTAAATGTAAATAATATCCCTACAGAAAAGTATTTTAAAGATGTACCATATAATGATGTTAATGCAGGATATGAAACTAGATGTGCTTTTATATTTGATAAATTACTAAATAAAATAAATTTATAAGAACGGTGAGATAATGTGCCGTAAACATATAACGGTAAGAAGGTTCGCCGGGGATAACAGGTTATAGTATATATAGAGCTCTAATCTTTATATACTATTGGCACCTCCATGTCGTCTCATCGCAGCCTTGCAATAAATAATATCTAGCGTGTATTGTTGCCTTGTACACACCGCTCGTCACGCAATATCAATATACTGGGTATAGAACTCCAGGCGTTAACCTGTAGAGTTGAGATGGAAACAGCCGGAAAGGTAATTTTACGCCCTTAACGTAAAGATCATTTATGAAATAGATTAGCATGGGACTAAAAAATGTTATGTTGTTGGTTTAAGCCCTATTACCATACAAGAGATCGCGTACTTTGGACCGAATAAAGCTGTGAGGAAACTACATTAAAGGAACTCGACTGGCCTACACTATAAGAACGAACGCTTTTAACGCCTGACATGGATGGATAATACTCGACTCTTCCAAAGTATAACCGCTGTCGCTGGGACTGTATGGATCAAATATTTCTCATTTATATCCGAGCCTCATGTTATTTTTATTGTTTTAAATAGATATTCACTTATTACAAATTGTAACCATAAAACTTTAGGATTATACTATTTATGGTTTTCATTTTTATTTGGTAGTTATGGATTTTTATTATCAGTAATACTACGTACTGAATTATATTCTTCATCTTTAAGAATAATTGCACAAGAAAATGTAAATCTATATAATATGATATTTACAATTCACGGAATAATTATGATTTTTTTCAATATAATGCCAGGATTATTCGGAGGATTTGGTAATTACTTTCTACCTATTTTATGTGGATCTCCAGAATTAGCATATCCTAGAATTAATAGTATATCTTTACTGTTACAACCAATTGCTTTTGTTTTAGTTATATTATCTACTGCAGCAGAATTTGGTGGTGGAACTGGATGGACTTTATATCCACCATTAAGTACATCTTTAATGTCATTATCTCCTGTAGCTGTAGATGTAATAATTTTTGGTTTATTAGTATCTGGAGTCGCTAGTATTATGTCTTCATTAAATTTTATTACTACAGTAATGCATTTAAGAGCAAAAGGATTAACACTTGGTATATTAAGTGTTTCTACATGGTCATTGATCATTACATCAGGAATGTTATTGCTAACACTACCGGTTTTAACTGGAGGAGTATTAATGTTATTATCAGACTTACATTTTAATACTTTATTTTTTGACCCAACATTTGCAGGAGATCCAATATTATATCAACATTTATTCTGGTTTTTTGGACATCCTGAAGTATACATTTTAATATTACCTGCTTTTGGAGTAATTAGTCATGTAATTTCTACTAATTATTGCAGAAATCTATTTGGTAATCAATCTATGATACTTGCTATGGGATGTATAGCTGTTTTAGGAAGCTTAGTATGGGTACATCATATGTACACTACTGGTTTAGAAGTTGATACTAGAGCTTATTTTACTTCGACTACCATTTTAATATCAATACCTACCGGTACAAAAGTATTTAACTGGATATGTACATATATGAGTAGTAATTTTGGTATGATACACAGCTCTTCATTATTGTCATTATTATTTATATGTACATTTACATTTGGAGGTACTACTGGAGTTATATTAGGTAATGCTGCCATTGATGTAGCATTACATGACACATATTATGTTATTGCTCATTTCCATTTTGTACTATCAATTGGTGCAATTATTGGATTATTTACAACTGTAAGTGCATTTCAAGATAATTTCTTTGGTAAAAACTTACGTGAAAATTCTATTGTAATACTATGGTCAATGTTATTTTTTGTAGGTGTAATATTAACATTTTTACCTATGCATTTTTTAGGATTTAATGTAATGCCTAGACGTATTCCTGATTATCCAGACGCTTTAAATGGATGGAATATGATTTGTTCTATTGGGTCAACAATGACTTTATTTGGTTTACTAATTTTTAAATAATATTACTATTTATTGTTTTTATGAACTTTTACTCTATTAATTTAGTTAAAGCACACTTAATAAATTACCCATGTCCATTGAACATAAACTTTTTATGGAATTACGGATTCCTTTTAGGAATAATATTTTTTATTCAAATTATAACAGGTGTATTTTTAGCAAGTCGATATACACCAGATGTTTCATATGCATATTATAGTATACAACACATTTTAAGAGAATTATGGAGTGGATGGTGTTTTAGATACATGCACGCAACAGGTGCTTCTCTTGTATTTTTATTAACATATCTTCATATTTTAAGAGGATTAAATTACTCATATATGTATTTACCATTATCATGGATATCTGGATTGATTTTATTTATGATATTTATTGTAACTGCTTTCGTTGGTTATGTCTTACCATGGGGTCAAATGAGTTATTGGGGTGCAACTGTAATTACTAACTTGTTATCCTCTATTCCAGTAGCAGTAATTTGGATATGTGGAGGATATACTGTGAGTGATCCTACAATAAAACGATTTTTTGTACTACATTTTATCTTACCATTTATTGGATTATGTATTGTATTTATACATATATTTTTCTTACATTTACATGGTAGCACAAATCCTTTAGGGTATGATACAGCATTAAAAATACCCTTTTATCCAAATCTATTAAGTCTTGATGTTAAAGGATTTAATAATGTTATAATTTTATTTCTAATACAAAGTTTATTTGGAATTATACCTTTATCACATCCTGATAATGCTATCGTAGTAAATACATATGTTACTCCATCTCAAATTGTACCTGAATGGTACTTTCTACCATTTTATGCAATGTTAAAAACTGTTCCAAGTAAACCAGCTGGTTTAGTAATTGTATTATTATCATTACAATTATTATTCTTATTAGCAGAACAAAGAAGTTTAACAACTATAATTCAATTTAAAATGATTTTTGGTGCTAGAGATTATTCTGTTCCTATTATATGGTTTATGTGTGCATTCTATGCTTTATTATGGATTGGATGTCAATTACCACAAGATATATTCATTTTATATGGTCGATTATTTATTGTATTATTTTTCTGTAGTGGTTTATTTGTACTTGTTCATTATAGACGAACACATTATGATTACAGCTCCCAAGCAAACATATAATATTACAAGATTGTGATAAGATGACATTTCTGAGTATTGAGCGGAACAAATCAGACCGTAAGGTTATAATTATGTACTATGATTGGAAAATATAACTATAGTTACCATAGCTGTAGATGGATGCTTCGATATATAGTATATTACAGTATCAATCGGATTTACATGCTCAGCCGCCAAAAACTATAACGATATTATTACCGTACAAGCCGTTAGCAAGACATGATAGGGAGTTGGCAAGTTAAAGAAGTTCTGGTTTATAATAGATACGTTATTAATGTTAGGATGTATGGGATATTTGTAGTACACCTTGATTGGTTTTACTATTTATATTTATCGATAAATGTTCGGTATTGCATGCCTGGTGTTTTTAATATAGACGCTGACTTCCTGGCTAAACTTCCCAATGATATATCTTCCAAATAGATTTCGCAGAAAACCGTCTATATTCATGTTTGATTGACCTTTAACCACTAATTACGAATCTTCCAAGAATATTTTAAGAGTCCAAGGTTCGGTCTATTATTTTCCTGTTCTGTAATTAGATCACATGTTTTATAGTTCATGGAGACATGGCTATAACCACTATTCATAGAGACAACTAATGGAATCTCTCTCGATTTCCAGATGTTGAGTTACTAAGAGGATTCTCTCCACACTTCAATTCGTACTTCCACTACCAGAATATACTCTCCTGTTCTAAAATTCTAGGATTTTTCGCGTTTTTTCAGGAGAAATCCGTATATCGATGTCTTTTAATCAATGCTATTGGATTCAACGTCCAGGACTTCCTGACGCTTAATAACGATTTCTACTTCCAGCAGCCATTTTTGGTTCAGCTACAAGTTCACTGTCAACTACCATGTTACGACTTCGCACCGACTGTTTCTTTTACCTCACGAGTCGATCAGGAAGGTTTCATCCTTAAATCTCGTAACCATGCCAACACATAAGAACTTTTAGGGAAGTTAAGGTGCTCAGGGTCTTACCGTCGGGCCGTATGATTCCACATATTCATGGATAATTCTATTTATTAGGAGTCTCACACTAGCGACAATGGGGAAGTCGTTACACCGTTCATGCAGGACGGAGATTACCCGACAAGGAATTTTGCTACCTTAGGACCGTTTAAAATACAGCCGCCGTTTATCATTGATGCCGGGCAGATGTCAGTAACTTGAAATATTCATCAGAATTATCAGTGACTTGTGTTGTAACCTTACAGACGCTTCCAGTAATTTAACTTCTTATAAATGGAAGCGCCGGTTTCCCGGGTATCCAATCCAGTGCTCCATTCAAGGCATAGAGACTCAGCCTATGTTCAACTTTGTAGAGTTATATTATAATA",
+ "served_meta": {
+  "totalCount": 5791,
+  "responseCount": 5791,
+  "displayTotalCount": 5720,
+  "viewTotalCount": 5791,
+  "displayViewTotalCount": 5720,
+  "recordClassName": "transcript",
+  "attributes": [
+   "organism_full",
+   "gene_orthomcl_name",
+   "protein_length",
+   "gene_name",
+   "gene_product",
+   "sequence_id",
+   "gene_start_min",
+   "gene_end_max",
+   "strand_plus_minus",
+   "is_pseudo",
+   "gene_type"
+  ],
+  "tables": []
+ },
+ "genes": [
+  {
+   "displayName": "PF3D7_MIT00100",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT00100"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT00100.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": null,
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "3",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA16",
+    "gene_end_max": "33",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT00200",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT00200"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT00200.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA20",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "34",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA20",
+    "gene_end_max": "71",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT00300",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT00300"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT00300.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA9",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "72",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA9",
+    "gene_end_max": "125",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT00400",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT00400"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT00400.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA17",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "126",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA17",
+    "gene_end_max": "165",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT00500",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT00500"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT00500.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA23t",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "171",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA23t",
+    "gene_end_max": "203",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT00600",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT00600"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT00600.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "LSUC",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "204",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "large subunit ribosomal RNA fragment C",
+    "gene_end_max": "225",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT00700",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT00700"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT00700.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA24t",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "226",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA24t",
+    "gene_end_max": "262",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT00800",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT00800"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT00800.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA25t",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "263",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA25t",
+    "gene_end_max": "282",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT00900",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT00900"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT00900.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "LSUG",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "283",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "large subunit ribosomal RNA fragment G",
+    "gene_end_max": "389",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT01000",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT01000"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT01000.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "SSUB",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "390",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "small subunit ribosomal RNA fragment B",
+    "gene_end_max": "505",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT01100",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT01100"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT01100.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA1",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "506",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA1",
+    "gene_end_max": "593",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT01200",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT01200"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT01200.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA15",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "594",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA15",
+    "gene_end_max": "624",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT01300",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT01300"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT01300.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA10",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "625",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA10",
+    "gene_end_max": "724",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT01400",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT01400"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT01400.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "OG8_0007158",
+    "protein_length": "249",
+    "gene_name": "COX3",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "734",
+    "gene_type": "protein coding gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "cytochrome c oxidase subunit 3",
+    "gene_end_max": "1483",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT01500",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT01500"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT01500.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "LSUF",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "1515",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "large subunit ribosomal RNA fragment F",
+    "gene_end_max": "1578",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT01600",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT01600"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT01600.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "SSUE",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "1638",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "small subunit ribosomal RNA fragment E",
+    "gene_end_max": "1680",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT01700",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT01700"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT01700.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA2",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "1698",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA2",
+    "gene_end_max": "1763",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT01800",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT01800"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT01800.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA26t",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "1764",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA26t",
+    "gene_end_max": "1806",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT01900",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT01900"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT01900.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA21",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "1807",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA21",
+    "gene_end_max": "1829",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT02000",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT02000"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT02000.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA3",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "1830",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA3",
+    "gene_end_max": "1910",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT02100",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT02100"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT02100.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "OG8_0005444",
+    "protein_length": "508",
+    "gene_name": "COX1",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "1945",
+    "gene_type": "protein coding gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "cytochrome c oxidase subunit 1",
+    "gene_end_max": "3471",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT02200",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT02200"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT02200.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "SSUA",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "1950",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "small subunit ribosomal RNA fragment A",
+    "gene_end_max": "2030",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT02300",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT02300"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT02300.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "OG8_0005317",
+    "protein_length": "376",
+    "gene_name": "CYTB",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "3492",
+    "gene_type": "protein coding gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "cytochrome b",
+    "gene_end_max": "4622",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT02400",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT02400"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT02400.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA27t",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "4085",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA27t",
+    "gene_end_max": "4138",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT02500",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT02500"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT02500.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "LSUB",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "4586",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "large subunit ribosomal RNA fragment B",
+    "gene_end_max": "4618",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT02600",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT02600"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT02600.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA4",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "4624",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA4",
+    "gene_end_max": "4698",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT02700",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT02700"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT02700.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA5",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "4720",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA5",
+    "gene_end_max": "4803",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT02800",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT02800"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT02800.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA6",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "4808",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA6",
+    "gene_end_max": "4865",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT02900",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT02900"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT02900.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA12",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "4893",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA12",
+    "gene_end_max": "4944",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT03000",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT03000"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT03000.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA18",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "4964",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA18",
+    "gene_end_max": "4988",
+    "strand_plus_minus": "+"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT03100",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT03100"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT03100.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA13",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "4996",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA13",
+    "gene_end_max": "5025",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT03200",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT03200"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT03200.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "LSUA",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "5026",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "large subunit ribosomal RNA fragment A",
+    "gene_end_max": "5201",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT03300",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT03300"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT03300.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA7",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "5202",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA7",
+    "gene_end_max": "5283",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT03400",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT03400"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT03400.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA11",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "5284",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA11",
+    "gene_end_max": "5340",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT03500",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT03500"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT03500.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA22",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "5341",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA22",
+    "gene_end_max": "5378",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT03600",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT03600"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT03600.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "SSUD",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "5379",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "small subunit ribosomal RNA fragment D",
+    "gene_end_max": "5446",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT03700",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT03700"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT03700.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "SSUF",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "5447",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "small subunit ribosomal RNA fragment F",
+    "gene_end_max": "5507",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT03800",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT03800"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT03800.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA14",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "5508",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA14",
+    "gene_end_max": "5546",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT03900",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT03900"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT03900.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA19",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "5547",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA19",
+    "gene_end_max": "5576",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT04000",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT04000"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT04000.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "LSUE",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "5577",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "large subunit ribosomal RNA fragment E",
+    "gene_end_max": "5771",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT04100",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT04100"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT04100.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "LSUD",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "5772",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "large subunit ribosomal RNA fragment D",
+    "gene_end_max": "5854",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_MIT04200",
+   "id": [
+    {
+     "name": "gene_source_id",
+     "value": "PF3D7_MIT04200"
+    },
+    {
+     "name": "source_id",
+     "value": "PF3D7_MIT04200.1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+   "attributes": {
+    "gene_orthomcl_name": "N/A (orthology not determined for transcripts that are not protein-coding)",
+    "protein_length": null,
+    "gene_name": "RNA8",
+    "organism_full": "Plasmodium falciparum 3D7",
+    "gene_start_min": "5861",
+    "gene_type": "ncRNA gene",
+    "sequence_id": "Pf3D7_MIT_v3",
+    "is_pseudo": "No",
+    "gene_product": "ribosomal RNA fragment RNA8",
+    "gene_end_max": "5954",
+    "strand_plus_minus": "-"
+   },
+   "tables": {},
+   "tableErrors": []
+  }
+ ],
+ "trim": "genes holds the served GenesByTaxon records whose sequence_id is Pf3D7_MIT_v3; served_meta is the meta of the whole served answer",
+ "record": {
+  "displayName": "PF3D7_MIT01400",
+  "id": [
+   {
+    "name": "source_id",
+    "value": "PF3D7_MIT01400"
+   },
+   {
+    "name": "project_id",
+    "value": "PlasmoDB"
+   }
+  ],
+  "recordClassName": "GeneRecordClasses.GeneRecordClass",
+  "attributes": {
+   "organismAbbrev": "pfal3D7"
+  },
+  "tables": {
+   "GeneModelDump": [
+    {
+     "strand": "-",
+     "sequence_id": "Pf3D7_MIT_v3",
+     "source_id": "PF3D7_MIT01400",
+     "type": "CDS",
+     "transcript_ids": "PF3D7_MIT01400.1",
+     "gm_end": "1483",
+     "gm_start": "734"
+    },
+    {
+     "strand": "-",
+     "sequence_id": "Pf3D7_MIT_v3",
+     "source_id": "PF3D7_MIT01400",
+     "type": "Exon",
+     "transcript_ids": "PF3D7_MIT01400.1",
+     "gm_end": "1483",
+     "gm_start": "734"
+    }
+   ]
+  },
+  "tableErrors": []
+ }
+}

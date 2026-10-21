@@ -1,5 +1,19 @@
 """The tools the WDK server serves, callable by a host in its own process."""
 
+from veupathdb_mcp.tools.audit_anatomy_tools import audit_pseudogene_anatomy
+from veupathdb_mcp.tools.audit_busco_tools import audit_genome_priority
+from veupathdb_mcp.tools.audit_evidence_tools import (
+    audit_gene_evidence,
+    audit_genome_provenance,
+)
+from veupathdb_mcp.tools.audit_fusion_tools import audit_gene_fusion
+from veupathdb_mcp.tools.audit_genome_pseudogene_calls_tools import (
+    audit_genome_pseudogene_calls,
+)
+from veupathdb_mcp.tools.audit_intron_tools import audit_intron_support
+from veupathdb_mcp.tools.audit_missing_tools import audit_missing_gene
+from veupathdb_mcp.tools.audit_organelle_tools import audit_organelle_gene
+from veupathdb_mcp.tools.audit_strain_tools import audit_strain_model
 from veupathdb_mcp.tools.audit_tools import (
     audit_gene_length,
     audit_gene_split,
@@ -39,10 +53,20 @@ from veupathdb_mcp.tools.user_tools import (
 )
 
 __all__ = [
+    "audit_gene_evidence",
+    "audit_gene_fusion",
     "audit_gene_length",
     "audit_gene_split",
+    "audit_genome_priority",
+    "audit_genome_provenance",
+    "audit_genome_pseudogene_calls",
+    "audit_intron_support",
+    "audit_missing_gene",
+    "audit_organelle_gene",
+    "audit_pseudogene_anatomy",
     "audit_pseudogene_call",
     "audit_selenoprotein_end",
+    "audit_strain_model",
     "browse_search_categories",
     "count_plan_steps",
     "create_gene_set_step",

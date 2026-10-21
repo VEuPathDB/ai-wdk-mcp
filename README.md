@@ -27,14 +27,14 @@ than from a file inside it.
 | package | what it publishes |
 | --- | --- |
 | `veupathdb_mcp` | the version, the service-token registry, the tool error payload, the tool metadata keys |
-| `veupathdb_mcp.audit` | the gene-model checks: genetic codes and translation, protein windows confirmed in DNA, a genome's gene rows and a gene list's proteins, a gene's model, ortholog-group length statistics, the pseudogene-call, selenoprotein-end, protein-length and split checks and the inputs their served tools read |
+| `veupathdb_mcp.audit` | the gene-model checks: genetic codes and translation, protein windows confirmed in DNA, a genome's gene rows, a gene list's proteins and the site's organism records, a gene's model, ortholog-group length statistics, the pseudogene-call, selenoprotein-end, protein-length, split, gene-fusion, strain-model, missing-gene, organelle-join and RNA-seq intron-support checks, the anatomy of a pseudogene call, a genome's pseudogene calls paired with a reference genome and a rate with its Wilson interval, floor and ceiling, the genome priority from the served BUSCO scores, the evidence a gene record serves and a genome's provenance, and the inputs their served tools read |
 | `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation, the shortlist a long vocabulary is shown as, and other sites' experiment cards |
 | `veupathdb_mcp.controls` | the control-test runners, their context and their result shapes |
 | `veupathdb_mcp.embeddings` | the embedder, its three tables, the record manager and the indexes on them |
 | `veupathdb_mcp.gene_lookup` | text lookup, id resolution and the organism list |
 | `veupathdb_mcp.research` | the research server, its settings and its two tools |
 | `veupathdb_mcp.separation` | the separation run, its request, its progress rows, its result, the request charges it makes and the hypergeometric tail it reads controls by |
-| `veupathdb_mcp.tools` | the thirty-one served tools |
+| `veupathdb_mcp.tools` | the forty-one served tools |
 | `veupathdb_mcp.wdk` | step trees, sizes, the sample of a built step (`step_sample_records`), downloads, expression, the vocabulary and defaults a form offers, and the AST a saved strategy converts into |
 | `veupathdb_mcp.wdk.enrichment` | over-representation analysis, its result shapes and its parser |
 
@@ -89,7 +89,7 @@ The two servers share no setting: the WDK server reads `WDK_MCP_*` and
 `VEUPATHDB_*`, the research server reads `RESEARCH_MCP_*`. A secret configured
 for one admits nothing on the other.
 
-## The thirty-one WDK tools
+## The forty-one WDK tools
 
 Catalog reads (service or user credential):
 
@@ -112,12 +112,23 @@ carries):
 Gene-model checks (the VEuPathDB user whose bearer the call carries):
 
 `audit_pseudogene_call`, `audit_selenoprotein_end`, `audit_gene_length`,
-`audit_gene_split`.
+`audit_gene_split`, `audit_strain_model`, `audit_missing_gene`,
+`audit_organelle_gene`, `audit_genome_priority`, `audit_pseudogene_anatomy`,
+`audit_genome_pseudogene_calls`, `audit_gene_evidence`, `audit_genome_provenance`,
+`audit_intron_support`, `audit_gene_fusion`.
 
-Eight of them declare a call budget over the default in tool `_meta`
+Every check that takes gene ids resolves each id through the site (the gene the
+locus-tag search serves for that id, its own id first, an alias or a transcript id;
+else the one gene whose own id, without its `:` qualifier, the site's text search
+finds) and answers `geneIds`, each id given beside the gene id it resolved to.
+
+Fifteen of them declare a call budget over the default in tool `_meta`
 (`org.veupathdb.assistant/maxCallSeconds`): the two control runs, the plan
-count, the four gene-model checks, and `enrich_gene_ids`, which also declares
-the stream part its result carries (`org.veupathdb.assistant/streamPart`).
+count, the eleven gene-model checks that read DNA or whole-genome gene reports,
+and `enrich_gene_ids`, which also declares the stream part its result carries
+(`org.veupathdb.assistant/streamPart`). `audit_genome_priority`,
+`audit_gene_evidence` and `audit_genome_provenance` read no DNA (one organism
+report, or the gene record type and one gene record) and keep the default.
 
 `count_plan_steps` and `create_gene_set_step` write into the calling user's
 account, which is what their `readOnlyHint: false` states. Both hold their work

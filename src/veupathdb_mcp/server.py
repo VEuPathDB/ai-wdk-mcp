@@ -27,6 +27,20 @@ from veupathdb_mcp.tool_meta import (
     MAX_CALL_SECONDS_META_KEY,
     STREAM_PART_META_KEY,
 )
+from veupathdb_mcp.tools.audit_anatomy_tools import audit_pseudogene_anatomy
+from veupathdb_mcp.tools.audit_busco_tools import audit_genome_priority
+from veupathdb_mcp.tools.audit_evidence_tools import (
+    audit_gene_evidence,
+    audit_genome_provenance,
+)
+from veupathdb_mcp.tools.audit_fusion_tools import audit_gene_fusion
+from veupathdb_mcp.tools.audit_genome_pseudogene_calls_tools import (
+    audit_genome_pseudogene_calls,
+)
+from veupathdb_mcp.tools.audit_intron_tools import audit_intron_support
+from veupathdb_mcp.tools.audit_missing_tools import audit_missing_gene
+from veupathdb_mcp.tools.audit_organelle_tools import audit_organelle_gene
+from veupathdb_mcp.tools.audit_strain_tools import audit_strain_model
 from veupathdb_mcp.tools.audit_tools import (
     audit_gene_length,
     audit_gene_split,
@@ -226,6 +240,44 @@ TOOLS: tuple[_ToolRow, ...] = (
     ),
     _ToolRow(
         audit_gene_split,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(
+        audit_strain_model,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(
+        audit_missing_gene,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(
+        audit_organelle_gene,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(audit_genome_priority, _READ),
+    _ToolRow(
+        audit_pseudogene_anatomy,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(
+        audit_genome_pseudogene_calls,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(audit_gene_evidence, _READ),
+    _ToolRow(audit_genome_provenance, _READ),
+    _ToolRow(
+        audit_intron_support,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(
+        audit_gene_fusion,
         _READ,
         {MAX_CALL_SECONDS_META_KEY: AUDIT_MAX_CALL_SECONDS},
     ),

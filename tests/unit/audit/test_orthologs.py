@@ -9,18 +9,13 @@ from tests._support.wdk_genes import (
     FIXTURES,
     PF3D7,
     PIGA,
-    answer_of,
     gene_attributes,
     piga,
     record,
-    serve,
 )
 from veupathdb import JSONObject
 from veupathdb.errors import (
     DataParsingError,
-    VEuPathDBError,
-    VEuPathDBErrorCode,
-    WDKError,
 )
 from veupathdb.wdk import (
     WDKRecordInstance,
@@ -28,13 +23,10 @@ from veupathdb.wdk import (
 
 from veupathdb_mcp.audit import gene_models, genes
 from veupathdb_mcp.audit.genes import (
-    GENE_ATTRIBUTES,
     GeneRow,
     OrthologRow,
-    genes_in_region,
     ortholog_table,
     orthologs_of,
-    rows_of,
 )
 
 
@@ -239,73 +231,6 @@ def test_an_ortholog_row_without_an_organism_is_refused() -> None:
         OrthologRow.model_validate(ortholog_row("X", "", "yes"))
 
 
-async def test_genes_in_a_region_are_read_by_location_and_sorted(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    site = serve(monkeypatch, [answer_of([located("B", 500), located("A", 100)])])
-
-    rows = await genes_in_region("plasmodb", PF3D7, "Pf3D7_10_v3", 1, 2000)
-
-    assert [row.gene for row in rows] == ["A", "B"]
-    assert [row.start for row in rows] == [100, 500]
-    assert len(site.searches) == 1
-    record_type, search_name, config, report = site.searches[0]
-    assert (record_type, search_name) == ("transcript", "GenesByLocation")
-    assert json.loads(config.parameters["organismSinglePick"]) == [PF3D7]
-    assert config.parameters["chromosomeOptional"] == "Choose chromosome"
-    assert config.parameters["sequenceId"] == "Pf3D7_10_v3"
-    assert (config.parameters["start_point"], config.parameters["end_point"]) == (
-        "1",
-        "2000",
-    )
-    assert report == {
-        "attributes": list(GENE_ATTRIBUTES),
-        "tables": [],
-        "pagination": {"offset": 0, "numRecords": 400000},
-    }
-
-
-async def test_a_region_to_the_sequence_end_sends_end_zero(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    site = serve(monkeypatch, [answer_of([located("A", 6000)])])
-
-    rows = await genes_in_region("plasmodb", PF3D7, "Pf3D7_10_v3", 5000, 0)
-
-    assert [row.gene for row in rows] == ["A"]
-    parameters = site.searches[0][2].parameters
-    assert (parameters["start_point"], parameters["end_point"]) == ("5000", "0")
-
-
-@pytest.mark.parametrize(
-    ("start", "end"), [(0, 2000), (-59000, 61000), (5000, 4999), (-1, 0)]
-)
-async def test_a_region_with_bounds_wdk_does_not_define_is_refused_before_a_read(
-    monkeypatch: pytest.MonkeyPatch, start: int, end: int
-) -> None:
-    site = serve(monkeypatch, [])
-
-    with pytest.raises(VEuPathDBError) as raised:
-        await genes_in_region("plasmodb", PF3D7, "Pf3D7_10_v3", start, end)
-
-    assert raised.value.code is VEuPathDBErrorCode.VALIDATION_ERROR
-    assert (
-        raised.value.detail
-        == f"the region {start}-{end} of Pf3D7_10_v3 is not one WDK reads"
-    )
-    assert site.searches == []
-
-
-@pytest.mark.parametrize("total", [2, None])
-async def test_a_region_report_short_of_its_total_is_refused(
-    monkeypatch: pytest.MonkeyPatch, total: int | None
-) -> None:
-    serve(monkeypatch, [answer_of([located("A", 100)], total=total)])
-
-    with pytest.raises(WDKError):
-        await genes_in_region("plasmodb", PF3D7, "Pf3D7_10_v3", 1, 2000)
-
-
 def test_the_recorded_ortholog_table_of_piga_reads_57_syntenic_orthologs() -> None:
     served = json.loads((FIXTURES / "pfal3D7_piga_orthologs.json").read_text())
     rows = TypeAdapter(list[OrthologRow]).validate_python(served)
@@ -316,16 +241,3 @@ def test_the_recorded_ortholog_table_of_piga_reads_57_syntenic_orthologs() -> No
     assert all(row.syntenic for row in rows)
     assert PIGA not in {row.gene for row in rows}
     assert triple(rows[0]) == ("PmUG01_10043600", "Plasmodium malariae UG01", True)
-
-
-def test_the_recorded_neighbourhood_of_piga_reads_ten_genes_in_order() -> None:
-    served = json.loads((FIXTURES / "pfal3D7_piga_neighbours.json").read_text())
-    rows = sorted(
-        rows_of(answer_of(served), "GenesByLocation"), key=lambda row: row.start
-    )
-
-    assert [row.gene for row in rows] == [f"PF3D7_10{n}00" for n in range(320, 330)]
-    assert {(row.organism, row.sequence_id) for row in rows} == {(PF3D7, "Pf3D7_10_v3")}
-    found = {row.gene: row for row in rows}[PIGA]
-    assert (found.start, found.end, found.strand) == (1302298, 1305315, "-")
-    assert (found.protein_length, found.pseudo) == (461, False)

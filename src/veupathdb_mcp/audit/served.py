@@ -4,14 +4,24 @@ from __future__ import annotations
 
 from typing import Literal, Self
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from veupathdb.errors import VEuPathDBErrorCode
 from veupathdb.jbrowse import GenomeReader, GenomeWindow, get_jbrowse_client
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.audit.codes import GeneticCode, infer_code, reverse_complement
-from veupathdb_mcp.audit.gene_models import GeneModel, gene_model
-from veupathdb_mcp.audit.genes import GeneRow, gene_rows, orthologs_of, proteins_of
+from veupathdb_mcp.audit.gene_ids import (
+    GeneId,
+    GeneReads,
+    check_resolved,
+    genes_by_text,
+    id_pairs,
+    rows_and_proteins,
+    rows_named,
+    several,
+)
+from veupathdb_mcp.audit.gene_models import GeneModel, gene_model, gene_organism
+from veupathdb_mcp.audit.genes import GeneRow, orthologs_of, proteins_of
 from veupathdb_mcp.audit.length import DnaWindow, LengthCheck
 from veupathdb_mcp.audit.lengths import (
     Confirmable,
@@ -35,11 +45,34 @@ SPLIT_MAX_GAP = 20000
 _READS_GENOME: frozenset[LengthClass] = frozenset({"SHORT", "SPLIT"})
 
 
+class PseudogenePair(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    strain: GeneRow
+    reference: GeneRow
+    gene_ids: list[GeneId]
+
+    @model_validator(mode="after")
+    def _a_flagged_strain(self) -> Self:
+        if self.strain.pseudo is not True:
+            msg = f"{self.strain.gene} is not flagged a pseudogene"
+            raise ValueError(msg)
+        check_resolved(self.gene_ids, [self.strain.gene, self.reference.gene])
+        return self
+
+
 class PseudogeneInputs(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     reference: ReferenceGene
-    strain_coding_dna: str
+    strain_window: GenomeWindow
+    strand: Literal["+", "-"]
+    gene_ids: list[GeneId] = Field(min_length=2, max_length=2)
+
+    @property
+    def strain_coding_dna(self) -> str:
+        dna = self.strain_window.sequence
+        return dna if self.strand == "+" else reverse_complement(dna)
 
 
 class SelenoproteinInputs(BaseModel):
@@ -49,11 +82,13 @@ class SelenoproteinInputs(BaseModel):
     reference_protein: str
     dna: str
     strand: Literal["+", "-"]
+    gene_ids: list[GeneId] = Field(min_length=2, max_length=2)
 
 
 class LengthScreen(CamelModel):
     model_config = ConfigDict(frozen=True)
 
+    gene_ids: list[GeneId]
     genes: list[str]
     length_class: LengthClass
     ratio: float | None
@@ -62,6 +97,11 @@ class LengthScreen(CamelModel):
     group_spread: float
     organisms: int
     reference_gene: str | None
+
+    @model_validator(mode="after")
+    def _named_as_resolved(self) -> Self:
+        check_resolved(self.gene_ids, self.genes)
+        return self
 
 
 class LengthDna(BaseModel):
@@ -97,29 +137,63 @@ class GeneLengthAudit(LengthCheck, LengthScreen):
 
 
 class PseudogeneCallAudit(PseudogeneCheck):
+    gene_ids: list[GeneId]
     strain_gene: str
     reference_gene: str
 
+    @model_validator(mode="after")
+    def _named_as_resolved(self) -> Self:
+        check_resolved(self.gene_ids, [self.strain_gene, self.reference_gene])
+        return self
+
 
 class SelenoproteinEndAudit(SecCheck):
+    gene_ids: list[GeneId]
     gene: str
     reference_gene: str
 
+    @model_validator(mode="after")
+    def _named_as_resolved(self) -> Self:
+        check_resolved(self.gene_ids, [self.gene, self.reference_gene])
+        return self
 
-async def _located(
-    site_id: str, gene_ids: list[str]
+
+async def _named(
+    site_id: str, gene: str, reads: GeneReads
+) -> list[GeneRow] | ToolErrorPayload:
+    return reads.named(gene) or await genes_by_text(site_id, gene)
+
+
+async def resolved(
+    site_id: str, given: list[str], reads: GeneReads
 ) -> dict[str, GeneRow] | ToolErrorPayload:
-    rows = {row.gene: row for row in await gene_rows(site_id, gene_ids)}
-    missing = [gene for gene in gene_ids if gene not in rows]
+    found: dict[str, GeneRow] = {}
+    missing: list[str] = []
+    for gene in given:
+        match await _named(site_id, gene, reads):
+            case ToolErrorPayload() as refusal:
+                return refusal
+            case [row]:
+                found[gene] = row
+            case []:
+                missing.append(gene)
+            case named:
+                return several(site_id, gene, [row.gene for row in named])
     if missing:
         return tool_error(
             VEuPathDBErrorCode.VALIDATION_ERROR,
             f"{', '.join(missing)} names no gene of {site_id}",
         )
-    return rows
+    return found
 
 
-def _window_refusal(gene: str, length: int) -> ToolErrorPayload:
+async def located(
+    site_id: str, given: list[str]
+) -> dict[str, GeneRow] | ToolErrorPayload:
+    return await resolved(site_id, given, await rows_named(site_id, given))
+
+
+def window_refusal(gene: str, length: int) -> ToolErrorPayload:
     return tool_error(
         VEuPathDBErrorCode.VALIDATION_ERROR,
         f"the {gene} window spans {length} bases; an audit reads at most "
@@ -127,36 +201,80 @@ def _window_refusal(gene: str, length: int) -> ToolErrorPayload:
     )
 
 
-async def pseudogene_inputs(
+async def read_proteins(
+    site_id: str, gene_ids: list[str]
+) -> dict[str, str] | ToolErrorPayload:
+    proteins = await proteins_of(site_id, gene_ids)
+    missing = [gene for gene in gene_ids if gene not in proteins]
+    if missing:
+        return tool_error(
+            VEuPathDBErrorCode.VALIDATION_ERROR,
+            f"{', '.join(missing)} has no protein on {site_id}",
+        )
+    return proteins
+
+
+def _unflagged(site_id: str, strain: GeneRow) -> ToolErrorPayload | None:
+    if strain.pseudo:
+        return None
+    flag = "No" if strain.pseudo is False else "not served"
+    return tool_error(
+        VEuPathDBErrorCode.VALIDATION_ERROR,
+        f"{strain.gene} is not flagged a pseudogene on {site_id} (is_pseudo: {flag}); "
+        "the check reads a strain gene the site calls a pseudogene",
+    )
+
+
+def _span_refusal(strain: GeneRow, reference: GeneRow) -> ToolErrorPayload | None:
+    reference_length = reference.end - reference.start + 1
+    strain_length = strain.end - strain.start + 1 + 2 * PSEUDOGENE_PAD
+    for gene, length in (
+        (reference.gene, reference_length),
+        (strain.gene, strain_length),
+    ):
+        if length > AUDIT_MAX_WINDOW_BASES:
+            return window_refusal(gene, length)
+    if reference_length * strain_length > PSEUDOGENE_MAX_CELLS:
+        return tool_error(
+            VEuPathDBErrorCode.VALIDATION_ERROR,
+            f"{reference.gene} spans {reference_length} bases and the {strain.gene} "
+            f"window {strain_length} bases; the check aligns pairs whose product "
+            f"is at most {PSEUDOGENE_MAX_CELLS}",
+        )
+    return None
+
+
+async def pseudogene_pair(
     site_id: str, strain_gene: str, reference_gene: str
-) -> PseudogeneInputs | ToolErrorPayload:
-    match await _located(site_id, [strain_gene, reference_gene]):
+) -> PseudogenePair | ToolErrorPayload:
+    match await located(site_id, [strain_gene, reference_gene]):
         case ToolErrorPayload() as refusal:
             return refusal
         case rows:
             strain, reference = rows[strain_gene], rows[reference_gene]
-    reference_length = reference.end - reference.start + 1
-    strain_length = strain.end - strain.start + 1 + 2 * PSEUDOGENE_PAD
-    for gene, length in (
-        (reference_gene, reference_length),
-        (strain_gene, strain_length),
-    ):
-        if length > AUDIT_MAX_WINDOW_BASES:
-            return _window_refusal(gene, length)
-    if reference_length * strain_length > PSEUDOGENE_MAX_CELLS:
-        return tool_error(
-            VEuPathDBErrorCode.VALIDATION_ERROR,
-            f"{reference_gene} spans {reference_length} bases and the {strain_gene} "
-            f"window {strain_length} bases; the check aligns pairs whose product "
-            f"is at most {PSEUDOGENE_MAX_CELLS}",
-        )
-    reference_model = await gene_model(site_id, reference_gene)
-    if not reference_model.cds:
-        return tool_error(
-            VEuPathDBErrorCode.VALIDATION_ERROR,
-            f"{reference_gene} has no CDS in its gene model on {site_id}",
-        )
-    strain_model = await gene_model(site_id, strain_gene)
+    unread = _unflagged(site_id, strain) or _span_refusal(strain, reference)
+    if unread is not None:
+        return unread
+    return PseudogenePair(
+        strain=strain,
+        reference=reference,
+        gene_ids=id_pairs([strain_gene, reference_gene], rows),
+    )
+
+
+def no_cds(site_id: str, gene: str, model: GeneModel) -> ToolErrorPayload | None:
+    if model.cds:
+        return None
+    return tool_error(
+        VEuPathDBErrorCode.VALIDATION_ERROR,
+        f"{gene} has no CDS in its gene model on {site_id}",
+    )
+
+
+async def pseudogene_dna(
+    site_id: str, pair: PseudogenePair, strain_abbrev: str, reference_model: GeneModel
+) -> PseudogeneInputs:
+    strain, reference = pair.strain, pair.reference
     genome = GenomeReader(get_jbrowse_client(site_id))
     reference_window = await genome.window(
         reference_model.organism_abbrev,
@@ -165,12 +283,11 @@ async def pseudogene_inputs(
         reference.end,
     )
     strain_window = await genome.window(
-        strain_model.organism_abbrev,
+        strain_abbrev,
         strain.sequence_id,
         strain.start - PSEUDOGENE_PAD,
         strain.end + PSEUDOGENE_PAD,
     )
-    strain_dna = strain_window.sequence
     return PseudogeneInputs(
         reference=ReferenceGene(
             dna=reference_window.sequence,
@@ -179,46 +296,79 @@ async def pseudogene_inputs(
             end=reference_window.end,
             strand=reference.strand,
         ),
-        strain_coding_dna=(
-            strain_dna if strain.strand == "+" else reverse_complement(strain_dna)
-        ),
+        strain_window=strain_window,
+        strand=strain.strand,
+        gene_ids=pair.gene_ids,
     )
 
 
-async def selenoprotein_inputs(
-    site_id: str, gene: str, reference_gene: str
-) -> SelenoproteinInputs | ToolErrorPayload:
-    match await _located(site_id, [gene, reference_gene]):
+async def pseudogene_inputs(
+    site_id: str, strain_gene: str, reference_gene: str
+) -> PseudogeneInputs | ToolErrorPayload:
+    match await pseudogene_pair(site_id, strain_gene, reference_gene):
         case ToolErrorPayload() as refusal:
             return refusal
-        case rows:
-            row = rows[gene]
-    proteins = await proteins_of(site_id, [gene, reference_gene])
-    missing = [name for name in (gene, reference_gene) if name not in proteins]
+        case PseudogenePair() as pair:
+            pass
+    reference_model = await gene_model(site_id, pair.reference.gene)
+    if (uncoded := no_cds(site_id, pair.reference.gene, reference_model)) is not None:
+        return uncoded
+    strain_abbrev = await gene_organism(site_id, pair.strain.gene)
+    return await pseudogene_dna(site_id, pair, strain_abbrev, reference_model)
+
+
+async def _proteins_of_named(
+    site_id: str, named: list[str], reads: GeneReads
+) -> dict[str, str] | ToolErrorPayload:
+    served = {row.gene for row in reads.rows}
+    late = [gene for gene in named if gene not in served]
+    proteins = dict(reads.proteins)
+    if late:
+        proteins |= await proteins_of(site_id, late)
+    missing = [gene for gene in named if gene not in proteins]
     if missing:
         return tool_error(
             VEuPathDBErrorCode.VALIDATION_ERROR,
             f"{', '.join(missing)} has no protein on {site_id}",
         )
-    tail = sec_tail(proteins[reference_gene])
+    return proteins
+
+
+async def selenoprotein_inputs(
+    site_id: str, gene: str, reference_gene: str
+) -> SelenoproteinInputs | ToolErrorPayload:
+    given = [gene, reference_gene]
+    reads = await rows_and_proteins(site_id, given)
+    match await resolved(site_id, given, reads):
+        case ToolErrorPayload() as refusal:
+            return refusal
+        case rows:
+            row, reference = rows[gene], rows[reference_gene]
+    match await _proteins_of_named(site_id, [row.gene, reference.gene], reads):
+        case ToolErrorPayload() as refusal:
+            return refusal
+        case proteins:
+            pass
+    tail = sec_tail(proteins[reference.gene])
     if not tail:
         return tool_error(
             VEuPathDBErrorCode.VALIDATION_ERROR,
-            f"{reference_gene} has no selenocysteine on {site_id}",
+            f"{reference.gene} has no selenocysteine on {site_id}",
         )
     pad = SELENOPROTEIN_PAD + 3 * len(tail)
     length = row.end - row.start + 1 + 2 * pad
     if length > AUDIT_MAX_WINDOW_BASES:
-        return _window_refusal(gene, length)
-    model = await gene_model(site_id, gene)
+        return window_refusal(row.gene, length)
+    abbrev = await gene_organism(site_id, row.gene)
     window = await GenomeReader(get_jbrowse_client(site_id)).window(
-        model.organism_abbrev, row.sequence_id, row.start - pad, row.end + pad
+        abbrev, row.sequence_id, row.start - pad, row.end + pad
     )
     return SelenoproteinInputs(
-        model_protein=proteins[gene],
-        reference_protein=proteins[reference_gene],
+        model_protein=proteins[row.gene],
+        reference_protein=proteins[reference.gene],
         dna=window.sequence,
         strand=row.strand,
+        gene_ids=id_pairs(given, rows),
     )
 
 
@@ -249,8 +399,11 @@ def _pair_refusal(parts: list[GeneRow]) -> ToolErrorPayload | None:
     return None
 
 
-def _screen(parts: list[GeneRow], call: Confirmable | NotChecked) -> LengthScreen:
+def length_screen(
+    parts: list[GeneRow], call: Confirmable | NotChecked, ids: list[GeneId]
+) -> LengthScreen:
     return LengthScreen(
+        gene_ids=ids,
         genes=[part.gene for part in parts],
         length_class=call.length_class,
         ratio=call.ratio,
@@ -262,7 +415,7 @@ def _screen(parts: list[GeneRow], call: Confirmable | NotChecked) -> LengthScree
     )
 
 
-def _coding_dna(
+def coding_dna(
     window: GenomeWindow, model: GeneModel, strand: Literal["+", "-"]
 ) -> str:
     if not all(window.start <= p.start and p.end <= window.end for p in model.cds):
@@ -274,33 +427,37 @@ def _coding_dna(
     return cds if strand == "+" else reverse_complement(cds)
 
 
-def _flank(call: Confirmable) -> int:
-    missing = call.reference_length - sum(call.lengths)
+def length_flank(missing_residues: int) -> int:
     return min(
         LENGTH_MAX_FLANK,
-        max(LENGTH_MIN_FLANK, missing * LENGTH_FLANK_PER_RESIDUE),
+        max(LENGTH_MIN_FLANK, missing_residues * LENGTH_FLANK_PER_RESIDUE),
     )
 
 
-async def _length_dna(
-    site_id: str, parts: list[GeneRow], call: Confirmable
-) -> LengthDna | ToolErrorPayload:
-    genes = [part.gene for part in parts]
-    first, last = min(p.start for p in parts), max(p.end for p in parts)
-    flank = _flank(call)
-    start, end = first - flank, last + flank
+def length_span(parts: list[GeneRow], missing_residues: int) -> tuple[int, int]:
+    flank = length_flank(missing_residues)
+    return min(p.start for p in parts) - flank, max(p.end for p in parts) + flank
+
+
+def length_window(
+    parts: list[GeneRow], missing_residues: int
+) -> tuple[int, int] | ToolErrorPayload:
+    start, end = length_span(parts, missing_residues)
     if end - start + 1 > AUDIT_MAX_WINDOW_BASES:
-        return _window_refusal(" and ".join(genes), end - start + 1)
-    reference = call.reference.gene
-    proteins = await proteins_of(site_id, [*genes, reference])
-    missing = [gene for gene in (*genes, reference) if gene not in proteins]
-    if missing:
-        return tool_error(
-            VEuPathDBErrorCode.VALIDATION_ERROR,
-            f"{', '.join(missing)} has no protein on {site_id}",
-        )
-    models = [proteins[gene] for gene in genes]
-    gene_models = [await gene_model(site_id, gene) for gene in genes]
+        genes = " and ".join(part.gene for part in parts)
+        return window_refusal(genes, end - start + 1)
+    return start, end
+
+
+async def length_dna(
+    site_id: str,
+    parts: list[GeneRow],
+    span: tuple[int, int],
+    reference_protein: str,
+    model_proteins: list[str],
+) -> LengthDna:
+    first, last = min(p.start for p in parts), max(p.end for p in parts)
+    gene_models = [await gene_model(site_id, part.gene) for part in parts]
     abbrev, seqid, strand = (
         gene_models[0].organism_abbrev,
         parts[0].sequence_id,
@@ -308,18 +465,18 @@ async def _length_dna(
     )
     genome = GenomeReader(get_jbrowse_client(site_id))
     contig = await genome.sequence_length(abbrev, seqid)
-    window = await genome.window(abbrev, seqid, start, end)
+    window = await genome.window(abbrev, seqid, *span)
     code = next(
         (
             inferred
-            for model, protein in zip(gene_models, models, strict=True)
-            if (inferred := infer_code(_coding_dna(window, model, strand), protein))
+            for model, protein in zip(gene_models, model_proteins, strict=True)
+            if (inferred := infer_code(coding_dna(window, model, strand), protein))
         ),
         None,
     )
     return LengthDna(
-        reference_protein=proteins[reference],
-        model_proteins=models,
+        reference_protein=reference_protein,
+        model_proteins=model_proteins,
         window=DnaWindow(
             sequence=window.sequence,
             strand=strand,
@@ -330,26 +487,44 @@ async def _length_dna(
     )
 
 
+async def _confirmed_dna(
+    site_id: str, parts: list[GeneRow], call: Confirmable
+) -> LengthDna | ToolErrorPayload:
+    match length_window(parts, call.reference_length - sum(call.lengths)):
+        case ToolErrorPayload() as refusal:
+            return refusal
+        case span:
+            pass
+    genes = [part.gene for part in parts]
+    match await read_proteins(site_id, [*genes, call.reference.gene]):
+        case ToolErrorPayload() as refusal:
+            return refusal
+        case proteins:
+            models = [proteins[gene] for gene in genes]
+    return await length_dna(site_id, parts, span, proteins[call.reference.gene], models)
+
+
 async def length_inputs(
     site_id: str, genes: list[str]
 ) -> LengthInputs | ToolErrorPayload:
     if len(genes) not in {1, 2}:
         msg = f"a length check reads one gene or a pair, not {len(genes)}"
         raise ValueError(msg)
-    match await _located(site_id, genes):
+    match await located(site_id, genes):
         case ToolErrorPayload() as refusal:
             return refusal
         case rows:
             parts = [rows[gene] for gene in genes]
+            ids = id_pairs(genes, rows)
     if (unpaired := _pair_refusal(parts)) is not None:
         return unpaired
-    match call_length(parts, await orthologs_of(site_id, genes[0])):
+    match call_length(parts, await orthologs_of(site_id, parts[0].gene)):
         case NotChecked() as call:
-            return LengthInputs(screen=_screen(parts, call), dna=None)
+            return LengthInputs(screen=length_screen(parts, call, ids), dna=None)
         case Confirmable() as call:
-            dna = await _length_dna(site_id, parts, call)
+            dna = await _confirmed_dna(site_id, parts, call)
     match dna:
         case ToolErrorPayload() as refusal:
             return refusal
         case LengthDna():
-            return LengthInputs(screen=_screen(parts, call), dna=dna)
+            return LengthInputs(screen=length_screen(parts, call, ids), dna=dna)

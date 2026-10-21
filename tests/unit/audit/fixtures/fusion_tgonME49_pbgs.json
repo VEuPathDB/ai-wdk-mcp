@@ -1,0 +1,4935 @@
+{
+ "case": {
+  "file": "fusion_tgonME49_pbgs.json",
+  "site": "toxodb",
+  "gene": "TGME49_500302"
+ },
+ "calls": [
+  {
+   "kind": "dataset",
+   "ids": [
+    "TGME49_500302"
+   ],
+   "dataset": 202394080
+  },
+  {
+   "kind": "search",
+   "record_type": "transcript",
+   "search_name": "GeneByLocusTag",
+   "parameters": {
+    "ds_gene_ids": "202394080"
+   },
+   "report": {
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type",
+     "input_id"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 8
+    }
+   },
+   "records": [
+    {
+     "displayName": "TGME49_500302",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGME49_500302"
+      },
+      {
+       "name": "source_id",
+       "value": "TGME49_500302.R91"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1743",
+      "gene_name": "PBGS",
+      "organism_full": "Toxoplasma gondii ME49",
+      "gene_start_min": "1272835",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGME49_chrIII",
+      "is_pseudo": "No",
+      "gene_product": "Porphobilinogen Synthase (PBGS) / Aminolevulinic Acid Dehydratase (ALAD) + Pitrilysin (apicoplast stromal processing peptidase)",
+      "gene_end_max": "1293118",
+      "strand_plus_minus": "-",
+      "input_id": "TGME49_500302"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGME49_500302",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGME49_500302"
+      },
+      {
+       "name": "source_id",
+       "value": "TGME49_500302.R92"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "658",
+      "gene_name": "PBGS",
+      "organism_full": "Toxoplasma gondii ME49",
+      "gene_start_min": "1272835",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGME49_chrIII",
+      "is_pseudo": "No",
+      "gene_product": "Porphobilinogen Synthase (PBGS) / Aminolevulinic Acid Dehydratase (ALAD) + Pitrilysin (apicoplast stromal processing peptidase)",
+      "gene_end_max": "1293118",
+      "strand_plus_minus": "-",
+      "input_id": "TGME49_500302"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ],
+   "served_total": 2,
+   "kept": null
+  },
+  {
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "TGME49_500302"
+    },
+    {
+     "name": "project_id",
+     "value": "ToxoDB"
+    }
+   ],
+   "attributes": [],
+   "tables": [
+    "Orthologs"
+   ],
+   "record": {
+    "displayName": "TGME49_500302",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "TGME49_500302"
+     },
+     {
+      "name": "project_id",
+      "value": "ToxoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "Orthologs": [
+      {
+       "organism": "Toxoplasma gondii ME49",
+       "gene": {
+        "displayText": "TGME49_235680-t26_1",
+        "url": "/toxo.qa/app/record/gene/TGME49_235680"
+       },
+       "ortho_source_id": "TGME49_235680-t26_1",
+       "ortho_gene_source_id": "TGME49_235680",
+       "sort_key": "tgme49_500302                                                                   9no 8yestgme49_235680                                                                   ",
+       "protein_length": "1692",
+       "comment_link": {
+        "displayText": "yes",
+        "url": "/toxo.qa/app/record/gene/TGME49_235680#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "yes",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGME49_235680\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii VAND",
+       "gene": {
+        "displayText": "TGVAND_253900A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGVAND_253900A"
+       },
+       "ortho_source_id": "TGVAND_253900A-t30_1",
+       "ortho_gene_source_id": "TGVAND_253900A",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgvand_253900a                                                                  ",
+       "protein_length": "209",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGVAND_253900A#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGVAND_253900A\">",
+       "gene_product": "parasite porphobilinogen synthase PBGS",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii GT1",
+       "gene": {
+        "displayText": "TGGT1_235680-t26_1",
+        "url": "/toxo.qa/app/record/gene/TGGT1_235680"
+       },
+       "ortho_source_id": "TGGT1_235680-t26_1",
+       "ortho_gene_source_id": "TGGT1_235680",
+       "sort_key": "tgme49_500302                                                                   9no 9no tggt1_235680                                                                    ",
+       "protein_length": "1692",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGGT1_235680#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGGT1_235680\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Neospora caninum Liverpool 2019",
+       "gene": {
+        "displayText": "Ncaninum_LIV_000490400.1",
+        "url": "/toxo.qa/app/record/gene/Ncaninum_LIV_000490400"
+       },
+       "ortho_source_id": "Ncaninum_LIV_000490400.1",
+       "ortho_gene_source_id": "Ncaninum_LIV_000490400",
+       "sort_key": "tgme49_500302                                                                   9no 9no ncaninum_liv_000490400                                                          ",
+       "protein_length": "1681",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/Ncaninum_LIV_000490400#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Ncaninum_LIV_000490400\">",
+       "gene_product": "putative M16 family peptidase",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii FOU",
+       "gene": {
+        "displayText": "TGFOU_235680B-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGFOU_235680B"
+       },
+       "ortho_source_id": "TGFOU_235680B-t30_1",
+       "ortho_gene_source_id": "TGFOU_235680B",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgfou_235680b                                                                   ",
+       "protein_length": "461",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGFOU_235680B#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGFOU_235680B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii FOU",
+       "gene": {
+        "displayText": "TGFOU_253890B-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGFOU_253890B"
+       },
+       "ortho_source_id": "TGFOU_253890B-t30_1",
+       "ortho_gene_source_id": "TGFOU_253890B",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgfou_253890b                                                                   ",
+       "protein_length": "523",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGFOU_253890B#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGFOU_253890B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii FOU",
+       "gene": {
+        "displayText": "TGFOU_235680A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGFOU_235680A"
+       },
+       "ortho_source_id": "TGFOU_235680A-t30_1",
+       "ortho_gene_source_id": "TGFOU_235680A",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgfou_235680a                                                                   ",
+       "protein_length": "1116",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGFOU_235680A#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGFOU_235680A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria tenella strain Houghton",
+       "gene": {
+        "displayText": "ETH_00007345-t26_1",
+        "url": "/toxo.qa/app/record/gene/ETH_00007345"
+       },
+       "ortho_source_id": "ETH_00007345-t26_1",
+       "ortho_gene_source_id": "ETH_00007345",
+       "sort_key": "tgme49_500302                                                                   8yes9no eth_00007345                                                                    ",
+       "protein_length": "1339",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/ETH_00007345#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"ETH_00007345\">",
+       "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii RUB",
+       "gene": {
+        "displayText": "TGRUB_253890-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGRUB_253890"
+       },
+       "ortho_source_id": "TGRUB_253890-t30_1",
+       "ortho_gene_source_id": "TGRUB_253890",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgrub_253890                                                                    ",
+       "protein_length": "1604",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGRUB_253890#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGRUB_253890\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii COUG",
+       "gene": {
+        "displayText": "TGCOUG_253900A-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGCOUG_253900A"
+       },
+       "ortho_source_id": "TGCOUG_253900A-t46_1",
+       "ortho_gene_source_id": "TGCOUG_253900A",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgcoug_253900a                                                                  ",
+       "protein_length": "209",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGCOUG_253900A#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGCOUG_253900A\">",
+       "gene_product": "parasite porphobilinogen synthase PBGS",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii ARI",
+       "gene": {
+        "displayText": "TGARI_253890-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGARI_253890"
+       },
+       "ortho_source_id": "TGARI_253890-t30_1",
+       "ortho_gene_source_id": "TGARI_253890",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgari_253890                                                                    ",
+       "protein_length": "1604",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGARI_253890#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGARI_253890\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii VEG",
+       "gene": {
+        "displayText": "TGVEG_253890-t26_1",
+        "url": "/toxo.qa/app/record/gene/TGVEG_253890"
+       },
+       "ortho_source_id": "TGVEG_253890-t26_1",
+       "ortho_gene_source_id": "TGVEG_253890",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgveg_253890                                                                    ",
+       "protein_length": "1604",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGVEG_253890#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGVEG_253890\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii GAB2-2007-GAL-DOM2",
+       "gene": {
+        "displayText": "TGDOM2_235680B-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGDOM2_235680B"
+       },
+       "ortho_source_id": "TGDOM2_235680B-t30_1",
+       "ortho_gene_source_id": "TGDOM2_235680B",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgdom2_235680b                                                                  ",
+       "protein_length": "595",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGDOM2_235680B#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGDOM2_235680B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii TgCATBr9",
+       "gene": {
+        "displayText": "TGBR9_253890B-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGBR9_253890B"
+       },
+       "ortho_source_id": "TGBR9_253890B-t46_1",
+       "ortho_gene_source_id": "TGBR9_253890B",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgbr9_253890b                                                                   ",
+       "protein_length": "523",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGBR9_253890B#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGBR9_253890B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii FOU",
+       "gene": {
+        "displayText": "TGFOU_253900A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGFOU_253900A"
+       },
+       "ortho_source_id": "TGFOU_253900A-t30_1",
+       "ortho_gene_source_id": "TGFOU_253900A",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgfou_253900a                                                                   ",
+       "protein_length": "209",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGFOU_253900A#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGFOU_253900A\">",
+       "gene_product": "parasite porphobilinogen synthase PBGS",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii TgCatPRC2",
+       "gene": {
+        "displayText": "TGPRC2_253900A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGPRC2_253900A"
+       },
+       "ortho_source_id": "TGPRC2_253900A-t30_1",
+       "ortho_gene_source_id": "TGPRC2_253900A",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgprc2_253900a                                                                  ",
+       "protein_length": "209",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGPRC2_253900A#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGPRC2_253900A\">",
+       "gene_product": "parasite porphobilinogen synthase PBGS",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii GT1",
+       "gene": {
+        "displayText": "TGGT1_253890-t26_1",
+        "url": "/toxo.qa/app/record/gene/TGGT1_253890"
+       },
+       "ortho_source_id": "TGGT1_253890-t26_1",
+       "ortho_gene_source_id": "TGGT1_253890",
+       "sort_key": "tgme49_500302                                                                   8yes9no tggt1_253890                                                                    ",
+       "protein_length": "1604",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGGT1_253890#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGGT1_253890\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Cystoisospora suis strain Wien I",
+       "gene": {
+        "displayText": "CSUI_004168-t36_1",
+        "url": "/toxo.qa/app/record/gene/CSUI_004168"
+       },
+       "ortho_source_id": "CSUI_004168-t36_1",
+       "ortho_gene_source_id": "CSUI_004168",
+       "sort_key": "tgme49_500302                                                                   9no 9no csui_004168                                                                     ",
+       "protein_length": "745",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/CSUI_004168#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"CSUI_004168\">",
+       "gene_product": "peptidase m16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii TgCATBr9",
+       "gene": {
+        "displayText": "TGBR9_235680C-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGBR9_235680C"
+       },
+       "ortho_source_id": "TGBR9_235680C-t46_1",
+       "ortho_gene_source_id": "TGBR9_235680C",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgbr9_235680c                                                                   ",
+       "protein_length": "446",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGBR9_235680C#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGBR9_235680C\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii CAST",
+       "gene": {
+        "displayText": "TGCAST_235680B-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGCAST_235680B"
+       },
+       "ortho_source_id": "TGCAST_235680B-t46_1",
+       "ortho_gene_source_id": "TGCAST_235680B",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgcast_235680b                                                                  ",
+       "protein_length": "690",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGCAST_235680B#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGCAST_235680B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii COUG",
+       "gene": {
+        "displayText": "TGCOUG_235680B-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGCOUG_235680B"
+       },
+       "ortho_source_id": "TGCOUG_235680B-t46_1",
+       "ortho_gene_source_id": "TGCOUG_235680B",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgcoug_235680b                                                                  ",
+       "protein_length": "595",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGCOUG_235680B#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGCOUG_235680B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria praecox Houghton",
+       "gene": {
+        "displayText": "EPH_0053790-t26_1",
+        "url": "/toxo.qa/app/record/gene/EPH_0053790"
+       },
+       "ortho_source_id": "EPH_0053790-t26_1",
+       "ortho_gene_source_id": "EPH_0053790",
+       "sort_key": "tgme49_500302                                                                   8yes9no eph_0053790                                                                     ",
+       "protein_length": "1326",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/EPH_0053790#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"EPH_0053790\">",
+       "gene_product": "Peptidase M16 inactive domain | Insulinase (Peptidase family M16) | domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii TgCATBr9",
+       "gene": {
+        "displayText": "TGBR9_235680B-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGBR9_235680B"
+       },
+       "ortho_source_id": "TGBR9_235680B-t46_1",
+       "ortho_gene_source_id": "TGBR9_235680B",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgbr9_235680b                                                                   ",
+       "protein_length": "443",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGBR9_235680B#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGBR9_235680B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii TgCatPRC2",
+       "gene": {
+        "displayText": "TGPRC2_235680A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGPRC2_235680A"
+       },
+       "ortho_source_id": "TGPRC2_235680A-t30_1",
+       "ortho_gene_source_id": "TGPRC2_235680A",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgprc2_235680a                                                                  ",
+       "protein_length": "1096",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGPRC2_235680A#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGPRC2_235680A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria brunetti Houghton",
+       "gene": {
+        "displayText": "EBH_0013940-t26_1",
+        "url": "/toxo.qa/app/record/gene/EBH_0013940"
+       },
+       "ortho_source_id": "EBH_0013940-t26_1",
+       "ortho_gene_source_id": "EBH_0013940",
+       "sort_key": "tgme49_500302                                                                   8yes9no ebh_0013940                                                                     ",
+       "protein_length": "1811",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/EBH_0013940#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"EBH_0013940\">",
+       "gene_product": "M16 family peptidase, putative",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii RH-88",
+       "gene": {
+        "displayText": "TGRH88_041800_t1",
+        "url": "/toxo.qa/app/record/gene/TGRH88_041800"
+       },
+       "ortho_source_id": "TGRH88_041800_t1",
+       "ortho_gene_source_id": "TGRH88_041800",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgrh88_041800                                                                   ",
+       "protein_length": "1632",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGRH88_041800#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGRH88_041800\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria stiedai A26",
+       "gene": {
+        "displayText": "Esti_000040-t70_1",
+        "url": "/toxo.qa/app/record/gene/Esti_000040"
+       },
+       "ortho_source_id": "Esti_000040-t70_1",
+       "ortho_gene_source_id": "Esti_000040",
+       "sort_key": "tgme49_500302                                                                   8yes9no esti_000040                                                                     ",
+       "protein_length": "1167",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/Esti_000040#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Esti_000040\">",
+       "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii p89",
+       "gene": {
+        "displayText": "TGP89_235680B-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGP89_235680B"
+       },
+       "ortho_source_id": "TGP89_235680B-t30_1",
+       "ortho_gene_source_id": "TGP89_235680B",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgp89_235680b                                                                   ",
+       "protein_length": "408",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGP89_235680B#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGP89_235680B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii ARI",
+       "gene": {
+        "displayText": "TGARI_235680-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGARI_235680"
+       },
+       "ortho_source_id": "TGARI_235680-t30_1",
+       "ortho_gene_source_id": "TGARI_235680",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgari_235680                                                                    ",
+       "protein_length": "1692",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGARI_235680#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGARI_235680\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria mitis Houghton",
+       "gene": {
+        "displayText": "EMH_0075450-t26_1",
+        "url": "/toxo.qa/app/record/gene/EMH_0075450"
+       },
+       "ortho_source_id": "EMH_0075450-t26_1",
+       "ortho_gene_source_id": "EMH_0075450",
+       "sort_key": "tgme49_500302                                                                   8yes9no emh_0075450                                                                     ",
+       "protein_length": "845",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/EMH_0075450#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"EMH_0075450\">",
+       "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii TgCATBr9",
+       "gene": {
+        "displayText": "TGBR9_253890A-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGBR9_253890A"
+       },
+       "ortho_source_id": "TGBR9_253890A-t46_1",
+       "ortho_gene_source_id": "TGBR9_253890A",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgbr9_253890a                                                                   ",
+       "protein_length": "1034",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGBR9_253890A#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGBR9_253890A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii p89",
+       "gene": {
+        "displayText": "TGP89_253890-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGP89_253890"
+       },
+       "ortho_source_id": "TGP89_253890-t30_1",
+       "ortho_gene_source_id": "TGP89_253890",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgp89_253890                                                                    ",
+       "protein_length": "1604",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGP89_253890#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGP89_253890\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Neospora caninum Liverpool",
+       "gene": {
+        "displayText": "NCLIV_008220-t26_1",
+        "url": "/toxo.qa/app/record/gene/NCLIV_008220"
+       },
+       "ortho_source_id": "NCLIV_008220-t26_1",
+       "ortho_gene_source_id": "NCLIV_008220",
+       "sort_key": "tgme49_500302                                                                   8yes9no ncliv_008220                                                                    ",
+       "protein_length": "1282",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/NCLIV_008220#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"NCLIV_008220\">",
+       "gene_product": "putative M16 family peptidase",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii CAST",
+       "gene": {
+        "displayText": "TGCAST_235680A-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGCAST_235680A"
+       },
+       "ortho_source_id": "TGCAST_235680A-t46_1",
+       "ortho_gene_source_id": "TGCAST_235680A",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgcast_235680a                                                                  ",
+       "protein_length": "1116",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGCAST_235680A#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGCAST_235680A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria media PL19_A22",
+       "gene": {
+        "displayText": "Emed_000410-t70_1",
+        "url": "/toxo.qa/app/record/gene/Emed_000410"
+       },
+       "ortho_source_id": "Emed_000410-t70_1",
+       "ortho_gene_source_id": "Emed_000410",
+       "sort_key": "tgme49_500302                                                                   8yes9no emed_000410                                                                     ",
+       "protein_length": "922",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/Emed_000410#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Emed_000410\">",
+       "gene_product": "Peptidase M16 inactive domain | Insulinase (Peptidase family M16) | domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Neospora caninum Liverpool",
+       "gene": {
+        "displayText": "NCLIV_050050-t26_1",
+        "url": "/toxo.qa/app/record/gene/NCLIV_050050"
+       },
+       "ortho_source_id": "NCLIV_050050-t26_1",
+       "ortho_gene_source_id": "NCLIV_050050",
+       "sort_key": "tgme49_500302                                                                   9no 9no ncliv_050050                                                                    ",
+       "protein_length": "1569",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/NCLIV_050050#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"NCLIV_050050\">",
+       "gene_product": "putative M16 family peptidase",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Eimeria tenella Houghton 2021",
+       "gene": {
+        "displayText": "ETH2_0700400_mRNA1",
+        "url": "/toxo.qa/app/record/gene/ETH2_0700400"
+       },
+       "ortho_source_id": "ETH2_0700400_mRNA1",
+       "ortho_gene_source_id": "ETH2_0700400",
+       "sort_key": "tgme49_500302                                                                   8yes9no eth2_0700400                                                                    ",
+       "protein_length": "1339",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/ETH2_0700400#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"ETH2_0700400\">",
+       "gene_product": "Insulinase (Peptidase family M16)/Peptidase M16 inactive domain containing protein, putative",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii RUB",
+       "gene": {
+        "displayText": "TGRUB_235680-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGRUB_235680"
+       },
+       "ortho_source_id": "TGRUB_235680-t30_1",
+       "ortho_gene_source_id": "TGRUB_235680",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgrub_235680                                                                    ",
+       "protein_length": "1692",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGRUB_235680#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGRUB_235680\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria intestinalis P0_A24",
+       "gene": {
+        "displayText": "ACSSS7_002512-t70_1",
+        "url": "/toxo.qa/app/record/gene/ACSSS7_002512"
+       },
+       "ortho_source_id": "ACSSS7_002512-t70_1",
+       "ortho_gene_source_id": "ACSSS7_002512",
+       "sort_key": "tgme49_500302                                                                   8yes9no acsss7_002512                                                                   ",
+       "protein_length": "1317",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/ACSSS7_002512#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"ACSSS7_002512\">",
+       "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Cyclospora cayetanensis isolate NF1_C8",
+       "gene": {
+        "displayText": "LOC34617740-t45_1",
+        "url": "/toxo.qa/app/record/gene/LOC34617740"
+       },
+       "ortho_source_id": "LOC34617740-t45_1",
+       "ortho_gene_source_id": "LOC34617740",
+       "sort_key": "tgme49_500302                                                                   8yes9no loc34617740                                                                     ",
+       "protein_length": "1729",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/LOC34617740#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"LOC34617740\">",
+       "gene_product": "stromal processing peptidase, chloroplastic",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Hammondia hammondi strain H.H.34",
+       "gene": {
+        "displayText": "HHA_253890_t1",
+        "url": "/toxo.qa/app/record/gene/HHA_253890"
+       },
+       "ortho_source_id": "HHA_253890_t1",
+       "ortho_gene_source_id": "HHA_253890",
+       "sort_key": "tgme49_500302                                                                   8yes9no hha_253890                                                                      ",
+       "protein_length": "1578",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/HHA_253890#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"HHA_253890\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii TgCatPRC2",
+       "gene": {
+        "displayText": "TGPRC2_253890A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGPRC2_253890A"
+       },
+       "ortho_source_id": "TGPRC2_253890A-t30_1",
+       "ortho_gene_source_id": "TGPRC2_253890A",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgprc2_253890a                                                                  ",
+       "protein_length": "1080",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGPRC2_253890A#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGPRC2_253890A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii CAST",
+       "gene": {
+        "displayText": "TGCAST_253890A-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGCAST_253890A"
+       },
+       "ortho_source_id": "TGCAST_253890A-t46_1",
+       "ortho_gene_source_id": "TGCAST_253890A",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgcast_253890a                                                                  ",
+       "protein_length": "1080",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGCAST_253890A#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGCAST_253890A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii COUG",
+       "gene": {
+        "displayText": "TGCOUG_235680A-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGCOUG_235680A"
+       },
+       "ortho_source_id": "TGCOUG_235680A-t46_1",
+       "ortho_gene_source_id": "TGCOUG_235680A",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgcoug_235680a                                                                  ",
+       "protein_length": "1096",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGCOUG_235680A#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGCOUG_235680A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Cystoisospora suis strain Wien I",
+       "gene": {
+        "displayText": "CSUI_011368-t36_1",
+        "url": "/toxo.qa/app/record/gene/CSUI_011368"
+       },
+       "ortho_source_id": "CSUI_011368-t36_1",
+       "ortho_gene_source_id": "CSUI_011368",
+       "sort_key": "tgme49_500302                                                                   9no 9no csui_011368                                                                     ",
+       "protein_length": "647",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/CSUI_011368#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"CSUI_011368\">",
+       "gene_product": "peptidase m16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Eimeria mitis Houghton",
+       "gene": {
+        "displayText": "EMH_0000400-t26_1",
+        "url": "/toxo.qa/app/record/gene/EMH_0000400"
+       },
+       "ortho_source_id": "EMH_0000400-t26_1",
+       "ortho_gene_source_id": "EMH_0000400",
+       "sort_key": "tgme49_500302                                                                   9no 9no emh_0000400                                                                     ",
+       "protein_length": "192",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/EMH_0000400#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"EMH_0000400\">",
+       "gene_product": "hypothetical protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Neospora caninum Liverpool 2019",
+       "gene": {
+        "displayText": "Ncaninum_LIV_000431500.1",
+        "url": "/toxo.qa/app/record/gene/Ncaninum_LIV_000431500"
+       },
+       "ortho_source_id": "Ncaninum_LIV_000431500.1",
+       "ortho_gene_source_id": "Ncaninum_LIV_000431500",
+       "sort_key": "tgme49_500302                                                                   8yes9no ncaninum_liv_000431500                                                          ",
+       "protein_length": "1542",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/Ncaninum_LIV_000431500#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Ncaninum_LIV_000431500\">",
+       "gene_product": "putative M16 family peptidase",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii VAND",
+       "gene": {
+        "displayText": "TGVAND_235680B-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGVAND_235680B"
+       },
+       "ortho_source_id": "TGVAND_235680B-t30_1",
+       "ortho_gene_source_id": "TGVAND_235680B",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgvand_235680b                                                                  ",
+       "protein_length": "482",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGVAND_235680B#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGVAND_235680B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria media PL19_A22",
+       "gene": {
+        "displayText": "Emed_000409-t70_1",
+        "url": "/toxo.qa/app/record/gene/Emed_000409"
+       },
+       "ortho_source_id": "Emed_000409-t70_1",
+       "ortho_gene_source_id": "Emed_000409",
+       "sort_key": "tgme49_500302                                                                   8yes9no emed_000409                                                                     ",
+       "protein_length": "407",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/Emed_000409#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Emed_000409\">",
+       "gene_product": "unspecified product",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii COUG",
+       "gene": {
+        "displayText": "TGCOUG_253890-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGCOUG_253890"
+       },
+       "ortho_source_id": "TGCOUG_253890-t46_1",
+       "ortho_gene_source_id": "TGCOUG_253890",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgcoug_253890                                                                   ",
+       "protein_length": "1604",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGCOUG_253890#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGCOUG_253890\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii VAND",
+       "gene": {
+        "displayText": "TGVAND_253890B-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGVAND_253890B"
+       },
+       "ortho_source_id": "TGVAND_253890B-t30_1",
+       "ortho_gene_source_id": "TGVAND_253890B",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgvand_253890b                                                                  ",
+       "protein_length": "736",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGVAND_253890B#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGVAND_253890B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii TgCATBr9",
+       "gene": {
+        "displayText": "TGBR9_235680A-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGBR9_235680A"
+       },
+       "ortho_source_id": "TGBR9_235680A-t46_1",
+       "ortho_gene_source_id": "TGBR9_235680A",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgbr9_235680a                                                                   ",
+       "protein_length": "743",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGBR9_235680A#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGBR9_235680A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii MAS",
+       "gene": {
+        "displayText": "TGMAS_253890A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGMAS_253890A"
+       },
+       "ortho_source_id": "TGMAS_253890A-t30_1",
+       "ortho_gene_source_id": "TGMAS_253890A",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgmas_253890a                                                                   ",
+       "protein_length": "1103",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGMAS_253890A#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGMAS_253890A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii GAB2-2007-GAL-DOM2",
+       "gene": {
+        "displayText": "TGDOM2_235680A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGDOM2_235680A"
+       },
+       "ortho_source_id": "TGDOM2_235680A-t30_1",
+       "ortho_gene_source_id": "TGDOM2_235680A",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgdom2_235680a                                                                  ",
+       "protein_length": "1096",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGDOM2_235680A#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGDOM2_235680A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Hammondia hammondi strain H.H.34",
+       "gene": {
+        "displayText": "HHA_235680_t1",
+        "url": "/toxo.qa/app/record/gene/HHA_235680"
+       },
+       "ortho_source_id": "HHA_235680_t1",
+       "ortho_gene_source_id": "HHA_235680",
+       "sort_key": "tgme49_500302                                                                   9no 9no hha_235680                                                                      ",
+       "protein_length": "1669",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/HHA_235680#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"HHA_235680\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii GAB2-2007-GAL-DOM2",
+       "gene": {
+        "displayText": "TGDOM2_253890-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGDOM2_253890"
+       },
+       "ortho_source_id": "TGDOM2_253890-t30_1",
+       "ortho_gene_source_id": "TGDOM2_253890",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgdom2_253890                                                                   ",
+       "protein_length": "1604",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGDOM2_253890#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGDOM2_253890\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria magna A19",
+       "gene": {
+        "displayText": "Emag_001034-t70_1",
+        "url": "/toxo.qa/app/record/gene/Emag_001034"
+       },
+       "ortho_source_id": "Emag_001034-t70_1",
+       "ortho_gene_source_id": "Emag_001034",
+       "sort_key": "tgme49_500302                                                                   8yes9no emag_001034                                                                     ",
+       "protein_length": "1215",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/Emag_001034#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Emag_001034\">",
+       "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii CAST",
+       "gene": {
+        "displayText": "TGCAST_253890B-t46_1",
+        "url": "/toxo.qa/app/record/gene/TGCAST_253890B"
+       },
+       "ortho_source_id": "TGCAST_253890B-t46_1",
+       "ortho_gene_source_id": "TGCAST_253890B",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgcast_253890b                                                                  ",
+       "protein_length": "523",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGCAST_253890B#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGCAST_253890B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii FOU",
+       "gene": {
+        "displayText": "TGFOU_253890A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGFOU_253890A"
+       },
+       "ortho_source_id": "TGFOU_253890A-t30_1",
+       "ortho_gene_source_id": "TGFOU_253890A",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgfou_253890a                                                                   ",
+       "protein_length": "1080",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGFOU_253890A#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGFOU_253890A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Cystoisospora suis strain Wien I",
+       "gene": {
+        "displayText": "CSUI_005196-t36_1",
+        "url": "/toxo.qa/app/record/gene/CSUI_005196"
+       },
+       "ortho_source_id": "CSUI_005196-t36_1",
+       "ortho_gene_source_id": "CSUI_005196",
+       "sort_key": "tgme49_500302                                                                   9no 9no csui_005196                                                                     ",
+       "protein_length": "179",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/CSUI_005196#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"CSUI_005196\">",
+       "gene_product": "peptidase m16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Sarcocystis neurona SN3",
+       "gene": {
+        "displayText": "SN3_00100810-mRNA-1",
+        "url": "/toxo.qa/app/record/gene/SN3_00100810"
+       },
+       "ortho_source_id": "SN3_00100810-mRNA-1",
+       "ortho_gene_source_id": "SN3_00100810",
+       "sort_key": "tgme49_500302                                                                   9no 9no sn3_00100810                                                                    ",
+       "protein_length": "2481",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/SN3_00100810#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"SN3_00100810\">",
+       "gene_product": "peptidase m16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Cystoisospora suis strain Wien I",
+       "gene": {
+        "displayText": "CSUI_000703-t36_1",
+        "url": "/toxo.qa/app/record/gene/CSUI_000703"
+       },
+       "ortho_source_id": "CSUI_000703-t36_1",
+       "ortho_gene_source_id": "CSUI_000703",
+       "sort_key": "tgme49_500302                                                                   9no 9no csui_000703                                                                     ",
+       "protein_length": "265",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/CSUI_000703#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"CSUI_000703\">",
+       "gene_product": "peptidase m16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii RUB",
+       "gene": {
+        "displayText": "TGRUB_253900A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGRUB_253900A"
+       },
+       "ortho_source_id": "TGRUB_253900A-t30_1",
+       "ortho_gene_source_id": "TGRUB_253900A",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgrub_253900a                                                                   ",
+       "protein_length": "209",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGRUB_253900A#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGRUB_253900A\">",
+       "gene_product": "parasite porphobilinogen synthase PBGS",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii p89",
+       "gene": {
+        "displayText": "TGP89_235680A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGP89_235680A"
+       },
+       "ortho_source_id": "TGP89_235680A-t30_1",
+       "ortho_gene_source_id": "TGP89_235680A",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgp89_235680a                                                                   ",
+       "protein_length": "1254",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGP89_235680A#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGP89_235680A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii MAS",
+       "gene": {
+        "displayText": "TGMAS_235680-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGMAS_235680"
+       },
+       "ortho_source_id": "TGMAS_235680-t30_1",
+       "ortho_gene_source_id": "TGMAS_235680",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgmas_235680                                                                    ",
+       "protein_length": "779",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGMAS_235680#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGMAS_235680\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria flavescens A23",
+       "gene": {
+        "displayText": "Efla_007085-t70_1",
+        "url": "/toxo.qa/app/record/gene/Efla_007085"
+       },
+       "ortho_source_id": "Efla_007085-t70_1",
+       "ortho_gene_source_id": "Efla_007085",
+       "sort_key": "tgme49_500302                                                                   8yes9no efla_007085                                                                     ",
+       "protein_length": "1744",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/Efla_007085#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"Efla_007085\">",
+       "gene_product": "porphobilinogen synthase",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Besnoitia besnoiti strain Bb-Ger1",
+       "gene": {
+        "displayText": "mrna.BESB_037210",
+        "url": "/toxo.qa/app/record/gene/BESB_037210"
+       },
+       "ortho_source_id": "mrna.BESB_037210",
+       "ortho_gene_source_id": "BESB_037210",
+       "sort_key": "tgme49_500302                                                                   9no 9no besb_037210                                                                     ",
+       "protein_length": "1739",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/BESB_037210#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"BESB_037210\">",
+       "gene_product": "Peptidase M16 inactive domain | Insulinase (Peptidase family M16) | domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii VAND",
+       "gene": {
+        "displayText": "TGVAND_253890A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGVAND_253890A"
+       },
+       "ortho_source_id": "TGVAND_253890A-t30_1",
+       "ortho_gene_source_id": "TGVAND_253890A",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgvand_253890a                                                                  ",
+       "protein_length": "868",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGVAND_253890A#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGVAND_253890A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Cystoisospora suis strain Wien I",
+       "gene": {
+        "displayText": "CSUI_008041-t36_1",
+        "url": "/toxo.qa/app/record/gene/CSUI_008041"
+       },
+       "ortho_source_id": "CSUI_008041-t36_1",
+       "ortho_gene_source_id": "CSUI_008041",
+       "sort_key": "tgme49_500302                                                                   8yes9no csui_008041                                                                     ",
+       "protein_length": "1634",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/CSUI_008041#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"CSUI_008041\">",
+       "gene_product": "peptidase m16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Sarcocystis neurona SO SN1",
+       "gene": {
+        "displayText": "SRCN_114.mRNA",
+        "url": "/toxo.qa/app/record/gene/SRCN_114"
+       },
+       "ortho_source_id": "SRCN_114.mRNA",
+       "ortho_gene_source_id": "SRCN_114",
+       "sort_key": "tgme49_500302                                                                   9no 9no srcn_114                                                                        ",
+       "protein_length": "2338",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/SRCN_114#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"SRCN_114\">",
+       "gene_product": "Peptidase M16, N-terminal, Peptidase M16, C-terminal domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria maxima Weybridge",
+       "gene": {
+        "displayText": "EMWEY_00014880-t26_1",
+        "url": "/toxo.qa/app/record/gene/EMWEY_00014880"
+       },
+       "ortho_source_id": "EMWEY_00014880-t26_1",
+       "ortho_gene_source_id": "EMWEY_00014880",
+       "sort_key": "tgme49_500302                                                                   8yes9no emwey_00014880                                                                  ",
+       "protein_length": "2066",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/EMWEY_00014880#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"EMWEY_00014880\">",
+       "gene_product": "M16 family peptidase, putative",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii TgCatPRC2",
+       "gene": {
+        "displayText": "TGPRC2_235680C-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGPRC2_235680C"
+       },
+       "ortho_source_id": "TGPRC2_235680C-t30_1",
+       "ortho_gene_source_id": "TGPRC2_235680C",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgprc2_235680c                                                                  ",
+       "protein_length": "467",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGPRC2_235680C#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGPRC2_235680C\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii TgCatPRC2",
+       "gene": {
+        "displayText": "TGPRC2_235680B-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGPRC2_235680B"
+       },
+       "ortho_source_id": "TGPRC2_235680B-t30_1",
+       "ortho_gene_source_id": "TGPRC2_235680B",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgprc2_235680b                                                                  ",
+       "protein_length": "128",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGPRC2_235680B#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGPRC2_235680B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria necatrix Houghton",
+       "gene": {
+        "displayText": "ENH_00077430.1",
+        "url": "/toxo.qa/app/record/gene/ENH_00077430"
+       },
+       "ortho_source_id": "ENH_00077430.1",
+       "ortho_gene_source_id": "ENH_00077430",
+       "sort_key": "tgme49_500302                                                                   8yes9no enh_00077430                                                                    ",
+       "protein_length": "1335",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/ENH_00077430#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"ENH_00077430\">",
+       "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Eimeria mitis Houghton",
+       "gene": {
+        "displayText": "EMH_0085810-t26_1",
+        "url": "/toxo.qa/app/record/gene/EMH_0085810"
+       },
+       "ortho_source_id": "EMH_0085810-t26_1",
+       "ortho_gene_source_id": "EMH_0085810",
+       "sort_key": "tgme49_500302                                                                   9no 9no emh_0085810                                                                     ",
+       "protein_length": "527",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/EMH_0085810#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"EMH_0085810\">",
+       "gene_product": "hypothetical protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii VAND",
+       "gene": {
+        "displayText": "TGVAND_235680A-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGVAND_235680A"
+       },
+       "ortho_source_id": "TGVAND_235680A-t30_1",
+       "ortho_gene_source_id": "TGVAND_235680A",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgvand_235680a                                                                  ",
+       "protein_length": "1225",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGVAND_235680A#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGVAND_235680A\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii VEG",
+       "gene": {
+        "displayText": "TGVEG_235680-t26_1",
+        "url": "/toxo.qa/app/record/gene/TGVEG_235680"
+       },
+       "ortho_source_id": "TGVEG_235680-t26_1",
+       "ortho_gene_source_id": "TGVEG_235680",
+       "sort_key": "tgme49_500302                                                                   9no 9no tgveg_235680                                                                    ",
+       "protein_length": "1692",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGVEG_235680#UserComments"
+       },
+       "is_syntenic": "no",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGVEG_235680\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Besnoitia besnoiti strain Bb-Ger1",
+       "gene": {
+        "displayText": "mrna.BESB_013030",
+        "url": "/toxo.qa/app/record/gene/BESB_013030"
+       },
+       "ortho_source_id": "mrna.BESB_013030",
+       "ortho_gene_source_id": "BESB_013030",
+       "sort_key": "tgme49_500302                                                                   8yes9no besb_013030                                                                     ",
+       "protein_length": "1547",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/BESB_013030#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"BESB_013030\">",
+       "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii MAS",
+       "gene": {
+        "displayText": "TGMAS_253890B-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGMAS_253890B"
+       },
+       "ortho_source_id": "TGMAS_253890B-t30_1",
+       "ortho_gene_source_id": "TGMAS_253890B",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgmas_253890b                                                                   ",
+       "protein_length": "537",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGMAS_253890B#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGMAS_253890B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria acervulina Houghton",
+       "gene": {
+        "displayText": "EAH_00019060-t26_1",
+        "url": "/toxo.qa/app/record/gene/EAH_00019060"
+       },
+       "ortho_source_id": "EAH_00019060-t26_1",
+       "ortho_gene_source_id": "EAH_00019060",
+       "sort_key": "tgme49_500302                                                                   8yes9no eah_00019060                                                                    ",
+       "protein_length": "1833",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/EAH_00019060#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"EAH_00019060\">",
+       "gene_product": "M16 family peptidase, putative",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Sarcocystis neurona SO SN1",
+       "gene": {
+        "displayText": "SRCN_6154.mRNA",
+        "url": "/toxo.qa/app/record/gene/SRCN_6154"
+       },
+       "ortho_source_id": "SRCN_6154.mRNA",
+       "ortho_gene_source_id": "SRCN_6154",
+       "sort_key": "tgme49_500302                                                                   8yes9no srcn_6154                                                                       ",
+       "protein_length": "1835",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/SRCN_6154#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"SRCN_6154\">",
+       "gene_product": "Peptidase M16, N-terminal, Peptidase M16, C-terminal domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Eimeria falciformis Bayer Haberkorn 1970",
+       "gene": {
+        "displayText": "EfaB_PLUS_20412.g1740.t1",
+        "url": "/toxo.qa/app/record/gene/EfaB_PLUS_20412.g1740"
+       },
+       "ortho_source_id": "EfaB_PLUS_20412.g1740.t1",
+       "ortho_gene_source_id": "EfaB_PLUS_20412.g1740",
+       "sort_key": "tgme49_500302                                                                   8yes9no efab_plus_20412.g1740                                                           ",
+       "protein_length": "1811",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/EfaB_PLUS_20412.g1740#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"EfaB_PLUS_20412.g1740\">",
+       "gene_product": "Delta-aminolevulinic acid dehydratase, Peptidase M16 N-terminal, Peptidase M16 C-terminal domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Cyclospora cayetanensis strain CHN_HEN01",
+       "gene": {
+        "displayText": "cyc_00589-t31_1",
+        "url": "/toxo.qa/app/record/gene/cyc_00589"
+       },
+       "ortho_source_id": "cyc_00589-t31_1",
+       "ortho_gene_source_id": "cyc_00589",
+       "sort_key": "tgme49_500302                                                                   8yes9no cyc_00589                                                                       ",
+       "protein_length": "1333",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/cyc_00589#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"cyc_00589\">",
+       "gene_product": "peptidase M16 domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "yes"
+      },
+      {
+       "organism": "Toxoplasma gondii RH-88",
+       "gene": {
+        "displayText": "TGRH88_004460_t1",
+        "url": "/toxo.qa/app/record/gene/TGRH88_004460"
+       },
+       "ortho_source_id": "TGRH88_004460_t1",
+       "ortho_gene_source_id": "TGRH88_004460",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgrh88_004460                                                                   ",
+       "protein_length": "1570",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGRH88_004460#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGRH88_004460\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      },
+      {
+       "organism": "Toxoplasma gondii TgCatPRC2",
+       "gene": {
+        "displayText": "TGPRC2_253890B-t30_1",
+        "url": "/toxo.qa/app/record/gene/TGPRC2_253890B"
+       },
+       "ortho_source_id": "TGPRC2_253890B-t30_1",
+       "ortho_gene_source_id": "TGPRC2_253890B",
+       "sort_key": "tgme49_500302                                                                   8yes9no tgprc2_253890b                                                                  ",
+       "protein_length": "523",
+       "comment_link": {
+        "displayText": "no",
+        "url": "/toxo.qa/app/record/gene/TGPRC2_253890B#UserComments"
+       },
+       "is_syntenic": "yes",
+       "has_comment": "no",
+       "clustalInput": "<input type=\"checkbox\" name=\"gene_ids\" value=\"TGPRC2_253890B\">",
+       "gene_product": "peptidase M16 inactive domain-containing protein",
+       "source_id": "TGME49_500302",
+       "is_reference_strain": "no"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "dataset",
+   "ids": [
+    "ACSSS7_002512",
+    "BESB_013030",
+    "BESB_037210",
+    "CSUI_000703",
+    "CSUI_004168",
+    "CSUI_005196",
+    "CSUI_008041",
+    "CSUI_011368",
+    "EAH_00019060",
+    "EBH_0013940",
+    "EMH_0000400",
+    "EMH_0075450",
+    "EMH_0085810",
+    "EMWEY_00014880",
+    "ENH_00077430",
+    "EPH_0053790",
+    "ETH2_0700400",
+    "ETH_00007345",
+    "EfaB_PLUS_20412.g1740",
+    "Efla_007085",
+    "Emag_001034",
+    "Emed_000409",
+    "Emed_000410",
+    "Esti_000040",
+    "HHA_235680",
+    "HHA_253890",
+    "LOC34617740",
+    "NCLIV_008220",
+    "NCLIV_050050",
+    "Ncaninum_LIV_000431500",
+    "Ncaninum_LIV_000490400",
+    "SN3_00100810",
+    "SRCN_114",
+    "SRCN_6154",
+    "TGARI_235680",
+    "TGARI_253890",
+    "TGBR9_235680A",
+    "TGBR9_235680B",
+    "TGBR9_235680C",
+    "TGBR9_253890A",
+    "TGBR9_253890B",
+    "TGCAST_235680A",
+    "TGCAST_235680B",
+    "TGCAST_253890A",
+    "TGCAST_253890B",
+    "TGCOUG_235680A",
+    "TGCOUG_235680B",
+    "TGCOUG_253890",
+    "TGCOUG_253900A",
+    "TGDOM2_235680A",
+    "TGDOM2_235680B",
+    "TGDOM2_253890",
+    "TGFOU_235680A",
+    "TGFOU_235680B",
+    "TGFOU_253890A",
+    "TGFOU_253890B",
+    "TGFOU_253900A",
+    "TGGT1_235680",
+    "TGGT1_253890",
+    "TGMAS_235680",
+    "TGMAS_253890A",
+    "TGMAS_253890B",
+    "TGME49_235680",
+    "TGME49_500302",
+    "TGP89_235680A",
+    "TGP89_235680B",
+    "TGP89_253890",
+    "TGPRC2_235680A",
+    "TGPRC2_235680B",
+    "TGPRC2_235680C",
+    "TGPRC2_253890A",
+    "TGPRC2_253890B",
+    "TGPRC2_253900A",
+    "TGRH88_004460",
+    "TGRH88_041800",
+    "TGRUB_235680",
+    "TGRUB_253890",
+    "TGRUB_253900A",
+    "TGVAND_235680A",
+    "TGVAND_235680B",
+    "TGVAND_253890A",
+    "TGVAND_253890B",
+    "TGVAND_253900A",
+    "TGVEG_235680",
+    "TGVEG_253890",
+    "cyc_00589"
+   ],
+   "dataset": 202394090
+  },
+  {
+   "kind": "search",
+   "record_type": "transcript",
+   "search_name": "GeneByLocusTag",
+   "parameters": {
+    "ds_gene_ids": "202394090"
+   },
+   "report": {
+    "attributes": [
+     "organism_full",
+     "gene_orthomcl_name",
+     "protein_length",
+     "gene_name",
+     "gene_product",
+     "sequence_id",
+     "gene_start_min",
+     "gene_end_max",
+     "strand_plus_minus",
+     "is_pseudo",
+     "gene_type"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 688
+    }
+   },
+   "records": [
+    {
+     "displayName": "ACSSS7_002512",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "ACSSS7_002512"
+      },
+      {
+       "name": "source_id",
+       "value": "ACSSS7_002512-t70_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1317",
+      "gene_name": null,
+      "organism_full": "Eimeria intestinalis P0_A24",
+      "gene_start_min": "93940",
+      "gene_type": "protein coding gene",
+      "sequence_id": "JBPVOF010000167",
+      "is_pseudo": null,
+      "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+      "gene_end_max": "99878",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "BESB_013030",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "BESB_013030"
+      },
+      {
+       "name": "source_id",
+       "value": "mrna.BESB_013030"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1547",
+      "gene_name": null,
+      "organism_full": "Besnoitia besnoiti strain Bb-Ger1",
+      "gene_start_min": "908896",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CM008354.1",
+      "is_pseudo": "No",
+      "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+      "gene_end_max": "916975",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "BESB_037210",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "BESB_037210"
+      },
+      {
+       "name": "source_id",
+       "value": "mrna.BESB_037210"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1739",
+      "gene_name": null,
+      "organism_full": "Besnoitia besnoiti strain Bb-Ger1",
+      "gene_start_min": "2593579",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CM008347.1",
+      "is_pseudo": "No",
+      "gene_product": "Peptidase M16 inactive domain | Insulinase (Peptidase family M16) | domain-containing protein",
+      "gene_end_max": "2606395",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "CSUI_000703",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "CSUI_000703"
+      },
+      {
+       "name": "source_id",
+       "value": "CSUI_000703-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "265",
+      "gene_name": null,
+      "organism_full": "Cystoisospora suis strain Wien I",
+      "gene_start_min": "15496",
+      "gene_type": "protein coding gene",
+      "sequence_id": "MIGC01000279",
+      "is_pseudo": "No",
+      "gene_product": "peptidase m16 inactive domain-containing protein",
+      "gene_end_max": "22697",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "CSUI_004168",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "CSUI_004168"
+      },
+      {
+       "name": "source_id",
+       "value": "CSUI_004168-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "745",
+      "gene_name": null,
+      "organism_full": "Cystoisospora suis strain Wien I",
+      "gene_start_min": "711",
+      "gene_type": "protein coding gene",
+      "sequence_id": "MIGC01001915",
+      "is_pseudo": "No",
+      "gene_product": "peptidase m16 inactive domain-containing protein",
+      "gene_end_max": "8336",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "CSUI_005196",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "CSUI_005196"
+      },
+      {
+       "name": "source_id",
+       "value": "CSUI_005196-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "179",
+      "gene_name": null,
+      "organism_full": "Cystoisospora suis strain Wien I",
+      "gene_start_min": "7712",
+      "gene_type": "protein coding gene",
+      "sequence_id": "MIGC01002504",
+      "is_pseudo": "No",
+      "gene_product": "peptidase m16 inactive domain-containing protein",
+      "gene_end_max": "11881",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "CSUI_008041",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "CSUI_008041"
+      },
+      {
+       "name": "source_id",
+       "value": "CSUI_008041-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1634",
+      "gene_name": null,
+      "organism_full": "Cystoisospora suis strain Wien I",
+      "gene_start_min": "72",
+      "gene_type": "protein coding gene",
+      "sequence_id": "MIGC01004387",
+      "is_pseudo": "No",
+      "gene_product": "peptidase m16 inactive domain-containing protein",
+      "gene_end_max": "24281",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "CSUI_011368",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "CSUI_011368"
+      },
+      {
+       "name": "source_id",
+       "value": "CSUI_011368-t36_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "647",
+      "gene_name": null,
+      "organism_full": "Cystoisospora suis strain Wien I",
+      "gene_start_min": "64",
+      "gene_type": "protein coding gene",
+      "sequence_id": "MIGC01011059",
+      "is_pseudo": "No",
+      "gene_product": "peptidase m16 inactive domain-containing protein",
+      "gene_end_max": "2379",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "cyc_00589",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "cyc_00589"
+      },
+      {
+       "name": "source_id",
+       "value": "cyc_00589-t31_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1333",
+      "gene_name": null,
+      "organism_full": "Cyclospora cayetanensis strain CHN_HEN01",
+      "gene_start_min": "76947",
+      "gene_type": "protein coding gene",
+      "sequence_id": "JROU02001487",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 domain-containing protein",
+      "gene_end_max": "82732",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "EAH_00019060",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "EAH_00019060"
+      },
+      {
+       "name": "source_id",
+       "value": "EAH_00019060-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1833",
+      "gene_name": null,
+      "organism_full": "Eimeria acervulina Houghton",
+      "gene_start_min": "14250",
+      "gene_type": "protein coding gene",
+      "sequence_id": "HG671427",
+      "is_pseudo": "No",
+      "gene_product": "M16 family peptidase, putative",
+      "gene_end_max": "22595",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "EBH_0013940",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "EBH_0013940"
+      },
+      {
+       "name": "source_id",
+       "value": "EBH_0013940-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1811",
+      "gene_name": null,
+      "organism_full": "Eimeria brunetti Houghton",
+      "gene_start_min": "42543",
+      "gene_type": "protein coding gene",
+      "sequence_id": "HG710532",
+      "is_pseudo": "No",
+      "gene_product": "M16 family peptidase, putative",
+      "gene_end_max": "51147",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "EfaB_PLUS_20412.g1740",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "EfaB_PLUS_20412.g1740"
+      },
+      {
+       "name": "source_id",
+       "value": "EfaB_PLUS_20412.g1740.t1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1811",
+      "gene_name": null,
+      "organism_full": "Eimeria falciformis Bayer Haberkorn 1970",
+      "gene_start_min": "516709",
+      "gene_type": "protein coding gene",
+      "sequence_id": "EfaB_Contig_20412",
+      "is_pseudo": "No",
+      "gene_product": "Delta-aminolevulinic acid dehydratase, Peptidase M16 N-terminal, Peptidase M16 C-terminal domain-containing protein",
+      "gene_end_max": "527964",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Efla_007085",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Efla_007085"
+      },
+      {
+       "name": "source_id",
+       "value": "Efla_007085-t70_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1744",
+      "gene_name": null,
+      "organism_full": "Eimeria flavescens A23",
+      "gene_start_min": "79133",
+      "gene_type": "protein coding gene",
+      "sequence_id": "JBPVOE010002007",
+      "is_pseudo": null,
+      "gene_product": "porphobilinogen synthase",
+      "gene_end_max": "87207",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Emag_001034",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Emag_001034"
+      },
+      {
+       "name": "source_id",
+       "value": "Emag_001034-t70_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1215",
+      "gene_name": null,
+      "organism_full": "Eimeria magna A19",
+      "gene_start_min": "344872",
+      "gene_type": "protein coding gene",
+      "sequence_id": "JBPVOG010000139",
+      "is_pseudo": null,
+      "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+      "gene_end_max": "350210",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Emed_000409",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Emed_000409"
+      },
+      {
+       "name": "source_id",
+       "value": "Emed_000409-t70_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "407",
+      "gene_name": null,
+      "organism_full": "Eimeria media PL19_A22",
+      "gene_start_min": "327115",
+      "gene_type": "protein coding gene",
+      "sequence_id": "JBPVOH010000039",
+      "is_pseudo": null,
+      "gene_product": "unspecified product",
+      "gene_end_max": "328436",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Emed_000410",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Emed_000410"
+      },
+      {
+       "name": "source_id",
+       "value": "Emed_000410-t70_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "922",
+      "gene_name": null,
+      "organism_full": "Eimeria media PL19_A22",
+      "gene_start_min": "328705",
+      "gene_type": "protein coding gene",
+      "sequence_id": "JBPVOH010000039",
+      "is_pseudo": null,
+      "gene_product": "Peptidase M16 inactive domain | Insulinase (Peptidase family M16) | domain-containing protein",
+      "gene_end_max": "333393",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "EMH_0000400",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "EMH_0000400"
+      },
+      {
+       "name": "source_id",
+       "value": "EMH_0000400-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "192",
+      "gene_name": null,
+      "organism_full": "Eimeria mitis Houghton",
+      "gene_start_min": "27",
+      "gene_type": "protein coding gene",
+      "sequence_id": "HG733361",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "673",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "EMH_0075450",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "EMH_0075450"
+      },
+      {
+       "name": "source_id",
+       "value": "EMH_0075450-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "845",
+      "gene_name": null,
+      "organism_full": "Eimeria mitis Houghton",
+      "gene_start_min": "100",
+      "gene_type": "protein coding gene",
+      "sequence_id": "HG684225",
+      "is_pseudo": "No",
+      "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+      "gene_end_max": "4891",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "EMH_0085810",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "EMH_0085810"
+      },
+      {
+       "name": "source_id",
+       "value": "EMH_0085810-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "527",
+      "gene_name": null,
+      "organism_full": "Eimeria mitis Houghton",
+      "gene_start_min": "607",
+      "gene_type": "protein coding gene",
+      "sequence_id": "HG685730",
+      "is_pseudo": "No",
+      "gene_product": "hypothetical protein",
+      "gene_end_max": "2815",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "EMWEY_00014880",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "EMWEY_00014880"
+      },
+      {
+       "name": "source_id",
+       "value": "EMWEY_00014880-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "2066",
+      "gene_name": null,
+      "organism_full": "Eimeria maxima Weybridge",
+      "gene_start_min": "11524",
+      "gene_type": "protein coding gene",
+      "sequence_id": "HG719582",
+      "is_pseudo": "No",
+      "gene_product": "M16 family peptidase, putative",
+      "gene_end_max": "22641",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "ENH_00077430",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "ENH_00077430"
+      },
+      {
+       "name": "source_id",
+       "value": "ENH_00077430.1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1335",
+      "gene_name": null,
+      "organism_full": "Eimeria necatrix Houghton",
+      "gene_start_min": "15619",
+      "gene_type": "protein coding gene",
+      "sequence_id": "HG725848",
+      "is_pseudo": "No",
+      "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+      "gene_end_max": "21117",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "EPH_0053790",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "EPH_0053790"
+      },
+      {
+       "name": "source_id",
+       "value": "EPH_0053790-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1326",
+      "gene_name": null,
+      "organism_full": "Eimeria praecox Houghton",
+      "gene_start_min": "49113",
+      "gene_type": "protein coding gene",
+      "sequence_id": "HG693640",
+      "is_pseudo": "No",
+      "gene_product": "Peptidase M16 inactive domain | Insulinase (Peptidase family M16) | domain-containing protein",
+      "gene_end_max": "54650",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Esti_000040",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Esti_000040"
+      },
+      {
+       "name": "source_id",
+       "value": "Esti_000040-t70_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1167",
+      "gene_name": null,
+      "organism_full": "Eimeria stiedai A26",
+      "gene_start_min": "104640",
+      "gene_type": "protein coding gene",
+      "sequence_id": "JBPSDH010000002",
+      "is_pseudo": null,
+      "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+      "gene_end_max": "109993",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "ETH_00007345",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "ETH_00007345"
+      },
+      {
+       "name": "source_id",
+       "value": "ETH_00007345-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1339",
+      "gene_name": null,
+      "organism_full": "Eimeria tenella strain Houghton",
+      "gene_start_min": "77022",
+      "gene_type": "protein coding gene",
+      "sequence_id": "HG675611",
+      "is_pseudo": "No",
+      "gene_product": "Insulinase (Peptidase family M16) | Peptidase M16 inactive domain | domain-containing protein",
+      "gene_end_max": "82493",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "ETH2_0700400",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "ETH2_0700400"
+      },
+      {
+       "name": "source_id",
+       "value": "ETH2_0700400_mRNA1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1339",
+      "gene_name": null,
+      "organism_full": "Eimeria tenella Houghton 2021",
+      "gene_start_min": "99404",
+      "gene_type": "protein coding gene",
+      "sequence_id": "HG994967.1",
+      "is_pseudo": "No",
+      "gene_product": "Insulinase (Peptidase family M16)/Peptidase M16 inactive domain containing protein, putative",
+      "gene_end_max": "104875",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "HHA_235680",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "HHA_235680"
+      },
+      {
+       "name": "source_id",
+       "value": "HHA_235680_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1669",
+      "gene_name": null,
+      "organism_full": "Hammondia hammondi strain H.H.34",
+      "gene_start_min": "1225624",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KL544038",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1242492",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "HHA_253890",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "HHA_253890"
+      },
+      {
+       "name": "source_id",
+       "value": "HHA_253890_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1578",
+      "gene_name": null,
+      "organism_full": "Hammondia hammondi strain H.H.34",
+      "gene_start_min": "658253",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KL544036",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "666785",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "LOC34617740",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "LOC34617740"
+      },
+      {
+       "name": "source_id",
+       "value": "LOC34617740-t45_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1729",
+      "gene_name": null,
+      "organism_full": "Cyclospora cayetanensis isolate NF1_C8",
+      "gene_start_min": "322317",
+      "gene_type": "protein coding gene",
+      "sequence_id": "NW_020312763",
+      "is_pseudo": "No",
+      "gene_product": "stromal processing peptidase, chloroplastic",
+      "gene_end_max": "330980",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Ncaninum_LIV_000431500",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Ncaninum_LIV_000431500"
+      },
+      {
+       "name": "source_id",
+       "value": "Ncaninum_LIV_000431500.1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1542",
+      "gene_name": null,
+      "organism_full": "Neospora caninum Liverpool 2019",
+      "gene_start_min": "1011504",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CM027905.1",
+      "is_pseudo": "No",
+      "gene_product": "putative M16 family peptidase",
+      "gene_end_max": "1019905",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "Ncaninum_LIV_000490400",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "Ncaninum_LIV_000490400"
+      },
+      {
+       "name": "source_id",
+       "value": "Ncaninum_LIV_000490400.1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1681",
+      "gene_name": null,
+      "organism_full": "Neospora caninum Liverpool 2019",
+      "gene_start_min": "2388718",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CM027901.1",
+      "is_pseudo": "No",
+      "gene_product": "putative M16 family peptidase",
+      "gene_end_max": "2402345",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "NCLIV_008220",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "NCLIV_008220"
+      },
+      {
+       "name": "source_id",
+       "value": "NCLIV_008220-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1282",
+      "gene_name": null,
+      "organism_full": "Neospora caninum Liverpool",
+      "gene_start_min": "1126755",
+      "gene_type": "protein coding gene",
+      "sequence_id": "FR823383",
+      "is_pseudo": "No",
+      "gene_product": "putative M16 family peptidase",
+      "gene_end_max": "1134940",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "NCLIV_050050",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "NCLIV_050050"
+      },
+      {
+       "name": "source_id",
+       "value": "NCLIV_050050-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1569",
+      "gene_name": null,
+      "organism_full": "Neospora caninum Liverpool",
+      "gene_start_min": "4621523",
+      "gene_type": "protein coding gene",
+      "sequence_id": "FR823391",
+      "is_pseudo": "No",
+      "gene_product": "putative M16 family peptidase",
+      "gene_end_max": "4633936",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "SN3_00100810",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "SN3_00100810"
+      },
+      {
+       "name": "source_id",
+       "value": "SN3_00100810-mRNA-1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "2481",
+      "gene_name": null,
+      "organism_full": "Sarcocystis neurona SN3",
+      "gene_start_min": "2559986",
+      "gene_type": "protein coding gene",
+      "sequence_id": "sneu_scaffold00001",
+      "is_pseudo": "No",
+      "gene_product": "peptidase m16 inactive domain-containing protein",
+      "gene_end_max": "2607627",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "SRCN_114",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "SRCN_114"
+      },
+      {
+       "name": "source_id",
+       "value": "SRCN_114.mRNA"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "2338",
+      "gene_name": null,
+      "organism_full": "Sarcocystis neurona SO SN1",
+      "gene_start_min": "1757107",
+      "gene_type": "protein coding gene",
+      "sequence_id": "SnSN1_scaffold00001",
+      "is_pseudo": "No",
+      "gene_product": "Peptidase M16, N-terminal, Peptidase M16, C-terminal domain-containing protein",
+      "gene_end_max": "1810769",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "SRCN_6154",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "SRCN_6154"
+      },
+      {
+       "name": "source_id",
+       "value": "SRCN_6154.mRNA"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1835",
+      "gene_name": null,
+      "organism_full": "Sarcocystis neurona SO SN1",
+      "gene_start_min": "201251",
+      "gene_type": "protein coding gene",
+      "sequence_id": "SnSN1_scaffold00040",
+      "is_pseudo": "No",
+      "gene_product": "Peptidase M16, N-terminal, Peptidase M16, C-terminal domain-containing protein",
+      "gene_end_max": "227865",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_235680",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_235680"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_235680-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1692",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "268754",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ973636",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "285785",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGARI_253890",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGARI_253890"
+      },
+      {
+       "name": "source_id",
+       "value": "TGARI_253890-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1604",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ARI",
+      "gene_start_min": "1216613",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ973616",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1225988",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGBR9_235680A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGBR9_235680A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGBR9_235680A-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "743",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii TgCATBr9",
+      "gene_start_min": "33434",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KZ793228.1",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "35665",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGBR9_235680B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGBR9_235680B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGBR9_235680B-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "443",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii TgCATBr9",
+      "gene_start_min": "36334",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KZ793228.1",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "41744",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGBR9_235680C",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGBR9_235680C"
+      },
+      {
+       "name": "source_id",
+       "value": "TGBR9_235680C-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "446",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii TgCATBr9",
+      "gene_start_min": "43885",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KZ793228.1",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "49153",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGBR9_253890A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGBR9_253890A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGBR9_253890A-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1034",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii TgCATBr9",
+      "gene_start_min": "1289801",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KZ793296.1",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1295338",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGBR9_253890B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGBR9_253890B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGBR9_253890B-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "523",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii TgCATBr9",
+      "gene_start_min": "1286144",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KZ793296.1",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1288724",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGCAST_235680A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGCAST_235680A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGCAST_235680A-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1116",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii CAST",
+      "gene_start_min": "278503",
+      "gene_type": "protein coding gene",
+      "sequence_id": "ML130740",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "286457",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGCAST_235680B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGCAST_235680B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGCAST_235680B-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "690",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii CAST",
+      "gene_start_min": "269214",
+      "gene_type": "protein coding gene",
+      "sequence_id": "ML130740",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "277646",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGCAST_253890A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGCAST_253890A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGCAST_253890A-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1080",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii CAST",
+      "gene_start_min": "655853",
+      "gene_type": "protein coding gene",
+      "sequence_id": "ML130715",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "662223",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGCAST_253890B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGCAST_253890B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGCAST_253890B-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "523",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii CAST",
+      "gene_start_min": "652566",
+      "gene_type": "protein coding gene",
+      "sequence_id": "ML130715",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "655141",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGCOUG_235680A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGCOUG_235680A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGCOUG_235680A-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1096",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii COUG",
+      "gene_start_min": "275891",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KZ624839.1",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "283802",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGCOUG_235680B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGCOUG_235680B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGCOUG_235680B-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "595",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii COUG",
+      "gene_start_min": "266664",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KZ624839.1",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "275097",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGCOUG_253890",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGCOUG_253890"
+      },
+      {
+       "name": "source_id",
+       "value": "TGCOUG_253890-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1604",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii COUG",
+      "gene_start_min": "1244464",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KZ624809.1",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1253836",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGCOUG_253900A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGCOUG_253900A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGCOUG_253900A-t46_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "209",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii COUG",
+      "gene_start_min": "1234627",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KZ624809.1",
+      "is_pseudo": "No",
+      "gene_product": "parasite porphobilinogen synthase PBGS",
+      "gene_end_max": "1236914",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGDOM2_235680A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGDOM2_235680A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGDOM2_235680A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1096",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GAB2-2007-GAL-DOM2",
+      "gene_start_min": "673868",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN003137",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "681789",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGDOM2_235680B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGDOM2_235680B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGDOM2_235680B-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "595",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GAB2-2007-GAL-DOM2",
+      "gene_start_min": "682585",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN003137",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "691040",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGDOM2_253890",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGDOM2_253890"
+      },
+      {
+       "name": "source_id",
+       "value": "TGDOM2_253890-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1604",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GAB2-2007-GAL-DOM2",
+      "gene_start_min": "656017",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN003129",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "665425",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGFOU_235680A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGFOU_235680A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGFOU_235680A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1116",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii FOU",
+      "gene_start_min": "273043",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN000272",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "280993",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGFOU_235680B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGFOU_235680B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGFOU_235680B-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "461",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii FOU",
+      "gene_start_min": "265932",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN000272",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "271676",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGFOU_253890A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGFOU_253890A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGFOU_253890A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1080",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii FOU",
+      "gene_start_min": "1062895",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN003102",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1069252",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGFOU_253890B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGFOU_253890B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGFOU_253890B-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "523",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii FOU",
+      "gene_start_min": "1070250",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN003102",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1072827",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGFOU_253900A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGFOU_253900A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGFOU_253900A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "209",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii FOU",
+      "gene_start_min": "1052138",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN003102",
+      "is_pseudo": "No",
+      "gene_product": "parasite porphobilinogen synthase PBGS",
+      "gene_end_max": "1054287",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_235680",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_235680"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_235680-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1692",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "4930492",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrX",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "4947476",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGGT1_253890",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGGT1_253890"
+      },
+      {
+       "name": "source_id",
+       "value": "TGGT1_253890-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1604",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii GT1",
+      "gene_start_min": "1254200",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGGT1_chrIII",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1263616",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGMAS_235680",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGMAS_235680"
+      },
+      {
+       "name": "source_id",
+       "value": "TGMAS_235680-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "779",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii MAS",
+      "gene_start_min": "56377",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN044661",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "59238",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGMAS_253890A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGMAS_253890A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGMAS_253890A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1103",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii MAS",
+      "gene_start_min": "1039028",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN044619",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1045465",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGMAS_253890B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGMAS_253890B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGMAS_253890B-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "537",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii MAS",
+      "gene_start_min": "1046006",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN044619",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1048626",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGME49_235680",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGME49_235680"
+      },
+      {
+       "name": "source_id",
+       "value": "TGME49_235680-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1692",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii ME49",
+      "gene_start_min": "5041114",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGME49_chrX",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "5060271",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGME49_500302",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGME49_500302"
+      },
+      {
+       "name": "source_id",
+       "value": "TGME49_500302.R91"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1743",
+      "gene_name": "PBGS",
+      "organism_full": "Toxoplasma gondii ME49",
+      "gene_start_min": "1272835",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGME49_chrIII",
+      "is_pseudo": "No",
+      "gene_product": "Porphobilinogen Synthase (PBGS) / Aminolevulinic Acid Dehydratase (ALAD) + Pitrilysin (apicoplast stromal processing peptidase)",
+      "gene_end_max": "1293118",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGME49_500302",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGME49_500302"
+      },
+      {
+       "name": "source_id",
+       "value": "TGME49_500302.R92"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "658",
+      "gene_name": "PBGS",
+      "organism_full": "Toxoplasma gondii ME49",
+      "gene_start_min": "1272835",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGME49_chrIII",
+      "is_pseudo": "No",
+      "gene_product": "Porphobilinogen Synthase (PBGS) / Aminolevulinic Acid Dehydratase (ALAD) + Pitrilysin (apicoplast stromal processing peptidase)",
+      "gene_end_max": "1293118",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGP89_235680A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGP89_235680A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGP89_235680A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1254",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii p89",
+      "gene_start_min": "893398",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KL998091",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "902926",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGP89_235680B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGP89_235680B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGP89_235680B-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "408",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii p89",
+      "gene_start_min": "886908",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KL998091",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "892493",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGP89_253890",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGP89_253890"
+      },
+      {
+       "name": "source_id",
+       "value": "TGP89_253890-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1604",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii p89",
+      "gene_start_min": "1278886",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KL998083",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1288261",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGPRC2_235680A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGPRC2_235680A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGPRC2_235680A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1096",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii TgCatPRC2",
+      "gene_start_min": "270910",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ986321",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "278835",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGPRC2_235680B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGPRC2_235680B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGPRC2_235680B-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "128",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii TgCatPRC2",
+      "gene_start_min": "269267",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ986321",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "270210",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGPRC2_235680C",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGPRC2_235680C"
+      },
+      {
+       "name": "source_id",
+       "value": "TGPRC2_235680C-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "467",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii TgCatPRC2",
+      "gene_start_min": "261109",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ986321",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "267994",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGPRC2_253890A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGPRC2_253890A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGPRC2_253890A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1080",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii TgCatPRC2",
+      "gene_start_min": "652925",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ983275",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "659281",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGPRC2_253890B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGPRC2_253890B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGPRC2_253890B-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "523",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii TgCatPRC2",
+      "gene_start_min": "649586",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ983275",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "652162",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGPRC2_253900A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGPRC2_253900A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGPRC2_253900A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "209",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii TgCatPRC2",
+      "gene_start_min": "667019",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KQ983275",
+      "is_pseudo": "No",
+      "gene_product": "parasite porphobilinogen synthase PBGS",
+      "gene_end_max": "669168",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGRH88_004460",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGRH88_004460"
+      },
+      {
+       "name": "source_id",
+       "value": "TGRH88_004460_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1570",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii RH-88",
+      "gene_start_min": "1324933",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CM023084",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1333474",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGRH88_041800",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGRH88_041800"
+      },
+      {
+       "name": "source_id",
+       "value": "TGRH88_041800_t1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1632",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii RH-88",
+      "gene_start_min": "2479510",
+      "gene_type": "protein coding gene",
+      "sequence_id": "CM023091",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "2496494",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGRUB_235680",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGRUB_235680"
+      },
+      {
+       "name": "source_id",
+       "value": "TGRUB_235680-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1692",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii RUB",
+      "gene_start_min": "278562",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN039990",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "295594",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGRUB_253890",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGRUB_253890"
+      },
+      {
+       "name": "source_id",
+       "value": "TGRUB_253890-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1604",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii RUB",
+      "gene_start_min": "646147",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN039997",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "655512",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGRUB_253900A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGRUB_253900A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGRUB_253900A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "209",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii RUB",
+      "gene_start_min": "663236",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN039997",
+      "is_pseudo": "No",
+      "gene_product": "parasite porphobilinogen synthase PBGS",
+      "gene_end_max": "665387",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGVAND_235680A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGVAND_235680A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGVAND_235680A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1225",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii VAND",
+      "gene_start_min": "2301593",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN042475",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "2311059",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGVAND_235680B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGVAND_235680B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGVAND_235680B-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "482",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii VAND",
+      "gene_start_min": "2311953",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN042475",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "2318933",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGVAND_253890A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGVAND_253890A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGVAND_253890A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "868",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii VAND",
+      "gene_start_min": "1060539",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN042477",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1065197",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGVAND_253890B",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGVAND_253890B"
+      },
+      {
+       "name": "source_id",
+       "value": "TGVAND_253890B-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "736",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii VAND",
+      "gene_start_min": "1066531",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN042477",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1070587",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGVAND_253900A",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGVAND_253900A"
+      },
+      {
+       "name": "source_id",
+       "value": "TGVAND_253900A-t30_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "209",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii VAND",
+      "gene_start_min": "1050513",
+      "gene_type": "protein coding gene",
+      "sequence_id": "KN042477",
+      "is_pseudo": "No",
+      "gene_product": "parasite porphobilinogen synthase PBGS",
+      "gene_end_max": "1052616",
+      "strand_plus_minus": "+"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGVEG_235680",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGVEG_235680"
+      },
+      {
+       "name": "source_id",
+       "value": "TGVEG_235680-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1692",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii VEG",
+      "gene_start_min": "4963476",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGVEG_chrX",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "4980535",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    },
+    {
+     "displayName": "TGVEG_253890",
+     "id": [
+      {
+       "name": "gene_source_id",
+       "value": "TGVEG_253890"
+      },
+      {
+       "name": "source_id",
+       "value": "TGVEG_253890-t26_1"
+      },
+      {
+       "name": "project_id",
+       "value": "ToxoDB"
+      }
+     ],
+     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+     "attributes": {
+      "gene_orthomcl_name": "OG8_0011941",
+      "protein_length": "1604",
+      "gene_name": null,
+      "organism_full": "Toxoplasma gondii VEG",
+      "gene_start_min": "1281442",
+      "gene_type": "protein coding gene",
+      "sequence_id": "TGVEG_chrIII",
+      "is_pseudo": "No",
+      "gene_product": "peptidase M16 inactive domain-containing protein",
+      "gene_end_max": "1290850",
+      "strand_plus_minus": "-"
+     },
+     "tables": {},
+     "tableErrors": []
+    }
+   ],
+   "served_total": 87,
+   "kept": null
+  }
+ ]
+}

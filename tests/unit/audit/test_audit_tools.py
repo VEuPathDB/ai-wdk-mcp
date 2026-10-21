@@ -5,25 +5,27 @@ from tests._support.audit_fixtures import (
     GT1_SELK,
     ME49_SELK,
     NF54_PIGA,
+    NF54_PIGA_ID,
     PIGA,
-    load,
-    load_protein,
     piga_inputs,
-    reference_piga,
-    reference_protein,
     selk_inputs,
 )
-from tests._support.audit_site import AuditSite, window_refused
-from veupathdb.errors import WDKError
+from tests._support.audit_site import window_refused
+from tests._support.piga_selk_site import (
+    SELK_PAD,
+    Site,
+    gt1_selk_row,
+    reference_piga_row,
+    strain_piga_row,
+)
+from veupathdb.errors import DataParsingError
 from veupathdb.jbrowse import GenomeIndexError, JBrowseError
 from veupathdb.wdk import WDKRecordInstance
 
 from veupathdb_mcp.audit import gene_models, served
+from veupathdb_mcp.audit.gene_ids import GeneReads
 from veupathdb_mcp.audit.gene_models import GeneModel
-from veupathdb_mcp.audit.genes import GeneRow
 from veupathdb_mcp.tools import audit_tools
-
-SELK_PAD = served.SELENOPROTEIN_PAD + 3 * len("UG")
 
 
 async def test_the_pseudogene_tool_returns_the_check(
@@ -35,7 +37,11 @@ async def test_the_pseudogene_tool_returns_the_check(
 
     assert result.verdict == "INTACT"
     assert result.strain_cds_length == result.reference_cds_length == 1386
-    assert (result.strain_gene, result.reference_gene) == (NF54_PIGA, PIGA)
+    assert (result.strain_gene, result.reference_gene) == (NF54_PIGA_ID, PIGA)
+    assert [(i.given, i.resolved) for i in result.gene_ids] == [
+        (NF54_PIGA, NF54_PIGA_ID),
+        (PIGA, PIGA),
+    ]
 
 
 async def test_the_selenoprotein_tool_returns_the_check(
@@ -47,6 +53,7 @@ async def test_the_selenoprotein_tool_returns_the_check(
 
     assert result.verdict == "STOPS_AT_SEC"
     assert result.reference_tail == "UG"
+    assert (result.tail_identity, result.sec_aligned) == (1.0, True)
     assert (result.gene, result.reference_gene) == (GT1_SELK, ME49_SELK)
 
 
@@ -57,96 +64,6 @@ async def test_a_refused_input_is_a_tool_error(
 
     with pytest.raises(ToolError, match="NOT_A_GENE names no gene"):
         await audit_tools.audit_pseudogene_call("plasmodb", "NOT_A_GENE", PIGA)
-
-
-def strain_piga_row() -> GeneRow:
-    return GeneRow(
-        gene=NF54_PIGA,
-        organism="Plasmodium falciparum NF54",
-        ortholog_group="OG8_0000001",
-        protein_length=None,
-        name="",
-        product="phosphatidylinositol N-acetylglucosaminyltransferase subunit A",
-        sequence_id="VBRF01000019.1",
-        start=1063699,
-        end=1065985,
-        strand="-",
-        pseudo=True,
-        gene_type="pseudogene",
-    )
-
-
-def reference_piga_row() -> GeneRow:
-    return strain_piga_row().model_copy(
-        update={
-            "gene": PIGA,
-            "organism": "Plasmodium falciparum 3D7",
-            "protein_length": 461,
-            "name": "PIGA",
-            "sequence_id": "Pf3D7_10_v3",
-            "start": 1302298,
-            "end": 1305315,
-            "pseudo": False,
-            "gene_type": "protein coding gene",
-        }
-    )
-
-
-def gt1_selk_row() -> GeneRow:
-    gt1 = load("tgonGT1_selk.json")
-    return GeneRow(
-        gene=GT1_SELK,
-        organism="Toxoplasma gondii GT1",
-        ortholog_group="OG7_0000000",
-        protein_length=131,
-        name="",
-        product="selenoprotein K",
-        sequence_id=gt1.seqid,
-        start=gt1.start + SELK_PAD,
-        end=gt1.end - SELK_PAD,
-        strand="+",
-        pseudo=False,
-        gene_type="protein coding gene",
-    )
-
-
-def me49_selk_row() -> GeneRow:
-    me49 = load("tgonME49_selk.json")
-    return gt1_selk_row().model_copy(
-        update={
-            "gene": ME49_SELK,
-            "organism": "Toxoplasma gondii ME49",
-            "protein_length": 133,
-            "sequence_id": me49.seqid,
-            "start": me49.start,
-            "end": me49.end,
-        }
-    )
-
-
-class Site(AuditSite):
-    def __init__(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        super().__init__(monkeypatch)
-        self.rows = [
-            strain_piga_row(),
-            reference_piga_row(),
-            gt1_selk_row(),
-            me49_selk_row(),
-        ]
-        self.models = {
-            PIGA: GeneModel(organism_abbrev="pfal3D7", cds=reference_piga().cds),
-            NF54_PIGA: GeneModel(organism_abbrev="pfalNF54", cds=[]),
-            GT1_SELK: GeneModel(organism_abbrev="tgonGT1", cds=[]),
-        }
-        self.proteins = {
-            GT1_SELK: load_protein("tgonGT1_selk.json").model_protein,
-            ME49_SELK: reference_protein("tgonME49_selk.json"),
-        }
-        for name in ("pfal3D7_piga.json", "pfalNF54_piga.json", "tgonGT1_selk.json"):
-            region = load(name)
-            organism = name.split("_", 1)[0]
-            key = (organism, region.seqid, region.start, region.end)
-            self.regions[key] = region.sequence
 
 
 async def test_the_pseudogene_inputs_are_read_on_each_genes_own_strand(
@@ -175,7 +92,8 @@ async def test_the_selenoprotein_inputs_pad_the_gene_past_the_reference_tail(
     assert result.verdict == "STOPS_AT_SEC"
     assert result.after_model_end.startswith("*G*")
     assert site.windows == [("tgonGT1", "TGGT1_chrXI", 5359280, 5361636)]
-    assert site.models_read == [GT1_SELK]
+    assert (site.models_read, site.organisms_read) == ([], [GT1_SELK])
+    assert site.proteins_read == [[GT1_SELK, ME49_SELK]]
 
 
 @pytest.mark.parametrize("strand", ["+", "-"])
@@ -332,11 +250,11 @@ async def test_a_wdk_refusal_is_a_tool_error(
 ) -> None:
     site = Site(monkeypatch)
 
-    async def truncated(site_id: str, gene_ids: list[str]) -> list[GeneRow]:
+    async def truncated(site_id: str, gene_ids: list[str]) -> GeneReads:
         msg = "WDK GeneByLocusTag report served 1 records of a total of 2"
-        raise WDKError(msg)
+        raise DataParsingError(msg)
 
-    monkeypatch.setattr(served, "gene_rows", truncated)
+    monkeypatch.setattr(served, "rows_and_proteins", truncated)
 
     with pytest.raises(ToolError, match="served 1 records of a total of 2"):
         await audit_tools.audit_selenoprotein_end("toxodb", GT1_SELK, ME49_SELK)
@@ -362,7 +280,7 @@ async def test_a_gene_record_without_an_organism_is_a_tool_error(
                 {"attributes": {"organismAbbrev": ""}, "tables": {}}
             )
 
-    monkeypatch.setattr(served, "gene_model", gene_models.gene_model)
+    monkeypatch.setattr(served, "gene_organism", gene_models.gene_organism)
     monkeypatch.setattr(gene_models, "get_strategy_api", lambda site_id: Records())
 
     with pytest.raises(ToolError, match="gene record of TGGT1_316600 on toxodb"):
@@ -402,7 +320,9 @@ async def test_a_selenoprotein_window_at_the_limit_is_read(
     assert end - start + 1 == served.AUDIT_MAX_WINDOW_BASES
 
 
-@pytest.mark.parametrize(("over", "gene", "pad"), [(0, NF54_PIGA, 3000), (1, PIGA, 0)])
+@pytest.mark.parametrize(
+    ("over", "gene", "pad"), [(0, NF54_PIGA_ID, 3000), (1, PIGA, 0)]
+)
 async def test_a_pseudogene_window_over_the_limit_is_a_tool_error(
     monkeypatch: pytest.MonkeyPatch, over: int, gene: str, pad: int
 ) -> None:

@@ -13,11 +13,12 @@ from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import AiExpressionReport, AiExpressionStatus
 
-from veupathdb_mcp.wdk import ai_expression
+from veupathdb_mcp.wdk import ai_expression, gene_record_type
 from veupathdb_mcp.wdk.ai_expression import (
     NO_SUMMARY_ON_THE_SITE,
     get_gene_expression_summary,
 )
+from veupathdb_mcp.wdk.site_cache import SiteCache
 
 SUMMARIZED_GENE = "PF3D7_0709000"
 INCOMPLETE_GENE = "PF3D7_1133400"
@@ -57,7 +58,7 @@ class _FakeClient:
 
 @pytest.fixture(autouse=True)
 def no_record_type_read_yet(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(ai_expression, "_GENE_KEY_COLUMNS", {})
+    monkeypatch.setattr(gene_record_type, "_SERVED", SiteCache())
 
 
 def _install(
@@ -68,6 +69,7 @@ def _install(
 ) -> _FakeClient:
     client = _FakeClient(report, refusal, key_columns)
     monkeypatch.setattr(ai_expression, "get_wdk_client", lambda _site: client)
+    monkeypatch.setattr(gene_record_type, "get_wdk_client", lambda _site: client)
     return client
 
 
