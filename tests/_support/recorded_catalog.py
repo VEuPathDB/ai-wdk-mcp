@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 from veupathdb import JSONObject
-from veupathdb.devtools.wdk_capture import WDKExchange
+from veupathdb.devtools import WDKExchange
 from veupathdb.wdk import WDKRecordType
 
 from veupathdb_mcp.catalog import discovery

@@ -1,4 +1,5 @@
 import pytest
+from fastmcp.exceptions import ToolError
 from tests._support.audit_site import Contig
 from tests._support.proteins import PROTEIN, back_translate, row
 from tests._support.strain_site import (
@@ -10,7 +11,9 @@ from tests._support.strain_site import (
     StrainSite,
     strain_site,
 )
+from veupathdb.jbrowse import JBrowseError
 
+from veupathdb_mcp.audit import ANNOTATION_MAX_GROUPS, STRAIN_STORE_READS
 from veupathdb_mcp.tools.audit_strain_tools import audit_strain_model
 
 POLY = PROTEIN[:100] + "N" * 40 + PROTEIN[100:]
@@ -96,6 +99,9 @@ async def test_a_paralog_beside_the_strain_gene_stops_the_genome_read(
     assert (result.code, result.relatives.median) == (None, 200)
     assert site.models_read == []
     assert site.windows == []
+    assert site.rows_read == [STRAIN, REFERENCE]
+    assert site.annotation.lists == ["pfalDd2"]
+    assert len(site.annotation.reads) == 1
 
 
 @pytest.mark.parametrize(("gap", "stopped"), [(5999, True), (6000, False)])
@@ -140,3 +146,64 @@ async def test_a_member_off_the_strain_sequence_or_organism_does_not_stop_the_re
 
     assert (result.not_read, result.nearby_paralogs) == (None, [])
     assert len(site.windows) == 1
+
+
+async def test_a_paralog_the_annotation_does_not_index_on_the_sequence_is_not_seen(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = with_paralog(monkeypatch, 1000)
+    site.annotation.indexed = False
+
+    result = await audit_strain_model("plasmodb", STRAIN, REFERENCE)
+
+    assert (result.not_read, result.nearby_paralogs) == (None, [])
+    assert site.annotation.reads == []
+    assert len(site.windows) == 1
+
+
+async def test_an_annotation_past_the_chunk_group_cap_is_a_tool_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = with_paralog(monkeypatch, 1000)
+    site.annotation.groups = ANNOTATION_MAX_GROUPS + 1
+
+    with pytest.raises(ToolError, match="lies in 5 chunk groups; at most 4 are read"):
+        await audit_strain_model("plasmodb", STRAIN, REFERENCE)
+
+    assert (site.annotation.reads, site.windows) == ([], [])
+
+
+async def test_an_organism_with_no_annotation_track_is_a_tool_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = with_paralog(monkeypatch, 1000)
+    site.annotation.listed = False
+
+    with pytest.raises(ToolError, match="pfalDd2 lists no genomeAndProteome/gff"):
+        await audit_strain_model("plasmodb", STRAIN, REFERENCE)
+
+
+async def test_an_annotation_track_list_the_site_refuses_is_a_tool_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = with_paralog(monkeypatch, 1000)
+    site.annotation.refusal = JBrowseError("GET", "https://qa.example/tracks", 503)
+
+    with pytest.raises(ToolError, match="503"):
+        await audit_strain_model("plasmodb", STRAIN, REFERENCE)
+
+    assert site.windows == []
+
+
+async def test_a_strain_gene_with_no_other_member_in_its_organism_reads_no_annotation(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = strain_site(monkeypatch, (SHORT, PROTEIN))
+
+    await audit_strain_model("plasmodb", STRAIN, REFERENCE)
+
+    assert (site.annotation.lists, site.annotation.reads) == ([], [])
+
+
+def test_a_strain_call_makes_at_most_one_window_and_four_annotation_reads() -> None:
+    assert (STRAIN_STORE_READS, ANNOTATION_MAX_GROUPS) == (5, 4)

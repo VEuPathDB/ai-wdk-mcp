@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from collections.abc import Awaitable, Callable
 
 import pytest
 from pydantic import TypeAdapter, ValidationError
@@ -10,7 +9,6 @@ from tests._support.wdk_genes import (
     PF3D7,
     PIGA,
     gene_attributes,
-    piga,
     record,
 )
 from veupathdb import JSONObject
@@ -21,9 +19,8 @@ from veupathdb.wdk import (
     WDKRecordInstance,
 )
 
-from veupathdb_mcp.audit import gene_models, genes
+from veupathdb_mcp.audit import gene_models
 from veupathdb_mcp.audit.genes import (
-    GeneRow,
     OrthologRow,
     ortholog_table,
     orthologs_of,
@@ -40,8 +37,10 @@ def ortholog_row(gene: str, organism: str, syntenic: str) -> dict[str, object]:
         "ortho_source_id": f"{gene}.1",
         "ortho_gene_source_id": gene,
         "protein_length": "459",
+        "gene_product": "GPI anchor biosynthesis protein",
         "is_syntenic": syntenic,
         "is_reference_strain": "yes",
+        "has_comment": "no",
         "source_id": PIGA,
     }
 
@@ -71,20 +70,6 @@ def install_fake_record(
     records = _Records({} if table is None else {"Orthologs": table})
     monkeypatch.setattr(gene_models, "get_strategy_api", lambda site_id: records)
     return records
-
-
-def fake_gene_rows(
-    read: list[list[str]], served: set[str] | None = None
-) -> Callable[[str, list[str]], Awaitable[list[GeneRow]]]:
-    async def rows(site_id: str, gene_ids: list[str]) -> list[GeneRow]:
-        read.append(gene_ids)
-        return [
-            piga(pseudo=False).model_copy(update={"gene": gene})
-            for gene in gene_ids
-            if served is None or gene in served
-        ]
-
-    return rows
 
 
 def triple(row: OrthologRow) -> tuple[str, str, bool]:
@@ -130,7 +115,7 @@ async def test_the_ortholog_table_is_one_gene_record_read(
     ]
 
 
-async def test_orthologs_come_from_the_gene_records_ortholog_table(
+async def test_a_group_is_the_table_without_the_gene_and_without_repeats(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     records = install_fake_record(
@@ -138,54 +123,25 @@ async def test_orthologs_come_from_the_gene_records_ortholog_table(
         [
             ortholog_row("PmUG01_10043600", "Plasmodium malariae UG01", "yes"),
             ortholog_row(PIGA, PF3D7, "yes"),
+            ortholog_row("PmUG01_10043600", "Plasmodium malariae UG01", "yes"),
         ],
     )
-    read: list[list[str]] = []
-    monkeypatch.setattr(genes, "gene_rows", fake_gene_rows(read))
 
-    rows = await orthologs_of("plasmodb", PIGA)
+    group = await orthologs_of("plasmodb", PIGA)
 
     assert [(r[1][0]["value"], r[3]) for r in records.reads] == [(PIGA, ["Orthologs"])]
-    assert read == [[PIGA, "PmUG01_10043600"]]
-    assert {row.gene for row in rows} == {PIGA, "PmUG01_10043600"}
+    assert group.gene == PIGA
+    assert [(m.gene, m.protein_length, m.reference_strain) for m in group.members] == [
+        ("PmUG01_10043600", 459, True)
+    ]
 
 
-async def test_an_ortholog_the_gene_rows_do_not_return_is_a_refusal_naming_it(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    install_fake_record(
-        monkeypatch,
-        [
-            ortholog_row("PmUG01_10043600", "Plasmodium malariae UG01", "yes"),
-            ortholog_row("PY03143", "Plasmodium yoelii yoelii 17XNL", "yes"),
-            ortholog_row("C922_03356", "Plasmodium inui San Antonio 1", "yes"),
-        ],
-    )
-    read: list[list[str]] = []
-    monkeypatch.setattr(
-        genes, "gene_rows", fake_gene_rows(read, served={PIGA, "PY03143"})
-    )
-
-    with pytest.raises(DataParsingError) as refused:
-        await orthologs_of("plasmodb", PIGA)
-
-    assert refused.value.detail == (
-        "plasmodb serves no gene row for C922_03356, PmUG01_10043600, "
-        f"named in the orthologs of {PIGA}"
-    )
-
-
-async def test_a_gene_with_no_orthologs_reads_itself(
+async def test_a_gene_with_no_orthologs_has_an_empty_group(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     install_fake_record(monkeypatch, [])
-    read: list[list[str]] = []
-    monkeypatch.setattr(genes, "gene_rows", fake_gene_rows(read))
 
-    rows = await orthologs_of("plasmodb", PIGA)
-
-    assert read == [[PIGA]]
-    assert [row.gene for row in rows] == [PIGA]
+    assert (await orthologs_of("plasmodb", PIGA)).members == []
 
 
 async def test_a_gene_record_without_the_ortholog_table_is_a_refusal(

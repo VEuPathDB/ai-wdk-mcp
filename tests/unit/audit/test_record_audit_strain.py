@@ -13,7 +13,15 @@ DD2 = "Plasmodium falciparum Dd2"
 
 def ortholog(gene: str, organism: str) -> OrthologRow:
     return OrthologRow.model_validate(
-        {"ortho_gene_source_id": gene, "organism": organism, "is_syntenic": "yes"}
+        {
+            "ortho_gene_source_id": gene,
+            "organism": organism,
+            "is_syntenic": "yes",
+            "protein_length": "300",
+            "gene_product": "protein",
+            "is_reference_strain": "no",
+            "has_comment": "no",
+        }
     )
 
 
@@ -68,6 +76,7 @@ def test_a_strain_recording_holds_the_reference_beside_the_served_bodies(
         contig_length=10,
         window_start=1,
         window="ATGAAATAA",
+        annotation=["S_contig\tVEuPathDB\tprotein_coding_gene\t1\t9\t.\t+\t.\tID=S"],
     )
 
     write_lengths(tmp_path, {"strain_s.json": recorded})

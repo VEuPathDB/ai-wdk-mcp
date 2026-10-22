@@ -12,7 +12,7 @@ from veupathdb.model import CamelModel
 
 from veupathdb_mcp.audit.codes import GeneticCode
 from veupathdb_mcp.audit.gene_ids import GeneId, check_resolved
-from veupathdb_mcp.audit.genes import GeneRow
+from veupathdb_mcp.audit.genes import GeneRow, GroupMember
 from veupathdb_mcp.audit.length import LengthCheck, LengthVerdict
 from veupathdb_mcp.audit.lengths import GroupProfile, RelativeTier, relatives_of
 from veupathdb_mcp.audit.windows import FOUND, MISSING, STEP, WINDOW, best_identity
@@ -149,13 +149,13 @@ class StrainRelatives(CamelModel):
 
 
 def strain_relatives(
-    reference: GeneRow, strain: GeneRow, group: list[GeneRow] | None
+    reference: GeneRow, strain: GeneRow, group: list[GroupMember] | None
 ) -> StrainRelatives:
     if group is None:
         return StrainRelatives(
             tier=None, members=[], missing="RESIDUAL_GROUP", copies_per_organism=None
         )
-    copies = GroupProfile.of(group).copies
+    copies = GroupProfile.of([reference], group).copies
     found = relatives_of(reference, strain, group) if copies == 1 else None
     if found is None:
         return StrainRelatives(

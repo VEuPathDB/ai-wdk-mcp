@@ -20,17 +20,18 @@ from veupathdb.jbrowse import GenomeWindow
 
 from veupathdb_mcp.audit.codes import GeneticCode
 from veupathdb_mcp.audit.gene_ids import GeneId
+from veupathdb_mcp.audit.intron_judge import (
+    judge_introns,
+)
 from veupathdb_mcp.audit.introns import (
     GeneStructure,
     IntronAudit,
-    IntronCorrection,
     IntronJudgement,
     IntronSupport,
     RnaJunction,
     UnreadIntron,
-    correct_model,
-    judge_introns,
 )
+from veupathdb_mcp.audit.introns_correction import IntronCorrection, correct_model
 
 STANDARD = GeneticCode.STANDARD
 READS = [junction(I1, 100), junction(I2, 120), junction(I3, 300)]
@@ -90,33 +91,12 @@ def test_a_minus_strand_gene_is_corrected_on_its_own_strand() -> None:
     assert result.protein == SPLICED
 
 
-def test_a_model_with_an_unexplained_intron_is_not_corrected() -> None:
-    gene = structure([E1, E3, E4])
-    judgement = judge_introns(gene, [junction(I3, 300)])
-
-    with pytest.raises(ValueError, match="every unread intron is explained"):
-        correct_model(gene, judged(judgement), dna(), STANDARD)
-
-
 def test_a_window_that_misses_the_gene_is_a_parsing_error() -> None:
     gene = structure([E1, E3, E4])
     short = GenomeWindow(seqid="contig", start=1100, sequence="ACGT" * 100)
 
     with pytest.raises(DataParsingError, match="PcyX_1-t1 lies outside the window"):
         correct_model(gene, judged(judge_introns(gene, READS)), short, STANDARD)
-
-
-def test_an_unread_intron_has_as_many_replacements_as_its_outcome_says() -> None:
-    one = IntronSupport(start=1151, end=1210, reads=900, tracks=1)
-
-    with pytest.raises(ValidationError, match="SHIFTED has one"):
-        UnreadIntron(
-            start=1151, end=1234, in_cds=True, outcome="SHIFTED", replacement=[]
-        )
-    with pytest.raises(ValidationError, match="SHIFTED has one"):
-        UnreadIntron(
-            start=1151, end=1234, in_cds=True, outcome="MISSING_EXON", replacement=[one]
-        )
 
 
 def test_a_judgement_verdict_follows_its_unread_introns() -> None:
@@ -166,6 +146,7 @@ def test_an_audit_corrects_only_a_shifted_or_missing_exon_verdict() -> None:
             transcript="g1-t1",
             other_transcripts=0,
             tracks_refused=[],
+            evidence_unread=[],
             corrected_cds=None,
             corrected_protein=None,
             frame_kept=None,
@@ -187,6 +168,7 @@ def test_an_intron_audit_whose_gene_ids_name_another_gene_is_invalid() -> None:
             transcript="g1-t1",
             other_transcripts=0,
             tracks_refused=[],
+            evidence_unread=[],
             corrected_cds=None,
             corrected_protein=None,
             frame_kept=None,

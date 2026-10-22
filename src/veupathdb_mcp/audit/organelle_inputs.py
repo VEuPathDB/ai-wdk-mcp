@@ -12,8 +12,7 @@ from veupathdb.jbrowse import GenomeReader, get_jbrowse_client
 from veupathdb_mcp.audit.codes import GeneticCode, infer_code
 from veupathdb_mcp.audit.gene_ids import GeneId, check_resolved, id_pairs
 from veupathdb_mcp.audit.gene_models import gene_model, gene_organism
-from veupathdb_mcp.audit.genes import GeneRow, genes_of_genome
-from veupathdb_mcp.audit.lengths import is_coding
+from veupathdb_mcp.audit.genes import GeneRow, genes_of_genome, is_coding
 from veupathdb_mcp.audit.organelle import OrganelleCheck
 from veupathdb_mcp.audit.served import (
     AUDIT_MAX_WINDOW_BASES,

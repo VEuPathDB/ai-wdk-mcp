@@ -7,7 +7,7 @@ from typing import Any
 
 import httpx
 import pytest
-from veupathdb import MetricAttrs, get_observer, set_observer
+from veupathdb import MetricAttrs, NoObserver, get_observer, set_observer
 from veupathdb.wdk import SearchRequest, VEuPathDBClient
 
 from veupathdb_mcp.search_line import search_line_gate, told_while_waiting
@@ -32,21 +32,9 @@ class _HeldLine:
         yield
 
 
-class _Waits:
+class _Waits(NoObserver):
     def __init__(self) -> None:
         self.waits: list[MetricAttrs] = []
-
-    def on_wdk_request(self, _seconds: float, _attrs: MetricAttrs, /) -> None:
-        return None
-
-    def on_wdk_retry(self, _attrs: MetricAttrs, /) -> None:
-        return None
-
-    def on_site_search_request(self, _seconds: float, _attrs: MetricAttrs, /) -> None:
-        return None
-
-    def on_site_search_retry(self, _attrs: MetricAttrs, /) -> None:
-        return None
 
     def on_wdk_search_wait(self, _seconds: float, attrs: MetricAttrs, /) -> None:
         self.waits.append(attrs)

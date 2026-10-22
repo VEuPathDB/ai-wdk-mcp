@@ -3,7 +3,7 @@ from tests._support.audit_site import AuditSite
 from tests._support.proteins import PROTEIN, row
 
 from veupathdb_mcp.audit import fusion_inputs
-from veupathdb_mcp.audit.genes import GeneRow
+from veupathdb_mcp.audit.genes import GeneRow, OrthologGroup
 
 MEMBER = "PfDd2_010001"
 REFERENCE_GENE = "PF3D7_0100500"
@@ -28,13 +28,18 @@ class FusionSite(AuditSite):
         self.genomes: dict[str, list[GeneRow]] = {}
         self.genomes_read: list[str] = []
         self.orthologs_read: list[str] = []
+        self.neighbours_read: list[list[str]] = []
         monkeypatch.setattr(fusion_inputs, "orthologs_of", self.orthologs_of)
         monkeypatch.setattr(fusion_inputs, "genes_of_genome", self.genes_of_genome)
         monkeypatch.setattr(fusion_inputs, "proteins_of", self.proteins_of)
 
-    async def orthologs_of(self, site_id: str, gene: str) -> list[GeneRow]:
+    async def orthologs_of(self, site_id: str, gene: str) -> OrthologGroup:
         self.orthologs_read.append(gene)
         return await super().orthologs_of(site_id, gene)
+
+    async def proteins_of(self, site_id: str, gene_ids: list[str]) -> dict[str, str]:
+        self.neighbours_read.append(gene_ids)
+        return {gene: self.proteins[gene] for gene in gene_ids if gene in self.proteins}
 
     async def genes_of_genome(self, site_id: str, organism: str) -> list[GeneRow]:
         self.genomes_read.append(organism)

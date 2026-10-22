@@ -1,0 +1,686 @@
+{
+ "site": "fungidb",
+ "transcript_key": [
+  "gene_source_id",
+  "source_id",
+  "project_id"
+ ],
+ "records": [
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "AN11194",
+    "project_id": "FungiDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "AN11194",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "AN11194"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "451",
+       "transcript_id": "AN11194-T",
+       "exon_count": "3",
+       "length": "1356",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "AN11194",
+    "source_id": "AN11194-T",
+    "project_id": "FungiDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "AN11194",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "AN11194"
+     },
+     {
+      "name": "source_id",
+      "value": "AN11194-T"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MLCKTGGCVEGRAAEDQSTRKVHWGQEGSGQSPEARPRALDMISRLEPSRGPSHAHWWHIISPQLAVMLEETGYPVEKQLEILTFLYHWVIPYLAPVAAGNAASSCNWKSLLPSAIVPLEYSWKWDSSGKAREPEIRLTIEVFGELSGTQFDPLNQAPAMELLYRLSSILPGVNQILASHFRCKFFDHDNVKYMEEPRLDTLPRSTMLTYMTPRKLGQQGFAPLSEYVSAIQALGQASGRTLDTLTNFLSTSPEGVHLHPFGLAFDNVEPSSSRLKLYFFSNRTSYNSMREVLTLGGRIYSESYDMEEKLRTIYSLAQLLMGCPENNAEDADIPLLPITHSQHTAAERATLLSGFQYYFDVAPGADLPSVKFYIPVRKEHANDRAVGSALTGWFREQGRGKFCDNYMRMLERLAGGLELGECRGLHSFISCMIGGDGEIEVTSYLLPGSEA"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "BO72DRAFT_529148",
+    "project_id": "FungiDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "BO72DRAFT_529148",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "BO72DRAFT_529148"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "454",
+       "transcript_id": "BO72DRAFT_529148_t1",
+       "exon_count": "2",
+       "length": "1365",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "BO72DRAFT_529148",
+    "source_id": "BO72DRAFT_529148_t1",
+    "project_id": "FungiDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "BO72DRAFT_529148",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "BO72DRAFT_529148"
+     },
+     {
+      "name": "source_id",
+      "value": "BO72DRAFT_529148_t1"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MVDYNMLGADPEFSVIHLAVLARSVVSLLSPIPMETSPSSPGDLTSMDTIFWRETLGRDLRILLDGAEYDRTTQQAALTTVSRYVAPCLGPRPLVGEAGRDQLRPVRWRSFMTDDFSPIEYSWSWENLAPTIRYSFEPIGRLAGTSQDPYNRTAPLGCVQQLRGILPAADWRWFDHFAQAFRGPTTLPRKESPSHSSPSTTFLAFNLEKHGHRCKSYHVPHSTSDQLGGSRLDVLHQACRALQQQHGLPAYDCIEQFLRQQEQSSTPPIIIGVAVDCVHPSVANLKVYFRSCATSFDSVQGTLSMAGASPSWDTRALEELRELWHLTLGLPFDFPNHQQLPSKDHETSGVLYNFGFKQGQRYPDTKVYIPVRHYARSDRAIVQGLVEYLARCGRAEQAERFVQTLERLVESFRSLDEACGLQTYIACGNKDGRLSLTSYLSAEIYYPGRWSRQP"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "P174DRAFT_379803",
+    "project_id": "FungiDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "P174DRAFT_379803",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "P174DRAFT_379803"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "453",
+       "transcript_id": "P174DRAFT_379803-t37_1",
+       "exon_count": "1",
+       "length": "1362",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "P174DRAFT_379803",
+    "source_id": "P174DRAFT_379803-t37_1",
+    "project_id": "FungiDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "P174DRAFT_379803",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "P174DRAFT_379803"
+     },
+     {
+      "name": "source_id",
+      "value": "P174DRAFT_379803-t37_1"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MTIPSIPETIPEHSELKGKAPLRDISDIPANPRQTIRTPSWDLTSTWLIGANDDIRAWWDCIGPQVAILADEAGYSVAAQTEILLLLHSVVLPDMGRFPPAGQNRPVVQYSWRINTYDYDHPILTLTVEAPGEHAKGSSSMTRHHLQATQNIVEQLSAQLPPVDLTWYRHFMAAFQIDHHTDHSSHHRTFLSTDKDTIRPRMPLSFEFTDTGVIPKAYFYPPAQAHERKPSLAIFTDAIRSISETIRLPAFEEVVAFVDNHPVGVTLNPEMLGMDCIEPSQASLYLHASTPVTNFESIIAVMTLGGRVHAMDMAIMELWELLCLVLRPKHRDRTFSWGDELPVWNAHAQDDDQQGLKYCFEILPGAEVPEVTLYIPVVRYGPADEDVAVGLERFLTKRGHAQFADGFWRVLNMLSEGWTGSRRVVTHIACSFRGESLDVTSCLEPAILRSRDD"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "FPRO_13655",
+    "project_id": "FungiDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "FPRO_13655",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "FPRO_13655"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "419",
+       "transcript_id": "FPRO_13655-t41_1",
+       "exon_count": "1",
+       "length": "1260",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "FPRO_13655",
+    "source_id": "FPRO_13655-t41_1",
+    "project_id": "FungiDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "FPRO_13655",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "FPRO_13655"
+     },
+     {
+      "name": "source_id",
+      "value": "FPRO_13655-t41_1"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MLLQASQATQSVWETLNKWLPPLSRDKDWWWKTLGPQINTLLTEADYDLNERYEALLLLYRWVVPEMGPRPRSSVAPSKSFMTDDHSPIEYSWKWNSGNKKPEIRYAVELVSPLAGSKQDPFNQIPTRNLVYNLAKIIPELDLTWFEHFWHELLGPGSPTTSTSGILTKGSTVFAALEMLHGHLSVKVYFIPVETPGFSAWHQIKHAIEASGCPNLEALNHVDAYLFSHDDGRQLRPFMLAIDLVEPAASRLKIYARSNQTSFRFVRDVMTIGGLRTDLDRSIEKFSDLWKRALGLDPDTPPEDELPKVDHLTSGAVFNFDVAPKSPIPEVKAYIPVRHYANNDLQAALGLIGYLEDHGHGGYSQSYLRGLDMLAPSGQLDQATGVQTYFAVACQGEDLSLTSYLNPQFYAAFQEPERT"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "FPRN_06665",
+    "project_id": "FungiDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "FPRN_06665",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "FPRN_06665"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "437",
+       "transcript_id": "FPRN_06665-t42_1",
+       "exon_count": "3",
+       "length": "1314",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "FPRN_06665",
+    "source_id": "FPRN_06665-t42_1",
+    "project_id": "FungiDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "FPRN_06665",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "FPRN_06665"
+     },
+     {
+      "name": "source_id",
+      "value": "FPRN_06665-t42_1"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MASTLDPLTPKMPVAPTDHEEALQSTGKSDKPSDLKAKEDGVVFWTKHTKPVLTSLLKSVGDYTPEQQAAHLEFLDNYIIPSMGRAPEKDRARSLLTPNGSPFETSLNNCDSGKSYVRFCYEPVFPGSDGVTEDPIPRIAEKAGADLRWFNKFATEFYPSEEDAVILAEKMPKDTIRIPKVFLAFDLKDDKQTMKAYFYPVIKWMTAKQNSDRAGFDLIRRLDPLGPSFGPAIDMIERYQSKLYQDPPLTVVIGIDCVSPEEGARVKIYIEPQSNTWEAVVQHVTLGGQVTDKTTMEGLAILRDMWHILLNEPENKEFDEKFSKKILEDKPDVSGACFSWELKPGQDIPEVKIYVPLNQYFKNDKDATEAMEKVFRKRGWAWGIEGTYEKIVSDAYGSDVVDDTVTTPTEHTFVSFNFSQKKGVYMTTYVAPFVRFP"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "ASPACDRAFT_47294",
+    "project_id": "FungiDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "ASPACDRAFT_47294",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "ASPACDRAFT_47294"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "460",
+       "transcript_id": "ASPACDRAFT_47294-t33_1",
+       "exon_count": "2",
+       "length": "1383",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "ASPACDRAFT_47294",
+    "source_id": "ASPACDRAFT_47294-t33_1",
+    "project_id": "FungiDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "ASPACDRAFT_47294",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "ASPACDRAFT_47294"
+     },
+     {
+      "name": "source_id",
+      "value": "ASPACDRAFT_47294-t33_1"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MAQGNLPFAPSPYISLSQSLLFQNQEEDDWWHRAAPVLARMLQNADYEIAKQYQYLAFFAQHVVPALGPSPANPRPNLYRGVFNLEFSQNFQESGCIIRLAFLPVNYLAGVPGKDPFNRLSTPEVLARYAQIDGIDLDLRLYQQLVSDLTLNTREEDHLLSTESPLPPVFKTQSGIALDLRKEGKMTVKLYTFVVGKSMATATPASTLALNAVRKVDQGAASRFDAGMRPIQAFLDEKQGTPDAMIPTSPTSFHPRGMIQFGCDLVDLARTRFKFYIHDYIVNTDRLAELWTLGGRLRERDCPGIEKGLEILHELWSILQVREGYHLPFACAPRAGERESVVTHDPASLTAASTSTTSKPQFYYDQQFLIVNYEIHPGDPWPVPKVYFPLFGMTEDAVIDAVVAFFERLGWAQQARVYRESMVACFQTRDLEKTTDIQVWLSFSYSPKKGPYTTVYYRSL"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "BDV34DRAFT_226942",
+    "project_id": "FungiDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "BDV34DRAFT_226942",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "BDV34DRAFT_226942"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "446",
+       "transcript_id": "BDV34DRAFT_226942_t1",
+       "exon_count": "1",
+       "length": "1341",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "BDV34DRAFT_226942",
+    "source_id": "BDV34DRAFT_226942_t1",
+    "project_id": "FungiDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "BDV34DRAFT_226942",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "BDV34DRAFT_226942"
+     },
+     {
+      "name": "source_id",
+      "value": "BDV34DRAFT_226942_t1"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MSLRSDLDNGQPTKRLESWDIASMWLSDRKDEIQGWWDFSGLQLATLAHEAGYSTVTQIELLLFFRSIVLPRIGRFPDACRPRACAQSRSILTYDGSPIEYSWKWNSSANDHPEIRFCVEPVGDGMCADGIVGGKLRATDEILVQLAKRVPSTDLEWYHHFRDSFGLGHWADGPLHEHAGTWQGRRPRMPVAFEFTPKGIVTKVYFTPPATLDDMPSFNTFADVVRPICDKDTAALDECMEYLSRDPVGAILRPDVLAIDCVSPLKSRIKLYAGTAMTTFTSAISVLTLGGRIPVTRHSIAEMWALFRMVLGLHDKFSQDEELPVQNPFQPTRAHPDDYYSGLLYYFNLAPGAQLPDVKLYLPVIRYGRSDADIALGLQRFMMSRHRGQYVDGFQRAMESINLRHKSGNGHRIQTYIACSFDKDGSLSLTSYLNPGAYLSSGTVDV"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "FOXG_13322",
+    "project_id": "FungiDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "FOXG_13322",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "FOXG_13322"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "437",
+       "transcript_id": "FOXG_13322-t26_1",
+       "exon_count": "3",
+       "length": "1685",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "FOXG_13322",
+    "source_id": "FOXG_13322-t26_1",
+    "project_id": "FungiDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "FOXG_13322",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "FOXG_13322"
+     },
+     {
+      "name": "source_id",
+      "value": "FOXG_13322-t26_1"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MASTLEPLTLKMSAASTDQEEALQSTGESNKPSDLKAKEDGIAFWTKHTKPVLASLLKSVGDYTPEQQAAHLEFLDTYILPSMGRAPTKDRARSLLTPNGSPFETSLNNSDGGNSYVRFCYEPVFPGSDGVTEDPIPRIAEKTGADLRWFNQFAAEFYPSEEDAVILAEKMPKDTIRIPKVFLAFDLKEDKQTMKAYFYPVIKWMTAKQNSDRAGFDLIRRLDPLGPSFGPAIDMIERYQRKLYQDPPLTVVIGIDCVSPEEGARVKIYIEPQSNTWEAVVQHVTLGGQITDKTTMDGLAVLRDMWHILINEPEDKEFDEKFSKKILENKPNVSGACFSWELRPDQGIPEVKIYVPLNQYFKSDKDATEAMEKVFRKRGWAWGAEGTYQKIVSDAYGSDVIDDTVTTPTEHTFVSFNFSHKKGVYMTTYVAPFVRFP"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "FOBCDRAFT_230538",
+    "project_id": "FungiDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "FOBCDRAFT_230538",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "FOBCDRAFT_230538"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "445",
+       "transcript_id": "FOBCDRAFT_230538-t70_1",
+       "exon_count": "2",
+       "length": "1510",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "FOBCDRAFT_230538",
+    "source_id": "FOBCDRAFT_230538-t70_1",
+    "project_id": "FungiDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "FOBCDRAFT_230538",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "FOBCDRAFT_230538"
+     },
+     {
+      "name": "source_id",
+      "value": "FOBCDRAFT_230538-t70_1"
+     },
+     {
+      "name": "project_id",
+      "value": "FungiDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MTPSQSLQVEAKPWHLVKTKWEGISEPYQQYWYQTVGYMLGALLDSAGYSYESQTSILHQFANLVTPYLGVAPWSELPRWESFMTDDNTPIELSWDFHTGADQPTIRYSIEPIGADAGTGTNQYNEGTAAAFKQALFKAYPDIETALLNHFEACFNGSWADRNPEGHCSTFFWAFDLNEKTITNKAYFFPGVVAHATHRSKLIVIADAITSAPGCRIGMQIPLHIYIDFVYQHPGLEPEIDMLALDLVPLEKARLKIYFRERRTDFGSVKETMSLGGRIQGPEFETGMKRLTRLWDALTGMHNKPDDIPLPYKDHRTAGILYNVEFRMNAETPKVKIYIPVRHYAKNDQQIIKVLKEFLTEQVGQRQDLRTAPVSAESYSRCLGNLFDTKALAGGLGVHTYIGCSIQRGGDLRLVSYINPQLGKMNSKVPFASPEMRTNGEKLPN"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  }
+ ],
+ "store": []
+}

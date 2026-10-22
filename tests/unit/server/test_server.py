@@ -1299,6 +1299,7 @@ async def test_an_intron_audit_with_no_junction_track_answers_camel_case(
         "transcript": "PcyM_0736700-t36_1",
         "otherTranscripts": 0,
         "tracksRefused": None,
+        "evidenceUnread": [],
         "correctedCds": None,
         "correctedProtein": None,
         "frameKept": None,

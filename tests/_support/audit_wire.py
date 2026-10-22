@@ -25,7 +25,11 @@ class ServedRecords:
         tables: list[str],
     ) -> WDKRecordInstance:
         self.reads.append(tables)
-        return next(r for r in self._records if sorted(r.tables) == sorted(tables))
+        return next(
+            r
+            for r in self._records
+            if set(tables) <= set(r.tables) and set(attributes) <= set(r.attributes)
+        )
 
 
 def load_wire(name: str) -> LengthWire:

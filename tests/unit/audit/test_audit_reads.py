@@ -126,7 +126,7 @@ async def test_a_selenoprotein_id_resolved_by_alias_reads_its_protein_after(
         ("tggt1_316600", GT1_SELK),
         (ME49_SELK, ME49_SELK),
     ]
-    assert site.proteins_read == [["tggt1_316600", ME49_SELK], [GT1_SELK]]
+    assert site.proteins_read == [GT1_SELK, ME49_SELK]
     assert site.texts_read == ["tggt1_316600"]
 
 
@@ -188,14 +188,17 @@ def test_a_pseudogene_pair_needs_a_flagged_strain_and_its_ids() -> None:
         PseudogenePair(strain=strain, reference=reference, gene_ids=ids[::-1])
 
 
-async def test_an_id_the_site_echoes_for_two_genes_is_refused_naming_both(
+async def test_an_id_whose_record_read_names_two_genes_is_refused_naming_both(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     site = Site(monkeypatch)
     site.rows += [row("A1", "P f", 400), row("A2", "P f", 400)]
     site.echoes = {"OLD_A": ["A1", "A2"]}
 
-    with pytest.raises(ToolError, match=r"^OLD_A names 2 genes of plasmodb: A1, A2$"):
+    with pytest.raises(
+        ToolError,
+        match=r"^OLD_A names several genes of plasmodb: OLD_A maps to 2 records$",
+    ):
         payload_or_error(await served.located("plasmodb", ["OLD_A"]))
 
     assert site.texts_read == []

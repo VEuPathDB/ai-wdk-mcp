@@ -12,8 +12,7 @@ import time
 from pathlib import Path
 
 import httpx
-from veupathdb.devtools import use_qa_sites
-from veupathdb.devtools.wdk_capture import wdk_record
+from veupathdb.devtools import use_qa_sites, wdk_record
 from veupathdb.guest_token import guest_tokens
 from veupathdb.wdk import get_site_router
 

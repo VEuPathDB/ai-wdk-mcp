@@ -1,40 +1,29 @@
-"""Which genes of a site an id names: the rows the locus-tag search serves for it, as the
-site echoes each input, else the gene whose own id the site's text search finds."""
+"""Which genes of a site an id names: the gene record the id reads, else the gene whose
+own id or transcript id the site's text search finds."""
 
 from __future__ import annotations
 
 import json
-from collections import defaultdict
 from typing import Self
 
-import pydantic
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, model_validator
 from veupathdb.domain.parameters import WDKTreeBoxVocabNode, collect_leaf_terms
-from veupathdb.errors import DataParsingError, VEuPathDBErrorCode
+from veupathdb.errors import DataParsingError, VEuPathDBErrorCode, WDKError
 from veupathdb.model import CamelModel
-from veupathdb.wdk import (
-    WDKAnswer,
-    WDKRecordInstance,
-    WDKSearchConfig,
-    get_wdk_client,
-)
+from veupathdb.wdk import WDKAnswer, WDKSearchConfig, get_wdk_client
 
-from veupathdb_mcp.audit.genes import (
-    GENE_ATTRIBUTES,
-    LOCUS_TAG,
-    PROTEIN_ATTRIBUTE,
-    GeneRow,
-    gene_rows,
-    locus_tag_answers,
-    proteins_in,
-    report_of,
-    rows_of,
+from veupathdb_mcp.audit.genes import GeneRow, report_of
+from veupathdb_mcp.audit.record_reads import (
+    RECORD_READS_PER_CALL,
+    SEVERAL_RECORDS,
+    bounded,
+    found_row,
+    record_proteins,
+    record_rows,
 )
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
 from veupathdb_mcp.wdk.site_cache import SiteCache
 
-INPUT_ID = "input_id"
-LOCATED_ATTRIBUTES = (*GENE_ATTRIBUTES, INPUT_ID)
 TEXT_SEARCH = "GenesByText"
 TEXT_ORGANISMS = "text_search_organism"
 ID_FIELDS = ("primary_key",)
@@ -42,17 +31,18 @@ MAX_MATCHES = 50
 _UNSEARCHED = "*"
 
 
+class _TextHit(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    gene_source_id: str | None = None
+    source_id: str = ""
+
+
 class GeneId(CamelModel):
     model_config = ConfigDict(frozen=True)
 
     given: str
     resolved: str
-
-
-class _Echo(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-
-    input_id: str = Field(min_length=1)
 
 
 class GeneReads(BaseModel):
@@ -77,37 +67,44 @@ class GeneReads(BaseModel):
         return [row for row in self.rows if row.gene in (own or genes)]
 
 
-def _echoed(record: WDKRecordInstance) -> list[str]:
+async def _named(site_id: str, gene_id: str) -> list[GeneRow] | ToolErrorPayload:
     try:
-        echo = _Echo.model_validate(record.attributes).input_id
-    except pydantic.ValidationError as exc:
-        ids = ", ".join(f"{part.name}={part.value}" for part in record.id)
-        msg = f"the WDK {LOCUS_TAG} report served a record ({ids}) with no {INPUT_ID}"
-        raise DataParsingError(msg) from exc
-    return [given.strip().lower() for given in echo.split(",") if given.strip()]
+        row = await found_row(site_id, gene_id)
+    except WDKError as exc:
+        if exc.status != SEVERAL_RECORDS:
+            raise
+        return tool_error(
+            VEuPathDBErrorCode.VALIDATION_ERROR,
+            f"{gene_id} names several genes of {site_id}: {exc.detail}",
+        )
+    if row is not None:
+        return [row]
+    return await genes_by_text(site_id, gene_id)
 
 
-def reads_of(answers: list[WDKAnswer]) -> GeneReads:
-    inputs: dict[str, set[str]] = defaultdict(set)
-    for answer in answers:
-        for record in answer.records:
-            gene = next(p.value for p in record.id if p.name == "gene_source_id")
-            for given in _echoed(record):
-                inputs[given].add(gene)
-    return GeneReads(
-        rows=[row for answer in answers for row in rows_of(answer, LOCUS_TAG)],
-        proteins=proteins_in(answers),
-        inputs={given: sorted(genes) for given, genes in inputs.items()},
-    )
+async def rows_named(site_id: str, gene_ids: list[str]) -> GeneReads | ToolErrorPayload:
+    bounded(gene_ids, RECORD_READS_PER_CALL, "record reads")
+    rows: dict[str, GeneRow] = {}
+    inputs: dict[str, list[str]] = {}
+    for given in gene_ids:
+        match await _named(site_id, given):
+            case ToolErrorPayload() as refusal:
+                return refusal
+            case named:
+                inputs[given.lower()] = [row.gene for row in named]
+                rows |= {row.gene: row for row in named}
+    return GeneReads(rows=list(rows.values()), proteins={}, inputs=inputs)
 
 
-async def rows_named(site_id: str, gene_ids: list[str]) -> GeneReads:
-    return reads_of(await locus_tag_answers(site_id, gene_ids, LOCATED_ATTRIBUTES))
-
-
-async def rows_and_proteins(site_id: str, gene_ids: list[str]) -> GeneReads:
-    attributes = (*LOCATED_ATTRIBUTES, PROTEIN_ATTRIBUTE)
-    return reads_of(await locus_tag_answers(site_id, gene_ids, attributes))
+async def rows_and_proteins(
+    site_id: str, gene_ids: list[str]
+) -> GeneReads | ToolErrorPayload:
+    match await rows_named(site_id, gene_ids):
+        case ToolErrorPayload() as refusal:
+            return refusal
+        case GeneReads() as reads:
+            proteins = await record_proteins(site_id, [row.gene for row in reads.rows])
+            return GeneReads(rows=reads.rows, proteins=proteins, inputs=reads.inputs)
 
 
 def check_resolved(ids: list[GeneId], genes: list[str]) -> None:
@@ -170,15 +167,16 @@ async def text_answer(site_id: str, gene_id: str, organisms: list[str]) -> WDKAn
 
 
 def matched_genes(answer: WDKAnswer, gene_id: str) -> list[str]:
-    return sorted(
-        {
-            part.value
-            for record in answer.records
-            for part in record.id
-            if part.name == "gene_source_id"
-            and part.value.split(":", 1)[0].lower() == gene_id.lower()
-        }
-    )
+    wanted = gene_id.lower()
+    found: set[str] = set()
+    for record in answer.records:
+        hit = _TextHit.model_validate({part.name: part.value for part in record.id})
+        if hit.gene_source_id is None:
+            continue
+        own = hit.gene_source_id.split(":", 1)[0].lower()
+        if wanted in {own, hit.source_id.lower()}:
+            found.add(hit.gene_source_id)
+    return sorted(found)
 
 
 async def genes_by_text(site_id: str, gene_id: str) -> list[GeneRow] | ToolErrorPayload:
@@ -197,4 +195,4 @@ async def genes_by_text(site_id: str, gene_id: str) -> list[GeneRow] | ToolError
     matched = matched_genes(answer, gene_id)
     if len(matched) > 1:
         return several(site_id, gene_id, matched)
-    return await gene_rows(site_id, matched)
+    return await record_rows(site_id, matched)

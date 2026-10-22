@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain.parameters.values import DateRangeValue, NumberRangeValue
+from veupathdb.domain.parameters import param_value_from_raw
 
 from veupathdb_mcp.catalog import UnreadableValueError
 from veupathdb_mcp.catalog.param_dag import (
@@ -34,7 +34,9 @@ async def _resolve(
 async def test_a_range_with_no_stated_value_takes_the_site_default() -> None:
     resolved = await _resolve(_range())
 
-    assert resolved.params[_RANGE] == NumberRangeValue(min=20.0, max=28.0)
+    assert resolved.params[_RANGE] == param_value_from_raw(
+        {"min": 20.0, "max": 28.0}, "number-range"
+    )
     assert resolved.provenance[_RANGE] is Provenance.DEFAULTED
     assert resolved.open_slots == []
 
@@ -46,8 +48,8 @@ async def test_a_date_range_with_no_stated_value_takes_the_site_default() -> Non
         )
     )
 
-    assert resolved.params["dates"] == DateRangeValue(
-        min="2020-01-01", max="2020-12-31"
+    assert resolved.params["dates"] == param_value_from_raw(
+        {"min": "2020-01-01", "max": "2020-12-31"}, "date-range"
     )
 
 
@@ -57,7 +59,9 @@ async def test_a_date_range_with_no_stated_value_takes_the_site_default() -> Non
 async def test_a_range_stated_as_its_json_text_binds(stated: str) -> None:
     resolved = await _resolve(_range(), overrides={_RANGE: stated})
 
-    assert resolved.params[_RANGE] == NumberRangeValue(min=22.0, max=26.0)
+    assert resolved.params[_RANGE] == param_value_from_raw(
+        {"min": 22.0, "max": 26.0}, "number-range"
+    )
     assert resolved.provenance[_RANGE] is Provenance.STATED
 
 

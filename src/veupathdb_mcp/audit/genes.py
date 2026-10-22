@@ -111,17 +111,58 @@ class GeneRow(BaseModel):
         )
 
 
-class OrthologRow(BaseModel):
+def is_coding(row: GeneRow) -> bool:
+    return not row.pseudo and "protein" in row.gene_type
+
+
+class GroupMember(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    gene: str
+    organism: str = Field(min_length=1)
+    protein_length: int | None
+    product: str
+    syntenic: bool | None
+    reference_strain: bool | None
+
+    @classmethod
+    def of_row(cls, row: GeneRow) -> GroupMember:
+        return cls(
+            gene=row.gene,
+            organism=row.organism,
+            protein_length=row.protein_length if is_coding(row) else None,
+            product=row.product,
+            syntenic=None,
+            reference_strain=None,
+        )
+
+
+class OrthologRow(GroupMember):
     model_config = ConfigDict(frozen=True, extra="ignore")
 
     gene: str = Field(validation_alias="ortho_gene_source_id")
-    organism: str = Field(min_length=1)
     syntenic: bool = Field(validation_alias="is_syntenic")
+    product: str = Field(validation_alias="gene_product")
+    reference_strain: bool = Field(validation_alias="is_reference_strain")
+    has_comment: bool
 
-    @field_validator("syntenic", mode="before")
+    @field_validator("syntenic", "reference_strain", "has_comment", mode="before")
     @classmethod
-    def _syntenic(cls, value: JsonValue) -> bool:
+    def _yes(cls, value: JsonValue) -> bool:
         return _SYNTENIC.validate_python(value, strict=True) == "yes"
+
+    @field_validator("protein_length", mode="before")
+    @classmethod
+    def _length(cls, value: str | int | None) -> int | None:
+        text = str(value or "")
+        return int(text) if text.isdigit() else None
+
+
+class OrthologGroup(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    gene: str
+    members: list[GroupMember]
 
 
 class _OrthologTable(BaseModel):
@@ -221,25 +262,13 @@ async def ortholog_table(site_id: str, gene: str) -> list[OrthologRow]:
         raise DataParsingError(msg) from exc
 
 
-async def orthologs_of(site_id: str, gene: str) -> list[GeneRow]:
+async def orthologs_of(site_id: str, gene: str) -> OrthologGroup:
     table = await ortholog_table(site_id, gene)
-    asked = sorted({gene, *(row.gene for row in table)})
-    rows = await gene_rows(site_id, asked)
-    missing = sorted(set(asked) - {row.gene for row in rows})
-    if missing:
-        msg = (
-            f"{site_id} serves no gene row for {', '.join(missing)}, "
-            f"named in the orthologs of {gene}"
-        )
-        raise DataParsingError(msg)
-    return rows
-
-
-async def gene_rows(site_id: str, gene_ids: list[str]) -> list[GeneRow]:
-    if not gene_ids:
-        return []
-    answers = await locus_tag_answers(site_id, gene_ids, GENE_ATTRIBUTES)
-    return [row for answer in answers for row in rows_of(answer, LOCUS_TAG)]
+    named: dict[str, GroupMember] = {}
+    for row in table:
+        if row.gene != gene:
+            named.setdefault(row.gene, row)
+    return OrthologGroup(gene=gene, members=list(named.values()))
 
 
 def proteins_in(answers: list[WDKAnswer]) -> dict[str, str]:

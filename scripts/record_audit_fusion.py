@@ -12,11 +12,10 @@ import asyncio
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict
-from scripts.record_audit_fixtures import FIXTURES
+from scripts.record_audit_fixtures import FIXTURES, act_as_the_test_account
 from scripts.record_audit_missing import SearchCall, Tape, WireCall, tape_the_reads
 from veupathdb.devtools import use_qa_sites
 from veupathdb.jbrowse import close_all_jbrowse_clients
-from veupathdb.testing.wdk_credentials import act_as_the_test_account
 from veupathdb.wdk import WDKRecordInstance, close_all_clients
 
 from veupathdb_mcp.audit.fusion import NEIGHBOURS_EACH_SIDE

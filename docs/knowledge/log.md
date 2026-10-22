@@ -1,5 +1,73 @@
 # Knowledge log
 
+## 2026-10-22 - 0.2.0b36
+
+- 0.2.0b36 reads every gene a served check names by its own record, so no tool a chat
+  calls uploads a gene list, reads an ortholog group from the one `Orthologs` table
+  read, gives a host one id-list read per run, and stages the intron check's evidence
+  ([a named gene is read by its record](decisions/a-named-gene-is-read-by-its-record.md)).
+  It pins veupathdb-py 0.1.0b21 for the bigWig reader and its total summary, the JBrowse
+  request observer and `TabixReader.chunk_group_count`, and no module or test reads a client name off a file
+  inside a client package any more.
+- Recorded on QA on 2026-10-22, under the test account, one request in flight: 158
+  observed WDK requests and 96 JBrowse store reads, no dataset. The recording stopped at
+  the first refusal, the 404 the gene record of `PF3D7_1032400.1` answers. A second
+  recording, of 175 store reads (the agamPEST rnaseq track list, 168 stranded bigWig
+  headers and 6 depth reads), and a third, of 26 store reads over the six shortlisted
+  subtracks, with no WDK request, measured AGAP003685's coverage choice.
+  `records_pfal3D7_piga.json` holds the gene record, protein and alias reads of PIGA;
+  `introns_afumAf293_afu8g00850.json.xz`, `introns_agamPEST_agap007279.json.xz`,
+  `introns_tgonME49_tgme49_224540.json.xz` and `introns_agamPEST_agap003685.json.xz`
+  hold, xz-compressed, each intron case's record reads and exactly the JBrowse store
+  reads the check makes;
+  `introns_pcynM_pkac_proteins.json` and `introns_afumAf293_dmaw_proteins.json` hold
+  the ortholog proteins the older intron recordings lack.
+- The intron check gains `REPLACED`, `NONCANONICAL` and `RETAINED` outcomes and
+  verdicts, `motif` and `depth` (median depth, covered share) on an unread intron and
+  `evidenceUnread` on the answer. A motif with a base other than A, C, G or T is an
+  assembly gap, left unread. The coverage experiment is chosen per gene among the three
+  stranded pairs that cover the most bases by bigWig total summary
+  (`COVERAGE_HEADERS_READ` 200 header reads per organism and process,
+  `COVERAGE_CANDIDATE_PAIRS` 3), by the highest exon median over the gene.
+  Every correctable outcome is corrected and judged by orthologs: up to 16 named per
+  call (`ORTHOLOG_PROTEINS_READ`), where 60 were before.
+- The strain check places the strain's other group members with one range read of
+  the organism's `annotated_transcripts` GFF over the window (`ANNOTATION_MAX_GROUPS`
+  4), recorded on QA on 2026-10-22 for both strain cases (one track list and one
+  range read each, no WDK request), so it reads no member's record. Every intron evidence stage names a refused read in
+  `evidenceUnread` instead of failing the call; concurrent checks of one organism share
+  its track list and coverage choice, and a refused RNA-seq track list is read again
+  by the next gene, waiting `TRACK_LIST_RETRY_SECONDS` (600) after `TRACK_LIST_TRIES`
+  (2) failures; `STRAIN_STORE_READS` (5) names
+  a strain call's store cost; at most `JUNCTION_TRACKS_READ` (4) junction
+  tracks are read; a peptide clears only an intron the junctions leave unexplained; and
+  an ortholog protein is chosen only among members the table gives a length. The judge
+  moved to `audit/intron_judge.py`, the coverage reads to `audit/intron_coverage.py`
+  and the shared track reads to `audit/track_reads.py`.
+- `catalog_record_type`, the catalog's search lookup by context (renamed from
+  `find_record_type_for_search`, which `catalog/record_type_resolution.py` keeps),
+  answers None for a search the catalog does not list,
+  never the record type it was asked under; `resolve_search_record_type`, the parameter
+  reads and both control runs refuse such a search with `UnlistedSearchError`, and
+  `inspect_search` answers `UnknownSearchError` naming the listed searches. The other
+  resolver in `catalog/record_type_resolution.py` loses its two options, which its one
+  caller always set.
+- The OrthoMCL count recordings are package data under `veupathdb_mcp.testing`
+  (`ORTHOMCL_COUNTS`), so a host's suite reads them from the installed distribution.
+- What a host does to take this release, beyond the pin: read an ortholog group as
+  `OrthologGroup.members` (`GroupMember`), which no longer holds the gene itself or a
+  location; pass members to `call_length`, `classify`, `closest_reference`,
+  `relatives_of` and `relatives_median`, and the placed genes and the members to
+  `GroupProfile.of`; read named genes with `record_rows` and `record_proteins` (at most
+  80 per call) and a run's list with `one_list_rows` (at most 400 ids, one dataset,
+  `LIST_MAX_PAGES` report pages); build members from genome rows with
+  `GroupMember.of_row`, which keeps the coding rule and leaves `syntenic` and
+  `referenceStrain` unknown;
+  stop reading `INPUT_ID`, `LOCATED_ATTRIBUTES`, `ORTHOLOGS_READ`, `gene_rows` and
+  `ortholog_species`, which left the surface; handle None from
+  `catalog_record_type`; and accept `evidenceUnread`, `motif` and
+  `depth` and the three new verdicts in an intron answer.
+
 ## 2026-10-22 - 0.2.0b35
 
 - 0.2.0b35 serves `build_protein_count_comparison` and `build_clade_only_expression`, rewords the `GroupsBySingleCopy` note and

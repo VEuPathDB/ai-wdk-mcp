@@ -164,7 +164,7 @@ def patch_control_account(
         return record_type
 
     monkeypatch.setattr(
-        "veupathdb_mcp.controls.control_tests.find_record_type_for_search", _record_type
+        "veupathdb_mcp.controls.control_tests.listed_record_type", _record_type
     )
     return api
 

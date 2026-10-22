@@ -23,13 +23,7 @@ def make_validation_callbacks(
         record_type: str | None,
         search_name: str | None,
     ) -> str | None:
-        return await find_record_type_for_search(
-            site_id,
-            record_type,
-            search_name,
-            require_match=True,
-            allow_fallback=True,
-        )
+        return await find_record_type_for_search(site_id, record_type, search_name)
 
     async def _hint(search_name: str, exclude: str | None = None) -> str | None:
         return await find_record_type_hint(site_id, search_name, exclude)

@@ -53,8 +53,7 @@ class MissingSite:
         self.organisms_read: list[str] = []
         self.windows: list[tuple[str, str, int, int]] = []
         monkeypatch.setattr(served, "rows_named", self.rows_named)
-        monkeypatch.setattr(served, "genes_by_text", self.genes_by_text)
-        monkeypatch.setattr(served, "proteins_of", self.proteins_of)
+        monkeypatch.setattr(served, "record_proteins", self.proteins_of)
         monkeypatch.setattr(missing_inputs, "genes_of_genome", self.genes_of_genome)
         monkeypatch.setattr(missing_inputs, "gene_model", self.gene_model)
         monkeypatch.setattr(missing_inputs, "gene_organism", self.gene_organism)

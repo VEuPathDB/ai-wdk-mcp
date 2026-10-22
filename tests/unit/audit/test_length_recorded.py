@@ -5,6 +5,7 @@ from tests._support.audit_wire import (
     install_records,
     load_wire,
 )
+from tests._support.row_reads import serve_recorded_rows
 from tests._support.wdk_genes import serve_private
 
 from veupathdb_mcp.audit import served
@@ -25,9 +26,8 @@ async def test_the_recorded_pkac_group_is_too_varied_to_judge(
     wire = load_wire(PKAC_FIXTURE)
     records = install_records(monkeypatch, wire)
     genome = install_genome(monkeypatch, wire, "pcynM", "PcyM_07")
-    _, reports = serve_private(
-        monkeypatch, answers([*wire.gene_answers, *wire.row_answers])
-    )
+    rows = serve_recorded_rows(monkeypatch, wire.gene_answers)
+    _, reports = serve_private(monkeypatch, [])
 
     result = await audit_tools.audit_gene_length("plasmodb", PKAC)
 
@@ -41,13 +41,7 @@ async def test_the_recorded_pkac_group_is_too_varied_to_judge(
     )
     assert (result.windows, result.counts) == (0, {})
     assert records.reads == [["Orthologs"]]
-    assert [len(d.source_content.ids) for d in reports.datasets] == [
-        1,
-        150,
-        150,
-        150,
-        73,
-    ]
+    assert (rows.reads, rows.protein_reads, reports.datasets) == ([PKAC], [], [])
     assert genome.windows == []
     assert genome.lengths_read == []
 

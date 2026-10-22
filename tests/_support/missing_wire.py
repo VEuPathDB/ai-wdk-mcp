@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 import pytest
+from pydantic import BaseModel, ConfigDict, JsonValue
 from scripts.record_audit_missing import (
     DatasetCall,
     MissingRecording,
@@ -11,6 +12,7 @@ from scripts.record_audit_missing import (
     WindowCall,
     WireCall,
 )
+from tests._support.row_reads import RowReads, serve_recorded_rows
 from veupathdb import JSONObject
 from veupathdb.jbrowse import GenomeWindow
 from veupathdb.wdk import (
@@ -125,3 +127,40 @@ def replay(monkeypatch: pytest.MonkeyPatch, calls: list[WireCall]) -> WireReplay
     monkeypatch.setattr(missing_inputs, "get_jbrowse_client", lambda site_id: wire)
     monkeypatch.setattr(missing_inputs, "GenomeReader", lambda client: client)
     return wire
+
+
+class NamedReads(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    kept: list[WireCall]
+    rows: list[JsonValue]
+    proteins: list[JsonValue]
+
+
+def named_reads(calls: list[WireCall], pairs: int) -> NamedReads:
+    kept: list[WireCall] = []
+    rows: list[JsonValue] = []
+    proteins: list[JsonValue] = []
+    left = pairs
+    pending = False
+    for call in calls:
+        match call:
+            case DatasetCall() if left:
+                left -= 1
+                pending = True
+            case SearchCall() if pending:
+                pending = False
+                served = {"meta": {"totalCount": call.total}, "records": call.records}
+                read = (call.report or {}).get("attributes")
+                (proteins if read == ["protein_sequence"] else rows).append(served)
+            case _:
+                kept.append(call)
+    return NamedReads(kept=kept, rows=rows, proteins=proteins)
+
+
+def replay_records(
+    monkeypatch: pytest.MonkeyPatch, calls: list[WireCall], pairs: int
+) -> tuple[WireReplay, RowReads]:
+    named = named_reads(calls, pairs)
+    rows = serve_recorded_rows(monkeypatch, named.rows, named.proteins)
+    return replay(monkeypatch, named.kept), rows

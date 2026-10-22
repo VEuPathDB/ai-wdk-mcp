@@ -1,7 +1,8 @@
 import pytest
 from scripts.record_audit_fusion import CASES, FusionRecording
 from scripts.record_audit_missing import DatasetCall, SearchCall
-from tests._support.missing_wire import FIXTURES, replay
+from tests._support.audit_site import members
+from tests._support.missing_wire import FIXTURES, replay_records
 from veupathdb.wdk import WDKAnswer
 
 from veupathdb_mcp.audit.genes import rows_of
@@ -57,7 +58,7 @@ async def test_the_fragile_rpt6_model_holds_the_upstream_coatneyi_neighbour(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     recorded = recording("pfraNilgiri_rpt6")
-    wire = replay(monkeypatch, recorded.calls)
+    wire, rows = replay_records(monkeypatch, recorded.calls, 3)
 
     result = await audit_gene_fusion("plasmodb", "AK88_02763")
 
@@ -94,6 +95,10 @@ async def test_the_fragile_rpt6_model_holds_the_upstream_coatneyi_neighbour(
         [],
     )
     assert wire.calls == []
+    assert (rows.reads, rows.protein_reads) == (
+        ["AK88_02763"],
+        ["AK88_02763", "PCOAH_00051830"],
+    )
 
 
 def test_each_fragile_genome_report_keeps_genes_past_the_reach_and_off_the_contig() -> (
@@ -127,7 +132,7 @@ async def test_the_me49_pbgs_pitrilysin_model_is_not_judged_by_its_paralog_group
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     recorded = recording("tgonME49_pbgs")
-    wire = replay(monkeypatch, recorded.calls)
+    wire, rows = replay_records(monkeypatch, recorded.calls, 2)
 
     result = await audit_gene_fusion("toxodb", "TGME49_500302")
 
@@ -141,6 +146,7 @@ async def test_the_me49_pbgs_pitrilysin_model_is_not_judged_by_its_paralog_group
     assert result.reference_gene == "LOC34617740"
     assert reads(recorded) == ([1, 86], [])
     assert wire.calls == []
+    assert (rows.reads, rows.protein_reads) == (["TGME49_500302"], [])
 
 
 def test_the_me49_pbgs_model_fails_the_spread_and_ratio_gates_too() -> None:
@@ -154,7 +160,7 @@ def test_the_me49_pbgs_model_fails_the_spread_and_ratio_gates_too() -> None:
             longest[row.organism] = row
     pbgs = longest["Toxoplasma gondii ME49"]
 
-    call = call_length([pbgs], list(longest.values()))
+    call = call_length([pbgs], members(list(longest.values())))
 
     assert (pbgs.gene, pbgs.protein_length) == ("TGME49_500302", 1743)
     assert (call.length_class, call.profile.copies) == ("UNQUALIFIED", 1)

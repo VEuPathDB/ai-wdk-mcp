@@ -12,6 +12,7 @@ from scripts.record_audit_gene_ids import (
     SITE,
     GeneIdRecording,
 )
+from tests._support.row_reads import serve_recorded_rows
 from tests._support.wdk_genes import (
     FIXTURES,
     Datasets,
@@ -27,7 +28,6 @@ from veupathdb.wdk import WDKAnswer, WDKSearchConfig, WDKSearchResponse
 from veupathdb_mcp.audit import gene_ids, genes, served
 from veupathdb_mcp.audit.gene_ids import (
     ID_FIELDS,
-    LOCATED_ATTRIBUTES,
     MAX_MATCHES,
     TEXT_ORGANISMS,
     TEXT_SEARCH,
@@ -100,9 +100,8 @@ async def test_a_plain_nf54_id_beside_piga_resolves_through_the_text_search(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     wire = recorded()
-    locus, text = serve(
-        monkeypatch, answers([*wire.batch, *wire.resolved]), answers(wire.text)
-    )
+    locus, text = serve(monkeypatch, [], answers(wire.text))
+    reads = serve_recorded_rows(monkeypatch, [*wire.batch, *wire.resolved])
 
     rows = payload_or_error(await served.located(SITE, [GIVEN, BESIDE]))
 
@@ -114,15 +113,8 @@ async def test_a_plain_nf54_id_beside_piga_resolves_through_the_text_search(
         True,
         "Plasmodium falciparum NF54",
     )
-    assert [d.source_content.ids for d in locus.datasets] == [
-        [GIVEN, BESIDE],
-        [RESOLVED],
-    ]
-    assert locus.searches[0][3] == {
-        "attributes": list(LOCATED_ATTRIBUTES),
-        "tables": [],
-        "pagination": {"offset": 0, "numRecords": 16},
-    }
+    assert reads.reads == [GIVEN, RESOLVED, BESIDE]
+    assert (locus.datasets, locus.searches) == ([], [])
     assert text.details == [("transcript", TEXT_SEARCH)]
     [(record_type, search_name, config, report)] = text.searches
     assert (record_type, search_name) == ("transcript", TEXT_SEARCH)
@@ -141,97 +133,46 @@ async def test_a_plain_nf54_id_beside_piga_resolves_through_the_text_search(
     ]
 
 
-async def test_a_row_the_batch_echoes_for_another_id_is_not_the_unread_ids_gene(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test_the_recording_holds_the_nf54_id_matched_by_text() -> None:
     wire = recorded()
-    [batch] = answers(wire.batch)
-    extra = echoed(IT_PSEUDOGENE, "PfIT_100037300.1", BESIDE, pseudo="Yes")
-    kept = [r.model_dump(mode="json", by_alias=True) for r in batch.records]
-    widened = answer_of([*kept, extra])
-    locus, text = serve(
-        monkeypatch, [widened, *answers(wire.resolved)], answers(wire.text)
-    )
-
-    rows = payload_or_error(await served.located(SITE, [GIVEN, BESIDE]))
-
-    assert (rows[GIVEN].gene, rows[BESIDE].gene) == (RESOLVED, BESIDE)
-    assert len(text.searches) == 1
-    assert [d.source_content.ids for d in locus.datasets] == [
-        [GIVEN, BESIDE],
-        [RESOLVED],
-    ]
-
-
-def test_the_recording_holds_piga_echoed_and_the_nf54_id_unfound() -> None:
-    wire = recorded()
-    [batch] = answers(wire.batch)
-    reads = gene_ids.reads_of([batch])
+    [text] = answers(wire.text)
 
     assert (wire.site, wire.given, BESIDE) == (
         "plasmodb",
         "PfNF54_100037200",
         "PF3D7_1032400",
     )
-    assert reads.inputs == {BESIDE.lower(): [BESIDE]}
-    assert reads.named(GIVEN) == []
-    [text] = answers(wire.text)
     assert gene_ids.matched_genes(text, GIVEN) == [RESOLVED]
 
 
-def test_an_echo_of_several_inputs_names_the_gene_for_each() -> None:
-    echo = "PF3D7_1032400.1, pf3d7_1032400, PF10_0327"
-    reads = gene_ids.reads_of([answer_of([echoed(BESIDE, f"{BESIDE}.1", echo)])])
+def test_a_text_match_on_a_transcript_id_names_its_gene() -> None:
+    hit = echoed(BESIDE, f"{BESIDE}.1", "-")
 
-    for given in ("PF3D7_1032400.1", "PF3D7_1032400", "pf10_0327"):
-        assert [row.gene for row in reads.named(given)] == [BESIDE]
-
-
-def test_an_input_echoed_for_two_other_genes_names_both() -> None:
-    reads = gene_ids.reads_of(
-        [answer_of([echoed("A1", "A1.1", "OLD_A"), echoed("A2", "A2.1", "OLD_A")])]
-    )
-
-    assert [row.gene for row in reads.named("OLD_A")] == ["A1", "A2"]
+    assert gene_ids.matched_genes(answer_of([hit]), f"{BESIDE}.1") == [BESIDE]
+    assert gene_ids.matched_genes(answer_of([hit]), f"{BESIDE}.2") == []
 
 
-def test_a_record_with_no_input_id_is_refused_naming_it() -> None:
-    served_record = record(BESIDE, f"{BESIDE}.1", gene_attributes("461", "No", "x"))
-
-    with pytest.raises(DataParsingError, match=f"gene_source_id={BESIDE}.*input_id"):
-        gene_ids.reads_of([answer_of([served_record])])
-
-
-async def test_rows_and_proteins_are_read_from_one_locus_tag_report(
+async def test_rows_and_proteins_are_read_by_record(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    served_records = [
+    locus, _ = serve(monkeypatch, [], [])
+    served_rows = [
         record(
-            BESIDE,
-            BESIDE + end,
-            {
-                **gene_attributes(length, "No", "protein coding gene"),
-                "protein_sequence": sequence,
-                "input_id": BESIDE,
-            },
+            BESIDE, BESIDE + ".1", gene_attributes("461", "No", "protein coding gene")
         )
-        for end, length, sequence in ((".1", "461", "MKV*"), (".2", "400", "MKVLL*"))
     ]
-    locus, _ = serve(monkeypatch, [answer_of(served_records)], [])
+    reads_made = serve_recorded_rows(monkeypatch, [answer_body(served_rows)])
+    reads_made.proteins[BESIDE] = "MKVLL"
 
-    reads = await gene_ids.rows_and_proteins(SITE, [BESIDE])
+    reads = payload_or_error(await gene_ids.rows_and_proteins(SITE, [BESIDE]))
 
     assert [row.gene for row in reads.rows] == [BESIDE]
     assert (reads.proteins, reads.inputs) == (
         {BESIDE: "MKVLL"},
         {"pf3d7_1032400": [BESIDE]},
     )
-    assert [d.source_content.ids for d in locus.datasets] == [[BESIDE]]
-    assert locus.searches[0][3] == {
-        "attributes": [*LOCATED_ATTRIBUTES, "protein_sequence"],
-        "tables": [],
-        "pagination": {"offset": 0, "numRecords": 8},
-    }
+    assert (reads_made.reads, reads_made.protein_reads) == ([BESIDE], [BESIDE])
+    assert locus.datasets == []
 
 
 @pytest.mark.parametrize("given", ["PF3D7_10*", "PF3D7 1032400"])
@@ -317,7 +258,8 @@ async def test_an_id_in_many_aliases_still_names_its_own_suffixed_gene(
     own = echoed(RESOLVED, "PfNF54_100037200.1", "-", pseudo="Yes")
     aliased = [echoed(f"PF3D7_{n:07d}", f"PF3D7_{n:07d}.1", "-") for n in range(60)]
     wire = recorded()
-    locus, text = serve(monkeypatch, answers(wire.resolved), [])
+    locus, text = serve(monkeypatch, [], [])
+    reads_made = serve_recorded_rows(monkeypatch, wire.resolved)
 
     async def by_fields(
         record_type: str,
@@ -336,4 +278,8 @@ async def test_an_id_in_many_aliases_still_names_its_own_suffixed_gene(
     found = payload_or_error(await gene_ids.genes_by_text(SITE, GIVEN))
 
     assert [row.gene for row in found] == [RESOLVED]
-    assert [d.source_content.ids for d in locus.datasets] == [[RESOLVED]]
+    assert (reads_made.reads, locus.datasets) == ([RESOLVED], [])
+
+
+def answer_body(records: list[JSONObject]) -> JSONObject:
+    return answer_of(records).model_dump(mode="json", by_alias=True)

@@ -17,7 +17,6 @@ from tests._support.audit_fixtures import (
 )
 from tests._support.audit_wire import (
     FIXTURES,
-    answers,
     install_genome,
     install_records,
     load_wire,
@@ -33,9 +32,16 @@ from tests._support.evidence_site import (
 )
 from tests._support.group_count_site import install, install_recorded
 from tests._support.intron_wire import Served, load_introns
-from tests._support.missing_wire import recording, replay
+from tests._support.missing_wire import recording, replay_records
 from tests._support.organelle_fixtures import CYTB, recorded_site
-from tests._support.wdk_genes import PF3D7, ReportSite, answer_of, serve, serve_private
+from tests._support.record_site import (
+    install_recorded_records,
+    install_store,
+    load_records,
+)
+from tests._support.row_reads import serve_recorded_rows
+from tests._support.strain_site import install_annotation
+from tests._support.wdk_genes import PF3D7, ReportSite, answer_of, serve
 from veupathdb.wdk import WDKAnswer
 
 from veupathdb_mcp import server
@@ -112,7 +118,7 @@ async def gene_length(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
     wire = load_wire("pcynM_pkac_length.json")
     install_records(monkeypatch, wire)
     install_genome(monkeypatch, wire, "pcynM", "PcyM_07")
-    serve_private(monkeypatch, answers([*wire.gene_answers, *wire.row_answers]))
+    serve_recorded_rows(monkeypatch, wire.gene_answers)
     return [await audit_tools.audit_gene_length("plasmodb", "PcyM_0736700")]
 
 
@@ -122,9 +128,9 @@ async def strain_model(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
     )
     install_records(monkeypatch, wire)
     install_genome(monkeypatch, wire, "pcynM", "PcyM_07")
-    serve_private(
-        monkeypatch,
-        answers([*wire.gene_answers, *wire.protein_answers, *wire.row_answers]),
+    install_annotation(monkeypatch, wire.annotation)
+    serve_recorded_rows(
+        monkeypatch, [*wire.gene_answers, *wire.row_answers], wire.protein_answers
     )
     return [
         await audit_strain_tools.audit_strain_model(
@@ -134,7 +140,7 @@ async def strain_model(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
 
 
 async def missing_gene(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
-    replay(monkeypatch, recording("missing_tgonGT1_nac.json").calls)
+    replay_records(monkeypatch, recording("missing_tgonGT1_nac.json").calls, 2)
     return [
         await audit_missing_tools.audit_missing_gene(
             "toxodb", "TGARI_257090", "Toxoplasma gondii GT1"
@@ -208,21 +214,31 @@ async def intron_support(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
         ("plasmodb", "PcyM_0736700", "introns_pcynM_pkac.json"),
         ("fungidb", DMAW, "introns_afumAf293_dmaw.json"),
     ):
-        Served(monkeypatch, load_introns(name))
+        Served(monkeypatch, load_introns(name), name.replace(".json", "_proteins.json"))
         found.append(await audit_intron_tools.audit_intron_support(site_id, gene))
+    for name, gene in (
+        ("introns_afumAf293_afu8g00850.json.xz", "Afu8g00850"),
+        ("introns_agamPEST_agap007279.json.xz", "AGAP007279"),
+        ("introns_tgonME49_tgme49_224540.json.xz", "TGME49_224540"),
+        ("introns_agamPEST_agap003685.json.xz", "AGAP003685"),
+    ):
+        wire = load_records(name)
+        install_recorded_records(monkeypatch, wire)
+        install_store(monkeypatch, wire)
+        found.append(await audit_intron_tools.audit_intron_support(wire.site, gene))
     return found
 
 
 async def gene_fusion(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
     found: list[BaseModel] = []
-    for site_id, gene, case in (
-        ("plasmodb", "AK88_02763", "pfraNilgiri_rpt6"),
-        ("toxodb", "TGME49_500302", "tgonME49_pbgs"),
+    for site_id, gene, case, pairs in (
+        ("plasmodb", "AK88_02763", "pfraNilgiri_rpt6", 3),
+        ("toxodb", "TGME49_500302", "tgonME49_pbgs", 2),
     ):
         recorded = FusionRecording.model_validate_json(
             (FIXTURES / CASES[case].file).read_text()
         )
-        replay(monkeypatch, recorded.calls)
+        replay_records(monkeypatch, recorded.calls, pairs)
         found.append(await audit_fusion_tools.audit_gene_fusion(site_id, gene))
     return found
 

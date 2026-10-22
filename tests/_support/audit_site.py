@@ -2,12 +2,13 @@ import re
 
 import pytest
 from pydantic import BaseModel, ConfigDict
+from veupathdb.errors import WDKError
 from veupathdb.jbrowse import GenomeWindow
 
-from veupathdb_mcp.audit import served
+from veupathdb_mcp.audit import gene_ids, record_reads, served
 from veupathdb_mcp.audit.gene_ids import GeneId, GeneReads
 from veupathdb_mcp.audit.gene_models import GeneModel
-from veupathdb_mcp.audit.genes import GeneRow
+from veupathdb_mcp.audit.genes import GeneRow, GroupMember, OrthologGroup
 
 type Window = tuple[str, str, int, int]
 
@@ -80,7 +81,17 @@ def reads_for(
     return GeneReads(
         rows=[row for row in rows if row.gene in served],
         proteins={gene: p for gene, p in proteins.items() if gene in served},
-        inputs={given: genes for given, genes in inputs.items() if genes},
+        inputs=inputs,
+    )
+
+
+def members(rows: list[GeneRow]) -> list[GroupMember]:
+    return [GroupMember.of_row(row) for row in rows]
+
+
+def group_of(gene: str, rows: list[GeneRow]) -> OrthologGroup:
+    return OrthologGroup(
+        gene=gene, members=[GroupMember.of_row(row) for row in rows if row.gene != gene]
     )
 
 
@@ -95,32 +106,42 @@ class AuditSite(Genome):
         self.echoes: dict[str, list[str]] = {}
         self.models_read: list[str] = []
         self.organisms_read: list[str] = []
-        self.proteins_read: list[list[str]] = []
+        self.rows_read: list[str] = []
+        self.proteins_read: list[str] = []
         self.texts_read: list[str] = []
-        monkeypatch.setattr(served, "rows_named", self.rows_named)
-        monkeypatch.setattr(served, "genes_by_text", self.genes_by_text)
-        monkeypatch.setattr(served, "rows_and_proteins", self.rows_and_proteins)
+        monkeypatch.setattr(record_reads, "_row", self.record_row)
+        monkeypatch.setattr(record_reads, "_protein", self.record_protein)
+        monkeypatch.setattr(gene_ids, "genes_by_text", self.genes_by_text)
         monkeypatch.setattr(served, "orthologs_of", self.orthologs_of)
         monkeypatch.setattr(served, "gene_model", self.gene_model)
         monkeypatch.setattr(served, "gene_organism", self.gene_organism)
-        monkeypatch.setattr(served, "proteins_of", self.proteins_of)
 
-    async def gene_rows(self, site_id: str, gene_ids: list[str]) -> list[GeneRow]:
-        return [row for row in self.rows if row.gene in gene_ids]
+    def row_of(self, gene: str) -> GeneRow | None:
+        listed = [*self.rows, *(r for rows in self.orthologs.values() for r in rows)]
+        return next((row for row in listed if row.gene == gene), None)
+
+    async def record_row(self, site_id: str, gene: str) -> GeneRow:
+        self.rows_read.append(gene)
+        named = [gene] if self.row_of(gene) else self.echoes.get(gene, [])
+        if len(named) > 1:
+            msg = f"{gene} maps to {len(named)} records"
+            raise WDKError(msg, status=300)
+        row = self.row_of(named[0]) if named else None
+        if row is None:
+            msg = f"{gene} has no record"
+            raise WDKError(msg, status=404)
+        return row
+
+    async def record_protein(self, site_id: str, gene: str) -> str | None:
+        self.proteins_read.append(gene)
+        return self.proteins.get(gene)
 
     async def genes_by_text(self, site_id: str, gene_id: str) -> list[GeneRow]:
         self.texts_read.append(gene_id)
-        return await self.gene_rows(site_id, self.aliases.get(gene_id, []))
+        return [row for row in self.rows if row.gene in self.aliases.get(gene_id, [])]
 
-    async def rows_named(self, site_id: str, gene_ids: list[str]) -> GeneReads:
-        return reads_for(self.rows, gene_ids, self.echoes, {})
-
-    async def rows_and_proteins(self, site_id: str, gene_ids: list[str]) -> GeneReads:
-        self.proteins_read.append(gene_ids)
-        return reads_for(self.rows, gene_ids, self.echoes, self.proteins)
-
-    async def orthologs_of(self, site_id: str, gene: str) -> list[GeneRow]:
-        return self.orthologs[gene]
+    async def orthologs_of(self, site_id: str, gene: str) -> OrthologGroup:
+        return group_of(gene, self.orthologs[gene])
 
     async def gene_model(self, site_id: str, gene: str) -> GeneModel:
         self.models_read.append(gene)
@@ -129,10 +150,6 @@ class AuditSite(Genome):
     async def gene_organism(self, site_id: str, gene: str) -> str:
         self.organisms_read.append(gene)
         return self.models[gene].organism_abbrev
-
-    async def proteins_of(self, site_id: str, gene_ids: list[str]) -> dict[str, str]:
-        self.proteins_read.append(gene_ids)
-        return {gene: self.proteins[gene] for gene in gene_ids if gene in self.proteins}
 
 
 def own_id(gene: str) -> GeneId:

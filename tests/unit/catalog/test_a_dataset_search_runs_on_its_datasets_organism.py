@@ -12,7 +12,7 @@ from tests._support.recorded_catalog import (
     recorded_catalog,
 )
 from tests._support.recordings import TEST_ROOT
-from veupathdb.devtools.wdk_capture import WDKExchange
+from veupathdb.devtools import WDKExchange
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 
 from veupathdb_mcp import catalog

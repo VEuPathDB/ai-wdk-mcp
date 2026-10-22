@@ -1,5 +1,5 @@
 import pytest
-from tests._support.missing_wire import recording, replay
+from tests._support.missing_wire import recording, replay_records
 
 from veupathdb_mcp.audit.codes import GeneticCode
 from veupathdb_mcp.tools import audit_missing_tools
@@ -11,7 +11,7 @@ async def test_the_ari_nac_gene_lies_unannotated_between_gt1_anchors(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     recorded = recording(NAC)
-    wire = replay(monkeypatch, recorded.calls)
+    wire, _ = replay_records(monkeypatch, recorded.calls, 2)
 
     result = await audit_missing_tools.audit_missing_gene(
         "toxodb", "TGARI_257090", "Toxoplasma gondii GT1"

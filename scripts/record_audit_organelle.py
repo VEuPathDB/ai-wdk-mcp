@@ -12,17 +12,15 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, JsonValue
-from scripts.record_audit_fixtures import FIXTURES
+from scripts.record_audit_fixtures import FIXTURES, act_as_the_test_account
 from veupathdb.devtools import use_qa_sites
 from veupathdb.jbrowse import (
     GenomeReader,
     close_all_jbrowse_clients,
     get_jbrowse_client,
 )
-from veupathdb.testing.wdk_credentials import act_as_the_test_account
 from veupathdb.wdk import close_all_clients
 
-from veupathdb_mcp.audit.gene_ids import LOCATED_ATTRIBUTES
 from veupathdb_mcp.audit.gene_models import (
     MODEL_TABLE,
     ORGANISM_ATTRIBUTE,
@@ -30,6 +28,7 @@ from veupathdb_mcp.audit.gene_models import (
     gene_record,
 )
 from veupathdb_mcp.audit.genes import (
+    GENE_ATTRIBUTES,
     GENOME_SEARCH,
     GeneRow,
     genome_answer,
@@ -145,7 +144,7 @@ async def _contig(reader: GenomeReader, target: ContigTarget) -> ContigRecording
 
 async def _gene(gene: str) -> GeneRecording:
     [answer] = await locus_tag_answers(
-        SITE, [gene], [*LOCATED_ATTRIBUTES, PROTEIN_ATTRIBUTE]
+        SITE, [gene], [*GENE_ATTRIBUTES, PROTEIN_ATTRIBUTE]
     )
     record = await gene_record(SITE, gene, [ORGANISM_ATTRIBUTE], [MODEL_TABLE])
     return GeneRecording(

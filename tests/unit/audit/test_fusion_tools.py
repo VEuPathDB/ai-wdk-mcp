@@ -54,7 +54,8 @@ async def test_a_long_model_whose_extra_residues_match_the_reference_neighbour(
     assert result.fusion.partner_group == PARTNER_GROUP
     assert result.fusion.partner_copies == [PARTNER_COPY]
     assert site.orthologs_read == [MEMBER]
-    assert site.proteins_read == [[MEMBER, REFERENCE_GENE], BESIDE_REFERENCE]
+    assert site.proteins_read == [MEMBER, REFERENCE_GENE]
+    assert site.neighbours_read == [BESIDE_REFERENCE]
     assert site.genomes_read == [PF3D7, DD2]
 
 
@@ -174,7 +175,7 @@ async def test_a_reference_its_genome_report_lacks_is_a_tool_error(
     site = fusion_site(monkeypatch, REFERENCE + NEIGHBOUR)
     site.genomes[PF3D7] = [r for r in site.genomes[PF3D7] if r.gene != REFERENCE_GENE]
 
-    with pytest.raises(ToolError, match=f"holds no {REFERENCE_GENE} on Pf3D7_01"):
+    with pytest.raises(ToolError, match=f"3D7 on plasmodb lists no {REFERENCE_GENE}$"):
         await audit_gene_fusion("plasmodb", MEMBER)
 
 

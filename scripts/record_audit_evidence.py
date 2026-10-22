@@ -13,9 +13,8 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, JsonValue
-from scripts.record_audit_fixtures import FIXTURES
+from scripts.record_audit_fixtures import FIXTURES, act_as_the_test_account
 from veupathdb.devtools import use_qa_sites
-from veupathdb.testing.wdk_credentials import act_as_the_test_account
 from veupathdb.wdk import close_all_clients, get_wdk_client
 
 from veupathdb_mcp.audit.evidence import requested_tables

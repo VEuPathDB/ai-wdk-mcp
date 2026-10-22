@@ -1,18 +1,15 @@
 """What the intron support check reads from a site: the gene's model and the junctions
-of every RNA-seq junction track over it, then, for a correction, its genome and protein."""
+of every RNA-seq junction track over it, the staged evidence for an intron no junction
+reads, then, for a correction, its genome, its protein and its orthologs' proteins."""
 
 from __future__ import annotations
-
-import weakref
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from veupathdb.errors import DataParsingError
 from veupathdb.jbrowse import (
-    GenomeReader,
     GenomeWindow,
     JBrowseClient,
     SequenceNotIndexedError,
-    TabixReader,
     get_jbrowse_client,
     parse_gff_line,
 )
@@ -26,10 +23,21 @@ from veupathdb_mcp.audit.gene_models import (
     model_record,
     transcript_spans,
 )
-from veupathdb_mcp.audit.genes import GeneRow, OrthologRow, ortholog_table, proteins_of
-from veupathdb_mcp.audit.introns import GeneStructure, RnaJunction, Span
+from veupathdb_mcp.audit.genes import GeneRow, GroupMember, OrthologGroup, orthologs_of
+from veupathdb_mcp.audit.intron_evidence import (
+    StagedEvidence,
+    stage_evidence,
+)
+from veupathdb_mcp.audit.introns import (
+    NO_EVIDENCE,
+    GeneStructure,
+    IntronEvidence,
+    RnaJunction,
+    Span,
+)
 from veupathdb_mcp.audit.introns_orthologs import OrthologProtein, OrthologSet
 from veupathdb_mcp.audit.lengths import species_of
+from veupathdb_mcp.audit.record_reads import record_proteins
 from veupathdb_mcp.audit.served import (
     AUDIT_MAX_WINDOW_BASES,
     coding_dna,
@@ -37,11 +45,17 @@ from veupathdb_mcp.audit.served import (
     read_proteins,
     window_refusal,
 )
+from veupathdb_mcp.audit.track_reads import (
+    GeneSite,
+    genome_reader,
+    tabix_reader,
+)
 from veupathdb_mcp.tool_errors import ToolErrorPayload
 
 INTRON_READ_THROUGH = 3000
 INTRON_JUNCTION_PAD = 200
-ORTHOLOGS_READ = 60
+JUNCTION_TRACKS_READ = 4
+ORTHOLOG_PROTEINS_READ = 16
 
 
 class UncheckedIntrons(BaseModel):
@@ -59,6 +73,7 @@ class _TrackReads(BaseModel):
 
     junctions: list[RnaJunction]
     refused: list[str]
+    unread: list[str]
 
 
 class _NoTrack(BaseModel):
@@ -77,6 +92,9 @@ class IntronReads(BaseModel):
     structure: GeneStructure
     junctions: list[RnaJunction]
     tracks_refused: list[str]
+    evidence: IntronEvidence = NO_EVIDENCE
+    window: GenomeWindow | None = None
+    evidence_unread: list[str] = Field(default_factory=list)
 
 
 class CorrectionInputs(BaseModel):
@@ -96,14 +114,24 @@ def genome_region(row: GeneRow) -> Span:
     return max(1, row.start - INTRON_READ_THROUGH), row.end + INTRON_READ_THROUGH
 
 
-def ortholog_species(table: list[OrthologRow], row: GeneRow) -> dict[str, str]:
+def _nearest(members: list[GroupMember], length: int) -> GroupMember:
+    return min(members, key=lambda m: abs((m.protein_length or 0) - length))
+
+
+def ortholog_choice(group: OrthologGroup, row: GeneRow) -> dict[str, str]:
     own = species_of(row.organism)
+    by_species: dict[str, list[GroupMember]] = {}
+    for member in group.members:
+        species = species_of(member.organism)
+        if member.gene != row.gene and species != own and member.protein_length:
+            by_species.setdefault(species, []).append(member)
     named: dict[str, str] = {}
-    for ortholog in table:
-        species = species_of(ortholog.organism)
-        if ortholog.gene != row.gene and species != own and ortholog.gene not in named:
-            named[ortholog.gene] = species
-    return dict(list(named.items())[:ORTHOLOGS_READ])
+    for species, members in by_species.items():
+        reference = next((m for m in members if m.reference_strain), None)
+        for chosen in (reference, _nearest(members, row.protein_length or 0)):
+            if chosen is not None and len(named) < ORTHOLOG_PROTEINS_READ:
+                named.setdefault(chosen.gene, species)
+    return named
 
 
 def _structure(rows: list[ModelRow], model: GeneModel, row: GeneRow) -> GeneStructure:
@@ -135,28 +163,23 @@ def _features(lines: list[str], path: str) -> list[RnaJunction]:
         raise DataParsingError(msg) from exc
 
 
-_READERS: weakref.WeakKeyDictionary[JBrowseClient, TabixReader] = (
-    weakref.WeakKeyDictionary()
-)
-
-
-def _tabix_reader(client: JBrowseClient) -> TabixReader:
-    if client not in _READERS:
-        _READERS[client] = TabixReader(client)
-    return _READERS[client]
-
-
 async def _junctions(
     site_id: str, client: JBrowseClient, abbrev: str, row: GeneRow
 ) -> _TrackReads | _NoTrack:
-    tracks = await client.junction_tracks(abbrev)
+    listed = await client.junction_tracks(abbrev)
+    tracks = listed[:JUNCTION_TRACKS_READ]
+    capped = (
+        f"{abbrev} lists {len(listed)} junction tracks; the first "
+        f"{JUNCTION_TRACKS_READ} were read"
+    )
+    unread = [capped] if len(listed) > JUNCTION_TRACKS_READ else []
     if not tracks:
         return _NoTrack(
             reason=f"{site_id} lists no RNA-seq junction track for {abbrev}",
             refused=None,
         )
     start, end = junction_region(row)
-    reader = _tabix_reader(client)
+    reader = tabix_reader(client)
     found: list[RnaJunction] = []
     refused: list[str] = []
     for track in tracks:
@@ -168,7 +191,25 @@ async def _junctions(
         found += _features(lines, track.data_path)
     if len(refused) == len(tracks):
         return _NoTrack(reason="; ".join(refused), refused=refused)
-    return _TrackReads(junctions=found, refused=refused)
+    return _TrackReads(junctions=found, refused=refused, unread=unread)
+
+
+async def _staged(
+    client: JBrowseClient,
+    row: GeneRow,
+    model: GeneModel,
+    structure: GeneStructure,
+    junctions: list[RnaJunction],
+) -> StagedEvidence:
+    gene = GeneSite(
+        abbrev=model.organism_abbrev,
+        seqid=row.sequence_id,
+        start=row.start,
+        end=row.end,
+        strand=row.strand,
+        window=genome_region(row),
+    )
+    return await stage_evidence(client, gene, structure, junctions)
 
 
 async def _read_junctions(
@@ -189,6 +230,7 @@ async def _read_junctions(
                 tracks_refused=missing.refused,
             )
         case _TrackReads() as read:
+            staged = await _staged(client, row, model, structure, read.junctions)
             return IntronReads(
                 gene_ids=ids,
                 row=row,
@@ -196,6 +238,9 @@ async def _read_junctions(
                 structure=structure,
                 junctions=read.junctions,
                 tracks_refused=read.refused,
+                evidence=staged.evidence,
+                window=staged.window,
+                evidence_unread=[*read.unread, *staged.unread],
             )
 
 
@@ -238,9 +283,8 @@ async def correction_inputs(
             return refusal
         case proteins:
             protein = proteins[row.gene]
-    start, end = genome_region(row)
-    window = await GenomeReader(get_jbrowse_client(site_id)).window(
-        reads.model.organism_abbrev, row.sequence_id, start, end
+    window = reads.window or await genome_reader(get_jbrowse_client(site_id)).window(
+        reads.model.organism_abbrev, row.sequence_id, *genome_region(row)
     )
     code = infer_code(coding_dna(window, reads.model, row.strand), protein)
     return CorrectionInputs(
@@ -252,8 +296,8 @@ async def correction_inputs(
 
 
 async def ortholog_proteins(site_id: str, row: GeneRow) -> OrthologSet:
-    named = ortholog_species(await ortholog_table(site_id, row.gene), row)
-    proteins = await proteins_of(site_id, list(named))
+    named = ortholog_choice(await orthologs_of(site_id, row.gene), row)
+    proteins = await record_proteins(site_id, list(named))
     return OrthologSet(
         named=len(named),
         proteins=[

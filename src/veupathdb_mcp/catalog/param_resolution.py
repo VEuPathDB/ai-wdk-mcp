@@ -38,7 +38,7 @@ from veupathdb_mcp.catalog.search_context import context_for_metadata_read
 from veupathdb_mcp.catalog.search_notes import described
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
 
-from .searches import find_record_type_for_search
+from .searches import listed_record_type
 
 logger = get_logger(__name__)
 
@@ -152,7 +152,7 @@ async def expand_search_details_with_params(
         try:
             normalized_context = canonicalizer.canonicalize(filtered_context)
         except ValidationError:
-            resolved_record_type = await find_record_type_for_search(ctx)
+            resolved_record_type = await listed_record_type(ctx)
             fallback_response = await client.get_search_details_with_params(
                 resolved_record_type,
                 ctx.search_name,
@@ -172,7 +172,7 @@ async def expand_search_details_with_params(
         input_step_param = find_input_step_param(specs)
         if input_step_param:
             wire_context[input_step_param] = ""
-    resolved_record_type = await find_record_type_for_search(ctx)
+    resolved_record_type = await listed_record_type(ctx)
     return await _get_search_details_with_portal_fallback(
         site_id=ctx.site_id,
         client=client,

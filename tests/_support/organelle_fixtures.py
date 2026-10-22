@@ -1,15 +1,15 @@
 import json
-from collections.abc import Sequence
 from pathlib import Path
 
 import pytest
 from scripts.record_audit_organelle import ContigRecording, GeneRecording
 from tests._support.audit_site import AuditSite, Contig
+from tests._support.row_reads import RowReads, serve_recorded_rows
 from veupathdb import JSONObject
 from veupathdb.wdk import WDKAnswer, WDKRecordInstance, WDKSearchConfig
 
-from veupathdb_mcp.audit import gene_ids, gene_models, genes, organelle_inputs, served
-from veupathdb_mcp.audit.genes import GeneRow
+from veupathdb_mcp.audit import gene_models, genes, organelle_inputs
+from veupathdb_mcp.audit.genes import GeneRow, proteins_in
 
 FIXTURES = Path(__file__).resolve().parents[1] / "unit/audit/fixtures"
 CYTB = "PF3D7_MIT02300"
@@ -26,22 +26,13 @@ def cytb() -> GeneRecording:
     return GeneRecording.model_validate_json(path.read_text())
 
 
-def _serve_cytb(monkeypatch: pytest.MonkeyPatch) -> None:
+def _serve_cytb(monkeypatch: pytest.MonkeyPatch) -> RowReads:
     recording = cytb()
-
-    async def answers(
-        site_id: str, gene_ids: list[str], attributes: Sequence[str]
-    ) -> list[WDKAnswer]:
-        assert (site_id, gene_ids) == ("plasmodb", [recording.gene])
-        return [WDKAnswer.model_validate(recording.report)]
-
-    monkeypatch.setattr(genes, "locus_tag_answers", answers)
-    monkeypatch.setattr(gene_ids, "locus_tag_answers", answers)
+    return serve_recorded_rows(monkeypatch, [recording.report], [recording.report])
 
 
-async def cytb_protein(monkeypatch: pytest.MonkeyPatch) -> str:
-    _serve_cytb(monkeypatch)
-    return (await genes.proteins_of("plasmodb", [CYTB]))[CYTB]
+def cytb_protein() -> str:
+    return proteins_in([WDKAnswer.model_validate(cytb().report)])[CYTB]
 
 
 class GenomeReports:
@@ -105,8 +96,6 @@ def recorded_site(monkeypatch: pytest.MonkeyPatch) -> tuple[AuditSite, GenomeRep
     _serve_cytb(monkeypatch)
     monkeypatch.setattr(gene_models, "gene_record", record)
     monkeypatch.setattr(genes, "get_wdk_client", lambda site_id: reports)
-    monkeypatch.setattr(served, "rows_named", gene_ids.rows_named)
-    monkeypatch.setattr(served, "proteins_of", genes.proteins_of)
     monkeypatch.setattr(organelle_inputs, "gene_model", gene_models.gene_model)
     monkeypatch.setattr(organelle_inputs, "gene_organism", gene_models.gene_organism)
     monkeypatch.setattr(organelle_inputs, "genes_of_genome", genes.genes_of_genome)

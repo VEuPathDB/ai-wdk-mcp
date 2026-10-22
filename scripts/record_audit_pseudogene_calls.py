@@ -12,10 +12,9 @@ import json
 from collections.abc import Mapping
 from pathlib import Path
 
-from scripts.record_audit_fixtures import FIXTURES
+from scripts.record_audit_fixtures import FIXTURES, act_as_the_test_account
 from veupathdb import JSONObject
 from veupathdb.devtools import use_qa_sites
-from veupathdb.testing.wdk_credentials import act_as_the_test_account
 from veupathdb.wdk import (
     WDKAnswer,
     WDKSearchConfig,

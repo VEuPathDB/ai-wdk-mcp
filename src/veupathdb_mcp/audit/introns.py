@@ -1,5 +1,6 @@
-"""Annotated introns of a gene model against the RNA-seq junctions a site serves,
-and the model the strong junctions imply when annotated introns have no read."""
+"""Annotated introns of a gene model against the RNA-seq junctions a site serves, and
+the peptides, splice motifs and read depth that explain an annotated intron no read
+spans."""
 
 from __future__ import annotations
 
@@ -7,13 +8,13 @@ from itertools import pairwise
 from typing import Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-from veupathdb.errors import DataParsingError
-from veupathdb.jbrowse import GenomeWindow, GffFeature
+from veupathdb.jbrowse import GffFeature
 from veupathdb.model import CamelModel
 
-from veupathdb_mcp.audit.codes import GeneticCode, reverse_complement, translate
+from veupathdb_mcp.audit.codes import GeneticCode
 from veupathdb_mcp.audit.gene_ids import GeneId, check_resolved
 from veupathdb_mcp.audit.introns_orthologs import OrthologSupport
+from veupathdb_mcp.computed import computed
 
 STRONG_MIN_READS = 20
 EXPRESSED_MIN_READS = 50
@@ -21,24 +22,46 @@ MIN_INTRON = 20
 INTRON_SLACK = 30
 STRONG_EVIDENCE = "Strong Evidence"
 CHAIN_MAX_STEP = 2000
+REPLACED_MIN_SHARE = 0.25
+RETAINED_MIN_SHARE = 0.25
+RETAINED_MIN_COVERED = 0.9
+PEPTIDE_SLACK = 3
+CANONICAL_MOTIFS = frozenset({"GT..AG", "GC..AG"})
 
 type Span = tuple[int, int]
 type Strand = Literal["+", "-"]
-type UnreadOutcome = Literal["SHIFTED", "MISSING_EXON", "UNEXPLAINED"]
+type UnreadOutcome = Literal[
+    "SHIFTED", "MISSING_EXON", "REPLACED", "NONCANONICAL", "RETAINED", "UNEXPLAINED"
+]
 type IntronVerdict = Literal[
     "SUPPORTED",
     "UNSUPPORTED_SHIFTED",
     "UNSUPPORTED_MISSING_EXON",
+    "UNSUPPORTED_REPLACED",
+    "UNSUPPORTED_NONCANONICAL",
+    "UNSUPPORTED_RETAINED",
     "UNSUPPORTED_UNEXPLAINED",
     "NOT_EXPRESSED",
     "NOT_CHECKED",
 ]
 
 CORRECTABLE: frozenset[IntronVerdict] = frozenset(
-    {"UNSUPPORTED_SHIFTED", "UNSUPPORTED_MISSING_EXON"}
+    {
+        "UNSUPPORTED_SHIFTED",
+        "UNSUPPORTED_MISSING_EXON",
+        "UNSUPPORTED_REPLACED",
+        "UNSUPPORTED_NONCANONICAL",
+        "UNSUPPORTED_RETAINED",
+    }
 )
-_FLAGGED: frozenset[IntronVerdict] = frozenset(
-    {"UNSUPPORTED_SHIFTED", "UNSUPPORTED_MISSING_EXON", "UNSUPPORTED_UNEXPLAINED"}
+_FLAGGED: frozenset[IntronVerdict] = CORRECTABLE | {"UNSUPPORTED_UNEXPLAINED"}
+_RANKED: tuple[tuple[UnreadOutcome, IntronVerdict], ...] = (
+    ("UNEXPLAINED", "UNSUPPORTED_UNEXPLAINED"),
+    ("NONCANONICAL", "UNSUPPORTED_NONCANONICAL"),
+    ("RETAINED", "UNSUPPORTED_RETAINED"),
+    ("MISSING_EXON", "UNSUPPORTED_MISSING_EXON"),
+    ("REPLACED", "UNSUPPORTED_REPLACED"),
+    ("SHIFTED", "UNSUPPORTED_SHIFTED"),
 )
 _UNJUDGED: frozenset[IntronVerdict] = frozenset({"NOT_EXPRESSED", "NOT_CHECKED"})
 
@@ -129,13 +152,80 @@ class IntronSupport(CamelModel):
     tracks: int
 
 
+def intron_key(span: Span) -> str:
+    return f"{span[0]}-{span[1]}"
+
+
+class PeptideSplit(CamelModel):
+    model_config = ConfigDict(frozen=True)
+
+    before: Span
+    after: Span
+
+    @model_validator(mode="after")
+    def _in_order(self) -> Self:
+        if not self.before[0] <= self.before[1] < self.after[0] <= self.after[1]:
+            msg = f"a split peptide reads {self.before} before {self.after}"
+            raise ValueError(msg)
+        return self
+
+    def spans(self, intron: Span) -> bool:
+        gap = (self.before[1] + 1, self.after[0] - 1)
+        return all(
+            abs(a - b) <= PEPTIDE_SLACK for a, b in zip(gap, intron, strict=True)
+        )
+
+
+class IntronDepth(CamelModel):
+    model_config = ConfigDict(frozen=True)
+
+    intron_median_depth: float
+    exon_median_depth: float
+    covered_share: float = Field(ge=0, le=1)
+    track: str
+
+    @computed
+    def depth_share(self) -> float:
+        if self.exon_median_depth == 0:
+            return 0.0
+        return round(self.intron_median_depth / self.exon_median_depth, 3)
+
+    @property
+    def retained(self) -> bool:
+        return (
+            self.exon_median_depth > 0
+            and self.intron_median_depth >= RETAINED_MIN_SHARE * self.exon_median_depth
+            and self.covered_share >= RETAINED_MIN_COVERED
+        )
+
+
+class IntronEvidence(CamelModel):
+    model_config = ConfigDict(frozen=True)
+
+    peptides: tuple[PeptideSplit, ...] | None = None
+    motifs: dict[str, str] | None = None
+    depth: dict[str, IntronDepth] | None = None
+
+    def peptide_spans(self, intron: Span) -> bool:
+        return any(peptide.spans(intron) for peptide in self.peptides or ())
+
+    def motif_of(self, intron: Span) -> str | None:
+        return (self.motifs or {}).get(intron_key(intron))
+
+    def depth_of(self, intron: Span) -> IntronDepth | None:
+        return (self.depth or {}).get(intron_key(intron))
+
+
+NO_EVIDENCE = IntronEvidence()
+
+
 def _fits(outcome: UnreadOutcome, links: int) -> bool:
     match outcome:
-        case "SHIFTED":
+        case "SHIFTED" | "REPLACED":
             return links == 1
         case "MISSING_EXON":
             return links > 1
-        case "UNEXPLAINED":
+        case "NONCANONICAL" | "RETAINED" | "UNEXPLAINED":
             return links == 0
 
 
@@ -147,13 +237,31 @@ class UnreadIntron(CamelModel):
     in_cds: bool
     outcome: UnreadOutcome
     replacement: list[IntronSupport]
+    motif: str | None = None
+    depth: IntronDepth | None = None
 
     @model_validator(mode="after")
     def _replaced_as_named(self) -> Self:
         if not _fits(self.outcome, len(self.replacement)):
             msg = (
                 f"a {self.outcome} intron has {len(self.replacement)} replacement "
-                "junctions; SHIFTED has one, MISSING_EXON more, UNEXPLAINED none"
+                "junctions; SHIFTED and REPLACED have one, MISSING_EXON more, "
+                "NONCANONICAL, RETAINED and UNEXPLAINED none"
+            )
+            raise ValueError(msg)
+        return self
+
+    @model_validator(mode="after")
+    def _kept_as_read(self) -> Self:
+        facts = (
+            self.outcome != "NONCANONICAL"
+            or (self.motif is not None and self.motif not in CANONICAL_MOTIFS),
+            self.outcome != "RETAINED" or self.depth is not None,
+        )
+        if not all(facts):
+            msg = (
+                f"a {self.outcome} intron carries the evidence that kept it: a "
+                "NONCANONICAL one its motif, a RETAINED one its depth"
             )
             raise ValueError(msg)
         return self
@@ -163,13 +271,9 @@ class UnreadIntron(CamelModel):
         return self.start, self.end
 
 
-def _verdict(unread: list[UnreadIntron]) -> IntronVerdict:
+def verdict_of(unread: list[UnreadIntron]) -> IntronVerdict:
     outcomes = {u.outcome for u in unread}
-    if "UNEXPLAINED" in outcomes:
-        return "UNSUPPORTED_UNEXPLAINED"
-    if "MISSING_EXON" in outcomes:
-        return "UNSUPPORTED_MISSING_EXON"
-    return "UNSUPPORTED_SHIFTED"
+    return next(verdict for outcome, verdict in _RANKED if outcome in outcomes)
 
 
 class IntronJudgement(CamelModel):
@@ -185,7 +289,7 @@ class IntronJudgement(CamelModel):
     @model_validator(mode="after")
     def _consistent(self) -> Self:
         unchecked = self.verdict == "NOT_CHECKED"
-        named = _verdict(self.unread) if self.unread else None
+        named = verdict_of(self.unread) if self.unread else None
         facts = (
             unchecked
             == (self.reason is not None)
@@ -215,20 +319,13 @@ class IntronJudgement(CamelModel):
         )
 
 
-class IntronCorrection(CamelModel):
-    model_config = ConfigDict(frozen=True)
-
-    cds: list[Span]
-    protein: str
-    frame_kept: bool
-
-
 class IntronAudit(IntronJudgement):
     gene_ids: list[GeneId]
     gene: str
     transcript: str | None
     other_transcripts: int | None
     tracks_refused: list[str] | None
+    evidence_unread: list[str]
     corrected_cds: list[Span] | None
     corrected_protein: str | None
     frame_kept: bool | None
@@ -270,209 +367,3 @@ class IntronAudit(IntronJudgement):
             )
             raise ValueError(msg)
         return self
-
-
-class _Orf(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    protein: str
-    stop: bool
-    positions: list[int]
-
-
-def _merge(spans: list[Span]) -> list[Span]:
-    merged: list[Span] = []
-    for start, end in sorted(spans):
-        if merged and start <= merged[-1][1] + 1:
-            merged[-1] = (merged[-1][0], max(merged[-1][1], end))
-        else:
-            merged.append((start, end))
-    return merged
-
-
-def _subtract(spans: list[Span], cuts: list[Span]) -> list[Span]:
-    kept = _merge(spans)
-    for cut_start, cut_end in cuts:
-        kept = [
-            piece
-            for start, end in kept
-            for piece in (
-                (start, min(end, cut_start - 1)),
-                (max(start, cut_end + 1), end),
-            )
-            if piece[0] <= piece[1]
-        ]
-    return kept
-
-
-def _support(span: Span, junctions: list[RnaJunction]) -> IntronSupport:
-    hits = [j for j in junctions if j.span == span]
-    return IntronSupport(
-        start=span[0],
-        end=span[1],
-        reads=max((j.reads for j in hits), default=0),
-        tracks=len({j.track for j in hits}),
-    )
-
-
-def _floor(path: list[RnaJunction]) -> int:
-    return min(j.reads for j in path)
-
-
-def _extend(
-    path: list[RnaJunction], usable: list[RnaJunction], end: int
-) -> list[RnaJunction]:
-    while abs(path[-1].end - end) > INTRON_SLACK:
-        last = path[-1].end
-        following = [
-            j for j in usable if j.start > last + 1 and j.start - last < CHAIN_MAX_STEP
-        ]
-        if not following:
-            break
-        path = [*path, max(following, key=lambda j: j.reads)]
-    return path
-
-
-def _chain(intron: Span, junctions: list[RnaJunction]) -> list[RnaJunction]:
-    start, end = intron
-    usable = sorted(
-        (
-            j
-            for j in junctions
-            if j.usable
-            and start - INTRON_SLACK <= j.start
-            and j.end <= end + INTRON_SLACK
-        ),
-        key=lambda j: (j.start, j.end, j.reads),
-    )
-    best: list[RnaJunction] = []
-    for first in usable:
-        if abs(first.start - start) > INTRON_SLACK:
-            continue
-        path = _extend([first], usable, end)
-        if abs(path[-1].end - end) <= INTRON_SLACK and (
-            not best or _floor(path) > _floor(best)
-        ):
-            best = path
-    return best
-
-
-def _unread(
-    model: GeneStructure, intron: IntronSupport, same: list[RnaJunction]
-) -> UnreadIntron:
-    path = _chain((intron.start, intron.end), same)
-    outcome: UnreadOutcome = (
-        "UNEXPLAINED" if not path else "SHIFTED" if len(path) == 1 else "MISSING_EXON"
-    )
-    return UnreadIntron(
-        start=intron.start,
-        end=intron.end,
-        in_cds=model.in_cds((intron.start, intron.end)),
-        outcome=outcome,
-        replacement=[_support(j.span, same) for j in path],
-    )
-
-
-def _expression(
-    model: GeneStructure, introns: list[IntronSupport], same: list[RnaJunction]
-) -> int:
-    if any(i.reads for i in introns):
-        return max(i.reads for i in introns)
-    return max(
-        (
-            j.reads
-            for j in same
-            if j.strong and model.start <= j.start and j.end <= model.end
-        ),
-        default=0,
-    )
-
-
-def judge_introns(
-    model: GeneStructure, junctions: list[RnaJunction]
-) -> IntronJudgement:
-    inside = [j for j in junctions if model.start <= j.start and j.end <= model.end]
-    unstranded = sum(j.strand not in {"+", "-"} for j in inside)
-    if inside and unstranded == len(inside):
-        return IntronJudgement.not_checked(
-            f"every junction over {model.transcript} is unstranded "
-            f"({unstranded} junctions)",
-            unstranded,
-        )
-    same = [j for j in junctions if j.strand == model.strand]
-    introns = [_support(span, same) for span in model.introns]
-    best = _expression(model, introns, same)
-    if best < EXPRESSED_MIN_READS:
-        return IntronJudgement(
-            verdict="NOT_EXPRESSED",
-            introns=introns,
-            unread=None,
-            best_junction_reads=best,
-            unstranded_ignored=unstranded,
-        )
-    unread = [
-        _unread(model, i, same)
-        for i in introns
-        if not i.reads and i.end - i.start + 1 >= MIN_INTRON
-    ]
-    return IntronJudgement(
-        verdict=_verdict(unread) if unread else "SUPPORTED",
-        introns=introns,
-        unread=unread,
-        best_junction_reads=best,
-        unstranded_ignored=unstranded,
-    )
-
-
-def _complement(bases: str) -> str:
-    return reverse_complement(bases)[::-1]
-
-
-def _orf(
-    dna: GenomeWindow, exons: list[Span], strand: Strand, edge: int, code: GeneticCode
-) -> _Orf:
-    exonic = [p for start, end in _merge(exons) for p in range(start, end + 1)]
-    if strand == "+":
-        path = [p for p in exonic if p >= edge] + list(
-            range(exonic[-1] + 1, dna.end + 1)
-        )
-    else:
-        path = [p for p in reversed(exonic) if p <= edge] + list(
-            range(exonic[0] - 1, dna.start - 1, -1)
-        )
-    bases = "".join(dna.sequence[p - dna.start] for p in path)
-    residues = translate(bases if strand == "+" else _complement(bases), code)
-    protein, stop, _ = residues.partition("*")
-    used = 3 * (len(protein) + 1) if stop else 3 * len(protein)
-    return _Orf(protein=protein, stop=bool(stop), positions=path[:used])
-
-
-def correct_model(
-    model: GeneStructure,
-    unread: list[UnreadIntron],
-    dna: GenomeWindow,
-    code: GeneticCode,
-) -> IntronCorrection:
-    if not unread or any(u.outcome == "UNEXPLAINED" for u in unread):
-        msg = "a model is corrected only when every unread intron is explained"
-        raise ValueError(msg)
-    parts = [*model.exons, *model.cds]
-    if not dna.start <= min(a for a, _ in parts) <= max(b for _, b in parts) <= dna.end:
-        msg = (
-            f"{model.transcript} lies outside the window "
-            f"{dna.seqid}:{dna.start}-{dna.end}"
-        )
-        raise DataParsingError(msg)
-    exons = _subtract(
-        [*model.exons, *(u.span for u in unread)],
-        [(r.start, r.end) for u in unread for r in u.replacement],
-    )
-    annotated = _orf(dna, model.exons, model.strand, model.start_edge, code)
-    corrected = _orf(dna, exons, model.strand, model.start_edge, code)
-    return IntronCorrection(
-        cds=_merge([(p, p) for p in corrected.positions]),
-        protein=corrected.protein,
-        frame_kept=annotated.stop
-        and corrected.stop
-        and annotated.positions[-3:] == corrected.positions[-3:],
-    )

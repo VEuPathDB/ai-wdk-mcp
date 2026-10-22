@@ -10,7 +10,7 @@ from veupathdb import get_logger
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import vocab_keys
 from veupathdb.domain.strategy import StrategyStep
-from veupathdb.errors import VEuPathDBError
+from veupathdb.errors import ValidationError, VEuPathDBError
 from veupathdb.model import CamelModel
 from veupathdb.wdk import WDKParameter, WDKRecordType, WDKSearch, get_wdk_client
 
@@ -278,13 +278,17 @@ async def organism_parameter(
     marked = await _marked(site_id, record_type, search_name)
     if marked is None or search_name == ORGANISM_SEARCH:
         return None if marked is None else marked.name
-    listed_under = await find_record_type_for_search(
+    listed_under = await catalog_record_type(
         SearchContext(
             site_id=site_id, record_type="transcript", search_name=ORGANISM_SEARCH
         )
     )
     try:
-        listing = await _marked(site_id, listed_under, ORGANISM_SEARCH)
+        listing = (
+            None
+            if listed_under is None
+            else await _marked(site_id, listed_under, ORGANISM_SEARCH)
+        )
     except VEuPathDBError:
         listing = None
     organisms = vocab_keys(None if listing is None else listing.vocabulary)
@@ -319,6 +323,14 @@ async def study_organisms(site_id: str, dataset_id: str) -> list[str]:
     return catalog.study_organisms(dataset_id)
 
 
+class UnlistedSearchError(ValidationError):
+    def __init__(self, site_id: str, search_name: str) -> None:
+        super().__init__(
+            title="Unknown search",
+            detail=f"{site_id} lists no search {search_name} under any record type",
+        )
+
+
 async def resolve_search_record_type(
     site_id: str, search_name: str, record_type: str | None
 ) -> str:
@@ -328,18 +340,28 @@ async def resolve_search_record_type(
     ctx = SearchContext(
         site_id=site_id, search_name=search_name, record_type="transcript"
     )
-    return await find_record_type_for_search(ctx)
+    return await listed_record_type(ctx)
 
 
-async def find_record_type_for_search(ctx: SearchContext) -> str:
-    """Resolve which record type owns a search name.
+async def catalog_record_type(ctx: SearchContext) -> str | None:
+    catalog = await get_discovery_service().get_catalog(ctx.site_id)
+    return catalog.find_record_type_for_search(ctx.search_name)
 
-    The context record type applies when the search is not in the catalog.
-    """
-    discovery = get_discovery_service()
-    catalog = await discovery.get_catalog(ctx.site_id)
-    resolved = catalog.find_record_type_for_search(ctx.search_name)
-    return resolved or ctx.record_type
+
+async def listed_record_type(ctx: SearchContext) -> str:
+    found = await catalog_record_type(ctx)
+    if found is None:
+        raise UnlistedSearchError(ctx.site_id, ctx.search_name)
+    return found
+
+
+async def listed_search_names(site_id: str) -> list[str]:
+    catalog = await get_discovery_service().get_catalog(site_id)
+    return [
+        search.url_segment
+        for record_type in catalog.get_record_types()
+        for search in catalog.get_searches(record_type.url_segment)
+    ]
 
 
 async def make_record_type_resolver(site_id: str) -> ResolveRecordType:

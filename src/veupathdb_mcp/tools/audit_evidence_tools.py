@@ -34,9 +34,16 @@ async def audit_gene_evidence(site_id: str, gene: str) -> GeneEvidence:
     organism and offered on every organism of the site, each with its rows;
     an empty one says nothing about this gene or its organism. unserved
     names the evidence tables the site does not declare or did not answer.
+    Reads: the record of the id; the site's gene record type (once per site
+    and process); one gene record read with every evidence table the type
+    declares.
     geneIds pairs each id given with the site's own gene id it names (the
-    same id, an alias, a transcript id, or the one gene whose own id is the
-    id with a ":" qualifier added); every other gene field holds that id.
+    same id, an alias or a previous id its gene record read resolves, a
+    transcript id the site's text search names, or the one gene whose own id
+    is the id with a ":" qualifier added); every other gene field holds that
+    id. Each id given costs one gene record read; an id no record names adds
+    one text search and one record read of the gene it names. Resolving ids
+    uploads no gene list, and a refusal names an id that names several genes.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.

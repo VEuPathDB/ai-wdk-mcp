@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 from tests._support.recordings import TEST_ROOT
-from veupathdb.devtools.wdk_capture import WDKExchange
+from veupathdb.devtools import WDKExchange
 from veupathdb.domain.parameters import FilterValue
 from veupathdb.errors import ValidationError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording

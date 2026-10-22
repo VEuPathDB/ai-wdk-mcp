@@ -53,7 +53,8 @@ async def test_a_strain_that_lost_a_segment_its_genome_encodes_is_strain_short(
     assert (result.dna.ns_in_window, result.dna.at_contig_edge) == (0, False)
     assert site.orthologs_read == [REFERENCE]
     assert site.models_read == [STRAIN]
-    assert site.proteins_read == [[STRAIN, REFERENCE]]
+    assert site.proteins_read == [STRAIN, REFERENCE]
+    assert site.rows_read == [STRAIN, REFERENCE]
     assert site.windows == [
         ("pfalDd2", strain.sequence_id, strain.start - 6000, strain.end + 6000)
     ]

@@ -14,19 +14,19 @@ from pathlib import Path
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, JsonValue
+from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.devtools import use_qa_sites
 from veupathdb.jbrowse import (
     GenomeReader,
     close_all_jbrowse_clients,
     get_jbrowse_client,
 )
-from veupathdb.testing.wdk_credentials import act_as_the_test_account
+from veupathdb.testing import NO_CREDENTIALS_REASON, registered_wdk_token
 from veupathdb.wdk import WDKAnswer, WDKRecordInstance, close_all_clients
 
 from veupathdb_mcp.audit import (
     GENE_ATTRIBUTES,
     LENGTH_MAX_FLANK,
-    LOCATED_ATTRIBUTES,
     MODEL_TABLE,
     ORGANISM_ATTRIBUTE,
     ORTHOLOG_TABLE,
@@ -209,6 +209,13 @@ MODES: dict[str, Recording] = {
 }
 
 
+async def act_as_the_test_account() -> None:
+    token = await registered_wdk_token()
+    if token is None:
+        raise RuntimeError(NO_CREDENTIALS_REASON)
+    veupathdb_auth_token_ctx.set(token)
+
+
 class ServedTable(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
@@ -288,7 +295,7 @@ def served_answers(answers: list[WDKAnswer]) -> list[JsonValue]:
 
 
 async def _length(site: str, reader: GenomeReader, target: LengthTarget) -> LengthWire:
-    gene_answers = await locus_tag_answers(site, [target.gene], LOCATED_ATTRIBUTES)
+    gene_answers = await locus_tag_answers(site, [target.gene], GENE_ATTRIBUTES)
     orthologs = await gene_record(site, target.gene, [], [ORTHOLOG_TABLE])
     table = ServedTable.model_validate(orthologs.tables).rows
     named = {OrthologRow.model_validate(served).gene for served in table}

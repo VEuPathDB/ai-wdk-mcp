@@ -110,7 +110,7 @@ def client(monkeypatch: pytest.MonkeyPatch) -> _Client:
         del ctx
         return _response(), set(_PARAMS)
 
-    monkeypatch.setattr(param_resolution, "find_record_type_for_search", _record_type)
+    monkeypatch.setattr(param_resolution, "listed_record_type", _record_type)
     monkeypatch.setattr(
         param_resolution, "_load_discovery_details_and_allowed", _discovery
     )

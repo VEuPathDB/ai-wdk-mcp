@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 from tests._support.recordings import TEST_ROOT
 from veupathdb import JSONObject
-from veupathdb.devtools.wdk_capture import WDKExchange
+from veupathdb.devtools import WDKExchange
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 
 from veupathdb_mcp.catalog.catalog_metadata import (

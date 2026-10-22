@@ -11,7 +11,12 @@ import asyncio
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, JsonValue
-from scripts.record_audit_fixtures import FIXTURES, LOCATION, GeneLocation
+from scripts.record_audit_fixtures import (
+    FIXTURES,
+    LOCATION,
+    GeneLocation,
+    act_as_the_test_account,
+)
 from veupathdb.devtools import use_qa_sites
 from veupathdb.jbrowse import (
     GenomeReader,
@@ -19,7 +24,6 @@ from veupathdb.jbrowse import (
     close_all_jbrowse_clients,
     get_jbrowse_client,
 )
-from veupathdb.testing.wdk_credentials import act_as_the_test_account
 from veupathdb.wdk import close_all_clients
 
 from veupathdb_mcp.audit.gene_models import (

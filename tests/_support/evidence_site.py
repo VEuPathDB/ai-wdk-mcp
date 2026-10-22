@@ -63,7 +63,6 @@ class EvidenceSite:
         monkeypatch.setattr(genes, "get_wdk_client", lambda site_id: self)
         monkeypatch.setattr(evidence_inputs, "gene_record", self.gene_record)
         monkeypatch.setattr(served, "rows_named", self.rows_named)
-        monkeypatch.setattr(served, "genes_by_text", self.genes_by_text)
 
     async def gene_rows(self, site_id: str, gene_ids: list[str]) -> list[GeneRow]:
         return [row(gene, site_id, None) for gene in gene_ids if gene in self.records]

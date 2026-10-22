@@ -16,6 +16,7 @@ from scripts.record_audit_fixtures import (
     FIXTURES,
     LengthWire,
     ServedTable,
+    act_as_the_test_account,
     served_answers,
     served_body,
     write_lengths,
@@ -26,13 +27,12 @@ from veupathdb.jbrowse import (
     close_all_jbrowse_clients,
     get_jbrowse_client,
 )
-from veupathdb.testing.wdk_credentials import act_as_the_test_account
 from veupathdb.wdk import close_all_clients
 
 from veupathdb_mcp.audit import (
+    ANNOTATION_TRACK,
     GENE_ATTRIBUTES,
     LENGTH_MAX_FLANK,
-    LOCATED_ATTRIBUTES,
     MODEL_TABLE,
     ORGANISM_ATTRIBUTE,
     ORTHOLOG_TABLE,
@@ -40,7 +40,10 @@ from veupathdb_mcp.audit import (
     OrthologRow,
     gene_record,
     locus_tag_answers,
+    organism_tracks,
     rows_of,
+    tabix_reader,
+    tabix_track,
 )
 
 SITE = "plasmodb"
@@ -76,6 +79,7 @@ class StrainPair(BaseModel):
 
 class StrainWire(LengthWire):
     reference: str
+    annotation: list[str]
 
 
 PAIRS = [
@@ -92,6 +96,15 @@ PAIRS = [
 ]
 
 
+async def _annotation(abbrev: str, seqid: str, first: int, last: int) -> list[str]:
+    client = get_jbrowse_client(SITE)
+    track = tabix_track(await organism_tracks(client, abbrev), ANNOTATION_TRACK)
+    if track is None:
+        msg = f"{abbrev} lists no {ANNOTATION_TRACK} track"
+        raise ValueError(msg)
+    return await tabix_reader(client).lines(track, seqid, max(first, 1), last)
+
+
 async def _pair(reader: GenomeReader, pair: StrainPair) -> StrainWire:
     orthologs = await gene_record(SITE, pair.reference, [], [ORTHOLOG_TABLE])
     table = [
@@ -100,7 +113,7 @@ async def _pair(reader: GenomeReader, pair: StrainPair) -> StrainWire:
     ]
     strain = pair.strain_in(table)
     genes = [strain, pair.reference]
-    gene_answers = await locus_tag_answers(SITE, genes, LOCATED_ATTRIBUTES)
+    gene_answers = await locus_tag_answers(SITE, genes, GENE_ATTRIBUTES)
     protein_answers = await locus_tag_answers(SITE, genes, ["protein_sequence"])
     row_answers = await locus_tag_answers(
         SITE, sorted({pair.reference, *(row.gene for row in table)}), GENE_ATTRIBUTES
@@ -114,12 +127,9 @@ async def _pair(reader: GenomeReader, pair: StrainPair) -> StrainWire:
     model_record = await gene_record(SITE, strain, [ORGANISM_ATTRIBUTE], [MODEL_TABLE])
     abbrev = GeneModel.from_record(model_record).organism_abbrev
     contig_length = await reader.sequence_length(abbrev, row.sequence_id)
-    window = await reader.window(
-        abbrev,
-        row.sequence_id,
-        row.start - LENGTH_MAX_FLANK,
-        row.end + LENGTH_MAX_FLANK,
-    )
+    first, last = row.start - LENGTH_MAX_FLANK, row.end + LENGTH_MAX_FLANK
+    window = await reader.window(abbrev, row.sequence_id, first, last)
+    annotation = await _annotation(abbrev, row.sequence_id, first, last)
     return StrainWire(
         gene=strain,
         reference=pair.reference,
@@ -130,6 +140,7 @@ async def _pair(reader: GenomeReader, pair: StrainPair) -> StrainWire:
         contig_length=contig_length,
         window_start=window.start,
         window=window.sequence,
+        annotation=annotation,
     )
 
 

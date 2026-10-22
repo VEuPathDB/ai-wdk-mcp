@@ -1,0 +1,279 @@
+{
+ "site": "plasmodb",
+ "transcript_key": [
+  "gene_source_id",
+  "source_id",
+  "project_id"
+ ],
+ "records": [
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "PF3D7_1032400",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [
+    "organism_full",
+    "orthomcl_name",
+    "name",
+    "product",
+    "sequence_id",
+    "start_min",
+    "end_max",
+    "strand_plus_minus",
+    "is_pseudo",
+    "gene_type"
+   ],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "PF3D7_1032400",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PF3D7_1032400"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {
+     "organism_full": "Plasmodium falciparum 3D7",
+     "product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+     "gene_type": "protein coding gene",
+     "name": "PIGA",
+     "sequence_id": "Pf3D7_10_v3",
+     "end_max": "1305315",
+     "is_pseudo": "No",
+     "orthomcl_name": "OG8_0001100",
+     "strand_plus_minus": "-",
+     "start_min": "1302298"
+    },
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "461",
+       "transcript_id": "PF3D7_1032400.1",
+       "exon_count": "7",
+       "length": "2116",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "PF3D7_1032400",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "PF3D7_1032400",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PF3D7_1032400"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "461",
+       "transcript_id": "PF3D7_1032400.1",
+       "exon_count": "7",
+       "length": "2116",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "PF3D7_1032400",
+    "source_id": "PF3D7_1032400.1",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "PF3D7_1032400",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PF3D7_1032400"
+     },
+     {
+      "name": "source_id",
+      "value": "PF3D7_1032400.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MESAVSECNIYKKEKDKNIIYKQERKCCICMVSDFFYPNLGGIETHIFELSKNLIKKGFKVIVVTNFNNNRHGIRWMGNGIKVYYLPFQPFLDVVSFPNIIGTLPLCRNILYREKVDIVHGHQATSALAHQFILHAKTLGIKTIYTDHSLYSFSDKGCIHVNKLLKYCINDVDHSICVSHTNRENLVLRTESNPYKTSVIGNALDTTKFVPCISKRPKFPRINIIVISRLTYRKGIDLIVKVIPLVCQKYPFIKFIIGGEGPKRLLLEEMREKYHLHNSVVLLGKVKQENVKNILQTGHIFLNTSLTEAFCIAIIEAASCGLLVISTDVGGISEVLPHDMMILAKPNHIELCKAVDKALKIVQKVDSNLFHERLTKMYSWEKVAEKTEKVYMNVLNYANPSLFNRIRKIYEINTVFSIIYIFIIMISYIGCQILEWLMPRQNIEEVVSFPHFYDDENKNEK"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "PF3D7_1032400",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [],
+   "tables": [
+    "Alias"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "PF3D7_1032400",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PF3D7_1032400"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "Alias": [
+      {
+       "db_name": "protein_id",
+       "alias": "CZT98581.1",
+       "id_type": "alternate ID"
+      },
+      {
+       "db_name": "Uniprot/SPTREMBL",
+       "alias": "Q8IJ83",
+       "id_type": "alternate ID"
+      },
+      {
+       "db_name": "UniParc",
+       "alias": "UPI0001B051A2",
+       "id_type": "alternate ID"
+      },
+      {
+       "db_name": "RefSeq_dna",
+       "alias": "XM_001347564.2",
+       "id_type": "alternate ID"
+      },
+      {
+       "db_name": "RefSeq_peptide",
+       "alias": "XP_001347600.2",
+       "id_type": "alternate ID"
+      },
+      {
+       "db_name": "",
+       "alias": "PIGA",
+       "id_type": "name"
+      },
+      {
+       "db_name": "",
+       "alias": "PF10_0316",
+       "id_type": "previous ID"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "PF10_0316",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "PF3D7_1032400",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PF3D7_1032400"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "CZT98581.1",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "PF3D7_1032400",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PF3D7_1032400"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "PF3D7_1032400.1",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [],
+   "tables": [],
+   "status": 404,
+   "body": "POST /record-types/gene/records -> HTTP 404: Resource 'RecordClass with name gene has no record with primary keys: source_id = PF3D7_1032400.1, project_id = PlasmoDB' does not exist."
+  }
+ ],
+ "store": []
+}

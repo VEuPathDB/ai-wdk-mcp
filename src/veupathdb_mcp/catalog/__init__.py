@@ -114,6 +114,7 @@ from veupathdb_mcp.catalog.search_inspection import (
 )
 from veupathdb_mcp.catalog.searches import (
     SearchQueryRejection,
+    UnlistedSearchError,
     VagueSearchQueryError,
     assign_step_record_classes,
     browse_search_categories,
@@ -123,6 +124,8 @@ from veupathdb_mcp.catalog.searches import (
     get_raw_searches,
     list_searches,
     list_transforms,
+    listed_record_type,
+    listed_search_names,
     make_record_type_resolver,
     organism_parameter,
     read_search_definition,
@@ -186,6 +189,7 @@ __all__ = [
     "UnknownExperimentError",
     "UnknownParameterError",
     "UnknownSearchError",
+    "UnlistedSearchError",
     "UnreadableValueError",
     "VagueSearchQueryError",
     "ValidatedParams",
@@ -231,6 +235,8 @@ __all__ = [
     "list_searches",
     "list_sites",
     "list_transforms",
+    "listed_record_type",
+    "listed_search_names",
     "lookup_phyletic_codes",
     "make_record_type_resolver",
     "make_validation_callbacks",

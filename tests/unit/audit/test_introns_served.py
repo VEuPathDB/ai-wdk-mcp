@@ -15,14 +15,21 @@ from tests._support.intron_site import (
     gff_line,
     junctions,
     model_rows,
+    ortholog_row,
     track_list,
 )
+from tests._support.proteins import row
 from veupathdb.jbrowse import GenomeWindow, TrackReadError
 
-from veupathdb_mcp.audit import introns_inputs, served
+from veupathdb_mcp.audit import served, track_reads
 from veupathdb_mcp.audit.codes import GeneticCode
+from veupathdb_mcp.audit.genes import OrthologGroup
 from veupathdb_mcp.audit.introns import IntronAudit
-from veupathdb_mcp.audit.introns_inputs import INTRON_READ_THROUGH
+from veupathdb_mcp.audit.introns_inputs import (
+    INTRON_READ_THROUGH,
+    JUNCTION_TRACKS_READ,
+    ortholog_choice,
+)
 from veupathdb_mcp.tools.audit_intron_tools import audit_intron_support
 
 
@@ -271,10 +278,43 @@ async def test_one_tabix_reader_serves_every_audit_on_one_client(
         built.append(client)
         return client
 
-    monkeypatch.setattr(introns_inputs, "TabixReader", reader)
+    monkeypatch.setattr(track_reads, "TabixReader", reader)
 
     await audit_intron_support("plasmodb", GENE)
     await audit_intron_support("plasmodb", GENE)
 
     assert built == [jbrowse]
     assert len(jbrowse.track_reads) == 2
+
+
+async def test_past_four_junction_tracks_the_first_four_are_read_and_named(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    Site(monkeypatch)
+    paths = tuple(f"PcynomolgiX/genomeBrowser/gff/junction{n}.gff.gz" for n in range(5))
+    jbrowse = junctions(monkeypatch, READS, paths=paths, indexed=paths)
+
+    result = await audit_intron_support("plasmodb", GENE)
+
+    assert [read[0] for read in jbrowse.track_reads] == list(
+        paths[:JUNCTION_TRACKS_READ]
+    )
+    assert (
+        result.evidence_unread[0]
+        == "pcynX lists 5 junction tracks; the first 4 were read"
+    )
+
+
+def test_an_ortholog_with_no_protein_is_never_chosen_for_a_species() -> None:
+    gene = row("PcyX_1", "Plasmodium cynomolgi strain X", 400)
+    group = OrthologGroup(
+        gene=gene.gene,
+        members=[
+            ortholog_row("PF3D7_1", "Plasmodium falciparum 3D7", None, "yes"),
+            ortholog_row("PfDd2_1", "Plasmodium falciparum Dd2", 380),
+            ortholog_row("PfIT_1", "Plasmodium falciparum IT", 410),
+            ortholog_row("PY_1", "Plasmodium yoelii 17X", None),
+        ],
+    )
+
+    assert ortholog_choice(group, gene) == {"PfIT_1": "Plasmodium falciparum"}

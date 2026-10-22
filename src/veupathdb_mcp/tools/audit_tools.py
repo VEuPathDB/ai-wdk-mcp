@@ -92,9 +92,17 @@ async def audit_pseudogene_call(
     breaks it. The check translates with the standard genetic code; it does
     not infer the gene's code, so a gene of a clade that reads TGA or CTG
     otherwise can read a stop or a substitution here.
+    Reads: the record of each id, then the reference's gene model and the
+    strain's organism (one gene record read each) and two JBrowse genome
+    windows (the reference span, and the strain span with 3,000 bases on
+    each side).
     geneIds pairs each id given with the site's own gene id it names (the
-    same id, an alias, a transcript id, or the one gene whose own id is the
-    id with a ":" qualifier added); every other gene field holds that id.
+    same id, an alias or a previous id its gene record read resolves, a
+    transcript id the site's text search names, or the one gene whose own id
+    is the id with a ":" qualifier added); every other gene field holds that
+    id. Each id given costs one gene record read; an id no record names adds
+    one text search and one record read of the gene it names. Resolving ids
+    uploads no gene list, and a refusal names an id that names several genes.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
@@ -138,9 +146,16 @@ async def audit_selenoprotein_end(
     already holds the selenocysteine, and then nothing is aligned or compared.
     The check translates with the standard genetic code; it does not infer
     the gene's code.
+    Reads: the record of each id; each protein as one gene record read of
+    its transcripts and one transcript record read of the longest coding
+    one; the gene's organism (one gene record read); one genome window.
     geneIds pairs each id given with the site's own gene id it names (the
-    same id, an alias, a transcript id, or the one gene whose own id is the
-    id with a ":" qualifier added); every other gene field holds that id.
+    same id, an alias or a previous id its gene record read resolves, a
+    transcript id the site's text search names, or the one gene whose own id
+    is the id with a ":" qualifier added); every other gene field holds that
+    id. Each id given costs one gene record read; an id no record names adds
+    one text search and one record read of the gene it names. Resolving ids
+    uploads no gene list, and a refusal names an id that names several genes.
 
     Args:
         site_id: VEuPathDB site, for example 'toxodb'.
@@ -212,9 +227,18 @@ async def audit_gene_length(site_id: str, gene: str) -> GeneLengthAudit:
     Every other class answers NOT_CHECKED with no genome read, and then
     nsInWindow and atContigEdge are null; organisms, groupMedian,
     groupCopies and groupSpread show what the group holds.
+    Reads: the record of the id; the gene record's Orthologs table (one read
+    whatever the group's size; the group's protein lengths are the table's,
+    and a member it gives no length counts as not coding). Only a SHORT
+    gene adds the proteins of the gene and the reference (two record reads
+    each), its gene model (one read) and one genome window.
     geneIds pairs each id given with the site's own gene id it names (the
-    same id, an alias, a transcript id, or the one gene whose own id is the
-    id with a ":" qualifier added); every other gene field holds that id.
+    same id, an alias or a previous id its gene record read resolves, a
+    transcript id the site's text search names, or the one gene whose own id
+    is the id with a ":" qualifier added); every other gene field holds that
+    id. Each id given costs one gene record read; an id no record names adds
+    one text search and one record read of the gene it names. Resolving ids
+    uploads no gene list, and a refusal names an id that names several genes.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
@@ -237,9 +261,17 @@ async def audit_gene_split(site_id: str, gene_a: str, gene_b: str) -> GeneLength
     them; SPLIT_UNCLEAR means they do not. A pair that is not a SPLIT, or
     that the group cannot judge (UNQUALIFIED), answers NOT_CHECKED and reads
     no genome.
+    Reads: the record of each id; gene_a's Orthologs table (one read
+    whatever the group's size). Only a SPLIT pair adds the proteins of both
+    models and the reference (two record reads each), both gene models
+    (one read each) and one genome window.
     geneIds pairs each id given with the site's own gene id it names (the
-    same id, an alias, a transcript id, or the one gene whose own id is the
-    id with a ":" qualifier added); every other gene field holds that id.
+    same id, an alias or a previous id its gene record read resolves, a
+    transcript id the site's text search names, or the one gene whose own id
+    is the id with a ":" qualifier added); every other gene field holds that
+    id. Each id given costs one gene record read; an id no record names adds
+    one text search and one record read of the gene it names. Resolving ids
+    uploads no gene list, and a refusal names an id that names several genes.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.

@@ -18,7 +18,7 @@ SERVED_7G82019 = 5482
 async def test_the_3d7_cytb_cds_reads_the_standard_code(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    protein = await cytb_protein(monkeypatch)
+    protein = cytb_protein()
     cds = contig("pfal3D7").sequence[CYTB_CDS]
 
     assert (len(cds), len(protein)) == (1131, 376)
@@ -45,7 +45,7 @@ async def test_the_recorded_falciparum_mitochondria(
     recorded = contig(abbrev)
 
     result = check_circular_join(
-        recorded.sequence, await cytb_protein(monkeypatch), GeneticCode.STANDARD
+        recorded.sequence, cytb_protein(), GeneticCode.STANDARD
     )
 
     assert (recorded.seqid, recorded.length) == (seqid, length)
@@ -75,9 +75,7 @@ async def test_the_3d7_circle_cut_inside_cytb_is_split_whatever_its_overlap(
     mito = contig("pfal3D7").sequence
     stored = mito[4000:] + mito[: 4000 + overlap]
 
-    result = check_circular_join(
-        stored, await cytb_protein(monkeypatch), GeneticCode.STANDARD
-    )
+    result = check_circular_join(stored, cytb_protein(), GeneticCode.STANDARD)
 
     assert (result.verdict, result.overlap_bases) == ("SPLIT_AT_JOIN", overlap)
     assert result.overlap_mismatches == 0
@@ -89,7 +87,7 @@ async def test_the_nf54_contig_without_its_last_base_is_still_split(
 ) -> None:
     result = check_circular_join(
         contig("pfalNF54").sequence[:-1],
-        await cytb_protein(monkeypatch),
+        cytb_protein(),
         GeneticCode.STANDARD,
     )
 
@@ -105,7 +103,7 @@ async def test_a_frameshift_near_the_cytb_end_is_not_found(
 
     result = check_circular_join(
         mito[:at] + mito[at + 1 :],
-        await cytb_protein(monkeypatch),
+        cytb_protein(),
         GeneticCode.STANDARD,
     )
 

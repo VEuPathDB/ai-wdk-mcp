@@ -79,9 +79,25 @@ async def audit_strain_model(
     relatives lack and the reference model holds it, as a model that
     starts too early does; UNCLEAR is every other case, a strain longer
     than its reference among them; NO_RELATIVES means relatives is empty.
+    Reads: the record of each id; both proteins (one gene record read of
+    the transcripts and one transcript record read of the longest coding
+    one, each); the reference's Orthologs table (one read whatever the
+    group's size). A lost run adds the strain's gene model and one genome
+    window; when the group has another member in the strain's organism, it
+    first adds the strain's organism (one gene record read), that organism's
+    JBrowse track list and the tabix index of its annotated transcripts
+    track (once per organism and process), and up to ANNOTATION_MAX_GROUPS
+    (4) range reads over the window, one per chunk group, which place the
+    members (more groups is a refusal, and a sequence the track does not
+    index places none). Beyond the reads made once per organism, a call
+    makes at most 5 store reads: the genome window and the 4 range reads.
     geneIds pairs each id given with the site's own gene id it names (the
-    same id, an alias, a transcript id, or the one gene whose own id is the
-    id with a ":" qualifier added); every other gene field holds that id.
+    same id, an alias or a previous id its gene record read resolves, a
+    transcript id the site's text search names, or the one gene whose own id
+    is the id with a ":" qualifier added); every other gene field holds that
+    id. Each id given costs one gene record read; an id no record names adds
+    one text search and one record read of the gene it names. Resolving ids
+    uploads no gene list, and a refusal names an id that names several genes.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
@@ -97,7 +113,9 @@ async def audit_strain_model(
     extra = await run_in_a_slot(
         missing_runs, inputs.strain_protein, inputs.reference_protein
     )
-    paralogs = paralogs_in_window(inputs) if lost else []
+    paralogs = (
+        await read_inputs(site_id, paralogs_in_window(site_id, inputs)) if lost else []
+    )
     not_read = _not_read(inputs, lost, paralogs)
     check, dna = (
         (LengthCheck.not_checked(), None)

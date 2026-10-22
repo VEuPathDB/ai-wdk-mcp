@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Discriminator, JsonValue
-from scripts.record_audit_fixtures import FIXTURES
+from scripts.record_audit_fixtures import FIXTURES, act_as_the_test_account
 from veupathdb import JSONObject
 from veupathdb.devtools import use_qa_sites
 from veupathdb.jbrowse import (
@@ -26,7 +26,6 @@ from veupathdb.jbrowse import (
     JBrowseClient,
     close_all_jbrowse_clients,
 )
-from veupathdb.testing.wdk_credentials import act_as_the_test_account
 from veupathdb.wdk import (
     StrategyAPI,
     VEuPathDBClient,

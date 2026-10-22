@@ -10,9 +10,12 @@ import asyncio
 from pathlib import Path
 
 from pydantic import JsonValue
-from scripts.record_audit_fixtures import FIXTURES, write_served
+from scripts.record_audit_fixtures import (
+    FIXTURES,
+    act_as_the_test_account,
+    write_served,
+)
 from veupathdb.devtools import use_qa_sites
-from veupathdb.testing.wdk_credentials import act_as_the_test_account
 from veupathdb.wdk import WDKAnswer, close_all_clients
 
 from veupathdb_mcp.audit.busco import BUSCO_ATTRIBUTES

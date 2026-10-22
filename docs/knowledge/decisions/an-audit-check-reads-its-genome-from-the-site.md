@@ -1,7 +1,7 @@
 ---
 type: Decision
 title: An audit check reads its genome from the site
-description: The served gene-model checks resolve each gene id through the site, read every input themselves from the site the call names (gene rows, the gene record, the ortholog group, the JBrowse genome window), answer one verdict per call, refuse an input the site cannot give, or a window over the limit, as a tool error and never as a verdict (the intron check's NOT_CHECKED is the one exception), and run at most two checks at a time in worker threads; the evidence tools return what a gene record and an organism record serve, without a verdict.
+description: The served gene-model checks resolve each gene id through the site, read every input themselves from the site the call names (gene records, the ortholog table, the JBrowse genome window and tracks), answer one verdict per call, refuse an input the site cannot give, or a window over the limit, as a tool error and never as a verdict (the intron check's NOT_CHECKED is the one exception), and run at most two checks at a time in worker threads; the evidence tools return what a gene record and an organism record serve, without a verdict.
 tags: [audit, tools, jbrowse, wdk]
 status: stable
 ---
@@ -14,31 +14,21 @@ status: stable
 gene ids and nothing else.
 `veupathdb_mcp.audit.served` reads what each check needs:
 
-- **Where a gene is**: its `GeneByLocusTag` row, on the private dataset client every
-  dataset upload uses, read with the dynamic attribute `input_id` (`rows_named` in
-  `veupathdb_mcp.audit.gene_ids`; `located` in `veupathdb_mcp.audit.served`).
-  `GeneByLocusTag` matches a gene id, a transcript id and an alias in the site's gene
-  id table, serves the row under the gene's own id, and echoes in `input_id` every
-  input that matched the transcript, comma-separated: on QA plasmodb one PIGA
-  transcript echoes `PF3D7_1032400.1, pf3d7_1032400, PF3D7_1032400`, `PF10_0327`
-  answers `PF3D7_1033600` and `PfNF54_100037200.1` answers
-  `PfNF54_100037200:pseudogene`. Each id given takes the genes echoed for it (case
-  apart); when one of them is the id itself, that gene. A row echoed for another
-  input is never taken. An id with no echoed row goes to `GenesByText` (primary keys
-  only, over every organism its `text_search_organism` tree lists, read once per site
-  per process) and takes the one matched gene whose own id, without its `:` qualifier,
-  is the id. Aliases are not searched: `GeneByLocusTag` already resolves them, and an
-  alias match could never be taken, so it would only count toward the 50-transcript
-  limit. This finds the gene a site serves only under a suffixed id:
-  on QA plasmodb `GeneByLocusTag` serves no row for `PfNF54_100037200` (and the gene
-  record answers 404), and the text search names `PfNF54_100037200:pseudogene`, one
-  of the 204 NF54 pseudogenes of 229 served with that suffix. An id that holds `*` or
-  a space is refused before the text search; an answer over 50 transcripts is refused
-  naming the id; an id that names no gene, or several, is refused by name, several
-  before any row read. Every gene-id tool serves `geneIds`, each id given beside the
-  gene id it resolved to, reads and serves only the resolved id after that, and its
-  answer is invalid when its gene fields are not the resolved ids. `resolve_gene_ids`
-  runs the same `GeneByLocusTag` search and does not resolve the plain NF54 id either.
+- **Where a gene is**: its own gene record, read by the id given; an id no record names
+  goes to `GenesByText` (primary keys only, over every organism its
+  `text_search_organism` tree lists, read once per site per process) and takes the one
+  gene whose own id, without its `:` qualifier, or whose transcript id is the id
+  (`rows_named` in `veupathdb_mcp.audit.gene_ids`; `located` in
+  `veupathdb_mcp.audit.served`). How a record read resolves an id, and why no tool
+  uploads a gene list, is [a named gene is read by its record](a-named-gene-is-read-by-its-record.md).
+  This finds the gene a site serves only under a suffixed id: on QA plasmodb the gene
+  record of `PfNF54_100037200` answers 404, and the text search names
+  `PfNF54_100037200:pseudogene`, one of the 204 NF54 pseudogenes of 229 served with
+  that suffix. An id that holds `*` or a space is refused before the text search; an
+  answer over 50 transcripts is refused naming the id; an id that names no gene, or
+  several, is refused by name. Every gene-id tool serves `geneIds`, each id given beside
+  the gene id it resolved to, reads and serves only the resolved id after that, and its
+  answer is invalid when its gene fields are not the resolved ids.
 - **Its organism and coding parts**: one gene record read (`gene_model`), attribute
   `organismAbbrev` and table `GeneModelDump`, the CDS rows of the transcript with the
   longest CDS, the lower id on a tie (a row whose `transcript_ids` lists several
@@ -56,12 +46,9 @@ gene ids and nothing else.
   `SELENOPROTEIN_PAD` (300 bases) plus three bases per residue of the reference tail
   from its first selenocysteine, so a model that stops at a selenocysteine in the middle
   of the protein still has the whole tail in its window.
-- **The proteins** of a selenoprotein check: the longest transcript's, the lowest
-  transcript id on an exact length tie (`proteins_of`), so every check takes the same
-  transcript whatever order the site serves them in. The selenoprotein check reads the
-  rows and the proteins of both genes in one `GeneByLocusTag` report
-  (`rows_and_proteins`, attributes `GENE_ATTRIBUTES` and `protein_sequence`), one
-  dataset per call; only an id resolved by a second read has its protein read after it.
+- **The proteins**: the longest coding transcript's, the lowest transcript id on an
+  exact length tie (`record_proteins`), so every check takes the same transcript
+  whatever order the site serves them in.
 
 The pseudogene check reads only a strain gene the site flags as a pseudogene
 (`is_pseudo` Yes): a gene flagged coding, or one whose flag the site does not serve, is
@@ -128,11 +115,12 @@ code.
 ## The length and split checks
 
 `audit_gene_length` reads the gene's `Orthologs` table (`orthologs_of`) and keeps the
-protein-coding rows with a length, the longest row per organism (`GroupProfile`). A row
-whose site serves no pseudogene flag (`is_pseudo` null, as on the P. chabaudi CB and
-P. vivax-like genomes) has an unknown flag: the statistics exclude only a row whose
-flag is set, and count the rest by gene type. A record that is not a gene row at all is
-a tool error that names the search and the record.
+members with a protein length, the longest per organism (`GroupProfile`); a member the
+table gives no length counts as not coding. The gene itself, which the table does not
+list, counts by its own row: a row whose site serves no pseudogene flag (`is_pseudo`
+null, as on the P. chabaudi CB and P. vivax-like genomes) has an unknown flag, and only
+a set flag or a gene type that is not protein coding excludes it. A split partner
+counts only when the table lists it.
 
 The group can judge a length only with 8 or more organisms, a median of at least 80
 residues, an interquartile range at most 0.3 of the median, a median of one copy per
@@ -472,28 +460,37 @@ prototype screen; a novel junction never opens this gate. When every annotated i
 unread, the gene is expressed when a Strong Evidence junction on its strand lying wholly
 inside it has 50 reads or more; this second gate extends the prototype, which skipped
 such genes. 20 reads is only the bar a replacing junction must reach. Every unread
-annotated intron of 20 bases or more is judged on its own: `SHIFTED` by one Strong
-Evidence junction of 20 reads or more within 30 bases at both ends, `MISSING_EXON` by a
-chain of such junctions each starting under 2000 bases after the last, `UNEXPLAINED`
-otherwise, with whether it lies inside the CDS. The verdict is `UNEXPLAINED` if any is,
-else `MISSING_EXON` if any is, else `SHIFTED`. Only when every unread intron is
-explained are the protein and the genome (gene +- 3000) read and all replacements
-applied together; the corrected CDS is served in ascending genome order with its stop
-codon. When the protein or the genome window cannot be read, or the window misses the
-transcript, the judgement stays and `correctionReason` says why, with the corrected
-fields, code and orthologs null. The ortholog count reads the first 60 genes of other species in the gene's
-ortholog table, keeps the closest copy per species (3-mer Jaccard, 8 species) and counts
-the orthologs whose own 20-residue windows are found only in the corrected or only in
-the annotated protein, with how many were named and read; a group that is not an `OG`
-group (`OGR` or an `N/A` label), or a failed ortholog read, serves no count and the
-reason, and never drops the correction. On
-QA, PcyM_0736700 answers `UNSUPPORTED_MISSING_EXON`: its unread intron 1381746-1382305 is
-replaced by junctions of 1436 and 1686 reads, the corrected CDS parts are
-[124,158,185,160,399] (341 aa, served 280) and `bestJunctionReads` is 1970. Afu2g18040
-answers `UNSUPPORTED_SHIFTED`: its unread intron 4793693-4793790 is replaced by
-4793713-4793786 (1226 reads), the corrected protein has 459 aa (served 451) and
-`bestJunctionReads` is 1349. The check reads the junctions with the client's tabix
-reader, released with veupathdb-py 0.1.0b17.
+annotated intron of 20 bases or more is judged on its own and in stages
+([a named gene is read by its record](a-named-gene-is-read-by-its-record.md)):
+`SHIFTED` by one Strong Evidence junction of 20 reads or more within 30 bases at both
+ends, `MISSING_EXON` by a chain of such junctions each starting under 2000 bases after
+the last, `REPLACED` by one inside the gene that overlaps it, ends more than 30 bases
+from it and holds a quarter of the median reads of the gene's read introns; a genomic
+peptide split across it supports it; `NONCANONICAL` when its motif is neither `GT..AG`
+nor `GC..AG` (a motif with a base other than A, C, G or T is an assembly gap and is not
+read); `RETAINED` when its median depth is a quarter of the exons' median, 0.9 of its
+bases are covered and every other intron has 20 reads; `UNEXPLAINED` otherwise. The verdict takes the first of
+`UNEXPLAINED`, `NONCANONICAL`, `RETAINED`, `MISSING_EXON`, `REPLACED` and `SHIFTED`.
+Only when no unread intron is `UNEXPLAINED` are the protein and the genome (gene +-
+3000) read and all of them applied together, a junction outcome by cutting its
+junctions out and a kept intron by reading it as exon; the corrected CDS is served in
+ascending genome order with its stop codon. When the protein or the genome window
+cannot be read, or the window misses the transcript, the judgement stays and
+`correctionReason` says why, with the corrected fields, code and orthologs null. The
+ortholog count names, per species other than the gene's own and in the table's order,
+the reference-strain member and the member nearest the gene's protein length, up to 16,
+keeps the closest copy per species (3-mer Jaccard, 8 species) and counts the orthologs
+whose own 20-residue windows are found only in the corrected or only in the annotated
+protein, with how many were named and read; a group that is not an `OG` group (`OGR` or
+an `N/A` label), or a failed ortholog read, serves no count and the reason, and never
+drops the correction. On QA, PcyM_0736700 answers `UNSUPPORTED_MISSING_EXON`: its
+unread intron 1381746-1382305 is replaced by junctions of 1436 and 1686 reads, the
+corrected CDS parts are [124,158,185,160,399] (341 aa, served 280) and
+`bestJunctionReads` is 1970. Afu2g18040 answers `UNSUPPORTED_SHIFTED`: its unread intron
+4793693-4793790 is replaced by 4793713-4793786 (1226 reads), the corrected protein has
+459 aa (served 451) and `bestJunctionReads` is 1349. The check reads the junctions with
+the client's tabix reader, released with veupathdb-py 0.1.0b17, and the depth with its
+bigWig reader, released with 0.1.0b19.
 
 ## The gene-fusion check
 
@@ -549,15 +546,7 @@ site's naming in the library and would answer for an id that names another gene 
 that suffix. The site's text search over gene ids and aliases is the site's own answer,
 and a word that names several genes is refused.
 
-**`resolve_gene_ids` before each read.** It runs the same `GeneByLocusTag` search the
-row read runs, so it adds a dataset and a report per call and does not resolve the plain
-NF54 pseudogene id.
-
-**Taking a row the batch served for no given id as the gene of the id left unread.** The
-locus-tag read can serve an extra row for an id that is one gene's id and another
-gene's alias; that row would then answer for an unrelated id, a pseudogene of another
-strain among them. The site's `input_id` echo says which input matched each row.
-
 **Any word match of the text search, aliases included.** A word of an alias or a
-wildcard match names genes the id does not name; only a gene whose own id is the id is
-taken, so the search reads primary keys only.
+wildcard match names genes the id does not name; only a gene whose own id or transcript
+id is the id is taken, so the search reads primary keys only. The gene record read
+already resolves the site's aliases and previous ids.

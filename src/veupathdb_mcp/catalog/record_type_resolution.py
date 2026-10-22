@@ -37,42 +37,17 @@ async def resolve_record_type_value(
 
 
 async def find_record_type_for_search(
-    site_id: str,
-    record_type: str | None,
-    search_name: str | None,
-    *,
-    require_match: bool = False,
-    allow_fallback: bool = True,
+    site_id: str, record_type: str | None, search_name: str | None
 ) -> str | None:
     resolved = await resolve_record_type_value(site_id, record_type)
     if not search_name:
         return resolved
-    return await _lookup_record_type_for_search(
-        site_id,
-        search_name,
-        resolved,
-        require_match=require_match,
-        allow_fallback=allow_fallback,
-    )
-
-
-async def _lookup_record_type_for_search(
-    site_id: str,
-    search_name: str,
-    resolved: str | None,
-    *,
-    require_match: bool,
-    allow_fallback: bool,
-) -> str | None:
     catalog = await get_catalog(site_id)
     if resolved == "gene" and catalog.find_search("transcript", search_name):
         return "transcript"
     if resolved and catalog.find_search(resolved, search_name):
         return resolved
-    if not allow_fallback:
-        return None if require_match else resolved
-    found = catalog.find_record_type_for_search(search_name)
-    return found or (None if require_match else resolved)
+    return catalog.find_record_type_for_search(search_name)
 
 
 def _scan_record_type_excluding(

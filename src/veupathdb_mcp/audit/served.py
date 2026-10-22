@@ -14,14 +14,13 @@ from veupathdb_mcp.audit.gene_ids import (
     GeneId,
     GeneReads,
     check_resolved,
-    genes_by_text,
     id_pairs,
     rows_and_proteins,
     rows_named,
     several,
 )
 from veupathdb_mcp.audit.gene_models import GeneModel, gene_model, gene_organism
-from veupathdb_mcp.audit.genes import GeneRow, orthologs_of, proteins_of
+from veupathdb_mcp.audit.genes import GeneRow, orthologs_of
 from veupathdb_mcp.audit.length import DnaWindow, LengthCheck
 from veupathdb_mcp.audit.lengths import (
     Confirmable,
@@ -30,6 +29,7 @@ from veupathdb_mcp.audit.lengths import (
     call_length,
 )
 from veupathdb_mcp.audit.pseudogene import PseudogeneCheck, ReferenceGene
+from veupathdb_mcp.audit.record_reads import record_proteins
 from veupathdb_mcp.audit.selenocysteine import SecCheck, sec_tail
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
 
@@ -158,21 +158,13 @@ class SelenoproteinEndAudit(SecCheck):
         return self
 
 
-async def _named(
-    site_id: str, gene: str, reads: GeneReads
-) -> list[GeneRow] | ToolErrorPayload:
-    return reads.named(gene) or await genes_by_text(site_id, gene)
-
-
-async def resolved(
+def resolved(
     site_id: str, given: list[str], reads: GeneReads
 ) -> dict[str, GeneRow] | ToolErrorPayload:
     found: dict[str, GeneRow] = {}
     missing: list[str] = []
     for gene in given:
-        match await _named(site_id, gene, reads):
-            case ToolErrorPayload() as refusal:
-                return refusal
+        match reads.named(gene):
             case [row]:
                 found[gene] = row
             case []:
@@ -190,7 +182,11 @@ async def resolved(
 async def located(
     site_id: str, given: list[str]
 ) -> dict[str, GeneRow] | ToolErrorPayload:
-    return await resolved(site_id, given, await rows_named(site_id, given))
+    match await rows_named(site_id, given):
+        case ToolErrorPayload() as refusal:
+            return refusal
+        case GeneReads() as reads:
+            return resolved(site_id, given, reads)
 
 
 def window_refusal(gene: str, length: int) -> ToolErrorPayload:
@@ -204,7 +200,7 @@ def window_refusal(gene: str, length: int) -> ToolErrorPayload:
 async def read_proteins(
     site_id: str, gene_ids: list[str]
 ) -> dict[str, str] | ToolErrorPayload:
-    proteins = await proteins_of(site_id, gene_ids)
+    proteins = await record_proteins(site_id, gene_ids)
     missing = [gene for gene in gene_ids if gene not in proteins]
     if missing:
         return tool_error(
@@ -317,38 +313,47 @@ async def pseudogene_inputs(
     return await pseudogene_dna(site_id, pair, strain_abbrev, reference_model)
 
 
-async def _proteins_of_named(
+def _proteins_of_named(
     site_id: str, named: list[str], reads: GeneReads
 ) -> dict[str, str] | ToolErrorPayload:
-    served = {row.gene for row in reads.rows}
-    late = [gene for gene in named if gene not in served]
-    proteins = dict(reads.proteins)
-    if late:
-        proteins |= await proteins_of(site_id, late)
-    missing = [gene for gene in named if gene not in proteins]
+    missing = [gene for gene in named if gene not in reads.proteins]
     if missing:
         return tool_error(
             VEuPathDBErrorCode.VALIDATION_ERROR,
             f"{', '.join(missing)} has no protein on {site_id}",
         )
-    return proteins
+    return reads.proteins
+
+
+async def _selenoprotein_reads(
+    site_id: str, given: list[str]
+) -> tuple[dict[str, GeneRow], dict[str, str]] | ToolErrorPayload:
+    match await rows_and_proteins(site_id, given):
+        case ToolErrorPayload() as refusal:
+            return refusal
+        case GeneReads() as reads:
+            pass
+    match resolved(site_id, given, reads):
+        case ToolErrorPayload() as refusal:
+            return refusal
+        case rows:
+            named = [rows[gene].gene for gene in given]
+    match _proteins_of_named(site_id, named, reads):
+        case ToolErrorPayload() as refusal:
+            return refusal
+        case proteins:
+            return rows, proteins
 
 
 async def selenoprotein_inputs(
     site_id: str, gene: str, reference_gene: str
 ) -> SelenoproteinInputs | ToolErrorPayload:
     given = [gene, reference_gene]
-    reads = await rows_and_proteins(site_id, given)
-    match await resolved(site_id, given, reads):
+    match await _selenoprotein_reads(site_id, given):
         case ToolErrorPayload() as refusal:
             return refusal
-        case rows:
+        case (rows, proteins):
             row, reference = rows[gene], rows[reference_gene]
-    match await _proteins_of_named(site_id, [row.gene, reference.gene], reads):
-        case ToolErrorPayload() as refusal:
-            return refusal
-        case proteins:
-            pass
     tail = sec_tail(proteins[reference.gene])
     if not tail:
         return tool_error(
@@ -518,7 +523,8 @@ async def length_inputs(
             ids = id_pairs(genes, rows)
     if (unpaired := _pair_refusal(parts)) is not None:
         return unpaired
-    match call_length(parts, await orthologs_of(site_id, parts[0].gene)):
+    group = await orthologs_of(site_id, parts[0].gene)
+    match call_length(parts, group.members):
         case NotChecked() as call:
             return LengthInputs(screen=length_screen(parts, call, ids), dna=None)
         case Confirmable() as call:

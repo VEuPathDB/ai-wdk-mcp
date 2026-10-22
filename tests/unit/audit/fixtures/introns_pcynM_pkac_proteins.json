@@ -1,0 +1,311 @@
+{
+ "site": "plasmodb",
+ "transcript_key": [
+  "gene_source_id",
+  "source_id",
+  "project_id"
+ ],
+ "records": [
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "PVP01_1143600",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "PVP01_1143600",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PVP01_1143600"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "354",
+       "transcript_id": "PVP01_1143600.1",
+       "exon_count": "4",
+       "length": "2207",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "PVP01_1143600",
+    "source_id": "PVP01_1143600.1",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "PVP01_1143600",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PVP01_1143600"
+     },
+     {
+      "name": "source_id",
+      "value": "PVP01_1143600.1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MNESVSSPIKATCRDMALKSSLHSFTFSLKDFDIAGFLGDGAHGSVFLACERRTNFICVLKCISKSHLVKSTQEALLRKEIELQAHLKHPHIACMYTWFHTSSHVFFVMEYCSNGDLFTYLNEHGPFAEKKVAEMLFEIIWAIRTCHDKRIAHLDLKPENVLVNHEEKCKLADFGLSAHIGSKHKKKGISHYRGTHDYWSPEQCARHQKKKQNFGEFDQKTDIWTLGILAFELKFGRPPFGSTNEERETVIMNRIQDYHWSQLFCEKVKQDLIDKLSPEFKDFLNLCLDKNPKKRPTAETLIQHPFIFLHNKSRPCIKSYATQPRGKQGPKLSHKGFNEQDGSFLTPIWFHNKG"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "Py17XNL_000801943",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "Py17XNL_000801943",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "Py17XNL_000801943"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "314",
+       "transcript_id": "Py17XNL_000801943_t1",
+       "exon_count": "7",
+       "length": "1974",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "Py17XNL_000801943",
+    "source_id": "Py17XNL_000801943_t1",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "Py17XNL_000801943",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "Py17XNL_000801943"
+     },
+     {
+      "name": "source_id",
+      "value": "Py17XNL_000801943_t1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MKYEDFNFIRTLGTGSFGRVILATYKNEDLPPVAIKRFEKSKIIKQKQVDHVFSERKILNYINHPFCVKLYGSFKDESYLYLVLEFVIGGEFFTFLRRNKRFPNDVGCFYAAQIVLIFEYLQSLNIVYRDLKPENLLLDKDGFIKMTDFGFAKVVNTRTYTLCGTPEYIAPEILLNAGHGKAVDWWTLGIFIYEILVGYPPFYANEPLLIYQKILEGIIYFPKFLDNNCKHLMKKLLSHDLTKRYGNLKKGAQSVKEHPWFANIEWNNLLNKKVDVPYKPKYKNIFDASNFEKVQEDLSIADKVINENDPFFDW"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "POWCR01_070036800",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "POWCR01_070036800",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "POWCR01_070036800"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "341",
+       "transcript_id": "POWCR01_070036800_t1",
+       "exon_count": "5",
+       "length": "1026",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "POWCR01_070036800",
+    "source_id": "POWCR01_070036800_t1",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "POWCR01_070036800",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "POWCR01_070036800"
+     },
+     {
+      "name": "source_id",
+      "value": "POWCR01_070036800_t1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MIQFLKNLQLNKKKDSSDKKTSKRKSKMKYDDFNFIRTLGTGSFGRVILATYKNEDYPPVAIKRFEKSKIIRQKQVDHVFSERKILNYINHPFCVNLYGSFKDESYLYLVLEFVIGGEFFTFLRRNKRFPNDVGCFYAAQIVLIFEYLQSLNIVYRDLKPENLLLDKDGFIKMTDFGFAKVVDTRTYTLCGTPEYIAPEILLNVGHGKAADWWTLGIFIYEILVGCPPFYANEPLLIYQKILEGIIYFPKFLDNNCKHLMKKLLSHDLTKRYGNLKKGAQNVKEHPWFGNIDWVNLLNKKVEVPYKPKYKNIFDSSNFERVQEDLSVADKITNENDPFYDW"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "PVPCR_0803510",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "PVPCR_0803510",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PVPCR_0803510"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "314",
+       "transcript_id": "PVPCR_0803510_t1",
+       "exon_count": "5",
+       "length": "945",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "transcript",
+   "primary_key": {
+    "gene_source_id": "PVPCR_0803510",
+    "source_id": "PVPCR_0803510_t1",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "status": 200,
+   "body": {
+    "displayName": "PVPCR_0803510",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PVPCR_0803510"
+     },
+     {
+      "name": "source_id",
+      "value": "PVPCR_0803510_t1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MKYEDFNFIRTLGTGSFGRVILATYKNEDLPPVAIKRFEKSKIIKQKQVDHVFSERKILNYISHPFCVNLYGSFKDESYLYLVLEFVIGGEFFTFLRRNKRFPNDVGCFYAAQIVLIFEYLQSLNIVYRDLKPENLLLDKDGFIKMTDFGFAKVVNTRTYTLCGTPEYIAPEILLNAGHGKAVDWWTLGIFIYEILVGYPPFYANEPLLIYQKILEGIIYFPKFLDNNCKHLMKKLLSHDLTKRYGNLKKGAQNVKEHPWFANIEWNNLLNKRVDVPYKPKYKNIFDASNFEQVQEDLSIADKVINESDPFYDW"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  }
+ ],
+ "store": []
+}

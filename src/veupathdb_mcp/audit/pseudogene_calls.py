@@ -10,8 +10,8 @@ from typing import Literal, Self
 from pydantic import ConfigDict, Field, model_validator
 from veupathdb.model import CamelModel
 
-from veupathdb_mcp.audit.genes import GeneRow
-from veupathdb_mcp.audit.lengths import is_coding, is_orthology_group
+from veupathdb_mcp.audit.genes import GeneRow, is_coding
+from veupathdb_mcp.audit.lengths import is_orthology_group
 from veupathdb_mcp.computed import computed
 
 FAMILY_WORDS = (

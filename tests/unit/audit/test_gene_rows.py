@@ -35,7 +35,6 @@ from veupathdb_mcp.audit.genes import (
     GENE_ATTRIBUTES,
     GeneRow,
     contig_sides,
-    gene_rows,
     genes_of_genome,
     proteins_of,
     rows_of,
@@ -238,52 +237,6 @@ async def test_proteins_with_no_researcher_token_are_refused_before_a_dataset(
 
     assert site.datasets == []
     assert site.searches == []
-
-
-async def test_gene_rows_are_read_from_one_locus_tag_report_on_a_private_client(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    shared, site = serve_private(monkeypatch, [answer_of([coding()])])
-
-    rows = await gene_rows("plasmodb", [PIGA, "PfNF54_100037200"])
-
-    assert rows == [piga(pseudo=False)]
-    assert [dataset.source_content.ids for dataset in site.datasets] == [
-        [PIGA, "PfNF54_100037200"]
-    ]
-    assert [(search[0], search[1]) for search in site.searches] == [
-        ("transcript", "GeneByLocusTag")
-    ]
-    assert site.searches[0][2].parameters["ds_gene_ids"] == "9001"
-    assert site.searches[0][3] == {
-        "attributes": list(GENE_ATTRIBUTES),
-        "tables": [],
-        "pagination": {"offset": 0, "numRecords": 16},
-    }
-    assert shared.searches == []
-    assert shared.datasets == []
-
-
-async def test_a_gene_row_report_short_of_its_total_is_refused(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    serve_private(monkeypatch, [answer_of([coding()], total=3)])
-
-    with pytest.raises(DataParsingError) as refused:
-        await gene_rows("plasmodb", [PIGA])
-
-    assert refused.value.detail == (
-        "WDK GeneByLocusTag report served 1 records of a total of 3"
-    )
-    assert refused.value.status == 500
-
-
-async def test_no_genes_read_no_rows(monkeypatch: pytest.MonkeyPatch) -> None:
-    shared, site = serve_private(monkeypatch, [])
-
-    assert await gene_rows("plasmodb", []) == []
-    assert site.datasets == []
-    assert shared.datasets == []
 
 
 def test_a_row_reads_its_organism() -> None:

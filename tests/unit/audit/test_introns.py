@@ -11,10 +11,12 @@ from tests._support.intron_genes import (
     structure,
 )
 
+from veupathdb_mcp.audit.intron_judge import (
+    judge_introns,
+)
 from veupathdb_mcp.audit.introns import (
     IntronSupport,
     UnreadIntron,
-    judge_introns,
 )
 
 WHOLE = (I1[0], I2[1])
@@ -162,12 +164,13 @@ def test_an_unread_intron_with_no_strong_junction_near_it_is_unexplained() -> No
     assert result.unread == [unread(WHOLE, "UNEXPLAINED")]
 
 
-def test_a_strong_junction_under_20_reads_explains_nothing() -> None:
+def test_a_strong_junction_under_20_reads_links_no_chain() -> None:
     reads = [junction(I1, 19), junction(I2, 120), junction(I3, 300)]
 
     result = judge_introns(structure([E1, E3, E4]), reads)
 
-    assert result.verdict == "UNSUPPORTED_UNEXPLAINED"
+    assert result.verdict == "UNSUPPORTED_REPLACED"
+    assert result.unread == [unread(WHOLE, "REPLACED", read(I2, 120))]
 
 
 def test_a_junction_on_the_other_strand_neither_reads_nor_explains() -> None:
@@ -216,13 +219,13 @@ def test_a_gene_whose_every_junction_is_unstranded_is_unchecked() -> None:
     assert result.unstranded_ignored == 2
 
 
-def test_a_replacement_30_bases_off_explains_and_31_does_not() -> None:
+def test_a_replacement_30_bases_off_is_shifted_and_31_is_replaced() -> None:
     gene = structure([E1, (I1[1] + 31, E2[1]), E3, E4])
     near = [junction(I1, 900), junction(I2, 80), junction(I3, 300)]
     far = [junction((I1[0] + 31, I1[1]), 900), junction(I2, 80), junction(I3, 300)]
 
     assert judge_introns(gene, near).verdict == "UNSUPPORTED_SHIFTED"
-    assert judge_introns(gene, far).verdict == "UNSUPPORTED_UNEXPLAINED"
+    assert judge_introns(gene, far).verdict == "UNSUPPORTED_REPLACED"
 
 
 def test_an_intron_under_20_bases_is_never_flagged() -> None:
@@ -279,7 +282,7 @@ def test_a_chain_is_kept_only_when_its_weakest_link_beats_the_best_so_far() -> N
 
 @pytest.mark.parametrize(
     ("step", "verdict"),
-    [(1999, "UNSUPPORTED_MISSING_EXON"), (2000, "UNSUPPORTED_UNEXPLAINED")],
+    [(1999, "UNSUPPORTED_MISSING_EXON"), (2000, "UNSUPPORTED_REPLACED")],
 )
 def test_a_chain_links_junctions_under_2000_bases_apart(
     step: int, verdict: str

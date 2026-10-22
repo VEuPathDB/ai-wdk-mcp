@@ -5,11 +5,12 @@ from __future__ import annotations
 
 import statistics
 from collections import defaultdict
+from collections.abc import Sequence
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
-from veupathdb_mcp.audit.genes import GeneRow
+from veupathdb_mcp.audit.genes import GeneRow, GroupMember, is_coding
 
 type LengthClass = Literal["SHORT", "LONG", "TYPICAL", "SPLIT", "UNQUALIFIED"]
 type RelativeTier = Literal["SAME_GENUS", "OTHER_GENERA"]
@@ -44,24 +45,31 @@ def is_orthology_group(group: str) -> bool:
     return group.startswith(ORTHOLOGY_GROUP) and not is_residual_group(group)
 
 
-def is_coding(row: GeneRow) -> bool:
-    return not row.pseudo and "protein" in row.gene_type
-
-
 def _coding_length(row: GeneRow) -> int | None:
     return row.protein_length if is_coding(row) and row.protein_length else None
 
 
-def _members(rows: list[GeneRow]) -> dict[str, dict[str, int]]:
-    members: dict[str, dict[str, int]] = defaultdict(dict)
-    for row in rows:
-        if length := _coding_length(row):
-            members[row.organism][row.gene] = length
-    return members
+type Group = Sequence[GroupMember]
+type Members = dict[str, dict[str, int]]
 
 
-def _longest(rows: list[GeneRow]) -> dict[str, int]:
-    return {organism: max(n.values()) for organism, n in _members(rows).items()}
+def _members(parts: Sequence[GeneRow], group: Group) -> Members:
+    members: Members = defaultdict(dict)
+    for member in group:
+        if member.protein_length:
+            members[member.organism][member.gene] = member.protein_length
+    listed = {member.gene for member in group}
+    for index, part in enumerate(parts):
+        if index and part.gene not in listed:
+            continue
+        members[part.organism].pop(part.gene, None)
+        if length := _coding_length(part):
+            members[part.organism][part.gene] = length
+    return {organism: genes for organism, genes in members.items() if genes}
+
+
+def _longest(members: Members) -> dict[str, int]:
+    return {organism: max(n.values()) for organism, n in members.items()}
 
 
 class GroupProfile(BaseModel):
@@ -82,8 +90,11 @@ class GroupProfile(BaseModel):
         )
 
     @classmethod
-    def of(cls, rows: list[GeneRow]) -> GroupProfile:
-        members = _members(rows)
+    def of(cls, parts: Sequence[GeneRow], group: Group) -> GroupProfile:
+        return cls.of_members(_members(parts, group))
+
+    @classmethod
+    def of_members(cls, members: Members) -> GroupProfile:
         tops = [max(n.values()) for n in members.values()]
         if not tops:
             return cls(organisms=0, median=0.0, spread=0.0, copies=0.0)
@@ -111,7 +122,7 @@ class NotChecked(BaseModel):
     ratio: float | None
     expected: float
     profile: GroupProfile
-    reference: GeneRow | None
+    reference: GroupMember | None
 
 
 class Confirmable(BaseModel):
@@ -121,21 +132,21 @@ class Confirmable(BaseModel):
     ratio: float
     expected: float
     profile: GroupProfile
-    reference: GeneRow
+    reference: GroupMember
     reference_length: int
     lengths: list[int]
 
 
-def _expectation(gene: GeneRow, rows: list[GeneRow]) -> _Expectation:
+def _expectation(gene: GeneRow, members: Members) -> _Expectation:
     genus = genus_of(gene.organism)
     kin = [
         n
-        for organism, n in _longest(rows).items()
+        for organism, n in _longest(members).items()
         if organism != gene.organism and genus_of(organism) == genus
     ]
     if len(kin) >= MIN_RELATIVES:
         return _Expectation(median=statistics.median(kin), relatives=kin)
-    return _Expectation(median=GroupProfile.of(rows).median, relatives=[])
+    return _Expectation(median=GroupProfile.of_members(members).median, relatives=[])
 
 
 def _lengths(parts: list[GeneRow]) -> list[int] | None:
@@ -143,10 +154,8 @@ def _lengths(parts: list[GeneRow]) -> list[int] | None:
     return lengths if len(lengths) == len(parts) else None
 
 
-def _placed(parts: list[GeneRow], rows: list[GeneRow]) -> bool:
-    own = [
-        r.gene for r in rows if r.organism == parts[0].organism and _coding_length(r)
-    ]
+def _placed(parts: list[GeneRow], members: Members) -> bool:
+    own = members.get(parts[0].organism, {})
     return sorted(own) == sorted(part.gene for part in parts)
 
 
@@ -171,20 +180,21 @@ def _split_class(lengths: list[int], expected: _Expectation) -> LengthClass:
     return "TYPICAL"
 
 
-def _judgeable(parts: list[GeneRow], rows: list[GeneRow]) -> bool:
+def _judgeable(parts: list[GeneRow], members: Members) -> bool:
     return (
-        GroupProfile.of(rows).qualifies
+        GroupProfile.of_members(members).qualifies
         and is_orthology_group(parts[0].ortholog_group)
-        and _placed(parts, rows)
+        and _placed(parts, members)
     )
 
 
-def call_length(parts: list[GeneRow], rows: list[GeneRow]) -> Confirmable | NotChecked:
+def call_length(parts: list[GeneRow], group: Group) -> Confirmable | NotChecked:
     if len(parts) not in {1, 2}:
         msg = f"a length call reads one gene or a pair, not {len(parts)}"
         raise ValueError(msg)
-    expected = _expectation(parts[0], rows)
-    reference = closest_reference(parts[0], rows)
+    members = _members(parts, group)
+    expected = _expectation(parts[0], members)
+    reference = closest_reference(parts[0], group)
     lengths = _lengths(parts)
     unchecked = NotChecked(
         length_class="UNQUALIFIED",
@@ -192,10 +202,10 @@ def call_length(parts: list[GeneRow], rows: list[GeneRow]) -> Confirmable | NotC
         if lengths and expected.median
         else None,
         expected=expected.median,
-        profile=GroupProfile.of(rows),
+        profile=GroupProfile.of_members(members),
         reference=reference,
     )
-    if lengths is None or reference is None or not _judgeable(parts, rows):
+    if lengths is None or reference is None or not _judgeable(parts, members):
         return unchecked
     match (
         _single_class(lengths[0], expected)
@@ -209,7 +219,7 @@ def call_length(parts: list[GeneRow], rows: list[GeneRow]) -> Confirmable | NotC
                 expected=expected.median,
                 profile=unchecked.profile,
                 reference=reference,
-                reference_length=_longest(rows)[reference.organism],
+                reference_length=_longest(members)[reference.organism],
                 lengths=lengths,
             )
         case "TYPICAL" | "LONG" | "UNQUALIFIED" as other:
@@ -222,20 +232,21 @@ def call_length(parts: list[GeneRow], rows: list[GeneRow]) -> Confirmable | NotC
             )
 
 
-def classify(gene: GeneRow, rows: list[GeneRow]) -> LengthClass:
-    return call_length([gene], rows).length_class
+def classify(gene: GeneRow, group: Group) -> LengthClass:
+    return call_length([gene], group).length_class
 
 
-def closest_reference(gene: GeneRow, rows: list[GeneRow]) -> GeneRow | None:
-    expected = _expectation(gene, rows).median
+def closest_reference(gene: GeneRow, group: Group) -> GroupMember | None:
+    members = _members([gene], group)
+    expected = _expectation(gene, members).median
     single = {
         member
-        for organism, genes in _members(rows).items()
+        for organism, genes in members.items()
         if organism != gene.organism and len(genes) == 1
         for member in genes
     }
     return min(
-        (row for row in rows if row.gene in single),
+        (row for row in group if row.gene in single),
         key=lambda row: (
             species_of(row.organism) != species_of(gene.organism),
             genus_of(row.organism) != genus_of(gene.organism),
@@ -257,13 +268,11 @@ class Relatives(BaseModel):
         return statistics.median(self.lengths.values())
 
 
-def relatives_of(
-    reference: GeneRow, model: GeneRow, rows: list[GeneRow]
-) -> Relatives | None:
+def relatives_of(reference: GeneRow, model: GeneRow, group: Group) -> Relatives | None:
     left_out = {reference.organism, model.organism}
     tops = {
         organism: n
-        for organism, n in _longest(rows).items()
+        for organism, n in _longest(_members([], group)).items()
         if organism not in left_out
     }
     genus = genus_of(reference.organism)
@@ -284,8 +293,6 @@ def relatives_of(
     return None
 
 
-def relatives_median(
-    reference: GeneRow, model: GeneRow, rows: list[GeneRow]
-) -> float | None:
-    found = relatives_of(reference, model, rows)
+def relatives_median(reference: GeneRow, model: GeneRow, group: Group) -> float | None:
+    found = relatives_of(reference, model, group)
     return None if found is None else found.median

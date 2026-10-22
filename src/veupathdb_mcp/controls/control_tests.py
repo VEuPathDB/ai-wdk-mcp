@@ -25,7 +25,7 @@ from veupathdb.wdk import (
     walk_wdk_step_tree,
 )
 
-from veupathdb_mcp.catalog.searches import find_record_type_for_search
+from veupathdb_mcp.catalog.searches import listed_record_type
 from veupathdb_mcp.controls.account_writes import RunWrites, run_writes
 from veupathdb_mcp.controls.control_helpers import (
     _encode_id_list,
@@ -351,10 +351,10 @@ async def run_positive_negative_controls(
 
     # A search has one correct record type, which the catalog knows. A gene
     # search lives under "transcript".
-    target_rt = await find_record_type_for_search(
+    target_rt = await listed_record_type(
         SearchContext(config.site_id, config.record_type, config.target_search_name)
     )
-    controls_rt = await find_record_type_for_search(
+    controls_rt = await listed_record_type(
         SearchContext(config.site_id, config.record_type, config.controls_search_name)
     )
     dataset = await upload_controls(

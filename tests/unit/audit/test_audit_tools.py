@@ -93,7 +93,7 @@ async def test_the_selenoprotein_inputs_pad_the_gene_past_the_reference_tail(
     assert result.after_model_end.startswith("*G*")
     assert site.windows == [("tgonGT1", "TGGT1_chrXI", 5359280, 5361636)]
     assert (site.models_read, site.organisms_read) == ([], [GT1_SELK])
-    assert site.proteins_read == [[GT1_SELK, ME49_SELK]]
+    assert site.proteins_read == [GT1_SELK, ME49_SELK]
 
 
 @pytest.mark.parametrize("strand", ["+", "-"])

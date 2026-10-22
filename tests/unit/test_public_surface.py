@@ -21,6 +21,7 @@ PACKAGES = (
     "veupathdb_mcp.research",
     "veupathdb_mcp.search_line",
     "veupathdb_mcp.separation",
+    "veupathdb_mcp.testing",
     "veupathdb_mcp.tools",
     "veupathdb_mcp.wdk",
     "veupathdb_mcp.wdk.enrichment",

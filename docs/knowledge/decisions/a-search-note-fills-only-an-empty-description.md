@@ -132,6 +132,7 @@ retires the note without a release.
 Falsified by `tests/unit/catalog/test_search_notes.py`,
 `tests/unit/catalog/test_protein_count_comparison.py`,
 `tests/unit/catalog/test_clade_only_expression.py` (with the recorded counts in
-`tests/unit/catalog/fixtures/orthomcl_clade_only_counts.json`),
+`src/veupathdb_mcp/testing/fixtures/orthomcl/orthomcl_clade_only_counts.json`, package
+data a host's suite reads through `veupathdb_mcp.testing.ORTHOMCL_COUNTS`),
 `tests/unit/catalog/test_param_formatting.py::TestTheExpressionSheetStatesTheGrammarAndTheRecipes`
 and `tests/unit/catalog/test_the_help_recipes_parse.py`.

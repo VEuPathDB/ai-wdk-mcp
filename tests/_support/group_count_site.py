@@ -1,6 +1,5 @@
 import asyncio
 from collections.abc import Callable
-from pathlib import Path
 
 import pytest
 from pydantic import BaseModel, ConfigDict
@@ -10,10 +9,10 @@ from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKAnswer, WDKSearchConfig, ortho_taxonomy_of
 
 from veupathdb_mcp.catalog import group_counts
+from veupathdb_mcp.testing import ORTHOMCL_COUNTS
 
-FIXTURES = Path(__file__).resolve().parents[1] / "unit/catalog/fixtures"
-LADDER_FILE = FIXTURES / "orthomcl_protein_count_ladder.json"
-CLADE_ONLY_FILE = FIXTURES / "orthomcl_clade_only_counts.json"
+LADDER_FILE = ORTHOMCL_COUNTS / "orthomcl_protein_count_ladder.json"
+CLADE_ONLY_FILE = ORTHOMCL_COUNTS / "orthomcl_clade_only_counts.json"
 COUNT_ONLY: JSONObject = {
     "attributes": ["primary_key"],
     "pagination": {"offset": 0, "numRecords": 0},
@@ -45,7 +44,7 @@ def recorded_clade_only() -> CountRecording:
 
 
 def recording(name: str) -> CountRecording:
-    return CountRecording.model_validate_json((FIXTURES / name).read_text())
+    return CountRecording.model_validate_json((ORTHOMCL_COUNTS / name).read_text())
 
 
 def recorded_taxonomy() -> PhyleticTree:

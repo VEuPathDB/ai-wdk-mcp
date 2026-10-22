@@ -42,7 +42,9 @@ from veupathdb_mcp.catalog.search_context import (
     get_search_params_under_context,
 )
 from veupathdb_mcp.catalog.searches import (
+    UnlistedSearchError,
     get_raw_searches,
+    listed_search_names,
     read_search_definition,
     resolve_search_record_type,
 )
@@ -254,9 +256,13 @@ async def inspect_search(
     query: str | None = None,
 ) -> SearchInspection:
     """Read one search and format it. ``query`` ranks an oversized vocabulary."""
-    rt = await resolve_search_record_type(
-        site_id, search_name, _auto_resolved_record_type(record_type)
-    )
+    try:
+        rt = await resolve_search_record_type(
+            site_id, search_name, _auto_resolved_record_type(record_type)
+        )
+    except UnlistedSearchError as exc:
+        listed = await listed_search_names(site_id)
+        raise UnknownSearchError(search_name, listed) from exc
     try:
         search = await read_search_definition(site_id, rt, search_name)
     except WDKError as exc:

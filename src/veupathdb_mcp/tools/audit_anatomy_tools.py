@@ -35,9 +35,16 @@ async def audit_pseudogene_anatomy(
     reference with several transcripts the two can describe different
     transcripts. dnaCheck translates with the standard genetic code; it does
     not infer the gene's code. It states facts only.
+    Reads: the record of each id; both gene models (one gene record read
+    each); two JBrowse genome windows and the strain contig's length from
+    the organism's FASTA index.
     geneIds pairs each id given with the site's own gene id it names (the
-    same id, an alias, a transcript id, or the one gene whose own id is the
-    id with a ":" qualifier added); every other gene field holds that id.
+    same id, an alias or a previous id its gene record read resolves, a
+    transcript id the site's text search names, or the one gene whose own id
+    is the id with a ":" qualifier added); every other gene field holds that
+    id. Each id given costs one gene record read; an id no record names adds
+    one text search and one record read of the gene it names. Resolving ids
+    uploads no gene list, and a refusal names an id that names several genes.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.

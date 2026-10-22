@@ -13,14 +13,16 @@ from pathlib import Path
 
 import httpx
 from pydantic import BaseModel, ConfigDict, JsonValue
-from scripts.record_audit_fixtures import FIXTURES, ServedTable, served_answers
+from scripts.record_audit_fixtures import (
+    FIXTURES,
+    ServedTable,
+    act_as_the_test_account,
+    served_answers,
+)
 from veupathdb.devtools import use_qa_sites
-from veupathdb.devtools.jbrowse_capture import ExchangeRecorder
 from veupathdb.jbrowse import GenomeReader, JBrowseClient, TabixReader
-from veupathdb.testing.wdk_credentials import act_as_the_test_account
 from veupathdb.wdk import close_all_clients, get_site
 
-from veupathdb_mcp.audit.gene_ids import LOCATED_ATTRIBUTES
 from veupathdb_mcp.audit.gene_models import (
     MODEL_TABLE,
     ORGANISM_ATTRIBUTE,
@@ -28,7 +30,9 @@ from veupathdb_mcp.audit.gene_models import (
     gene_record,
 )
 from veupathdb_mcp.audit.genes import (
+    GENE_ATTRIBUTES,
     ORTHOLOG_TABLE,
+    OrthologGroup,
     OrthologRow,
     locus_tag_answers,
     rows_of,
@@ -36,8 +40,22 @@ from veupathdb_mcp.audit.genes import (
 from veupathdb_mcp.audit.introns_inputs import (
     genome_region,
     junction_region,
-    ortholog_species,
+    ortholog_choice,
 )
+
+
+class TrackLists(httpx.AsyncBaseTransport):
+    def __init__(self, inner: httpx.AsyncBaseTransport) -> None:
+        self._inner = inner
+        self.bodies: list[bytes] = []
+
+    async def handle_async_request(self, request: httpx.Request) -> httpx.Response:
+        response = await self._inner.handle_async_request(request)
+        self.bodies.append(await response.aread())
+        return response
+
+    async def aclose(self) -> None:
+        await self._inner.aclose()
 
 
 class IntronTarget(BaseModel):
@@ -85,10 +103,10 @@ async def record(target: IntronTarget, into: Path) -> None:
     use_qa_sites()
     await act_as_the_test_account()
     site, gene = target.site, target.gene
-    recorder = ExchangeRecorder(httpx.AsyncHTTPTransport())
+    recorder = TrackLists(httpx.AsyncHTTPTransport())
     client = JBrowseClient(base_url=get_site(site).web_base_url, transport=recorder)
     try:
-        gene_answers = await locus_tag_answers(site, [gene], LOCATED_ATTRIBUTES)
+        gene_answers = await locus_tag_answers(site, [gene], GENE_ATTRIBUTES)
         [row] = rows_of(gene_answers[0], "GeneByLocusTag")
         model_record = await gene_record(
             site, gene, [ORGANISM_ATTRIBUTE], [MODEL_TABLE]
@@ -96,7 +114,7 @@ async def record(target: IntronTarget, into: Path) -> None:
         abbrev = GeneModel.from_record(model_record).organism_abbrev
         protein_answers = await locus_tag_answers(site, [gene], ["protein_sequence"])
         tracks = await client.junction_tracks(abbrev)
-        listed = json.loads(recorder.exchanges[-1].body)
+        listed = json.loads(recorder.bodies[-1])
         region = junction_region(row)
         reader = TabixReader(client)
         lines = {
@@ -111,7 +129,12 @@ async def record(target: IntronTarget, into: Path) -> None:
             OrthologRow.model_validate(served)
             for served in ServedTable.model_validate(orthologs.tables).rows
         ]
-        named = list(ortholog_species(table, row))
+        named = list(
+            ortholog_choice(
+                OrthologGroup(gene=gene, members=[r for r in table if r.gene != gene]),
+                row,
+            )
+        )
         ortholog_answers = await locus_tag_answers(site, named, ["protein_sequence"])
     finally:
         await client.close()
