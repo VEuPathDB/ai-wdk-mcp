@@ -47,6 +47,7 @@ from veupathdb_mcp.catalog.overview_formatting import SearchOverviewResult
 from veupathdb_mcp.catalog.param_dag import ResolvedParams, UnknownParameterError
 from veupathdb_mcp.catalog.param_intent import ParamIntent
 from veupathdb_mcp.catalog.param_validation import ValidatedParams
+from veupathdb_mcp.catalog.protein_comparison import MAX_COUNT_REPORTS
 from veupathdb_mcp.catalog.search_inspection import (
     SearchInspection,
     UnknownSearchError,
@@ -92,6 +93,8 @@ EXPECTED_ANNOTATIONS: dict[str, dict[str, bool]] = {
     "list_searches": READ_ONLY,
     "list_transforms": READ_ONLY,
     "lookup_phyletic_codes": READ_ONLY,
+    "build_protein_count_comparison": READ_ONLY,
+    "build_clade_only_expression": READ_ONLY,
     "search_example_plans": READ_ONLY,
     "get_search_overview": READ_ONLY,
     "get_parameter_options": READ_ONLY,
@@ -1368,3 +1371,24 @@ async def test_the_phyletic_lookup_says_each_match_counts_its_genomes() -> None:
 
     assert "genomes, the number of genomes under it" in text
     assert "species groups the genomes the query names by species" in text
+
+
+async def test_the_protein_comparison_names_its_report_bound_and_its_budget() -> None:
+    tools = await _list_tools()
+
+    tool = tools["build_protein_count_comparison"]
+    text = " ".join((tool.description or "").split())
+    assert f"at most {MAX_COUNT_REPORTS} count reports, one at a time" in text
+    assert tool.meta is not None
+    assert tool.meta[MAX_CALL_SECONDS_META_KEY] > 60
+
+
+async def test_the_clade_only_builder_names_its_one_report_and_keeps_the_default() -> (
+    None
+):
+    tools = await _list_tools()
+
+    tool = tools["build_clade_only_expression"]
+    text = " ".join((tool.description or "").split())
+    assert "One count report counts the groups" in text
+    assert MAX_CALL_SECONDS_META_KEY not in (tool.meta or {})

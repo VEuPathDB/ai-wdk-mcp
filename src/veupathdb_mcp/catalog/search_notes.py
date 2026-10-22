@@ -7,11 +7,17 @@ from collections.abc import Mapping
 from veupathdb.wdk import WDKSearch
 
 _SINGLE_COPY = (
-    "Measured on OrthoMCL build 8.2: this search runs the same query as Number of "
-    "Taxa (GroupsByGenomeCount). The same ranges return the same groups, and groups "
-    "with several proteins in one genome are among them. It counts genomes of any "
-    "clade and names no clade. One protein in every genome of a list or a clade is a "
-    "GroupsByPhyleticPattern expression: L=NT AND L=N, with N the genome count "
+    "Measured on OrthoMCL build 8.2: this search returns the groups whose number of "
+    "genomes with a protein, over all genomes, core genomes and peripheral genomes, "
+    "falls in the three ranges. It does not limit the proteins of one genome, so a "
+    "group it returns can hold several proteins in one genome; when it answers a "
+    "single-copy question, state that limit. The three ranges apply together, and a "
+    "group's all-genome count is its core count plus its peripheral count, so an "
+    "all-genome range that starts above the sum of the core and peripheral maxima "
+    "returns no group; widen those two ranges to reach it. Single copy over named "
+    "genomes, a list "
+    "or a clade L of N genomes, is the GroupsByPhyleticPattern expression L=NT AND "
+    "L=N, one protein in every genome of L, with N the genome count "
     "lookup_phyletic_codes gives."
 )
 

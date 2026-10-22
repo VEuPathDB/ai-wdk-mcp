@@ -49,6 +49,8 @@ from veupathdb_mcp.tools.audit_tools import (
 )
 from veupathdb_mcp.tools.catalog_tools import (
     browse_search_categories,
+    build_clade_only_expression,
+    build_protein_count_comparison,
     get_parameter_options,
     get_search_overview,
     get_search_param_specs,
@@ -93,6 +95,7 @@ CONTROL_TESTS_MAX_CALL_SECONDS = 180
 # A combined plan creates one WDK step per node before it reads a count.
 PLAN_COUNTS_MAX_CALL_SECONDS = 180
 AUDIT_MAX_CALL_SECONDS = 120
+PROTEIN_COMPARISON_MAX_CALL_SECONDS = 120
 
 _NO_CREDENTIAL = "The call carried no verified credential."
 
@@ -183,6 +186,12 @@ TOOLS: tuple[_ToolRow, ...] = (
     _ToolRow(list_searches, _READ),
     _ToolRow(list_transforms, _READ),
     _ToolRow(lookup_phyletic_codes, _READ),
+    _ToolRow(
+        build_protein_count_comparison,
+        _READ,
+        {MAX_CALL_SECONDS_META_KEY: PROTEIN_COMPARISON_MAX_CALL_SECONDS},
+    ),
+    _ToolRow(build_clade_only_expression, _READ),
     _ToolRow(search_example_plans, _READ),
     _ToolRow(get_search_overview, _READ),
     _ToolRow(get_parameter_options, _READ),

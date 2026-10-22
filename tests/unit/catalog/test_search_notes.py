@@ -44,11 +44,40 @@ def _single_copy_response() -> WDKSearchResponse:
 
 
 def _holds_the_note(text: str) -> bool:
-    return "same query as Number of Taxa" in text and "L=NT AND L=N" in text
+    return "does not limit the proteins of one genome" in text and (
+        "L=NT AND L=N" in text
+    )
 
 
 def test_an_empty_description_takes_the_note() -> None:
     assert _holds_the_note(described("orthomcl", _single_copy()).description)
+
+
+def test_the_note_says_what_the_search_returns_and_keeps_single_copy() -> None:
+    note = " ".join(described("orthomcl", _single_copy()).description.split())
+
+    assert (
+        "this search returns the groups whose number of genomes with a protein, "
+        "over all genomes, core genomes and peripheral genomes, falls in the three "
+        "ranges." in note
+    )
+    assert (
+        "It does not limit the proteins of one genome, so a group it returns can "
+        "hold several proteins in one genome; when it answers a single-copy "
+        "question, state that limit." in note
+    )
+    assert (
+        "Single copy over named genomes, a list or a clade L of N genomes, is the "
+        "GroupsByPhyleticPattern expression L=NT AND L=N" in note
+    )
+    assert (
+        "The three ranges apply together, and a group's all-genome count is its core "
+        "count plus its peripheral count, so an all-genome range that starts above "
+        "the sum of the core and peripheral maxima returns no group; widen those two "
+        "ranges to reach it." in note
+    )
+    assert "same query" not in note
+    assert "Number of Taxa" not in note
 
 
 def test_a_published_description_stands() -> None:

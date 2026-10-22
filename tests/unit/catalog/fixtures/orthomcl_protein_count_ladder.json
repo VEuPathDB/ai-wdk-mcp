@@ -1,0 +1,47 @@
+{
+ "site": "orthomcl",
+ "build": "8.2",
+ "search": "GroupsByPhyleticPattern",
+ "reports": [
+  {
+   "expression": "pfal>=128",
+   "total": 0
+  },
+  {
+   "expression": "pfal>=64",
+   "total": 2
+  },
+  {
+   "expression": "pfal>=96",
+   "total": 1
+  },
+  {
+   "expression": "pfal>=112",
+   "total": 0
+  },
+  {
+   "expression": "pfal>=104",
+   "total": 1
+  },
+  {
+   "expression": "pfal>=108",
+   "total": 1
+  },
+  {
+   "expression": "pfal>=110",
+   "total": 1
+  },
+  {
+   "expression": "pfal>=111",
+   "total": 1
+  },
+  {
+   "expression": "(pfal=0 AND tgon>=1) OR (pfal=1 AND tgon>=2) OR (pfal=2 AND tgon>=3) OR (pfal=3 AND tgon>=4) OR (pfal=4 AND tgon>=5) OR (pfal=5 AND tgon>=6) OR (pfal=6 AND tgon>=7) OR (pfal=7 AND tgon>=8) OR (pfal=8 AND tgon>=9) OR (pfal=9 AND tgon>=10) OR (pfal=10 AND tgon>=11) OR (pfal=11 AND tgon>=12) OR (pfal=12 AND tgon>=13) OR (pfal=13 AND tgon>=14) OR (pfal=14 AND tgon>=15) OR (pfal=15 AND tgon>=16) OR (pfal=16 AND tgon>=17) OR (pfal=17 AND tgon>=18) OR (pfal=18 AND tgon>=19) OR (pfal=19 AND tgon>=20) OR (pfal=20 AND tgon>=21) OR (pfal=21 AND tgon>=22) OR (pfal=22 AND tgon>=23) OR (pfal=23 AND tgon>=24) OR (pfal=24 AND tgon>=25) OR (pfal=25 AND tgon>=26) OR (pfal=26 AND tgon>=27) OR (pfal=27 AND tgon>=28) OR (pfal=28 AND tgon>=29) OR (pfal=29 AND tgon>=30) OR (pfal=30 AND tgon>=31) OR (pfal=31 AND tgon>=32) OR (pfal=32 AND tgon>=33) OR (pfal=33 AND tgon>=34) OR (pfal=34 AND tgon>=35) OR (pfal=35 AND tgon>=36) OR (pfal=36 AND tgon>=37) OR (pfal=37 AND tgon>=38) OR (pfal=38 AND tgon>=39) OR (pfal=39 AND tgon>=40) OR (pfal=40 AND tgon>=41) OR (pfal=41 AND tgon>=42) OR (pfal=42 AND tgon>=43) OR (pfal=43 AND tgon>=44) OR (pfal=44 AND tgon>=45) OR (pfal=45 AND tgon>=46) OR (pfal=46 AND tgon>=47) OR (pfal=47 AND tgon>=48) OR (pfal=48 AND tgon>=49) OR (pfal=49 AND tgon>=50) OR (pfal=50 AND tgon>=51) OR (pfal=51 AND tgon>=52) OR (pfal=52 AND tgon>=53) OR (pfal=53 AND tgon>=54) OR (pfal=54 AND tgon>=55) OR (pfal=55 AND tgon>=56) OR (pfal=56 AND tgon>=57) OR (pfal=57 AND tgon>=58) OR (pfal=58 AND tgon>=59) OR (pfal=59 AND tgon>=60) OR (pfal=60 AND tgon>=61) OR (pfal=61 AND tgon>=62) OR (pfal=62 AND tgon>=63) OR (pfal=63 AND tgon>=64) OR (pfal=64 AND tgon>=65) OR (pfal=65 AND tgon>=66) OR (pfal=66 AND tgon>=67) OR (pfal=67 AND tgon>=68) OR (pfal=68 AND tgon>=69) OR (pfal=69 AND tgon>=70) OR (pfal=70 AND tgon>=71) OR (pfal=71 AND tgon>=72) OR (pfal=72 AND tgon>=73) OR (pfal=73 AND tgon>=74) OR (pfal=74 AND tgon>=75) OR (pfal=75 AND tgon>=76) OR (pfal=76 AND tgon>=77) OR (pfal=77 AND tgon>=78) OR (pfal=78 AND tgon>=79) OR (pfal=79 AND tgon>=80) OR (pfal=80 AND tgon>=81) OR (pfal=81 AND tgon>=82) OR (pfal=82 AND tgon>=83) OR (pfal=83 AND tgon>=84) OR (pfal=84 AND tgon>=85) OR (pfal=85 AND tgon>=86) OR (pfal=86 AND tgon>=87) OR (pfal=87 AND tgon>=88) OR (pfal=88 AND tgon>=89) OR (pfal=89 AND tgon>=90) OR (pfal=90 AND tgon>=91) OR (pfal=91 AND tgon>=92) OR (pfal=92 AND tgon>=93) OR (pfal=93 AND tgon>=94) OR (pfal=94 AND tgon>=95) OR (pfal=95 AND tgon>=96) OR (pfal=96 AND tgon>=97) OR (pfal=97 AND tgon>=98) OR (pfal=98 AND tgon>=99) OR (pfal=99 AND tgon>=100) OR (pfal=100 AND tgon>=101) OR (pfal=101 AND tgon>=102) OR (pfal=102 AND tgon>=103) OR (pfal=103 AND tgon>=104) OR (pfal=104 AND tgon>=105) OR (pfal=105 AND tgon>=106) OR (pfal=106 AND tgon>=107) OR (pfal=107 AND tgon>=108) OR (pfal=108 AND tgon>=109) OR (pfal=109 AND tgon>=110) OR (pfal=110 AND tgon>=111) OR (pfal=111 AND tgon>=112)",
+   "total": 3896
+  },
+  {
+   "expression": "(tgon=0 AND pfal>=1) OR (tgon=1 AND pfal>=2) OR (tgon=2 AND pfal>=3) OR (tgon=3 AND pfal>=4) OR (tgon=4 AND pfal>=5) OR (tgon=5 AND pfal>=6) OR (tgon=6 AND pfal>=7) OR (tgon=7 AND pfal>=8) OR (tgon=8 AND pfal>=9) OR (tgon=9 AND pfal>=10) OR (tgon=10 AND pfal>=11) OR (tgon=11 AND pfal>=12) OR (tgon=12 AND pfal>=13) OR (tgon=13 AND pfal>=14) OR (tgon=14 AND pfal>=15) OR (tgon=15 AND pfal>=16) OR (tgon=16 AND pfal>=17) OR (tgon=17 AND pfal>=18) OR (tgon=18 AND pfal>=19) OR (tgon=19 AND pfal>=20) OR (tgon=20 AND pfal>=21) OR (tgon=21 AND pfal>=22) OR (tgon=22 AND pfal>=23) OR (tgon=23 AND pfal>=24) OR (tgon=24 AND pfal>=25) OR (tgon=25 AND pfal>=26) OR (tgon=26 AND pfal>=27) OR (tgon=27 AND pfal>=28) OR (tgon=28 AND pfal>=29) OR (tgon=29 AND pfal>=30) OR (tgon=30 AND pfal>=31) OR (tgon=31 AND pfal>=32) OR (tgon=32 AND pfal>=33) OR (tgon=33 AND pfal>=34) OR (tgon=34 AND pfal>=35) OR (tgon=35 AND pfal>=36) OR (tgon=36 AND pfal>=37) OR (tgon=37 AND pfal>=38) OR (tgon=38 AND pfal>=39) OR (tgon=39 AND pfal>=40) OR (tgon=40 AND pfal>=41) OR (tgon=41 AND pfal>=42) OR (tgon=42 AND pfal>=43) OR (tgon=43 AND pfal>=44) OR (tgon=44 AND pfal>=45) OR (tgon=45 AND pfal>=46) OR (tgon=46 AND pfal>=47) OR (tgon=47 AND pfal>=48) OR (tgon=48 AND pfal>=49) OR (tgon=49 AND pfal>=50) OR (tgon=50 AND pfal>=51) OR (tgon=51 AND pfal>=52) OR (tgon=52 AND pfal>=53) OR (tgon=53 AND pfal>=54) OR (tgon=54 AND pfal>=55) OR (tgon=55 AND pfal>=56) OR (tgon=56 AND pfal>=57) OR (tgon=57 AND pfal>=58) OR (tgon=58 AND pfal>=59) OR (tgon=59 AND pfal>=60) OR (tgon=60 AND pfal>=61) OR (tgon=61 AND pfal>=62) OR (tgon=62 AND pfal>=63) OR (tgon=63 AND pfal>=64) OR (tgon=64 AND pfal>=65) OR (tgon=65 AND pfal>=66) OR (tgon=66 AND pfal>=67) OR (tgon=67 AND pfal>=68) OR (tgon=68 AND pfal>=69) OR (tgon=69 AND pfal>=70) OR (tgon=70 AND pfal>=71) OR (tgon=71 AND pfal>=72) OR (tgon=72 AND pfal>=73) OR (tgon=73 AND pfal>=74) OR (tgon=74 AND pfal>=75) OR (tgon=75 AND pfal>=76) OR (tgon=76 AND pfal>=77) OR (tgon=77 AND pfal>=78) OR (tgon=78 AND pfal>=79) OR (tgon=79 AND pfal>=80) OR (tgon=80 AND pfal>=81) OR (tgon=81 AND pfal>=82) OR (tgon=82 AND pfal>=83) OR (tgon=83 AND pfal>=84) OR (tgon=84 AND pfal>=85) OR (tgon=85 AND pfal>=86) OR (tgon=86 AND pfal>=87) OR (tgon=87 AND pfal>=88) OR (tgon=88 AND pfal>=89) OR (tgon=89 AND pfal>=90) OR (tgon=90 AND pfal>=91) OR (tgon=91 AND pfal>=92) OR (tgon=92 AND pfal>=93) OR (tgon=93 AND pfal>=94) OR (tgon=94 AND pfal>=95) OR (tgon=95 AND pfal>=96) OR (tgon=96 AND pfal>=97) OR (tgon=97 AND pfal>=98) OR (tgon=98 AND pfal>=99) OR (tgon=99 AND pfal>=100) OR (tgon=100 AND pfal>=101) OR (tgon=101 AND pfal>=102) OR (tgon=102 AND pfal>=103) OR (tgon=103 AND pfal>=104) OR (tgon=104 AND pfal>=105) OR (tgon=105 AND pfal>=106) OR (tgon=106 AND pfal>=107) OR (tgon=107 AND pfal>=108) OR (tgon=108 AND pfal>=109) OR (tgon=109 AND pfal>=110) OR (tgon=110 AND pfal>=111)",
+   "total": 1472
+  }
+ ]
+}

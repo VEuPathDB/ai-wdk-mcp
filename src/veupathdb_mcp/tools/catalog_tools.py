@@ -9,12 +9,15 @@ from veupathdb.domain.parameters import ParamValue
 from veupathdb.errors import VEuPathDBError
 
 from veupathdb_mcp.catalog import (
+    clade_only,
     experiments,
     parameters,
+    protein_comparison,
     search_inspection,
     searches,
     sites,
 )
+from veupathdb_mcp.catalog.clade_only import CladeOnlyExpression
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.experiments import ExperimentMatch, UnknownExperimentError
 from veupathdb_mcp.catalog.models import ParamSpecResponse, RecordTypeInfo, SearchMatch
@@ -28,6 +31,7 @@ from veupathdb_mcp.catalog.param_formatting import GetParameterOptionsResult
 from veupathdb_mcp.catalog.param_intent import ParamIntent
 from veupathdb_mcp.catalog.param_specs_formatting import build_param_specs
 from veupathdb_mcp.catalog.param_validation import ValidatedParams, validate_parameters
+from veupathdb_mcp.catalog.protein_comparison import ProteinCountComparison
 from veupathdb_mcp.catalog.search_inspection import UnknownSearchError
 from veupathdb_mcp.catalog.searches import VagueSearchQueryError
 from veupathdb_mcp.catalog.shortlist import shortlist_slot
@@ -152,6 +156,70 @@ async def lookup_phyletic_codes(
     return payload_or_error(
         await parameters.lookup_phyletic_codes(site_id, record_type, query)
     )
+
+
+async def build_protein_count_comparison(
+    site_id: str,
+    genome_a: str,
+    genome_b: str,
+    reverse: bool = False,
+) -> ProteinCountComparison:
+    """Build the exact phyletic_expression for the OrthoMCL groups in which genome
+    A holds more proteins than genome B.
+
+    The expression is B=0 AND A>=1 OR B=1 AND A>=2 OR ... OR B=K AND A>=K+1,
+    where K is the smallest count for which B>=K+1 returns no group. K is read
+    from the site by bisection over count reports, each a count with no records:
+    at most 15 count reports, one at a time. A genome B with 1024 or more
+    proteins in one group is refused, because its ladder would not finish. Each ladder gives its expression,
+    groups, the number of groups it returns, and length, its characters; the
+    parameter has no length limit, so pass the expression whole. A group with as
+    many proteins in both genomes is in neither ladder.
+
+    Args:
+        site_id: The OrthoMCL site, 'orthomcl'.
+        genome_a: Genome A, one genome code (leaf=true in lookup_phyletic_codes).
+        genome_b: Genome B, one genome code (leaf=true in lookup_phyletic_codes).
+        reverse: Also build the ladder of the groups in which genome B holds
+            more proteins than genome A.
+    """
+    try:
+        return await protein_comparison.compare_protein_counts(
+            site_id, genome_a, genome_b, reverse=reverse
+        )
+    except VEuPathDBError as exc:
+        raise ToolError(exc.detail or exc.title) from exc
+
+
+async def build_clade_only_expression(
+    site_id: str,
+    clade: list[str],
+    within: list[str] | None = None,
+) -> CladeOnlyExpression:
+    """Build the exact phyletic_expression for the OrthoMCL groups present in a
+    clade L and in no genome outside it.
+
+    The expression is L>=1T AND C=0T, with C every genome outside L, written from
+    the site's taxonomy: a clade code for each whole clade outside L and a genome
+    code for the rest. With within, a clade M that holds every genome of L, C is
+    every genome outside M, so the groups may also hold proteins elsewhere in M.
+    One count report counts the groups. The result gives expression, groups,
+    length, its characters, genomes, the genome codes of L, and outside, the
+    number of genomes C covers; the parameter has no length limit, so pass the
+    expression whole. For a clade X whose genomes must hold no protein, write
+    L>=1T AND X=0T instead.
+
+    Args:
+        site_id: The OrthoMCL site, 'orthomcl'.
+        clade: L, one clade code, or the genome codes of a group with no clade
+            code of its own, such as a genus, from lookup_phyletic_codes.
+        within: M, the codes of a clade that holds every genome of L; every
+            genome outside M must hold no protein.
+    """
+    try:
+        return await clade_only.clade_only_expression(site_id, clade, within)
+    except VEuPathDBError as exc:
+        raise ToolError(exc.detail or exc.title) from exc
 
 
 async def search_example_plans(

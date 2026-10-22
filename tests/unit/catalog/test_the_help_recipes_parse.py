@@ -176,6 +176,32 @@ _RECIPES = (
     ),
 )
 
+
+def _outside(clade: str) -> str:
+    tree = _tree()
+    return "+".join(sorted(tree.genomes_under(["ALL"]) - tree.genomes_under([clade])))
+
+
+_ONLY_IN_A_CLADE = (
+    _Instance(
+        recipe="L>=1T AND C=0T",
+        expression=f"CILI>=1T AND {_outside('CILI')}=0T",
+        selects=({"ptet": 1}, {"ptet": 3, "tetr": 1}),
+        rejects=(
+            {"ptet": 1, "bant": 1},
+            {"tetr": 1, "nmen": 4},
+            {"bant": 1},
+            {},
+        ),
+    ),
+    _Instance(
+        recipe="L>=1T AND X=0T",
+        expression="CILI>=1T AND FIRM=0T",
+        selects=({"ptet": 1}, {"ptet": 1, "tetr": 2, "nmen": 1}),
+        rejects=({"ptet": 1, "lmon": 1}, {"bant": 1}, {}),
+    ),
+)
+
 _EXAMPLE_CODES = {
     "a": "atum",
     "b": "bdia",
@@ -252,7 +278,14 @@ _FROM_HELP = (
     ),
 )
 
-_ALL = (*_RECIPES, *_FROM_HELP)
+_ALL = (*_RECIPES, *_ONLY_IN_A_CLADE, *_FROM_HELP)
+
+
+def test_the_complement_names_every_genome_outside_the_clade_once() -> None:
+    unit = PhyleticExpression.parse(_ONLY_IN_A_CLADE[0].expression).units()[1]
+
+    assert len(unit.codes) == len(_tree().genomes_under(["ALL"])) - 2 == 855
+    assert {"ptet", "tetr"}.isdisjoint(unit.codes)
 
 
 def test_band_zero_is_read_from_the_help() -> None:

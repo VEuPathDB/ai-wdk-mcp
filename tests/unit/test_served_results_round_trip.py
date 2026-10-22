@@ -31,6 +31,7 @@ from tests._support.evidence_site import (
     EvidenceSite,
     gene_record,
 )
+from tests._support.group_count_site import install, install_recorded
 from tests._support.intron_wire import Served, load_introns
 from tests._support.missing_wire import recording, replay
 from tests._support.organelle_fixtures import CYTB, recorded_site
@@ -51,6 +52,7 @@ from veupathdb_mcp.tools import (
     audit_organelle_tools,
     audit_strain_tools,
     audit_tools,
+    catalog_tools,
 )
 
 type Recorded = Callable[[pytest.MonkeyPatch], Awaitable[list[BaseModel]]]
@@ -225,6 +227,25 @@ async def gene_fusion(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
     return found
 
 
+async def protein_count_comparison(
+    monkeypatch: pytest.MonkeyPatch,
+) -> list[BaseModel]:
+    install_recorded(monkeypatch)
+    return [
+        await catalog_tools.build_protein_count_comparison(
+            "orthomcl", "tgon", "pfal", reverse=True
+        )
+    ]
+
+
+async def clade_only_expression(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
+    install(monkeypatch, lambda expression: 41)
+    return [
+        await catalog_tools.build_clade_only_expression("orthomcl", ["CILI"]),
+        await catalog_tools.build_clade_only_expression("orthomcl", ["ecun"], ["MICR"]),
+    ]
+
+
 RECORDED: dict[str, Recorded] = {
     "audit_pseudogene_call": pseudogene_call,
     "audit_selenoprotein_end": selenoprotein_end,
@@ -239,6 +260,8 @@ RECORDED: dict[str, Recorded] = {
     "audit_genome_provenance": genome_provenance,
     "audit_intron_support": intron_support,
     "audit_gene_fusion": gene_fusion,
+    "build_protein_count_comparison": protein_count_comparison,
+    "build_clade_only_expression": clade_only_expression,
 }
 
 

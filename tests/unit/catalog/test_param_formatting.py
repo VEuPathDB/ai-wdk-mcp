@@ -530,12 +530,30 @@ class TestTheExpressionSheetStatesTheGrammarAndTheRecipes:
         assert "c=0 band is the absence form" not in help_text
 
     def test_one_genome_with_more_proteins_than_another_is_a_ladder(self) -> None:
+        help_text = " ".join(self._help().split())
+
         assert (
-            "Genome A has more proteins than genome B: B=0 AND A>=1 OR B=1 AND A>=2 "
-            "OR ... OR B=K AND A>=K+1, where K is the smallest count for which "
-            "B>=K+1 returns no group; it is exact for two single genomes."
-            in self._help()
+            "Genome A has more proteins than genome B, for two single genomes: "
+            "B=0 AND A>=1 OR B=1 AND A>=2 OR ... OR B=K AND A>=K+1, where K is the "
+            "smallest count for which B>=K+1 returns no group." in help_text
         )
+        assert (
+            "Build it with build_protein_count_comparison, which reads K from the "
+            "site and counts the groups; a ladder written by hand that stops before "
+            "K misses groups." in help_text
+        )
+
+    def test_presence_only_in_a_clade_is_absence_over_its_complement(self) -> None:
+        help_text = " ".join(self._help().split())
+
+        assert (
+            "Present only in a clade L, with no protein in any genome outside L: "
+            "L>=1T AND C=0T, with C every genome not under L. Build it with "
+            "build_clade_only_expression, which writes C from the taxonomy, a clade "
+            "code for each whole clade outside L, and counts the groups; given within, "
+            "a clade M that holds L, C is every genome outside M." in help_text
+        )
+        assert "In L and in no genome of a clade X: L>=1T AND X=0T." in help_text
 
     def test_the_example_writes_absence_as_two_and_terms(self) -> None:
         help_text = self._help()

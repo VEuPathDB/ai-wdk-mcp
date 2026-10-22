@@ -28,13 +28,13 @@ than from a file inside it.
 | --- | --- |
 | `veupathdb_mcp` | the version, the service-token registry, the tool error payload, the tool metadata keys |
 | `veupathdb_mcp.audit` | the gene-model checks: genetic codes and translation, protein windows confirmed in DNA, a genome's gene rows, a gene list's proteins and the site's organism records, a gene's model, ortholog-group length statistics, the pseudogene-call, selenoprotein-end, protein-length, split, gene-fusion, strain-model, missing-gene, organelle-join and RNA-seq intron-support checks, the anatomy of a pseudogene call, a genome's pseudogene calls paired with a reference genome and a rate with its Wilson interval, floor and ceiling, the genome priority from the served BUSCO scores, the evidence a gene record serves and a genome's provenance, and the inputs their served tools read |
-| `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation, the shortlist a long vocabulary is shown as, and other sites' experiment cards |
+| `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation, the shortlist a long vocabulary is shown as, other sites' experiment cards, and the OrthoMCL protein-count comparison of two genomes and the expression for presence only inside a clade |
 | `veupathdb_mcp.controls` | the control-test runners, their context and their result shapes |
 | `veupathdb_mcp.embeddings` | the embedder, its three tables, the record manager and the indexes on them |
 | `veupathdb_mcp.gene_lookup` | text lookup, id resolution and the organism list |
 | `veupathdb_mcp.research` | the research server, its settings and its two tools |
 | `veupathdb_mcp.separation` | the separation run, its request, its progress rows, its result, the request charges it makes and the hypergeometric tail it reads controls by |
-| `veupathdb_mcp.tools` | the forty-one served tools |
+| `veupathdb_mcp.tools` | the forty-three served tools |
 | `veupathdb_mcp.wdk` | step trees, sizes, the sample of a built step (`step_sample_records`), a step's gene ids read up to a limit the caller names (`StepTooLargeError` past it), an OrthoMCL group's proteins per genome (`group_genome_counts`, from its `TaxonCounts` table), downloads, expression, the vocabulary and defaults a form offers, and the AST a saved strategy converts into |
 | `veupathdb_mcp.wdk.enrichment` | over-representation analysis, its result shapes and its parser |
 
@@ -89,12 +89,13 @@ The two servers share no setting: the WDK server reads `WDK_MCP_*` and
 `VEUPATHDB_*`, the research server reads `RESEARCH_MCP_*`. A secret configured
 for one admits nothing on the other.
 
-## The forty-one WDK tools
+## The forty-three WDK tools
 
 Catalog reads (service or user credential):
 
 `list_record_types`, `search_for_searches`, `browse_search_categories`,
 `list_searches`, `list_transforms`, `lookup_phyletic_codes`,
+`build_protein_count_comparison`, `build_clade_only_expression`,
 `search_example_plans`, `get_search_overview`, `get_parameter_options`,
 `get_search_param_specs`, `resolve_search_parameters`,
 `validate_search_parameters`, `search_catalog_index`,
@@ -122,11 +123,12 @@ locus-tag search serves for that id, its own id first, an alias or a transcript 
 else the one gene whose own id, without its `:` qualifier, the site's text search
 finds) and answers `geneIds`, each id given beside the gene id it resolved to.
 
-Fifteen of them declare a call budget over the default in tool `_meta`
+Sixteen of them declare a call budget over the default in tool `_meta`
 (`org.veupathdb.assistant/maxCallSeconds`): the two control runs, the plan
-count, the eleven gene-model checks that read DNA or whole-genome gene reports,
-and `enrich_gene_ids`, which also declares the stream part its result carries
-(`org.veupathdb.assistant/streamPart`). `audit_genome_priority`,
+count, the protein-count comparison, the eleven gene-model checks that read DNA
+or whole-genome gene reports, and `enrich_gene_ids`, which also declares the
+stream part its result carries (`org.veupathdb.assistant/streamPart`).
+`audit_genome_priority`,
 `audit_gene_evidence` and `audit_genome_provenance` read no DNA (one organism
 report, or the gene record type and one gene record) and keep the default.
 
@@ -148,11 +150,27 @@ by species under `species`. On OrthoMCL it reads the site's taxonomy, and the
 `phyletic_expression` help states the counting, absence and precedence rules the
 site was measured to follow.
 
+`build_protein_count_comparison` builds the OrthoMCL expression for the groups in
+which one genome holds more proteins than another, `B=0 AND A>=1 OR ... OR B=K AND
+A>=K+1`, and counts them. It reads K, the smallest count at which `B>=K+1` returns
+no group, by bisection over count reports that return no records: at most 15
+reports, sent one after another, so the call keeps the one-search-per-site line of
+the client. A genome B with 1024 or more proteins in one group is refused, because
+its ladder would not finish within the call's 120 second budget. `reverse` adds the
+ladder of the opposite comparison.
+
+`build_clade_only_expression` builds `L>=1T AND C=0T` for the groups present in a
+clade L and in no genome outside it, C written from the taxonomy as a clade code for
+each whole clade outside L and a genome code for the rest; `within`, a clade M that
+holds L, moves the edge to M. L may be a clade code or the genome codes of a group with
+no clade code. It sends one count report.
+
 A search the site publishes no description for may carry a measured note in its
 place (`catalog/search_notes.py`); a note never replaces a description the site
-publishes. OrthoMCL's `GroupsBySingleCopy` carries the only one: it runs the
-query of `GroupsByGenomeCount`, and one protein in every genome of a list is a
-`GroupsByPhyleticPattern` expression.
+publishes. OrthoMCL's `GroupsBySingleCopy` carries the only one: it selects
+groups by how many genomes hold a protein and does not limit the proteins of one
+genome, and one protein in every genome of a list is a `GroupsByPhyleticPattern`
+expression.
 
 `get_step_gene_ids` answers at most 200 gene ids. It asks the site for one record
 more, refuses a larger step by its id and the limit, and names

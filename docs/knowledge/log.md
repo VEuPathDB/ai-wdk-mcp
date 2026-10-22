@@ -1,5 +1,72 @@
 # Knowledge log
 
+## 2026-10-22 - 0.2.0b35
+
+- 0.2.0b35 serves `build_protein_count_comparison` and `build_clade_only_expression`, rewords the `GroupsBySingleCopy` note and
+  adds the complement recipe to the `phyletic_expression` help
+  ([a search note fills only an empty description](decisions/a-search-note-fills-only-an-empty-description.md)).
+  It pins veupathdb-py 0.1.0b18, as 0.2.0b34 did.
+- `build_protein_count_comparison` takes two single genome codes of the OrthoMCL taxonomy,
+  reads K, the smallest count at which `B>=K+1` answers no group, by bisection over count
+  reports, and returns the ladder `B=0 AND A>=1 OR ... OR B=K AND A>=K+1` with the groups it
+  answers, its length and K; `reverse` adds the opposite ladder, which stops at K - 1. One
+  call sends at most 15 count reports, each with no records, one after another, and declares
+  a 120 second call budget. A clade code, an unknown code or one genome named twice is refused
+  before any report, and a genome B with 1024 or more proteins in one group is refused after
+  the fourth probe, because its ladders would not finish within the budget. The two-genome
+  recipe of the help names the tool.
+- The tool's tests replay the QA OrthoMCL build 8.2 recording of 2026-10-21
+  (`tests/unit/catalog/fixtures/orthomcl_protein_count_ladder.json`): the eight bisection
+  probes in the order the tool sends them, and the totals of both ladders. The ladders were
+  sent with each AND term in parentheses, which the site reads as the same query, so the
+  replay compares the site reading of each expression, unit by unit and in any code order.
+  Two more recordings (`orthomcl_protein_count_ladder_osat_zmay.json`, `..._zmay_osat.json`)
+  hold the large-family pair below: its probes verbatim, and the ladders rebuilt by the tool's
+  own rule, whose lengths equal the logged lengths of what was sent. The result validates its own dump
+  (`tests/unit/test_served_results_round_trip.py`).
+- The `GroupsBySingleCopy` note no longer compares the search to `GroupsByGenomeCount`. It
+  states what the search returns, that it does not limit the proteins of one genome and that
+  an answer from it states that limit, names `L=NT AND L=N` for single copy over named
+  genomes, and states that the three ranges apply together, so an all-genome range above the
+  sum of the core and peripheral maxima returns no group.
+- The help states presence only in a clade L as `L>=1T AND C=0T`, C every genome outside L,
+  names `build_clade_only_expression` to build it, and states absence from a named clade X as
+  `L>=1T AND X=0T` (X, because M is the clade `within` names). `test_the_help_recipes_parse.py` passes both through the served validator
+  (C of 855 codes) and the client's evaluation.
+- `build_clade_only_expression` takes L as a clade code or the genome codes of a group with no
+  clade code, and optionally `within`, a clade M that holds L. It writes C, the genomes
+  outside L (or outside M), as the fewest taxonomy codes that cover them, sends one count
+  report, and returns the expression, the groups, its length, the genome codes of L and the
+  number of genomes C covers. An unknown code, an empty or genome-less L, an L that covers
+  every genome and an M that does not hold L are refused before the report. Its tests read
+  the client's recorded taxonomy, pass each expression through the served validator and the
+  client's evaluation, pin that a clade with no genome is never written and that codes under
+  a named clade collapse into it, and replay three recorded counts
+  (`orthomcl_clade_only_counts.json`): a clade-only expression measured on 2026-10-21 in
+  another code order and the two smoke counts below, the last
+  rebuilt from the recorded taxonomy, whose first 200 characters and length equal what was
+  sent.
+- Live on QA OrthoMCL with this release's source, anonymous, one request at a time: 15
+  requests, all 200 (the service root, `/app`, the taxonomy and 12 count reports). The
+  comparison of the recorded genome pair reads the K and the two ladder totals of the
+  recording in 10.2 s: 8 probes of 0.23 to 0.27 s and ladder counts of 4.0 and 4.3 s. A
+  clade-only count over a clade code took 5.2 s and over a genus list 4.8 s.
+- Live on QA for a large family, the same way: 27 requests, all 200. `osat` over `zmay`
+  bisects `zmay` in 11 probes to K = 340 and counts 13,354 and 11,130 groups in ladders of
+  8,644 and 8,618 characters (10.5 and 11.6 s), 25.6 s in all; `zmay` over `osat` bisects
+  `osat` in 9 probes to K = 212 and counts the same 11,130 and 13,354 (5,316 and 5,290
+  characters, 9.1 and 8.7 s), 20.2 s in all. Both directions agree on both totals.
+- The budget: a ladder count grows with its length, at 32 to 42 ms per term measured. 120 s
+  is 4.7 times the slowest measured call (25.6 s), and covers the estimate at the largest K
+  the tool accepts, 1,023: about 2 x 1,024 x 0.042 s for the two ladders and 13 x 0.3 s for
+  the probes, about 90 s. A larger K is refused by name rather than left to time out, which
+  also lowers the request bound from 29 to 15. The clade-only builder sends one report
+  (4.8 to 5.2 s measured) and keeps the default budget.
+- What a host does to take this release: expose `build_protein_count_comparison` and
+  `build_clade_only_expression` to the agent that writes phyletic expressions, in the same
+  change as the pin, because the help names both tools; a host that lists sample arguments
+  per served tool adds theirs.
+
 ## 2026-10-22 - 0.2.0b34
 
 - 0.2.0b34 ships served results that validate their own dump

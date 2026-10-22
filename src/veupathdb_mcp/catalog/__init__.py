@@ -2,6 +2,11 @@
 
 from veupathdb_mcp.catalog._param_binding import OverrideMap, UnreadableValueError
 from veupathdb_mcp.catalog._param_filters import has_contrast_sibling
+from veupathdb_mcp.catalog.clade_only import (
+    CLADE_ONLY_COUNT_REPORTS,
+    CladeOnlyExpression,
+    clade_only_expression,
+)
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service
 from veupathdb_mcp.catalog.eda_backed import (
     COMPUTE_QUERY,
@@ -88,6 +93,12 @@ from veupathdb_mcp.catalog.parameters import (
     lookup_phyletic_codes,
     validate_search_params,
 )
+from veupathdb_mcp.catalog.protein_comparison import (
+    MAX_COUNT_REPORTS,
+    ProteinCountComparison,
+    ProteinCountLadder,
+    compare_protein_counts,
+)
 from veupathdb_mcp.catalog.radio_pairs import (
     RadioPairIssue,
     check_radio_pairs,
@@ -134,12 +145,15 @@ from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
 from veupathdb_mcp.catalog.vocab_lookup import PhrasingMatch, VocabLookup
 
 __all__ = [
+    "CLADE_ONLY_COUNT_REPORTS",
     "COMPUTE_QUERY",
     "EDA_ANALYSIS_SPEC_PARAM",
     "EDA_DATASET_ID_PARAM",
+    "MAX_COUNT_REPORTS",
     "RADIO_OFF",
     "SUBSET_QUERY",
     "UNIVERSAL_SEARCHES",
+    "CladeOnlyExpression",
     "EdaBackedSearch",
     "EdaStepRequest",
     "ExperimentCard",
@@ -156,6 +170,8 @@ __all__ = [
     "PhrasingMatch",
     "PhyleticNoSelection",
     "PhyleticUnresolvedProposal",
+    "ProteinCountComparison",
+    "ProteinCountLadder",
     "Provenance",
     "RadioPairIssue",
     "RecordTypeInfo",
@@ -184,6 +200,8 @@ __all__ = [
     "build_param_specs_from_list",
     "build_sheet",
     "check_radio_pairs",
+    "clade_only_expression",
+    "compare_protein_counts",
     "contrast_role_of",
     "dataset_assay",
     "dataset_organisms",

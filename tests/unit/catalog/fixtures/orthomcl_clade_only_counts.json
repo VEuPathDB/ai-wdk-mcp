@@ -1,0 +1,19 @@
+{
+ "site": "orthomcl",
+ "build": "8.2",
+ "search": "GroupsByPhyleticPattern",
+ "reports": [
+  {
+   "expression": "ecun>=1T AND ARCH+BACT+ALVE+AMOE+EUGL+META+OEUK+VIRI+ASCO+BASI+CHYT+MUCO+amac+cang+ccor+rall=0T",
+   "total": 558
+  },
+  {
+   "expression": "APIC>=1T AND ARCH+BACT+CILI+cvel+vbra+AMOE+EUGL+FUNG+META+OEUK+VIRI=0T",
+   "total": 54039
+  },
+  {
+   "expression": "cand+cbov+choi+chot+chom+chod+cmel+cmtu+cmur+cpia+cpib+cpar+crya+cser+cspi+cscp+ctyz+cubi>=1T AND ARCH+BACT+ACON+bbes+ccnf+ccay+csui+eace+ebru+efal+efla+eipa+emag+emax+emed+emit+enec+epra+esti+etht+eten+hhhh+ncan+nclv+sneu+snsn+tgar+tgca+tgco+tgfo+tggd+tggt+tgma+tgon+tgop+tgee+tgru+tgta+tgtg+tgva+tgve+gnip+pcga+pcgb+CILI+cvel+vbra+AMOE+EUGL+FUNG+META+OEUK+VIRI=0T",
+   "total": 1511
+  }
+ ]
+}
