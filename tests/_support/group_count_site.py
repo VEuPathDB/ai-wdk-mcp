@@ -13,6 +13,7 @@ from veupathdb_mcp.testing import ORTHOMCL_COUNTS
 
 LADDER_FILE = ORTHOMCL_COUNTS / "orthomcl_protein_count_ladder.json"
 CLADE_ONLY_FILE = ORTHOMCL_COUNTS / "orthomcl_clade_only_counts.json"
+EVERY_SPECIES_FILE = ORTHOMCL_COUNTS / "orthomcl_every_species_counts.json"
 COUNT_ONLY: JSONObject = {
     "attributes": ["primary_key"],
     "pagination": {"offset": 0, "numRecords": 0},
@@ -41,6 +42,10 @@ def recorded_ladder() -> CountRecording:
 
 def recorded_clade_only() -> CountRecording:
     return CountRecording.model_validate_json(CLADE_ONLY_FILE.read_text())
+
+
+def recorded_every_species() -> CountRecording:
+    return CountRecording.model_validate_json(EVERY_SPECIES_FILE.read_text())
 
 
 def recording(name: str) -> CountRecording:

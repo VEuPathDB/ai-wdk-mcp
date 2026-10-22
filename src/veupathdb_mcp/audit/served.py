@@ -19,7 +19,16 @@ from veupathdb_mcp.audit.gene_ids import (
     rows_named,
     several,
 )
-from veupathdb_mcp.audit.gene_models import GeneModel, gene_model, gene_organism
+from veupathdb_mcp.audit.gene_models import (
+    GeneModel,
+    ModelReads,
+    ModelRecord,
+    ModelSpans,
+    ReadModels,
+    check_models,
+    gene_organism,
+    model_record,
+)
 from veupathdb_mcp.audit.genes import GeneRow, orthologs_of
 from veupathdb_mcp.audit.length import DnaWindow, LengthCheck
 from veupathdb_mcp.audit.lengths import (
@@ -65,6 +74,7 @@ class PseudogeneInputs(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     reference: ReferenceGene
+    reference_models: ReadModels
     strain_window: GenomeWindow
     strand: Literal["+", "-"]
     gene_ids: list[GeneId] = Field(min_length=2, max_length=2)
@@ -83,6 +93,7 @@ class SelenoproteinInputs(BaseModel):
     dna: str
     strand: Literal["+", "-"]
     gene_ids: list[GeneId] = Field(min_length=2, max_length=2)
+    models: ReadModels
 
 
 class LengthScreen(CamelModel):
@@ -112,6 +123,7 @@ class LengthDna(BaseModel):
     window: DnaWindow
     code: GeneticCode
     code_inferred: bool
+    models: list[ModelRecord] = Field(min_length=1)
 
 
 class LengthInputs(BaseModel):
@@ -131,23 +143,38 @@ class LengthInputs(BaseModel):
         return self
 
 
-class GeneLengthAudit(LengthCheck, LengthScreen):
+class GeneLengthAudit(LengthCheck, LengthScreen, ReadModels):
     code: GeneticCode | None
     code_inferred: bool
+
+    @model_validator(mode="after")
+    def _models_of_the_genes(self) -> Self:
+        check_models(self.models, self.genes)
+        if self.models and self.verdict == "NOT_CHECKED":
+            msg = "a length check reads the gene models only when it reads the genome"
+            raise ValueError(msg)
+        return self
 
 
 class PseudogeneCallAudit(PseudogeneCheck):
     gene_ids: list[GeneId]
     strain_gene: str
     reference_gene: str
+    reference_model: ModelSpans | None = None
+    evidence_unread: list[str] = Field(default_factory=list, max_length=1)
 
     @model_validator(mode="after")
     def _named_as_resolved(self) -> Self:
         check_resolved(self.gene_ids, [self.strain_gene, self.reference_gene])
+        model = self.reference_model
+        check_models([model] if model else [], [self.reference_gene])
+        if model and self.evidence_unread:
+            msg = "a reference model that was read needs no reason it was not read"
+            raise ValueError(msg)
         return self
 
 
-class SelenoproteinEndAudit(SecCheck):
+class SelenoproteinEndAudit(SecCheck, ReadModels):
     gene_ids: list[GeneId]
     gene: str
     reference_gene: str
@@ -155,6 +182,7 @@ class SelenoproteinEndAudit(SecCheck):
     @model_validator(mode="after")
     def _named_as_resolved(self) -> Self:
         check_resolved(self.gene_ids, [self.gene, self.reference_gene])
+        check_models(self.models, [self.gene, self.reference_gene])
         return self
 
 
@@ -268,9 +296,10 @@ def no_cds(site_id: str, gene: str, model: GeneModel) -> ToolErrorPayload | None
 
 
 async def pseudogene_dna(
-    site_id: str, pair: PseudogenePair, strain_abbrev: str, reference_model: GeneModel
+    site_id: str, pair: PseudogenePair, strain_abbrev: str, record: ModelRecord
 ) -> PseudogeneInputs:
     strain, reference = pair.strain, pair.reference
+    reference_model = record.model
     genome = GenomeReader(get_jbrowse_client(site_id))
     reference_window = await genome.window(
         reference_model.organism_abbrev,
@@ -292,6 +321,7 @@ async def pseudogene_dna(
             end=reference_window.end,
             strand=reference.strand,
         ),
+        reference_models=ReadModels.of([record]),
         strain_window=strain_window,
         strand=strain.strand,
         gene_ids=pair.gene_ids,
@@ -306,11 +336,11 @@ async def pseudogene_inputs(
             return refusal
         case PseudogenePair() as pair:
             pass
-    reference_model = await gene_model(site_id, pair.reference.gene)
-    if (uncoded := no_cds(site_id, pair.reference.gene, reference_model)) is not None:
+    record = await model_record(site_id, pair.reference.gene)
+    if (uncoded := no_cds(site_id, pair.reference.gene, record.model)) is not None:
         return uncoded
     strain_abbrev = await gene_organism(site_id, pair.strain.gene)
-    return await pseudogene_dna(site_id, pair, strain_abbrev, reference_model)
+    return await pseudogene_dna(site_id, pair, strain_abbrev, record)
 
 
 def _proteins_of_named(
@@ -364,9 +394,10 @@ async def selenoprotein_inputs(
     length = row.end - row.start + 1 + 2 * pad
     if length > AUDIT_MAX_WINDOW_BASES:
         return window_refusal(row.gene, length)
-    abbrev = await gene_organism(site_id, row.gene)
+    record = await model_record(site_id, row.gene)
+    reference_record = await ModelReads(site_id).read(reference.gene)
     window = await GenomeReader(get_jbrowse_client(site_id)).window(
-        abbrev, row.sequence_id, row.start - pad, row.end + pad
+        record.model.organism_abbrev, row.sequence_id, row.start - pad, row.end + pad
     )
     return SelenoproteinInputs(
         model_protein=proteins[row.gene],
@@ -374,6 +405,7 @@ async def selenoprotein_inputs(
         dna=window.sequence,
         strand=row.strand,
         gene_ids=id_pairs(given, rows),
+        models=ReadModels.of([record, reference_record]),
     )
 
 
@@ -462,7 +494,8 @@ async def length_dna(
     model_proteins: list[str],
 ) -> LengthDna:
     first, last = min(p.start for p in parts), max(p.end for p in parts)
-    gene_models = [await gene_model(site_id, part.gene) for part in parts]
+    records = [await model_record(site_id, part.gene) for part in parts]
+    gene_models = [record.model for record in records]
     abbrev, seqid, strand = (
         gene_models[0].organism_abbrev,
         parts[0].sequence_id,
@@ -489,6 +522,7 @@ async def length_dna(
         ),
         code=code or GeneticCode.STANDARD,
         code_inferred=code is not None,
+        models=records,
     )
 
 

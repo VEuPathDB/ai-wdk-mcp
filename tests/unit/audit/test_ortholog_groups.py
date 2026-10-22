@@ -97,7 +97,7 @@ async def test_a_group_lists_neither_its_gene_nor_a_member_twice(
         [
             WDKRecordInstance.model_validate(
                 {
-                    "id": [],
+                    "id": [{"name": "source_id", "value": "EXA_0001"}],
                     "attributes": {},
                     "tables": {
                         "Orthologs": [

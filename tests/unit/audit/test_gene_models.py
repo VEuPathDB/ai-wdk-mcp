@@ -7,11 +7,16 @@ from veupathdb_mcp.audit import gene_models
 from veupathdb_mcp.audit.gene_models import (
     MODEL_TABLE,
     GeneModel,
+    ModelRecord,
     ModelRow,
+    ModelSpans,
+    ReadModels,
+    check_models,
     coding_parts,
     gene_model,
     gene_organism,
     gene_record,
+    model_spans,
 )
 from veupathdb_mcp.audit.pseudogene import CdsPart
 
@@ -99,6 +104,70 @@ def test_transcripts_of_equal_length_are_taken_by_id() -> None:
     ]
 
     assert coding_parts(rows) == [CdsPart(start=100, end=200)]
+
+
+def test_the_spans_are_the_rows_of_the_transcript_the_coding_parts_take() -> None:
+    rows = [ModelRow.model_validate(raw) for raw in MODEL]
+
+    assert model_spans(PIGA, rows) == ModelSpans(
+        gene=PIGA,
+        transcript=f"{PIGA}.1",
+        seqid="Pf3D7_10_v3",
+        strand="-",
+        exons=[(1304710, 1305315)],
+        cds=[(1302594, 1302660), (1304710, 1304881)],
+    )
+
+
+def test_the_spans_of_equal_transcripts_are_those_of_the_first_by_id() -> None:
+    rows = [
+        ModelRow.model_validate(row(kind, 100, 200, transcript=transcript))
+        for kind in ("CDS", "Exon")
+        for transcript in ("G.2", "G.1")
+    ]
+
+    assert model_spans("G", rows).transcript == "G.1"
+
+
+def test_rows_on_two_sequences_are_refused_naming_the_gene() -> None:
+    rows = [ModelRow.model_validate(raw) for raw in MODEL]
+    moved = rows[2].model_copy(update={"sequence_id": "Pf3D7_11_v3"})
+
+    with pytest.raises(DataParsingError, match=f"{PIGA} lie on more than one"):
+        model_spans(PIGA, [*rows[:2], moved, *rows[3:]])
+
+
+def test_rows_on_two_strands_are_refused_naming_the_gene() -> None:
+    rows = [ModelRow.model_validate(raw) for raw in MODEL]
+    flipped = rows[1].model_copy(update={"strand": "+"})
+
+    with pytest.raises(DataParsingError, match=f"{PIGA} lie on more than one"):
+        model_spans(PIGA, [rows[0], flipped, *rows[2:]])
+
+
+@pytest.mark.parametrize("dropped", ["CDS", "Exon"])
+def test_a_model_without_cds_or_exon_rows_has_no_spans(dropped: str) -> None:
+    rows = [ModelRow.model_validate(raw) for raw in MODEL if raw["type"] != dropped]
+
+    with pytest.raises(DataParsingError, match=f"{PIGA} gives no {dropped}"):
+        model_spans(PIGA, rows)
+
+
+def test_a_model_row_names_its_sequence_and_strand() -> None:
+    raw = row("CDS", 100, 200)
+    del raw["strand"]
+
+    with pytest.raises(ValidationError, match="strand"):
+        ModelRow.model_validate(raw)
+
+
+def test_a_model_record_serves_the_spans_of_its_gene() -> None:
+    rows = [ModelRow.model_validate(raw) for raw in MODEL]
+    model = GeneModel(organism_abbrev="pfal3D7", cds=coding_parts(rows))
+
+    found = ModelRecord(gene=PIGA, model=model, rows=rows)
+
+    assert found.spans == model_spans(PIGA, rows)
 
 
 def test_a_model_row_round_trips_through_its_dump() -> None:
@@ -248,12 +317,16 @@ async def test_a_model_record_serves_the_model_and_its_rows_from_one_read(
                         {
                             "type": "CDS",
                             "transcript_ids": "t1",
+                            "sequence_id": "c1",
+                            "strand": "+",
                             "gm_start": 10,
                             "gm_end": 30,
                         },
                         {
                             "type": "Exon",
                             "transcript_ids": "t1",
+                            "sequence_id": "c1",
+                            "strand": "+",
                             "gm_start": 1,
                             "gm_end": 40,
                         },
@@ -274,3 +347,44 @@ async def test_a_model_record_serves_the_model_and_its_rows_from_one_read(
         ("Exon", 1),
     ]
     assert reads == [("G1", ["organismAbbrev"], ["GeneModelDump"])]
+    assert found.spans == ModelSpans(
+        gene="G1",
+        transcript="t1",
+        seqid="c1",
+        strand="+",
+        exons=[(1, 40)],
+        cds=[(10, 30)],
+    )
+
+
+def test_the_models_not_read_are_none_beside_their_reasons() -> None:
+    rows = [ModelRow.model_validate(raw) for raw in MODEL]
+    uncoded = [found for found in rows if found.type != "CDS"]
+    model = GeneModel(organism_abbrev="pfal3D7", cds=coding_parts(rows))
+    empty = GeneModel(organism_abbrev="pfal3D7", cds=[])
+
+    read = ReadModels.of(
+        [
+            ModelRecord(gene=PIGA, model=model, rows=rows),
+            ModelRecord(gene="G2", model=empty, rows=uncoded),
+        ]
+    )
+
+    assert read.models == [model_spans(PIGA, rows), None]
+    assert read.evidence_unread == [f"the {MODEL_TABLE} of G2 gives no CDS row"]
+
+
+def test_a_model_not_read_states_why() -> None:
+    with pytest.raises(ValidationError, match="reason"):
+        ReadModels(models=[None])
+
+
+def test_a_model_not_read_holds_the_place_of_its_gene() -> None:
+    rows = [ModelRow.model_validate(raw) for raw in MODEL]
+    read = model_spans(PIGA, rows)
+
+    check_models([None, read], ["G1", PIGA])
+    with pytest.raises(ValueError, match="gene models name"):
+        check_models([read, None], ["G1", PIGA])
+    with pytest.raises(ValueError, match="gene models name"):
+        check_models([None], ["G1", PIGA])

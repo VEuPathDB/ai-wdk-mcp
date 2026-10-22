@@ -15,6 +15,7 @@ class ServedRecords:
     def __init__(self, records: list[WDKRecordInstance]) -> None:
         self._records = records
         self.reads: list[list[str]] = []
+        self.genes: list[str] = []
 
     async def get_single_record(
         self,
@@ -24,11 +25,15 @@ class ServedRecords:
         attributes: list[str],
         tables: list[str],
     ) -> WDKRecordInstance:
+        gene = next(p["value"] for p in primary_key if p["name"] == "source_id")
         self.reads.append(tables)
+        self.genes.append(gene)
         return next(
             r
             for r in self._records
-            if set(tables) <= set(r.tables) and set(attributes) <= set(r.attributes)
+            if any(p.name == "source_id" and p.value == gene for p in r.id)
+            and set(tables) <= set(r.tables)
+            and set(attributes) <= set(r.attributes)
         )
 
 

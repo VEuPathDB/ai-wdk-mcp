@@ -95,7 +95,7 @@ async def anatomy_inputs(
     if unread is not None:
         return unread
     pseudogene = await pseudogene_dna(
-        site_id, pair, strain.model.organism_abbrev, reference_model
+        site_id, pair, strain.model.organism_abbrev, reference
     )
     contig_length = await GenomeReader(get_jbrowse_client(site_id)).sequence_length(
         strain.model.organism_abbrev, pair.strain.sequence_id

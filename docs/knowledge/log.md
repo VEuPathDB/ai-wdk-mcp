@@ -1,5 +1,54 @@
 # Knowledge log
 
+## 2026-10-22 - 0.2.0b37
+
+- 0.2.0b37 serves the gene models of the genes a check judges, in genome coordinates:
+  `ModelSpans` (gene, transcript, seqid, strand, exon and CDS spans of the transcript the
+  coding parts take) and, for a merge, `GeneSpan`. `IntronAudit.model`,
+  `GeneLengthAudit.models`, `PseudogeneCallAudit.referenceModel` and
+  `StrainModelAudit.models` come from the `GeneModelDump` reads the checks already made;
+  `GeneFusionAudit.models` and `.merged` and `SelenoproteinEndAudit.models` add reads.
+  Every new field defaults to none read, so a result stored before 0.2.0b37 validates.
+  Each result refuses models of genes it does not judge.
+- New reads, one gene record read each, made by `ModelReads`, which refuses a third read
+  in one call (`MODEL_READS_PER_FINDING` = 2): the reference of a strain whose genome was
+  read (1), the reference and the partner of a LONG gene's fusion (2 at most), and the
+  reference of a selenoprotein end (1). The selenoprotein check's organism read of its gene
+  now asks for the model table too, the same request. `ModelRow` reads `sequence_id` and
+  `strand`.
+- A gene model whose table gives no CDS row, no Exon row for its transcript, or rows on
+  two sequences or strands is null in the result's models, and `evidenceUnread` gives one
+  reason for each null model (`ReadModels`); the check judges as it did at 0.2.0b36. Two
+  refusals of 0.2.0b36 stay: the intron check refuses a model with no Exon row for the
+  transcript it judges, and the pseudogene check refuses a reference with no CDS.
+- The fusion check reads its reference's neighbours' proteins by record
+  (`record_proteins`, two record reads per neighbour, at most 6 neighbours) and uploads no
+  gene list; it used `proteins_of`, which uploaded one.
+- `fusion_pfraNilgiri_rpt6.json` was re-recorded on QA plasmodb on 2026-10-22 by
+  `record_audit_fusion.py`, which reruns the check with every gene list upload refused:
+  22 record and report reads (17 gene and transcript record reads for rows and proteins,
+  1 Orthologs read, 2 genome reports, 2 model reads), no dataset, no status of 400 or
+  more. The recorded test replays it read by read.
+- `build_every_species_expression` writes one unit `S>=ceil(k/2)T` per species: a group
+  is present in a species of k genomes when at least ceil(k/2) of them hold a protein.
+- The strain recorder keeps only `--models`, which adds gene model reads by single gene
+  record reads; its full mode uploaded gene lists as datasets and is removed. The fusion
+  recorder's full mode reruns the check by record reads with every dataset upload refused.
+  `test_recorders_upload_no_dataset.py` runs the strain, fusion and selenoprotein recorders
+  with the dataset upload refused. Five older recorders still upload datasets:
+  [every recorder reads by record and uploads no dataset](backlog/every-recorder-reads-by-record-and-uploads-no-dataset.md).
+- 0.2.0b37 also serves `build_every_species_expression`
+  ([a search note fills only an empty description](decisions/a-search-note-fills-only-an-empty-description.md)).
+  It pins veupathdb-py 0.1.0b21, as 0.2.0b36 did.
+- Recorded on QA on 2026-10-22, under the test account, one request in flight, no
+  dataset: the selenoprotein tool's wire at 0.2.0b36 (`selenoprotein_tgonGT1_selk.json`,
+  7 gene and transcript record reads and 3 JBrowse store reads), then 6 `GeneModelDump`
+  record reads added to the strain, fusion and selenoprotein wires, and one OrthoMCL
+  count report for Cryptosporidium. No status of 400 or more.
+- What a host does to take this release: read the new result fields, count the model
+  reads above in its request estimates, and give the every-species builder to whatever
+  writes phyletic expressions.
+
 ## 2026-10-22 - 0.2.0b36
 
 - 0.2.0b36 reads every gene a served check names by its own record, so no tool a chat

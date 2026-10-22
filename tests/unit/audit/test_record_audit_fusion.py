@@ -3,11 +3,13 @@ from pathlib import Path
 import pytest
 from scripts.record_audit_fusion import (
     CASES,
+    MODEL_BUDGET,
     FusionRecording,
+    models_unread,
     trim,
     write_recording,
 )
-from scripts.record_audit_missing import DatasetCall, SearchCall, WireCall
+from scripts.record_audit_missing import DatasetCall, RecordCall, SearchCall, WireCall
 from tests._support.wdk_genes import gene_attributes, record
 from veupathdb import JSONObject
 from veupathdb.wdk import WDKRecordInstance
@@ -104,3 +106,31 @@ def test_a_recording_reads_back(tmp_path: Path) -> None:
 
     written = (tmp_path / "fusion_tgonME49_pbgs.json").read_text()
     assert FusionRecording.model_validate_json(written) == recorded
+
+
+def model_call(gene: str, tables: list[str]) -> RecordCall:
+    return RecordCall(
+        record_type="gene",
+        primary_key=[
+            {"name": "source_id", "value": gene},
+            {"name": "project_id", "value": "PlasmoDB"},
+        ],
+        attributes=["organismAbbrev"],
+        tables=tables,
+        record={},
+    )
+
+
+def test_the_rpt6_case_reads_the_models_of_its_reference_and_partner() -> None:
+    assert CASES["pfraNilgiri_rpt6"].models == ["PCOAH_00051830", "PCOAH_00051820"]
+    assert CASES["tgonME49_pbgs"].models == []
+    assert MODEL_BUDGET == 2
+
+
+def test_a_model_the_recording_holds_is_not_read_again() -> None:
+    calls: list[WireCall] = [
+        model_call("PCOAH_00051830", ["GeneModelDump"]),
+        model_call("PCOAH_00051820", ["Orthologs"]),
+    ]
+
+    assert models_unread(CASES["pfraNilgiri_rpt6"], calls) == ["PCOAH_00051820"]

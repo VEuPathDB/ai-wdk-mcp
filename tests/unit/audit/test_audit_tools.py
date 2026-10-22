@@ -8,9 +8,10 @@ from tests._support.audit_fixtures import (
     NF54_PIGA_ID,
     PIGA,
     piga_inputs,
+    reference_piga,
     selk_inputs,
 )
-from tests._support.audit_site import window_refused
+from tests._support.audit_site import MODEL_RECORD, window_refused
 from tests._support.piga_selk_site import (
     SELK_PAD,
     Site,
@@ -80,6 +81,47 @@ async def test_the_pseudogene_inputs_are_read_on_each_genes_own_strand(
         ("pfal3D7", "Pf3D7_10_v3", 1302298, 1305315),
         ("pfalNF54", "VBRF01000019.1", 1060699, 1068985),
     ]
+    assert result.reference_model is not None
+    assert (result.reference_model.gene, result.reference_model.seqid) == (
+        PIGA,
+        "Pf3D7_10_v3",
+    )
+    assert result.reference_model.cds == [
+        (part.start, part.end) for part in reference_piga().cds
+    ]
+    assert result.reference_model.strand == "-"
+    assert (site.models_read, site.organisms_read) == ([PIGA], [NF54_PIGA_ID])
+
+
+async def test_a_reference_model_with_no_exon_row_is_not_read_in_a_pseudogene_call(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = Site(monkeypatch)
+    site.exonless.add(PIGA)
+
+    result = await audit_tools.audit_pseudogene_call("plasmodb", NF54_PIGA, PIGA)
+
+    assert result.verdict == "INTACT"
+    assert result.strain_cds_length == result.reference_cds_length == 1386
+    assert result.reference_model is None
+    assert result.evidence_unread == [
+        f"the GeneModelDump of {PIGA} gives no Exon row for {PIGA}.1"
+    ]
+
+
+async def test_a_reference_model_with_no_exon_row_is_not_read_at_a_selenoprotein_end(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = Site(monkeypatch)
+    site.exonless.add(ME49_SELK)
+
+    result = await audit_tools.audit_selenoprotein_end("toxodb", GT1_SELK, ME49_SELK)
+
+    assert result.verdict == "STOPS_AT_SEC"
+    assert [m.gene if m else None for m in result.models] == [GT1_SELK, None]
+    assert result.evidence_unread == [
+        f"the GeneModelDump of {ME49_SELK} gives no Exon row for {ME49_SELK}.1"
+    ]
 
 
 async def test_the_selenoprotein_inputs_pad_the_gene_past_the_reference_tail(
@@ -92,8 +134,12 @@ async def test_the_selenoprotein_inputs_pad_the_gene_past_the_reference_tail(
     assert result.verdict == "STOPS_AT_SEC"
     assert result.after_model_end.startswith("*G*")
     assert site.windows == [("tgonGT1", "TGGT1_chrXI", 5359280, 5361636)]
-    assert (site.models_read, site.organisms_read) == ([], [GT1_SELK])
+    assert (site.models_read, site.organisms_read) == ([GT1_SELK, ME49_SELK], [])
     assert site.proteins_read == [GT1_SELK, ME49_SELK]
+    assert [(m.gene, m.seqid) for m in result.models] == [
+        (GT1_SELK, "TGGT1_chrXI"),
+        (ME49_SELK, site.rows[3].sequence_id),
+    ]
 
 
 @pytest.mark.parametrize("strand", ["+", "-"])
@@ -280,7 +326,7 @@ async def test_a_gene_record_without_an_organism_is_a_tool_error(
                 {"attributes": {"organismAbbrev": ""}, "tables": {}}
             )
 
-    monkeypatch.setattr(served, "gene_organism", gene_models.gene_organism)
+    monkeypatch.setattr(served, "model_record", MODEL_RECORD)
     monkeypatch.setattr(gene_models, "get_strategy_api", lambda site_id: Records())
 
     with pytest.raises(ToolError, match="gene record of TGGT1_316600 on toxodb"):

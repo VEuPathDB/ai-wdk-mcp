@@ -1449,6 +1449,199 @@
     ]
    },
    "tableErrors": []
+  },
+  {
+   "displayName": "PF3D7_1472100",
+   "id": [
+    {
+     "name": "source_id",
+     "value": "PF3D7_1472100"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "GeneRecordClasses.GeneRecordClass",
+   "attributes": {
+    "organismAbbrev": "pfal3D7"
+   },
+   "tables": {
+    "GeneModelDump": [
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "transcript_ids": "PF3D7_1472100.1",
+      "type": "five_prime_UTR",
+      "gm_end": "2945279",
+      "gm_start": "2943260"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "type": "Exon",
+      "transcript_ids": "PF3D7_1472100.1",
+      "gm_end": "2945279",
+      "gm_start": "2942745"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "type": "CDS",
+      "transcript_ids": "PF3D7_1472100.1",
+      "gm_end": "2943259",
+      "gm_start": "2942745"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "type": "Intron",
+      "transcript_ids": "PF3D7_1472100.1",
+      "gm_end": "2942744",
+      "gm_start": "2942614"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "type": "Exon",
+      "transcript_ids": "PF3D7_1472100.1",
+      "gm_end": "2942613",
+      "gm_start": "2942532"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "type": "CDS",
+      "transcript_ids": "PF3D7_1472100.1",
+      "gm_end": "2942613",
+      "gm_start": "2942532"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "transcript_ids": "PF3D7_1472100.1",
+      "type": "Intron",
+      "gm_end": "2942531",
+      "gm_start": "2942441"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "type": "Exon",
+      "transcript_ids": "PF3D7_1472100.1",
+      "gm_end": "2942440",
+      "gm_start": "2942354"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "type": "CDS",
+      "transcript_ids": "PF3D7_1472100.1",
+      "gm_end": "2942440",
+      "gm_start": "2942354"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "transcript_ids": "PF3D7_1472100.1",
+      "type": "Intron",
+      "gm_end": "2942353",
+      "gm_start": "2942244"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "transcript_ids": "PF3D7_1472100.1",
+      "type": "CDS",
+      "gm_end": "2942243",
+      "gm_start": "2942146"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "type": "Exon",
+      "transcript_ids": "PF3D7_1472100.1",
+      "gm_end": "2942243",
+      "gm_start": "2942146"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "transcript_ids": "PF3D7_1472100.1",
+      "type": "Intron",
+      "gm_end": "2942145",
+      "gm_start": "2941906"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "transcript_ids": "PF3D7_1472100.1",
+      "type": "Exon",
+      "gm_end": "2941905",
+      "gm_start": "2941830"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "transcript_ids": "PF3D7_1472100.1",
+      "type": "CDS",
+      "gm_end": "2941905",
+      "gm_start": "2941830"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "transcript_ids": "PF3D7_1472100.1",
+      "type": "Intron",
+      "gm_end": "2941829",
+      "gm_start": "2941687"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "type": "CDS",
+      "transcript_ids": "PF3D7_1472100.1",
+      "gm_end": "2941686",
+      "gm_start": "2941600"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "transcript_ids": "PF3D7_1472100.1",
+      "type": "Exon",
+      "gm_end": "2941686",
+      "gm_start": "2941398"
+     },
+     {
+      "strand": "-",
+      "sequence_id": "Pf3D7_14_v3",
+      "source_id": "PF3D7_1472100",
+      "type": "three_prime_UTR",
+      "transcript_ids": "PF3D7_1472100.1",
+      "gm_end": "2941599",
+      "gm_start": "2941398"
+     }
+    ]
+   },
+   "tableErrors": []
   }
  ],
  "gene_answers": [

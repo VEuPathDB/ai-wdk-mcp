@@ -127,6 +127,31 @@ async def test_only_the_longest_cds_transcript_is_judged(
     assert (result.transcript, result.other_transcripts) == (f"{GENE}-t1", 1)
     assert result.introns is not None
     assert [(i.start, i.end) for i in result.introns] == [WHOLE, I3]
+    assert result.model is not None
+    assert (result.model.transcript, result.model.cds) == (f"{GENE}-t1", [E1, E3, E4])
+    assert (result.model.seqid, result.model.strand) == ("contig", "+")
+
+
+async def test_a_model_on_two_strands_is_judged_and_not_read(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = Site(monkeypatch)
+    [first, *rest] = model_rows([E1, E3, E4], ("Exon",))
+    site.model = [
+        *model_rows([E1, E3, E4], ("CDS",)),
+        {**first, "strand": "-"},
+        *rest,
+    ]
+    junctions(monkeypatch, READS)
+
+    result = await audit_intron_support("plasmodb", GENE)
+
+    assert result.verdict == "UNSUPPORTED_MISSING_EXON"
+    assert result.corrected_cds == [E1, E2, E3, E4]
+    assert result.model is None
+    assert result.evidence_unread == [
+        f"the GeneModelDump rows of {GENE} lie on more than one strand or sequence"
+    ]
 
 
 async def test_a_supported_gene_reads_no_genome_protein_or_ortholog(

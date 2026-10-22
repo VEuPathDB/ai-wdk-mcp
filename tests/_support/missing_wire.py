@@ -22,7 +22,7 @@ from veupathdb.wdk import (
     WDKSearchConfig,
 )
 
-from veupathdb_mcp.audit import gene_models, genes, missing_inputs
+from veupathdb_mcp.audit import gene_models, genes, missing_inputs, record_reads
 
 FIXTURES = Path(__file__).resolve().parents[1] / "unit/audit/fixtures"
 
@@ -126,6 +126,14 @@ def replay(monkeypatch: pytest.MonkeyPatch, calls: list[WireCall]) -> WireReplay
     monkeypatch.setattr(gene_models, "get_strategy_api", lambda site_id: wire)
     monkeypatch.setattr(missing_inputs, "get_jbrowse_client", lambda site_id: wire)
     monkeypatch.setattr(missing_inputs, "GenomeReader", lambda client: client)
+    return wire
+
+
+def replay_record_reads(
+    monkeypatch: pytest.MonkeyPatch, calls: list[WireCall]
+) -> WireReplay:
+    wire = replay(monkeypatch, calls)
+    monkeypatch.setattr(record_reads, "get_strategy_api", lambda site_id: wire)
     return wire
 
 

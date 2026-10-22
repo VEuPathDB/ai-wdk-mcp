@@ -50,6 +50,7 @@ from veupathdb_mcp.tools.audit_tools import (
 from veupathdb_mcp.tools.catalog_tools import (
     browse_search_categories,
     build_clade_only_expression,
+    build_every_species_expression,
     build_protein_count_comparison,
     get_parameter_options,
     get_search_overview,
@@ -192,6 +193,7 @@ TOOLS: tuple[_ToolRow, ...] = (
         {MAX_CALL_SECONDS_META_KEY: PROTEIN_COMPARISON_MAX_CALL_SECONDS},
     ),
     _ToolRow(build_clade_only_expression, _READ),
+    _ToolRow(build_every_species_expression, _READ),
     _ToolRow(search_example_plans, _READ),
     _ToolRow(get_search_overview, _READ),
     _ToolRow(get_parameter_options, _READ),

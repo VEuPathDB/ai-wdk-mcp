@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from veupathdb_mcp.audit.gene_models import ModelReads, ReadModels
 from veupathdb_mcp.audit.length import LengthCheck, check_length
 from veupathdb_mcp.audit.served import LengthDna
 from veupathdb_mcp.audit.strain import (
@@ -35,12 +36,15 @@ def _not_read(
 
 async def _genome_check(
     site_id: str, inputs: StrainInputs
-) -> tuple[LengthCheck, LengthDna]:
+) -> tuple[LengthCheck, LengthDna, ReadModels]:
     dna = await read_inputs(site_id, strain_dna(site_id, inputs))
     check = await run_in_a_slot(
         check_length, dna.reference_protein, dna.model_proteins, dna.window, dna.code
     )
-    return check, dna
+    reference = await read_inputs(
+        site_id, ModelReads(site_id).read(inputs.reference.gene)
+    )
+    return check, dna, ReadModels.of([*dna.models, reference])
 
 
 async def audit_strain_model(
@@ -79,11 +83,16 @@ async def audit_strain_model(
     relatives lack and the reference model holds it, as a model that
     starts too early does; UNCLEAR is every other case, a strain longer
     than its reference among them; NO_RELATIVES means relatives is empty.
+    When the strain's genome was read, models gives the strain's, then the
+    reference's, longest coding transcript (exon and CDS spans (genome coordinates, 1-based, inclusive, ascending), its seqid and strand); it is empty otherwise. A model is null when its
+    GeneModelDump rows give no CDS row, no Exon row or more than one sequence
+    or strand; evidenceUnread gives one reason for each null model.
     Reads: the record of each id; both proteins (one gene record read of
     the transcripts and one transcript record read of the longest coding
     one, each); the reference's Orthologs table (one read whatever the
     group's size). A lost run adds the strain's gene model and one genome
-    window; when the group has another member in the strain's organism, it
+    window, and a genome read adds the reference's gene model (one gene
+    record read); when the group has another member in the strain's organism, it
     first adds the strain's organism (one gene record read), that organism's
     JBrowse track list and the tabix index of its annotated transcripts
     track (once per organism and process), and up to ANNOTATION_MAX_GROUPS
@@ -117,8 +126,8 @@ async def audit_strain_model(
         await read_inputs(site_id, paralogs_in_window(site_id, inputs)) if lost else []
     )
     not_read = _not_read(inputs, lost, paralogs)
-    check, dna = (
-        (LengthCheck.not_checked(), None)
+    check, dna, models = (
+        (LengthCheck.not_checked(), None, ReadModels())
         if not_read
         else await _genome_check(site_id, inputs)
     )
@@ -142,4 +151,6 @@ async def audit_strain_model(
         relatives=relatives,
         code=dna.code if dna else None,
         code_inferred=dna.code_inferred if dna else False,
+        models=models.models,
+        evidence_unread=models.evidence_unread,
     )

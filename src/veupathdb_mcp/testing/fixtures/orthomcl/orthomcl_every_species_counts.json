@@ -1,0 +1,11 @@
+{
+ "site": "orthomcl",
+ "build": "8.2",
+ "search": "GroupsByPhyleticPattern",
+ "reports": [
+  {
+   "expression": "cand>=1T AND cbov>=1T AND choi+chot+chom+chod>=2T AND cmel+cmtu>=1T AND cmur>=1T AND cpia+cpib+cpar>=2T AND crya>=1T AND cser>=1T AND cspi>=1T AND cscp>=1T AND ctyz>=1T AND cubi>=1T",
+   "total": 2505
+  }
+ ]
+}

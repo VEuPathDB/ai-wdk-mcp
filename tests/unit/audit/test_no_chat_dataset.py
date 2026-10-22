@@ -2,6 +2,7 @@ from collections.abc import Awaitable, Callable
 
 import pytest
 from pydantic import BaseModel
+from scripts.record_audit_fusion import CASES, FusionRecording
 from scripts.record_audit_strain import StrainWire
 from tests._support import anatomy_site
 from tests._support.audit_fixtures import GT1_SELK, ME49_SELK, NF54_PIGA_ID, PIGA
@@ -14,6 +15,7 @@ from tests._support.audit_wire import (
 from tests._support.evidence_site import EvidenceSite, gene_record
 from tests._support.intron_wire import Served, load_introns
 from tests._support.length_site import PART_A, PART_B, split_site
+from tests._support.missing_wire import replay_record_reads
 from tests._support.piga_selk_site import Site
 from tests._support.record_site import (
     install_recorded_records,
@@ -28,6 +30,7 @@ from veupathdb_mcp.audit import genes, record_reads
 from veupathdb_mcp.tools import (
     audit_anatomy_tools,
     audit_evidence_tools,
+    audit_fusion_tools,
     audit_intron_tools,
     audit_strain_tools,
     audit_tools,
@@ -88,6 +91,14 @@ def strain_model(monkeypatch: pytest.MonkeyPatch) -> Run:
     )
 
 
+def gene_fusion(monkeypatch: pytest.MonkeyPatch) -> Run:
+    recorded = FusionRecording.model_validate_json(
+        (FIXTURES / CASES["pfraNilgiri_rpt6"].file).read_text()
+    )
+    replay_record_reads(monkeypatch, recorded.calls)
+    return lambda: audit_fusion_tools.audit_gene_fusion("plasmodb", "AK88_02763")
+
+
 def pseudogene_call(monkeypatch: pytest.MonkeyPatch) -> Run:
     Site(monkeypatch)
     return lambda: audit_tools.audit_pseudogene_call("plasmodb", NF54_PIGA_ID, PIGA)
@@ -131,6 +142,7 @@ CHECKS: dict[str, Check] = {
     "audit_gene_length": gene_length,
     "audit_gene_split": gene_split,
     "audit_strain_model": strain_model,
+    "audit_gene_fusion": gene_fusion,
     "audit_pseudogene_call": pseudogene_call,
     "audit_pseudogene_anatomy": pseudogene_anatomy,
     "audit_selenoprotein_end": selenoprotein_end,
@@ -150,6 +162,7 @@ def test_every_chat_check_is_driven() -> None:
         "audit_gene_length",
         "audit_gene_split",
         "audit_strain_model",
+        "audit_gene_fusion",
         "audit_pseudogene_call",
         "audit_pseudogene_anatomy",
         "audit_selenoprotein_end",

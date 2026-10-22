@@ -27,15 +27,15 @@ than from a file inside it.
 | package | what it publishes |
 | --- | --- |
 | `veupathdb_mcp` | the version, the service-token registry, the tool error payload, the tool metadata keys |
-| `veupathdb_mcp.audit` | the gene-model checks: genetic codes and translation, protein windows confirmed in DNA, a genome's gene rows, a named gene's record reads and proteins, a run's one gene-list read and the site's organism records, a gene's model, ortholog-group length statistics, the pseudogene-call, selenoprotein-end, protein-length, split, gene-fusion, strain-model, missing-gene, organelle-join and RNA-seq intron-support checks, the anatomy of a pseudogene call, a genome's pseudogene calls paired with a reference genome and a rate with its Wilson interval, floor and ceiling, the genome priority from the served BUSCO scores, the evidence a gene record serves and a genome's provenance, and the inputs their served tools read |
-| `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation, the shortlist a long vocabulary is shown as, other sites' experiment cards, and the OrthoMCL protein-count comparison of two genomes and the expression for presence only inside a clade |
+| `veupathdb_mcp.audit` | the gene-model checks: genetic codes and translation, protein windows confirmed in DNA, a genome's gene rows, a named gene's record reads and proteins, a run's one gene-list read and the site's organism records, a gene's model and its exon and CDS spans, at most two model reads a check adds per call, ortholog-group length statistics, the pseudogene-call, selenoprotein-end, protein-length, split, gene-fusion, strain-model, missing-gene, organelle-join and RNA-seq intron-support checks, the anatomy of a pseudogene call, a genome's pseudogene calls paired with a reference genome and a rate with its Wilson interval, floor and ceiling, the genome priority from the served BUSCO scores, the evidence a gene record serves and a genome's provenance, and the inputs their served tools read |
+| `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation, the shortlist a long vocabulary is shown as, other sites' experiment cards, and the OrthoMCL protein-count comparison of two genomes and the expressions for presence only inside a clade and in every species of a clade |
 | `veupathdb_mcp.controls` | the control-test runners, their context and their result shapes |
 | `veupathdb_mcp.embeddings` | the embedder, its three tables, the record manager and the indexes on them |
 | `veupathdb_mcp.gene_lookup` | text lookup, id resolution and the organism list |
 | `veupathdb_mcp.research` | the research server, its settings and its two tools |
 | `veupathdb_mcp.separation` | the separation run, its request, its progress rows, its result, the request charges it makes and the hypergeometric tail it reads controls by |
 | `veupathdb_mcp.testing` | the recordings this distribution ships for a host's suite: the OrthoMCL count recordings (`ORTHOMCL_COUNTS`) |
-| `veupathdb_mcp.tools` | the forty-three served tools |
+| `veupathdb_mcp.tools` | the forty-four served tools |
 | `veupathdb_mcp.wdk` | step trees, sizes, the sample of a built step (`step_sample_records`), a step's gene ids read up to a limit the caller names (`StepTooLargeError` past it), an OrthoMCL group's proteins per genome (`group_genome_counts`, from its `TaxonCounts` table), downloads, expression, the vocabulary and defaults a form offers, and the AST a saved strategy converts into |
 | `veupathdb_mcp.wdk.enrichment` | over-representation analysis, its result shapes and its parser |
 
@@ -90,14 +90,14 @@ The two servers share no setting: the WDK server reads `WDK_MCP_*` and
 `VEUPATHDB_*`, the research server reads `RESEARCH_MCP_*`. A secret configured
 for one admits nothing on the other.
 
-## The forty-three WDK tools
+## The forty-four WDK tools
 
 Catalog reads (service or user credential):
 
 `list_record_types`, `search_for_searches`, `browse_search_categories`,
 `list_searches`, `list_transforms`, `lookup_phyletic_codes`,
 `build_protein_count_comparison`, `build_clade_only_expression`,
-`search_example_plans`, `get_search_overview`, `get_parameter_options`,
+`build_every_species_expression`, `search_example_plans`, `get_search_overview`, `get_parameter_options`,
 `get_search_param_specs`, `resolve_search_parameters`,
 `validate_search_parameters`, `search_catalog_index`,
 `rank_experiments_elsewhere`, `read_experiment`.
@@ -167,6 +167,12 @@ clade L and in no genome outside it, C written from the taxonomy as a clade code
 each whole clade outside L and a genome code for the rest; `within`, a clade M that
 holds L, moves the edge to M. L may be a clade code or the genome codes of a group with
 no clade code. It sends one count report.
+
+`build_every_species_expression` builds one unit `S>=ceil(k/2)T` per species S of k
+genomes of a clade L, joined with AND: a species is present when at least half its
+genomes hold a protein. The species are the genome labels' genus and species words, as
+`lookup_phyletic_codes` groups them. A clade of one species is refused. It sends one
+count report.
 
 A search the site publishes no description for may carry a measured note in its
 place (`catalog/search_notes.py`); a note never replaces a description the site

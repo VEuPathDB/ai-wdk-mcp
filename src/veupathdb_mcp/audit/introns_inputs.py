@@ -17,11 +17,13 @@ from veupathdb.jbrowse import (
 from veupathdb_mcp.audit.codes import GeneticCode, infer_code
 from veupathdb_mcp.audit.gene_ids import GeneId, id_pairs
 from veupathdb_mcp.audit.gene_models import (
-    MODEL_TABLE,
     GeneModel,
-    ModelRow,
+    ModelRecord,
+    ReadModels,
+    TranscriptParts,
     model_record,
-    transcript_spans,
+    no_exon_row,
+    transcript_parts,
 )
 from veupathdb_mcp.audit.genes import GeneRow, GroupMember, OrthologGroup, orthologs_of
 from veupathdb_mcp.audit.intron_evidence import (
@@ -89,6 +91,7 @@ class IntronReads(BaseModel):
     gene_ids: list[GeneId] = Field(min_length=1, max_length=1)
     row: GeneRow
     model: GeneModel
+    models: ReadModels
     structure: GeneStructure
     junctions: list[RnaJunction]
     tracks_refused: list[str]
@@ -134,24 +137,24 @@ def ortholog_choice(group: OrthologGroup, row: GeneRow) -> dict[str, str]:
     return named
 
 
-def _structure(rows: list[ModelRow], model: GeneModel, row: GeneRow) -> GeneStructure:
-    cds = [(part.start, part.end) for part in model.cds]
-    transcripts = {transcript for r in rows for transcript in r.transcript_ids}
-    main = min(t for t in transcripts if transcript_spans(rows, "CDS", t) == cds)
+def _structure(
+    record: ModelRecord, parts: TranscriptParts, row: GeneRow
+) -> GeneStructure:
+    if not parts.exons:
+        raise DataParsingError(no_exon_row(row.gene, parts.transcript))
+    transcripts = {t for r in record.rows for t in r.transcript_ids}
     try:
         return GeneStructure(
-            transcript=main,
+            transcript=parts.transcript,
             other_transcripts=len(transcripts) - 1,
             strand=row.strand,
             start=row.start,
             end=row.end,
-            exons=transcript_spans(rows, "Exon", main),
-            cds=cds,
+            exons=parts.exons,
+            cds=parts.cds,
         )
     except ValidationError as exc:
-        msg = (
-            f"the {MODEL_TABLE} of {row.gene} gives no Exon row for {main} in the gene"
-        )
+        msg = f"the model of {row.gene} has a part outside the gene's span"
         raise DataParsingError(msg) from exc
 
 
@@ -216,9 +219,10 @@ async def _read_junctions(
     site_id: str,
     ids: list[GeneId],
     row: GeneRow,
-    model: GeneModel,
+    record: ModelRecord,
     structure: GeneStructure,
 ) -> IntronReads | UncheckedIntrons:
+    model = record.model
     client = get_jbrowse_client(site_id)
     match await _junctions(site_id, client, model.organism_abbrev, row):
         case _NoTrack() as missing:
@@ -235,6 +239,7 @@ async def _read_junctions(
                 gene_ids=ids,
                 row=row,
                 model=model,
+                models=ReadModels.of([record]),
                 structure=structure,
                 junctions=read.junctions,
                 tracks_refused=read.refused,
@@ -257,13 +262,13 @@ async def intron_inputs(
     if length > AUDIT_MAX_WINDOW_BASES:
         return window_refusal(row.gene, length)
     record = await model_record(site_id, row.gene)
-    model = record.model
-    if not model.cds:
+    parts = transcript_parts(record.rows)
+    if parts is None:
         return UncheckedIntrons(
             gene_ids=ids,
             reason=f"{row.gene} has no CDS in its gene model on {site_id}",
         )
-    structure = _structure(record.rows, model, row)
+    structure = _structure(record, parts, row)
     if not structure.introns:
         return UncheckedIntrons(
             gene_ids=ids,
@@ -271,7 +276,7 @@ async def intron_inputs(
             transcript=structure.transcript,
             other_transcripts=structure.other_transcripts,
         )
-    return await _read_junctions(site_id, ids, row, model, structure)
+    return await _read_junctions(site_id, ids, row, record, structure)
 
 
 async def correction_inputs(

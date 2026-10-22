@@ -93,13 +93,14 @@ async def _judged(site_id: str, reads: IntronReads) -> IntronAudit:
         "transcript": structure.transcript,
         "other_transcripts": structure.other_transcripts,
         "tracks_refused": reads.tracks_refused,
-        "evidence_unread": reads.evidence_unread,
+        "evidence_unread": [*reads.evidence_unread, *reads.models.evidence_unread],
         "corrected_cds": None,
         "corrected_protein": None,
         "frame_kept": None,
         "code": None,
         "code_inferred": False,
         "orthologs": None,
+        "model": reads.models.models[0],
     }
     if judgement.verdict not in CORRECTABLE or judgement.unread is None:
         return IntronAudit.model_validate(audit)
@@ -184,6 +185,10 @@ async def audit_intron_support(site_id: str, gene: str) -> IntronAudit:
     unread stay, the corrected fields, code and orthologs are null, and
     correctionReason says why. tracksRefused lists the junction tracks that
     do not index the gene's sequence, and is null when no track was read.
+    model gives the judged transcript's exon and CDS spans (genome coordinates, 1-based, inclusive, ascending), its seqid and strand; it is null for a
+    NOT_CHECKED answer, and null when the model's rows lie on more than one
+    sequence or strand, with evidenceUnread giving why. A model with no Exon
+    row for the judged transcript is refused.
     NOT_CHECKED, with its reason, means the gene has no CDS or intron, the
     organism has no junction track, no track indexes the gene's sequence,
     or every junction over the gene has no strand; then introns and unread

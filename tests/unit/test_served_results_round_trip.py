@@ -2,11 +2,12 @@ import typing
 from collections.abc import Awaitable, Callable
 
 import pytest
-from pydantic import AliasChoices, BaseModel
+from pydantic import AliasChoices, BaseModel, ValidationError
 from pydantic.fields import FieldInfo
 from scripts.record_audit_fusion import CASES, FusionRecording
 from scripts.record_audit_strain import StrainWire
-from tests._support import anatomy_site
+from scripts.record_orthomcl_every_species import CRYPTOSPORIDIUM
+from tests._support import anatomy_site, fusion_site, piga_selk_site
 from tests._support.audit_fixtures import (
     GT1_SELK,
     ME49_SELK,
@@ -30,22 +31,40 @@ from tests._support.evidence_site import (
     EvidenceSite,
     gene_record,
 )
-from tests._support.group_count_site import install, install_recorded
+from tests._support.group_count_site import (
+    install,
+    install_recorded,
+    install_replay,
+    recorded_every_species,
+)
 from tests._support.intron_wire import Served, load_introns
-from tests._support.missing_wire import recording, replay_records
+from tests._support.length_site import PART_A, PART_B, split_site
+from tests._support.missing_wire import (
+    recording,
+    replay_record_reads,
+    replay_records,
+)
 from tests._support.organelle_fixtures import CYTB, recorded_site
+from tests._support.proteins import PROTEIN, back_translate
 from tests._support.record_site import (
     install_recorded_records,
     install_store,
     load_records,
 )
 from tests._support.row_reads import serve_recorded_rows
-from tests._support.strain_site import install_annotation
+from tests._support.selenoprotein_wire import SelenoproteinWire
+from tests._support.strain_site import (
+    REFERENCE,
+    STRAIN,
+    install_annotation,
+    strain_site,
+)
 from tests._support.wdk_genes import PF3D7, ReportSite, answer_of, serve
 from veupathdb.wdk import WDKAnswer
 
 from veupathdb_mcp import server
-from veupathdb_mcp.audit import genes
+from veupathdb_mcp.audit import genes, served
+from veupathdb_mcp.audit.gene_models import GeneModel
 from veupathdb_mcp.research import server as research_server
 from veupathdb_mcp.tools import (
     audit_anatomy_tools,
@@ -105,13 +124,28 @@ def unread_dump_keys(model: type[BaseModel]) -> list[str]:
 
 
 async def pseudogene_call(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
+    site = piga_selk_site.Site(monkeypatch)
+    site.exonless.add(PIGA)
+    exonless = await audit_tools.audit_pseudogene_call("plasmodb", NF54_PIGA, PIGA)
     monkeypatch.setattr(audit_tools, "pseudogene_inputs", piga_inputs)
-    return [await audit_tools.audit_pseudogene_call("plasmodb", NF54_PIGA, PIGA)]
+    return [
+        await audit_tools.audit_pseudogene_call("plasmodb", NF54_PIGA, PIGA),
+        exonless,
+    ]
 
 
 async def selenoprotein_end(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
+    SelenoproteinWire(monkeypatch)
+    recorded = await audit_tools.audit_selenoprotein_end("toxodb", GT1_SELK, ME49_SELK)
     monkeypatch.setattr(audit_tools, "selenoprotein_inputs", selk_inputs)
-    return [await audit_tools.audit_selenoprotein_end("toxodb", GT1_SELK, ME49_SELK)]
+    faked = await audit_tools.audit_selenoprotein_end("toxodb", GT1_SELK, ME49_SELK)
+    site = piga_selk_site.Site(monkeypatch)
+    site.exonless.add(ME49_SELK)
+    monkeypatch.setattr(
+        audit_tools, "selenoprotein_inputs", served.selenoprotein_inputs
+    )
+    exonless = await audit_tools.audit_selenoprotein_end("toxodb", GT1_SELK, ME49_SELK)
+    return [recorded, faked, exonless]
 
 
 async def gene_length(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
@@ -119,7 +153,12 @@ async def gene_length(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
     install_records(monkeypatch, wire)
     install_genome(monkeypatch, wire, "pcynM", "PcyM_07")
     serve_recorded_rows(monkeypatch, wire.gene_answers)
-    return [await audit_tools.audit_gene_length("plasmodb", "PcyM_0736700")]
+    unqualified = await audit_tools.audit_gene_length("plasmodb", "PcyM_0736700")
+    site = split_site(monkeypatch)
+    split = await audit_tools.audit_gene_split("plasmodb", PART_A, PART_B)
+    site.models[PART_B] = GeneModel(organism_abbrev="pcynB", cds=[])
+    uncoded = await audit_tools.audit_gene_split("plasmodb", PART_A, PART_B)
+    return [unqualified, split, uncoded]
 
 
 async def strain_model(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
@@ -132,11 +171,17 @@ async def strain_model(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
     serve_recorded_rows(
         monkeypatch, [*wire.gene_answers, *wire.row_answers], wire.protein_answers
     )
-    return [
-        await audit_strain_tools.audit_strain_model(
-            "plasmodb", "PcyM_0736700", "PCYB_074210"
-        )
-    ]
+    recorded = await audit_strain_tools.audit_strain_model(
+        "plasmodb", "PcyM_0736700", "PCYB_074210"
+    )
+    site = strain_site(
+        monkeypatch,
+        (PROTEIN[:60] + PROTEIN[140:], PROTEIN),
+        intron=back_translate(PROTEIN[60:140]),
+    )
+    site.models[STRAIN] = GeneModel(organism_abbrev="pfalDd2", cds=[])
+    uncoded = await audit_strain_tools.audit_strain_model("plasmodb", STRAIN, REFERENCE)
+    return [recorded, uncoded]
 
 
 async def missing_gene(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
@@ -231,15 +276,21 @@ async def intron_support(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
 
 async def gene_fusion(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
     found: list[BaseModel] = []
-    for site_id, gene, case, pairs in (
-        ("plasmodb", "AK88_02763", "pfraNilgiri_rpt6", 3),
-        ("toxodb", "TGME49_500302", "tgonME49_pbgs", 2),
-    ):
-        recorded = FusionRecording.model_validate_json(
-            (FIXTURES / CASES[case].file).read_text()
-        )
-        replay_records(monkeypatch, recorded.calls, pairs)
-        found.append(await audit_fusion_tools.audit_gene_fusion(site_id, gene))
+    rpt6, pbgs = (
+        FusionRecording.model_validate_json((FIXTURES / CASES[case].file).read_text())
+        for case in ("pfraNilgiri_rpt6", "tgonME49_pbgs")
+    )
+    replay_record_reads(monkeypatch, rpt6.calls)
+    found.append(await audit_fusion_tools.audit_gene_fusion("plasmodb", "AK88_02763"))
+    replay_records(monkeypatch, pbgs.calls, 2)
+    found.append(await audit_fusion_tools.audit_gene_fusion("toxodb", "TGME49_500302"))
+    fake = fusion_site.fusion_site(
+        monkeypatch, fusion_site.REFERENCE + fusion_site.NEIGHBOUR
+    )
+    fake.exonless.add(fusion_site.BESIDE_REFERENCE[2])
+    found.append(
+        await audit_fusion_tools.audit_gene_fusion("plasmodb", fusion_site.MEMBER)
+    )
     return found
 
 
@@ -262,6 +313,15 @@ async def clade_only_expression(monkeypatch: pytest.MonkeyPatch) -> list[BaseMod
     ]
 
 
+async def every_species_expression(
+    monkeypatch: pytest.MonkeyPatch,
+) -> list[BaseModel]:
+    install_replay(monkeypatch, recorded_every_species())
+    return [
+        await catalog_tools.build_every_species_expression("orthomcl", CRYPTOSPORIDIUM)
+    ]
+
+
 RECORDED: dict[str, Recorded] = {
     "audit_pseudogene_call": pseudogene_call,
     "audit_selenoprotein_end": selenoprotein_end,
@@ -278,6 +338,7 @@ RECORDED: dict[str, Recorded] = {
     "audit_gene_fusion": gene_fusion,
     "build_protein_count_comparison": protein_count_comparison,
     "build_clade_only_expression": clade_only_expression,
+    "build_every_species_expression": every_species_expression,
 }
 
 
@@ -299,3 +360,67 @@ async def test_a_served_result_validates_its_own_dump(
     for result in results:
         served = result.model_dump(by_alias=True, mode="json")
         assert type(result).model_validate(served) == result
+
+
+GENE_MODEL_FIELDS: dict[str, dict[str, object]] = {
+    "audit_intron_support": {"model": None},
+    "audit_gene_length": {"models": [], "evidenceUnread": []},
+    "audit_pseudogene_call": {"referenceModel": None, "evidenceUnread": []},
+    "audit_strain_model": {"models": [], "evidenceUnread": []},
+    "audit_gene_fusion": {"models": [], "evidenceUnread": [], "merged": None},
+    "audit_selenoprotein_end": {"models": [], "evidenceUnread": []},
+}
+
+
+@pytest.mark.parametrize("tool", sorted(GENE_MODEL_FIELDS))
+async def test_a_result_stored_before_the_gene_models_reads_none_read(
+    monkeypatch: pytest.MonkeyPatch, tool: str
+) -> None:
+    unread = GENE_MODEL_FIELDS[tool]
+    results = await RECORDED[tool](monkeypatch)
+    stored = [result.model_dump(by_alias=True, mode="json") for result in results]
+
+    for result, dumped in zip(results, stored, strict=True):
+        older = {key: value for key, value in dumped.items() if key not in unread}
+        validated = type(result).model_validate(older)
+        assert validated.model_dump(by_alias=True, mode="json") == older | unread
+    assert {
+        key for dumped in stored for key in unread if dumped[key] != unread[key]
+    } == set(unread)
+
+
+def misnamed(dumped: dict[str, typing.Any], key: str) -> dict[str, typing.Any]:
+    held = dumped[key]
+    match held:
+        case list() if len(held) > 1:
+            return dumped | {key: held[::-1]}
+        case list():
+            return dumped | {key: [held[0] | {"gene": "OTHER_GENE"}]}
+        case _:
+            return dumped | {key: held | {"gene": "OTHER_GENE"}}
+
+
+@pytest.mark.parametrize("tool", sorted(GENE_MODEL_FIELDS))
+async def test_a_result_whose_models_name_other_genes_is_refused(
+    monkeypatch: pytest.MonkeyPatch, tool: str
+) -> None:
+    key = next(iter(GENE_MODEL_FIELDS[tool]))
+    results = await RECORDED[tool](monkeypatch)
+    [(result, dumped)] = [
+        (result, dumped)
+        for result in results
+        if (dumped := result.model_dump(by_alias=True, mode="json"))[key]
+    ][:1]
+
+    with pytest.raises(ValidationError, match=r"gene models name|merged span"):
+        type(result).model_validate(misnamed(dumped, key))
+
+
+async def test_a_fusion_with_models_and_no_merged_span_is_refused(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    [result, *_] = await gene_fusion(monkeypatch)
+    dumped = result.model_dump(by_alias=True, mode="json")
+
+    with pytest.raises(ValidationError, match="serves the merged span"):
+        type(result).model_validate(dumped | {"merged": None})

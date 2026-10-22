@@ -2,82 +2,79 @@
  "case": {
   "file": "fusion_pfraNilgiri_rpt6.json",
   "site": "plasmodb",
-  "gene": "AK88_02763"
+  "gene": "AK88_02763",
+  "models": [
+   "PCOAH_00051830",
+   "PCOAH_00051820"
+  ]
  },
  "calls": [
   {
-   "kind": "dataset",
-   "ids": [
-    "AK88_02763"
-   ],
-   "dataset": 202394040
-  },
-  {
-   "kind": "search",
-   "record_type": "transcript",
-   "search_name": "GeneByLocusTag",
-   "parameters": {
-    "ds_gene_ids": "202394040"
-   },
-   "report": {
-    "attributes": [
-     "organism_full",
-     "gene_orthomcl_name",
-     "protein_length",
-     "gene_name",
-     "gene_product",
-     "sequence_id",
-     "gene_start_min",
-     "gene_end_max",
-     "strand_plus_minus",
-     "is_pseudo",
-     "gene_type",
-     "input_id"
-    ],
-    "tables": [],
-    "pagination": {
-     "offset": 0,
-     "numRecords": 8
-    }
-   },
-   "records": [
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
     {
-     "displayName": "AK88_02763",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "AK88_02763"
-      },
-      {
-       "name": "source_id",
-       "value": "AK88_02763-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "1095",
-      "gene_name": null,
-      "organism_full": "Plasmodium fragile strain nilgiri",
-      "gene_start_min": "202826",
-      "gene_type": "protein coding gene",
-      "sequence_id": "KQ001672",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8",
-      "gene_end_max": "207689",
-      "strand_plus_minus": "+",
-      "input_id": "AK88_02763"
-     },
-     "tables": {},
-     "tableErrors": []
+     "name": "source_id",
+     "value": "AK88_02763"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
     }
    ],
-   "served_total": 1,
-   "kept": null
+   "attributes": [
+    "organism_full",
+    "orthomcl_name",
+    "name",
+    "product",
+    "sequence_id",
+    "start_min",
+    "end_max",
+    "strand_plus_minus",
+    "is_pseudo",
+    "gene_type"
+   ],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "record": {
+    "displayName": "AK88_02763",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "AK88_02763"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {
+     "organism_full": "Plasmodium fragile strain nilgiri",
+     "product": "26S protease regulatory subunit 8",
+     "gene_type": "protein coding gene",
+     "name": null,
+     "sequence_id": "KQ001672",
+     "end_max": "207689",
+     "is_pseudo": "No",
+     "orthomcl_name": "OG8_0000315",
+     "strand_plus_minus": "+",
+     "start_min": "202826"
+    },
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "1095",
+       "transcript_id": "AK88_02763-t30_1",
+       "exon_count": "2",
+       "length": "3288",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
   },
   {
    "kind": "record",
@@ -1420,2260 +1417,184 @@
    }
   },
   {
-   "kind": "dataset",
-   "ids": [
-    "AK88_02763",
-    "C922_04966",
-    "HEP_00361900",
-    "Htart_000094500",
-    "MKS88_005863",
-    "PADL01_1249100",
-    "PBANKA_1461800",
-    "PBILCG01_1248300",
-    "PBLACG01_1248800",
-    "PCHAS_1464100",
-    "PCHCB_000486000",
-    "PCOAH_00051830",
-    "PCYB_147330",
-    "PF3D7_1248900",
-    "PGABG01_1247300",
-    "PGAL8A_00469700",
-    "PGSY75_1248900",
-    "PKA1H_140074700",
-    "PKNH_1468600",
-    "PKNOH_S140287200",
-    "POWCR01_140067600",
-    "PPRFG01_1206500",
-    "PRCDC_1248300",
-    "PRELSG_1464100",
-    "PRG01_1252200",
-    "PVBDA_1406440",
-    "PVLDE_1406290",
-    "PVL_140050200",
-    "PVP01_1466000",
-    "PVPAM_140074800",
-    "PVPCR_1406510",
-    "PVSEL_1406500",
-    "PVVCY_1406390",
-    "PVW1_140072500",
-    "PVX_101335",
-    "PY02897",
-    "PY17X_1464400",
-    "PYYM_1465800",
-    "PcyM_1472800",
-    "Pf7G8-2_000398100",
-    "Pf7G8_120054600",
-    "PfCD01_120053700",
-    "PfDd2_120054100",
-    "PfGA01_120054200",
-    "PfGB4_120054100",
-    "PfGN01_120055100",
-    "PfHB3_120053700",
-    "PfIT_120054100",
-    "PfKE01_120054200",
-    "PfKH01_120055000",
-    "PfKH02_120053600",
-    "PfML01_120055000",
-    "PfNF135_120053300",
-    "PfNF166_120054500",
-    "PfNF54_120052700",
-    "PfSD01_120053600",
-    "PfSN01_120054300",
-    "PfTG01_120053900",
-    "PmUG01_14082100",
-    "PocGH01_14073400",
-    "Py17XNL_001401466",
-    "YYE_00713",
-    "YYG_00648"
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "AK88_02763"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
    ],
-   "dataset": 202394050
-  },
-  {
-   "kind": "search",
-   "record_type": "transcript",
-   "search_name": "GeneByLocusTag",
-   "parameters": {
-    "ds_gene_ids": "202394050"
-   },
-   "report": {
-    "attributes": [
-     "organism_full",
-     "gene_orthomcl_name",
-     "protein_length",
-     "gene_name",
-     "gene_product",
-     "sequence_id",
-     "gene_start_min",
-     "gene_end_max",
-     "strand_plus_minus",
-     "is_pseudo",
-     "gene_type"
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "record": {
+    "displayName": "AK88_02763",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "AK88_02763"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
     ],
-    "tables": [],
-    "pagination": {
-     "offset": 0,
-     "numRecords": 504
-    }
-   },
-   "records": [
-    {
-     "displayName": "AK88_02763",
-     "id": [
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
       {
-       "name": "gene_source_id",
-       "value": "AK88_02763"
-      },
-      {
-       "name": "source_id",
-       "value": "AK88_02763-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
+       "protein_length": "1095",
+       "transcript_id": "AK88_02763-t30_1",
+       "exon_count": "2",
+       "length": "3288",
+       "transcript_type": "mRNA"
       }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "1095",
-      "gene_name": null,
-      "organism_full": "Plasmodium fragile strain nilgiri",
-      "gene_start_min": "202826",
-      "gene_type": "protein coding gene",
-      "sequence_id": "KQ001672",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8",
-      "gene_end_max": "207689",
-      "strand_plus_minus": "+"
-     },
-     "tables": {},
-     "tableErrors": []
+     ]
     },
-    {
-     "displayName": "C922_04966",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "C922_04966"
-      },
-      {
-       "name": "source_id",
-       "value": "C922_04966-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "423",
-      "gene_name": null,
-      "organism_full": "Plasmodium inui San Antonio 1",
-      "gene_start_min": "7900",
-      "gene_type": "protein coding gene",
-      "sequence_id": "KI965492",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8 like A",
-      "gene_end_max": "9171",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "HEP_00361900",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "HEP_00361900"
-      },
-      {
-       "name": "source_id",
-       "value": "HEP_00361900_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "423",
-      "gene_name": null,
-      "organism_full": "Hepatocystis sp. ex Piliocolobus tephrosceles 2019",
-      "gene_start_min": "2047",
-      "gene_type": "protein coding gene",
-      "sequence_id": "CABPSV020000733",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "3318",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "Htart_000094500",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "Htart_000094500"
-      },
-      {
-       "name": "source_id",
-       "value": "Htart_000094500.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "438",
-      "gene_name": null,
-      "organism_full": "Haemoproteus tartakovskyi strain SISKIN1",
-      "gene_start_min": "485",
-      "gene_type": "protein coding gene",
-      "sequence_id": "LSRZ01000080",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "1801",
-      "strand_plus_minus": "+"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "MKS88_005863",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "MKS88_005863"
-      },
-      {
-       "name": "source_id",
-       "value": "MKS88_005863_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "422",
-      "gene_name": null,
-      "organism_full": "Plasmodium brasilianum strain Bolivian I",
-      "gene_start_min": "3076613",
-      "gene_type": "protein coding gene",
-      "sequence_id": "CM043782",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8",
-      "gene_end_max": "3077881",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PADL01_1249100",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PADL01_1249100"
-      },
-      {
-       "name": "source_id",
-       "value": "PADL01_1249100-t36_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "433",
-      "gene_name": null,
-      "organism_full": "Plasmodium adleri G01",
-      "gene_start_min": "1959519",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PADLG01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "1960820",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PBANKA_1461800",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PBANKA_1461800"
-      },
-      {
-       "name": "source_id",
-       "value": "PBANKA_1461800.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "422",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium berghei ANKA",
-      "gene_start_min": "2337461",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PbANKA_14_v3",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2338729",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PBILCG01_1248300",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PBILCG01_1248300"
-      },
-      {
-       "name": "source_id",
-       "value": "PBILCG01_1248300_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "432",
-      "gene_name": null,
-      "organism_full": "Plasmodium billcollinsi G01",
-      "gene_start_min": "2030702",
-      "gene_type": "protein coding gene",
-      "sequence_id": "LT990241",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2032000",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PBLACG01_1248800",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PBLACG01_1248800"
-      },
-      {
-       "name": "source_id",
-       "value": "PBLACG01_1248800-t36_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "434",
-      "gene_name": null,
-      "organism_full": "Plasmodium blacklocki G01",
-      "gene_start_min": "1950990",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PBLACG01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "1952294",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PCHAS_1464100",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PCHAS_1464100"
-      },
-      {
-       "name": "source_id",
-       "value": "PCHAS_1464100.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "421",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium chabaudi chabaudi",
-      "gene_start_min": "2323057",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PCHAS_14_v3",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2324322",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PCHCB_000486000",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PCHCB_000486000"
-      },
-      {
-       "name": "source_id",
-       "value": "PCHCB_000486000-t70_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "421",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium chabaudi chabaudi CB",
-      "gene_start_min": "2250176",
-      "gene_type": "protein coding gene",
-      "sequence_id": "LT608166",
-      "is_pseudo": null,
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2251441",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PCOAH_00051830",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PCOAH_00051830"
-      },
-      {
-       "name": "source_id",
-       "value": "PCOAH_00051830-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "424",
-      "gene_name": null,
-      "organism_full": "Plasmodium coatneyi Hackeri",
-      "gene_start_min": "251514",
-      "gene_type": "protein coding gene",
-      "sequence_id": "CP016252",
-      "is_pseudo": "No",
-      "gene_product": "Tat-binding protein-like protein",
-      "gene_end_max": "252788",
-      "strand_plus_minus": "+"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PCYB_147330",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PCYB_147330"
-      },
-      {
-       "name": "source_id",
-       "value": "PCYB_147330-t26_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "409",
-      "gene_name": null,
-      "organism_full": "Plasmodium cynomolgi strain B",
-      "gene_start_min": "2829790",
-      "gene_type": "protein coding gene",
-      "sequence_id": "DF157106",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8",
-      "gene_end_max": "2831064",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PcyM_1472800",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PcyM_1472800"
-      },
-      {
-       "name": "source_id",
-       "value": "PcyM_1472800-t36_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "424",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium cynomolgi strain M",
-      "gene_start_min": "2931090",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PcyM_14",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2932364",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PF3D7_1248900",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PF3D7_1248900"
-      },
-      {
-       "name": "source_id",
-       "value": "PF3D7_1248900.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum 3D7",
-      "gene_start_min": "2002325",
-      "gene_type": "protein coding gene",
-      "sequence_id": "Pf3D7_12_v3",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2004499",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "Pf7G8_120054600",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "Pf7G8_120054600"
-      },
-      {
-       "name": "source_id",
-       "value": "Pf7G8_120054600-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum 7G8",
-      "gene_start_min": "2060621",
-      "gene_type": "protein coding gene",
-      "sequence_id": "Pf7G8_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2061928",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "Pf7G8-2_000398100",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "Pf7G8-2_000398100"
-      },
-      {
-       "name": "source_id",
-       "value": "Pf7G8-2_000398100.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum 7G8 2019",
-      "gene_start_min": "1107405",
-      "gene_type": "protein coding gene",
-      "sequence_id": "VBRD01000017.1",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "1108712",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfCD01_120053700",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfCD01_120053700"
-      },
-      {
-       "name": "source_id",
-       "value": "PfCD01_120053700-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum CD01",
-      "gene_start_min": "2025232",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfCD01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2026539",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfDd2_120054100",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfDd2_120054100"
-      },
-      {
-       "name": "source_id",
-       "value": "PfDd2_120054100-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum Dd2",
-      "gene_start_min": "2004817",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfDd2_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2006124",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfGA01_120054200",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfGA01_120054200"
-      },
-      {
-       "name": "source_id",
-       "value": "PfGA01_120054200-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum GA01",
-      "gene_start_min": "2018405",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfGA01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2019712",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfGB4_120054100",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfGB4_120054100"
-      },
-      {
-       "name": "source_id",
-       "value": "PfGB4_120054100-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum GB4",
-      "gene_start_min": "2002990",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfGB4_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2004297",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfGN01_120055100",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfGN01_120055100"
-      },
-      {
-       "name": "source_id",
-       "value": "PfGN01_120055100-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum GN01",
-      "gene_start_min": "2050862",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfGN01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2052169",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfHB3_120053700",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfHB3_120053700"
-      },
-      {
-       "name": "source_id",
-       "value": "PfHB3_120053700-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum HB3",
-      "gene_start_min": "2007834",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfHB3_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2009141",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfIT_120054100",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfIT_120054100"
-      },
-      {
-       "name": "source_id",
-       "value": "PfIT_120054100-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum IT",
-      "gene_start_min": "2034706",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfIT_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2036013",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfKE01_120054200",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfKE01_120054200"
-      },
-      {
-       "name": "source_id",
-       "value": "PfKE01_120054200-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum KE01",
-      "gene_start_min": "2031148",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfKE01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2032455",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfKH01_120055000",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfKH01_120055000"
-      },
-      {
-       "name": "source_id",
-       "value": "PfKH01_120055000-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum KH01",
-      "gene_start_min": "2035067",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfKH01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2036374",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfKH02_120053600",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfKH02_120053600"
-      },
-      {
-       "name": "source_id",
-       "value": "PfKH02_120053600-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum KH02",
-      "gene_start_min": "2014955",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfKH02_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2016262",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfML01_120055000",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfML01_120055000"
-      },
-      {
-       "name": "source_id",
-       "value": "PfML01_120055000-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum ML01",
-      "gene_start_min": "2020402",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfML01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2021709",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfNF135_120053300",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfNF135_120053300"
-      },
-      {
-       "name": "source_id",
-       "value": "PfNF135_120053300.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum NF135.C10",
-      "gene_start_min": "2014681",
-      "gene_type": "protein coding gene",
-      "sequence_id": "VBRG01000018.1",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2015988",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfNF166_120054500",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfNF166_120054500"
-      },
-      {
-       "name": "source_id",
-       "value": "PfNF166_120054500.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum NF166",
-      "gene_start_min": "1981218",
-      "gene_type": "protein coding gene",
-      "sequence_id": "VBRE01000021.1",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "1982525",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfNF54_120052700",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfNF54_120052700"
-      },
-      {
-       "name": "source_id",
-       "value": "PfNF54_120052700.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum NF54",
-      "gene_start_min": "2007188",
-      "gene_type": "protein coding gene",
-      "sequence_id": "VBRF01000024.1",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2008495",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfSD01_120053600",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfSD01_120053600"
-      },
-      {
-       "name": "source_id",
-       "value": "PfSD01_120053600-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum SD01",
-      "gene_start_min": "1994243",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfSD01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "1995550",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfSN01_120054300",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfSN01_120054300"
-      },
-      {
-       "name": "source_id",
-       "value": "PfSN01_120054300-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum SN01",
-      "gene_start_min": "2044255",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfSN01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2045562",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PfTG01_120053900",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PfTG01_120053900"
-      },
-      {
-       "name": "source_id",
-       "value": "PfTG01_120053900-t41_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium falciparum TG01",
-      "gene_start_min": "2019746",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PfTG01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2021053",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PGABG01_1247300",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PGABG01_1247300"
-      },
-      {
-       "name": "source_id",
-       "value": "PGABG01_1247300-t36_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "431",
-      "gene_name": null,
-      "organism_full": "Plasmodium gaboni strain G01",
-      "gene_start_min": "1898095",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PGABG01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "1899390",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PGAL8A_00469700",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PGAL8A_00469700"
-      },
-      {
-       "name": "source_id",
-       "value": "PGAL8A_00469700.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "422",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium gallinaceum 8A",
-      "gene_start_min": "755235",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PGAL8A_union_v1_archived_contig_130",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "756503",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PGSY75_1248900",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PGSY75_1248900"
-      },
-      {
-       "name": "source_id",
-       "value": "PGSY75_1248900-t31_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "431",
-      "gene_name": null,
-      "organism_full": "Plasmodium gaboni strain SY75",
-      "gene_start_min": "1703776",
-      "gene_type": "protein coding gene",
-      "sequence_id": "CM003867.1",
-      "is_pseudo": "No",
-      "gene_product": "putative 26S protease regulatory subunit 8",
-      "gene_end_max": "1705071",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PKA1H_140074700",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PKA1H_140074700"
-      },
-      {
-       "name": "source_id",
-       "value": "PKA1H_140074700.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "424",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium knowlesi strain A1H1",
-      "gene_start_min": "3048500",
-      "gene_type": "protein coding gene",
-      "sequence_id": "LT727661",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "3049774",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PKNH_1468600",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PKNH_1468600"
-      },
-      {
-       "name": "source_id",
-       "value": "PKNH_1468600.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "424",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium knowlesi strain H",
-      "gene_start_min": "3026246",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PKNH_14_v2",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "3027520",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PKNOH_S140287200",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PKNOH_S140287200"
-      },
-      {
-       "name": "source_id",
-       "value": "PKNOH_S140287200-t35_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "424",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium knowlesi strain Malayan Strain Pk1 A",
-      "gene_start_min": "3090093",
-      "gene_type": "protein coding gene",
-      "sequence_id": "NETL01000028",
-      "is_pseudo": "No",
-      "gene_product": "putative 26S protease regulatory subunit 8",
-      "gene_end_max": "3091367",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PmUG01_14082100",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PmUG01_14082100"
-      },
-      {
-       "name": "source_id",
-       "value": "PmUG01_14082100.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "422",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium malariae UG01",
-      "gene_start_min": "3369528",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PmUG01_14_v1",
-      "is_pseudo": "No",
-      "gene_product": "26S proteasome AAA-ATPase subunit RPT6, putative",
-      "gene_end_max": "3370796",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PocGH01_14073400",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PocGH01_14073400"
-      },
-      {
-       "name": "source_id",
-       "value": "PocGH01_14073400.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "417",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium ovale curtisi GH01",
-      "gene_start_min": "2682798",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PocGH01_14_v2",
-      "is_pseudo": "No",
-      "gene_product": "26S proteasome AAA-ATPase subunit RPT6, putative",
-      "gene_end_max": "2684051",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "POWCR01_140067600",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "POWCR01_140067600"
-      },
-      {
-       "name": "source_id",
-       "value": "POWCR01_140067600_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "417",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium ovale wallikeri PowCR01",
-      "gene_start_min": "2714472",
-      "gene_type": "protein coding gene",
-      "sequence_id": "LT594518",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2715725",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PPRFG01_1206500",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PPRFG01_1206500"
-      },
-      {
-       "name": "source_id",
-       "value": "PPRFG01_1206500_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": null,
-      "organism_full": "Plasmodium praefalciparum strain G01",
-      "gene_start_min": "2003345",
-      "gene_type": "protein coding gene",
-      "sequence_id": "LT963425",
-      "is_pseudo": "No",
-      "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
-      "gene_end_max": "2004652",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PRCDC_1248300",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PRCDC_1248300"
-      },
-      {
-       "name": "source_id",
-       "value": "PRCDC_1248300.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium reichenowi CDC",
-      "gene_start_min": "1970436",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PrCDC_12_v3",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "1971743",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PRELSG_1464100",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PRELSG_1464100"
-      },
-      {
-       "name": "source_id",
-       "value": "PRELSG_1464100.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "422",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium relictum SGS1-like",
-      "gene_start_min": "2432496",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PRELSG_14_v1",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2433764",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PRG01_1252200",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PRG01_1252200"
-      },
-      {
-       "name": "source_id",
-       "value": "PRG01_1252200-t36_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "435",
-      "gene_name": null,
-      "organism_full": "Plasmodium reichenowi G01",
-      "gene_start_min": "2072326",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PRG01_12",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2073633",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PVBDA_1406440",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PVBDA_1406440"
-      },
-      {
-       "name": "source_id",
-       "value": "PVBDA_1406440_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "421",
-      "gene_name": null,
-      "organism_full": "Plasmodium vinckei brucechwatti DA",
-      "gene_start_min": "2326092",
-      "gene_type": "protein coding gene",
-      "sequence_id": "LR865392",
-      "is_pseudo": "No",
-      "gene_product": "Proteasomal ATPase OB C-terminal domain | AAA+ lid domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
-      "gene_end_max": "2327357",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PVL_140050200",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PVL_140050200"
-      },
-      {
-       "name": "source_id",
-       "value": "PVL_140050200-t42_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "424",
-      "gene_name": null,
-      "organism_full": "Plasmodium vivax-like Pvl01",
-      "gene_start_min": "2339755",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PVL_14_v1",
-      "is_pseudo": null,
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2341029",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PVLDE_1406290",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PVLDE_1406290"
-      },
-      {
-       "name": "source_id",
-       "value": "PVLDE_1406290_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "421",
-      "gene_name": null,
-      "organism_full": "Plasmodium vinckei lentum DE",
-      "gene_start_min": "2197424",
-      "gene_type": "protein coding gene",
-      "sequence_id": "LR865376",
-      "is_pseudo": "No",
-      "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
-      "gene_end_max": "2198689",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PVP01_1466000",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PVP01_1466000"
-      },
-      {
-       "name": "source_id",
-       "value": "PVP01_1466000.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "424",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium vivax P01",
-      "gene_start_min": "2813583",
-      "gene_type": "protein coding gene",
-      "sequence_id": "PvP01_14_v2",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2816392",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PVPAM_140074800",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PVPAM_140074800"
-      },
-      {
-       "name": "source_id",
-       "value": "PVPAM_140074800_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "424",
-      "gene_name": null,
-      "organism_full": "Plasmodium vivax PAM",
-      "gene_start_min": "2935721",
-      "gene_type": "protein coding gene",
-      "sequence_id": "CASCJQ010000014",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2936995",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PVPCR_1406510",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PVPCR_1406510"
-      },
-      {
-       "name": "source_id",
-       "value": "PVPCR_1406510_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "421",
-      "gene_name": null,
-      "organism_full": "Plasmodium vinckei petteri CR 2020",
-      "gene_start_min": "2347568",
-      "gene_type": "protein coding gene",
-      "sequence_id": "LR865419",
-      "is_pseudo": "No",
-      "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
-      "gene_end_max": "2348833",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PVSEL_1406500",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PVSEL_1406500"
-      },
-      {
-       "name": "source_id",
-       "value": "PVSEL_1406500_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "421",
-      "gene_name": null,
-      "organism_full": "Plasmodium vinckei Cameroon EL",
-      "gene_start_min": "2331998",
-      "gene_type": "protein coding gene",
-      "sequence_id": "LR865435",
-      "is_pseudo": "No",
-      "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
-      "gene_end_max": "2333263",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PVVCY_1406390",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PVVCY_1406390"
-      },
-      {
-       "name": "source_id",
-       "value": "PVVCY_1406390_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "421",
-      "gene_name": null,
-      "organism_full": "Plasmodium vinckei vinckei CY",
-      "gene_start_min": "2296465",
-      "gene_type": "protein coding gene",
-      "sequence_id": "LR215070",
-      "is_pseudo": "No",
-      "gene_product": "Proteasomal ATPase OB C-terminal domain | AAA+ lid domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
-      "gene_end_max": "2297730",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PVW1_140072500",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PVW1_140072500"
-      },
-      {
-       "name": "source_id",
-       "value": "PVW1_140072500_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "424",
-      "gene_name": null,
-      "organism_full": "Plasmodium vivax PvW1",
-      "gene_start_min": "2878631",
-      "gene_type": "protein coding gene",
-      "sequence_id": "CAJZCX010000003",
-      "is_pseudo": "No",
-      "gene_product": "AAA+ lid domain | Proteasomal ATPase OB C-terminal domain | ATPase family associated with various cellular activities (AAA) | domain-containing protein",
-      "gene_end_max": "2879905",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PVX_101335",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PVX_101335"
-      },
-      {
-       "name": "source_id",
-       "value": "PVX_101335.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "424",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium vivax Sal-1",
-      "gene_start_min": "2806816",
-      "gene_type": "protein coding gene",
-      "sequence_id": "Pv_Sal1_chr14",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2808090",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PY02897",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PY02897"
-      },
-      {
-       "name": "source_id",
-       "value": "PY02897-t26_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "442",
-      "gene_name": null,
-      "organism_full": "Plasmodium yoelii yoelii 17XNL",
-      "gene_start_min": "5708",
-      "gene_type": "protein coding gene",
-      "sequence_id": "AABL01000812",
-      "is_pseudo": "No",
-      "gene_product": "tat-binding protein homolog",
-      "gene_end_max": "7975",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PY17X_1464400",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PY17X_1464400"
-      },
-      {
-       "name": "source_id",
-       "value": "PY17X_1464400.1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "422",
-      "gene_name": "RPT6",
-      "organism_full": "Plasmodium yoelii yoelii 17X",
-      "gene_start_min": "2485707",
-      "gene_type": "protein coding gene",
-      "sequence_id": "Py17X_14_v3",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2486975",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "Py17XNL_001401466",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "Py17XNL_001401466"
-      },
-      {
-       "name": "source_id",
-       "value": "Py17XNL_001401466_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "422",
-      "gene_name": null,
-      "organism_full": "Plasmodium yoelii yoelii 17XNL 2023",
-      "gene_start_min": "2485575",
-      "gene_type": "protein coding gene",
-      "sequence_id": "CP115538",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8",
-      "gene_end_max": "2488034",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PYYM_1465800",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PYYM_1465800"
-      },
-      {
-       "name": "source_id",
-       "value": "PYYM_1465800_t1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "422",
-      "gene_name": null,
-      "organism_full": "Plasmodium yoelii yoelii YM",
-      "gene_start_min": "2477805",
-      "gene_type": "protein coding gene",
-      "sequence_id": "LK934642",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8, putative",
-      "gene_end_max": "2479073",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "YYE_00713",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "YYE_00713"
-      },
-      {
-       "name": "source_id",
-       "value": "YYE_00713-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "421",
-      "gene_name": null,
-      "organism_full": "Plasmodium vinckei vinckei strain vinckei",
-      "gene_start_min": "131001",
-      "gene_type": "protein coding gene",
-      "sequence_id": "KL446945",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8 like A",
-      "gene_end_max": "132266",
-      "strand_plus_minus": "+"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "YYG_00648",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "YYG_00648"
-      },
-      {
-       "name": "source_id",
-       "value": "YYG_00648-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "gene_orthomcl_name": "OG8_0000315",
-      "protein_length": "421",
-      "gene_name": null,
-      "organism_full": "Plasmodium vinckei petteri strain CR",
-      "gene_start_min": "2322573",
-      "gene_type": "protein coding gene",
-      "sequence_id": "KI965394",
-      "is_pseudo": "No",
-      "gene_product": "26S protease regulatory subunit 8 like A",
-      "gene_end_max": "2323838",
-      "strand_plus_minus": "-"
-     },
-     "tables": {},
-     "tableErrors": []
-    }
-   ],
-   "served_total": 63,
-   "kept": null
+    "tableErrors": []
+   }
   },
   {
-   "kind": "dataset",
-   "ids": [
-    "AK88_02763",
-    "PCOAH_00051830"
-   ],
-   "dataset": 202394060
-  },
-  {
-   "kind": "search",
+   "kind": "record",
    "record_type": "transcript",
-   "search_name": "GeneByLocusTag",
-   "parameters": {
-    "ds_gene_ids": "202394060"
-   },
-   "report": {
-    "attributes": [
-     "protein_sequence"
-    ],
-    "tables": [],
-    "pagination": {
-     "offset": 0,
-     "numRecords": 16
-    }
-   },
-   "records": [
+   "primary_key": [
     {
-     "displayName": "AK88_02763",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "AK88_02763"
-      },
-      {
-       "name": "source_id",
-       "value": "AK88_02763-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "protein_sequence": "MNRHIVCLLVSGKLIEKKNIDKQIIQRNLEHVILHFHKYSQETGISALLKKIIPYTKNTFVGSVHLKYLYSHFVEPLLKEGNIDPACLPNLVHTFKKSEDCNFVVKKLNDYIACAIRAGKFSLQNDVHNWVSVVQVFSAKRRGINFVPLLRHLLVNDTSAPSLSGSTHNSHISEPGNVQAPIPNDIQIQHSALDQCNVVHPISSHDLRYETLESLSPRTFCILLNVLSKVKMQNTPDPSFTSFVREKTSQMLPYMSNIDLCQLTEALTQLICVDREILSALIEPEVIKRVMSFDLLQLSMIFHSLSQYWKDLKKKQLFCVLFMRKIKKYLALYSLHNQEEKYILRTRNKNTLIEIVPMFFLTYVKNAHNMFPHYPCLSKFILLQFSILSKWLHRSLCERNCQTGMPNQKFADKGERHPPSLRHINQTLSNLLYAFIGYLYNISTLQYKGEQSRSFTRHLHLTLDNIYQLLSHFILFYRHREVLTNGAQFMLPVHKSQLLIFLYTYWDFLLDLQSRVNYCTGMTKKKNVALTVQAKRHEKENTNLTADSFFFIKWENVKKVNFVLALLDDINLNSFMKETLEENNKYVSYIYSQILNVANNSVGVPHRTTLHFSRRVVGPYTISELCSGVKNPVPPAVAALATAKAIPGTSSAIYINGEEPVKTPHTYKNTHMAAVDMHMRSGELPEEAKKDQKKDPNGVNKSEEEMQSGIKTYYEMKIEEYESIINKKLQNKKRLEAQRNELNTRVRELCDEIQYLLEAASYVGEIVKPMGKNKVLVKINPEGKYVVDIAHSINIAQCTPNTRVALYNDSYKLHKILPSKVDPLVSLMKVEKVPDSTYEMVGGLDQQVKEVKEVIELPVKHPEIFESLGISQPKGVLLYGPPGTGKTLLARAVAHHTECTFIRVSGSELVQKYIGEGSRMVRELFVMAREHAPSIIFMDEIDSIGSQRIEGEHGDSEVQRTMMELLNQLDGFESTQNIKVIMCTNRIDILDEALLRPGRIDRKIEFPNPNVEARMEILKIHSRKMNLMRGIDMLKIATDMNNCSGAEVKAVCTEAGMFALRERRVHVTQEDFEMAVAKVMKQDAEKNFTLRKLWK"
-     },
-     "tables": {},
-     "tableErrors": []
+     "name": "gene_source_id",
+     "value": "AK88_02763"
     },
     {
-     "displayName": "PCOAH_00051830",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PCOAH_00051830"
-      },
-      {
-       "name": "source_id",
-       "value": "PCOAH_00051830-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "protein_sequence": "MATVDMQVQSGNLPEESRKDQKNDPNGVSKSEEEMQSGIKTYYEMKIEEYESIINKKLQNKKRLEAQRNELNTRVRELCDEIQYLLEAASYVGEIVKPMGKNKVLVKINPEGKYVVDIAHSINIAQCTPNTRVALYNDSYKLHKILPSKVDPLVSLMKVEKVPDSTYEMVGGLDQQVKEVKEVIELPVKHPEIFESLGISQPKGVLLYGPPGTGKTLLARAVAHHTECTFIRVSGSELVQKYIGEGSRMVRELFVMAREHAPSIIFMDEIDSIGSQRIEGEHGDSEVQRTMMELLNQLDGFESTQNIKVIMCTNRIDILDEALLRPGRIDRKIEFPNPNVEARMEILKIHSRKMNLMRGIDMLKIATDMNNCSGAEVKAVCTEAGMFALRERRVHVTQEDFEMAVAKVMKQDAEKNFTLRKLWK"
-     },
-     "tables": {},
-     "tableErrors": []
+     "name": "source_id",
+     "value": "AK88_02763-t30_1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
     }
    ],
-   "served_total": 2,
-   "kept": null
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "record": {
+    "displayName": "AK88_02763",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "AK88_02763"
+     },
+     {
+      "name": "source_id",
+      "value": "AK88_02763-t30_1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MNRHIVCLLVSGKLIEKKNIDKQIIQRNLEHVILHFHKYSQETGISALLKKIIPYTKNTFVGSVHLKYLYSHFVEPLLKEGNIDPACLPNLVHTFKKSEDCNFVVKKLNDYIACAIRAGKFSLQNDVHNWVSVVQVFSAKRRGINFVPLLRHLLVNDTSAPSLSGSTHNSHISEPGNVQAPIPNDIQIQHSALDQCNVVHPISSHDLRYETLESLSPRTFCILLNVLSKVKMQNTPDPSFTSFVREKTSQMLPYMSNIDLCQLTEALTQLICVDREILSALIEPEVIKRVMSFDLLQLSMIFHSLSQYWKDLKKKQLFCVLFMRKIKKYLALYSLHNQEEKYILRTRNKNTLIEIVPMFFLTYVKNAHNMFPHYPCLSKFILLQFSILSKWLHRSLCERNCQTGMPNQKFADKGERHPPSLRHINQTLSNLLYAFIGYLYNISTLQYKGEQSRSFTRHLHLTLDNIYQLLSHFILFYRHREVLTNGAQFMLPVHKSQLLIFLYTYWDFLLDLQSRVNYCTGMTKKKNVALTVQAKRHEKENTNLTADSFFFIKWENVKKVNFVLALLDDINLNSFMKETLEENNKYVSYIYSQILNVANNSVGVPHRTTLHFSRRVVGPYTISELCSGVKNPVPPAVAALATAKAIPGTSSAIYINGEEPVKTPHTYKNTHMAAVDMHMRSGELPEEAKKDQKKDPNGVNKSEEEMQSGIKTYYEMKIEEYESIINKKLQNKKRLEAQRNELNTRVRELCDEIQYLLEAASYVGEIVKPMGKNKVLVKINPEGKYVVDIAHSINIAQCTPNTRVALYNDSYKLHKILPSKVDPLVSLMKVEKVPDSTYEMVGGLDQQVKEVKEVIELPVKHPEIFESLGISQPKGVLLYGPPGTGKTLLARAVAHHTECTFIRVSGSELVQKYIGEGSRMVRELFVMAREHAPSIIFMDEIDSIGSQRIEGEHGDSEVQRTMMELLNQLDGFESTQNIKVIMCTNRIDILDEALLRPGRIDRKIEFPNPNVEARMEILKIHSRKMNLMRGIDMLKIATDMNNCSGAEVKAVCTEAGMFALRERRVHVTQEDFEMAVAKVMKQDAEKNFTLRKLWK"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051830"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "record": {
+    "displayName": "PCOAH_00051830",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051830"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "424",
+       "transcript_id": "PCOAH_00051830-t30_1",
+       "exon_count": "1",
+       "length": "1275",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "transcript",
+   "primary_key": [
+    {
+     "name": "gene_source_id",
+     "value": "PCOAH_00051830"
+    },
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051830-t30_1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "record": {
+    "displayName": "PCOAH_00051830",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PCOAH_00051830"
+     },
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051830-t30_1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MATVDMQVQSGNLPEESRKDQKNDPNGVSKSEEEMQSGIKTYYEMKIEEYESIINKKLQNKKRLEAQRNELNTRVRELCDEIQYLLEAASYVGEIVKPMGKNKVLVKINPEGKYVVDIAHSINIAQCTPNTRVALYNDSYKLHKILPSKVDPLVSLMKVEKVPDSTYEMVGGLDQQVKEVKEVIELPVKHPEIFESLGISQPKGVLLYGPPGTGKTLLARAVAHHTECTFIRVSGSELVQKYIGEGSRMVRELFVMAREHAPSIIFMDEIDSIGSQRIEGEHGDSEVQRTMMELLNQLDGFESTQNIKVIMCTNRIDILDEALLRPGRIDRKIEFPNPNVEARMEILKIHSRKMNLMRGIDMLKIATDMNNCSGAEVKAVCTEAGMFALRERRVHVTQEDFEMAVAKVMKQDAEKNFTLRKLWK"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
   },
   {
    "kind": "search",
@@ -4038,176 +1959,544 @@
    "kept": "PCOAH_00051830, the 4 genes on each side of it on its sequence and the gene of another sequence that starts nearest to it"
   },
   {
-   "kind": "dataset",
-   "ids": [
-    "PCOAH_00051800",
-    "PCOAH_00051810",
-    "PCOAH_00051820",
-    "PCOAH_00051840",
-    "PCOAH_00051850",
-    "PCOAH_00051860"
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051800"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
    ],
-   "dataset": 202394070
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "record": {
+    "displayName": "PCOAH_00051800",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051800"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "178",
+       "transcript_id": "PCOAH_00051800-t30_1",
+       "exon_count": "2",
+       "length": "537",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
   },
   {
-   "kind": "search",
+   "kind": "record",
    "record_type": "transcript",
-   "search_name": "GeneByLocusTag",
-   "parameters": {
-    "ds_gene_ids": "202394070"
-   },
-   "report": {
-    "attributes": [
-     "protein_sequence"
-    ],
-    "tables": [],
-    "pagination": {
-     "offset": 0,
-     "numRecords": 48
-    }
-   },
-   "records": [
+   "primary_key": [
     {
-     "displayName": "PCOAH_00051800",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PCOAH_00051800"
-      },
-      {
-       "name": "source_id",
-       "value": "PCOAH_00051800-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "protein_sequence": "MDVEKKLLKSFKEIRKKNVRRQGRQEQNVISDFPKWEDNFSCDEYSVDDVVRCVRKGGGEDDDTGKYKNVFNTFENEINYYLGEYVEEIICSSVTGRKDNGFPRWEEETLRKPTDVIFQHLIYGSLFGENLRRYECSSRYFKPTLVEDISDFSDASTSSNDAQRGKHSPVRDITHEVK"
-     },
-     "tables": {},
-     "tableErrors": []
+     "name": "gene_source_id",
+     "value": "PCOAH_00051800"
     },
     {
-     "displayName": "PCOAH_00051810",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PCOAH_00051810"
-      },
-      {
-       "name": "source_id",
-       "value": "PCOAH_00051810-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "protein_sequence": "MEYKKTKRTNQYIFEGSRHQAKRQKINVNAECKGILISTLSPKRTNIGIKEFLNFLKVHFPSEADEASVKQGPSKEDHQKEENKPNGEQAEQEGEGGRMEKQLKDEIKKENMEYNRFAPLRNIVKNFTFIKFNNVTEKNPSDMVQQIFVLAHNKKEKYILRHLCKIIPLDCICKPHLSPFIKAILPVLKGNFPEGTCVKENFTFGHLFKLMNVSAEEEEKKEGEEEGDKVGDKEGDKEDDKKEDQTKDDQKMEENKPKEETAPSEDKNANGKKVSWALIYKCSNTKTLMKKDVLTVLDNCIGSNYSVNLSNPDLAVVVYVTEVRFACLKKEIMCGISIVKGYEKTRKFNIAAFNEDS"
-     },
-     "tables": {},
-     "tableErrors": []
+     "name": "source_id",
+     "value": "PCOAH_00051800-t30_1"
     },
     {
-     "displayName": "PCOAH_00051820",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PCOAH_00051820"
-      },
-      {
-       "name": "source_id",
-       "value": "PCOAH_00051820-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "protein_sequence": "MNRHVVRLIVGGKLMEKKNIDKQIIQRNLEHVILHFDQYSQETGTSALLKKIIPYTKNTFLGSVHLKYLYSHVVEPLLKEGNIDPECLPNLVHTFKRNEDCNYMVKKLNDYITCAIGKGKISLQNDVNNWVSVVQVFSAKRRGINFVPLLRHLLVNDSFAPSHGGDTKHAQTSEPRNVEAPIPNDIQIEQNGPHQCKMFCPITLRELCYATLESLPPRTFCILLNVLSKVKMQNAPDPIFTSFLREKTFQMLPHMSNIDLCQLAEALPQLICVDREILSTLIEPEVLKRVTSFDVLQLSMIFHSLSKYWKDLKKKQLFCVLFMRKIEKYLALYSLHNQEEKYILHTRNKNTLIEIVPMFFLAYVKNAHYMFPHYSCFSKFVQLQFSILSKWLHRLKKCRSLLEGNYKSEMPNQQLERPSLTNNYHHLQLVDNRGSHPPCLRHTNQTLSNLLYAFIGYLYNITTLHYNDEQSRSFTRHLHLTLDNINQLLSHFILFYRHREVVTNGAQFILPVHKSQLLIFLYTYWGFLLDLHSHVDYYTRVKKKNNLALTVQAKRNEKENTMHTANPFFFIKLDNVKKVSFLFALLDDINLNALMKETLEENNKYVSHIYSQVLNVVNNSVGVPHRAALHFSRRVVGPYTISELCR"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PCOAH_00051840",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PCOAH_00051840"
-      },
-      {
-       "name": "source_id",
-       "value": "PCOAH_00051840-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "protein_sequence": "MQKLFRNFLRVVNAREKNKLDESALWELKKWGREKVLQNDQVLEEYLNYRQVLHDCTELLSASEGKSEEDKIEKVANYVGLTTTAAKGGKSTPVHT"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PCOAH_00051850",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PCOAH_00051850"
-      },
-      {
-       "name": "source_id",
-       "value": "PCOAH_00051850-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "protein_sequence": "MKSQERRSSNDSSVKSKSGGSFGGSSWNNNGEANSSRAESLTRRKSEKASEKNTEQGKSKSSSSSNTRSKMDSSKMENFKTNDKKEDLKNVKSLKSNASDSLKHKGSNSRESVKSNRSKSEKAGTAEDSKKDKSSHSNGDKKKKDPPNDKNDVKVNNKLISKNGKSKNVNGKGNSNNGSSTNHSNSSAKGGGDEKGTPSKGLPSKGSSSKNTPSKNTPSKSSSAKSTPSKSGSSKSGPSKNASQESLNSENVKKERKGSTASSSKEVGELMSSHTASSKEENSRASRSASKAEKKVKSEKSQKTDREKSIKSISESENEAPKQKNSKKKSGAASKEKDAVKNNPSKRSKSEAEEKANKKDVSKKGSAEEKKKKNNSKSSSKKDRRADSKSKSSKSNSKSKGGKYSEEEEVDTEEEDVEVDETENDDEEEEEEESEVDETENDDDEEDEDDDEEEEEEEDDDNNDDDDDEEEDDPKKRSSKQATKDSVTKKKKKKRTSFSLKKKKRNRKGSQQDGNKNGGKNVNKSISKNSSKSKKTVKEEKKKNSNKNNNKKEKNKKSVKSENASEEDEEEEEEEEENPYFDDKDYTVDARRSVLEERERKRNLKESYIKQMKVPTYADDESILFVNNPNYVMVLLFLTVYKDVLKMSWNFKDIDEMFQNKETTEFGRNFILKLFFFLGRYFNSKSIFMYRYISRIFEDKQASLVRVVNFNELFPVMETRRDRRSKSGGGGTTGGGSSSKKKRKNDKKRKTVKAEEDVKADELFEEEIIENDDVNEDANDEVNDEVNEFDEEEPDDGDDENESENEVDEMIDGEEVEDPPLNEANQTHGKSSSSGKADHSSGKLVNQEEKSNTGDRNPQMDGSPLGVTKDAAKREDADGLATQHGVTTAGTTITAGSGNDIGAAANDETANNPNGDHLPDGVKNEELQENKRLSKKLFLEWDDLSVISKLRIIRMLLNLVLCESNNLKKMLMEEKVDYNSGYLGRVNKEKYWLILNDTINIEFKLYVEKEEEGTFEFLCDNDDVLYSIGYNLMKDTETKTMGETIIERYNKICRERRNRSRILKQQKKLCSDFNLNGGSLVISKKRQHKQVEHFNFDNDKMRRKKNDGGGMYGVGGSNYGSGMSANNPYALQKNNYQKNDRSFRLAARNAQKGNGLVGELLDGIANQEYLQGGGTVVSVEGLIGKGGVADGAIMNSVGGTAVGGATGTLTHLQGVNAGALGAGGVVVKVPQKRGRKKKSEKKKRGRKKKILTEGGALIGGEGAPLSGLVVDPNNPLAAVTQVKETKKGTGTSTRGRKTPYSKRNTKPAVSIKYGTRSHSISKNRNDASHYGEFSLTHGVNTEPLYKNGNLDAKYFNPNMHVNNFMAPNMNSPYGMQTNMLNMRGNKMEGPPGSYNFPYMYNPQMYGQYYMYNGSMYMLNNAGGGMFSQSGGSPGGGGGTGKEIKGEGAFMSKGAVSSGNGTTVGNANTLKNSSMGPGGGSKSAMSGNEGEGEGSSEMSGQMNMMNSVGGADGMGGGLNYMDPINKYQPYVLNRNAMSNMPSNPMYNNLYNLKFPYLNNDLMNYNFNMSNFQNMNYEKMGKVGGGGGPGQPTGQSTGQPTGQPGGGPQTATGGMFKRYPNFMGGAFPPPYNNMNNPYANFNAYNMGYQRNEGYGSMPAGGAGTGASTSGGTTPGAGSFKSKLVDMNMSGEGSSGVGGVSGYHMTNVKSRIGNSAMHGAAPTQEKPAPLGEANQKEETHRIENLMSYMMMQQGGNADAPHGGNGKNSSSMTNVENSAVQNGPNG"
-     },
-     "tables": {},
-     "tableErrors": []
-    },
-    {
-     "displayName": "PCOAH_00051860",
-     "id": [
-      {
-       "name": "gene_source_id",
-       "value": "PCOAH_00051860"
-      },
-      {
-       "name": "source_id",
-       "value": "PCOAH_00051860-t30_1"
-      },
-      {
-       "name": "project_id",
-       "value": "PlasmoDB"
-      }
-     ],
-     "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
-     "attributes": {
-      "protein_sequence": "MNSRTPCVILYAVSLVVCVFVIFSLNKYERQGVPLHKLSSTSVLLQELYNANRRERPTGERQNWSNGKVSHFSINLFIVSTGKERSTNSLGIEMKEYFSSQVQFEWKDKPAARSISDVQELFYVNPLLVSEDEMGSDNMRDIANVCLSSSPGEGSTHNILNNRYFICLSEKRQEEGTSVVFTLKGNNTIHVKFTQRDNNPTTYNHQLAEETWNIVKRVFFFKSKNRSLFFNPELDLNFYLASSLYNEGNYKVSKYKTGSRVSNDKTGDESKDPQSDDPNGYASPVNIATWDFYNDVYYPYLRNFIEQLLNLFQINVYTQIIANIDLFKISEKVKEVEGKRVIILDRVNKLTSIFDDVTFGDILRKPTYHIPKSINLVAVFPTGEEIFFYNPPTGKLETTVSFAEWGVFHINNAFQRGNMTRKRKKFVNVSGEAPFICGFFISHLRQYLGLGANFSDYVFTIFDADRYDVKYVRSESTDEGNSFLYAVQSEDQLNFYFSYDSPVRSGIFPFELLALMREAYLYYVVEALTNLGKFVSISNVSIYFRVPVHALHVFNDILDKVKCSLDLMRGADGCKMPHLGKSIREALHSYGHPIGGNANEGDNRTVEADLLRETYFRAAVVLAQSAYKDSLQLLSDDTFSIYDILSKDFLLASVLPVLIPYAIPVTFSLFRELFRSIKLAKEKQKVD"
-     },
-     "tables": {},
-     "tableErrors": []
+     "name": "project_id",
+     "value": "PlasmoDB"
     }
    ],
-   "served_total": 6,
-   "kept": null
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "record": {
+    "displayName": "PCOAH_00051800",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PCOAH_00051800"
+     },
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051800-t30_1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MDVEKKLLKSFKEIRKKNVRRQGRQEQNVISDFPKWEDNFSCDEYSVDDVVRCVRKGGGEDDDTGKYKNVFNTFENEINYYLGEYVEEIICSSVTGRKDNGFPRWEEETLRKPTDVIFQHLIYGSLFGENLRRYECSSRYFKPTLVEDISDFSDASTSSNDAQRGKHSPVRDITHEVK"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051810"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "record": {
+    "displayName": "PCOAH_00051810",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051810"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "357",
+       "transcript_id": "PCOAH_00051810-t30_1",
+       "exon_count": "3",
+       "length": "1074",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "transcript",
+   "primary_key": [
+    {
+     "name": "gene_source_id",
+     "value": "PCOAH_00051810"
+    },
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051810-t30_1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "record": {
+    "displayName": "PCOAH_00051810",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PCOAH_00051810"
+     },
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051810-t30_1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MEYKKTKRTNQYIFEGSRHQAKRQKINVNAECKGILISTLSPKRTNIGIKEFLNFLKVHFPSEADEASVKQGPSKEDHQKEENKPNGEQAEQEGEGGRMEKQLKDEIKKENMEYNRFAPLRNIVKNFTFIKFNNVTEKNPSDMVQQIFVLAHNKKEKYILRHLCKIIPLDCICKPHLSPFIKAILPVLKGNFPEGTCVKENFTFGHLFKLMNVSAEEEEKKEGEEEGDKVGDKEGDKEDDKKEDQTKDDQKMEENKPKEETAPSEDKNANGKKVSWALIYKCSNTKTLMKKDVLTVLDNCIGSNYSVNLSNPDLAVVVYVTEVRFACLKKEIMCGISIVKGYEKTRKFNIAAFNEDS"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051820"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "record": {
+    "displayName": "PCOAH_00051820",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051820"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "646",
+       "transcript_id": "PCOAH_00051820-t30_1",
+       "exon_count": "1",
+       "length": "1941",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "transcript",
+   "primary_key": [
+    {
+     "name": "gene_source_id",
+     "value": "PCOAH_00051820"
+    },
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051820-t30_1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "record": {
+    "displayName": "PCOAH_00051820",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PCOAH_00051820"
+     },
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051820-t30_1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MNRHVVRLIVGGKLMEKKNIDKQIIQRNLEHVILHFDQYSQETGTSALLKKIIPYTKNTFLGSVHLKYLYSHVVEPLLKEGNIDPECLPNLVHTFKRNEDCNYMVKKLNDYITCAIGKGKISLQNDVNNWVSVVQVFSAKRRGINFVPLLRHLLVNDSFAPSHGGDTKHAQTSEPRNVEAPIPNDIQIEQNGPHQCKMFCPITLRELCYATLESLPPRTFCILLNVLSKVKMQNAPDPIFTSFLREKTFQMLPHMSNIDLCQLAEALPQLICVDREILSTLIEPEVLKRVTSFDVLQLSMIFHSLSKYWKDLKKKQLFCVLFMRKIEKYLALYSLHNQEEKYILHTRNKNTLIEIVPMFFLAYVKNAHYMFPHYSCFSKFVQLQFSILSKWLHRLKKCRSLLEGNYKSEMPNQQLERPSLTNNYHHLQLVDNRGSHPPCLRHTNQTLSNLLYAFIGYLYNITTLHYNDEQSRSFTRHLHLTLDNINQLLSHFILFYRHREVVTNGAQFILPVHKSQLLIFLYTYWGFLLDLHSHVDYYTRVKKKNNLALTVQAKRNEKENTMHTANPFFFIKLDNVKKVSFLFALLDDINLNALMKETLEENNKYVSHIYSQVLNVVNNSVGVPHRAALHFSRRVVGPYTISELCR"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051840"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "record": {
+    "displayName": "PCOAH_00051840",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051840"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "96",
+       "transcript_id": "PCOAH_00051840-t30_1",
+       "exon_count": "1",
+       "length": "291",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "transcript",
+   "primary_key": [
+    {
+     "name": "gene_source_id",
+     "value": "PCOAH_00051840"
+    },
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051840-t30_1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "record": {
+    "displayName": "PCOAH_00051840",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PCOAH_00051840"
+     },
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051840-t30_1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MQKLFRNFLRVVNAREKNKLDESALWELKKWGREKVLQNDQVLEEYLNYRQVLHDCTELLSASEGKSEEDKIEKVANYVGLTTTAAKGGKSTPVHT"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051850"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "record": {
+    "displayName": "PCOAH_00051850",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051850"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "1782",
+       "transcript_id": "PCOAH_00051850-t30_1",
+       "exon_count": "1",
+       "length": "5349",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "transcript",
+   "primary_key": [
+    {
+     "name": "gene_source_id",
+     "value": "PCOAH_00051850"
+    },
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051850-t30_1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "record": {
+    "displayName": "PCOAH_00051850",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PCOAH_00051850"
+     },
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051850-t30_1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MKSQERRSSNDSSVKSKSGGSFGGSSWNNNGEANSSRAESLTRRKSEKASEKNTEQGKSKSSSSSNTRSKMDSSKMENFKTNDKKEDLKNVKSLKSNASDSLKHKGSNSRESVKSNRSKSEKAGTAEDSKKDKSSHSNGDKKKKDPPNDKNDVKVNNKLISKNGKSKNVNGKGNSNNGSSTNHSNSSAKGGGDEKGTPSKGLPSKGSSSKNTPSKNTPSKSSSAKSTPSKSGSSKSGPSKNASQESLNSENVKKERKGSTASSSKEVGELMSSHTASSKEENSRASRSASKAEKKVKSEKSQKTDREKSIKSISESENEAPKQKNSKKKSGAASKEKDAVKNNPSKRSKSEAEEKANKKDVSKKGSAEEKKKKNNSKSSSKKDRRADSKSKSSKSNSKSKGGKYSEEEEVDTEEEDVEVDETENDDEEEEEEESEVDETENDDDEEDEDDDEEEEEEEDDDNNDDDDDEEEDDPKKRSSKQATKDSVTKKKKKKRTSFSLKKKKRNRKGSQQDGNKNGGKNVNKSISKNSSKSKKTVKEEKKKNSNKNNNKKEKNKKSVKSENASEEDEEEEEEEEENPYFDDKDYTVDARRSVLEERERKRNLKESYIKQMKVPTYADDESILFVNNPNYVMVLLFLTVYKDVLKMSWNFKDIDEMFQNKETTEFGRNFILKLFFFLGRYFNSKSIFMYRYISRIFEDKQASLVRVVNFNELFPVMETRRDRRSKSGGGGTTGGGSSSKKKRKNDKKRKTVKAEEDVKADELFEEEIIENDDVNEDANDEVNDEVNEFDEEEPDDGDDENESENEVDEMIDGEEVEDPPLNEANQTHGKSSSSGKADHSSGKLVNQEEKSNTGDRNPQMDGSPLGVTKDAAKREDADGLATQHGVTTAGTTITAGSGNDIGAAANDETANNPNGDHLPDGVKNEELQENKRLSKKLFLEWDDLSVISKLRIIRMLLNLVLCESNNLKKMLMEEKVDYNSGYLGRVNKEKYWLILNDTINIEFKLYVEKEEEGTFEFLCDNDDVLYSIGYNLMKDTETKTMGETIIERYNKICRERRNRSRILKQQKKLCSDFNLNGGSLVISKKRQHKQVEHFNFDNDKMRRKKNDGGGMYGVGGSNYGSGMSANNPYALQKNNYQKNDRSFRLAARNAQKGNGLVGELLDGIANQEYLQGGGTVVSVEGLIGKGGVADGAIMNSVGGTAVGGATGTLTHLQGVNAGALGAGGVVVKVPQKRGRKKKSEKKKRGRKKKILTEGGALIGGEGAPLSGLVVDPNNPLAAVTQVKETKKGTGTSTRGRKTPYSKRNTKPAVSIKYGTRSHSISKNRNDASHYGEFSLTHGVNTEPLYKNGNLDAKYFNPNMHVNNFMAPNMNSPYGMQTNMLNMRGNKMEGPPGSYNFPYMYNPQMYGQYYMYNGSMYMLNNAGGGMFSQSGGSPGGGGGTGKEIKGEGAFMSKGAVSSGNGTTVGNANTLKNSSMGPGGGSKSAMSGNEGEGEGSSEMSGQMNMMNSVGGADGMGGGLNYMDPINKYQPYVLNRNAMSNMPSNPMYNNLYNLKFPYLNNDLMNYNFNMSNFQNMNYEKMGKVGGGGGPGQPTGQSTGQPTGQPGGGPQTATGGMFKRYPNFMGGAFPPPYNNMNNPYANFNAYNMGYQRNEGYGSMPAGGAGTGASTSGGTTPGAGSFKSKLVDMNMSGEGSSGVGGVSGYHMTNVKSRIGNSAMHGAAPTQEKPAPLGEANQKEETHRIENLMSYMMMQQGGNADAPHGGNGKNSSSMTNVENSAVQNGPNG"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051860"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "record": {
+    "displayName": "PCOAH_00051860",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051860"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {},
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "687",
+       "transcript_id": "PCOAH_00051860-t30_1",
+       "exon_count": "3",
+       "length": "2064",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "transcript",
+   "primary_key": [
+    {
+     "name": "gene_source_id",
+     "value": "PCOAH_00051860"
+    },
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051860-t30_1"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [
+    "protein_sequence"
+   ],
+   "tables": [],
+   "record": {
+    "displayName": "PCOAH_00051860",
+    "id": [
+     {
+      "name": "gene_source_id",
+      "value": "PCOAH_00051860"
+     },
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051860-t30_1"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "TranscriptRecordClasses.TranscriptRecordClass",
+    "attributes": {
+     "protein_sequence": "MNSRTPCVILYAVSLVVCVFVIFSLNKYERQGVPLHKLSSTSVLLQELYNANRRERPTGERQNWSNGKVSHFSINLFIVSTGKERSTNSLGIEMKEYFSSQVQFEWKDKPAARSISDVQELFYVNPLLVSEDEMGSDNMRDIANVCLSSSPGEGSTHNILNNRYFICLSEKRQEEGTSVVFTLKGNNTIHVKFTQRDNNPTTYNHQLAEETWNIVKRVFFFKSKNRSLFFNPELDLNFYLASSLYNEGNYKVSKYKTGSRVSNDKTGDESKDPQSDDPNGYASPVNIATWDFYNDVYYPYLRNFIEQLLNLFQINVYTQIIANIDLFKISEKVKEVEGKRVIILDRVNKLTSIFDDVTFGDILRKPTYHIPKSINLVAVFPTGEEIFFYNPPTGKLETTVSFAEWGVFHINNAFQRGNMTRKRKKFVNVSGEAPFICGFFISHLRQYLGLGANFSDYVFTIFDADRYDVKYVRSESTDEGNSFLYAVQSEDQLNFYFSYDSPVRSGIFPFELLALMREAYLYYVVEALTNLGKFVSISNVSIYFRVPVHALHVFNDILDKVKCSLDLMRGADGCKMPHLGKSIREALHSYGHPIGGNANEGDNRTVEADLLRETYFRAAVVLAQSAYKDSLQLLSDDTFSIYDILSKDFLLASVLPVLIPYAIPVTFSLFRELFRSIKLAKEKQKVD"
+    },
+    "tables": {},
+    "tableErrors": []
+   }
   },
   {
    "kind": "search",
@@ -4570,6 +2859,126 @@
    ],
    "served_total": 5744,
    "kept": "AK88_02763, the 4 genes on each side of it on its sequence and the gene of another sequence that starts nearest to it"
+  },
+  {
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051830"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [
+    "organismAbbrev"
+   ],
+   "tables": [
+    "GeneModelDump"
+   ],
+   "record": {
+    "displayName": "PCOAH_00051830",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051830"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {
+     "organismAbbrev": "pcoaHackeri"
+    },
+    "tables": {
+     "GeneModelDump": [
+      {
+       "strand": "+",
+       "sequence_id": "CP016252",
+       "source_id": "PCOAH_00051830",
+       "type": "CDS",
+       "transcript_ids": "PCOAH_00051830-t30_1",
+       "gm_end": "252788",
+       "gm_start": "251514"
+      },
+      {
+       "strand": "+",
+       "sequence_id": "CP016252",
+       "source_id": "PCOAH_00051830",
+       "type": "Exon",
+       "transcript_ids": "PCOAH_00051830-t30_1",
+       "gm_end": "252788",
+       "gm_start": "251514"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "kind": "record",
+   "record_type": "gene",
+   "primary_key": [
+    {
+     "name": "source_id",
+     "value": "PCOAH_00051820"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "attributes": [
+    "organismAbbrev"
+   ],
+   "tables": [
+    "GeneModelDump"
+   ],
+   "record": {
+    "displayName": "PCOAH_00051820",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PCOAH_00051820"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {
+     "organismAbbrev": "pcoaHackeri"
+    },
+    "tables": {
+     "GeneModelDump": [
+      {
+       "strand": "+",
+       "sequence_id": "CP016252",
+       "source_id": "PCOAH_00051820",
+       "type": "CDS",
+       "transcript_ids": "PCOAH_00051820-t30_1",
+       "gm_end": "250131",
+       "gm_start": "248191"
+      },
+      {
+       "strand": "+",
+       "sequence_id": "CP016252",
+       "source_id": "PCOAH_00051820",
+       "type": "Exon",
+       "transcript_ids": "PCOAH_00051820-t30_1",
+       "gm_end": "250131",
+       "gm_start": "248191"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
   }
  ]
 }

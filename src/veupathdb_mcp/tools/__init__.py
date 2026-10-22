@@ -23,6 +23,7 @@ from veupathdb_mcp.tools.audit_tools import (
 from veupathdb_mcp.tools.catalog_tools import (
     browse_search_categories,
     build_clade_only_expression,
+    build_every_species_expression,
     build_protein_count_comparison,
     get_parameter_options,
     get_search_overview,
@@ -71,6 +72,7 @@ __all__ = [
     "audit_strain_model",
     "browse_search_categories",
     "build_clade_only_expression",
+    "build_every_species_expression",
     "build_protein_count_comparison",
     "count_plan_steps",
     "create_gene_set_step",

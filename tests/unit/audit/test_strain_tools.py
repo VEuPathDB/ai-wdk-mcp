@@ -12,6 +12,7 @@ from tests._support.strain_site import (
 
 from veupathdb_mcp.audit import served
 from veupathdb_mcp.audit.codes import GeneticCode
+from veupathdb_mcp.audit.gene_models import GeneModel
 from veupathdb_mcp.tools.audit_strain_tools import audit_strain_model
 
 SHORT = PROTEIN[:60] + PROTEIN[140:]
@@ -52,11 +53,46 @@ async def test_a_strain_that_lost_a_segment_its_genome_encodes_is_strain_short(
     assert (result.code, result.code_inferred) == (GeneticCode.STANDARD, True)
     assert (result.dna.ns_in_window, result.dna.at_contig_edge) == (0, False)
     assert site.orthologs_read == [REFERENCE]
-    assert site.models_read == [STRAIN]
+    assert site.models_read == [STRAIN, REFERENCE]
+    assert [(m.gene, m.cds) for m in result.models] == [
+        (STRAIN, [(p.start, p.end) for p in site.models[STRAIN].cds]),
+        (REFERENCE, [(site.rows[1].start, site.rows[1].end)]),
+    ]
     assert site.proteins_read == [STRAIN, REFERENCE]
     assert site.rows_read == [STRAIN, REFERENCE]
     assert site.windows == [
         ("pfalDd2", strain.sequence_id, strain.start - 6000, strain.end + 6000)
+    ]
+
+
+async def test_a_strain_model_with_no_cds_row_is_checked_and_not_read(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = short_strain(monkeypatch)
+    site.models[STRAIN] = GeneModel(organism_abbrev="pfalDd2", cds=[])
+
+    result = await audit_strain_model("plasmodb", STRAIN, REFERENCE)
+
+    assert (result.dna.verdict, result.side) == ("GENOME_ENCODES", "STRAIN_SHORT")
+    assert (result.code, result.code_inferred) == (GeneticCode.STANDARD, False)
+    assert site.models_read == [STRAIN, REFERENCE]
+    assert result.models[0] is None
+    assert [m.gene for m in result.models[1:] if m] == [REFERENCE]
+    assert result.evidence_unread == [f"the GeneModelDump of {STRAIN} gives no CDS row"]
+
+
+async def test_a_reference_model_with_no_cds_row_is_not_read(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = short_strain(monkeypatch)
+    site.models[REFERENCE] = GeneModel(organism_abbrev="pfal3D7", cds=[])
+
+    result = await audit_strain_model("plasmodb", STRAIN, REFERENCE)
+
+    assert result.dna.verdict == "GENOME_ENCODES"
+    assert [m.gene if m else None for m in result.models] == [STRAIN, None]
+    assert result.evidence_unread == [
+        f"the GeneModelDump of {REFERENCE} gives no CDS row"
     ]
 
 

@@ -10,6 +10,8 @@ from veupathdb_mcp.audit.fusion import (
     check_fusion,
 )
 from veupathdb_mcp.audit.fusion_inputs import FusionReads, partner_copies, read_fusion
+from veupathdb_mcp.audit.gene_models import GeneSpan, ModelReads, ReadModels
+from veupathdb_mcp.audit.genes import GeneRow
 from veupathdb_mcp.audit.lengths import is_orthology_group
 from veupathdb_mcp.tools.audit_tools import read_inputs, run_in_a_slot
 
@@ -33,6 +35,21 @@ async def _fusion(site_id: str, reads: FusionReads, check: FusionCheck) -> Fusio
         partner_group=partner.ortholog_group if partner else None,
         partner_product=partner.product if partner else None,
         partner_copies=copies,
+    )
+
+
+async def _models(site_id: str, genes: list[str]) -> ReadModels:
+    reads = ModelReads(site_id)
+    return ReadModels.of([await reads.read(gene) for gene in genes])
+
+
+def _span(row: GeneRow) -> GeneSpan:
+    return GeneSpan(
+        gene=row.gene,
+        seqid=row.sequence_id,
+        strand=row.strand,
+        start=row.start,
+        end=row.end,
     )
 
 
@@ -65,7 +82,16 @@ async def audit_gene_fusion(site_id: str, gene: str) -> GeneFusionAudit:
     holds no extra window. For a partner in an orthology group (OG, not
     OGR), partnerCopies lists the genes within 3 of the checked gene on its
     own sequence that are in the partner's group, a separate model of that
-    neighbour beside the checked gene; it is null otherwise.
+    neighbour beside the checked gene; it is null otherwise. For a LONG
+    gene, models gives the reference's, then the partner's when partner is
+    set, longest coding transcript (exon and CDS spans (genome coordinates, 1-based, inclusive, ascending), its seqid and strand), and merged gives the checked
+    gene's own seqid, strand, start and end; for any other class models is
+    empty and merged null. A model is null when its rows give no CDS row,
+    no Exon row or more than one sequence or strand; evidenceUnread gives one
+    reason for each null. A LONG gene adds those gene models, one gene
+    record read each, and the proteins of the reference's neighbours, one
+    gene record read of the transcripts and one transcript record read of
+    the longest coding one each; it uploads no gene list.
     geneIds pairs each id given with the site's own gene id it names (the
     same id, an alias or a previous id its gene record read resolves, a
     transcript id the site's text search names, or the one gene whose own id
@@ -80,15 +106,23 @@ async def audit_gene_fusion(site_id: str, gene: str) -> GeneFusionAudit:
     """
     inputs = await read_inputs(site_id, read_fusion(site_id, gene))
     reads = inputs.reads
-    fusion = None
-    if reads is not None:
-        check = await run_in_a_slot(
-            check_fusion,
-            reads.member_protein,
-            reads.reference_protein,
-            reads.neighbour_proteins,
+    if reads is None:
+        return GeneFusionAudit.model_validate(
+            {**inputs.screen.model_dump(), "fusion": None}
         )
-        fusion = await _fusion(site_id, reads, check)
+    check = await run_in_a_slot(
+        check_fusion,
+        reads.member_protein,
+        reads.reference_protein,
+        reads.neighbour_proteins,
+    )
+    fusion = await _fusion(site_id, reads, check)
+    genes = [reads.reference, *([check.partner] if check.partner else [])]
     return GeneFusionAudit.model_validate(
-        {**inputs.screen.model_dump(), "fusion": fusion}
+        {
+            **inputs.screen.model_dump(),
+            "fusion": fusion,
+            **(await read_inputs(site_id, _models(site_id, genes))).model_dump(),
+            "merged": _span(reads.member),
+        }
     )

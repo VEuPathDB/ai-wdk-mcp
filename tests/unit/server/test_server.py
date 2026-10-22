@@ -35,6 +35,8 @@ from veupathdb_mcp.audit import (
     GeneId,
     LengthInputs,
     LengthScreen,
+    ModelSpans,
+    ReadModels,
     SelenoproteinInputs,
     UncheckedIntrons,
 )
@@ -95,6 +97,7 @@ EXPECTED_ANNOTATIONS: dict[str, dict[str, bool]] = {
     "lookup_phyletic_codes": READ_ONLY,
     "build_protein_count_comparison": READ_ONLY,
     "build_clade_only_expression": READ_ONLY,
+    "build_every_species_expression": READ_ONLY,
     "search_example_plans": READ_ONLY,
     "get_search_overview": READ_ONLY,
     "get_parameter_options": READ_ONLY,
@@ -1144,6 +1147,19 @@ async def test_an_audit_call_answers_the_check_with_the_ids_given_and_resolved(
                 GeneId(given=gene, resolved=gene.upper()),
                 GeneId(given=reference_gene, resolved=reference_gene),
             ],
+            models=ReadModels(
+                models=[
+                    ModelSpans(
+                        gene=named,
+                        transcript=f"{named}.1",
+                        seqid="chr1",
+                        strand="+",
+                        exons=[(1, 36)],
+                        cds=[(1, 36)],
+                    )
+                    for named in (gene.upper(), reference_gene)
+                ]
+            ),
         )
 
     monkeypatch.setattr(audit_tools, "selenoprotein_inputs", inputs)
@@ -1170,6 +1186,18 @@ async def test_an_audit_call_answers_the_check_with_the_ids_given_and_resolved(
         ],
         "gene": "TGGT1_316600",
         "referenceGene": "TGME49_316600",
+        "models": [
+            {
+                "gene": named,
+                "transcript": f"{named}.1",
+                "seqid": "chr1",
+                "strand": "+",
+                "exons": [[1, 36]],
+                "cds": [[1, 36]],
+            }
+            for named in ("TGGT1_316600", "TGME49_316600")
+        ],
+        "evidenceUnread": [],
     }
 
 
@@ -1264,6 +1292,8 @@ async def test_a_length_audit_the_group_cannot_judge_answers_camel_case(
         "referenceGene": "PF3D7_1032400",
         "code": None,
         "codeInferred": False,
+        "models": [],
+        "evidenceUnread": [],
     }
 
 
@@ -1307,6 +1337,7 @@ async def test_an_intron_audit_with_no_junction_track_answers_camel_case(
         "codeInferred": False,
         "orthologs": None,
         "correctionReason": None,
+        "model": None,
     }
 
 
@@ -1348,6 +1379,9 @@ async def test_a_fusion_audit_of_a_gene_that_is_not_long_answers_camel_case(
         "organisms": 38,
         "referenceGene": "LOC34617740",
         "fusion": None,
+        "models": [],
+        "evidenceUnread": [],
+        "merged": None,
     }
 
 
@@ -1393,3 +1427,19 @@ async def test_the_clade_only_builder_names_its_one_report_and_keeps_the_default
     text = " ".join((tool.description or "").split())
     assert "One count report counts the groups" in text
     assert MAX_CALL_SECONDS_META_KEY not in (tool.meta or {})
+
+
+async def test_the_every_species_builder_names_its_rule_and_one_report() -> None:
+    tools = await _list_tools()
+
+    tool = tools["build_every_species_expression"]
+    text = " ".join((tool.description or "").split())
+    assert "One count report counts the groups" in text
+    assert (
+        "a group is present in a species S of k genomes when at least ceil(k/2) "
+        "of those k genomes hold a protein of the group, the unit S>=ceil(k/2)T"
+    ) in text
+    assert "a group passes only when it is present in every species" in text
+    assert MAX_CALL_SECONDS_META_KEY not in (tool.meta or {})
+    assert tool.annotations is not None
+    assert tool.annotations.readOnlyHint is True

@@ -49,6 +49,7 @@ async def test_a_sequence_the_junction_index_does_not_name_is_not_checked(
     assert (result.transcript, result.other_transcripts) == (f"{GENE}-t1", 0)
     assert (result.orthologs, result.code_inferred) == (None, False)
     assert (jbrowse.windows, site.proteins_read) == ([], [])
+    assert result.model is None
 
 
 async def test_an_organism_with_no_junction_track_is_not_checked(
@@ -245,6 +246,16 @@ async def test_a_model_with_no_exon_row_is_a_tool_error(
     junctions(monkeypatch, {I1: 100, I2: 120, I3: 300})
 
     with pytest.raises(ToolError, match=f"gives no Exon row for {GENE}-t1"):
+        await audit_intron_support("plasmodb", GENE)
+
+
+async def test_a_model_reaching_past_the_gene_is_a_tool_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    Site(monkeypatch, end=E4[1] - 10)
+    junctions(monkeypatch, {I1: 100, I2: 120, I3: 300})
+
+    with pytest.raises(ToolError, match=f"the model of {GENE} has a part outside"):
         await audit_intron_support("plasmodb", GENE)
 
 

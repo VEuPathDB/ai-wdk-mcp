@@ -15,9 +15,9 @@ from veupathdb_mcp.audit.genes import (
     GroupMember,
     genes_of_genome,
     orthologs_of,
-    proteins_of,
 )
 from veupathdb_mcp.audit.lengths import NotChecked, call_length
+from veupathdb_mcp.audit.record_reads import record_proteins
 from veupathdb_mcp.audit.served import (
     LengthScreen,
     length_screen,
@@ -32,6 +32,7 @@ class FusionReads(BaseModel):
 
     member: GeneRow
     member_protein: str
+    reference: str
     reference_protein: str
     neighbours: list[GeneRow]
     neighbour_proteins: dict[str, str]
@@ -71,9 +72,10 @@ async def _beside_reference(
     return FusionReads(
         member=member,
         member_protein=proteins[member.gene],
+        reference=placed.gene,
         reference_protein=proteins[placed.gene],
         neighbours=neighbours,
-        neighbour_proteins=await proteins_of(site_id, [r.gene for r in neighbours]),
+        neighbour_proteins=await record_proteins(site_id, [r.gene for r in neighbours]),
     )
 
 

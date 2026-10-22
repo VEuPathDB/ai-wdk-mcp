@@ -12,6 +12,7 @@ from veupathdb.model import CamelModel
 
 from veupathdb_mcp.audit.codes import GeneticCode
 from veupathdb_mcp.audit.gene_ids import GeneId, check_resolved
+from veupathdb_mcp.audit.gene_models import ReadModels, check_models
 from veupathdb_mcp.audit.genes import GeneRow, GroupMember
 from veupathdb_mcp.audit.length import LengthCheck, LengthVerdict
 from veupathdb_mcp.audit.lengths import GroupProfile, RelativeTier, relatives_of
@@ -249,7 +250,7 @@ class StrainCheck(CamelModel):
         return self
 
 
-class StrainModelAudit(StrainCheck):
+class StrainModelAudit(StrainCheck, ReadModels):
     gene_ids: list[GeneId]
     strain_gene: str
     reference_gene: str
@@ -261,6 +262,10 @@ class StrainModelAudit(StrainCheck):
     @model_validator(mode="after")
     def _named_as_resolved(self) -> Self:
         check_resolved(self.gene_ids, [self.strain_gene, self.reference_gene])
+        check_models(self.models, [self.strain_gene, self.reference_gene])
+        if self.models and self.dna.verdict == "NOT_CHECKED":
+            msg = "a check reads the gene models only when it read the strain's genome"
+            raise ValueError(msg)
         return self
 
     @model_validator(mode="after")

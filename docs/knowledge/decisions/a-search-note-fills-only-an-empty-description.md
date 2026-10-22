@@ -84,6 +84,15 @@ was measured to do on build 8.2, from the OrthoMCLModel source at commit `fcc9de
   with no clade code are 53. With `within`, a clade M that holds L, C is every genome
   outside M; an M that does not hold L is refused, and the refusal names
   `L>=1T AND M=0T`, the form for absence from M.
+- Presence in every species of a clade L, a species present when at least half its k
+  genomes hold a protein, is one unit `S>=ceil(k/2)T` per species, joined with AND. The
+  species are the genome labels' genus and species words (the client's `species_of`), so a
+  unit written by hand can drop a strain or round a half the wrong way; the help names
+  `build_every_species_expression` (`catalog/clade_only.py`), which writes the units from the
+  taxonomy and counts them with one report. On QA OrthoMCL build 8.2 the 18 genomes of
+  Cryptosporidium are 12 species, two of them with a threshold of 2, and the expression
+  answers 2,505 groups (`orthomcl_every_species_counts.json`). A clade of one species is
+  refused, since its one unit needs no builder.
 - `phyletic_expression` declares `length` 0, and WDK checks a string's length only when
   it is not 0, so the parameter has no length limit. Expressions of 2,842, 4,264 and
   8,644 characters were answered.

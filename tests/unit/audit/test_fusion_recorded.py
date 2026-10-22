@@ -1,10 +1,15 @@
 import pytest
-from scripts.record_audit_fusion import CASES, FusionRecording
-from scripts.record_audit_missing import DatasetCall, SearchCall
+from scripts.record_audit_fusion import CASES, FusionRecording, models_read
+from scripts.record_audit_missing import DatasetCall, RecordCall, SearchCall
 from tests._support.audit_site import members
-from tests._support.missing_wire import FIXTURES, replay_records
+from tests._support.missing_wire import (
+    FIXTURES,
+    replay_record_reads,
+    replay_records,
+)
 from veupathdb.wdk import WDKAnswer
 
+from veupathdb_mcp.audit.gene_models import GeneSpan
 from veupathdb_mcp.audit.genes import rows_of
 from veupathdb_mcp.audit.lengths import (
     LONG_ABOVE,
@@ -38,6 +43,28 @@ def answers_of(recorded: FusionRecording, search: str) -> list[WDKAnswer]:
     return answers
 
 
+def requested(recorded: FusionRecording) -> list[tuple[str, str, str]]:
+    found: list[tuple[str, str, str]] = []
+    for call in recorded.calls:
+        match call:
+            case RecordCall(record_type=kind, primary_key=key, tables=tables):
+                gene = next(p["value"] for p in key if p["name"] != "project_id")
+                found.append((kind, gene, ",".join(tables)))
+            case SearchCall(search_name=name, parameters=parameters):
+                found.append((name, parameters["organism"], ""))
+            case _:
+                pass
+    return found
+
+
+def proteins_read(genes: list[str]) -> list[tuple[str, str, str]]:
+    return [
+        read
+        for gene in genes
+        for read in (("gene", gene, "GeneTranscripts"), ("transcript", gene, ""))
+    ]
+
+
 def reads(recorded: FusionRecording) -> tuple[list[int], list[GenomeReport]]:
     datasets: list[int] = []
     genomes: list[GenomeReport] = []
@@ -58,7 +85,7 @@ async def test_the_fragile_rpt6_model_holds_the_upstream_coatneyi_neighbour(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     recorded = recording("pfraNilgiri_rpt6")
-    wire, rows = replay_records(monkeypatch, recorded.calls, 3)
+    wire = replay_record_reads(monkeypatch, recorded.calls)
 
     result = await audit_gene_fusion("plasmodb", "AK88_02763")
 
@@ -95,10 +122,24 @@ async def test_the_fragile_rpt6_model_holds_the_upstream_coatneyi_neighbour(
         [],
     )
     assert wire.calls == []
-    assert (rows.reads, rows.protein_reads) == (
-        ["AK88_02763"],
-        ["AK88_02763", "PCOAH_00051830"],
+    assert requested(recorded) == [
+        ("gene", "AK88_02763", "GeneTranscripts"),
+        ("gene", "AK88_02763", "Orthologs"),
+        *proteins_read(["AK88_02763", "PCOAH_00051830"]),
+        ("GenesByTaxon", '["Plasmodium coatneyi Hackeri"]', ""),
+        *proteins_read(result.fusion.neighbours),
+        ("GenesByTaxon", '["Plasmodium fragile strain nilgiri"]', ""),
+        ("gene", "PCOAH_00051830", "GeneModelDump"),
+        ("gene", "PCOAH_00051820", "GeneModelDump"),
+    ]
+    assert [(m.gene, m.seqid, m.strand, m.cds) for m in result.models] == [
+        ("PCOAH_00051830", "CP016252", "+", [(251514, 252788)]),
+        ("PCOAH_00051820", "CP016252", "+", [(248191, 250131)]),
+    ]
+    assert result.merged == GeneSpan(
+        gene="AK88_02763", seqid="KQ001672", strand="+", start=202826, end=207689
     )
+    assert models_read(recorded.calls) == ["PCOAH_00051830", "PCOAH_00051820"]
 
 
 def test_each_fragile_genome_report_keeps_genes_past_the_reach_and_off_the_contig() -> (
@@ -111,7 +152,7 @@ def test_each_fragile_genome_report_keeps_genes_past_the_reach_and_off_the_conti
     ]
 
     assert reads(recorded) == (
-        [1, 63, 2, 6],
+        [],
         [
             ('["Plasmodium coatneyi Hackeri"]', 10, 5575),
             ('["Plasmodium fragile strain nilgiri"]', 10, 5744),
@@ -147,6 +188,8 @@ async def test_the_me49_pbgs_pitrilysin_model_is_not_judged_by_its_paralog_group
     assert reads(recorded) == ([1, 86], [])
     assert wire.calls == []
     assert (rows.reads, rows.protein_reads) == (["TGME49_500302"], [])
+    assert (result.models, result.merged) == ([], None)
+    assert models_read(recorded.calls) == []
 
 
 def test_the_me49_pbgs_model_fails_the_spread_and_ratio_gates_too() -> None:

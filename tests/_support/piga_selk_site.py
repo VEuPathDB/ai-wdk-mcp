@@ -15,6 +15,7 @@ from tests._support.audit_site import AuditSite
 from veupathdb_mcp.audit import served
 from veupathdb_mcp.audit.gene_models import GeneModel
 from veupathdb_mcp.audit.genes import GeneRow
+from veupathdb_mcp.audit.pseudogene import CdsPart
 
 SELK_PAD = served.SELENOPROTEIN_PAD + 3 * len("UG")
 
@@ -94,10 +95,18 @@ class Site(AuditSite):
             me49_selk_row(),
         ]
         self.aliases = {NF54_PIGA: [NF54_PIGA_ID]}
+        gt1, me49 = gt1_selk_row(), me49_selk_row()
         self.models = {
             PIGA: GeneModel(organism_abbrev="pfal3D7", cds=reference_piga().cds),
             NF54_PIGA_ID: GeneModel(organism_abbrev="pfalNF54", cds=[]),
-            GT1_SELK: GeneModel(organism_abbrev="tgonGT1", cds=[]),
+            GT1_SELK: GeneModel(
+                organism_abbrev="tgonGT1",
+                cds=[CdsPart(start=gt1.start, end=gt1.end)],
+            ),
+            ME49_SELK: GeneModel(
+                organism_abbrev="tgonME49",
+                cds=[CdsPart(start=me49.start, end=me49.end)],
+            ),
         }
         self.proteins = {
             GT1_SELK: load_protein("tgonGT1_selk.json").model_protein,

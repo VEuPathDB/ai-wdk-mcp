@@ -177,12 +177,31 @@ async def test_the_code_is_inferred_from_the_genes_own_cds(
 async def test_a_cds_the_protein_does_not_explain_reads_the_standard_code(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    gene = short_gene(back_translate(PROTEIN[60:140]))
+    site = short_site(monkeypatch, gene)
+    site.models[ME] = GeneModel(
+        organism_abbrev="pcynB",
+        cds=[CdsPart(start=gene.start + 3, end=gene.start + 32)],
+    )
+
+    result = await audit_tools.audit_gene_length("plasmodb", ME)
+
+    assert (result.code, result.code_inferred) == (GeneticCode.STANDARD, False)
+
+
+async def test_a_model_with_no_cds_row_is_checked_and_its_model_is_not_read(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     site = short_site(monkeypatch, short_gene(back_translate(PROTEIN[60:140])))
     site.models[ME] = GeneModel(organism_abbrev="pcynB", cds=[])
 
     result = await audit_tools.audit_gene_length("plasmodb", ME)
 
+    assert result.verdict == "GENOME_ENCODES"
     assert (result.code, result.code_inferred) == (GeneticCode.STANDARD, False)
+    assert site.models_read == [ME]
+    assert result.models == [None]
+    assert result.evidence_unread == [f"the GeneModelDump of {ME} gives no CDS row"]
 
 
 @pytest.mark.parametrize(
@@ -208,6 +227,7 @@ async def test_a_gene_the_group_does_not_call_short_reads_no_genome(
     assert result.reference_gene == REFERENCE
     assert site.proteins_read == []
     assert site.models_read == []
+    assert result.models == []
     assert site.windows == []
     assert site.lengths_read == []
 
@@ -280,6 +300,10 @@ async def test_two_neighbours_that_hold_the_reference_are_a_split(
     assert result.counts == {"part1": 9, "genome_same_strand": 1, "part2": 9}
     assert result.track == "1" * 9 + "G" + "2" * 9
     assert site.models_read == [PART_A, PART_B]
+    assert [(m.gene, m.cds) for m in result.models] == [
+        (PART_A, [(site.rows[0].start, site.rows[0].end)]),
+        (PART_B, [(site.rows[1].start, site.rows[1].end)]),
+    ]
     [(_, _, start, end)] = site.windows
     assert (start, end) == (site.rows[0].start - 6000, site.rows[1].end + 6000)
 

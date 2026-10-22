@@ -10,6 +10,7 @@ from pydantic import ConfigDict, Field, field_validator, model_validator
 from veupathdb.errors import DataParsingError
 from veupathdb.model import CamelModel
 
+from veupathdb_mcp.audit.gene_models import GeneSpan, ReadModels, check_models
 from veupathdb_mcp.audit.genes import GeneRow, contig_sides
 from veupathdb_mcp.audit.lengths import is_orthology_group
 from veupathdb_mcp.audit.served import LengthScreen
@@ -165,8 +166,9 @@ class FusionAudit(FusionCheck):
         return self
 
 
-class GeneFusionAudit(LengthScreen):
+class GeneFusionAudit(LengthScreen, ReadModels):
     fusion: FusionAudit | None
+    merged: GeneSpan | None = None
 
     @model_validator(mode="after")
     def _read_when_long(self) -> Self:
@@ -175,5 +177,24 @@ class GeneFusionAudit(LengthScreen):
                 f"a {self.length_class} gene is checked for a fusion only when "
                 "its class is LONG"
             )
+            raise ValueError(msg)
+        return self
+
+    @model_validator(mode="after")
+    def _models_of_a_checked_fusion(self) -> Self:
+        if not self.models and self.merged is None:
+            return self
+        partner = self.fusion.partner if self.fusion else None
+        check_models(
+            self.models, [str(self.reference_gene), *([partner] if partner else [])]
+        )
+        if self.fusion is None or self.merged is None or not self.models:
+            msg = (
+                "a fusion check serves the merged span with the reference and "
+                "partner models, and only for a checked fusion"
+            )
+            raise ValueError(msg)
+        if self.merged.gene != self.genes[0]:
+            msg = f"the merged span names {self.merged.gene}, not {self.genes[0]}"
             raise ValueError(msg)
         return self

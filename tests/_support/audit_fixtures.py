@@ -4,6 +4,7 @@ from scripts.record_audit_fixtures import ProteinRegion, Region
 from veupathdb.jbrowse import GenomeWindow
 
 from veupathdb_mcp.audit.gene_ids import GeneId
+from veupathdb_mcp.audit.gene_models import ModelSpans, ReadModels
 from veupathdb_mcp.audit.pseudogene import CdsPart, ReferenceGene
 from veupathdb_mcp.audit.served import PseudogeneInputs, SelenoproteinInputs
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
@@ -41,6 +42,17 @@ def reference_piga() -> ReferenceGene:
     )
 
 
+def spans(gene: str, region: Region) -> ModelSpans:
+    return ModelSpans(
+        gene=gene,
+        transcript=f"{gene}.1",
+        seqid=region.seqid,
+        strand=region.strand,
+        exons=region.cds or [(region.start, region.end)],
+        cds=region.cds or [(region.start, region.end)],
+    )
+
+
 async def piga_inputs(
     site_id: str, strain_gene: str, reference_gene: str
 ) -> PseudogeneInputs | ToolErrorPayload:
@@ -49,6 +61,9 @@ async def piga_inputs(
     strain = load("pfalNF54_piga.json")
     return PseudogeneInputs(
         reference=reference_piga(),
+        reference_models=ReadModels(
+            models=[spans(reference_gene, load("pfal3D7_piga.json"))]
+        ),
         strain_window=GenomeWindow(
             seqid=strain.seqid, start=strain.start, sequence=strain.sequence
         ),
@@ -73,4 +88,10 @@ async def selk_inputs(
             GeneId(given=gene, resolved=gene),
             GeneId(given=reference_gene, resolved=reference_gene),
         ],
+        models=ReadModels(
+            models=[
+                spans(gene, load("tgonGT1_selk.json")),
+                spans(reference_gene, load("tgonME49_selk.json")),
+            ]
+        ),
     )

@@ -555,6 +555,15 @@ class TestTheExpressionSheetStatesTheGrammarAndTheRecipes:
         )
         assert "In L and in no genome of a clade X: L>=1T AND X=0T." in help_text
 
+    def test_presence_in_every_species_names_its_builder(self) -> None:
+        help_text = " ".join(self._help().split())
+
+        assert (
+            "one unit S>=ceil(k/2)T per species S of k genomes, joined with AND; "
+            "build it with build_every_species_expression, which writes the units "
+            "from the taxonomy and counts the groups." in help_text
+        )
+
     def test_the_example_writes_absence_as_two_and_terms(self) -> None:
         help_text = self._help()
 

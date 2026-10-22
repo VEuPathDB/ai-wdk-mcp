@@ -3,7 +3,9 @@ from tests._support.audit_site import AuditSite
 from tests._support.proteins import PROTEIN, row
 
 from veupathdb_mcp.audit import fusion_inputs
+from veupathdb_mcp.audit.gene_models import GeneModel
 from veupathdb_mcp.audit.genes import GeneRow, OrthologGroup
+from veupathdb_mcp.audit.pseudogene import CdsPart
 
 MEMBER = "PfDd2_010001"
 REFERENCE_GENE = "PF3D7_0100500"
@@ -28,22 +30,20 @@ class FusionSite(AuditSite):
         self.genomes: dict[str, list[GeneRow]] = {}
         self.genomes_read: list[str] = []
         self.orthologs_read: list[str] = []
-        self.neighbours_read: list[list[str]] = []
         monkeypatch.setattr(fusion_inputs, "orthologs_of", self.orthologs_of)
         monkeypatch.setattr(fusion_inputs, "genes_of_genome", self.genes_of_genome)
-        monkeypatch.setattr(fusion_inputs, "proteins_of", self.proteins_of)
 
     async def orthologs_of(self, site_id: str, gene: str) -> OrthologGroup:
         self.orthologs_read.append(gene)
         return await super().orthologs_of(site_id, gene)
 
-    async def proteins_of(self, site_id: str, gene_ids: list[str]) -> dict[str, str]:
-        self.neighbours_read.append(gene_ids)
-        return {gene: self.proteins[gene] for gene in gene_ids if gene in self.proteins}
-
     async def genes_of_genome(self, site_id: str, organism: str) -> list[GeneRow]:
         self.genomes_read.append(organism)
         return self.genomes[organism]
+
+    def row_of(self, gene: str) -> GeneRow | None:
+        placed = [row for rows in self.genomes.values() for row in rows]
+        return next((row for row in placed if row.gene == gene), super().row_of(gene))
 
 
 def placed(gene: str, organism: str, contig: str, start: int, group: str) -> GeneRow:
@@ -117,5 +117,11 @@ def fusion_site(
         BESIDE_REFERENCE[2]: NEIGHBOUR,
         BESIDE_REFERENCE[0]: SIDE_PROTEIN,
         BESIDE_REFERENCE[4]: SIDE_PROTEIN[::-1],
+    }
+    site.models = {
+        gene.gene: GeneModel(
+            organism_abbrev="pfal3D7", cds=[CdsPart(start=gene.start, end=gene.end)]
+        )
+        for gene in site.genomes[PF3D7]
     }
     return site

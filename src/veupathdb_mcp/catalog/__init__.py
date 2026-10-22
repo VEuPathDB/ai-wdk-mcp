@@ -4,8 +4,12 @@ from veupathdb_mcp.catalog._param_binding import OverrideMap, UnreadableValueErr
 from veupathdb_mcp.catalog._param_filters import has_contrast_sibling
 from veupathdb_mcp.catalog.clade_only import (
     CLADE_ONLY_COUNT_REPORTS,
+    EVERY_SPECIES_COUNT_REPORTS,
     CladeOnlyExpression,
+    EverySpeciesExpression,
+    SpeciesUnit,
     clade_only_expression,
+    every_species_expression,
 )
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service
 from veupathdb_mcp.catalog.eda_backed import (
@@ -152,6 +156,7 @@ __all__ = [
     "COMPUTE_QUERY",
     "EDA_ANALYSIS_SPEC_PARAM",
     "EDA_DATASET_ID_PARAM",
+    "EVERY_SPECIES_COUNT_REPORTS",
     "MAX_COUNT_REPORTS",
     "RADIO_OFF",
     "SUBSET_QUERY",
@@ -159,6 +164,7 @@ __all__ = [
     "CladeOnlyExpression",
     "EdaBackedSearch",
     "EdaStepRequest",
+    "EverySpeciesExpression",
     "ExperimentCard",
     "ExperimentMatch",
     "FilterFieldInfo",
@@ -186,6 +192,7 @@ __all__ = [
     "SearchParametersResult",
     "SearchQueryRejection",
     "SheetEntry",
+    "SpeciesUnit",
     "UnknownExperimentError",
     "UnknownParameterError",
     "UnknownSearchError",
@@ -212,6 +219,7 @@ __all__ = [
     "derive_phyletic_overrides",
     "eda_backed_guidance",
     "eda_backed_search",
+    "every_species_expression",
     "expand_search_details_with_params",
     "fetch_search_details",
     "format_param_info_typed",

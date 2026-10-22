@@ -17,6 +17,7 @@ from veupathdb_mcp.audit import (
     GeneticCode,
     LengthCheck,
     PseudogeneCallAudit,
+    ReadModels,
     SelenoproteinEndAudit,
     check_length,
     check_pseudogene_call,
@@ -91,7 +92,10 @@ async def audit_pseudogene_call(
     means one open frame from start to stop; the other verdicts name what
     breaks it. The check translates with the standard genetic code; it does
     not infer the gene's code, so a gene of a clade that reads TGA or CTG
-    otherwise can read a stop or a substitution here.
+    otherwise can read a stop or a substitution here. referenceModel gives
+    the reference transcript's exon and CDS spans (genome coordinates, 1-based, inclusive, ascending), its seqid and strand.
+    It is null when the reference's model rows give no Exon row or lie on
+    more than one sequence or strand, and evidenceUnread gives why.
     Reads: the record of each id, then the reference's gene model and the
     strain's organism (one gene record read each) and two JBrowse genome
     windows (the reference span, and the strain span with 3,000 bases on
@@ -122,6 +126,8 @@ async def audit_pseudogene_call(
             "gene_ids": inputs.gene_ids,
             "strain_gene": strain.resolved,
             "reference_gene": reference.resolved,
+            "reference_model": inputs.reference_models.models[0],
+            "evidence_unread": inputs.reference_models.evidence_unread,
         }
     )
 
@@ -145,10 +151,14 @@ async def audit_selenoprotein_end(
     so; MODEL_NOT_FOUND means it was not found. CONTAINS_SEC means the model
     already holds the selenocysteine, and then nothing is aligned or compared.
     The check translates with the standard genetic code; it does not infer
-    the gene's code.
+    the gene's code. models gives the gene's, then the reference's, longest
+    coding transcript: its exon and CDS spans (genome coordinates, 1-based, inclusive, ascending), its seqid and strand.
+    A model is null when its rows give no CDS row, no Exon row or more than
+    one sequence or strand; evidenceUnread gives one reason for each null.
     Reads: the record of each id; each protein as one gene record read of
     its transcripts and one transcript record read of the longest coding
-    one; the gene's organism (one gene record read); one genome window.
+    one; the gene's organism and gene model (one gene record read); the
+    reference's gene model (one gene record read); one genome window.
     geneIds pairs each id given with the site's own gene id it names (the
     same id, an alias or a previous id its gene record read resolves, a
     transcript id the site's text search names, or the one gene whose own id
@@ -180,6 +190,7 @@ async def audit_selenoprotein_end(
             "gene_ids": inputs.gene_ids,
             "gene": named.resolved,
             "reference_gene": reference.resolved,
+            **inputs.models.model_dump(),
         }
     )
 
@@ -203,6 +214,7 @@ async def _length_audit(site_id: str, genes: list[str]) -> GeneLengthAudit:
             **inputs.screen.model_dump(),
             "code": dna.code if dna else None,
             "code_inferred": dna.code_inferred if dna else False,
+            **(ReadModels.of(dna.models) if dna else ReadModels()).model_dump(),
         }
     )
 
@@ -226,7 +238,11 @@ async def audit_gene_length(site_id: str, gene: str) -> GeneLengthAudit:
     means the genome lacks it; NOT_SHORT means the model holds every window.
     Every other class answers NOT_CHECKED with no genome read, and then
     nsInWindow and atContigEdge are null; organisms, groupMedian,
-    groupCopies and groupSpread show what the group holds.
+    groupCopies and groupSpread show what the group holds. models gives the
+    gene's longest coding transcript (exon and CDS spans (genome coordinates, 1-based, inclusive, ascending), its seqid and strand)
+    when the genome was read, and is empty otherwise. A model is null when
+    its GeneModelDump rows give no CDS row, no Exon row or more than one
+    sequence or strand; evidenceUnread gives one reason for each null model.
     Reads: the record of the id; the gene record's Orthologs table (one read
     whatever the group's size; the group's protein lengths are the table's,
     and a member it gives no length counts as not coding). Only a SHORT
@@ -260,7 +276,10 @@ async def audit_gene_split(site_id: str, gene_a: str, gene_b: str) -> GeneLength
     model holds at least 3 of its windows and the two together hold 60% of
     them; SPLIT_UNCLEAR means they do not. A pair that is not a SPLIT, or
     that the group cannot judge (UNQUALIFIED), answers NOT_CHECKED and reads
-    no genome.
+    no genome. models gives each model's longest coding transcript (exon and CDS spans (genome coordinates, 1-based, inclusive, ascending), its seqid and strand)
+    when the genome was read, and is empty otherwise. A model is null when
+    its GeneModelDump rows give no CDS row, no Exon row or more than one
+    sequence or strand; evidenceUnread gives one reason for each null model.
     Reads: the record of each id; gene_a's Orthologs table (one read
     whatever the group's size). Only a SPLIT pair adds the proteins of both
     models and the reference (two record reads each), both gene models

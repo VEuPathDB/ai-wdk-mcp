@@ -1,52 +1,35 @@
-"""Record the reads of the strain-model check for strain genes and their species
-references on a QA site.
+"""Record the gene model reads the strain-model check adds to its recorded wires, from
+a QA site, by single gene record reads.
 
 Run it from the repository root as the test account (WDK_TEST_TOKEN, or
 WDK_TEST_EMAIL and WDK_TEST_PASSWORD):
-``uv run python scripts/record_audit_strain.py [--out DIR]``.
+``uv run python scripts/record_audit_strain.py --models [--out DIR]``.
 """
 
 import argparse
 import asyncio
 from pathlib import Path
-from typing import Self
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, JsonValue
 from scripts.record_audit_fixtures import (
     FIXTURES,
     LengthWire,
-    ServedTable,
     act_as_the_test_account,
-    served_answers,
     served_body,
     write_lengths,
 )
 from veupathdb.devtools import use_qa_sites
-from veupathdb.jbrowse import (
-    GenomeReader,
-    close_all_jbrowse_clients,
-    get_jbrowse_client,
-)
 from veupathdb.wdk import close_all_clients
 
 from veupathdb_mcp.audit import (
-    ANNOTATION_TRACK,
-    GENE_ATTRIBUTES,
-    LENGTH_MAX_FLANK,
     MODEL_TABLE,
     ORGANISM_ATTRIBUTE,
-    ORTHOLOG_TABLE,
-    GeneModel,
-    OrthologRow,
     gene_record,
-    locus_tag_answers,
-    organism_tracks,
-    rows_of,
-    tabix_reader,
-    tabix_track,
 )
 
 SITE = "plasmodb"
+MODEL_BUDGET = 2
+INTRONS_PKAC = "introns_pcynM_pkac.json"
 
 
 class StrainPair(BaseModel):
@@ -54,27 +37,6 @@ class StrainPair(BaseModel):
 
     file: str
     reference: str
-    strain: str | None = None
-    organism: str | None = None
-
-    @model_validator(mode="after")
-    def _one_strain(self) -> Self:
-        if (self.strain is None) == (self.organism is None):
-            msg = "a pair names its strain gene or the organism to find it in"
-            raise ValueError(msg)
-        return self
-
-    def strain_in(self, table: list[OrthologRow]) -> str:
-        if self.strain is not None:
-            return self.strain
-        genes = [row.gene for row in table if row.organism == self.organism]
-        if len(genes) != 1:
-            msg = (
-                f"the orthologs of {self.reference} name {len(genes)} genes "
-                f"of {self.organism}"
-            )
-            raise ValueError(msg)
-        return genes[0]
 
 
 class StrainWire(LengthWire):
@@ -83,81 +45,82 @@ class StrainWire(LengthWire):
 
 
 PAIRS = [
-    StrainPair(
-        file="strain_pcynM_pkac.json",
-        reference="PCYB_074210",
-        strain="PcyM_0736700",
-    ),
-    StrainPair(
-        file="strain_pfalDd2_yip1.json",
-        reference="PF3D7_1472100",
-        organism="Plasmodium falciparum Dd2",
-    ),
+    StrainPair(file="strain_pcynM_pkac.json", reference="PCYB_074210"),
+    StrainPair(file="strain_pfalDd2_yip1.json", reference="PF3D7_1472100"),
 ]
 
 
-async def _annotation(abbrev: str, seqid: str, first: int, last: int) -> list[str]:
-    client = get_jbrowse_client(SITE)
-    track = tabix_track(await organism_tracks(client, abbrev), ANNOTATION_TRACK)
-    if track is None:
-        msg = f"{abbrev} lists no {ANNOTATION_TRACK} track"
-        raise ValueError(msg)
-    return await tabix_reader(client).lines(track, seqid, max(first, 1), last)
+class _Served(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    id: list[dict[str, str]]
+    tables: dict[str, list[JsonValue]] = {}
+
+    @property
+    def gene(self) -> str:
+        return next(part["value"] for part in self.id if part["name"] == "source_id")
 
 
-async def _pair(reader: GenomeReader, pair: StrainPair) -> StrainWire:
-    orthologs = await gene_record(SITE, pair.reference, [], [ORTHOLOG_TABLE])
-    table = [
-        OrthologRow.model_validate(served)
-        for served in ServedTable.model_validate(orthologs.tables).rows
-    ]
-    strain = pair.strain_in(table)
-    genes = [strain, pair.reference]
-    gene_answers = await locus_tag_answers(SITE, genes, GENE_ATTRIBUTES)
-    protein_answers = await locus_tag_answers(SITE, genes, ["protein_sequence"])
-    row_answers = await locus_tag_answers(
-        SITE, sorted({pair.reference, *(row.gene for row in table)}), GENE_ATTRIBUTES
-    )
-    [row] = [
-        r
-        for answer in gene_answers
-        for r in rows_of(answer, "GeneByLocusTag")
-        if r.gene == strain
-    ]
-    model_record = await gene_record(SITE, strain, [ORGANISM_ATTRIBUTE], [MODEL_TABLE])
-    abbrev = GeneModel.from_record(model_record).organism_abbrev
-    contig_length = await reader.sequence_length(abbrev, row.sequence_id)
-    first, last = row.start - LENGTH_MAX_FLANK, row.end + LENGTH_MAX_FLANK
-    window = await reader.window(abbrev, row.sequence_id, first, last)
-    annotation = await _annotation(abbrev, row.sequence_id, first, last)
-    return StrainWire(
-        gene=strain,
-        reference=pair.reference,
-        records=[served_body(orthologs), served_body(model_record)],
-        gene_answers=served_answers(gene_answers),
-        row_answers=served_answers(row_answers),
-        protein_answers=served_answers(protein_answers),
-        contig_length=contig_length,
-        window_start=window.start,
-        window=window.sequence,
-        annotation=annotation,
+class _IntronModel(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    model_record: _Served
+
+
+def model_rows(records: list[JsonValue], gene: str) -> list[JsonValue] | None:
+    served = [_Served.model_validate(body) for body in records]
+    return next(
+        (
+            s.tables[MODEL_TABLE]
+            for s in served
+            if s.gene == gene and MODEL_TABLE in s.tables
+        ),
+        None,
     )
 
 
-async def record(into: Path) -> None:
+def agrees_with_introns(wire: StrainWire, introns: str) -> bool:
+    held = _IntronModel.model_validate_json(introns).model_record
+    return model_rows(wire.records, wire.gene) == held.tables.get(MODEL_TABLE)
+
+
+async def record_models(into: Path) -> None:
     use_qa_sites()
     await act_as_the_test_account()
-    reader = GenomeReader(get_jbrowse_client(SITE))
+    introns = (into / INTRONS_PKAC).read_text()
+    wires = {
+        pair.file: StrainWire.model_validate_json((into / pair.file).read_text())
+        for pair in PAIRS
+    }
+    pkac = wires[PAIRS[0].file]
+    if not agrees_with_introns(pkac, introns):
+        msg = f"the strain model of {pkac.gene} differs from {INTRONS_PKAC}"
+        raise ValueError(msg)
+    sent = 0
     try:
-        wires = {pair.file: await _pair(reader, pair) for pair in PAIRS}
+        for name, wire in wires.items():
+            if model_rows(wire.records, wire.reference) is not None:
+                continue
+            if sent == MODEL_BUDGET:
+                msg = f"the recording spent its {MODEL_BUDGET} model reads"
+                raise RuntimeError(msg)
+            sent += 1
+            read = await gene_record(
+                SITE, wire.reference, [ORGANISM_ATTRIBUTE], [MODEL_TABLE]
+            )
+            print("model", wire.reference, "200")
+            wires[name] = wire.model_copy(
+                update={"records": [*wire.records, served_body(read)]}
+            )
     finally:
-        await close_all_jbrowse_clients()
         await close_all_clients()
+        print("model reads sent", sent)
     write_lengths(into, wires)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", type=Path, default=FIXTURES)
+    parser.add_argument("--models", action="store_true", required=True)
     arguments = parser.parse_args()
-    asyncio.run(record(arguments.out))
+    asyncio.run(record_models(arguments.out))

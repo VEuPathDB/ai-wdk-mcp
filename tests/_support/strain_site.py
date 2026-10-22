@@ -123,6 +123,11 @@ def strain_site(
     site.orthologs[REFERENCE] = site.rows
     site.proteins = {STRAIN: strain_protein, REFERENCE: reference_protein}
     site.models[STRAIN] = GeneModel(organism_abbrev="pfalDd2", cds=cds)
+    reference = site.rows[1]
+    site.models[REFERENCE] = GeneModel(
+        organism_abbrev="pfal3D7",
+        cds=[CdsPart(start=reference.start, end=reference.end)],
+    )
     site.contigs["pfalDd2", strain.sequence_id] = Contig.whole(
         "C" * left + gene + "C" * FLANK
     )

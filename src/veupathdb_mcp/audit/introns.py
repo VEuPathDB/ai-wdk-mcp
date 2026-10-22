@@ -13,6 +13,7 @@ from veupathdb.model import CamelModel
 
 from veupathdb_mcp.audit.codes import GeneticCode
 from veupathdb_mcp.audit.gene_ids import GeneId, check_resolved
+from veupathdb_mcp.audit.gene_models import ModelSpans, check_models
 from veupathdb_mcp.audit.introns_orthologs import OrthologSupport
 from veupathdb_mcp.computed import computed
 
@@ -333,10 +334,12 @@ class IntronAudit(IntronJudgement):
     code_inferred: bool
     orthologs: OrthologSupport | None
     correction_reason: str | None = None
+    model: ModelSpans | None = None
 
     @model_validator(mode="after")
     def _named_as_resolved(self) -> Self:
         check_resolved(self.gene_ids, [self.gene])
+        check_models([self.model] if self.model else [], [self.gene])
         return self
 
     @model_validator(mode="after")

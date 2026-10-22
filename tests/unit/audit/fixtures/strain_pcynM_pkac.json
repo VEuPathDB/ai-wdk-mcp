@@ -11103,6 +11103,154 @@
     ]
    },
    "tableErrors": []
+  },
+  {
+   "displayName": "PCYB_074210",
+   "id": [
+    {
+     "name": "source_id",
+     "value": "PCYB_074210"
+    },
+    {
+     "name": "project_id",
+     "value": "PlasmoDB"
+    }
+   ],
+   "recordClassName": "GeneRecordClasses.GeneRecordClass",
+   "attributes": {
+    "organismAbbrev": "pcynB"
+   },
+   "tables": {
+    "GeneModelDump": [
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "type": "CDS",
+      "gm_end": "1386032",
+      "gm_start": "1385909"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "type": "Exon",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "gm_end": "1386032",
+      "gm_start": "1385909"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "type": "Intron",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "gm_end": "1386173",
+      "gm_start": "1386033"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "type": "CDS",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "gm_end": "1386331",
+      "gm_start": "1386174"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "type": "Exon",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "gm_end": "1386331",
+      "gm_start": "1386174"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "type": "Intron",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "gm_end": "1386567",
+      "gm_start": "1386332"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "type": "CDS",
+      "gm_end": "1386752",
+      "gm_start": "1386568"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "type": "Exon",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "gm_end": "1386752",
+      "gm_start": "1386568"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "type": "Intron",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "gm_end": "1386917",
+      "gm_start": "1386753"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "type": "CDS",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "gm_end": "1387077",
+      "gm_start": "1386918"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "type": "Exon",
+      "gm_end": "1387077",
+      "gm_start": "1386918"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "type": "Intron",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "gm_end": "1387254",
+      "gm_start": "1387078"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "type": "CDS",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "gm_end": "1387653",
+      "gm_start": "1387255"
+     },
+     {
+      "strand": "+",
+      "sequence_id": "DF157099",
+      "source_id": "PCYB_074210",
+      "transcript_ids": "PCYB_074210-t26_1",
+      "type": "Exon",
+      "gm_end": "1387653",
+      "gm_start": "1387255"
+     }
+    ]
+   },
+   "tableErrors": []
   }
  ],
  "gene_answers": [

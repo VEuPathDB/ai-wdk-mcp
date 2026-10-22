@@ -16,6 +16,8 @@ def rows(*served: tuple[str, str, int, int]) -> list[ModelRow]:
             {
                 "type": kind,
                 "transcript_ids": transcripts,
+                "sequence_id": "VBRF01000019.1",
+                "strand": "-",
                 "gm_start": str(start),
                 "gm_end": str(end),
             }

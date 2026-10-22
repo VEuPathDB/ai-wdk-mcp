@@ -15,6 +15,8 @@ FIXTURES = Path(__file__).resolve().parents[1] / "unit/audit/fixtures"
 CYTB = "PF3D7_MIT02300"
 RECORDED = ("pfal3D7", "pfalNF54", "pfalSN01", "pfal7G8", "pfal7G82019")
 
+MODEL_RECORD = gene_models.model_record
+
 
 def contig(name: str) -> ContigRecording:
     path = FIXTURES / f"organelle_{name}_mito.json"
@@ -96,6 +98,7 @@ def recorded_site(monkeypatch: pytest.MonkeyPatch) -> tuple[AuditSite, GenomeRep
     _serve_cytb(monkeypatch)
     monkeypatch.setattr(gene_models, "gene_record", record)
     monkeypatch.setattr(genes, "get_wdk_client", lambda site_id: reports)
+    monkeypatch.setattr(gene_models, "model_record", MODEL_RECORD)
     monkeypatch.setattr(organelle_inputs, "gene_model", gene_models.gene_model)
     monkeypatch.setattr(organelle_inputs, "gene_organism", gene_models.gene_organism)
     monkeypatch.setattr(organelle_inputs, "genes_of_genome", genes.genes_of_genome)

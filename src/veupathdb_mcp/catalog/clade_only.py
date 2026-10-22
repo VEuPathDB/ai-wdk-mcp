@@ -11,6 +11,8 @@ from veupathdb_mcp.catalog.group_counts import GroupCountReports, site_taxonomy
 from veupathdb_mcp.computed import computed
 
 CLADE_ONLY_COUNT_REPORTS = 1
+EVERY_SPECIES_COUNT_REPORTS = 1
+EVERY_SPECIES_MIN_SPECIES = 2
 
 
 class CladeOnlyExpression(CamelModel):
@@ -27,9 +29,34 @@ class CladeOnlyExpression(CamelModel):
         return len(self.expression)
 
 
+class SpeciesUnit(CamelModel):
+    model_config = ConfigDict(frozen=True)
+
+    species: str
+    genomes: tuple[str, ...] = Field(min_length=1)
+
+    @computed
+    def present(self) -> int:
+        return -(-len(self.genomes) // 2)
+
+
+class EverySpeciesExpression(CamelModel):
+    model_config = ConfigDict(frozen=True)
+
+    site_id: str
+    expression: str
+    groups: int = Field(ge=0)
+    genomes: tuple[str, ...] = Field(min_length=2)
+    species: tuple[SpeciesUnit, ...] = Field(min_length=2)
+
+    @computed
+    def length(self) -> int:
+        return len(self.expression)
+
+
 def _refuse(detail: str) -> ValidationError:
     return ValidationError(
-        title="The clade-only expression takes clades of the site's taxonomy",
+        title="A clade expression takes clades of the site's taxonomy",
         detail=detail,
     )
 
@@ -92,4 +119,33 @@ async def clade_only_expression(
         groups=groups,
         genomes=tuple(sorted(inside)),
         outside=len(outside),
+    )
+
+
+async def every_species_expression(
+    site_id: str, clade: Sequence[str]
+) -> EverySpeciesExpression:
+    tree = await site_taxonomy(site_id)
+    inside = _genomes(tree, "clade", clade)
+    species = tuple(
+        SpeciesUnit(species=group.species, genomes=group.genomes)
+        for group in tree.species_groups(sorted(inside))
+    )
+    if len(species) < EVERY_SPECIES_MIN_SPECIES:
+        [only] = species
+        msg = (
+            f"clade holds one species, {only.species}; write "
+            f"L>={only.present}T for it, with L its genomes."
+        )
+        raise _refuse(msg)
+    expression = " AND ".join(
+        _unit(tree, frozenset(unit.genomes), f">={unit.present}T") for unit in species
+    )
+    groups = await GroupCountReports(site_id).groups(expression)
+    return EverySpeciesExpression(
+        site_id=site_id,
+        expression=expression,
+        groups=groups,
+        genomes=tuple(sorted(inside)),
+        species=species,
     )

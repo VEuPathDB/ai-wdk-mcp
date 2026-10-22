@@ -54,9 +54,37 @@ async def test_a_long_model_whose_extra_residues_match_the_reference_neighbour(
     assert result.fusion.partner_group == PARTNER_GROUP
     assert result.fusion.partner_copies == [PARTNER_COPY]
     assert site.orthologs_read == [MEMBER]
-    assert site.proteins_read == [MEMBER, REFERENCE_GENE]
-    assert site.neighbours_read == [BESIDE_REFERENCE]
+    assert site.proteins_read == [MEMBER, REFERENCE_GENE, *BESIDE_REFERENCE]
     assert site.genomes_read == [PF3D7, DD2]
+    assert site.models_read == [REFERENCE_GENE, PARTNER]
+    assert [m.gene for m in result.models] == [REFERENCE_GENE, PARTNER]
+    assert result.merged is not None
+    assert (result.merged.gene, result.merged.seqid, result.merged.start) == (
+        MEMBER,
+        "PfDd2_01",
+        50001,
+    )
+
+
+async def test_a_partner_model_with_no_exon_row_is_not_read(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = fusion_site(monkeypatch, REFERENCE + NEIGHBOUR)
+    site.exonless.add(PARTNER)
+
+    result = await audit_gene_fusion("plasmodb", MEMBER)
+
+    assert result.fusion is not None
+    assert (result.fusion.verdict, result.fusion.partner) == (
+        "EXTRA_MATCHES_NEIGHBOUR",
+        PARTNER,
+    )
+    assert site.models_read == [REFERENCE_GENE, PARTNER]
+    assert [m.gene if m else None for m in result.models] == [REFERENCE_GENE, None]
+    assert result.evidence_unread == [
+        f"the GeneModelDump of {PARTNER} gives no Exon row for {PARTNER}.1"
+    ]
+    assert result.merged is not None
 
 
 async def test_a_long_model_whose_extra_residues_no_neighbour_holds_is_unexplained(
@@ -73,6 +101,8 @@ async def test_a_long_model_whose_extra_residues_no_neighbour_holds_is_unexplain
         result.fusion.closest_neighbour,
         result.fusion.neighbour_windows,
     ) == (None, None, 0)
+    assert site.models_read == [REFERENCE_GENE]
+    assert [m.gene for m in result.models] == [REFERENCE_GENE]
     assert (result.fusion.product, result.fusion.partner_product) == (
         MEMBER_PRODUCT,
         None,

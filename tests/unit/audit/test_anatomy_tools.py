@@ -38,6 +38,8 @@ def with_exons(site: AnatomySite, exons: list[tuple[int, int]]) -> None:
                     {
                         "type": "Exon",
                         "transcript_ids": "PfNF54_100037200.1",
+                        "sequence_id": "VBRF01000019.1",
+                        "strand": "-",
                         "gm_start": str(start),
                         "gm_end": str(end),
                     }

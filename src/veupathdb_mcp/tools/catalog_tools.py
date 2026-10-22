@@ -17,7 +17,7 @@ from veupathdb_mcp.catalog import (
     searches,
     sites,
 )
-from veupathdb_mcp.catalog.clade_only import CladeOnlyExpression
+from veupathdb_mcp.catalog.clade_only import CladeOnlyExpression, EverySpeciesExpression
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.experiments import ExperimentMatch, UnknownExperimentError
 from veupathdb_mcp.catalog.models import ParamSpecResponse, RecordTypeInfo, SearchMatch
@@ -218,6 +218,37 @@ async def build_clade_only_expression(
     """
     try:
         return await clade_only.clade_only_expression(site_id, clade, within)
+    except VEuPathDBError as exc:
+        raise ToolError(exc.detail or exc.title) from exc
+
+
+async def build_every_species_expression(
+    site_id: str, clade: list[str]
+) -> EverySpeciesExpression:
+    """Build the exact phyletic_expression for the OrthoMCL groups present in every
+    species of a clade L.
+
+    The rule: a group is present in a species S of k genomes when at least
+    ceil(k/2) of those k genomes hold a protein of the group, the unit
+    S>=ceil(k/2)T; a species of one genome is S>=1T. The expression joins one
+    unit per species of L with AND, so a group passes only when it is present
+    in every species. It is written from the site's taxonomy: the species are
+    the genome labels' genus and species words, and each unit names that
+    species' genomes. One count report counts the groups. The
+    result gives expression, groups, length, its characters, genomes, the genome
+    codes of L, and species, each species with its genomes and present, the
+    genomes that must hold a protein; the parameter has no length limit, so pass
+    the expression whole. For presence in every genome write L=NT instead, and
+    for presence in some genome L>=1T. A clade of one species is refused: write
+    its one unit by hand.
+
+    Args:
+        site_id: The OrthoMCL site, 'orthomcl'.
+        clade: L, one clade code, or the genome codes of a group with no clade
+            code of its own, such as a genus, from lookup_phyletic_codes.
+    """
+    try:
+        return await clade_only.every_species_expression(site_id, clade)
     except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc
 

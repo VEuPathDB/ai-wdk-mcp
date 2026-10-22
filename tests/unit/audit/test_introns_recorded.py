@@ -108,6 +108,21 @@ async def test_the_recorded_pkac_model_misses_its_atp_site_exon(
         )
     ]
     assert served.jbrowse.windows == [("pcynM", "PcyM_07", 1378622, 1386462)]
+    assert result.model is not None
+    assert (result.model.seqid, result.model.strand, result.model.transcript) == (
+        "PcyM_07",
+        "+",
+        "PcyM_0736700-t36_1",
+    )
+    assert result.model.cds == [
+        (1381622, 1381745),
+        (1382306, 1382465),
+        (1382631, 1382790),
+        (1383064, 1383462),
+    ]
+    assert result.model.exons == result.model.cds
+    assert result.model.gene == "PcyM_0736700"
+    assert sum(end - start + 1 for start, end in result.model.cds) == 3 * (280 + 1)
     assert served.records.reads == [["GeneModelDump"], ["Orthologs"]]
     assert served.reports.datasets == []
     assert served.rows.reads == ["PcyM_0736700"]
@@ -154,6 +169,16 @@ async def test_the_recorded_dmaw_intron_is_shifted_by_24_bases(
     assert len(result.orthologs.compared) == 8
     assert served.jbrowse.windows == [
         ("afumAf293", "Chr2_A_fumigatus_Af293", 4790606, 4798120)
+    ]
+    assert result.model is not None
+    assert (result.model.seqid, result.model.strand) == (
+        "Chr2_A_fumigatus_Af293",
+        "-",
+    )
+    assert result.model.cds == [
+        (4793606, 4793692),
+        (4793791, 4793908),
+        (4793970, 4795120),
     ]
     assert served.records.reads == [["GeneModelDump"], ["Orthologs"]]
     assert served.reports.datasets == []

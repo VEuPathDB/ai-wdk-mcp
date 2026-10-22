@@ -5,12 +5,14 @@ from pydantic import BaseModel, ConfigDict
 from veupathdb.errors import WDKError
 from veupathdb.jbrowse import GenomeWindow
 
-from veupathdb_mcp.audit import gene_ids, record_reads, served
+from veupathdb_mcp.audit import gene_ids, gene_models, record_reads, served
 from veupathdb_mcp.audit.gene_ids import GeneId, GeneReads
-from veupathdb_mcp.audit.gene_models import GeneModel
+from veupathdb_mcp.audit.gene_models import GeneModel, ModelRecord, ModelRow
 from veupathdb_mcp.audit.genes import GeneRow, GroupMember, OrthologGroup
 
 type Window = tuple[str, str, int, int]
+
+MODEL_RECORD = gene_models.model_record
 
 
 class Contig(BaseModel):
@@ -109,11 +111,13 @@ class AuditSite(Genome):
         self.rows_read: list[str] = []
         self.proteins_read: list[str] = []
         self.texts_read: list[str] = []
+        self.exonless: set[str] = set()
         monkeypatch.setattr(record_reads, "_row", self.record_row)
         monkeypatch.setattr(record_reads, "_protein", self.record_protein)
         monkeypatch.setattr(gene_ids, "genes_by_text", self.genes_by_text)
         monkeypatch.setattr(served, "orthologs_of", self.orthologs_of)
-        monkeypatch.setattr(served, "gene_model", self.gene_model)
+        monkeypatch.setattr(served, "model_record", self.model_record)
+        monkeypatch.setattr(gene_models, "model_record", self.model_record)
         monkeypatch.setattr(served, "gene_organism", self.gene_organism)
 
     def row_of(self, gene: str) -> GeneRow | None:
@@ -146,6 +150,26 @@ class AuditSite(Genome):
     async def gene_model(self, site_id: str, gene: str) -> GeneModel:
         self.models_read.append(gene)
         return self.models[gene]
+
+    async def model_record(self, site_id: str, gene: str) -> ModelRecord:
+        self.models_read.append(gene)
+        model = self.models[gene]
+        placed = self.row_of(gene)
+        assert placed is not None
+        rows = [
+            ModelRow(
+                type=kind,
+                transcript_ids=frozenset({f"{gene}.1"}),
+                sequence_id=placed.sequence_id,
+                strand=placed.strand,
+                gm_start=part.start,
+                gm_end=part.end,
+            )
+            for part in model.cds
+            for kind in ("CDS", "Exon")
+            if kind == "CDS" or gene not in self.exonless
+        ]
+        return ModelRecord(gene=gene, model=model, rows=rows)
 
     async def gene_organism(self, site_id: str, gene: str) -> str:
         self.organisms_read.append(gene)
