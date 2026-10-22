@@ -1,5 +1,19 @@
 # Knowledge log
 
+## 2026-10-22 - 0.2.0b34
+
+- 0.2.0b34 ships served results that validate their own dump
+  ([a served result validates its own dump](decisions/a-served-result-validates-its-own-dump.md))
+  and pins veupathdb-py 0.1.0b18, as 0.2.0b33 did. `Linkout.external_id` dumped
+  `externalId` and read only `ext_id` or `external_id`, so the recorded PIGA, K13, GLO1
+  and DMAW evidence, with 11, 43, 7 and 26 cross-references, failed to read back with one
+  error per cross-reference. The NF54 provenance failed on `recordId`, `referenceStrain`
+  and `ncbiTaxon`, and `referenceStrain` then on its dumped `false`. Each of these
+  fields now reads its camelCase alias too, and `referenceStrain` reads a boolean.
+- `tests/unit/test_served_results_round_trip.py` walks the return type of every tool of
+  both servers (102 models) and replays the recordings of thirteen gene-model tools; no
+  other model dumped a key it did not read.
+
 ## 2026-10-22 - 0.2.0b33
 
 - 0.2.0b33 ships the entry below, the control runs that delete every step and strategy

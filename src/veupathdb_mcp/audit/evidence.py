@@ -9,6 +9,7 @@ from typing import Annotated, Literal, Self
 
 from pydantic import (
     AfterValidator,
+    AliasChoices,
     BaseModel,
     BeforeValidator,
     ConfigDict,
@@ -62,7 +63,9 @@ class _Link(BaseModel):
 
 _CELL: TypeAdapter[_Link | str | None] = TypeAdapter(_Link | str | None)
 _NUMBER: TypeAdapter[int | str | None] = TypeAdapter(int | str | None)
-_YES_NO: TypeAdapter[Literal["yes", "no"]] = TypeAdapter(Literal["yes", "no"])
+_FLAG: TypeAdapter[Literal["yes", "no"] | bool] = TypeAdapter(
+    Literal["yes", "no"] | bool
+)
 
 
 def _text(value: JsonValue) -> str | None:
@@ -82,7 +85,7 @@ def _number(value: JsonValue) -> int | str | None:
 
 
 def _yes(value: JsonValue) -> bool:
-    return _YES_NO.validate_python(value, strict=True) == "yes"
+    return _FLAG.validate_python(value, strict=True) in {"yes", True}
 
 
 def _numbered(build: int | None) -> int | None:
@@ -157,7 +160,7 @@ class Linkout(CamelModel):
     model_config = ConfigDict(frozen=True, extra="ignore")
 
     database: str = Field(validation_alias="dataset")
-    external_id: str = Field(validation_alias="ext_id")
+    external_id: str = Field(validation_alias=AliasChoices("ext_id", "externalId"))
 
 
 class SeqEdit(CamelModel):
@@ -354,7 +357,7 @@ class GeneEvidence(CamelModel):
 class GenomeProvenance(CamelModel):
     model_config = ConfigDict(frozen=True, extra="ignore")
 
-    record_id: str = Field(validation_alias="source_id")
+    record_id: str = Field(validation_alias=AliasChoices("source_id", "recordId"))
     organism: str = Field(validation_alias="organism_full", min_length=1)
     genome_source: ServedText
     genome_version: ServedText
@@ -364,9 +367,11 @@ class GenomeProvenance(CamelModel):
     build_introduced: ServedBuild
     build_latest_update: ServedBuild
     reference_strain: Annotated[bool, BeforeValidator(_yes)] = Field(
-        validation_alias="is_reference_strain"
+        validation_alias=AliasChoices("is_reference_strain", "referenceStrain")
     )
-    ncbi_taxon: ServedText = Field(validation_alias="ncbi_tax_id")
+    ncbi_taxon: ServedText = Field(
+        validation_alias=AliasChoices("ncbi_tax_id", "ncbiTaxon")
+    )
 
 
 def provenance_of(answer: WDKAnswer, organism: str) -> GenomeProvenance | None:
