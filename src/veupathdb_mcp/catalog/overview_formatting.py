@@ -95,8 +95,6 @@ def format_search_overview(
     optional: list[ParamOverviewEntry] = []
 
     for sheet in build_sheet(infos, query=query):
-        if sheet.hidden:
-            continue
         info = by_name[sheet.name]
         entry = ParamOverviewEntry(
             name=sheet.name,
@@ -111,7 +109,12 @@ def format_search_overview(
             vocabulary=sheet.vocabulary,
             vocabulary_total=sheet.vocabulary_total,
             vocabulary_note=sheet.vocabulary_note,
-            controls_vocab_of=info.controls_vocab_of,
+            controls_vocab_of=[
+                name
+                for name in info.controls_vocab_of or []
+                if name in by_name and by_name[name].is_visible
+            ]
+            or None,
             filter_facets=sheet.filter_facets,
         )
         if sheet.required:

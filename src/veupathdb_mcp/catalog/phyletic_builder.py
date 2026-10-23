@@ -1,0 +1,115 @@
+from __future__ import annotations
+
+import asyncio
+from dataclasses import dataclass
+
+from pydantic import ConfigDict, Field
+from veupathdb.domain.parameters import (
+    PhyleticExpression,
+    PhyleticTree,
+    check_expression,
+)
+from veupathdb.model import CamelModel
+
+from veupathdb_mcp.catalog.group_counts import GroupCountReports, site_taxonomy
+from veupathdb_mcp.catalog.phyletic_logic import (
+    Guard,
+    Probe,
+    Writing,
+    refuse,
+    render,
+)
+from veupathdb_mcp.catalog.phyletic_pattern import Maxima, PhyleticPattern
+from veupathdb_mcp.catalog.site_cost import site_cost
+
+FIRST_PROBE = 128
+LAST_PROBE = 2**16
+READING_LIMIT = 2_000
+_CUT = " ..."
+
+
+class PhyleticExpressionResult(CamelModel):
+    model_config = ConfigDict(frozen=True)
+
+    site_id: str
+    expression: str
+    reading: str
+    groups: int = Field(ge=0)
+    codes: tuple[str, ...] = Field(min_length=1)
+    maximum_reads: int = Field(ge=0)
+
+
+@dataclass(frozen=True, slots=True)
+class _Written:
+    text: str
+    terms: int
+    reading: str
+    codes: tuple[str, ...]
+
+
+def written(
+    pattern: PhyleticPattern, tree: PhyleticTree, maxima: Maxima, probes: int
+) -> _Written:
+    guard = Guard(tree, site_cost(), probes)
+    text, terms = render(pattern.dnf(Writing(tree, maxima, guard)), guard)
+    expression = PhyleticExpression.parse(text)
+    check_expression(expression, tree)
+    return _Written(
+        text=text,
+        terms=terms,
+        reading=reading(pattern, expression, tree, text, terms),
+        codes=tuple(expression.codes()),
+    )
+
+
+def reading(
+    pattern: PhyleticPattern,
+    expression: PhyleticExpression,
+    tree: PhyleticTree,
+    text: str,
+    terms: int,
+) -> str:
+    if len(text) <= READING_LIMIT:
+        described = expression.describe(tree)
+        if len(described) <= READING_LIMIT:
+            return described
+    counted = f"; written as {terms} OR terms, {len(text)} characters"
+    outline = pattern.outline()
+    room = READING_LIMIT - len(counted)
+    if len(outline) > room:
+        outline = outline[: room - len(_CUT)] + _CUT
+    return outline + counted
+
+
+async def _largest(reports: GroupCountReports, probe: Probe) -> int:
+    held, empty = 0, FIRST_PROBE
+    while await reports.groups(probe.at(empty)) > 0:
+        if empty == LAST_PROBE:
+            refuse(f"{probe.at(empty)} still answers groups; no count is that large.")
+        held, empty = empty, empty * 2
+    while empty - held > 1:
+        middle = (held + empty) // 2
+        if await reports.groups(probe.at(middle)) > 0:
+            held = middle
+        else:
+            empty = middle
+    return held
+
+
+async def write_phyletic_expression(
+    site_id: str, pattern: PhyleticPattern
+) -> PhyleticExpressionResult:
+    tree = await site_taxonomy(site_id)
+    probes = list(dict.fromkeys(pattern.probes(tree)))
+    reports = GroupCountReports(site_id)
+    maxima = {probe: await _largest(reports, probe) for probe in probes}
+    maximum_reads = reports.sent
+    built = await asyncio.to_thread(written, pattern, tree, maxima, maximum_reads)
+    return PhyleticExpressionResult(
+        site_id=site_id,
+        expression=built.text,
+        reading=built.reading,
+        groups=await reports.groups(built.text),
+        codes=built.codes,
+        maximum_reads=maximum_reads,
+    )

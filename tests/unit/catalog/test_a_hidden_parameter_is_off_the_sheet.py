@@ -1,5 +1,5 @@
-"""A read-only parameter is marked as WDK marks it, and a hidden parameter
-with a vocabulary is on the sheet, marked hidden, because it takes any entry."""
+"""A read-only parameter is marked as WDK marks it, and no hidden parameter is
+on the sheet, because the site's form never lets a person set one."""
 
 from __future__ import annotations
 
@@ -49,14 +49,13 @@ def test_the_read_only_mark_travels_on_the_wire() -> None:
 @pytest.mark.skipif(
     needs_qa_recording("wdk/search_genes_by_ngs_snps.json"), reason=NEEDS_QA_RECORDING
 )
-def test_a_hidden_parameter_with_a_vocabulary_is_on_the_sheet_marked_hidden() -> None:
+def test_a_hidden_parameter_with_a_vocabulary_is_not_on_the_sheet() -> None:
     sheet = build_sheet(_infos("search_genes_by_ngs_snps"), query="snps")
 
-    assert [(e.name, e.default) for e in sheet if e.hidden] == [
-        ("eda_sample_table_suffix", "s3be28bbe14_sample"),
-        ("WebServicesPath", "dflt"),
-    ]
-    assert len([e for e in sheet if not e.hidden]) == 12
+    names = [entry.name for entry in sheet]
+    assert {"eda_sample_table_suffix", "WebServicesPath"} & set(names) == set()
+    assert len(names) == 12
+    assert "hidden" not in sheet[0].model_dump(by_alias=True)
 
 
 @pytest.mark.skipif(

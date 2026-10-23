@@ -22,9 +22,7 @@ from veupathdb_mcp.tools.audit_tools import (
 )
 from veupathdb_mcp.tools.catalog_tools import (
     browse_search_categories,
-    build_clade_only_expression,
-    build_every_species_expression,
-    build_protein_count_comparison,
+    build_phyletic_expression,
     get_parameter_options,
     get_search_overview,
     get_search_param_specs,
@@ -71,9 +69,7 @@ __all__ = [
     "audit_selenoprotein_end",
     "audit_strain_model",
     "browse_search_categories",
-    "build_clade_only_expression",
-    "build_every_species_expression",
-    "build_protein_count_comparison",
+    "build_phyletic_expression",
     "count_plan_steps",
     "create_gene_set_step",
     "enrich_gene_ids",

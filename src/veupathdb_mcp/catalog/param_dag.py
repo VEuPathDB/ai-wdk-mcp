@@ -2,14 +2,20 @@
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Sequence
 
 from pydantic import Field
 from veupathdb.domain import SearchContext
-from veupathdb.domain.parameters import ParamValue, UnboundParameter, to_wire
+from veupathdb.domain.parameters import (
+    PHYLETIC_LIST_PARAMS,
+    ParamValue,
+    PhyleticBinding,
+    UnboundParameter,
+    to_wire,
+)
 from veupathdb.errors import ValidationError
 from veupathdb.model import CamelModel
-from veupathdb.wdk import get_wdk_client
+from veupathdb.wdk import WDKParameter, get_wdk_client
 
 from veupathdb_mcp.catalog._param_binding import (
     OverrideMap,
@@ -25,6 +31,7 @@ from veupathdb_mcp.catalog._param_filters import _resolve_filter_param
 from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,
 )
+from veupathdb_mcp.catalog.hidden_params import HiddenParameterError
 from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,
     format_param_info_typed,
@@ -34,6 +41,12 @@ from veupathdb_mcp.catalog.param_intent import (
     Provenance,
     contrast_pair_key,
     contrast_role,
+)
+from veupathdb_mcp.catalog.param_phyletic import (
+    PhyleticListError,
+    PhyleticNoSelection,
+    derive_phyletic_overrides,
+    is_phyletic_sheet,
 )
 from veupathdb_mcp.catalog.search_context import (
     get_search_params_under_context,
@@ -70,7 +83,58 @@ def _refuse_unknown_overrides(
     names = {i.name for i in infos}
     unknown = sorted(set(overrides) - names)
     if unknown:
-        raise UnknownParameterError(unknown, sorted(names))
+        raise UnknownParameterError(
+            unknown, sorted(i.name for i in infos if i.is_visible)
+        )
+
+
+def _refuse_hidden_overrides(
+    infos: list[ParameterInfo], overrides: OverrideMap
+) -> None:
+    for info in infos:
+        if info.name in overrides and not info.is_visible:
+            raise HiddenParameterError(info.name)
+
+
+def _with_derived_phyletic(
+    infos: list[ParameterInfo],
+    overrides: OverrideMap,
+    definition: Sequence[WDKParameter],
+) -> OverrideMap:
+    if not is_phyletic_sheet(infos):
+        return overrides
+    if not PHYLETIC_LIST_PARAMS & overrides.keys():
+        raise PhyleticListError(PhyleticNoSelection())
+    lists = {
+        name: overrides[name] for name in PHYLETIC_LIST_PARAMS if name in overrides
+    }
+    match derive_phyletic_overrides(list(definition), lists):
+        case PhyleticBinding() as binding:
+            return {**overrides, **binding.model_dump()}
+        case refused:
+            raise PhyleticListError(refused)
+
+
+def _visible_slot(
+    info: ParameterInfo, slot: UnboundParameter
+) -> UnboundParameter | None:
+    if info.is_visible:
+        return slot
+    if info.param_kind != "input-step":
+        raise HiddenParameterError(info.name, unset=True)
+    return None
+
+
+def _checked_overrides(
+    infos: list[ParameterInfo],
+    stated: OverrideMap,
+    definition: Sequence[WDKParameter],
+    *,
+    first_pass: bool,
+) -> OverrideMap | None:
+    _refuse_unknown_overrides(infos, stated, first_pass=first_pass)
+    _refuse_hidden_overrides(infos, stated)
+    return _with_derived_phyletic(infos, stated, definition) if first_pass else None
 
 
 ParamFetcher = Callable[[dict[str, str]], Awaitable[list[ParameterInfo]]]
@@ -215,6 +279,7 @@ async def resolve_params_with_intent(
     fetch_at: ParamFetcher,
     intent: ParamIntent,
     overrides: OverrideMap | None = None,
+    definition: Sequence[WDKParameter] = (),
 ) -> ResolvedParams:
     """Walks the dependency DAG and resolves each param from an override, an automatic
     value, the scalar default, or an open slot. Re-fetches after each pick so dependent
@@ -222,7 +287,8 @@ async def resolve_params_with_intent(
 
     An override that names no parameter of the search raises ``UnknownParameterError``.
     """
-    overrides = overrides or {}
+    stated = overrides or {}
+    overrides = stated
     context: dict[str, str] = {}
     params: dict[str, ParamValue] = {}
     open_slots: list[UnboundParameter] = []
@@ -234,7 +300,10 @@ async def resolve_params_with_intent(
     resolution = _Resolution(intent=intent, overrides=overrides)
     for pass_index in range(_MAX_RESOLVE_DEPTH):
         infos = await fetch_at(context)
-        _refuse_unknown_overrides(infos, overrides, first_pass=pass_index == 0)
+        overrides = (
+            _checked_overrides(infos, stated, definition, first_pass=pass_index == 0)
+            or overrides
+        )
         # Siblings decide whether one numeric param owns a stated quantity.
         resolution = _Resolution(
             intent=intent, overrides=overrides, siblings=tuple(infos)
@@ -264,8 +333,10 @@ async def resolve_params_with_intent(
                 unread.append(outcome.param_name)
                 unresolved.append(outcome.param_name)
             elif isinstance(outcome, UnboundParameter):
-                open_slots.append(outcome)
-                unresolved.append(info.name)
+                slot = _visible_slot(info, outcome)
+                if slot is not None:
+                    open_slots.append(slot)
+                    unresolved.append(info.name)
             elif outcome is not None:
                 params[info.name] = outcome.value
                 provenance[info.name] = outcome.provenance

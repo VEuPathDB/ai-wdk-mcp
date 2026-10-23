@@ -20,7 +20,12 @@ from veupathdb.domain.parameters import (
     derive_binding,
     nearest_entries,
 )
-from veupathdb.errors import VEuPathDBError, VEuPathDBErrorCode
+from veupathdb.errors import (
+    ValidationError,
+    VEuPathDBError,
+    VEuPathDBErrorCode,
+    param_message_rows,
+)
 from veupathdb.wdk import (
     WDKParameter,
     WDKRecordType,
@@ -55,12 +60,12 @@ LOOKUP_HINT = (
 )
 
 EXPRESSION_LOOKUP_HINT = (
-    f"Write codes in {PHYLETIC_EXPRESSION_PARAM}, joined with '+'. A code with "
-    "leaf=true is one genome (one proteome), and a count ending in T counts genomes: "
-    "several strains of one species are several genomes, grouped under species. A "
-    "code with leaf=false is a clade, and genomes is the number of genomes under it. "
-    "A clade is only what its label names, so a genus with no clade of its own is the "
-    "list of its genome codes. The parameter's help states the recipes."
+    f"Pass these codes to build_phyletic_expression, which writes "
+    f"{PHYLETIC_EXPRESSION_PARAM} from them. A code with leaf=true is one genome (one "
+    "proteome): several strains of one species are several genomes, grouped under "
+    "species. A code with leaf=false is a clade, and genomes is the number of genomes "
+    "under it. A clade is only what its label names, so a genus with no clade of its "
+    "own is the list of its genome codes."
 )
 
 
@@ -80,6 +85,43 @@ class PhyleticNoSelection(BaseModel):
 
 
 PhyleticDerivation = PhyleticBinding | PhyleticUnresolvedProposal | PhyleticNoSelection
+
+
+class PhyleticListError(ValidationError):
+    def __init__(
+        self, refused: PhyleticUnresolvedProposal | PhyleticNoSelection | None
+    ) -> None:
+        self.refused = refused
+        match refused:
+            case PhyleticUnresolvedProposal(unresolved=unresolved, nearest=nearest):
+                named = [
+                    f"{name} names no entry {terms}"
+                    for name, terms in (
+                        ("included_species", unresolved.included_unknown),
+                        ("excluded_species", unresolved.excluded_unknown),
+                    )
+                    if terms
+                ]
+                if unresolved.conflicts:
+                    named.append(f"both lists name {unresolved.conflicts}")
+                detail = f"{'; '.join(named)}. Nearest entries: {nearest}."
+            case PhyleticNoSelection():
+                detail = (
+                    "included_species and excluded_species select no species, so "
+                    "profile_pattern states no criterion. Name what must have an "
+                    "ortholog and what must not."
+                )
+            case None:
+                detail = (
+                    "profile_pattern is derived from included_species and "
+                    "excluded_species against the search's published parameters, "
+                    "and the call passed none."
+                )
+        super().__init__(
+            title="The species lists derive no profile_pattern",
+            detail=detail,
+            errors=param_message_rows({"profile_pattern": [detail]}),
+        )
 
 
 def is_phyletic_sheet(infos: list[ParameterInfo]) -> bool:

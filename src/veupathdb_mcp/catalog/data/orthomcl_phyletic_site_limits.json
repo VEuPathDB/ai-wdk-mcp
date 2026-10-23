@@ -1,0 +1,81 @@
+{
+ "site": "orthomcl",
+ "search": "GroupsByPhyleticPattern",
+ "left": "tgon",
+ "right": "pfal",
+ "measured": [
+  {
+   "series": "wide-8",
+   "terms": 250,
+   "characters": 15028,
+   "status": 200,
+   "seconds": 6.46,
+   "total": 16181,
+   "error": ""
+  },
+  {
+   "series": "wide-32",
+   "terms": 250,
+   "characters": 45028,
+   "status": 200,
+   "seconds": 11.014,
+   "total": 56825,
+   "error": ""
+  },
+  {
+   "series": "wide-128",
+   "terms": 250,
+   "characters": 165028,
+   "status": 200,
+   "seconds": 21.726,
+   "total": 146982,
+   "error": ""
+  },
+  {
+   "series": "wide-512",
+   "terms": 250,
+   "characters": 645028,
+   "status": 200,
+   "seconds": 103.242,
+   "total": 502853,
+   "error": ""
+  },
+  {
+   "series": "ladder",
+   "terms": 250,
+   "characters": 6278,
+   "status": 200,
+   "seconds": 4.494,
+   "total": 3896,
+   "error": ""
+  },
+  {
+   "series": "ladder",
+   "terms": 500,
+   "characters": 12778,
+   "status": 200,
+   "seconds": 5.387,
+   "total": 3896,
+   "error": ""
+  },
+  {
+   "series": "ladder",
+   "terms": 1000,
+   "characters": 25779,
+   "status": 200,
+   "seconds": 7.682,
+   "total": 3896,
+   "error": ""
+  },
+  {
+   "series": "ladder",
+   "terms": 2000,
+   "characters": 53779,
+   "status": 200,
+   "seconds": 14.193,
+   "total": 3896,
+   "error": ""
+  }
+ ],
+ "stopped": "plan"
+}

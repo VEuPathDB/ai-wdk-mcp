@@ -150,16 +150,16 @@ def test_the_two_hints_name_the_parameter_each_search_takes() -> None:
     assert "included_species" in LOOKUP_HINT
 
 
-def test_the_expression_hint_counts_genomes_and_names_species() -> None:
+def test_the_expression_hint_names_the_builder_and_counts_genomes() -> None:
     assert EXPRESSION_LOOKUP_HINT == (
-        "Write codes in phyletic_expression, joined with '+'. A code with leaf=true "
-        "is one genome (one proteome), and a count ending in T counts genomes: "
-        "several strains of one species are several genomes, grouped under species. "
-        "A code with leaf=false is a clade, and genomes is the number of genomes "
-        "under it. A clade is only what its label names, so a genus with no clade "
-        "of its own is the list of its genome codes. The parameter's help states "
-        "the recipes."
+        "Pass these codes to build_phyletic_expression, which writes "
+        "phyletic_expression from them. A code with leaf=true is one genome (one "
+        "proteome): several strains of one species are several genomes, grouped "
+        "under species. A code with leaf=false is a clade, and genomes is the number "
+        "of genomes under it. A clade is only what its label names, so a genus with "
+        "no clade of its own is the list of its genome codes."
     )
+    assert "recipe" not in EXPRESSION_LOOKUP_HINT
 
 
 async def test_every_entry_that_names_each_known_query_word_is_returned_past_the_cap(

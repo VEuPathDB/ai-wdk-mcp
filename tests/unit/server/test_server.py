@@ -51,7 +51,6 @@ from veupathdb_mcp.catalog.overview_formatting import SearchOverviewResult
 from veupathdb_mcp.catalog.param_dag import ResolvedParams, UnknownParameterError
 from veupathdb_mcp.catalog.param_intent import ParamIntent
 from veupathdb_mcp.catalog.param_validation import ValidatedParams
-from veupathdb_mcp.catalog.protein_comparison import MAX_COUNT_REPORTS
 from veupathdb_mcp.catalog.search_inspection import (
     SearchInspection,
     UnknownSearchError,
@@ -97,9 +96,7 @@ EXPECTED_ANNOTATIONS: dict[str, dict[str, bool]] = {
     "list_searches": READ_ONLY,
     "list_transforms": READ_ONLY,
     "lookup_phyletic_codes": READ_ONLY,
-    "build_protein_count_comparison": READ_ONLY,
-    "build_clade_only_expression": READ_ONLY,
-    "build_every_species_expression": READ_ONLY,
+    "build_phyletic_expression": READ_ONLY,
     "search_example_plans": READ_ONLY,
     "get_search_overview": READ_ONLY,
     "get_parameter_options": READ_ONLY,
@@ -1072,8 +1069,10 @@ async def test_a_binding_call_answers_from_the_parameter_walk(
         fetch_at: object,
         intent: ParamIntent,
         overrides: dict[str, str | list[str]] | None = None,
+        definition: object = (),
     ) -> ResolvedParams:
         del fetch_at
+        del definition
         seen.append((intent.text, overrides))
         return ResolvedParams(params={"organism": StringValue(value="P. falciparum")})
 
@@ -1103,8 +1102,9 @@ async def test_an_override_that_names_no_parameter_is_a_tool_error(
         fetch_at: object,
         intent: ParamIntent,
         overrides: dict[str, str | list[str]] | None = None,
+        definition: object = (),
     ) -> ResolvedParams:
-        del fetch_at, intent, overrides
+        del fetch_at, intent, overrides, definition
         raise UnknownParameterError(["orgnism"], ["organism"])
 
     monkeypatch.setattr(catalog_tools, "resolve_params_with_intent", refuse)
@@ -1403,41 +1403,44 @@ async def test_the_phyletic_lookup_says_each_match_counts_its_genomes() -> None:
     assert "species groups the genomes the query names by species" in text
 
 
-async def test_the_protein_comparison_names_its_report_bound_and_its_budget() -> None:
+async def test_the_phyletic_builder_states_its_rounding_and_its_budget() -> None:
     tools = await _list_tools()
 
-    tool = tools["build_protein_count_comparison"]
+    tool = tools["build_phyletic_expression"]
     text = " ".join((tool.description or "").split())
-    assert f"at most {MAX_COUNT_REPORTS} count reports, one at a time" in text
+    assert "at_least p is at least ceil(p*N/100) genomes" in text
+    assert "exactly holds only when p*N/100 is a whole number" in text
+    assert "one count read" in text
+    assert "expression (the value for phyletic_expression; it can run to" in text
+    assert "bind it by reference" in text
+    assert "longest expression the site was measured to answer" in text
+    assert "pass it whole" not in text
+    assert '["ALL"] is every genome' in text
     assert tool.meta is not None
-    assert tool.meta[MAX_CALL_SECONDS_META_KEY] > 60
+    assert tool.meta[MAX_CALL_SECONDS_META_KEY] == 300
 
 
-async def test_the_clade_only_builder_names_its_one_report_and_keeps_the_default() -> (
-    None
-):
+async def test_the_phyletic_builder_takes_the_pattern_as_a_tagged_union() -> None:
     tools = await _list_tools()
 
-    tool = tools["build_clade_only_expression"]
-    text = " ".join((tool.description or "").split())
-    assert "One count report counts the groups" in text
-    assert MAX_CALL_SECONDS_META_KEY not in (tool.meta or {})
-
-
-async def test_the_every_species_builder_names_its_rule_and_one_report() -> None:
-    tools = await _list_tools()
-
-    tool = tools["build_every_species_expression"]
-    text = " ".join((tool.description or "").split())
-    assert "One count report counts the groups" in text
-    assert (
-        "a group is present in a species S of k genomes when at least ceil(k/2) "
-        "of those k genomes hold a protein of the group, the unit S>=ceil(k/2)T"
-    ) in text
-    assert "a group passes only when it is present in every species" in text
-    assert MAX_CALL_SECONDS_META_KEY not in (tool.meta or {})
-    assert tool.annotations is not None
-    assert tool.annotations.readOnlyHint is True
+    schema = tools["build_phyletic_expression"].inputSchema
+    kinds = {
+        variant["properties"]["kind"]["const"]
+        for variant in schema["$defs"].values()
+        if "kind" in variant.get("properties", {})
+    }
+    assert kinds == {
+        "count",
+        "compare",
+        "all_of",
+        "any_of",
+        "none_of",
+        "codes",
+        "all_except",
+        "each_species_of",
+        "each_genome_of",
+    }
+    assert schema["required"] == ["site_id", "pattern"]
 
 
 @pytest.mark.parametrize(

@@ -24,6 +24,7 @@ from veupathdb.wdk import (
     get_wdk_client,
 )
 
+from veupathdb_mcp.catalog.hidden_params import HiddenParameterError
 from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
@@ -305,6 +306,9 @@ async def read_parameter_options(
         encode_wdk_params(context) if context else {},
     )
     all_params = result.search_data.parameters or []
+    shown = {p.name for p in all_params if p.is_visible}
+    if any(p.name == parameter_id for p in all_params) and parameter_id not in shown:
+        raise HiddenParameterError(parameter_id, search_name)
 
     unbound = _unbound_parents(all_params, parameter_id, context)
     if unbound:
@@ -337,6 +341,14 @@ async def read_parameter_options(
                 },
                 phyletic_options=phyletic,
                 lookup=lookup or phyletic_lookup,
+            )
+            read = read.model_copy(
+                update={
+                    "controls_vocab_of": [
+                        name for name in read.controls_vocab_of or [] if name in shown
+                    ]
+                    or None
+                }
             )
             query = " ".join((*narrow.terms, *narrow.request_terms))
             if not query or not read.facets():

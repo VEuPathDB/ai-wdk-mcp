@@ -1,7 +1,7 @@
 ---
 type: Decision
 title: A search note fills only an empty description
-description: A measured note stands in for the description a site does not publish, on every path that reads one, and never replaces a description the site publishes; GroupsBySingleCopy carries the only note, the expression help states the counting, zero, precedence and complement rules the site was measured to follow, `build_protein_count_comparison` builds the two-genome protein ladder and `build_clade_only_expression` the presence-only-in-a-clade expression.
+description: A measured note stands in for the description a site does not publish, on every path that reads one, and never replaces a description the site publishes; GroupsBySingleCopy carries the only note, the expression help states the counting, zero and precedence rules the site was measured to follow, and `build_phyletic_expression` writes every expression from a typed pattern, with no path for one question shape.
 tags: [catalog, orthomcl, search-guidance, phyletic-expression]
 status: stable
 ---
@@ -52,67 +52,78 @@ was measured to do on build 8.2, from the OrthoMCLModel source at commit `fcc9de
   of `A AND B` plus the count of `C`. So an OR inside an AND term is multiplied out, and
   absence from at least k of N genomes is written `X AND L<=(N-k)T OR X AND L=0T`, X
   being the other units of that AND term.
-- Two single genomes compare by protein count as a ladder of AND terms, one per count of
-  the smaller side up to K, where K is the smallest count at which `B>=K+1` answers no
-  group. A group with equal counts in the two genomes is not selected. The served tool
-  `build_protein_count_comparison` (`catalog/protein_comparison.py`) reads K by bisection
-  over count reports and counts the ladder, and the help names it as the way to build
-  one. The bisection probes `B>=128` and doubles up to `B>=1024`, then halves the last
-  interval, so one call sends at most 15 count reports (13 probes and two ladders), one
-  after another under the client's one-search-per-site line. The reverse ladder stops at
-  K - 1, because a term past it asks `B>=K+1`, which answers nothing.
-- A ladder count takes time in proportion to its length. Measured on QA build 8.2, a
-  call with both ladders took 10.2 s at K = 111 (ladders of 2,690 and 2,664 characters,
-  4.0 and 4.3 s), 20.2 s at K = 212 (5,316 and 5,290 characters, 9.1 and 8.7 s) and
-  25.6 s at K = 340 (8,644 and 8,618 characters, 10.5 and 11.6 s), each bisection probe
-  0.23 to 0.32 s. The two directions of one genome pair agree: each ladder total is the
-  same whichever genome the bisection reads. The slowest ladder ran at 42 ms per term,
-  so a call at the largest accepted K, 1,023, needs about 2 x 1,024 x 0.042 s for its
-  ladders and 13 x 0.3 s for its probes, about 90 s. The call budget is 120 s: 4.7 times
-  the slowest measured call, and above that estimate. A B with 1024 or more proteins in
-  one group is refused by name, because its ladders would pass the budget; a refusal
-  states why, where a timeout states nothing. The longest ladder measured,
-  8,644 characters, is the longest expression the site was measured to answer.
-- Presence only in a clade L is absence over its complement: `L>=1T AND C=0T`, with C
-  every genome outside L. No served read lists the genomes outside a clade
-  (`lookup_phyletic_codes` gives at most 20 matches and no parent), so the help names
-  `build_clade_only_expression` (`catalog/clade_only.py`), which writes C from the
-  taxonomy and counts it with one report. C is the fewest tree codes that cover exactly
-  the genomes outside L: a clade code wherever a whole clade lies outside, a genome code
-  for the rest, and no code for a clade with no genome. On the recorded taxonomy the 855
-  genomes outside a clade of two are 11 codes, and the 839 outside a genus of 18 genomes
-  with no clade code are 53. With `within`, a clade M that holds L, C is every genome
-  outside M; an M that does not hold L is refused, and the refusal names
-  `L>=1T AND M=0T`, the form for absence from M.
-- Presence in every species of a clade L, a species present when at least half its k
-  genomes hold a protein, is one unit `S>=ceil(k/2)T` per species, joined with AND. The
-  species are the genome labels' genus and species words (the client's `species_of`), so a
-  unit written by hand can drop a strain or round a half the wrong way; the help names
-  `build_every_species_expression` (`catalog/clade_only.py`), which writes the units from the
-  taxonomy and counts them with one report. On QA OrthoMCL build 8.2 the 18 genomes of
-  Cryptosporidium are 12 species, two of them with a threshold of 2, and the expression
-  answers 2,505 groups (`orthomcl_every_species_counts.json`). A clade of one species is
-  refused, since its one unit needs no builder.
+- Two sets compare by protein count as bands: one AND term per count k of the right
+  side, from 0 to K, the largest count of the right side in any group, read by bisection
+  over count reports (`B>=128`, doubling, then halving the last interval). A ladder
+  stopped before K misses groups.
+- A count's time follows the expression's characters, measured from 6,278 to 645,028
+  characters and from 250 to 2,000 OR terms. On QA OrthoMCL with
+  `scripts/record_phyletic_site_limits.py`
+  (`catalog/data/orthomcl_phyletic_site_limits.json`, read with `importlib.resources`),
+  every read answered 200: two-genome ladders of 250, 500, 1,000 and 2,000 terms (6,278
+  to 53,779 characters) took 4.5, 5.4, 7.7 and 14.2 s, and 250 terms over units of 8,
+  32, 128 and 512 codes (15,028 to 645,028 characters) took 6.5, 11.0, 21.7 and 103.2 s.
+  The ladder above 2,000 terms was not sent. Each bisection probe took 0.23 to 0.32 s on
+  build 8.2.
+- Presence only in a clade L is absence over its complement, `L>=1T AND C=0T`. No
+  served read lists the genomes outside a clade, so the builder writes C from the
+  taxonomy as the fewest tree codes that cover exactly those genomes. On the recorded
+  taxonomy the 855 genomes outside a clade of two are 11 codes.
+- The species of a clade are the genome labels' genus and species words (the client's
+  `species_of`). A unit written by hand can drop a strain; `each_species_of` writes one
+  unit per species from the taxonomy.
 - `phyletic_expression` declares `length` 0, and WDK checks a string's length only when
   it is not 0, so the parameter has no length limit. Expressions of 2,842, 4,264 and
-  8,644 characters were answered.
+  8,644 characters were answered on build 8.2, and up to 645,028 on QA.
 
-# What the help needs from the client
+# The builder, not recipes
 
-The help tells a model to write an OR of AND terms without parentheses. The parameter
-check reads each stated expression with the client's `PhyleticExpression.parse` and
-judges it with `check_expression`. `veupathdb-py` 0.1.0b17 refuses AND and OR side by
-side without parentheses, so the help ships with the pin to 0.1.0b18, which accepts an
-OR of AND terms and refuses an upper bound of zero (`<=0` or `<1`), because such a unit
-matches no group. Each recipe and the example pass the served check and select, with
-the client's evaluation of an expression on one group, the groups their words describe:
-each instance has groups it must select and groups it must reject, and every one-edit
-change of an instance (an operator, a count up or down by one, T added or removed, a unit
-or an OR term dropped) that selects other groups fails on one of them. Two recipe forms
-reach a bound of zero at an edge, so the help names the edge: absence from at least k is
-for k below N, and absence from all N genomes is `X AND L=0T`; band c=0 over one genome
-in L1 is `L1=0T AND Y` alone. In band c=0, Y is `L2>=1`, because at least r times 0
-proteins states nothing and the check refuses `L2>=0`.
+A builder per question shape leaves every other shape to the model and pulls a near
+shape toward the reading the builder encodes, and a recipe in the help does the same.
+`build_phyletic_expression`
+(`catalog/phyletic_pattern.py`, `catalog/phyletic_logic.py`,
+`catalog/phyletic_builder.py`) takes the whole grammar instead: counts over sets, a
+comparison whose reading the caller states (per genome, totals, averages), and AND, OR
+and NOT nested. It reads each condition with absence as 0, multiplies the nesting out
+into the OR of AND terms the site reads, and writes each unit in the form the site
+counts (`=0` or `=0T` for absence, never an upper bound of zero). The help states the
+grammar and names the builder, and no recipe. The five recorded count wires the three
+builders sent replay unit for unit against patterns the builder takes, so
+`ORTHOMCL_COUNTS` still answers a host's suite
+(`tests/unit/catalog/test_the_count_recordings_replay.py`).
+
+# The refusal: the site was not measured to answer it
+
+The expression has no length cap of its own choosing. The builder admits what the
+recording shows the site answering and refuses the rest:
+
+- The admission cap is the longest expression the site was measured to answer, read
+  from the recording (`SiteCost.longest`, 645,028 characters). A longer expression is
+  refused by name before its count, as longer than the longest expression the site
+  was measured to answer; it needs recorded rows before it is admitted.
+- The predicted time is a second guard. `catalog/site_cost.py` fits the recording's
+  answered reads as a fixed cost plus a cost per character, weighted by the inverse
+  square of each read's time so every row counts by its relative error: about 3.9 s
+  plus 0.138 s per 1,000 characters, every row within 25% (the worst at 22.8%,
+  165,028 characters; `tests/unit/catalog/test_the_site_cost_fits_its_recording.py`).
+  Each bisection probe adds 0.3 s. A pattern predicted past the 300 s call budget
+  (`CALL_SECONDS`, the tool's `_meta`) is refused with the predicted seconds.
+- Each refusal names the OR terms and characters. A pattern with no compare is refused
+  before any read.
+- The cap also bounds the build in memory. Each step of the OR-of-AND build is admitted
+  on its merged clauses, after contradictions drop and duplicates merge, by the
+  characters they write from the pattern's own code covers; a refusal there says the
+  pattern reaches at least those counts before its last step. The final rendering is
+  admitted on its exact characters before the string exists. No term count is fixed.
+- The expansion, the client's parse, check and reading run in a worker thread
+  (`asyncio.to_thread`); the client's 0.1.0b23 reads an expression in time linear in its
+  units.
+- The served result carries the whole expression, the value for `phyletic_expression`.
+  Its `reading` is the client's reading while that and the expression are both at most
+  2,000 characters (`READING_LIMIT`); past that it is an outline of the pattern (its
+  sets, measures, conditions and compare readings) with the OR terms and characters,
+  cut to 2,000 characters. A host that keeps a long expression out of a model's context
+  does so itself.
 
 # When to measure again
 
@@ -124,11 +135,14 @@ unmeasured until they are measured again on that build.
 **Hiding the search.** It still answers a question about how many genomes a group
 spans, which is what it counts.
 
-**Leaving the two-genome ladder to the model.** A ladder written by hand has no stop rule
+**A builder per question shape.** Each covers one reading of one shape, a shape outside
+them has no builder, and the model reads a near shape as the one with a builder.
+
+**Leaving the comparison bands to the model.** A ladder written by hand has no stop rule
 the model can check from what it sees: a term that answers no group does not mean the
 next one answers none, and a ladder copied from another answer stops at that answer's K.
 Both miss groups the full ladder returns. The bisection is a bounded number of counts a
-tool sends without error, and the expression it returns is the one the help describes.
+tool sends without error.
 
 **Leaving the complement to the model.** No served read lists the genomes outside a
 clade, so a model asked for presence only in a clade cannot write C. A tool that walks the
@@ -139,9 +153,9 @@ searches; a note fills only a gap, and a site that starts to describe the search
 retires the note without a release.
 
 Falsified by `tests/unit/catalog/test_search_notes.py`,
-`tests/unit/catalog/test_protein_count_comparison.py`,
-`tests/unit/catalog/test_clade_only_expression.py` (with the recorded counts in
-`src/veupathdb_mcp/testing/fixtures/orthomcl/orthomcl_clade_only_counts.json`, package
-data a host's suite reads through `veupathdb_mcp.testing.ORTHOMCL_COUNTS`),
-`tests/unit/catalog/test_param_formatting.py::TestTheExpressionSheetStatesTheGrammarAndTheRecipes`
-and `tests/unit/catalog/test_the_help_recipes_parse.py`.
+`tests/unit/catalog/test_phyletic_expression_builder.py` (every output checked with
+`check_expression` and compared group by group with the pattern's meaning on a
+synthetic taxonomy, and the budget refusal),
+`tests/unit/catalog/test_the_count_recordings_replay.py`,
+`tests/unit/test_the_site_limits_recorder_is_bounded.py` and
+`tests/unit/catalog/test_param_formatting.py::TestTheExpressionSheetStatesTheGrammarAndNamesTheBuilder`.

@@ -1,5 +1,130 @@
 # Knowledge log
 
+## 2026-10-23 - 0.2.0b40
+
+- A phyletic search resolved with neither species list raises `PhyleticListError`, never
+  binding the site's hidden `profile_pattern` default (`hsap=1T` on QA plasmodb
+  `GenesByOrthologPattern`, which would filter to genes with a human ortholog); the website's
+  form always derives the pattern from the two lists. An unknown parameter name lists only
+  visible names. `AllOf`, `AnyOf` and `NoneOf` are rebuilt, so a combined pattern serializes.
+  The served builder says a host should keep a long expression and bind it by reference.
+### One phyletic expression builder
+
+- Breaking for hosts. `build_protein_count_comparison`, `build_clade_only_expression`
+  and `build_every_species_expression` are no longer served, and
+  `compare_protein_counts`, `clade_only_expression`, `every_species_expression`,
+  `ProteinCountComparison`, `ProteinCountLadder`, `CladeOnlyExpression`,
+  `EverySpeciesExpression`, `SpeciesUnit`, `MAX_COUNT_REPORTS`,
+  `CLADE_ONLY_COUNT_REPORTS` and `EVERY_SPECIES_COUNT_REPORTS` leave
+  `veupathdb_mcp.catalog`. A builder per question shape pulls a near shape toward its
+  own reading.
+- `build_phyletic_expression(site_id, pattern)` replaces them, served read-only with a
+  300 s call budget, and `write_phyletic_expression(site_id, pattern)` is the same call
+  in process. `pattern` is the tagged union `PhyleticPattern` on `kind`: `count`
+  (`CountTerm`: a set, a measure of `genomes`, `proteins` or `share`, a condition of
+  `at_least`, `at_most`, `exactly`, `more_than`, `fewer_than` or `absent`, a value;
+  measure and value default to none and are required unless the condition is
+  `absent`), `compare` (`CompareTerm`: two sets, a reading of `per_genome`, `totals`
+  or `averages`, a condition, a factor), and `all_of`, `any_of`, `none_of` (`AllOf`,
+  `AnyOf`, `NoneOf`) over patterns. A set is `codes` (`CodeSet`, where `ALL` is every
+  genome), `all_except` (`AllExcept`), `each_species_of` (`EachSpeciesOf`) or
+  `each_genome_of` (`EachGenomeOf`); a comparison takes the first two. A genome with
+  no protein counts 0. A share is a genome count per set, ceiling for at_least, and
+  exactly holds only on a whole count. A per-genome compare against one right genome
+  writes one exact band per count. The result, `PhyleticExpressionResult`, gives
+  `expression`, `reading` (the client's `describe`), `groups`, `codes` and
+  `maximumReads`.
+- Requests per call: one count report for the expression, after `check_expression`
+  passes. A comparison adds the bisection reads of its right side's largest count
+  (`B>=128`, doubling, then halving), each distinct side read once per call, one report
+  at a time. A probe that still answers groups at 65,536 or more is refused.
+- Admission stops at the longest expression the site was measured to answer, read from
+  the QA recording `catalog/data/orthomcl_phyletic_site_limits.json` (runtime package
+  data the wheel ships): 645,028 characters. A longer expression is refused by name, as
+  longer than that; it needs recorded rows before it is admitted. A count's time follows
+  characters: `catalog/site_cost.py` fits the recording as about 3.9 s plus 0.138 s per
+  1,000 characters (every row within 25%, the worst at 22.8%), plus 0.3 s per bisection
+  probe, and a pattern predicted past the 300 s budget is refused as a second guard.
+  Each refusal names the OR terms and characters, before the count, and before any read
+  for a pattern with no compare. The build is admitted step by step on its merged
+  clauses, after contradictions drop, and its rendering on its exact characters; no
+  term count is fixed. The expansion, parse, check and reading run in a worker thread.
+  A site refusal reaches the caller as the site wrote it.
+- The result carries the whole expression, the value for `phyletic_expression`. Its
+  `reading` is the client's reading up to 2,000 characters (`READING_LIMIT`), and past
+  that an outline of the pattern with its OR terms and characters, at most 2,000
+  characters.
+- `scripts/record_phyletic_site_limits.py` (at most 30 count reports, one at a time,
+  stopping at the first refusal or at 300 s) ran on QA OrthoMCL: ladders of 250 to 2,000
+  terms (6,278 to 53,779 characters) took 4.5 to 14.2 s, and 250 terms over units of 8
+  to 512 codes (15,028 to 645,028 characters) took 6.5 to 103.2 s, all answered. The
+  ladder above 2,000 terms was not sent.
+- It pins veupathdb-py 0.1.0b23, which parses an expression in linear time, reads the
+  tree once per expression, and publishes `PHYLETIC_ROOT_CODE`.
+- The `phyletic_expression` help keeps its grammar, precedence, absence and length
+  rules, drops every recipe, and names `build_phyletic_expression`, as does
+  `EXPRESSION_LOOKUP_HINT`. `tests/unit/catalog/test_the_help_recipes_parse.py` and
+  `scripts/record_orthomcl_every_species.py` are deleted. The five recordings under
+  `ORTHOMCL_COUNTS` stay, and `tests/unit/catalog/test_the_count_recordings_replay.py`
+  replays each against the pattern it records on the recorded taxonomy: the three
+  two-genome ladders as `compare` totals more_than (3,896, 13,354 and 11,130 groups),
+  the three clade-only counts as `count` at_least 1 genome with `all_except` absent
+  (558, 54,039 and 1,511), and the every-species count as `each_species_of` share
+  at_least 50 (2,505).
+- What a host does to take this release: call `build_phyletic_expression` where it
+  called one of the three builders, read the input and result names above from
+  `veupathdb_mcp.catalog`, and replace its conformance samples for the three removed
+  tools with one sample of the new tool. The served tool count is forty-two.
+
+### No hidden parameter reaches the model
+
+- `build_sheet` (`catalog/param_sheet.py`) lists visible parameters only, and
+  `SheetEntry.hidden` is gone. Commit 2e4ce60 (0.2.0a32) listed a hidden parameter that
+  has a vocabulary, marked hidden, on the reading that hidden means not shown, not fixed.
+  The website does not read it that way: wdk-client's `DefaultQuestionForm.tsx` draws
+  only groups whose `displayType` is not `hidden`, and `extractParamValues`
+  (`Utils/WdkUser.ts`) gives every parameter, hidden ones included, its value from the
+  URL's initial params, the saved step, or `initialDisplayValue`. A person never sets a
+  hidden value, and a host hands the sheet to a model, so the model set them. Measured on
+  QA plasmodb `GenesByRNASeqpfal3D7_Bartfai_time_series_rnaSeq_RSRCPercentile`: the
+  hidden `channel` (group `_hidden`, `isVisible: false`, `initialDisplayValue`
+  `Channel 1`, vocabulary `Channel 1`, `Channel 2`) was on the sheet, and a count with
+  `channel="Channel 2"` and a valid profileset answered 500 Internal Error (WDK
+  `WdkEmptyEnumListException` on `samples_percentile_generic`).
+- The other paths that showed a hidden parameter are closed. `get_parameter_options`
+  (`read_parameter_options`) refuses one by name with `HiddenParameterError` ("the site
+  sets it"), and a visible parameter's `controlsVocabOf` names visible parameters only,
+  as the overview's does. The served `get_search_param_specs` lists visible parameters
+  and visible dependents; `build_param_specs` stays whole for a host's form. The
+  resolve walk binds a hidden parameter at its default, never opens a slot for one or
+  names one in `unresolvedRequired`, and refuses an override that names one. A hidden
+  required parameter with no default refuses the search (`HiddenParameterError`, "no
+  value the site sets"); a hidden input step is left to the step tree.
+- Breaking for hosts. `resolve_params_with_intent` takes `definition`, the search's
+  published parameters, and derives `profile_pattern` from `included_species` and
+  `excluded_species` with `derive_phyletic_overrides`. A stated `profile_pattern` is
+  refused as a hidden parameter, and a stated map as no parameter of the sheet. Lists
+  that name no entry, or select nothing, or come without `definition`, are refused with
+  `PhyleticListError`. The served `resolve_search_parameters` passes the definition.
+- The values `validate_parameters` returns carry a hidden parameter at its
+  `initialDisplayValue` when the caller states none and the parameter forbids an empty
+  value (the client's `fill_hidden_required_defaults`); a hidden parameter that allows
+  empty is not filled there, where the website sends every hidden one. A hidden value a
+  caller states still travels as stated: some searches take one from a form of their
+  own (`profile_pattern` on `GenesByOrthologPattern`, the `eda_*` parameters of the
+  EDA-backed searches), and a value WDK derives from a visible one
+  (`eda_sample_table_suffix` from the organism) differs from the static default.
+- Falsified by `tests/unit/catalog/test_a_hidden_parameter_is_off_the_sheet.py` (the
+  rewrite of `test_a_hidden_choice_is_on_the_sheet.py`),
+  `tests/unit/catalog/test_a_hidden_parameter_never_reaches_the_model.py` and
+  `tests/unit/catalog/test_a_hidden_parameter_takes_the_sites_value.py`, on the recorded
+  `GenesByNgsSnps` and its `_hidden` group.
+- What a host does to take this release: stop reading `SheetEntry.hidden`, stop offering
+  a hidden parameter's vocabulary as a choice, catch `HiddenParameterError` from
+  `read_parameter_options` and `resolve_params_with_intent`, and pass the two species
+  lists with `definition` to `resolve_params_with_intent` in place of a derived
+  `profile_pattern`, catching `PhyleticListError`.
+
 ## 2026-10-23 - 0.2.0b39
 
 - `read_each_gene_id(site_id, gene_ids)` (`veupathdb_mcp.gene_lookup`) answers each id on

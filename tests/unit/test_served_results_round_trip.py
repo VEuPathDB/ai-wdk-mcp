@@ -2,11 +2,10 @@ import typing
 from collections.abc import Awaitable, Callable
 
 import pytest
-from pydantic import AliasChoices, BaseModel, ValidationError
+from pydantic import AliasChoices, BaseModel, TypeAdapter, ValidationError
 from pydantic.fields import FieldInfo
 from scripts.record_audit_fusion import CASES, FusionRecording
 from scripts.record_audit_strain import StrainWire
-from scripts.record_orthomcl_every_species import CRYPTOSPORIDIUM
 from tests._support import anatomy_site, fusion_site, piga_selk_site
 from tests._support.audit_fixtures import (
     GT1_SELK,
@@ -31,12 +30,7 @@ from tests._support.evidence_site import (
     EvidenceSite,
     gene_record,
 )
-from tests._support.group_count_site import (
-    install,
-    install_recorded,
-    install_replay,
-    recorded_every_species,
-)
+from tests._support.group_count_site import install
 from tests._support.intron_wire import Served, load_introns
 from tests._support.length_site import PART_A, PART_B, split_site
 from tests._support.missing_wire import (
@@ -45,6 +39,7 @@ from tests._support.missing_wire import (
     replay_records,
 )
 from tests._support.organelle_fixtures import CYTB, recorded_site
+from tests._support.phyletic_truth import site_counts, synthetic_groups, synthetic_tree
 from tests._support.proteins import PROTEIN, back_translate
 from tests._support.record_site import (
     install_recorded_records,
@@ -65,6 +60,7 @@ from veupathdb.wdk import WDKAnswer
 from veupathdb_mcp import server
 from veupathdb_mcp.audit import genes, served
 from veupathdb_mcp.audit.gene_models import GeneModel
+from veupathdb_mcp.catalog import PhyleticPattern
 from veupathdb_mcp.research import server as research_server
 from veupathdb_mcp.tools import (
     audit_anatomy_tools,
@@ -294,32 +290,19 @@ async def gene_fusion(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
     return found
 
 
-async def protein_count_comparison(
-    monkeypatch: pytest.MonkeyPatch,
-) -> list[BaseModel]:
-    install_recorded(monkeypatch)
-    return [
-        await catalog_tools.build_protein_count_comparison(
-            "orthomcl", "tgon", "pfal", reverse=True
-        )
-    ]
-
-
-async def clade_only_expression(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
-    install(monkeypatch, lambda expression: 41)
-    return [
-        await catalog_tools.build_clade_only_expression("orthomcl", ["CILI"]),
-        await catalog_tools.build_clade_only_expression("orthomcl", ["ecun"], ["MICR"]),
-    ]
-
-
-async def every_species_expression(
-    monkeypatch: pytest.MonkeyPatch,
-) -> list[BaseModel]:
-    install_replay(monkeypatch, recorded_every_species())
-    return [
-        await catalog_tools.build_every_species_expression("orthomcl", CRYPTOSPORIDIUM)
-    ]
+async def phyletic_expression(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel]:
+    tree = synthetic_tree()
+    install(monkeypatch, site_counts(tree, synthetic_groups()), tree)
+    pattern = TypeAdapter(PhyleticPattern).validate_python(
+        {
+            "kind": "compare",
+            "left": {"kind": "codes", "codes": ["XG"]},
+            "right": {"kind": "all_except", "codes": ["XA"]},
+            "reading": "averages",
+            "condition": "more_than",
+        }
+    )
+    return [await catalog_tools.build_phyletic_expression("orthomcl", pattern)]
 
 
 RECORDED: dict[str, Recorded] = {
@@ -336,9 +319,7 @@ RECORDED: dict[str, Recorded] = {
     "audit_genome_provenance": genome_provenance,
     "audit_intron_support": intron_support,
     "audit_gene_fusion": gene_fusion,
-    "build_protein_count_comparison": protein_count_comparison,
-    "build_clade_only_expression": clade_only_expression,
-    "build_every_species_expression": every_species_expression,
+    "build_phyletic_expression": phyletic_expression,
 }
 
 

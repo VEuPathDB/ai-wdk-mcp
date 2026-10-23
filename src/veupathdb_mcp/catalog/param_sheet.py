@@ -15,17 +15,12 @@ from veupathdb_mcp.catalog.shortlist import shortlist
 
 
 class SheetEntry(CamelModel):
-    """One parameter with everything needed to propose a value for it.
-
-    ``hidden`` marks a parameter the site does not show but that takes any
-    entry of its vocabulary.
-    """
+    """One parameter with everything needed to propose a value for it."""
 
     name: str
     display_name: str
     type: str
     required: bool
-    hidden: bool = False
     is_number: bool = False
     organism_param: bool = False
     is_tree: bool = False
@@ -73,16 +68,13 @@ def _note(
 
 def build_sheet(infos: list[ParameterInfo], *, query: str) -> list[SheetEntry]:
     """Every parameter a value can be proposed for. A vocabulary over
-    ``DIRECT_MAX`` is shortlisted.
-
-    A hidden parameter is listed when it has a vocabulary; without one, only the
-    site sets it.
-    """
+    ``DIRECT_MAX`` is shortlisted. A hidden parameter is never listed: the site
+    sets it."""
     entries: list[SheetEntry] = []
     for info in infos:
-        options = info.vocabulary()
-        if not info.is_visible and not options:
+        if not info.is_visible:
             continue
+        options = info.vocabulary()
         shown = shortlist(options, query)
         facets = shown_facets(info.facets(), query)
         entries.append(
@@ -91,7 +83,6 @@ def build_sheet(infos: list[ParameterInfo], *, query: str) -> list[SheetEntry]:
                 display_name=info.display_name,
                 type=info.type,
                 required=info.required,
-                hidden=not info.is_visible,
                 is_number=info.is_number,
                 organism_param=info.organism_param,
                 is_tree=info.allowed_values_tree is not None,

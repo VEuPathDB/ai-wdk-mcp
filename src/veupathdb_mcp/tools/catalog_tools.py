@@ -5,21 +5,20 @@ from __future__ import annotations
 from fastmcp.exceptions import ToolError
 from veupathdb import JSONObject
 from veupathdb.domain import SearchContext
-from veupathdb.domain.parameters import ParamValue
+from veupathdb.domain.parameters import PHYLETIC_LIST_PARAMS, ParamValue
 from veupathdb.errors import VEuPathDBError
 
 from veupathdb_mcp.catalog import (
-    clade_only,
     experiments,
     parameters,
-    protein_comparison,
     search_inspection,
     searches,
     sites,
 )
-from veupathdb_mcp.catalog.clade_only import CladeOnlyExpression, EverySpeciesExpression
+from veupathdb_mcp.catalog.discovery_service import get_discovery_service
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.experiments import ExperimentMatch, UnknownExperimentError
+from veupathdb_mcp.catalog.hidden_params import HiddenParameterError
 from veupathdb_mcp.catalog.models import ParamSpecResponse, RecordTypeInfo, SearchMatch
 from veupathdb_mcp.catalog.overview_formatting import SearchOverviewResult
 from veupathdb_mcp.catalog.param_dag import (
@@ -31,7 +30,11 @@ from veupathdb_mcp.catalog.param_formatting import GetParameterOptionsResult
 from veupathdb_mcp.catalog.param_intent import ParamIntent
 from veupathdb_mcp.catalog.param_specs_formatting import build_param_specs
 from veupathdb_mcp.catalog.param_validation import ValidatedParams, validate_parameters
-from veupathdb_mcp.catalog.protein_comparison import ProteinCountComparison
+from veupathdb_mcp.catalog.phyletic_builder import (
+    PhyleticExpressionResult,
+    write_phyletic_expression,
+)
+from veupathdb_mcp.catalog.phyletic_pattern import PhyleticPattern
 from veupathdb_mcp.catalog.search_inspection import UnknownSearchError
 from veupathdb_mcp.catalog.searches import VagueSearchQueryError
 from veupathdb_mcp.catalog.shortlist import shortlist_slot
@@ -158,97 +161,68 @@ async def lookup_phyletic_codes(
     )
 
 
-async def build_protein_count_comparison(
-    site_id: str,
-    genome_a: str,
-    genome_b: str,
-    reverse: bool = False,
-) -> ProteinCountComparison:
-    """Build the exact phyletic_expression for the OrthoMCL groups in which genome
-    A holds more proteins than genome B.
+async def build_phyletic_expression(
+    site_id: str, pattern: PhyleticPattern
+) -> PhyleticExpressionResult:
+    """Write OrthoMCL's phyletic_expression from a pattern, check it against the
+    site's taxonomy, and count the groups it returns with one count read.
 
-    The expression is B=0 AND A>=1 OR B=1 AND A>=2 OR ... OR B=K AND A>=K+1,
-    where K is the smallest count for which B>=K+1 returns no group. K is read
-    from the site by bisection over count reports, each a count with no records:
-    at most 15 count reports, one at a time. A genome B with 1024 or more
-    proteins in one group is refused, because its ladder would not finish. Each ladder gives its expression,
-    groups, the number of groups it returns, and length, its characters; the
-    parameter has no length limit, so pass the expression whole. A group with as
-    many proteins in both genomes is in neither ladder.
+    Describe the groups you want; the tool writes the expression. Codes are clade
+    or genome codes from lookup_phyletic_codes. A genome with no protein in a group
+    counts 0, so at_most and fewer_than include groups absent from the set.
 
-    Args:
-        site_id: The OrthoMCL site, 'orthomcl'.
-        genome_a: Genome A, one genome code (leaf=true in lookup_phyletic_codes).
-        genome_b: Genome B, one genome code (leaf=true in lookup_phyletic_codes).
-        reverse: Also build the ladder of the groups in which genome B holds
-            more proteins than genome A.
-    """
-    try:
-        return await protein_comparison.compare_protein_counts(
-            site_id, genome_a, genome_b, reverse=reverse
-        )
-    except VEuPathDBError as exc:
-        raise ToolError(exc.detail or exc.title) from exc
+    A pattern is one of these, nested freely:
+    - count: {"kind": "count", "of": SET, "measure": M, "condition": C,
+      "value": V}. M is genomes (genomes of the set holding a protein), proteins
+      (the group's proteins over the set) or share (percent of the set's genomes
+      holding a protein). C is at_least, at_most, exactly, more_than or
+      fewer_than. {"kind": "count", "of": SET, "condition": "absent"} is no
+      protein in any genome of the set, with no measure and no value.
+    - compare: {"kind": "compare", "left": SET, "right": SET, "reading": R,
+      "condition": C, "factor": F} holds when left C F times right, F defaulting
+      to 1. R states what is compared: per_genome compares each genome of left
+      with each genome of right; totals compares the protein totals of the two
+      sets; averages compares proteins per genome, each total divided by its set's
+      genome count. The tool reads the largest count it needs from the site and
+      writes one band per count.
+    - all_of, any_of, none_of: {"kind": "all_of", "terms": [PATTERN, ...]} holds
+      when every term holds, any_of when one does, none_of when none does.
 
+    A SET is one of:
+    - {"kind": "codes", "codes": ["X"]}: clade X; ["A", "B"] is genomes A and B
+      read together; ["ALL"] is every genome.
+    - {"kind": "all_except", "codes": ["X"]}: every genome outside clade X.
+    - {"kind": "each_species_of", "codes": ["X"]}: the count holds within every
+      species of clade X, each on its own. A species is the genomes whose labels
+      share the genus and species words.
+    - {"kind": "each_genome_of", "codes": ["X"]}: the count holds in every genome
+      of clade X, each on its own.
+    compare takes codes and all_except only.
 
-async def build_clade_only_expression(
-    site_id: str,
-    clade: list[str],
-    within: list[str] | None = None,
-) -> CladeOnlyExpression:
-    """Build the exact phyletic_expression for the OrthoMCL groups present in a
-    clade L and in no genome outside it.
+    Rounding: a share p of a set of N genomes is exact. at_least p is at least
+    ceil(p*N/100) genomes, more_than is more than floor(p*N/100), at_most is at
+    most floor(p*N/100), fewer_than is fewer than ceil(p*N/100), and exactly holds
+    only when p*N/100 is a whole number. Within each_species_of, N is each
+    species' genome count. A compare factor rounds its bound the same way.
 
-    The expression is L>=1T AND C=0T, with C every genome outside L, written from
-    the site's taxonomy: a clade code for each whole clade outside L and a genome
-    code for the rest. With within, a clade M that holds every genome of L, C is
-    every genome outside M, so the groups may also hold proteins elsewhere in M.
-    One count report counts the groups. The result gives expression, groups,
-    length, its characters, genomes, the genome codes of L, and outside, the
-    number of genomes C covers; the parameter has no length limit, so pass the
-    expression whole. For a clade X whose genomes must hold no protein, write
-    L>=1T AND X=0T instead.
-
-    Args:
-        site_id: The OrthoMCL site, 'orthomcl'.
-        clade: L, one clade code, or the genome codes of a group with no clade
-            code of its own, such as a genus, from lookup_phyletic_codes.
-        within: M, the codes of a clade that holds every genome of L; every
-            genome outside M must hold no protein.
-    """
-    try:
-        return await clade_only.clade_only_expression(site_id, clade, within)
-    except VEuPathDBError as exc:
-        raise ToolError(exc.detail or exc.title) from exc
-
-
-async def build_every_species_expression(
-    site_id: str, clade: list[str]
-) -> EverySpeciesExpression:
-    """Build the exact phyletic_expression for the OrthoMCL groups present in every
-    species of a clade L.
-
-    The rule: a group is present in a species S of k genomes when at least
-    ceil(k/2) of those k genomes hold a protein of the group, the unit
-    S>=ceil(k/2)T; a species of one genome is S>=1T. The expression joins one
-    unit per species of L with AND, so a group passes only when it is present
-    in every species. It is written from the site's taxonomy: the species are
-    the genome labels' genus and species words, and each unit names that
-    species' genomes. One count report counts the groups. The
-    result gives expression, groups, length, its characters, genomes, the genome
-    codes of L, and species, each species with its genomes and present, the
-    genomes that must hold a protein; the parameter has no length limit, so pass
-    the expression whole. For presence in every genome write L=NT instead, and
-    for presence in some genome L>=1T. A clade of one species is refused: write
-    its one unit by hand.
+    The result gives expression (the value for phyletic_expression; it can run to
+    hundreds of thousands of characters, so a host that sets the search for you
+    should keep it and bind it by reference rather than ask you to repeat it),
+    reading (the expression in words, or for a long expression the pattern's
+    sets and conditions with its OR terms and characters), groups (the groups it
+    returns), codes (the codes it names) and maximumReads (count reads made for
+    the largest counts a compare needs). A refusal from the site is returned as
+    the site wrote it. A pattern whose expression would be longer than the
+    longest expression the site was measured to answer, or whose count would
+    pass the call budget, is refused before the count with its OR terms and
+    characters; narrow the pattern and call again.
 
     Args:
         site_id: The OrthoMCL site, 'orthomcl'.
-        clade: L, one clade code, or the genome codes of a group with no clade
-            code of its own, such as a genus, from lookup_phyletic_codes.
+        pattern: The groups to select, as described above.
     """
     try:
-        return await clade_only.every_species_expression(site_id, clade)
+        return await write_phyletic_expression(site_id, pattern)
     except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc
 
@@ -312,14 +286,17 @@ async def get_parameter_options(
             vocabulary. Hyphen and space match alike, and a phrase also
             matches its words in any order.
     """
-    return await search_inspection.read_parameter_options(
-        site_id,
-        search_name,
-        parameter_id,
-        record_type=record_type,
-        context_values=context_values,
-        narrowing=search_inspection.VocabNarrowing(query=query),
-    )
+    try:
+        return await search_inspection.read_parameter_options(
+            site_id,
+            search_name,
+            parameter_id,
+            record_type=record_type,
+            context_values=context_values,
+            narrowing=search_inspection.VocabNarrowing(query=query),
+        )
+    except HiddenParameterError as exc:
+        raise ToolError(exc.detail or exc.title) from exc
 
 
 async def get_search_param_specs(
@@ -341,7 +318,19 @@ async def get_search_param_specs(
     except UnknownSearchError as exc:
         msg = f"search_name is not on this site. {exc.guidance}"
         raise ToolError(msg) from exc
-    return build_param_specs(inspection.definition)
+    specs = build_param_specs(inspection.definition)
+    shown = {spec.name for spec in specs if spec.is_visible}
+    return [
+        spec.model_copy(
+            update={
+                "dependent_params": [
+                    name for name in spec.dependent_params if name in shown
+                ]
+            }
+        )
+        for spec in specs
+        if spec.name in shown
+    ]
 
 
 async def validate_search_parameters(
@@ -453,12 +442,27 @@ async def resolve_search_parameters(
         record_type: Record type. Gene searches are 'transcript'.
         criterion: The criterion the binding runs against, in your own words.
         overrides: Values stated by name, each a string or a list of strings.
+            A hidden parameter takes no stated value. On a phylogenetic profile
+            search, state included_species and excluded_species; profile_pattern
+            is derived from them.
     """
     try:
+        definition = (
+            (
+                await get_discovery_service().get_search_details(
+                    SearchContext(site_id, record_type, search_name),
+                    expand_params=True,
+                )
+            ).search_data.parameters
+            or []
+            if PHYLETIC_LIST_PARAMS & (overrides or {}).keys()
+            else []
+        )
         resolved = await resolve_params_with_intent(
             fetch_at=wdk_fetch_at(site_id, record_type, search_name),
             intent=ParamIntent(text=criterion),
             overrides=overrides,
+            definition=definition,
         )
     except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc
