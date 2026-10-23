@@ -19,8 +19,8 @@ from veupathdb_mcp.catalog.phyletic_builder import READS_PER_PROBE
 from veupathdb_mcp.catalog.phyletic_logic import (
     CALL_SECONDS,
     HOST_MARGIN,
-    MEASURED_SECONDS_PER_PAIR,
-    SECONDS_PER_PAIR,
+    MEASURED_SECONDS_PER_ATOM,
+    SECONDS_PER_ATOM,
     Dnf,
     Guard,
     atom,
@@ -167,9 +167,11 @@ class _Counting(Guard):
         super().__init__(synthetic_tree(), cost, 0)
         self.admitted: list[tuple[int, int]] = []
 
-    def admit(self, characters: int, terms: int, *, partial: bool = False) -> None:
+    def admit(
+        self, characters: int, terms: int, *, atoms: int = 0, partial: bool = False
+    ) -> None:
         self.admitted.append((characters, terms))
-        super().admit(characters, terms, partial=partial)
+        super().admit(characters, terms, atoms=atoms, partial=partial)
 
 
 def test_either_refuses_at_the_first_clause_past_the_cap() -> None:
@@ -207,6 +209,6 @@ def test_a_budget_shorter_than_the_longest_count_allows_no_reads() -> None:
     assert site_cost().reads_within(90.0) == 0
 
 
-def test_the_pair_cost_carries_a_margin_over_the_measured_cost() -> None:
-    assert SECONDS_PER_PAIR == MEASURED_SECONDS_PER_PAIR * HOST_MARGIN
+def test_the_atom_cost_carries_a_margin_over_the_measured_cost() -> None:
+    assert SECONDS_PER_ATOM == MEASURED_SECONDS_PER_ATOM * HOST_MARGIN
     assert HOST_MARGIN >= 2

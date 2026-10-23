@@ -633,7 +633,7 @@ async def test_the_expansion_runs_off_the_event_loop(
         "orthomcl", _pattern(_count(_codes("XA"), "genomes", "at_least", 2))
     )
 
-    assert moved == ["written"]
+    assert moved == ["probed", "written"]
 
 
 async def test_every_genome_is_a_set(monkeypatch: pytest.MonkeyPatch) -> None:

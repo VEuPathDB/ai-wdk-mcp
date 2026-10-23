@@ -117,12 +117,34 @@ recording shows the site answering and refuses the rest:
   A pattern whose
   sides would need more is refused by name before any read; `GroupCountReports`
   refuses the read past that ceiling whatever the prediction said.
-- The build's CPU is charged to the same budget. An AND product indexes the added
-  clauses by their exact count on one set and tries only the pairs whose bounds on that
-  set overlap; every pair it tries is charged before it builds, at 0.72 us a pair
-  (`SECONDS_PER_PAIR`), and the build time takes its share of the character cap. A
-  product predicted past the budget is refused by name with its pairs
-  (`tests/unit/catalog/test_phyletic_product.py`).
+- The build's CPU is charged to the same budget, in atoms. An AND product indexes the
+  added clauses by their exact count on one set and tries only the pairs whose bounds
+  on that set overlap. A pair costs time in proportion to the atoms of its two clauses,
+  so every pair it tries is charged by those atoms before it builds, summed from the
+  index without building a pair. Each clause a product or an OR merge admits charges
+  its atoms, and the rendering charges every unit it writes. An atom is 2.83 us
+  measured (`MEASURED_SECONDS_PER_ATOM`), times a host margin of 2 (`SECONDS_PER_ATOM`):
+  the most over 25 product and pattern shapes on the recorded OrthoMCL taxonomy, the
+  median of 7 runs with the garbage collector on, once each genome's cover was read.
+  Actual time over that charge is at most 1.00 before the margin, 0.50 after it. The
+  build time takes its share of the character cap. A product predicted past the budget
+  is refused by name with its atoms (`tests/unit/catalog/test_phyletic_product.py`).
+- The first cover read of each distinct genome set is charged to the same budget before
+  it is read: 19.14 ms a set measured (`MEASURED_SECONDS_PER_COVER`), times the host
+  margin (`SECONDS_PER_COVER`), the most over six kinds of set on that taxonomy, measured
+  the same way (0.40 ms for every genome, 15.6 ms for a genome, 19.1 ms for all but one
+  genome). A pattern past the budget is refused by name with its sets before the cover
+  that passes it is read.
+- The compare sides are found in a worker thread too (`probed`), through the call's
+  guard, so a side's cover is charged there before it is read and off the event loop.
+  The build's guard starts from that one (`Guard.after`) with its covers, their charge
+  and its start, so a cover read for a side is never read or charged again.
+- The call has a wall-clock deadline, fixed at its start: the monotonic time then, plus
+  the budget less the count's fixed cost. The probe covers and the site reads run on
+  the same clock, so slow reads shorten the build. Every charge and every admission
+  reads the clock, an admission also takes the count of its own characters off the
+  deadline, and a step past it is refused by name with the seconds the call ran. It
+  ends a build the estimates miss, in the worker thread that cannot be cancelled.
 - A pattern nests at most 8 levels (`MAX_DEPTH`) and holds at most 128 terms, nested
   terms counted (`MAX_TERMS`); the model refuses a larger one at validation.
 - The cap also bounds the build in memory. Each step of the OR-of-AND build, an AND

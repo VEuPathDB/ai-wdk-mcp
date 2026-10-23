@@ -1,5 +1,56 @@
 # Knowledge log
 
+## 2026-10-24 - 0.2.0b42
+
+- An AND product charges each pair it tries by its atoms, the left clause's plus the
+  right clause's, where it charged one flat cost a pair; the index sums them from per
+  bucket atom totals without building a pair. A pair's merge takes time in proportion
+  to its atoms, and a pattern of 128 terms makes clauses of hundreds of atoms, so a
+  flat charge let the build run many times its prediction. On the recorded OrthoMCL
+  taxonomy, an `all_of` of two `any_of`s of 60 `each_genome_of` counts over all 857
+  genomes is charged 106,500 pairs, about 0.15 s at the old 1.44 us a pair, and the
+  call ran 41.2 s. `MEASURED_SECONDS_PER_PAIR`, `SECONDS_PER_PAIR` and `Guard.pairs`
+  are gone; `Guard.atoms` counts the charge.
+- The work around a product is charged too. Each clause an AND product or an OR merge
+  admits charges its atoms (`Guard.admit(..., atoms=)`), and the rendering charges every
+  unit it writes, so the clause admissions, the widths and the string build come out of
+  the budget with the pairs.
+- The first cover read of each distinct genome set is charged before it is read
+  (`Guard.covers`), and a pattern past the budget is refused by name with its sets.
+  `pattern.probes` takes the `Guard` and reads each compare side's cover through it,
+  and `write_phyletic_expression` runs it in a worker thread (`probed`) before the
+  first read. `written` builds on `Guard.after(reads)`, which keeps the probe step's
+  covers, their charge and its start, so a side's cover is read and charged once a
+  call. A pattern whose sides pass the budget is refused before any read.
+- `MEASURED_SECONDS_PER_ATOM` is 2.83 us and `MEASURED_SECONDS_PER_COVER` 19.14 ms, each
+  the most over its measured shapes on that taxonomy, the median of 7 runs with the
+  garbage collector on, each genome's cover read first for the atoms; `HOST_MARGIN`
+  stays 2. Per atom (`atom_cost_median`, 25 shapes): pairs that contradict 0.11 to
+  0.30 us, wide pairs that merge 0.63 to 0.83 us at widths 8, 32 and 128, narrow pairs
+  that merge 1.37 us, duplicate-heavy products 0.68 to 1.06 us, patterns with their
+  rendering 0.10 to 0.96 us, and two same-side totals compares at a largest count of
+  16,000 with their rendering 2.83 us. Per cover: every genome 0.40 ms (20 sets), a
+  clade or all but one clade 1.77 ms (46, 47), a species 15.32 ms (640), a genome
+  15.64 ms (857), all but one genome 19.14 ms (200).
+- Actual time over the charge at the measured rate, before the margin
+  (`charge_bound`): duplicate-heavy 0.36, duplicate-heavy wide 0.27, totals AND
+  totals at 16,000 1.00, per_genome right 4 at 340 0.59, per_genome AND per_genome at
+  300 0.31, each_species_of ALL 0.75, none_of any_of 40 0.60; after the margin of 2,
+  every shape is at or under 0.50.
+- The call has a wall-clock deadline, fixed at its start before the taxonomy read
+  (`clock`, `Guard(start=)`): that time plus the 300 s budget less the count's fixed
+  cost. The probe covers and the site reads run on the same clock, so slow reads
+  shorten the build. Every charge and admission reads the clock, an admission takes
+  the count of its own characters off the deadline, and a step past it is refused by
+  name with the seconds the call ran. It ends a build the estimates miss in the worker
+  thread, which cannot be cancelled.
+- Unchanged: the two same-side totals compares build 152,697 characters in 0.4 s at a
+  largest count of 4,000 and 638,701 in 1.9 s at 16,000 (charged 480,024 atoms and 3
+  covers with its rendering, about 2.8 s), and are refused at the cap at 30,000; `each_genome_of` at most 1 protein
+  admits 10 genomes (111,612 characters) and 12 (536,572) and refuses 13 at the cap;
+  the fuzzed truth check (8 seeds, 100 patterns each, budget shrunk to 7 s) has no
+  mismatch, and refuses 5 patterns more than 0.2.0b41 by the cover charge.
+
 ## 2026-10-24 - 0.2.0b41
 
 - `build_phyletic_expression` bounds its site reads before the first one. A distinct

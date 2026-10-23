@@ -18,7 +18,6 @@ from veupathdb_mcp.catalog.phyletic_logic import (
     atom,
     both,
     bounds,
-    cover,
     either,
     neither,
     refuse,
@@ -183,8 +182,8 @@ class CountTerm(CamelModel):
     def size(self) -> int:
         return 1
 
-    def probes(self, tree: PhyleticTree) -> list[Probe]:
-        self.of.parts(tree)
+    def probes(self, guard: Guard) -> list[Probe]:
+        self.of.parts(guard.tree)
         return []
 
     def outline(self) -> str:
@@ -231,11 +230,11 @@ class CompareTerm(CamelModel):
         default=1, gt=0, description="left <condition> factor times right."
     )
 
-    def _probe(self, tree: PhyleticTree) -> Probe:
-        self.left.genomes(tree)
-        right = self.right.genomes(tree)
+    def _probe(self, guard: Guard) -> Probe:
+        self.left.genomes(guard.tree)
+        right = self.right.genomes(guard.tree)
         if self.reading != "per_genome" or len(right) == 1:
-            return Probe((cover(tree, right),), "AND")
+            return Probe((guard.unit(right),), "AND")
         upper = self.condition in {"at_least", "more_than"}
         return Probe(tuple(sorted(right)), "OR" if upper else "AND")
 
@@ -245,8 +244,8 @@ class CompareTerm(CamelModel):
     def size(self) -> int:
         return 1
 
-    def probes(self, tree: PhyleticTree) -> list[Probe]:
-        return [self._probe(tree)]
+    def probes(self, guard: Guard) -> list[Probe]:
+        return [self._probe(guard)]
 
     def outline(self) -> str:
         return (
@@ -259,7 +258,7 @@ class CompareTerm(CamelModel):
         tree, guard = writing.tree, writing.guard
         left = self.left.genomes(tree)
         right = self.right.genomes(tree)
-        top = writing.maxima[self._probe(tree)]
+        top = writing.maxima[self._probe(guard)]
         factor = Fraction(str(self.factor))
         if self.reading == "per_genome":
             return either(
@@ -331,8 +330,8 @@ class _Combination(CamelModel):
     def size(self) -> int:
         return 1 + sum(term.size() for term in self.terms)
 
-    def probes(self, tree: PhyleticTree) -> list[Probe]:
-        return [probe for term in self.terms for probe in term.probes(tree)]
+    def probes(self, guard: Guard) -> list[Probe]:
+        return [probe for term in self.terms for probe in term.probes(guard)]
 
     def _joined(self) -> str:
         return "; ".join(term.outline() for term in self.terms)

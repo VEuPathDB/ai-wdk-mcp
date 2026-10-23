@@ -17,6 +17,7 @@ from veupathdb_mcp.catalog.phyletic_logic import (
     Guard,
     Probe,
     Writing,
+    clock,
     refuse,
     render,
 )
@@ -51,10 +52,15 @@ class _Written:
     codes: tuple[str, ...]
 
 
+def probed(pattern: PhyleticPattern, guard: Guard) -> list[Probe]:
+    return list(dict.fromkeys(pattern.probes(guard)))
+
+
 def written(
-    pattern: PhyleticPattern, tree: PhyleticTree, maxima: Maxima, probes: int
+    pattern: PhyleticPattern, probing: Guard, maxima: Maxima, probes: int
 ) -> _Written:
-    guard = Guard(tree, site_cost(), probes)
+    guard = probing.after(probes)
+    tree = guard.tree
     text, terms = render(pattern.dnf(Writing(tree, maxima, guard)), guard)
     expression = PhyleticExpression.parse(text)
     check_expression(expression, tree)
@@ -114,14 +120,17 @@ def _admit_reads(probes: int, ceiling: int) -> None:
 async def write_phyletic_expression(
     site_id: str, pattern: PhyleticPattern
 ) -> PhyleticExpressionResult:
+    start = clock()
     tree = await site_taxonomy(site_id)
-    probes = list(dict.fromkeys(pattern.probes(tree)))
-    ceiling = site_cost().reads_within(CALL_SECONDS)
+    cost = site_cost()
+    probing = Guard(tree, cost, 0, start=start)
+    probes = await asyncio.to_thread(probed, pattern, probing)
+    ceiling = cost.reads_within(CALL_SECONDS)
     _admit_reads(len(probes), ceiling)
     reports = GroupCountReports(site_id, ceiling)
     maxima = {probe: await _largest(reports, probe) for probe in probes}
     maximum_reads = reports.sent
-    built = await asyncio.to_thread(written, pattern, tree, maxima, maximum_reads)
+    built = await asyncio.to_thread(written, pattern, probing, maxima, maximum_reads)
     return PhyleticExpressionResult(
         site_id=site_id,
         expression=built.text,
