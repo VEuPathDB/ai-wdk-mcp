@@ -44,7 +44,7 @@ from veupathdb_mcp.controls.control_types import (
     NegativeControls,
     PositiveControls,
 )
-from veupathdb_mcp.gene_lookup import TRANSCRIPTS_PER_GENE
+from veupathdb_mcp.wdk import TRANSCRIPTS_PER_GENE
 from veupathdb_mcp.wdk.helpers import extract_record_ids
 from veupathdb_mcp.wdk.step_report_filters import view_filters_for
 

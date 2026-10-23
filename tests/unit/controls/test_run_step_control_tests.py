@@ -18,8 +18,8 @@ from veupathdb_mcp.controls import (
     ControlTestResult,
     run_step_control_tests,
 )
-from veupathdb_mcp.gene_lookup import TRANSCRIPTS_PER_GENE
 from veupathdb_mcp.tool_payloads import ControlOutcome
+from veupathdb_mcp.wdk import TRANSCRIPTS_PER_GENE
 from veupathdb_mcp.wdk.step_report_filters import representative_transcript_only
 
 STEP_GENES = ("PF3D7_0100100", "PF3D7_0100200", "PF3D7_0100300")

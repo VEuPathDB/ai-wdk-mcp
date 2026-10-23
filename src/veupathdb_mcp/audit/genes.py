@@ -31,7 +31,7 @@ from veupathdb.wdk import (
 )
 
 from veupathdb_mcp.audit.gene_models import gene_record
-from veupathdb_mcp.gene_lookup import TRANSCRIPTS_PER_GENE, dataset_client
+from veupathdb_mcp.wdk import TRANSCRIPTS_PER_GENE, dataset_client
 
 GENE_ATTRIBUTES = (
     "organism_full",

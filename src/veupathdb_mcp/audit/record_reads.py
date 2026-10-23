@@ -29,7 +29,7 @@ from veupathdb_mcp.audit.genes import (
     GeneRow,
     rows_of,
 )
-from veupathdb_mcp.gene_lookup import TRANSCRIPTS_PER_GENE, dataset_client
+from veupathdb_mcp.wdk import TRANSCRIPTS_PER_GENE, dataset_client
 
 RECORD_READS_PER_CALL = 80
 MAX_LIST_IDS = 400

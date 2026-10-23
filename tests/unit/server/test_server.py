@@ -31,6 +31,7 @@ from veupathdb.wdk import (
 
 from veupathdb_mcp import server
 from veupathdb_mcp.audit import (
+    RECORD_READS_PER_CALL,
     FusionInputs,
     GeneId,
     LengthInputs,
@@ -40,6 +41,7 @@ from veupathdb_mcp.audit import (
     SelenoproteinInputs,
     UncheckedIntrons,
 )
+from veupathdb_mcp.audit.gene_ids import MAX_MATCHES
 from veupathdb_mcp.auth import CredentialMode, McpCredential
 from veupathdb_mcp.catalog import experiments, search_inspection, sites
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
@@ -397,19 +399,12 @@ async def test_a_record_call_answers_from_the_gene_lookup_service(
 ) -> None:
     seen: list[list[str]] = []
 
-    async def resolve(
-        site_id: str,
-        gene_ids: list[str],
-        *,
-        record_type: str,
-        search_name: str,
-        param_name: str,
-    ) -> GeneResolveResult:
-        del site_id, record_type, search_name, param_name
+    async def resolve(site_id: str, gene_ids: list[str]) -> GeneResolveResult:
+        del site_id
         seen.append(gene_ids)
         return GeneResolveResult(records=[], total_count=1)
 
-    monkeypatch.setattr(user_tools, "resolve_gene_ids", resolve)
+    monkeypatch.setattr(user_tools, "read_gene_ids", resolve)
 
     async with _served(_user_credential("user-bearer")) as client:
         result = await client.call_tool(
@@ -1443,3 +1438,29 @@ async def test_the_every_species_builder_names_its_rule_and_one_report() -> None
     assert MAX_CALL_SECONDS_META_KEY not in (tool.meta or {})
     assert tool.annotations is not None
     assert tool.annotations.readOnlyHint is True
+
+
+@pytest.mark.parametrize(
+    "tool_name", ["lookup_gene_records", "resolve_gene_ids_to_records"]
+)
+async def test_a_lookup_that_reads_records_one_by_one_declares_the_audit_budget(
+    tool_name: str,
+) -> None:
+    tools = await _list_tools()
+
+    meta = tools[tool_name].meta
+    assert meta is not None
+    assert meta[MAX_CALL_SECONDS_META_KEY] == server.AUDIT_MAX_CALL_SECONDS
+
+
+async def test_a_resolve_states_its_bound_in_the_schema_and_the_description() -> None:
+    tools = await _list_tools()
+
+    tool = tools["resolve_gene_ids_to_records"]
+    assert (
+        tool.inputSchema["properties"]["gene_ids"]["maxItems"] == RECORD_READS_PER_CALL
+    )
+    text = " ".join((tool.description or "").split())
+    assert f"at most {RECORD_READS_PER_CALL} identifiers" in text
+    assert "answers an error and no records" in text
+    assert f"more than {MAX_MATCHES} transcripts" in text

@@ -1,7 +1,7 @@
 ---
 type: Decision
 title: A named gene is read by its record
-description: Every gene a served check names is read by its own gene record (and its protein by one transcript record), an id no record names goes to the text search, an ortholog group is the one Orthologs table read, a host's one id-list read is the only upload, and an unread intron is explained in stages; and why a dataset per 150 ids, GenesByOrthologs and a protein attribute on the gene record were rejected.
+description: Every gene a served check or lookup names is read by its own gene record (and its protein by one transcript record), an id no record names goes to the text search, an ortholog group is the one Orthologs table read, a host's one id-list read is the only upload, and an unread intron is explained in stages; and why a dataset per 150 ids, GenesByOrthologs and a protein attribute on the gene record were rejected.
 tags: [audit, wdk, jbrowse, datasets]
 status: stable
 ---
@@ -11,7 +11,7 @@ status: stable
 WDK reports over an arbitrary gene list only through `GeneByLocusTag`'s `ds_gene_ids`
 parameter, which takes an id-list dataset, and WDK has no call that deletes a dataset.
 Every dataset a check uploads stays in the researcher's account. So no tool a chat
-calls uploads one:
+calls uploads one, except a tool whose WDK search takes only an id list, which says so:
 
 - **A named gene** is one gene record read by its primary key
   (`record_rows`, `veupathdb_mcp/audit/record_reads.py`), with the attributes
@@ -45,6 +45,17 @@ calls uploads one:
   `annotated_transcripts` GFF over the window (at most `ANNOTATION_MAX_GROUPS` (4)
   chunk groups), not with their records; on QA plasmodb its gene features carry the
   gene id as `ID` (`tests/unit/audit/fixtures/strain_pcynM_pkac.json`).
+- **A lookup** reads ids the same way (`read_gene_ids`,
+  `veupathdb_mcp/gene_lookup/records.py`): `resolve_gene_ids_to_records`, at most
+  `RECORD_READS_PER_CALL` ids, and the fill of a `lookup_gene_records` hit that lacks an
+  organism or a product. A result's `previous_ids` stays empty, because only the
+  transcript report serves `gene_previous_ids`. `resolve_gene_ids`, the id-list read, stays
+  for a host that names more ids than one call reads.
+- **A tool whose WDK search takes only an id list** (`enrich_gene_ids`,
+  `run_control_tests_on_search`, `run_control_tests_on_step`, `create_gene_set_step`)
+  writes one dataset per call, and its description says so. A test runs every served
+  tool with the upload refused and holds the tools that reach it equal to the tools whose
+  description says so.
 - **A host's gene rows** become group members through `GroupMember.of_row`, which keeps
   the coding rule: a pseudogene row, or a row of no protein gene type, has no length.
 - **A host's run** reads its gene list once, with `one_list_rows`: one id-list dataset
@@ -94,6 +105,9 @@ beyond those made once per organism: one genome window and up to
 **A dataset per 150 ids.** It is what `locus_tag_answers` did; every row and protein
 read left datasets in the account that nothing can delete.
 
+**A lookup through `GeneByLocusTag`.** It read up to 200 ids in two requests, and each
+call left a dataset in the account, under a tool annotated read-only.
+
 **`GenesByOrthologs`.** Its `gene_result` parameter is an input step, so a group read
 would write a step into the account; the `Orthologs` table already lists the group.
 
@@ -115,5 +129,7 @@ made; the deeper subtrack over the exons is a measurement.
 Falsified by `tests/unit/audit/test_record_reads.py`,
 `tests/unit/audit/test_ortholog_groups.py`, `tests/unit/audit/test_group_member_rows.py`,
 `tests/unit/audit/test_no_chat_dataset.py`, `tests/unit/audit/test_strain_sides.py`, `tests/unit/audit/test_intron_stages.py`,
-`tests/unit/audit/test_intron_evidence.py` and
-`tests/unit/audit/test_introns_recorded.py`.
+`tests/unit/audit/test_intron_evidence.py`,
+`tests/unit/audit/test_introns_recorded.py`,
+`tests/unit/gene_lookup/test_a_lookup_reads_by_record.py` and
+`tests/unit/test_every_dataset_write_is_described.py`.

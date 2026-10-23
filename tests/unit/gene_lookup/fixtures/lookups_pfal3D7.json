@@ -1,0 +1,195 @@
+{
+ "site": "plasmodb",
+ "resolved": [
+  "PF3D7_1133400",
+  "PF10_0316"
+ ],
+ "hydrated": [
+  "PF3D7_1222600"
+ ],
+ "records": [
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "PF3D7_1133400",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [
+    "organism_full",
+    "orthomcl_name",
+    "name",
+    "product",
+    "sequence_id",
+    "start_min",
+    "end_max",
+    "strand_plus_minus",
+    "is_pseudo",
+    "gene_type"
+   ],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "PF3D7_1133400",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PF3D7_1133400"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {
+     "organism_full": "Plasmodium falciparum 3D7",
+     "product": "apical membrane antigen 1",
+     "gene_type": "protein coding gene",
+     "name": "AMA1",
+     "sequence_id": "Pf3D7_11_v3",
+     "end_max": "1296696",
+     "is_pseudo": "No",
+     "orthomcl_name": "OG8_0026095",
+     "strand_plus_minus": "+",
+     "start_min": "1292966"
+    },
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "622",
+       "transcript_id": "PF3D7_1133400.1",
+       "exon_count": "1",
+       "length": "3731",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "PF10_0316",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [
+    "organism_full",
+    "orthomcl_name",
+    "name",
+    "product",
+    "sequence_id",
+    "start_min",
+    "end_max",
+    "strand_plus_minus",
+    "is_pseudo",
+    "gene_type"
+   ],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "PF3D7_1032400",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PF3D7_1032400"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {
+     "organism_full": "Plasmodium falciparum 3D7",
+     "product": "phosphatidylinositol N-acetylglucosaminyltransferase subunit A, putative",
+     "gene_type": "protein coding gene",
+     "name": "PIGA",
+     "sequence_id": "Pf3D7_10_v3",
+     "end_max": "1305315",
+     "is_pseudo": "No",
+     "orthomcl_name": "OG8_0001100",
+     "strand_plus_minus": "-",
+     "start_min": "1302298"
+    },
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "461",
+       "transcript_id": "PF3D7_1032400.1",
+       "exon_count": "7",
+       "length": "2116",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  },
+  {
+   "record_type": "gene",
+   "primary_key": {
+    "source_id": "PF3D7_1222600",
+    "project_id": "PlasmoDB"
+   },
+   "attributes": [
+    "organism_full",
+    "orthomcl_name",
+    "name",
+    "product",
+    "sequence_id",
+    "start_min",
+    "end_max",
+    "strand_plus_minus",
+    "is_pseudo",
+    "gene_type"
+   ],
+   "tables": [
+    "GeneTranscripts"
+   ],
+   "status": 200,
+   "body": {
+    "displayName": "PF3D7_1222600",
+    "id": [
+     {
+      "name": "source_id",
+      "value": "PF3D7_1222600"
+     },
+     {
+      "name": "project_id",
+      "value": "PlasmoDB"
+     }
+    ],
+    "recordClassName": "GeneRecordClasses.GeneRecordClass",
+    "attributes": {
+     "organism_full": "Plasmodium falciparum 3D7",
+     "product": "AP2 domain transcription factor AP2-G",
+     "gene_type": "protein coding gene",
+     "name": "AP2-G",
+     "sequence_id": "Pf3D7_12_v3",
+     "end_max": "914983",
+     "is_pseudo": "No",
+     "orthomcl_name": "OG8_0047539",
+     "strand_plus_minus": "+",
+     "start_min": "906714"
+    },
+    "tables": {
+     "GeneTranscripts": [
+      {
+       "protein_length": "2432",
+       "transcript_id": "PF3D7_1222600.1",
+       "exon_count": "1",
+       "length": "8270",
+       "transcript_type": "mRNA"
+      }
+     ]
+    },
+    "tableErrors": []
+   }
+  }
+ ]
+}

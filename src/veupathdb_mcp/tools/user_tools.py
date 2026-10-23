@@ -11,6 +11,7 @@ from veupathdb.domain.strategy import StrategyAst
 from veupathdb.errors import ValidationError, VEuPathDBError
 from veupathdb.wdk import WDKAnswer, get_strategy_api
 
+from veupathdb_mcp.audit import RECORD_READS_PER_CALL
 from veupathdb_mcp.controls.control_tests import (
     run_positive_negative_controls,
     run_step_control_tests,
@@ -25,7 +26,7 @@ from veupathdb_mcp.gene_lookup import (
     GeneSearchResult,
     lookup_genes_by_text,
     normalize_gene_ids,
-    resolve_gene_ids,
+    read_gene_ids,
 )
 from veupathdb_mcp.tool_payloads import StepDownloadUrl, gene_sample_attributes
 from veupathdb_mcp.wdk.ai_expression import (
@@ -59,6 +60,7 @@ from veupathdb_mcp.wdk.step_size import (
 # A call past a bound is refused by name, not narrowed in silence.
 type GeneRecordLimit = Annotated[int, Field(ge=1, le=50)]
 type SampleRecordLimit = Annotated[int, Field(ge=1, le=100)]
+type RecordReadIds = Annotated[list[str], Field(max_length=RECORD_READS_PER_CALL)]
 
 
 _NO_CONTROL_GENE = "positive_controls or negative_controls must name a gene id."
@@ -70,10 +72,10 @@ def _bounded_gene_ids(gene_ids: list[str]) -> list[str]:
     if not ids:
         msg = "gene_ids holds no gene identifier."
         raise ToolError(msg)
-    if len(ids) > MAX_GENE_IDS:
+    if len(ids) > RECORD_READS_PER_CALL:
         msg = (
             f"gene_ids holds {len(ids)} identifiers; one call takes at most "
-            f"{MAX_GENE_IDS}."
+            f"{RECORD_READS_PER_CALL}."
         )
         raise ToolError(msg)
     return ids
@@ -98,27 +100,22 @@ async def lookup_gene_records(
 
 async def resolve_gene_ids_to_records(
     site_id: str,
-    gene_ids: list[str],
-    record_type: str = "transcript",
-    search_name: str = "GeneByLocusTag",
-    param_name: str = "ds_gene_ids",
+    gene_ids: RecordReadIds,
 ) -> GeneResolveResult:
-    """Resolve gene identifiers to full records.
+    """Resolve gene identifiers to records, each read from its own gene record.
+
+    One call takes at most 80 identifiers. A previous or alternate id resolves
+    to the gene it names now. An id no gene record names is matched against gene
+    and transcript ids by the site's text search. When one id names several
+    genes, holds a wildcard or a space, or matches more than 50 transcripts, the
+    call answers an error and no records. The call writes nothing into the
+    account.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
         gene_ids: Gene or locus tag identifiers, for example ['PF3D7_1222600'].
-        record_type: Record type. Gene searches are 'transcript'.
-        search_name: WDK search that accepts an identifier list.
-        param_name: Parameter of that search which carries the identifier list.
     """
-    return await resolve_gene_ids(
-        site_id,
-        _bounded_gene_ids(gene_ids),
-        record_type=record_type,
-        search_name=search_name,
-        param_name=param_name,
-    )
+    return await read_gene_ids(site_id, _bounded_gene_ids(gene_ids))
 
 
 async def get_ai_expression_summary(
@@ -220,7 +217,9 @@ async def run_control_tests_on_search(
 ) -> ControlTestResult:
     """Intersect a search's results with known control genes.
 
-    Creates a temporary WDK strategy in the calling user's account.
+    Creates a temporary WDK strategy in the calling user's account. Each call
+    writes one dataset into the calling user's WDK account, which WDK cannot
+    delete.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
@@ -258,7 +257,9 @@ async def enrich_gene_ids(
 ) -> GeneIdEnrichment:
     """Run over-representation analysis on a gene list given by value.
 
-    Creates a temporary WDK dataset and step in the calling user's account.
+    Creates a temporary WDK step in the calling user's account. Each call
+    writes one dataset into the calling user's WDK account, which WDK cannot
+    delete.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
@@ -309,7 +310,9 @@ async def run_control_tests_on_step(
     """Intersect a step that is already built in WDK with known control genes.
 
     Creates a copy of the step, a controls step and a temporary WDK strategy in
-    the calling user's account, and deletes them when the test ends.
+    the calling user's account, and deletes them when the test ends. Each call
+    writes one dataset into the calling user's WDK account, which WDK cannot
+    delete.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
@@ -357,8 +360,10 @@ async def create_gene_set_step(
 ) -> int | None:
     """Materialize gene identifiers as a WDK step that holds exactly them.
 
-    Creates a temporary WDK dataset, step and internal strategy in the calling
-    user's account. An empty list creates nothing and answers null.
+    Creates a WDK step and an internal strategy in the calling user's account.
+    Each call that creates a step writes one dataset into the calling user's WDK
+    account, which WDK cannot delete. A list this server already made a step of
+    for the user reuses that step. An empty list creates nothing and answers null.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.

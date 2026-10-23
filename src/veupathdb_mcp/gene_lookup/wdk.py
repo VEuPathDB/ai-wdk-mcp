@@ -1,13 +1,10 @@
 """WDK-based gene search and ID resolution."""
 
 import json
-from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager
 from dataclasses import dataclass
 
 from veupathdb import JSONObject, get_logger, strip_html_tags
-from veupathdb.auth_context import veupathdb_auth_token_ctx
-from veupathdb.errors import VEuPathDBError, WDKLoginRequiredError
+from veupathdb.errors import VEuPathDBError
 from veupathdb.wdk import (
     StrategyAPI,
     VEuPathDBClient,
@@ -16,9 +13,10 @@ from veupathdb.wdk import (
     WDKDatasetIdListContent,
     WDKRecordInstance,
     WDKSearchConfig,
-    get_site_router,
     get_wdk_client,
 )
+
+from veupathdb_mcp.wdk import TRANSCRIPTS_PER_GENE, dataset_client
 
 from .organism import normalize_organism
 from .result import DEFAULT_GENE_ATTRIBUTES, GeneResult
@@ -29,8 +27,6 @@ WDK_WILDCARD_LIMIT = 50
 
 MAX_GENE_IDS = 200
 """The largest identifier list one resolve call accepts."""
-
-TRANSCRIPTS_PER_GENE = 8
 
 
 def normalize_gene_ids(gene_ids: list[str]) -> list[str]:
@@ -226,23 +222,6 @@ async def _fetch_gene_answer(
         )
     except VEuPathDBError:
         return None
-
-
-@asynccontextmanager
-async def dataset_client(site_id: str) -> AsyncIterator[VEuPathDBClient]:
-    if not veupathdb_auth_token_ctx.get():
-        raise WDKLoginRequiredError
-    router = get_site_router()
-    site = router.get_site(site_id)
-    routing = router._config.routing
-    timeout = float(
-        routing.portal_timeout if site.is_portal else routing.component_timeout
-    )
-    client = VEuPathDBClient(base_url=site.service_url, timeout=timeout)
-    try:
-        yield client
-    finally:
-        await client.close()
 
 
 async def resolve_gene_ids(

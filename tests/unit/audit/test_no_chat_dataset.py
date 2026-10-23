@@ -12,6 +12,7 @@ from tests._support.audit_wire import (
     install_records,
     load_wire,
 )
+from tests._support.dataset_trap import DatasetCreatedError, DatasetTrap
 from tests._support.evidence_site import EvidenceSite, gene_record
 from tests._support.intron_wire import Served, load_introns
 from tests._support.length_site import PART_A, PART_B, split_site
@@ -24,9 +25,8 @@ from tests._support.record_site import (
 )
 from tests._support.row_reads import serve_recorded_rows
 from tests._support.strain_site import install_annotation
-from veupathdb.wdk import StrategyAPI
 
-from veupathdb_mcp.audit import genes, record_reads
+from veupathdb_mcp.audit import genes
 from veupathdb_mcp.tools import (
     audit_anatomy_tools,
     audit_evidence_tools,
@@ -38,29 +38,6 @@ from veupathdb_mcp.tools import (
 
 type Run = Callable[[], Awaitable[BaseModel]]
 type Check = Callable[[pytest.MonkeyPatch], Run]
-
-
-class DatasetCreatedError(AssertionError):
-    pass
-
-
-class DatasetTrap:
-    def __init__(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        self.calls: list[str] = []
-        monkeypatch.setattr(StrategyAPI, "create_dataset", self.refuse)
-        monkeypatch.setattr(genes, "dataset_client", self.refuse)
-        monkeypatch.setattr(record_reads, "dataset_client", self.refuse)
-
-    def refuse(self, *args: object, **kwargs: object) -> None:
-        self.calls.append(repr(args))
-        raise DatasetCreatedError
-
-    def armed(self) -> bool:
-        return (
-            StrategyAPI.create_dataset == self.refuse
-            and genes.dataset_client == self.refuse
-            and record_reads.dataset_client == self.refuse
-        )
 
 
 def gene_length(monkeypatch: pytest.MonkeyPatch) -> Run:

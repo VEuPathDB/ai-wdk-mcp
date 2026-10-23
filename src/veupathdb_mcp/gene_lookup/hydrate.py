@@ -3,9 +3,11 @@
 from veupathdb import get_logger, strip_html_tags
 from veupathdb.errors import VEuPathDBError
 
+from veupathdb_mcp.audit import RECORD_READS_PER_CALL
+
 from .organism import normalize_organism
+from .records import read_gene_ids
 from .result import GeneResult
-from .wdk import MAX_GENE_IDS, resolve_gene_ids
 
 logger = get_logger(__name__)
 
@@ -35,7 +37,7 @@ async def hydrate_sparse_gene_results(
     site_id: str,
     results: list[GeneResult],
 ) -> list[GeneResult]:
-    """Fill an absent organism or product from the WDK standard reporter.
+    """Fill an absent organism or product from each gene's own record.
 
     The streaming form of site-search carries an identifier, a score and a
     project, so every record it contributes arrives without an organism and
@@ -48,14 +50,10 @@ async def hydrate_sparse_gene_results(
         return results
 
     try:
-        resolved = await resolve_gene_ids(
-            site_id,
-            ids_to_hydrate[:MAX_GENE_IDS],
-            record_type="transcript",
-        )
+        resolved = await read_gene_ids(site_id, ids_to_hydrate[:RECORD_READS_PER_CALL])
     except VEuPathDBError as exc:
         logger.debug(
-            "Gene metadata hydration via WDK skipped",
+            "Gene metadata hydration from gene records skipped",
             site_id=site_id,
             count=len(ids_to_hydrate),
             error=str(exc),

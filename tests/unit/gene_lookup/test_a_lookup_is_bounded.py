@@ -11,7 +11,8 @@ import pytest
 import respx
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 
-from veupathdb_mcp.gene_lookup import TRANSCRIPTS_PER_GENE, resolve_gene_ids
+from veupathdb_mcp.gene_lookup import resolve_gene_ids
+from veupathdb_mcp.wdk import TRANSCRIPTS_PER_GENE
 
 IDS = ["PF3D7_1133400", "PF3D7_0100100"]
 

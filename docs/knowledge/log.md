@@ -1,5 +1,38 @@
 # Knowledge log
 
+## 2026-10-23 - 0.2.0b38
+
+- `resolve_gene_ids_to_records` reads each named gene by its own gene record
+  (`read_gene_ids`, `veupathdb_mcp/gene_lookup/records.py`, over `rows_named`), with the
+  text-search fallback for an id no record names, at most `RECORD_READS_PER_CALL` (80)
+  ids a call, and writes nothing into the account. `lookup_gene_records` fills a hit that
+  lacks an organism or a product from the same reads. Both were annotated read-only and
+  each uploaded an id-list dataset. The result keeps its shape; `previous_ids` is now
+  empty, because only the transcript report the dataset path read serves
+  `gene_previous_ids`. The served resolve no longer takes `record_type`, `search_name`
+  or `param_name`, which only the dataset path read. Its schema and description state
+  the bound of 80, and its description says that one id naming several genes, holding a
+  wildcard or a space, or matching more than 50 transcripts makes the call answer an
+  error and no records. Both lookups declare `AUDIT_MAX_CALL_SECONDS` (120), because
+  80 ids are 80 to 160 sequential requests where the old path made 2.
+- `enrich_gene_ids`, `run_control_tests_on_search`, `run_control_tests_on_step` and
+  `create_gene_set_step` keep their dataset, and each description says the call writes
+  one dataset into the calling user's WDK account, which WDK cannot delete.
+  `test_every_dataset_write_is_described.py` runs every served tool on its recorded or
+  faked site with the upload refused, and holds the tools that reach it equal to the tools
+  whose description says so.
+- `TRANSCRIPTS_PER_GENE` and `dataset_client` move from `veupathdb_mcp.gene_lookup` to
+  `veupathdb_mcp.wdk`, so the lookup can read through the audit's record reads without an
+  import cycle. `veupathdb_mcp.gene_lookup` publishes `read_gene_ids`.
+- `lookups_pfal3D7.json` was recorded on QA plasmodb on 2026-10-23 by
+  `scripts/record_gene_lookups.py`, under the test account, one request in flight, with
+  every dataset upload refused: 4 WDK requests (1 user read, 3 gene record reads), no
+  dataset, no status of 400 or more. `PF10_0316` resolves to `PF3D7_1032400`.
+- What a host does to take this release: read `TRANSCRIPTS_PER_GENE` and
+  `dataset_client` from `veupathdb_mcp.wdk` if it reads them, and call `read_gene_ids`
+  where it resolves ids for a chat and wants no dataset written. `resolve_gene_ids`, the
+  id-list read, is unchanged. It pins veupathdb-py 0.1.0b21, as 0.2.0b37 did.
+
 ## 2026-10-22 - 0.2.0b37
 
 - 0.2.0b37 serves the gene models of the genes a check judges, in genome coordinates:

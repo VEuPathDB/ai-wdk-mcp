@@ -126,22 +126,26 @@ answers `geneIds`, each id given beside the gene id it resolved to. A named gene
 protein and its ortholog group are record reads, so these checks upload no gene list;
 a host reads a run's list once with `one_list_rows`.
 
-Sixteen of them declare a call budget over the default in tool `_meta`
+Eighteen of them declare a call budget over the default in tool `_meta`
 (`org.veupathdb.assistant/maxCallSeconds`): the two control runs, the plan
 count, the protein-count comparison, the eleven gene-model checks that read DNA
-or whole-genome gene reports, and `enrich_gene_ids`, which also declares the
+or whole-genome gene reports, the two gene lookups, which read one gene record per
+id, and `enrich_gene_ids`, which also declares the
 stream part its result carries (`org.veupathdb.assistant/streamPart`).
 `audit_genome_priority`,
 `audit_gene_evidence` and `audit_genome_provenance` read no DNA (one organism
 report, or the gene record type and one gene record) and keep the default.
 
-`count_plan_steps`, `create_gene_set_step`, `run_control_tests_on_search` and
-`run_control_tests_on_step` write into the calling user's account, which is what
-their `readOnlyHint: false` states. Each holds its work in an internal strategy.
-The plan count deletes what it created. Both control runs upload the control ids
-as a dataset and delete every step and strategy they created, also when the run
-fails or is cancelled; the step run first copies the tested step out of its
-strategy. WDK offers no delete for a dataset, so the dataset stays.
+`count_plan_steps`, `create_gene_set_step`, `enrich_gene_ids`,
+`run_control_tests_on_search` and `run_control_tests_on_step` write into the calling
+user's account, which is what their `readOnlyHint: false` states. Each holds its work
+in an internal strategy. The plan count deletes what it created. Both control runs
+delete every step and strategy they created, also when the run fails or is
+cancelled; the step run first copies the tested step out of its strategy.
+`create_gene_set_step`, `enrich_gene_ids` and both control runs each write one
+id-list dataset, and their descriptions say so. WDK offers no delete for a dataset, so
+the dataset stays. `lookup_gene_records` and `resolve_gene_ids_to_records` read each
+named gene by its own gene record and write nothing.
 
 A published call this list does not serve is an in-process import, and
 `docs/knowledge/decisions/what-the-wire-serves-and-what-a-host-imports.md`

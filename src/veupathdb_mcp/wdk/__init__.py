@@ -26,6 +26,7 @@ from veupathdb_mcp.wdk.helpers import (
     extract_record_ids,
     order_primary_key,
 )
+from veupathdb_mcp.wdk.id_list_datasets import TRANSCRIPTS_PER_GENE, dataset_client
 from veupathdb_mcp.wdk.params import (
     encode_param_value,
     extract_default_params,
@@ -49,6 +50,7 @@ __all__ = [
     "DEFAULT_GENE_SET_STRATEGY_NAME",
     "GROUP_GENOME_TABLE",
     "NO_SUMMARY_ON_THE_SITE",
+    "TRANSCRIPTS_PER_GENE",
     "GeneExpressionSummary",
     "GeneSetWdkContext",
     "GenomeProteins",
@@ -62,6 +64,7 @@ __all__ = [
     "canonicalize_synced_parameters",
     "compute_plan_step_counts",
     "count_search_answer",
+    "dataset_client",
     "describe_step_refusal",
     "encode_param_value",
     "extract_default_params",
