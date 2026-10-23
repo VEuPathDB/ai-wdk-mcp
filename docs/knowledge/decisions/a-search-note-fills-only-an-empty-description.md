@@ -110,7 +110,24 @@ recording shows the site answering and refuses the rest:
   (`CALL_SECONDS`, the tool's `_meta`) is refused with the predicted seconds.
 - Each refusal names the OR terms and characters. A pattern with no compare is refused
   before any read.
-- The cap also bounds the build in memory. Each step of the OR-of-AND build is admitted
+- The bisection reads are bounded before the first one. A distinct compare side takes
+  at most 25 count reads (`READS_PER_PROBE`: 10 doubling from 128 to 65,536, then 15
+  halving), and the call admits at most the reads the budget leaves after the count of
+  the longest admitted expression, `(300 - 92.8) / 0.3`, 690 (`SiteCost.reads_within`).
+  A pattern whose
+  sides would need more is refused by name before any read; `GroupCountReports`
+  refuses the read past that ceiling whatever the prediction said.
+- The build's CPU is charged to the same budget. An AND product indexes the added
+  clauses by their exact count on one set and tries only the pairs whose bounds on that
+  set overlap; every pair it tries is charged before it builds, at 0.72 us a pair
+  (`SECONDS_PER_PAIR`), and the build time takes its share of the character cap. A
+  product predicted past the budget is refused by name with its pairs
+  (`tests/unit/catalog/test_phyletic_product.py`).
+- A pattern nests at most 8 levels (`MAX_DEPTH`) and holds at most 128 terms, nested
+  terms counted (`MAX_TERMS`); the model refuses a larger one at validation.
+- The cap also bounds the build in memory. Each step of the OR-of-AND build, an AND
+  product or an OR merge, is admitted after each clause it adds, and its parts are built
+  one at a time, so it holds at most the cap and one clause; it is admitted
   on its merged clauses, after contradictions drop and duplicates merge, by the
   characters they write from the pattern's own code covers; a refusal there says the
   pattern reaches at least those counts before its last step. The final rendering is

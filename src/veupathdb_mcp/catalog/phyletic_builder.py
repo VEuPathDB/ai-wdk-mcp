@@ -13,6 +13,7 @@ from veupathdb.model import CamelModel
 
 from veupathdb_mcp.catalog.group_counts import GroupCountReports, site_taxonomy
 from veupathdb_mcp.catalog.phyletic_logic import (
+    CALL_SECONDS,
     Guard,
     Probe,
     Writing,
@@ -20,10 +21,13 @@ from veupathdb_mcp.catalog.phyletic_logic import (
     render,
 )
 from veupathdb_mcp.catalog.phyletic_pattern import Maxima, PhyleticPattern
-from veupathdb_mcp.catalog.site_cost import site_cost
+from veupathdb_mcp.catalog.site_cost import SECONDS_PER_PROBE, site_cost
 
 FIRST_PROBE = 128
 LAST_PROBE = 2**16
+DOUBLING_READS = (LAST_PROBE // FIRST_PROBE).bit_length()
+HALVING_READS = (LAST_PROBE // 2).bit_length() - 1
+READS_PER_PROBE = DOUBLING_READS + HALVING_READS
 READING_LIMIT = 2_000
 _CUT = " ..."
 
@@ -96,12 +100,25 @@ async def _largest(reports: GroupCountReports, probe: Probe) -> int:
     return held
 
 
+def _admit_reads(probes: int, ceiling: int) -> None:
+    predicted = probes * READS_PER_PROBE
+    if predicted > ceiling:
+        refuse(
+            f"The pattern compares {probes} distinct sides, and finding their largest "
+            f"counts takes up to {predicted} count reads, more than the {ceiling} the "
+            f"{CALL_SECONDS} s call budget allows at {SECONDS_PER_PROBE} s a read. "
+            "Narrow the pattern: compare fewer distinct sides."
+        )
+
+
 async def write_phyletic_expression(
     site_id: str, pattern: PhyleticPattern
 ) -> PhyleticExpressionResult:
     tree = await site_taxonomy(site_id)
     probes = list(dict.fromkeys(pattern.probes(tree)))
-    reports = GroupCountReports(site_id)
+    ceiling = site_cost().reads_within(CALL_SECONDS)
+    _admit_reads(len(probes), ceiling)
+    reports = GroupCountReports(site_id, ceiling)
     maxima = {probe: await _largest(reports, probe) for probe in probes}
     maximum_reads = reports.sent
     built = await asyncio.to_thread(written, pattern, tree, maxima, maximum_reads)
@@ -109,7 +126,7 @@ async def write_phyletic_expression(
         site_id=site_id,
         expression=built.text,
         reading=built.reading,
-        groups=await reports.groups(built.text),
+        groups=await GroupCountReports(site_id, 1).groups(built.text),
         codes=built.codes,
         maximum_reads=maximum_reads,
     )

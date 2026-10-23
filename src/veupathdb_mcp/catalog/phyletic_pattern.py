@@ -28,6 +28,8 @@ Measure = Literal["genomes", "proteins", "share"]
 Reading = Literal["per_genome", "totals", "averages"]
 
 WHOLE = 100
+MAX_DEPTH = 8
+MAX_TERMS = 128
 
 _CODES = Field(
     min_length=1,
@@ -175,6 +177,12 @@ class CountTerm(CamelModel):
             raise ValueError(msg)
         return self
 
+    def depth(self) -> int:
+        return 1
+
+    def size(self) -> int:
+        return 1
+
     def probes(self, tree: PhyleticTree) -> list[Probe]:
         self.of.parts(tree)
         return []
@@ -191,7 +199,7 @@ class CountTerm(CamelModel):
 
     def dnf(self, writing: Writing) -> Dnf:
         return both(
-            [self._within(part) for part in self.of.parts(writing.tree)],
+            (self._within(part) for part in self.of.parts(writing.tree)),
             writing.guard,
         )
 
@@ -231,6 +239,12 @@ class CompareTerm(CamelModel):
         upper = self.condition in {"at_least", "more_than"}
         return Probe(tuple(sorted(right)), "OR" if upper else "AND")
 
+    def depth(self) -> int:
+        return 1
+
+    def size(self) -> int:
+        return 1
+
     def probes(self, tree: PhyleticTree) -> list[Probe]:
         return [self._probe(tree)]
 
@@ -249,16 +263,16 @@ class CompareTerm(CamelModel):
         factor = Fraction(str(self.factor))
         if self.reading == "per_genome":
             return either(
-                [
+                (
                     self._per_genome(left, right, factor, k, guard)
                     for k in range(top + 1)
-                ],
+                ),
                 guard,
             )
         if self.reading == "averages":
             factor = factor * len(left) / len(right)
         return either(
-            [
+            (
                 both(
                     [
                         atom(right, (k, k), taxa=False),
@@ -267,7 +281,7 @@ class CompareTerm(CamelModel):
                     guard,
                 )
                 for k in range(top + 1)
-            ],
+            ),
             guard,
         )
 
@@ -306,53 +320,65 @@ class CompareTerm(CamelModel):
         )
 
 
-class AllOf(CamelModel):
+class _Combination(CamelModel):
     model_config = ConfigDict(frozen=True)
 
+    terms: list[PhyleticPattern] = Field(min_length=1, max_length=MAX_TERMS)
+
+    def depth(self) -> int:
+        return 1 + max(term.depth() for term in self.terms)
+
+    def size(self) -> int:
+        return 1 + sum(term.size() for term in self.terms)
+
+    def probes(self, tree: PhyleticTree) -> list[Probe]:
+        return [probe for term in self.terms for probe in term.probes(tree)]
+
+    def _joined(self) -> str:
+        return "; ".join(term.outline() for term in self.terms)
+
+    @model_validator(mode="after")
+    def _bounded(self) -> Self:
+        if self.depth() > MAX_DEPTH:
+            msg = f"A pattern nests no deeper than {MAX_DEPTH} levels."
+            raise ValueError(msg)
+        if self.size() > MAX_TERMS:
+            msg = (
+                f"A pattern holds no more than {MAX_TERMS} terms, nested ones counted."
+            )
+            raise ValueError(msg)
+        return self
+
+
+class AllOf(_Combination):
     kind: Literal["all_of"]
-    terms: list[PhyleticPattern] = Field(min_length=1)
 
     def outline(self) -> str:
-        return f"all of ({'; '.join(term.outline() for term in self.terms)})"
-
-    def probes(self, tree: PhyleticTree) -> list[Probe]:
-        return [probe for term in self.terms for probe in term.probes(tree)]
+        return f"all of ({self._joined()})"
 
     def dnf(self, writing: Writing) -> Dnf:
-        return both([term.dnf(writing) for term in self.terms], writing.guard)
+        return both((term.dnf(writing) for term in self.terms), writing.guard)
 
 
-class AnyOf(CamelModel):
-    model_config = ConfigDict(frozen=True)
-
+class AnyOf(_Combination):
     kind: Literal["any_of"]
-    terms: list[PhyleticPattern] = Field(min_length=1)
 
     def outline(self) -> str:
-        return f"any of ({'; '.join(term.outline() for term in self.terms)})"
-
-    def probes(self, tree: PhyleticTree) -> list[Probe]:
-        return [probe for term in self.terms for probe in term.probes(tree)]
+        return f"any of ({self._joined()})"
 
     def dnf(self, writing: Writing) -> Dnf:
-        return either([term.dnf(writing) for term in self.terms], writing.guard)
+        return either((term.dnf(writing) for term in self.terms), writing.guard)
 
 
-class NoneOf(CamelModel):
-    model_config = ConfigDict(frozen=True)
-
+class NoneOf(_Combination):
     kind: Literal["none_of"]
-    terms: list[PhyleticPattern] = Field(min_length=1)
 
     def outline(self) -> str:
-        return f"none of ({'; '.join(term.outline() for term in self.terms)})"
-
-    def probes(self, tree: PhyleticTree) -> list[Probe]:
-        return [probe for term in self.terms for probe in term.probes(tree)]
+        return f"none of ({self._joined()})"
 
     def dnf(self, writing: Writing) -> Dnf:
         guard = writing.guard
-        return neither(either([term.dnf(writing) for term in self.terms], guard), guard)
+        return neither(either((term.dnf(writing) for term in self.terms), guard), guard)
 
 
 type PhyleticPattern = Annotated[
@@ -360,6 +386,7 @@ type PhyleticPattern = Annotated[
 ]
 
 
+_Combination.model_rebuild()
 AllOf.model_rebuild()
 AnyOf.model_rebuild()
 NoneOf.model_rebuild()

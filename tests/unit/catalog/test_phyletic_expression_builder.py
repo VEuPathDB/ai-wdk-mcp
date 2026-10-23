@@ -540,7 +540,7 @@ async def test_the_reading_stays_short_however_long_the_pattern(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     install(monkeypatch, lambda expression: 1, wide_tree(12))
-    repeated = {"kind": "any_of", "terms": [_each_wide_genome_at_most_one()] * 300}
+    repeated = {"kind": "any_of", "terms": [_each_wide_genome_at_most_one()] * 100}
 
     result = await write_phyletic_expression("orthomcl", _pattern(repeated))
 

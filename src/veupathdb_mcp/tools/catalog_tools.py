@@ -187,6 +187,8 @@ async def build_phyletic_expression(
       writes one band per count.
     - all_of, any_of, none_of: {"kind": "all_of", "terms": [PATTERN, ...]} holds
       when every term holds, any_of when one does, none_of when none does.
+    A pattern nests at most 8 levels deep and holds at most 128 terms, nested
+    terms counted; a deeper or larger pattern is refused before any read.
 
     A SET is one of:
     - {"kind": "codes", "codes": ["X"]}: clade X; ["A", "B"] is genomes A and B
@@ -213,9 +215,11 @@ async def build_phyletic_expression(
     returns), codes (the codes it names) and maximumReads (count reads made for
     the largest counts a compare needs). A refusal from the site is returned as
     the site wrote it. A pattern whose expression would be longer than the
-    longest expression the site was measured to answer, or whose count would
-    pass the call budget, is refused before the count with its OR terms and
-    characters; narrow the pattern and call again.
+    longest expression the site was measured to answer, or whose build and count
+    would pass the call budget, is refused before the count with its OR terms and
+    characters; narrow the pattern and call again. Each distinct right side a
+    compare reads takes up to 25 count reads, and a pattern whose reads would
+    pass the call budget is refused before the first read.
 
     Args:
         site_id: The OrthoMCL site, 'orthomcl'.

@@ -7,6 +7,7 @@ from veupathdb.domain.parameters import (
 from veupathdb.errors import ValidationError
 from veupathdb.wdk import WDKSearchConfig, get_wdk_client
 
+from veupathdb_mcp.catalog.phyletic_logic import CALL_SECONDS, refuse
 from veupathdb_mcp.catalog.taxonomy import ortho_taxonomy
 
 GROUP_RECORD_TYPE = "group"
@@ -18,11 +19,18 @@ _COUNT_ONLY: JSONObject = {
 
 
 class GroupCountReports:
-    def __init__(self, site_id: str) -> None:
+    def __init__(self, site_id: str, ceiling: int) -> None:
         self.site_id = site_id
+        self.ceiling = ceiling
         self.sent = 0
 
     async def groups(self, expression: str) -> int:
+        if self.sent >= self.ceiling:
+            refuse(
+                "Finding the largest counts the pattern compares needs more than "
+                f"{self.ceiling} count reads, the most the {CALL_SECONDS} s call "
+                "budget allows. Narrow the pattern: compare fewer distinct sides."
+            )
         self.sent += 1
         answer = await get_wdk_client(self.site_id).run_search_report(
             GROUP_RECORD_TYPE,

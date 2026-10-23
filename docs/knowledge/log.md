@@ -1,5 +1,35 @@
 # Knowledge log
 
+## 2026-10-24 - 0.2.0b41
+
+- `build_phyletic_expression` bounds its site reads before the first one. A distinct
+  compare side takes at most 25 count reads (`READS_PER_PROBE`, derived from
+  `FIRST_PROBE` and `LAST_PROBE`), and a call admits at most the reads the 300 s budget
+  leaves after the count of the longest admitted expression (about 92.8 s), at the
+  measured 0.3 s a read (`SiteCost.reads_within`: 690 on the current fit). A pattern
+  whose distinct sides would need more, 28 sides or more, is refused by name before any
+  read, and
+  `GroupCountReports` refuses the read past the ceiling even when the prediction is
+  wrong. The expression's own count is one read on its own.
+- A pattern nests at most 8 levels (`MAX_DEPTH`) and holds at most 128 terms, nested
+  terms counted (`MAX_TERMS`); a combination past either is refused at validation, and
+  the tool description states both.
+- An OR merge is admitted after each clause it adds, like an AND product, and the
+  parts of every merge and product are built one at a time, so a refused build holds at
+  most the cap and one clause. An OR merge that meets an always-true part before it
+  passes the cap is still always true.
+- An AND product no longer tries every pair of clauses. It indexes the added side by the
+  set its clauses most often hold to one exact count, and pairs a clause only with the
+  clauses whose count on that set its own bound admits, so two compares over one side
+  try pairs linear in the side's largest count: at 16,000, 96,006 pairs where every pair
+  was 2.56e8, and the build of the 638,701-character expression takes 1.7 s where it
+  took 196 s. Every pair a product tries is charged to the guard before it builds, at
+  0.72 us a pair (`SECONDS_PER_PAIR`, measured on 9e6 contradictory pairs on a
+  developer machine), and that time comes out of the 300 s budget with the reads and the
+  count. A build predicted past it is refused by name, with its pairs, before its
+  clauses are built.
+- The read ceiling is never negative, and the pair cost carries a host margin of 2 over the cost measured on one machine (`MEASURED_SECONDS_PER_PAIR`, `HOST_MARGIN`).
+
 ## 2026-10-23 - 0.2.0b40
 
 - A phyletic search resolved with neither species list raises `PhyleticListError`, never

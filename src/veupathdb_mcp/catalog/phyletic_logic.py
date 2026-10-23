@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping, Sequence
+from bisect import bisect_left, bisect_right
+from collections.abc import Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from fractions import Fraction
-from itertools import product
+from heapq import merge
+from itertools import accumulate, product
 from math import ceil, floor, prod
 from typing import Literal, NoReturn
 
@@ -18,8 +20,12 @@ Join = Literal["AND", "OR"]
 CALL_SECONDS = 300
 AND_WIDTH = len(" AND ")
 OR_WIDTH = len(" OR ")
+MEASURED_SECONDS_PER_PAIR = 0.72e-6
+HOST_MARGIN = 2
+SECONDS_PER_PAIR = MEASURED_SECONDS_PER_PAIR * HOST_MARGIN
 
 type Span = tuple[int, int | None]
+type Key = tuple[frozenset[str], bool]
 
 
 def refuse(detail: str) -> NoReturn:
@@ -142,12 +148,72 @@ def _unique(clauses: Iterable[Clause]) -> Dnf:
     return tuple(found.values())
 
 
+@dataclass(frozen=True, slots=True)
+class _Index:
+    key: Key | None
+    every: range
+    loose: tuple[int, ...]
+    values: tuple[int, ...]
+    buckets: tuple[tuple[int, ...], ...]
+    starts: tuple[int, ...]
+
+    def _slice(self, clause: Clause) -> tuple[int, int] | None:
+        found = [one for one in clause if (one.genomes, one.taxa) == self.key]
+        if not found:
+            return None
+        lo, hi = found[0].lo, found[0].hi
+        last = len(self.values) if hi is None else bisect_right(self.values, hi)
+        return bisect_left(self.values, lo), last
+
+    def count(self, clause: Clause) -> int:
+        bounds = self._slice(clause)
+        if bounds is None:
+            return len(self.every)
+        first, last = bounds
+        return len(self.loose) + self.starts[last] - self.starts[first]
+
+    def matches(self, clause: Clause) -> Iterator[int]:
+        bounds = self._slice(clause)
+        if bounds is None:
+            return iter(self.every)
+        first, last = bounds
+        return merge(self.loose, *self.buckets[first:last])
+
+
+def _index(added: Dnf) -> _Index:
+    exact: dict[Key, dict[int, list[int]]] = {}
+    for position, clause in enumerate(added):
+        for one in clause:
+            if one.lo == one.hi:
+                exact.setdefault((one.genomes, one.taxa), {}).setdefault(
+                    one.lo, []
+                ).append(position)
+    every = range(len(added))
+    if not exact:
+        return _Index(None, every, (), (), (), (0,))
+    key = max(exact, key=lambda held: sum(map(len, exact[held].values())))
+    by_value = exact[key]
+    values = tuple(sorted(by_value))
+    buckets = tuple(tuple(by_value[value]) for value in values)
+    keyed = {position for bucket in buckets for position in bucket}
+    return _Index(
+        key,
+        every,
+        tuple(position for position in every if position not in keyed),
+        values,
+        buckets,
+        (0, *accumulate(len(bucket) for bucket in buckets)),
+    )
+
+
 def _product(held: Dnf, added: Dnf, guard: Guard) -> Dnf:
+    index = _index(added)
+    guard.charge(sum(index.count(left) for left in held))
     merged: dict[frozenset[Atom], Clause] = {}
     characters = 0
     for left in held:
-        for right in added:
-            clause = _clause((*left, *right))
+        for position in index.matches(left):
+            clause = _clause((*left, *added[position]))
             if clause is None:
                 continue
             if not clause:
@@ -161,30 +227,35 @@ def _product(held: Dnf, added: Dnf, guard: Guard) -> Dnf:
     return tuple(merged.values())
 
 
-def both(parts: Sequence[Dnf], guard: Guard) -> Dnf:
+def both(parts: Iterable[Dnf], guard: Guard) -> Dnf:
     result = TRUE
     for part in parts:
         result = _product(result, part, guard)
     return result
 
 
-def either(parts: Sequence[Dnf], guard: Guard) -> Dnf:
-    merged = _unique(clause for part in parts for clause in part)
-    guard.admit(
-        sum(guard.width(clause) for clause in merged)
-        + OR_WIDTH * max(len(merged) - 1, 0),
-        len(merged),
-        partial=True,
-    )
-    return merged
+def either(parts: Iterable[Dnf], guard: Guard) -> Dnf:
+    merged: dict[frozenset[Atom], Clause] = {}
+    characters = -OR_WIDTH
+    for part in parts:
+        for clause in part:
+            if not clause:
+                return TRUE
+            key = frozenset(clause)
+            if key in merged:
+                continue
+            merged[key] = clause
+            characters += guard.width(clause) + OR_WIDTH
+            guard.admit(characters, len(merged), partial=True)
+    return tuple(merged.values())
 
 
 def neither(dnf: Dnf, guard: Guard) -> Dnf:
     return both(
-        [
+        (
             _unique(negated for one in clause for negated in one.negated())
             for clause in dnf
-        ],
+        ),
         guard,
     )
 
@@ -224,10 +295,32 @@ class Guard:
         self.tree = tree
         self.cost = cost
         self.probes = probes
-        self.characters = min(
-            cost.longest, cost.characters_within(CALL_SECONDS, probes)
-        )
+        self.pairs = 0
         self._units: dict[frozenset[str], str] = {}
+
+    @property
+    def characters(self) -> int:
+        building = self.pairs * SECONDS_PER_PAIR
+        return min(
+            self.cost.longest,
+            self.cost.characters_within(CALL_SECONDS - building, self.probes),
+        )
+
+    def seconds(self, characters: int) -> float:
+        building = self.pairs * SECONDS_PER_PAIR
+        return self.cost.seconds(characters, self.probes) + building
+
+    def charge(self, pairs: int) -> None:
+        self.pairs += pairs
+        if self.seconds(0) <= CALL_SECONDS:
+            return
+        refuse(
+            f"Multiplied out, the pattern tries at least {self.pairs} clause pairs, "
+            f"about {self.pairs * SECONDS_PER_PAIR:.0f} s of building at "
+            f"{SECONDS_PER_PAIR * 1e9:.0f} ns a pair, so with its reads and its "
+            f"count it passes the {CALL_SECONDS} s call budget. Narrow the pattern: "
+            "fewer terms under all_of, or compares over sides with smaller counts."
+        )
 
     def unit(self, genomes: frozenset[str]) -> str:
         if genomes not in self._units:
@@ -263,7 +356,7 @@ class Guard:
             reason = (
                 f"the site was measured to count {self.cost.per_character * 1e6:.0f} "
                 f"ms per 1,000 characters plus {self.cost.fixed:.1f} s, so it needs "
-                f"about {self.cost.seconds(characters, self.probes):.0f} s, past the "
+                f"about {self.seconds(characters):.0f} s, past the "
                 f"{CALL_SECONDS} s call budget"
             )
         refuse(

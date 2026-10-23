@@ -35,6 +35,10 @@ class SiteCost:
     def seconds(self, characters: int, probes: int) -> float:
         return self.fixed + self.per_character * characters + SECONDS_PER_PROBE * probes
 
+    def reads_within(self, budget: float) -> int:
+        spare = budget - self.seconds(self.longest, 0)
+        return max(int(spare / SECONDS_PER_PROBE), 0)
+
     def characters_within(self, budget: float, probes: int) -> int:
         spare = budget - self.fixed - SECONDS_PER_PROBE * probes
         return max(int(spare / self.per_character), 0)
