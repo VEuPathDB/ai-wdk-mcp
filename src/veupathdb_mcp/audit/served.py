@@ -198,7 +198,7 @@ def resolved(
             case []:
                 missing.append(gene)
             case named:
-                return several(site_id, gene, [row.gene for row in named])
+                return several(site_id, gene, [row.gene for row in named]).payload
     if missing:
         return tool_error(
             VEuPathDBErrorCode.VALIDATION_ERROR,

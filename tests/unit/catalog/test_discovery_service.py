@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import pytest
+from veupathdb.wdk import WDKRecordType
 
 from veupathdb_mcp.catalog import discovery_service
 from veupathdb_mcp.catalog.discovery import CatalogPolicy
@@ -61,6 +62,9 @@ class _FakeCatalog:
     @property
     def memory_bytes(self) -> int:
         return _state.sizes.get(self.site_id, 10 * MIB)
+
+    def get_record_types(self) -> list[WDKRecordType]:
+        return [WDKRecordType(url_segment=f"{self.site_id}-gene")]
 
 
 class _FakeRouter:
@@ -190,3 +194,24 @@ def test_the_configured_service_takes_its_policy_from_the_settings(
 
     assert service._policy == CatalogPolicy(refresh=refresh, sync=sync)
     assert service._catalogs.maxsize == 7 * MIB
+
+
+async def test_a_site_not_held_answers_no_record_types_and_builds_nothing(
+    catalogs: _Catalogs,
+) -> None:
+    service = _service(100 * MIB)
+
+    assert service.held_record_types("plasmodb") is None
+    assert catalogs.loads == []
+
+
+async def test_a_held_site_answers_its_record_types_without_a_load(
+    catalogs: _Catalogs,
+) -> None:
+    service = _service(100 * MIB)
+    await service.get_catalog("plasmodb")
+
+    assert service.held_record_types("plasmodb") == [
+        WDKRecordType(url_segment="plasmodb-gene")
+    ]
+    assert catalogs.loads == ["plasmodb"]

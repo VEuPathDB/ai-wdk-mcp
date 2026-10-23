@@ -3,7 +3,6 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 import pytest
-from fastmcp.exceptions import ToolError
 from pydantic import JsonValue
 from scripts.record_audit_gene_ids import (
     BESIDE,
@@ -32,6 +31,8 @@ from veupathdb_mcp.audit.gene_ids import (
     TEXT_ORGANISMS,
     TEXT_SEARCH,
     GeneId,
+    GeneIdProblem,
+    GeneIdRefusal,
     id_pairs,
 )
 from veupathdb_mcp.tools.refusals import payload_or_error
@@ -181,8 +182,13 @@ async def test_an_id_with_a_wildcard_or_a_space_is_not_searched_as_text(
 ) -> None:
     _, text = serve(monkeypatch, [], [])
 
-    with pytest.raises(ToolError, match="holds a wildcard or a space"):
-        payload_or_error(await gene_ids.genes_by_text(SITE, given))
+    refused = await gene_ids.genes_by_text(SITE, given)
+
+    assert refused == GeneIdRefusal(
+        given=given,
+        problem=GeneIdProblem.NOT_AN_ID,
+        message=f"{given} holds a wildcard or a space; a gene id holds neither",
+    )
 
     assert (text.details, text.searches) == ([], [])
 
@@ -196,8 +202,13 @@ async def test_a_text_answer_over_the_limit_is_refused_naming_the_id(
     )
     locus, _ = serve(monkeypatch, [], [over])
 
-    with pytest.raises(ToolError, match=f"^{GIVEN} matches more than 50 transcripts"):
-        payload_or_error(await gene_ids.genes_by_text(SITE, GIVEN))
+    refused = await gene_ids.genes_by_text(SITE, GIVEN)
+
+    assert refused == GeneIdRefusal(
+        given=GIVEN,
+        problem=GeneIdProblem.TOO_MANY_MATCHES,
+        message=f"{GIVEN} matches more than 50 transcripts of {SITE}",
+    )
 
     assert locus.searches == []
 
@@ -217,10 +228,13 @@ async def test_two_genes_a_text_match_names_are_refused_before_any_row_read(
     both = answer_of([echoed("X1", "X1.1", "-"), echoed("X1:pseudogene", "X1.2", "-")])
     locus, _ = serve(monkeypatch, [], [both])
 
-    with pytest.raises(
-        ToolError, match=r"^X1 names 2 genes of plasmodb: X1, X1:pseudogene$"
-    ):
-        payload_or_error(await gene_ids.genes_by_text(SITE, "X1"))
+    refused = await gene_ids.genes_by_text(SITE, "X1")
+
+    assert refused == GeneIdRefusal(
+        given="X1",
+        problem=GeneIdProblem.SEVERAL_GENES,
+        message="X1 names 2 genes of plasmodb: X1, X1:pseudogene",
+    )
 
     assert locus.searches == []
 

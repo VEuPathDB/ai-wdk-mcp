@@ -10,6 +10,7 @@ from fastmcp.exceptions import ToolError
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from veupathdb import JSONObject
 from veupathdb.errors import DataParsingError, WDKError
+from veupathdb.model import CamelModel
 from veupathdb.wdk import (
     StrategyAPI,
     WDKAnswer,
@@ -21,7 +22,7 @@ from veupathdb.wdk import (
     get_strategy_api,
 )
 
-from veupathdb_mcp.audit.gene_models import gene_record
+from veupathdb_mcp.audit.gene_models import NO_RECORD, gene_record
 from veupathdb_mcp.audit.genes import (
     GENE_ATTRIBUTES,
     LOCUS_TAG,
@@ -37,7 +38,6 @@ LIST_PAGE_RECORDS = 1000
 LIST_MAX_PAGES = -(-MAX_LIST_IDS * TRANSCRIPTS_PER_GENE // LIST_PAGE_RECORDS)
 TRANSCRIPT_TABLE = "GeneTranscripts"
 TRANSCRIPT_RECORD = "transcript"
-NO_RECORD = 404
 SEVERAL_RECORDS = 300
 RECORD_ATTRIBUTES = (
     "organism_full",
@@ -81,10 +81,18 @@ class _Transcripts(BaseModel):
         )
 
 
+class TooManyIdsError(ToolError):
+    def __init__(self, named: int, bound: int, reads: str) -> None:
+        self.named = named
+        self.bound = bound
+        super().__init__(
+            f"{named} genes are named; {reads} read at most {bound} at once"
+        )
+
+
 def bounded(gene_ids: Sequence[str], bound: int, reads: str) -> None:
     if len(gene_ids) > bound:
-        msg = f"{len(gene_ids)} genes are named; {reads} read at most {bound} at once"
-        raise ToolError(msg)
+        raise TooManyIdsError(len(gene_ids), bound, reads)
 
 
 def _key(record: WDKRecordInstance) -> str:
@@ -187,10 +195,19 @@ def _page(offset: int) -> JSONObject:
     }
 
 
-async def one_list_rows(site_id: str, gene_ids: list[str]) -> list[GeneRow]:
+class GeneListDataset(CamelModel):
+    model_config = ConfigDict(frozen=True)
+
+    site_id: str
+    dataset_id: int
+    size: int = Field(ge=1, le=MAX_LIST_IDS)
+
+
+async def upload_gene_list(site_id: str, gene_ids: list[str]) -> GeneListDataset:
     bounded(gene_ids, MAX_LIST_IDS, "one list read")
     if not gene_ids:
-        return []
+        msg = "an empty gene list uploads no dataset"
+        raise ValueError(msg)
     async with dataset_client(site_id) as client:
         dataset = await StrategyAPI(client).create_dataset(
             WDKDatasetConfigIdList(
@@ -198,12 +215,17 @@ async def one_list_rows(site_id: str, gene_ids: list[str]) -> list[GeneRow]:
                 source_content=WDKDatasetIdListContent(ids=gene_ids),
             )
         )
-        config = WDKSearchConfig(parameters={"ds_gene_ids": str(dataset)})
-        pages: list[WDKAnswer] = []
+    return GeneListDataset(site_id=site_id, dataset_id=dataset, size=len(gene_ids))
+
+
+async def read_gene_list(dataset: GeneListDataset) -> list[GeneRow]:
+    config = WDKSearchConfig(parameters={"ds_gene_ids": str(dataset.dataset_id)})
+    pages: list[WDKAnswer] = []
+    async with dataset_client(dataset.site_id) as client:
         while not pages or _more(pages):
             if len(pages) == LIST_MAX_PAGES:
                 msg = (
-                    f"the {LOCUS_TAG} report of {len(gene_ids)} genes serves "
+                    f"the {LOCUS_TAG} report of {dataset.size} genes serves "
                     f"{_total(pages)} transcripts; one list read pages at most "
                     f"{LIST_MAX_PAGES * LIST_PAGE_RECORDS}"
                 )

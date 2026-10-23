@@ -45,12 +45,23 @@ calls uploads one, except a tool whose WDK search takes only an id list, which s
   `annotated_transcripts` GFF over the window (at most `ANNOTATION_MAX_GROUPS` (4)
   chunk groups), not with their records; on QA plasmodb its gene features carry the
   gene id as `ID` (`tests/unit/audit/fixtures/strain_pcynM_pkac.json`).
-- **A lookup** reads ids the same way (`read_gene_ids`,
-  `veupathdb_mcp/gene_lookup/records.py`): `resolve_gene_ids_to_records`, at most
-  `RECORD_READS_PER_CALL` ids, and the fill of a `lookup_gene_records` hit that lacks an
-  organism or a product. A result's `previous_ids` stays empty, because only the
-  transcript report serves `gene_previous_ids`. `resolve_gene_ids`, the id-list read, stays
-  for a host that names more ids than one call reads.
+- **A lookup** reads ids the same way (`read_each_gene_id`,
+  `veupathdb_mcp/gene_lookup/records.py`), and answers each id on its own: the records it
+  names, or a `GeneIdRefusal` whose `problem` says why. One id that names several genes
+  refuses that id alone. `read_gene_ids` and `resolve_gene_ids_to_records` keep the whole
+  list answer on the same reads: the first refused id, other than one that names no gene,
+  is the call's error, and no id after it is read. The fill of a `lookup_gene_records`
+  hit that lacks an organism or a product reads each id the same way. A call takes at
+  most `RECORD_READS_PER_CALL` ids; more raise `TooManyIdsError` before any request.
+  A result's `previous_ids` stays empty, because only the transcript report serves
+  `gene_previous_ids`. `resolve_gene_ids`, the id-list read, stays for a host that names
+  more ids than one call reads.
+- **A site with no gene record type.** A gene record read WDK answers 404
+  (`gene_models.gene_record`) asks whether the site lists the `gene` record type: from
+  the catalog the process holds, else from one unexpanded `GET /record-types` held per
+  site. A site that does not, such as OrthoMCL, raises `NoGeneRecordsError` after that
+  first read; a site that does reads the 404 as an absent record. A read WDK answers asks
+  nothing (`tests/unit/gene_lookup/test_each_id_is_answered.py`).
 - **A tool whose WDK search takes only an id list** (`enrich_gene_ids`,
   `run_control_tests_on_search`, `run_control_tests_on_step`, `create_gene_set_step`)
   writes one dataset per call, and its description says so. A test runs every served
@@ -58,9 +69,14 @@ calls uploads one, except a tool whose WDK search takes only an id list, which s
   description says so.
 - **A host's gene rows** become group members through `GroupMember.of_row`, which keeps
   the coding rule: a pseudogene row, or a row of no protein gene type, has no length.
-- **A host's run** reads its gene list once, with `one_list_rows`: one id-list dataset
-  of at most `MAX_LIST_IDS` (400) ids, its report paged by `LIST_PAGE_RECORDS`, at most
-  `LIST_MAX_PAGES` (4) pages; a report of more transcripts is refused.
+- **A host's run** uploads its gene list once, with `upload_gene_list`: one id-list
+  dataset of at most `MAX_LIST_IDS` (400) ids, answered as a `GeneListDataset` the host
+  stores. `read_gene_list` reads that dataset's report, paged by `LIST_PAGE_RECORDS`, at
+  most `LIST_MAX_PAGES` (4) pages; a report of more transcripts is refused. A retried read
+  takes the stored reference and uploads nothing, because WDK cannot delete a dataset.
+  A dataset id names a dataset inside the WDK account that uploaded it, so the host reads
+  a `GeneListDataset` under that account and carries its token on every retry; the
+  reference holds no token digest.
   `locus_tag_answers` stays behind it and behind the whole-genome checks.
 
 The intron check stages its evidence. Junctions judge first, from at most
@@ -101,6 +117,16 @@ beyond those made once per organism: one genome window and up to
 `ANNOTATION_MAX_GROUPS` annotation range reads, one per chunk group.
 
 # What was rejected
+
+**A per-id answer from the served `resolve_gene_ids_to_records`.** An MCP client gets one
+answer per call: the records, or one error. A per-id result would change the served wire
+schema for every client to serve a caller that needs a verdict per id, and that caller is
+in process: it calls `read_each_gene_id`, which the served tool and `read_gene_ids` are
+built on.
+
+**A dataset reference keyed by the uploading account's token digest.** A read under
+another account fails at WDK; the host already holds the run's account, so a digest
+check would only restate it.
 
 **A dataset per 150 ids.** It is what `locus_tag_answers` did; every row and protein
 read left datasets in the account that nothing can delete.

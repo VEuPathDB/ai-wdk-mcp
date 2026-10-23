@@ -12,6 +12,7 @@ from veupathdb.errors import ValidationError, VEuPathDBError
 from veupathdb.wdk import WDKAnswer, get_strategy_api
 
 from veupathdb_mcp.audit import RECORD_READS_PER_CALL
+from veupathdb_mcp.catalog import NoGeneRecordsError
 from veupathdb_mcp.controls.control_tests import (
     run_positive_negative_controls,
     run_step_control_tests,
@@ -108,14 +109,18 @@ async def resolve_gene_ids_to_records(
     to the gene it names now. An id no gene record names is matched against gene
     and transcript ids by the site's text search. When one id names several
     genes, holds a wildcard or a space, or matches more than 50 transcripts, the
-    call answers an error and no records. The call writes nothing into the
+    call answers an error and no records. A site that lists no gene record type,
+    such as OrthoMCL, is refused by name. The call writes nothing into the
     account.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
         gene_ids: Gene or locus tag identifiers, for example ['PF3D7_1222600'].
     """
-    return await read_gene_ids(site_id, _bounded_gene_ids(gene_ids))
+    try:
+        return await read_gene_ids(site_id, _bounded_gene_ids(gene_ids))
+    except NoGeneRecordsError as exc:
+        raise ToolError(exc.detail or exc.title) from exc
 
 
 async def get_ai_expression_summary(

@@ -188,4 +188,4 @@ async def test_every_gene_list_upload_is_refused_while_a_recorder_runs() -> None
     with pytest.raises(AssertionError, match="reached the dataset upload"):
         await genes.locus_tag_answers("plasmodb", ["PF3D7_1"], [])
     with pytest.raises(AssertionError, match="reached the dataset upload"):
-        await record_reads.one_list_rows("plasmodb", ["PF3D7_1"])
+        await record_reads.upload_gene_list("plasmodb", ["PF3D7_1"])

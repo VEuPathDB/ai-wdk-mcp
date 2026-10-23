@@ -14,13 +14,15 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from veupathdb.errors import DataParsingError
+from veupathdb.errors import DataParsingError, WDKError
 from veupathdb.model import CamelModel
 from veupathdb.wdk import WDKRecordInstance, get_site, get_strategy_api
 
 from veupathdb_mcp.audit.pseudogene import CdsPart
+from veupathdb_mcp.catalog import GENE_RECORD_TYPE, require_gene_records
 
 MODEL_TABLE = "GeneModelDump"
+NO_RECORD = 404
 ORGANISM_ATTRIBUTE = "organismAbbrev"
 MODEL_READS_PER_FINDING = 2
 
@@ -201,15 +203,20 @@ def model_spans(gene: str, rows: list[ModelRow]) -> ModelSpans:
 async def gene_record(
     site_id: str, gene: str, attributes: list[str], tables: list[str]
 ) -> WDKRecordInstance:
-    return await get_strategy_api(site_id).get_single_record(
-        "gene",
-        [
-            {"name": "source_id", "value": gene},
-            {"name": "project_id", "value": get_site(site_id).project_id},
-        ],
-        attributes=attributes,
-        tables=tables,
-    )
+    try:
+        return await get_strategy_api(site_id).get_single_record(
+            GENE_RECORD_TYPE,
+            [
+                {"name": "source_id", "value": gene},
+                {"name": "project_id", "value": get_site(site_id).project_id},
+            ],
+            attributes=attributes,
+            tables=tables,
+        )
+    except WDKError as exc:
+        if exc.status == NO_RECORD:
+            await require_gene_records(site_id)
+        raise
 
 
 async def gene_organism(site_id: str, gene: str) -> str:

@@ -6,7 +6,7 @@ from veupathdb.errors import VEuPathDBError
 from veupathdb_mcp.audit import RECORD_READS_PER_CALL
 
 from .organism import normalize_organism
-from .records import read_gene_ids
+from .records import GeneIdFound, read_each_gene_id
 from .result import GeneResult
 
 logger = get_logger(__name__)
@@ -50,7 +50,9 @@ async def hydrate_sparse_gene_results(
         return results
 
     try:
-        resolved = await read_gene_ids(site_id, ids_to_hydrate[:RECORD_READS_PER_CALL])
+        readings = await read_each_gene_id(
+            site_id, ids_to_hydrate[:RECORD_READS_PER_CALL]
+        )
     except VEuPathDBError as exc:
         logger.debug(
             "Gene metadata hydration from gene records skipped",
@@ -60,16 +62,11 @@ async def hydrate_sparse_gene_results(
         )
         return results
 
-    if resolved.error:
-        return results
-
-    if not resolved.records:
-        return results
-
     by_id: dict[str, GeneResult] = {}
-    for rec in resolved.records:
-        if rec.gene_id:
-            by_id[rec.gene_id.strip()] = rec
+    for reading in readings:
+        match reading:
+            case GeneIdFound(records=found):
+                by_id |= {record.gene_id: record for record in found}
 
     hydrated: list[GeneResult] = []
     for r in results:

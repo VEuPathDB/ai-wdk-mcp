@@ -27,11 +27,11 @@ than from a file inside it.
 | package | what it publishes |
 | --- | --- |
 | `veupathdb_mcp` | the version, the service-token registry, the tool error payload, the tool metadata keys |
-| `veupathdb_mcp.audit` | the gene-model checks: genetic codes and translation, protein windows confirmed in DNA, a genome's gene rows, a named gene's record reads and proteins, a run's one gene-list read and the site's organism records, a gene's model and its exon and CDS spans, at most two model reads a check adds per call, ortholog-group length statistics, the pseudogene-call, selenoprotein-end, protein-length, split, gene-fusion, strain-model, missing-gene, organelle-join and RNA-seq intron-support checks, the anatomy of a pseudogene call, a genome's pseudogene calls paired with a reference genome and a rate with its Wilson interval, floor and ceiling, the genome priority from the served BUSCO scores, the evidence a gene record serves and a genome's provenance, and the inputs their served tools read |
-| `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation, the shortlist a long vocabulary is shown as, other sites' experiment cards, and the OrthoMCL protein-count comparison of two genomes and the expressions for presence only inside a clade and in every species of a clade |
+| `veupathdb_mcp.audit` | the gene-model checks: genetic codes and translation, protein windows confirmed in DNA, a genome's gene rows, a named gene's record reads and proteins, a run's one gene-list upload and its reads of that list, each id's resolution or refusal, the site's organism records, a gene's model and its exon and CDS spans, at most two model reads a check adds per call, ortholog-group length statistics, the pseudogene-call, selenoprotein-end, protein-length, split, gene-fusion, strain-model, missing-gene, organelle-join and RNA-seq intron-support checks, the anatomy of a pseudogene call, a genome's pseudogene calls paired with a reference genome and a rate with its Wilson interval, floor and ceiling, the genome priority from the served BUSCO scores, the evidence a gene record serves and a genome's provenance, and the inputs their served tools read |
+| `veupathdb_mcp.catalog` | sites, record types, searches, parameter metadata and validation, the shortlist a long vocabulary is shown as, other sites' experiment cards, and the OrthoMCL protein-count comparison of two genomes and the expressions for presence only inside a clade and in every species of a clade, and whether a site lists the gene record type (`require_gene_records`) |
 | `veupathdb_mcp.controls` | the control-test runners, their context and their result shapes |
 | `veupathdb_mcp.embeddings` | the embedder, its three tables, the record manager and the indexes on them |
-| `veupathdb_mcp.gene_lookup` | text lookup, id resolution and the organism list |
+| `veupathdb_mcp.gene_lookup` | text lookup, id resolution (each id answered on its own by `read_each_gene_id`) and the organism list |
 | `veupathdb_mcp.research` | the research server, its settings and its two tools |
 | `veupathdb_mcp.separation` | the separation run, its request, its progress rows, its result, the request charges it makes and the hypergeometric tail it reads controls by |
 | `veupathdb_mcp.testing` | the recordings this distribution ships for a host's suite: the OrthoMCL count recordings (`ORTHOMCL_COUNTS`) |
@@ -124,7 +124,8 @@ id reads, its own id, an alias or a previous id; else the one gene whose own id,
 without its `:` qualifier, or whose transcript id the site's text search finds) and
 answers `geneIds`, each id given beside the gene id it resolved to. A named gene, its
 protein and its ortholog group are record reads, so these checks upload no gene list;
-a host reads a run's list once with `one_list_rows`.
+a host uploads a run's list once with `upload_gene_list`, keeps the `GeneListDataset` it
+answers, and reads the list with `read_gene_list` on every retry.
 
 Eighteen of them declare a call budget over the default in tool `_meta`
 (`org.veupathdb.assistant/maxCallSeconds`): the two control runs, the plan
@@ -405,7 +406,7 @@ tag.
 than a lint rule.
 
 The lock names `veupathdb-py` by the client repository
-(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, `v0.1.0b21`,
+(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, `v0.1.0b22`,
 so a checkout of this repository alone installs and tests. To take a newer client:
 change `tag` in `[tool.uv.sources]`, run `uv lock --upgrade-package veupathdb-py`,
 then `uv sync`. Every name `src/` and `tests/` reads from the client comes from a client

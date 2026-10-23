@@ -1,5 +1,52 @@
 # Knowledge log
 
+## 2026-10-23 - 0.2.0b39
+
+- `read_each_gene_id(site_id, gene_ids)` (`veupathdb_mcp.gene_lookup`) answers each id on
+  its own, in the order given: a `GeneIdFound` with the records the id names, or a
+  `GeneIdRefusal` (`veupathdb_mcp.audit`) whose `problem` is `notFound`,
+  `severalGenes`, `notAnId` or `tooManyMatches`. One id that names several genes refuses
+  that id alone. `read_gene_ids`, `rows_named` and the served
+  `resolve_gene_ids_to_records` read the same per-id answers through `each_named`, keep
+  their whole-list answer, and stop at the first refused id. The fill of a
+  `lookup_gene_records` hit reads each id on its own, so one ambiguous id leaves the
+  other hits filled. `genes_by_text` and `several` answer a `GeneIdRefusal`; its
+  `payload` is the tool error they answered before.
+- A list longer than its bound raises `TooManyIdsError` (a `ToolError`, with `named` and
+  `bound`) before any request.
+- A gene record read that WDK answers 404 (`gene_models.gene_record`, which every gene
+  read goes through) asks `require_gene_records` (`veupathdb_mcp.catalog`) whether the
+  site lists the `gene` record type (`GENE_RECORD_TYPE`), and raises
+  `NoGeneRecordsError` when it does not. So on OrthoMCL the first id of a lookup, and
+  `record_rows`, `record_proteins` and the audit checks, refuse by name where they raised
+  a bare `WDKError`. `found_row` reads a 404 as an absent record only when the site lists
+  `gene`. The served resolve answers the refusal as a tool error.
+- What the check costs: nothing on a read WDK answers. On a 404, the site's catalog when
+  the process holds it (no request); otherwise one unexpanded `GET /record-types`,
+  held per site for the life of the process. No catalog is loaded or built for it.
+- `one_list_rows` is gone. `upload_gene_list(site_id, gene_ids)` uploads the id-list
+  dataset and answers a `GeneListDataset` (`siteId`, `datasetId`, `size`) a host stores;
+  `read_gene_list(dataset)` reads its `GeneByLocusTag` report under the account that
+  uploaded it. A read retried after a failure takes the stored reference and uploads no
+  second dataset. An empty list is refused before an upload. With veupathdb-py 0.1.0b22
+  the upload POST itself is sent once: a 502 to it is not retried
+  (`test_an_upload_the_site_answers_502_is_sent_once`).
+- Requests per id are unchanged from b38: one gene record read, then for an id no record
+  names one `GenesByText` search and one record read per matched gene, all sequential.
+- `scripts/record_orthomcl_gene_class.py` records QA OrthoMCL's `GET /record-types` and
+  one `gene` record read (two requests, no dataset) into
+  `tests/unit/catalog/fixtures/orthomcl_gene_class.json`. Until it runs, the OrthoMCL
+  tests skip with `NEEDS_QA_RECORDING`. The hermetic suite serves plasmodb's record types
+  from the client's QA recording (`record_types`) and fails a test that asks any other
+  site's.
+- What a host does to take this release: call `read_each_gene_id` where it needs a
+  verdict per id, catch `TooManyIdsError` and `NoGeneRecordsError`, and replace
+  `one_list_rows` with `upload_gene_list`, storing its answer, then `read_gene_list`
+  under the same account. It pins veupathdb-py 0.1.0b22.
+- `DiscoveryService.held_record_types(site_id)` answers the record types of a catalog the
+  process holds, or None, and never loads one. The gene-class check reads it in one step,
+  so an eviction between a look and a read cannot start a catalog build.
+
 ## 2026-10-23 - 0.2.0b38
 
 - `resolve_gene_ids_to_records` reads each named gene by its own gene record

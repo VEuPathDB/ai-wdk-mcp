@@ -1,0 +1,41 @@
+{
+ "site": "orthomcl",
+ "gene": "PF3D7_1133400",
+ "record_types": {
+  "method": "GET",
+  "url": "https://qa.orthomcl.org/orthomcl.qa/service/record-types",
+  "status": 200,
+  "ms": 235.8178962022066,
+  "request_json": null,
+  "request_text": null,
+  "response_json": [
+   "group",
+   "sequence",
+   "helper"
+  ],
+  "response_text": null
+ },
+ "gene_record": {
+  "method": "POST",
+  "url": "https://qa.orthomcl.org/orthomcl.qa/service/record-types/gene/records",
+  "status": 404,
+  "ms": 32.95927494764328,
+  "request_json": {
+   "primaryKey": [
+    {
+     "name": "source_id",
+     "value": "PF3D7_1133400"
+    },
+    {
+     "name": "project_id",
+     "value": "OrthoMCL"
+    }
+   ],
+   "attributes": [],
+   "tables": []
+  },
+  "request_text": null,
+  "response_json": null,
+  "response_text": "Resource 'record type: gene' does not exist."
+ }
+}

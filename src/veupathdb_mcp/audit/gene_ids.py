@@ -4,7 +4,9 @@ own id or transcript id the site's text search finds."""
 from __future__ import annotations
 
 import json
-from typing import Self
+from collections.abc import AsyncIterator
+from enum import StrEnum
+from typing import Literal, Self
 
 from pydantic import BaseModel, ConfigDict, model_validator
 from veupathdb.domain.parameters import WDKTreeBoxVocabNode, collect_leaf_terms
@@ -45,6 +47,33 @@ class GeneId(CamelModel):
     resolved: str
 
 
+class GeneIdProblem(StrEnum):
+    NOT_FOUND = "notFound"
+    SEVERAL_GENES = "severalGenes"
+    NOT_AN_ID = "notAnId"
+    TOO_MANY_MATCHES = "tooManyMatches"
+
+
+class GeneIdRefusal(CamelModel):
+    model_config = ConfigDict(frozen=True)
+
+    outcome: Literal["refused"] = "refused"
+    given: str
+    problem: GeneIdProblem
+    message: str
+
+    @property
+    def payload(self) -> ToolErrorPayload:
+        return tool_error(VEuPathDBErrorCode.VALIDATION_ERROR, self.message)
+
+
+class GeneIdRows(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    given: str
+    rows: list[GeneRow]
+
+
 class GeneReads(BaseModel):
     model_config = ConfigDict(frozen=True)
 
@@ -67,32 +96,50 @@ class GeneReads(BaseModel):
         return [row for row in self.rows if row.gene in (own or genes)]
 
 
-async def _named(site_id: str, gene_id: str) -> list[GeneRow] | ToolErrorPayload:
+async def _named(site_id: str, gene_id: str) -> list[GeneRow] | GeneIdRefusal:
     try:
         row = await found_row(site_id, gene_id)
     except WDKError as exc:
         if exc.status != SEVERAL_RECORDS:
             raise
-        return tool_error(
-            VEuPathDBErrorCode.VALIDATION_ERROR,
-            f"{gene_id} names several genes of {site_id}: {exc.detail}",
+        return GeneIdRefusal(
+            given=gene_id,
+            problem=GeneIdProblem.SEVERAL_GENES,
+            message=f"{gene_id} names several genes of {site_id}: {exc.detail}",
         )
     if row is not None:
         return [row]
     return await genes_by_text(site_id, gene_id)
 
 
-async def rows_named(site_id: str, gene_ids: list[str]) -> GeneReads | ToolErrorPayload:
-    bounded(gene_ids, RECORD_READS_PER_CALL, "record reads")
-    rows: dict[str, GeneRow] = {}
-    inputs: dict[str, list[str]] = {}
+async def _each(
+    site_id: str, gene_ids: list[str]
+) -> AsyncIterator[GeneIdRows | GeneIdRefusal]:
     for given in gene_ids:
         match await _named(site_id, given):
-            case ToolErrorPayload() as refusal:
-                return refusal
-            case named:
-                inputs[given.lower()] = [row.gene for row in named]
-                rows |= {row.gene: row for row in named}
+            case GeneIdRefusal() as refusal:
+                yield refusal
+            case rows:
+                yield GeneIdRows(given=given, rows=rows)
+
+
+def each_named(
+    site_id: str, gene_ids: list[str]
+) -> AsyncIterator[GeneIdRows | GeneIdRefusal]:
+    bounded(gene_ids, RECORD_READS_PER_CALL, "record reads")
+    return _each(site_id, gene_ids)
+
+
+async def rows_named(site_id: str, gene_ids: list[str]) -> GeneReads | ToolErrorPayload:
+    rows: dict[str, GeneRow] = {}
+    inputs: dict[str, list[str]] = {}
+    async for named in each_named(site_id, gene_ids):
+        match named:
+            case GeneIdRefusal() as refusal:
+                return refusal.payload
+            case GeneIdRows(given=given, rows=found):
+                inputs[given.lower()] = [row.gene for row in found]
+                rows |= {row.gene: row for row in found}
     return GeneReads(rows=list(rows.values()), proteins={}, inputs=inputs)
 
 
@@ -118,10 +165,11 @@ def id_pairs(given: list[str], rows: dict[str, GeneRow]) -> list[GeneId]:
     return [GeneId(given=gene, resolved=rows[gene].gene) for gene in given]
 
 
-def several(site_id: str, gene_id: str, genes: list[str]) -> ToolErrorPayload:
-    return tool_error(
-        VEuPathDBErrorCode.VALIDATION_ERROR,
-        f"{gene_id} names {len(genes)} genes of {site_id}: {', '.join(genes)}",
+def several(site_id: str, gene_id: str, genes: list[str]) -> GeneIdRefusal:
+    return GeneIdRefusal(
+        given=gene_id,
+        problem=GeneIdProblem.SEVERAL_GENES,
+        message=f"{gene_id} names {len(genes)} genes of {site_id}: {', '.join(genes)}",
     )
 
 
@@ -179,18 +227,20 @@ def matched_genes(answer: WDKAnswer, gene_id: str) -> list[str]:
     return sorted(found)
 
 
-async def genes_by_text(site_id: str, gene_id: str) -> list[GeneRow] | ToolErrorPayload:
+async def genes_by_text(site_id: str, gene_id: str) -> list[GeneRow] | GeneIdRefusal:
     if _UNSEARCHED in gene_id or any(c.isspace() for c in gene_id):
-        return tool_error(
-            VEuPathDBErrorCode.VALIDATION_ERROR,
-            f"{gene_id} holds a wildcard or a space; a gene id holds neither",
+        return GeneIdRefusal(
+            given=gene_id,
+            problem=GeneIdProblem.NOT_AN_ID,
+            message=f"{gene_id} holds a wildcard or a space; a gene id holds neither",
         )
     answer = await text_answer(site_id, gene_id, await text_organisms(site_id))
     total = answer.meta.total_count
     if total is None or total > len(answer.records):
-        return tool_error(
-            VEuPathDBErrorCode.VALIDATION_ERROR,
-            f"{gene_id} matches more than {MAX_MATCHES} transcripts of {site_id}",
+        return GeneIdRefusal(
+            given=gene_id,
+            problem=GeneIdProblem.TOO_MANY_MATCHES,
+            message=f"{gene_id} matches more than {MAX_MATCHES} transcripts of {site_id}",
         )
     matched = matched_genes(answer, gene_id)
     if len(matched) > 1:

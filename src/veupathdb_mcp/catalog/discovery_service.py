@@ -107,6 +107,12 @@ class DiscoveryService:
                 held_bytes=self.held_bytes(),
             )
 
+    def held_record_types(self, site_id: str) -> list[WDKRecordType] | None:
+        held: SearchCatalog | None = self._catalogs.get(site_id)
+        if held is None:
+            return None
+        return held.get_record_types()
+
     async def get_record_types(self, site_id: str) -> list[WDKRecordType]:
         """Get record types for a site."""
         catalog = await self.get_catalog(site_id)

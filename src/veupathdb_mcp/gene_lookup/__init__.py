@@ -5,7 +5,12 @@
 
 from veupathdb_mcp.gene_lookup.lookup import GeneSearchResult, lookup_genes_by_text
 from veupathdb_mcp.gene_lookup.organisms import list_organisms
-from veupathdb_mcp.gene_lookup.records import read_gene_ids
+from veupathdb_mcp.gene_lookup.records import (
+    GeneIdFound,
+    GeneIdReading,
+    read_each_gene_id,
+    read_gene_ids,
+)
 from veupathdb_mcp.gene_lookup.result import GeneResult
 from veupathdb_mcp.gene_lookup.site_search import (
     SITE_SEARCH_PAGE_LIMIT,
@@ -24,6 +29,8 @@ __all__ = [
     "MAX_GENE_IDS",
     "SITE_SEARCH_PAGE_LIMIT",
     "SITE_SEARCH_STREAM_LIMIT",
+    "GeneIdFound",
+    "GeneIdReading",
     "GeneResolveResult",
     "GeneResult",
     "GeneSearchResult",
@@ -31,6 +38,7 @@ __all__ = [
     "list_organisms",
     "lookup_genes_by_text",
     "normalize_gene_ids",
+    "read_each_gene_id",
     "read_gene_ids",
     "resolve_gene_ids",
     "stream_site_search_gene_ids",

@@ -34,6 +34,11 @@ from veupathdb_mcp.catalog.experiments import (
     sites_holding_organism,
     sites_publishing,
 )
+from veupathdb_mcp.catalog.gene_records import (
+    GENE_RECORD_TYPE,
+    NoGeneRecordsError,
+    require_gene_records,
+)
 from veupathdb_mcp.catalog.models import (
     UNIVERSAL_SEARCHES,
     ParamSpecResponse,
@@ -157,6 +162,7 @@ __all__ = [
     "EDA_ANALYSIS_SPEC_PARAM",
     "EDA_DATASET_ID_PARAM",
     "EVERY_SPECIES_COUNT_REPORTS",
+    "GENE_RECORD_TYPE",
     "MAX_COUNT_REPORTS",
     "RADIO_OFF",
     "SUBSET_QUERY",
@@ -169,6 +175,7 @@ __all__ = [
     "ExperimentMatch",
     "FilterFieldInfo",
     "GetParameterOptionsResult",
+    "NoGeneRecordsError",
     "OverrideMap",
     "ParamFetcher",
     "ParamIntent",
@@ -256,6 +263,7 @@ __all__ = [
     "read_experiment",
     "read_parameter_options",
     "read_search_definition",
+    "require_gene_records",
     "resolve_params_with_intent",
     "resolve_search_details",
     "resolve_search_record_type",

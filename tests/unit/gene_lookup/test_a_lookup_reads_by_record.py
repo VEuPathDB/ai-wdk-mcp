@@ -12,15 +12,25 @@ from scripts.record_gene_lookups import (
     LookupWire,
 )
 from tests._support.dataset_trap import DatasetTrap
-from tests._support.record_site import RecordedRecords, install_recorded_records
+from tests._support.record_site import (
+    RECORD_ROW,
+    RecordedRecords,
+    install_recorded_records,
+)
 from tests._support.row_reads import serve_recorded_rows
 from tests.unit.audit import test_gene_ids
 from veupathdb.auth_context import veupathdb_auth_token_ctx
-from veupathdb.errors import VEuPathDBErrorCode
+from veupathdb.errors import WDKError
 
-from veupathdb_mcp.audit import RECORD_READS_PER_CALL, gene_ids
+from veupathdb_mcp.audit import (
+    RECORD_READS_PER_CALL,
+    GeneIdProblem,
+    GeneIdRefusal,
+    gene_ids,
+    record_reads,
+)
+from veupathdb_mcp.audit.genes import GeneRow
 from veupathdb_mcp.gene_lookup import GeneResult, lookup
-from veupathdb_mcp.tool_errors import tool_error
 from veupathdb_mcp.tools import user_tools
 
 
@@ -87,6 +97,36 @@ async def test_a_lookup_fills_a_sparse_gene_from_its_record(
     assert trap.calls == []
 
 
+async def test_one_ambiguous_hit_leaves_the_other_hits_filled(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    replay(monkeypatch)
+    [gene] = HYDRATED
+    ambiguous = "PF3D7_AMBIGUOUS"
+
+    async def row(site_id: str, named: str) -> GeneRow:
+        if named == ambiguous:
+            msg = f"{named} names 2 records"
+            raise WDKError(msg, status=300)
+        return await RECORD_ROW(site_id, named)
+
+    async def page(
+        site_id: str, search_text: str, **_: object
+    ) -> tuple[list[GeneResult], list[str], int]:
+        return [GeneResult(gene_id=ambiguous), GeneResult(gene_id=gene)], [], 2
+
+    monkeypatch.setattr(record_reads, "_row", row)
+    monkeypatch.setattr(lookup, "fetch_site_search_genes", page)
+
+    result = await user_tools.lookup_gene_records(SITE, gene)
+
+    filled = {r.gene_id: (r.organism, r.product) for r in result.records}
+    assert filled == {
+        ambiguous: ("", ""),
+        gene: ("Plasmodium falciparum 3D7", "AP2 domain transcription factor AP2-G"),
+    }
+
+
 async def test_an_id_no_record_names_resolves_through_the_text_search(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -104,7 +144,11 @@ async def test_an_id_several_genes_answer_is_an_error_with_no_records(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     async def refused(site_id: str, gene_id: str) -> object:
-        return tool_error(VEuPathDBErrorCode.VALIDATION_ERROR, f"{gene_id} names 2")
+        return GeneIdRefusal(
+            given=gene_id,
+            problem=GeneIdProblem.SEVERAL_GENES,
+            message=f"{gene_id} names 2",
+        )
 
     monkeypatch.setattr(gene_ids, "_named", refused)
 
