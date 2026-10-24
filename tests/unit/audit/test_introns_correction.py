@@ -50,7 +50,7 @@ def test_a_missing_exon_is_restored_in_frame() -> None:
     result = corrected(structure([E1, E3, E4]), READS)
 
     assert result == IntronCorrection(
-        cds=[E1, E2, E3, E4], protein=SPLICED, frame_kept=True
+        cds=[E1, E2, E3, E4], exons=[E1, E2, E3, E4], protein=SPLICED, frame_kept=True
     )
 
 
@@ -89,6 +89,43 @@ def test_a_minus_strand_gene_is_corrected_on_its_own_strand() -> None:
     assert [(u.start, u.end) for u in judged(judgement)] == [(1304, 1513)]
     assert result.cds == [(1061, 1153), (1214, 1303), (1364, 1453), (1514, 1603)]
     assert result.protein == SPLICED
+
+
+def test_a_stop_past_the_last_exon_extends_that_exon() -> None:
+    gene = structure([E1, E3, (E4[0], E4[1] - 6)])
+
+    result = corrected(gene, READS)
+
+    assert result.cds == [E1, E2, E3, E4]
+    assert result.exons == [E1, E2, E3, E4]
+    assert result.protein == SPLICED
+
+
+def test_a_minus_strand_stop_past_the_last_exon_extends_that_exon() -> None:
+    gene, window, reads = flipped([E1, E3, (E4[0], E4[1] - 6)], READS)
+
+    result = correct_model(gene, judged(judge_introns(gene, reads)), window, STANDARD)
+
+    assert gene.exons[0] == (1067, 1153)
+    assert result.cds == [(1061, 1153), (1214, 1303), (1364, 1453), (1514, 1603)]
+    assert result.exons == result.cds
+    assert result.protein == SPLICED
+
+
+def test_a_correction_keeps_the_untranslated_exons() -> None:
+    gene = structure([(1011, 1045), E1, E3, (E4[0], 1630)], cds=[E1, E3, E4])
+
+    result = corrected(gene, READS)
+
+    assert result.cds == [E1, E2, E3, E4]
+    assert result.exons == [(1011, 1045), E1, E2, E3, (E4[0], 1630)]
+
+
+def test_a_correction_whose_cds_leaves_its_exons_is_refused() -> None:
+    with pytest.raises(ValidationError, match="lies inside its exons"):
+        IntronCorrection(
+            cds=[E1, E2], exons=[E1, (E2[0], E2[1] - 3)], protein="M", frame_kept=True
+        )
 
 
 def test_a_window_that_misses_the_gene_is_a_parsing_error() -> None:

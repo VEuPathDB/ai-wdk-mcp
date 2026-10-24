@@ -3,6 +3,7 @@ import re
 import httpx
 import pytest
 from fastmcp.exceptions import ToolError
+from pydantic import ValidationError
 from tests._support.audit_site import window_refused
 from tests._support.intron_genes import E1, E3, E4, I1, I2, I3, dna
 from tests._support.intron_site import (
@@ -172,6 +173,7 @@ async def test_an_unknown_gene_is_a_tool_error(
 def uncorrected(result: IntronAudit) -> tuple[object, ...]:
     return (
         result.corrected_cds,
+        result.corrected_exons,
         result.corrected_protein,
         result.frame_kept,
         result.code,
@@ -191,7 +193,9 @@ async def test_a_gene_with_no_protein_keeps_its_judgement_and_names_why(
 
     assert result.verdict == "UNSUPPORTED_MISSING_EXON"
     assert result.correction_reason == f"{GENE} has no protein on plasmodb"
-    assert uncorrected(result) == (None, None, None, None, False, None)
+    assert uncorrected(result) == (None, None, None, None, None, False, None)
+    with pytest.raises(ValidationError, match="lies inside its exons"):
+        IntronAudit.model_validate({**result.model_dump(), "corrected_exons": [E1]})
 
 
 async def test_a_genome_window_the_site_does_not_serve_keeps_the_judgement(
@@ -212,7 +216,7 @@ async def test_a_genome_window_the_site_does_not_serve_keeps_the_judgement(
     assert result.correction_reason == (
         "plasmodb did not answer the correction reads: ReadTimeout read timed out"
     )
-    assert uncorrected(result) == (None, None, None, None, False, None)
+    assert uncorrected(result) == (None, None, None, None, None, False, None)
 
 
 async def test_an_unreadable_track_is_a_tool_error(
@@ -283,7 +287,7 @@ async def test_a_window_that_misses_the_transcript_keeps_the_judgement(
     assert result.verdict == "UNSUPPORTED_MISSING_EXON"
     assert result.correction_reason is not None
     assert "PcyX_1-t1 lies outside the window" in result.correction_reason
-    assert uncorrected(result) == (None, None, None, None, False, None)
+    assert uncorrected(result) == (None, None, None, None, None, False, None)
 
 
 async def test_one_tabix_reader_serves_every_audit_on_one_client(

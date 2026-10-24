@@ -1,5 +1,6 @@
 import httpx
 import pytest
+from pydantic import ValidationError
 from tests._support.intron_genes import E1, E2, E3, E4, I1, I2, I3, SPLICED, dna
 from tests._support.intron_site import (
     GENE,
@@ -15,7 +16,7 @@ from veupathdb.errors import DataParsingError
 from veupathdb.jbrowse import GenomeWindow, JBrowseError
 
 from veupathdb_mcp.audit.codes import GeneticCode
-from veupathdb_mcp.audit.introns import IntronSupport, UnreadIntron
+from veupathdb_mcp.audit.introns import IntronAudit, IntronSupport, UnreadIntron
 from veupathdb_mcp.audit.introns_orthologs import OrthologSupport
 from veupathdb_mcp.tools.audit_intron_tools import audit_intron_support
 
@@ -44,6 +45,7 @@ async def test_a_hidden_exon_is_served_with_its_corrected_model(
         )
     ]
     assert result.corrected_cds == [E1, E2, E3, E4]
+    assert result.corrected_exons == [E1, E2, E3, E4]
     assert result.corrected_protein == SPLICED
     assert (result.gene, result.transcript, result.other_transcripts) == (
         GENE,
@@ -64,6 +66,22 @@ async def test_a_hidden_exon_is_served_with_its_corrected_model(
     assert site.tables_read == [GENE]
 
 
+async def test_an_audit_whose_corrected_cds_leaves_its_exons_is_refused(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    Site(monkeypatch)
+    junctions(monkeypatch, READS)
+    served = (await audit_intron_support("plasmodb", GENE)).model_dump()
+
+    with pytest.raises(ValidationError, match="lies inside its exons"):
+        IntronAudit.model_validate(
+            {**served, "corrected_exons": [E1, E2, E3, (E4[0], E4[1] - 3)]}
+        )
+    assert IntronAudit.model_validate({**served, "corrected_exons": None}) == (
+        IntronAudit.model_validate(served).model_copy(update={"corrected_exons": None})
+    )
+
+
 async def test_the_served_check_is_camel_case(monkeypatch: pytest.MonkeyPatch) -> None:
     Site(monkeypatch)
     junctions(monkeypatch, READS)
@@ -73,6 +91,7 @@ async def test_the_served_check_is_camel_case(monkeypatch: pytest.MonkeyPatch) -
     dumped = result.model_dump(by_alias=True)
     assert {
         "correctedCds",
+        "correctedExons",
         "correctedProtein",
         "frameKept",
         "codeInferred",
@@ -351,6 +370,7 @@ async def test_a_donor_neither_gt_nor_gc_is_noncanonical_and_read_as_exon(
     assert result.unread is not None
     assert [(u.outcome, u.motif) for u in result.unread] == [("NONCANONICAL", "AT..AC")]
     assert result.corrected_cds == [E1, (E2[0], E3[1]), E4]
+    assert result.corrected_exons == [E1, (E2[0], E3[1]), E4]
     assert result.corrected_protein == (
         SPLICED[:60] + "I" + "P" * 18 + "H" + SPLICED[60:]
     )

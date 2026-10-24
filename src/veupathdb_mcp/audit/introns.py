@@ -154,6 +154,13 @@ class IntronSupport(CamelModel):
     tracks: int
 
 
+def within_exons(cds: list[Span] | None, exons: list[Span] | None) -> bool:
+    return exons is None or (
+        cds is not None
+        and all(any(a <= start and end <= b for a, b in exons) for start, end in cds)
+    )
+
+
 def intron_key(span: Span) -> str:
     return f"{span[0]}-{span[1]}"
 
@@ -383,6 +390,7 @@ class IntronAudit(IntronJudgement):
     code_inferred: bool
     orthologs: OrthologSupport | None
     correction_reason: str | None = None
+    corrected_exons: list[Span] | None = None
     model: ModelSpans | None = None
     junction_tracks: JunctionTracks | None = None
 
@@ -397,6 +405,16 @@ class IntronAudit(IntronJudgement):
         note = self.junction_tracks.cap_note if self.junction_tracks else None
         if note is not None and note not in self.evidence_unread:
             msg = f"an intron audit names its junction track cut: {note}"
+            raise ValueError(msg)
+        return self
+
+    @model_validator(mode="after")
+    def _transcribed_as_corrected(self) -> Self:
+        if not within_exons(self.corrected_cds, self.corrected_exons):
+            msg = (
+                "an intron audit names corrected exons only with a corrected CDS "
+                "that lies inside its exons"
+            )
             raise ValueError(msg)
         return self
 

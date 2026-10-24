@@ -474,7 +474,11 @@ bases are covered and every other intron has 20 reads; `UNEXPLAINED` otherwise. 
 Only when no unread intron is `UNEXPLAINED` are the protein and the genome (gene +-
 3000) read and all of them applied together, a junction outcome by cutting its
 junctions out and a kept intron by reading it as exon; the corrected CDS is served in
-ascending genome order with its stop codon. When the protein or the genome window
+ascending genome order with its stop codon. The corrected exons are served beside it, the
+same composition merged, and a reading frame that runs past the last exon on the gene's
+strand lengthens that exon to its stop codon, because a CDS is part of its transcript; a
+separate extension field was rejected, since each host would merge it again
+(`tests/unit/audit/test_introns_correction.py`). When the protein or the genome window
 cannot be read, or the window misses the transcript, the judgement stays and
 `correctionReason` says why, with the corrected fields, code and orthologs null. The
 ortholog count names, per species other than the gene's own and in the table's order,

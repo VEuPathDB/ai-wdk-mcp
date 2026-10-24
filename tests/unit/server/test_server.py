@@ -1337,6 +1337,7 @@ async def test_an_intron_audit_with_no_junction_track_answers_camel_case(
         "codeInferred": False,
         "orthologs": None,
         "correctionReason": None,
+        "correctedExons": None,
         "model": None,
         "junctionTracks": {"organismAbbrev": "pcynM", "listed": 0, "read": 0},
     }

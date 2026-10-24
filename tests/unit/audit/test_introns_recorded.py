@@ -78,6 +78,7 @@ async def test_the_recorded_pkac_model_misses_its_atp_site_exon(
         399,
     ]
     assert result.corrected_cds[1] == (1381887, 1382044)
+    assert result.corrected_exons == result.corrected_cds
     assert result.corrected_protein is not None
     assert (served_length(PKAC), len(result.corrected_protein)) == (280, 341)
     assert ATP_SITE in result.corrected_protein
@@ -160,6 +161,7 @@ async def test_the_recorded_dmaw_intron_is_shifted_by_24_bases(
         (4793787, 4793908),
         (4793970, 4795120),
     ]
+    assert result.corrected_exons == result.corrected_cds
     assert result.corrected_protein is not None
     assert (served_length(DMAW), len(result.corrected_protein)) == (451, 459)
     assert "ANLSESKV" in result.corrected_protein
@@ -241,6 +243,13 @@ async def test_a_replaced_intron_is_corrected_and_judged_by_orthologs(
         )
     ]
     assert result.corrected_cds == [(202062, 202208), (202267, 202401)]
+    assert result.corrected_exons == [
+        (201039, 201399),
+        (201454, 201595),
+        (201653, 201925),
+        (201976, 202208),
+        (202267, 202401),
+    ]
     assert result.corrected_protein is not None
     assert (len(result.corrected_protein), result.frame_kept) == (93, False)
     assert (result.code, result.code_inferred) == (GeneticCode.STANDARD, True)
@@ -288,6 +297,7 @@ async def test_an_intron_over_an_assembly_gap_is_left_unexplained(
         "the intron 44981063-44981393 spans an assembly gap"
     ]
     assert (result.corrected_cds, result.orthologs) == (None, None)
+    assert result.corrected_exons is None
     assert stages(store) == ["genome", "peptides"]
     assert protein_reads(records) == []
 
@@ -307,6 +317,7 @@ async def test_a_peptide_spanned_intron_is_supported(
         None,
         [],
     )
+    assert result.corrected_exons is None
     assert stages(store) == ["peptides"]
     assert records.reads == [
         ("gene", "TGME49_224540", ("GeneTranscripts",)),
@@ -353,6 +364,12 @@ async def test_a_covered_unspliced_intron_is_retained(
     ) == (4.17, 7.83, 0.988, 0.533)
     assert result.corrected_cds == [
         (41952051, 41952902),
+        (41953562, 41953639),
+        (41953733, 41953990),
+        (41954090, 41954101),
+    ]
+    assert result.corrected_exons == [
+        (41950997, 41952902),
         (41953562, 41953639),
         (41953733, 41953990),
         (41954090, 41954101),

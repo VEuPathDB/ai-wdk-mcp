@@ -370,6 +370,24 @@ async def test_a_result_stored_before_the_gene_models_reads_none_read(
     } == set(unread)
 
 
+async def test_an_intron_audit_stored_before_its_corrected_exons_reads_none(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    results = await intron_support(monkeypatch)
+    stored = [result.model_dump(by_alias=True, mode="json") for result in results]
+
+    for result, dumped in zip(results, stored, strict=True):
+        older = {key: value for key, value in dumped.items() if key != "correctedExons"}
+        validated = type(result).model_validate(older)
+        assert validated.model_dump(by_alias=True, mode="json") == older | {
+            "correctedExons": None
+        }
+    assert [dumped["correctedExons"] is None for dumped in stored] == [
+        dumped["correctedCds"] is None for dumped in stored
+    ]
+    assert sum(dumped["correctedExons"] is not None for dumped in stored) == 4
+
+
 def misnamed(dumped: dict[str, typing.Any], key: str) -> dict[str, typing.Any]:
     held = dumped[key]
     match held:

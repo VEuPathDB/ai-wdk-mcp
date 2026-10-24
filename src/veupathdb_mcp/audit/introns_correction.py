@@ -3,21 +3,37 @@ read as exon, translated from the annotated start."""
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict
+from typing import Self
+
+from pydantic import BaseModel, ConfigDict, model_validator
 from veupathdb.errors import DataParsingError
 from veupathdb.jbrowse import GenomeWindow
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.audit.codes import GeneticCode, reverse_complement, translate
-from veupathdb_mcp.audit.introns import GeneStructure, Span, Strand, UnreadIntron
+from veupathdb_mcp.audit.introns import (
+    GeneStructure,
+    Span,
+    Strand,
+    UnreadIntron,
+    within_exons,
+)
 
 
 class IntronCorrection(CamelModel):
     model_config = ConfigDict(frozen=True)
 
     cds: list[Span]
+    exons: list[Span]
     protein: str
     frame_kept: bool
+
+    @model_validator(mode="after")
+    def _transcribed(self) -> Self:
+        if not within_exons(self.cds, self.exons):
+            msg = "a corrected model's CDS lies inside its exons"
+            raise ValueError(msg)
+        return self
 
 
 class _Orf(BaseModel):
@@ -98,8 +114,10 @@ def correct_model(
     )
     annotated = _orf(dna, model.exons, model.strand, model.start_edge, code)
     corrected = _orf(dna, exons, model.strand, model.start_edge, code)
+    cds = _merge([(p, p) for p in corrected.positions])
     return IntronCorrection(
-        cds=_merge([(p, p) for p in corrected.positions]),
+        cds=cds,
+        exons=_merge([*exons, *cds]),
         protein=corrected.protein,
         frame_kept=annotated.stop
         and corrected.stop

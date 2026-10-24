@@ -116,6 +116,7 @@ async def _judged(site_id: str, reads: IntronReads) -> IntronAudit:
         {
             **audit,
             "corrected_cds": correction.cds,
+            "corrected_exons": correction.exons,
             "corrected_protein": correction.protein,
             "frame_kept": correction.frame_kept,
             "code": inputs.code,
@@ -176,8 +177,12 @@ async def audit_intron_support(site_id: str, gene: str) -> IntronAudit:
     UNEXPLAINED is one model corrected from them all and read from the
     genome: SHIFTED, MISSING_EXON and REPLACED introns join the exons with
     their junctions cut out, NONCANONICAL and RETAINED ones are read as
-    exon. correctedCds (parts in ascending genome order, the stop codon
-    included) and correctedProtein are translated with the genetic code the
+    exon. correctedExons is that model's transcript (genome coordinates,
+    1-based, inclusive, ascending, merged): the exons with the junctions cut
+    out and the introns read as exon, its last exon on the gene's strand
+    extended to the stop codon when the reading frame runs past it, so
+    correctedCds lies inside it. correctedCds (parts in ascending genome
+    order, the stop codon included) and correctedProtein are translated with the genetic code the
     gene's own CDS and protein show (the standard code when codeInferred is
     false), and the orthologs count: per species other than the gene's own,
     in the ortholog table's order, its reference-strain member and the
@@ -187,7 +192,8 @@ async def audit_intron_support(site_id: str, gene: str) -> IntronAudit:
     the corrected protein has (forCorrected) or only the annotated one has
     (forAnnotated); reason says why there is no count. When the protein or
     the genome window for the correction cannot be read, the verdict and
-    unread stay, the corrected fields, code and orthologs are null, and
+    unread stay, the corrected fields (correctedExons too), code and
+    orthologs are null, and
     correctionReason says why. tracksRefused lists the junction tracks that
     do not index the gene's sequence, and is null when no track was read.
     model gives the judged transcript's exon and CDS spans (genome coordinates, 1-based, inclusive, ascending), its seqid and strand; it is null for a

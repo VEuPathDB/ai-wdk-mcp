@@ -1,5 +1,31 @@
 # Knowledge log
 
+## 2026-10-24 - 0.2.0b49
+
+- Additive: no published name is removed or renamed, and no field changes type.
+- `IntronAudit.corrected_exons: list[Span] | None` (`correctedExons`) is the transcript
+  of the corrected model, in genome coordinates, 1-based, inclusive, ascending and
+  merged, the same shape as `corrected_cds` and `ModelSpans.exons`. `correct_model`
+  computes it from the composition it already made: the annotated exons and the unread
+  introns, less the replacing junctions. `IntronCorrection.exons` carries it, so a host
+  reads the corrected exons and does not restate that rule.
+- It is set exactly when `corrected_cds` is set: a correctable verdict whose correction
+  was read. The exons alone need no DNA, but the stop codon that can lengthen the last
+  exon is read from the genome, so exons served without the read would not be the
+  transcript the corrected CDS implies.
+- A corrected CDS whose reading frame runs past the last exon on the gene's strand
+  (`_orf` reads the genome past that exon until it meets a stop) lengthens that exon to
+  the stop codon: the exons are the merge of the composed exons and the corrected CDS.
+  A CDS is part of its transcript, so a transcript that holds the stop is what the
+  corrected model is; a separate extension field would leave each host to merge it
+  again. None of the six recorded intron cases reads past its last exon, and each of
+  them answers what it answered in b48 apart from the new field.
+- `IntronAudit` and `IntronCorrection` refuse a corrected CDS outside its exons, and
+  `IntronAudit` refuses corrected exons with no corrected CDS. `corrected_exons`
+  defaults to None, so an intron audit stored before 0.2.0b49 validates.
+- What a host does to take this release: read `corrected_exons` where it composed the
+  corrected transcript itself.
+
 ## 2026-10-24 - 0.2.0b48
 
 - Additive, except one pin: this release takes veupathdb-py 0.1.0b24, and a host

@@ -55,7 +55,7 @@ def test_a_shifted_intron_is_replaced_by_its_junction() -> None:
     result = corrected(gene, READS, outcome="SHIFTED")
 
     assert result == IntronCorrection(
-        cds=[E1, E2, E3, E4], protein=SPLICED, frame_kept=True
+        cds=[E1, E2, E3, E4], exons=[E1, E2, E3, E4], protein=SPLICED, frame_kept=True
     )
 
 
@@ -101,6 +101,7 @@ def test_an_intron_kept_in_the_transcript_is_read_as_exon(
     result = corrected(structure([E1, E2, E3, E4]), reads, evidence, outcome)
 
     assert result.cds == [E1, (E2[0], E3[1]), E4]
+    assert result.exons == [E1, (E2[0], E3[1]), E4]
     assert (result.protein, result.frame_kept) == (RETAINED_PROTEIN, True)
 
 
