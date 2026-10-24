@@ -5,6 +5,17 @@ from veupathdb_mcp.wdk.ai_expression import (
     GeneExpressionSummary,
     get_gene_expression_summary,
 )
+from veupathdb_mcp.wdk.column_counts import (
+    DEFAULT_COLUMN_COUNT_TOP,
+    MAX_COLUMN_COUNT_TOP,
+    ColumnCounts,
+    ColumnNotCountedError,
+    CountedValue,
+    StepColumn,
+    StepColumns,
+    count_by_column,
+    list_step_columns,
+)
 from veupathdb_mcp.wdk.gene_set_steps import (
     DEFAULT_GENE_SET_STRATEGY_NAME,
     GeneSetWdkContext,
@@ -47,16 +58,23 @@ from veupathdb_mcp.wdk.strategy_snapshot import (
 )
 
 __all__ = [
+    "DEFAULT_COLUMN_COUNT_TOP",
     "DEFAULT_GENE_SET_STRATEGY_NAME",
     "GROUP_GENOME_TABLE",
+    "MAX_COLUMN_COUNT_TOP",
     "NO_SUMMARY_ON_THE_SITE",
     "TRANSCRIPTS_PER_GENE",
+    "ColumnCounts",
+    "ColumnNotCountedError",
+    "CountedValue",
     "GeneExpressionSummary",
     "GeneSetWdkContext",
     "GenomeProteins",
     "GroupGenomeCounts",
     "SampleRecordsResult",
     "SetOperation",
+    "StepColumn",
+    "StepColumns",
     "StepCountResult",
     "StepTooLargeError",
     "WireStep",
@@ -64,6 +82,7 @@ __all__ = [
     "build_snapshot_from_wdk",
     "canonicalize_synced_parameters",
     "compute_plan_step_counts",
+    "count_by_column",
     "count_search_answer",
     "dataset_client",
     "describe_step_refusal",
@@ -77,6 +96,7 @@ __all__ = [
     "get_estimated_size_for_site",
     "get_gene_expression_summary",
     "group_genome_counts",
+    "list_step_columns",
     "order_primary_key",
     "step_download_url",
     "step_sample_records",

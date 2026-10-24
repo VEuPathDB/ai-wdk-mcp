@@ -4,6 +4,7 @@ from collections.abc import Awaitable, Callable, Iterator
 
 import pytest
 from fastmcp import Client
+from tests._support.column_site import STEP, wire_column_api
 from tests._support.control_run_wdk import (
     TESTED_STEP,
     RunFakeAPI,
@@ -159,6 +160,16 @@ def download_url(monkeypatch: pytest.MonkeyPatch) -> Run:
     return lambda: user_tools.get_step_download_url(SITE, 42)
 
 
+def step_columns(monkeypatch: pytest.MonkeyPatch) -> Run:
+    wire_column_api(monkeypatch)
+    return lambda: user_tools.get_step_columns(SITE, STEP)
+
+
+def step_column_counts(monkeypatch: pytest.MonkeyPatch) -> Run:
+    wire_column_api(monkeypatch)
+    return lambda: user_tools.count_step_by_column(SITE, STEP, "organism")
+
+
 def step_gene_ids(monkeypatch: pytest.MonkeyPatch) -> Run:
     monkeypatch.setattr(user_tools, "get_strategy_api", lambda site_id: site_id)
     answering(monkeypatch, user_tools, "fetch_gene_ids_from_step", [GENE])
@@ -294,6 +305,8 @@ DRIVERS: dict[str, Drive] = {
     ),
     "get_step_download_url": download_url,
     "get_step_gene_ids": step_gene_ids,
+    "get_step_columns": step_columns,
+    "count_step_by_column": step_column_counts,
     "count_plan_steps": catalog(
         user_tools,
         "compute_plan_step_counts",

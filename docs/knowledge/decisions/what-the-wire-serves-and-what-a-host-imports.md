@@ -8,8 +8,8 @@ status: stable
 
 # The choice
 
-Twenty-nine tools are served on `veupathdb-wdk-mcp`, against 390 names published for
-in-process import across nineteen surfaces. The line is one property:
+Forty-four tools are served on `veupathdb-wdk-mcp`, against 727 names published for
+in-process import across twenty surfaces. The line is one property:
 
 **A call is served when its arguments and its result are values.** A call whose
 contract includes a Python object the caller builds, or a write into a store the

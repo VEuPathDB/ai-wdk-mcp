@@ -35,8 +35,8 @@ than from a file inside it.
 | `veupathdb_mcp.research` | the research server, its settings and its two tools |
 | `veupathdb_mcp.separation` | the separation run, its request, its progress rows, its result, the request charges it makes and the hypergeometric tail it reads controls by |
 | `veupathdb_mcp.testing` | the recordings this distribution ships for a host's suite: the OrthoMCL count recordings (`ORTHOMCL_COUNTS`) |
-| `veupathdb_mcp.tools` | the forty-two served tools |
-| `veupathdb_mcp.wdk` | step trees, sizes, the sample of a built step (`step_sample_records`), a step's gene ids read up to a limit the caller names (`StepTooLargeError` past it), an OrthoMCL group's proteins per genome (`group_genome_counts`, from its `TaxonCounts` table), downloads, expression, the vocabulary and defaults a form offers, and the AST a saved strategy converts into |
+| `veupathdb_mcp.tools` | the forty-four served tools |
+| `veupathdb_mcp.wdk` | step trees, sizes, the sample of a built step (`step_sample_records`), a step's gene ids read up to a limit the caller names (`StepTooLargeError` past it), a step's columns (`list_step_columns`) and its records counted by one column (`count_by_column`, `ColumnNotCountedError` for a column that cannot be counted), an OrthoMCL group's proteins per genome (`group_genome_counts`, from its `TaxonCounts` table), downloads, expression, the vocabulary and defaults a form offers, and the AST a saved strategy converts into |
 | `veupathdb_mcp.wdk.enrichment` | over-representation analysis, its result shapes and its parser |
 
 `tests/unit/test_cold_import.py` holds the line: it imports every module of the
@@ -69,7 +69,7 @@ module name:
 `veupathdb_mcp.tool_meta` declares a surface too, and the root re-exports both
 of its names.
 
-`tests/unit/published_surface.json` is the checked-in copy of all nineteen
+`tests/unit/published_surface.json` is the checked-in copy of all twenty
 surfaces, so a name leaves one only by editing that file.
 
 ## Why two servers in one distribution
@@ -90,7 +90,7 @@ The two servers share no setting: the WDK server reads `WDK_MCP_*` and
 `VEUPATHDB_*`, the research server reads `RESEARCH_MCP_*`. A secret configured
 for one admits nothing on the other.
 
-## The forty-two WDK tools
+## The forty-four WDK tools
 
 Catalog reads (service or user credential):
 
@@ -107,6 +107,7 @@ carries):
 `lookup_gene_records`, `resolve_gene_ids_to_records`,
 `get_ai_expression_summary`, `get_step_estimated_size`,
 `get_step_sample_records`, `get_step_download_url`, `get_step_gene_ids`,
+`get_step_columns`, `count_step_by_column`,
 `run_control_tests_on_step`, `run_control_tests_on_search`, `count_plan_steps`,
 `create_gene_set_step`, `enrich_gene_ids`.
 
@@ -181,6 +182,17 @@ publishes. OrthoMCL's `GroupsBySingleCopy` carries the only one: it selects
 groups by how many genomes hold a protein and does not limit the proteins of one
 genome, and one protein in every genome of a list is a `GroupsByPhyleticPattern`
 expression.
+
+`count_step_by_column` counts any built step, a transform step among them, by one
+column with the site's `byValue` column reporter. It reads the step, its record type
+and its search first, and refuses a column that is not one of the step's, or that is
+not STRING or NUMBER with `byValue` in its `tools.reports`, naming the columns that can
+be counted, before any report. A string column answers its values ranked by count, at
+most `top` (1 to 200, 20 by default), with the number of distinct values; a number
+column answers the site's bins and its minimum, maximum and mean. A refused report is
+a tool error, never an empty count. `get_step_columns` lists the columns, the
+record type's attributes and the search's own, with their data type and whether they
+can be counted. Neither creates a step or a dataset.
 
 `get_step_gene_ids` answers at most 200 gene ids. It asks the site for one record
 more, refuses a larger step by its id and the limit, and names
@@ -402,7 +414,7 @@ tag.
 than a lint rule.
 
 The lock names `veupathdb-py` by the client repository
-(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, `v0.1.0b22`,
+(`https://github.com/VEuPathDB/ai-veupathdb-client`) at one release tag, `v0.1.0b24`,
 so a checkout of this repository alone installs and tests. To take a newer client:
 change `tag` in `[tool.uv.sources]`, run `uv lock --upgrade-package veupathdb-py`,
 then `uv sync`. Every name `src/` and `tests/` reads from the client comes from a client

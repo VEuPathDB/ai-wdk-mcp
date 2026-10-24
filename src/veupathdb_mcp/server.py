@@ -68,9 +68,11 @@ from veupathdb_mcp.tools.catalog_tools import (
 )
 from veupathdb_mcp.tools.user_tools import (
     count_plan_steps,
+    count_step_by_column,
     create_gene_set_step,
     enrich_gene_ids,
     get_ai_expression_summary,
+    get_step_columns,
     get_step_download_url,
     get_step_estimated_size,
     get_step_gene_ids,
@@ -214,6 +216,8 @@ TOOLS: tuple[_ToolRow, ...] = (
     _ToolRow(get_step_sample_records, _READ),
     _ToolRow(get_step_download_url, _READ),
     _ToolRow(get_step_gene_ids, _READ),
+    _ToolRow(get_step_columns, _READ),
+    _ToolRow(count_step_by_column, _READ),
     _ToolRow(
         run_control_tests_on_step,
         _ADDITIVE_WRITE,

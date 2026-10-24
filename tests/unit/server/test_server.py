@@ -116,6 +116,8 @@ EXPECTED_ANNOTATIONS: dict[str, dict[str, bool]] = {
     "rank_experiments_elsewhere": READ_ONLY,
     "read_experiment": READ_ONLY,
     "get_step_gene_ids": READ_ONLY,
+    "get_step_columns": READ_ONLY,
+    "count_step_by_column": READ_ONLY,
     "run_control_tests_on_step": ADDITIVE_WRITE,
     "count_plan_steps": ADDITIVE_WRITE,
     "create_gene_set_step": ADDITIVE_WRITE,

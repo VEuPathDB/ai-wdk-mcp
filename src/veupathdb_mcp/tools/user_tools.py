@@ -34,6 +34,15 @@ from veupathdb_mcp.wdk.ai_expression import (
     GeneExpressionSummary,
     get_gene_expression_summary,
 )
+from veupathdb_mcp.wdk.column_counts import (
+    DEFAULT_COLUMN_COUNT_TOP,
+    MAX_COLUMN_COUNT_TOP,
+    ColumnCounts,
+    ColumnNotCountedError,
+    StepColumns,
+    count_by_column,
+    list_step_columns,
+)
 from veupathdb_mcp.wdk.enrichment.gene_ids import (
     GeneIdEnrichment,
     enrich_gene_ids_by_value,
@@ -62,6 +71,7 @@ from veupathdb_mcp.wdk.step_size import (
 type GeneRecordLimit = Annotated[int, Field(ge=1, le=50)]
 type SampleRecordLimit = Annotated[int, Field(ge=1, le=100)]
 type RecordReadIds = Annotated[list[str], Field(max_length=RECORD_READS_PER_CALL)]
+type ColumnCountTop = Annotated[int, Field(ge=1, le=MAX_COLUMN_COUNT_TOP)]
 
 
 _NO_CONTROL_GENE = "positive_controls or negative_controls must name a gene id."
@@ -303,6 +313,55 @@ async def get_step_gene_ids(site_id: str, wdk_step_id: int) -> list[str]:
             "answers at most that many. Read the whole step with "
             "get_step_download_url."
         )
+        raise ToolError(msg) from exc
+
+
+async def get_step_columns(site_id: str, wdk_step_id: int) -> StepColumns:
+    """List the columns of a step that is already built in WDK.
+
+    The columns are the attributes of the step's record type and the columns
+    its own search adds. Each column gives its name, its display name, its data
+    type (STRING, NUMBER, DATE or OTHER) and whether count_step_by_column can
+    count it. The call writes nothing into the account.
+
+    Args:
+        site_id: VEuPathDB site, for example 'plasmodb'.
+        wdk_step_id: WDK step id.
+    """
+    return await list_step_columns(site_id, wdk_step_id)
+
+
+async def count_step_by_column(
+    site_id: str,
+    wdk_step_id: int,
+    column: str,
+    top: ColumnCountTop = DEFAULT_COLUMN_COUNT_TOP,
+) -> ColumnCounts:
+    """Count the records of a built WDK step by the values of one column.
+
+    The step can be any step: a search, a combined step or a transform step
+    such as an ortholog transform. The site counts the step's whole result, so
+    this answers which values occur most, for example which organisms hold the
+    most records or which products are the most common. A string column answers
+    its values ranked by record count, largest first, at most top of them, and
+    distinctValues says how many values exist in all. A number column answers
+    the site's histogram bins and the column's minimum, maximum and mean. On a
+    transcript step a gene counts once for each of its transcripts.
+
+    Choose the column with get_step_columns first: only a column it marks
+    countable is counted, and any other column is refused with the names of the
+    columns that can be counted. The call writes nothing into the account.
+
+    Args:
+        site_id: VEuPathDB site, for example 'orthomcl'.
+        wdk_step_id: WDK step id.
+        column: Column name from get_step_columns, for example 'organism'.
+        top: Largest number of string values to return.
+    """
+    try:
+        return await count_by_column(site_id, wdk_step_id, column, top)
+    except ColumnNotCountedError as exc:
+        msg = f"{exc.detail}. get_step_columns lists every column of the step."
         raise ToolError(msg) from exc
 
 

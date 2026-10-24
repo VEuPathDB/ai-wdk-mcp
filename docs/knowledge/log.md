@@ -1,5 +1,43 @@
 # Knowledge log
 
+## 2026-10-24 - 0.2.0b48
+
+- Additive, except one pin: this release takes veupathdb-py 0.1.0b24, and a host
+  takes the two together. A release of veupathdb-mcp that pins an older client fails
+  the host's resolution on conflicting URLs. In b24 `WDKAttributeField` requires
+  `column_data_type` (WDK's `columnDataType`: `STRING`, `NUMBER`, `DATE` or `OTHER`),
+  so a host that builds a `WDKAttributeField` by hand must name it.
+  `get_column_distribution` also raises on a refused or unreadable report, where it
+  used to answer an empty distribution.
+- `count_by_column(site_id, step_id, column, top=20, *, budget_seconds=None)` counts
+  a built step's records by one column with WDK's `byValue` column reporter and
+  answers `ColumnCounts`. A string column answers its values ranked by count, at most
+  `top`, beside `distinct_values` and `total_records`. A number column answers WDK's
+  bins and statistics as WDK sends them. `top` runs from 1 to 200 (`MAX_COLUMN_COUNT_TOP`),
+  and a value outside that range raises `ValueError` before any request. The call
+  sends one POST, the column report, and creates no step and no dataset.
+- `list_step_columns(site_id, step_id)` answers `StepColumns`: the record type's
+  attributes and the step search's dynamic attributes, the search's taking a shared
+  name, each a `StepColumn` with its name, display name, data type and `countable`. A
+  column can be counted when it is STRING or NUMBER and lists `byValue` in
+  `tools.reports`. DATE is left out, because its statistics are dates, not numbers.
+- `ColumnNotCountedError`, a `ValidationError`, refuses a column the step does not
+  list (`data_type` None) or one it cannot count, before the report. It names the
+  columns that can be counted.
+- WDK's reporter, read from its source (`AbstractByValueReporter`,
+  `ByValueStringReporter`, `ByValueNumberReporter`, and FgpUtil's
+  `DiscreteDistribution` and `FloatingPointBinDistribution`):
+  - a string column gets one bin per distinct value, with no cap, in value order;
+  - a number column gets 20 bins `[start,end)` over the column's range, with
+    `subsetMin`, `subsetMax` and `subsetMean`.
+  No byValue body is recorded. The unit fakes take the shape of those classes, and
+  the record type and the search are recorded bodies or are shaped from them.
+- Served as `get_step_columns` and `count_step_by_column`, both read only. The served
+  tool count is forty-four. `count_step_by_column` turns the refusal into a tool error
+  that names `get_step_columns`.
+- What a host does to take this release: take veupathdb-py 0.1.0b24 with it, and give
+  `column_data_type` to any `WDKAttributeField` it builds by hand.
+
 ## 2026-10-24 - 0.2.0b47
 
 - A tightened limit, not breaking for hosts: no published name is removed or renamed.

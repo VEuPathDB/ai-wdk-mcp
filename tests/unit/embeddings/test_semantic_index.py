@@ -19,7 +19,9 @@ def test_a_dynamic_attribute_contributes_its_display_name() -> None:
             display_name="Molecular weight",
             dynamic_attributes=[
                 WDKAttributeField(
-                    name="matched_result", display_name="Met Search Criteria"
+                    name="matched_result",
+                    display_name="Met Search Criteria",
+                    column_data_type="STRING",
                 )
             ],
         )
@@ -34,7 +36,11 @@ def test_the_search_weight_attribute_is_left_out() -> None:
             url_segment="GenesByMolecularWeight",
             display_name="Molecular weight",
             dynamic_attributes=[
-                WDKAttributeField(name="wdk_weight", display_name="Search Weight")
+                WDKAttributeField(
+                    name="wdk_weight",
+                    display_name="Search Weight",
+                    column_data_type="NUMBER",
+                )
             ],
         )
     )
