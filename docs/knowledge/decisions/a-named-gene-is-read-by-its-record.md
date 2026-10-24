@@ -1,7 +1,7 @@
 ---
 type: Decision
 title: A named gene is read by its record
-description: Every gene a served check or lookup names is read by its own gene record (and its protein by one transcript record), an id no record names goes to the text search, an ortholog group is the one Orthologs table read, a host's one id-list read is the only upload, and an unread intron is explained in stages; and why a dataset per 150 ids, GenesByOrthologs and a protein attribute on the gene record were rejected.
+description: Every gene a served check or lookup names is read by its own gene record (and its protein by one transcript record), an id no record names goes to the text search, an ortholog group is the one Orthologs table read, a host's run list is read by record too, and an unread intron is explained in stages; and why a dataset per 150 ids, one dataset per run, an inline id list, GenesByOrthologs and a protein attribute on the gene record were rejected.
 tags: [audit, wdk, jbrowse, datasets]
 status: stable
 ---
@@ -69,15 +69,14 @@ calls uploads one, except a tool whose WDK search takes only an id list, which s
   description says so.
 - **A host's gene rows** become group members through `GroupMember.of_row`, which keeps
   the coding rule: a pseudogene row, or a row of no protein gene type, has no length.
-- **A host's run** uploads its gene list once, with `upload_gene_list`: one id-list
-  dataset of at most `MAX_LIST_IDS` (400) ids, answered as a `GeneListDataset` the host
-  stores. `read_gene_list` reads that dataset's report, paged by `LIST_PAGE_RECORDS`, at
-  most `LIST_MAX_PAGES` (4) pages; a report of more transcripts is refused. A retried read
-  takes the stored reference and uploads nothing, because WDK cannot delete a dataset.
-  A dataset id names a dataset inside the WDK account that uploaded it, so the host reads
-  a `GeneListDataset` under that account and carries its token on every retry; the
-  reference holds no token digest.
-  `locus_tag_answers` stays behind it and behind the whole-genome checks.
+- **A host's run** reads its gene list with `read_gene_list`: one gene record read per
+  id (`found_row`), at most `MAX_LIST_IDS` (400) ids, more refused before any read. An
+  id no record names is dropped, as the list report dropped an id it did not match, and
+  two ids of one gene answer one row. A retry reads the records again and writes
+  nothing. On the three genes recorded both ways (PF3D7_1032400, PF3D7_1133400,
+  PF3D7_1222600) the record row equals the longest-protein row of the `GeneByLocusTag`
+  report field for field. `locus_tag_answers` stays only behind the recorders under
+  `scripts/` that the backlog moves to record reads.
 
 The intron check stages its evidence. Junctions judge first, from at most
 `JUNCTION_TRACKS_READ` (4) junction tracks of the organism; an intron they leave
@@ -131,6 +130,18 @@ check would only restate it.
 
 **A dataset per 150 ids.** It is what `locus_tag_answers` did; every row and protein
 read left datasets in the account that nothing can delete.
+
+**One dataset per run.** A host read its run's list through one id-list dataset, so
+every run left one dataset in the researcher's account per site, and a single-gene run
+left one for one gene. WDK's `DatasetService` serves POST and GET only, so nothing
+removes it.
+
+**An id list inline in the answer spec.** `GeneByLocusTag`'s `ds_gene_ids` is an
+`input-dataset` parameter, and
+[`DatasetParam.validateValue`](https://github.com/VEuPathDB/WDK/blob/599395d6aadaa1ff9ebaafdd55083f8148890f09/Model/src/main/java/org/gusdb/wdk/model/query/param/DatasetParam.java#L124-L150)
+refuses any value that is not a positive integer, then any id that names no dataset of
+the requesting user; `DatasetParamHandler.toInternalValue` reads the value with
+`Long.parseLong`. No form of the answer spec carries the ids themselves.
 
 **A lookup through `GeneByLocusTag`.** It read up to 200 ids in two requests, and each
 call left a dataset in the account, under a tool annotated read-only.

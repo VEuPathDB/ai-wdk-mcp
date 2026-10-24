@@ -1,21 +1,18 @@
-from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager
+import json
 
 import httpx
 import pytest
 import respx
 from fastmcp.exceptions import ToolError
 from scripts.record_audit_gene_ids import FILE, GeneIdRecording
+from tests._support.dataset_trap import DatasetTrap
 from tests._support.record_site import install_recorded_records, load_records
 from tests._support.wdk_genes import (
     FIXTURES,
-    Datasets,
-    ReportSite,
     answer_of,
     gene_attributes,
     record,
 )
-from veupathdb import JSONObject
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.errors import VEuPathDBErrorCode, WDKError
 from veupathdb.wdk import (
@@ -29,15 +26,12 @@ from veupathdb_mcp.audit import gene_ids, gene_models, record_reads, served
 from veupathdb_mcp.audit.gene_ids import GeneReads, rows_named
 from veupathdb_mcp.audit.genes import GeneRow
 from veupathdb_mcp.audit.record_reads import (
-    LIST_MAX_PAGES,
-    LIST_PAGE_RECORDS,
     MAX_LIST_IDS,
+    RECORD_ATTRIBUTES,
     RECORD_READS_PER_CALL,
-    GeneListDataset,
     read_gene_list,
     record_proteins,
     record_rows,
-    upload_gene_list,
 )
 from veupathdb_mcp.tool_errors import tool_error
 from veupathdb_mcp.tools.refusals import payload_or_error
@@ -232,160 +226,82 @@ async def test_a_transcript_id_resolves_by_text_then_record(
     assert text.reads == ["details:GenesByText", f"GenesByText:{PIGA}.1"]
 
 
-def list_site(monkeypatch: pytest.MonkeyPatch, pages: list[WDKAnswer]) -> ReportSite:
-    site = ReportSite(pages)
-
-    @asynccontextmanager
-    async def opened(site_id: str) -> AsyncIterator[ReportSite]:
-        yield site
-
-    monkeypatch.setattr(record_reads, "dataset_client", opened)
-    monkeypatch.setattr(record_reads, "StrategyAPI", Datasets)
-    return site
-
-
-def transcripts(gene: str) -> list[dict[str, object]]:
-    return [
-        record(
-            gene,
-            f"{gene}-t{n}",
-            gene_attributes(str(length), "No", "protein coding gene"),
-        )
-        for n, length in ((1, 300), (2, 420), (3, 280))
-    ]
-
-
-async def test_one_list_read_uploads_one_dataset_and_pages_its_report(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    named = [f"EXA_{n:04}" for n in range(MAX_LIST_IDS)]
-    served = [r for gene in named for r in transcripts(gene)]
-    site = list_site(
-        monkeypatch,
-        [
-            answer_of(served[:LIST_PAGE_RECORDS], total=len(served)),
-            answer_of(served[LIST_PAGE_RECORDS:], total=len(served)),
-        ],
-    )
-
-    dataset = await upload_gene_list("plasmodb", named)
-    rows = await read_gene_list(dataset)
-
-    assert dataset == GeneListDataset(site_id="plasmodb", dataset_id=9001, size=400)
-    assert sorted(row.gene for row in rows) == named
-    assert {row.protein_length for row in rows} == {420}
-    assert [d.source_content.ids for d in site.datasets] == [named]
-    assert [report["pagination"] for *_, report in site.searches] == [
-        {"offset": 0, "numRecords": LIST_PAGE_RECORDS},
-        {"offset": LIST_PAGE_RECORDS, "numRecords": LIST_PAGE_RECORDS},
-    ]
-
-
-async def test_a_list_report_past_its_page_cap_is_refused(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    named = [f"EXA_{n:04}" for n in range(MAX_LIST_IDS)]
-    served = [r for gene in named for r in transcripts(gene)][:LIST_PAGE_RECORDS]
-    total = LIST_MAX_PAGES * LIST_PAGE_RECORDS + 1
-    site = list_site(
-        monkeypatch, [answer_of(served, total=total) for _ in range(LIST_MAX_PAGES)]
-    )
-
-    with pytest.raises(
-        ToolError, match=f"serves {total} transcripts; one list read pages at most 4000"
-    ):
-        await read_gene_list(await upload_gene_list("plasmodb", named))
-    assert (len(site.datasets), len(site.searches)) == (1, LIST_MAX_PAGES)
-
-
-async def test_a_list_past_its_bound_is_refused_before_a_dataset(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    site = list_site(monkeypatch, [])
-
-    with pytest.raises(ToolError, match="401 genes are named; one list read"):
-        await upload_gene_list("plasmodb", [f"EXA_{n:04}" for n in range(401)])
-    assert site.datasets == []
+def _recorded_body(request: httpx.Request) -> httpx.Response:
+    if request.url.path.endswith("/app"):
+        return httpx.Response(200, text="ok")
+    if request.url.path.endswith("/users/current"):
+        return httpx.Response(200, json={"id": 42, "isGuest": False})
+    sent = json.loads(request.content)
+    key = {part["name"]: part["value"] for part in sent["primaryKey"]}
+    for exchange in load_records(PIGA_RECORDS).records:
+        if (exchange.record_type, exchange.primary_key, exchange.attributes) == (
+            "gene",
+            key,
+            sent["attributes"],
+        ):
+            return httpx.Response(exchange.status, json=exchange.body)
+    return httpx.Response(500, text="not recorded")
 
 
 @respx.mock
-async def test_an_upload_the_site_answers_502_is_sent_once() -> None:
-    posts: list[str] = []
-
-    def respond(request: httpx.Request) -> httpx.Response:
-        if request.url.path.endswith("/users/current"):
-            return httpx.Response(200, json={"id": 42, "isGuest": False})
-        if request.url.path.endswith("/datasets"):
-            posts.append(request.url.path)
-            return httpx.Response(502, text="Bad Gateway")
-        return httpx.Response(200, text="ok")
-
-    respx.route().mock(side_effect=respond)
+async def test_a_list_read_posts_no_dataset_and_reads_each_gene_record() -> None:
+    route = respx.route().mock(side_effect=_recorded_body)
     reset = veupathdb_auth_token_ctx.set("researcher.registered.token")
     try:
-        with pytest.raises(WDKError):
-            await upload_gene_list("plasmodb", ["PF3D7_1133400"])
+        rows = await read_gene_list("plasmodb", [PIGA])
     finally:
         veupathdb_auth_token_ctx.reset(reset)
 
-    assert posts == ["/plasmo.qa/service/users/42/datasets"]
-
-
-async def test_an_empty_list_uploads_no_dataset(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    site = list_site(monkeypatch, [])
-
-    with pytest.raises(ValueError, match="an empty gene list uploads no dataset"):
-        await upload_gene_list("plasmodb", [])
-    assert site.datasets == []
-
-
-class FailingOnce(ReportSite):
-    async def run_search_report(
-        self,
-        record_type: str,
-        search_name: str,
-        search_config: WDKSearchConfig,
-        report_config: JSONObject | None = None,
-    ) -> WDKAnswer:
-        if not self.searches:
-            self.searches.append(
-                (record_type, search_name, search_config, report_config)
-            )
-            msg = "connection refused"
-            raise httpx.ConnectError(msg)
-        return await super().run_search_report(
-            record_type, search_name, search_config, report_config
-        )
-
-
-async def test_a_retried_read_reuses_the_uploaded_dataset(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    named = ["EXA_0001", "EXA_0002"]
-    served = [r for gene in named for r in transcripts(gene)]
-    site = FailingOnce([answer_of([]), answer_of(served, total=len(served))])
-
-    @asynccontextmanager
-    async def opened(site_id: str) -> AsyncIterator[ReportSite]:
-        yield site
-
-    monkeypatch.setattr(record_reads, "dataset_client", opened)
-    monkeypatch.setattr(record_reads, "StrategyAPI", Datasets)
-
-    dataset = await upload_gene_list("plasmodb", named)
-    stored = dataset.model_dump_json(by_alias=True)
-    with pytest.raises(httpx.ConnectError):
-        await read_gene_list(dataset)
-    rows = await read_gene_list(GeneListDataset.model_validate_json(stored))
-
-    assert sorted(row.gene for row in rows) == named
-    assert [d.source_content.ids for d in site.datasets] == [named]
-    assert [config.parameters for _, _, config, _ in site.searches] == [
-        {"ds_gene_ids": "9001"},
-        {"ds_gene_ids": "9001"},
+    assert rows == [PIGA_ROW]
+    assert [(call.request.method, call.request.url.path) for call in route.calls] == [
+        ("GET", "/plasmo.qa/app"),
+        ("GET", "/plasmo.qa/service/users/current"),
+        ("POST", "/plasmo.qa/service/record-types/gene/records"),
     ]
+    assert [json.loads(call.request.content) for call in route.calls[2:]] == [
+        {
+            "primaryKey": [
+                {"name": "source_id", "value": PIGA},
+                {"name": "project_id", "value": "PlasmoDB"},
+            ],
+            "attributes": list(RECORD_ATTRIBUTES),
+            "tables": ["GeneTranscripts"],
+        }
+    ]
+
+
+async def test_a_list_read_keeps_one_row_per_gene_and_drops_an_id_no_record_names(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    records = install_recorded_records(monkeypatch, load_records(PIGA_RECORDS))
+    text = text_site(monkeypatch, answer_of([]))
+    trap = DatasetTrap(monkeypatch)
+
+    rows = await read_gene_list("plasmodb", [PIGA, "PF10_0316", f"{PIGA}.1"])
+
+    assert rows == [PIGA_ROW]
+    assert records.reads == [
+        ("gene", PIGA, ("GeneTranscripts",)),
+        ("gene", "PF10_0316", ("GeneTranscripts",)),
+        ("gene", f"{PIGA}.1", ("GeneTranscripts",)),
+    ]
+    assert (text.reads, trap.calls) == ([], [])
+
+
+async def test_a_list_past_its_bound_is_refused_before_a_read(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    records = install_recorded_records(monkeypatch, load_records(PIGA_RECORDS))
+
+    with pytest.raises(ToolError, match="401 genes are named; one list read"):
+        await read_gene_list("plasmodb", [f"EXA_{n:04}" for n in range(401)])
+    assert (MAX_LIST_IDS, records.reads) == (400, [])
+
+
+async def test_an_empty_list_reads_nothing(monkeypatch: pytest.MonkeyPatch) -> None:
+    records = install_recorded_records(monkeypatch, load_records(PIGA_RECORDS))
+
+    assert (await read_gene_list("plasmodb", []), records.reads) == ([], [])
 
 
 async def test_an_id_that_maps_to_several_records_is_refused_by_the_site_answer(

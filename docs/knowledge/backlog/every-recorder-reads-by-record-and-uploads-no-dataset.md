@@ -10,10 +10,10 @@ status: draft
 
 A served check reads a named gene by its own record (`audit/record_reads.py`:
 `record_rows`, `record_proteins`, at most `RECORD_READS_PER_CALL` genes) and uploads
-no gene list. A run uploads one list, through `upload_gene_list`. Five recorders still
-read the b35 way. `locus_tag_answers` and `proteins_of` (`audit/genes.py`) upload each
-gene list as a dataset in the test account, so four of these write datasets on a QA
-site, and the fifth tapes only those uploads:
+no gene list, and a host's run list is read the same way (`read_gene_list`). Five
+recorders still read the b35 way. `locus_tag_answers` and `proteins_of`
+(`audit/genes.py`) upload each gene list as a dataset in the test account, so four of
+these write datasets on a QA site, and the fifth tapes only those uploads:
 
 | recorder | read that uploads | read it moves to |
 | --- | --- | --- |

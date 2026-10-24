@@ -298,21 +298,17 @@ from veupathdb_mcp.audit.rates import (
     rate_with_bounds,
 )
 from veupathdb_mcp.audit.record_reads import (
-    LIST_MAX_PAGES,
-    LIST_PAGE_RECORDS,
     MAX_LIST_IDS,
     RECORD_ATTRIBUTES,
     RECORD_READS_PER_CALL,
     TRANSCRIPT_RECORD,
     TRANSCRIPT_TABLE,
-    GeneListDataset,
     TooManyIdsError,
     found_row,
     read_gene_list,
     record_proteins,
     record_row,
     record_rows,
-    upload_gene_list,
 )
 from veupathdb_mcp.audit.selenocysteine import (
     END_SLACK,
@@ -418,8 +414,6 @@ __all__ = [
     "JUNCTION_TRACKS_READ",
     "LENGTH_EDGE",
     "LENGTH_MAX_FLANK",
-    "LIST_MAX_PAGES",
-    "LIST_PAGE_RECORDS",
     "MAX_LIST_IDS",
     "MIN_INTRON",
     "MIN_PROTEIN",
@@ -503,7 +497,6 @@ __all__ = [
     "GeneIdRefusal",
     "GeneIdRows",
     "GeneLengthAudit",
-    "GeneListDataset",
     "GeneModel",
     "GeneReads",
     "GeneRow",
@@ -704,5 +697,4 @@ __all__ = [
     "tie_break",
     "translate",
     "unstranded_candidate",
-    "upload_gene_list",
 ]

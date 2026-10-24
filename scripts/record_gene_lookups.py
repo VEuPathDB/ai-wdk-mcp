@@ -44,7 +44,6 @@ def tape_the_reads(records: RecordTape) -> None:
     gene_ids.genes_by_text = _refused
     StrategyAPI.create_dataset = _refused
     genes.dataset_client = _refused
-    record_reads.dataset_client = _refused
     wdk.dataset_client = _refused
 
 

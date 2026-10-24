@@ -171,7 +171,6 @@ def tape_the_reads(records: RecordTape, store: StoreTape) -> JBrowseClient:
     served.get_jbrowse_client = lambda site_id: client
     gene_ids.genes_by_text = _refused
     genes.dataset_client = _refused
-    record_reads.dataset_client = _refused
     return client
 
 

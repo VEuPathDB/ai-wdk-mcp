@@ -66,7 +66,6 @@ def no_upload(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     monkeypatch.setattr(gene_ids, "genes_by_text", gene_ids.genes_by_text)
     monkeypatch.setattr(StrategyAPI, "create_dataset", _upload)
     monkeypatch.setattr(genes, "dataset_client", _upload)
-    monkeypatch.setattr(record_reads, "dataset_client", _upload)
     for script in (
         record_audit_strain,
         record_audit_fusion,
@@ -187,5 +186,3 @@ async def test_the_selenoprotein_recorder_replays_its_wire_and_uploads_no_datase
 async def test_every_gene_list_upload_is_refused_while_a_recorder_runs() -> None:
     with pytest.raises(AssertionError, match="reached the dataset upload"):
         await genes.locus_tag_answers("plasmodb", ["PF3D7_1"], [])
-    with pytest.raises(AssertionError, match="reached the dataset upload"):
-        await record_reads.upload_gene_list("plasmodb", ["PF3D7_1"])

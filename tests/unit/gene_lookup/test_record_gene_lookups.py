@@ -24,7 +24,6 @@ def restored(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     monkeypatch.setattr(gene_ids, "genes_by_text", gene_ids.genes_by_text)
     monkeypatch.setattr(StrategyAPI, "create_dataset", StrategyAPI.create_dataset)
     monkeypatch.setattr(genes, "dataset_client", genes.dataset_client)
-    monkeypatch.setattr(record_reads, "dataset_client", record_reads.dataset_client)
     monkeypatch.setattr(wdk, "dataset_client", wdk.dataset_client)
     monkeypatch.setattr(record_gene_lookups, "act_as_the_test_account", _signed_in)
     observer = get_observer()

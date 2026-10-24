@@ -123,8 +123,8 @@ id reads, its own id, an alias or a previous id; else the one gene whose own id,
 without its `:` qualifier, or whose transcript id the site's text search finds) and
 answers `geneIds`, each id given beside the gene id it resolved to. A named gene, its
 protein and its ortholog group are record reads, so these checks upload no gene list;
-a host uploads a run's list once with `upload_gene_list`, keeps the `GeneListDataset` it
-answers, and reads the list with `read_gene_list` on every retry.
+a host reads a run's list with `read_gene_list`, one gene record per id, which uploads
+nothing either.
 
 Eighteen of them declare a call budget over the default in tool `_meta`
 (`org.veupathdb.assistant/maxCallSeconds`): the two control runs, the plan

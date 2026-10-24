@@ -143,7 +143,6 @@ def tape_the_record_reads(tape: Tape, budget: Budget) -> None:
     )
     StrategyAPI.create_dataset = _uploaded
     genes.dataset_client = _uploaded
-    record_reads.dataset_client = _uploaded
     gene_ids.genes_by_text = _uploaded
 
 

@@ -5,11 +5,11 @@ from tests._support.missing_wire import WireReplay
 from tests._support.wdk_genes import Datasets
 from veupathdb.wdk import StrategyAPI
 
-from veupathdb_mcp.audit import genes, record_reads
+from veupathdb_mcp.audit import genes
 from veupathdb_mcp.gene_lookup import wdk
 
 UPLOADERS = (StrategyAPI, RunFakeAPI, FakeStrategyAPI, WireReplay, Datasets)
-CLIENT_HOLDERS = (genes, record_reads, wdk)
+CLIENT_HOLDERS = (genes, wdk)
 
 
 class DatasetCreatedError(AssertionError):

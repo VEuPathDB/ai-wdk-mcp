@@ -1,5 +1,4 @@
-"""Named genes read by their own gene and transcript records, one record at a time, and
-the one id-list read a host makes for a run."""
+"""Named genes read by their own gene and transcript records, one record at a time."""
 
 from __future__ import annotations
 
@@ -8,34 +7,14 @@ from collections.abc import Sequence
 import pydantic
 from fastmcp.exceptions import ToolError
 from pydantic import BaseModel, ConfigDict, Field, field_validator
-from veupathdb import JSONObject
 from veupathdb.errors import DataParsingError, WDKError
-from veupathdb.model import CamelModel
-from veupathdb.wdk import (
-    StrategyAPI,
-    WDKAnswer,
-    WDKDatasetConfigIdList,
-    WDKDatasetIdListContent,
-    WDKRecordInstance,
-    WDKSearchConfig,
-    get_site,
-    get_strategy_api,
-)
+from veupathdb.wdk import WDKRecordInstance, get_site, get_strategy_api
 
 from veupathdb_mcp.audit.gene_models import NO_RECORD, gene_record
-from veupathdb_mcp.audit.genes import (
-    GENE_ATTRIBUTES,
-    LOCUS_TAG,
-    PROTEIN_ATTRIBUTE,
-    GeneRow,
-    rows_of,
-)
-from veupathdb_mcp.wdk import TRANSCRIPTS_PER_GENE, dataset_client
+from veupathdb_mcp.audit.genes import PROTEIN_ATTRIBUTE, GeneRow
 
 RECORD_READS_PER_CALL = 80
 MAX_LIST_IDS = 400
-LIST_PAGE_RECORDS = 1000
-LIST_MAX_PAGES = -(-MAX_LIST_IDS * TRANSCRIPTS_PER_GENE // LIST_PAGE_RECORDS)
 TRANSCRIPT_TABLE = "GeneTranscripts"
 TRANSCRIPT_RECORD = "transcript"
 SEVERAL_RECORDS = 300
@@ -187,71 +166,10 @@ async def record_proteins(site_id: str, gene_ids: list[str]) -> dict[str, str]:
     return proteins
 
 
-def _page(offset: int) -> JSONObject:
-    return {
-        "attributes": list(GENE_ATTRIBUTES),
-        "tables": [],
-        "pagination": {"offset": offset, "numRecords": LIST_PAGE_RECORDS},
-    }
-
-
-class GeneListDataset(CamelModel):
-    model_config = ConfigDict(frozen=True)
-
-    site_id: str
-    dataset_id: int
-    size: int = Field(ge=1, le=MAX_LIST_IDS)
-
-
-async def upload_gene_list(site_id: str, gene_ids: list[str]) -> GeneListDataset:
+async def read_gene_list(site_id: str, gene_ids: list[str]) -> list[GeneRow]:
     bounded(gene_ids, MAX_LIST_IDS, "one list read")
-    if not gene_ids:
-        msg = "an empty gene list uploads no dataset"
-        raise ValueError(msg)
-    async with dataset_client(site_id) as client:
-        dataset = await StrategyAPI(client).create_dataset(
-            WDKDatasetConfigIdList(
-                source_type="idList",
-                source_content=WDKDatasetIdListContent(ids=gene_ids),
-            )
-        )
-    return GeneListDataset(site_id=site_id, dataset_id=dataset, size=len(gene_ids))
-
-
-async def read_gene_list(dataset: GeneListDataset) -> list[GeneRow]:
-    config = WDKSearchConfig(parameters={"ds_gene_ids": str(dataset.dataset_id)})
-    pages: list[WDKAnswer] = []
-    async with dataset_client(dataset.site_id) as client:
-        while not pages or _more(pages):
-            if len(pages) == LIST_MAX_PAGES:
-                msg = (
-                    f"the {LOCUS_TAG} report of {dataset.size} genes serves "
-                    f"{_total(pages)} transcripts; one list read pages at most "
-                    f"{LIST_MAX_PAGES * LIST_PAGE_RECORDS}"
-                )
-                raise ToolError(msg)
-            offset = sum(len(page.records) for page in pages)
-            pages.append(
-                await client.run_search_report(
-                    "transcript", LOCUS_TAG, config, _page(offset)
-                )
-            )
-    best: dict[str, GeneRow] = {}
-    for row in (row for page in pages for row in rows_of(page, LOCUS_TAG)):
-        held = best.get(row.gene)
-        if held is None or (row.protein_length or 0) > (held.protein_length or 0):
-            best[row.gene] = row
-    return list(best.values())
-
-
-def _total(pages: list[WDKAnswer]) -> int:
-    total = pages[-1].meta.total_count
-    if total is None:
-        msg = f"the WDK {LOCUS_TAG} report served no total count"
-        raise DataParsingError(msg)
-    return total
-
-
-def _more(pages: list[WDKAnswer]) -> bool:
-    read = sum(len(page.records) for page in pages)
-    return read < _total(pages) and bool(pages[-1].records)
+    rows: dict[str, GeneRow] = {}
+    for gene in gene_ids:
+        if (row := await found_row(site_id, gene)) is not None:
+            rows.setdefault(row.gene, row)
+    return list(rows.values())

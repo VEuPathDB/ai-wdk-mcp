@@ -1,5 +1,29 @@
 # Knowledge log
 
+## 2026-10-24 - 0.2.0b46
+
+- Breaking for hosts. An audit run uploads no dataset. `read_gene_list(site_id,
+  gene_ids)` reads a run's gene list by record, one gene record read per id
+  (`found_row`), at most `MAX_LIST_IDS` (400) ids, and answers one `GeneRow` per gene;
+  an id no record names is dropped, as the list report dropped it. `upload_gene_list`,
+  `GeneListDataset`, `LIST_PAGE_RECORDS` and `LIST_MAX_PAGES` are gone. Each run had
+  left one id-list dataset in the researcher's account per site, a single-gene run too,
+  and WDK's `DatasetService` serves POST and GET only, so nothing removed it. An inline
+  id list is not a way around the upload: `DatasetParam.validateValue` refuses a
+  `ds_gene_ids` value that is not the id of a dataset the requesting user owns. A
+  test reads a list over the HTTP wire and asserts the exact requests: the session
+  warm-up, `GET /users/current` and one `POST /record-types/gene/records`, and no
+  `/datasets`. On the three genes recorded both ways (PF3D7_1032400, PF3D7_1133400,
+  PF3D7_1222600) the record row equals the `GeneByLocusTag` row field for field, and
+  the thirteen recorded check results are byte-identical before and after.
+- What a host does to take this release: call `read_gene_list(site_id, genes)` where it
+  called `read_gene_list(await upload_gene_list(site_id, genes))`, and drop the
+  `GeneListDataset` it stored for a retry, together with the stored field that holds
+  it.
+- A host that prices a run's reads counts one record read per listed gene, not a fixed
+  list read, and announces no dataset left in the account. A read that fails partway
+  starts again from the first gene, since nothing is stored between attempts.
+
 ## 2026-10-24 - 0.2.0b45
 
 - Additive, not breaking. Two caps a host had to copy as numbers or read out of a
