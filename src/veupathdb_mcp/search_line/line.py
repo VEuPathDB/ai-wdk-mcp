@@ -9,7 +9,6 @@ from typing import Protocol
 
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
-from sqlalchemy.pool import NullPool
 from veupathdb import get_logger, get_observer
 from veupathdb.wdk import (
     SearchGate,
@@ -22,8 +21,7 @@ logger = get_logger(__name__)
 
 NOTICE_SECONDS = 5.0
 
-_TAKE = text("SELECT pg_advisory_lock(hashtextextended(:line, 0))")
-_RELEASE = text("SELECT pg_advisory_unlock(hashtextextended(:line, 0))")
+_TAKE = text("SELECT pg_advisory_xact_lock(hashtextextended(:line, 0))")
 
 type ExpensiveSearch = Callable[[SearchRequest], bool]
 
@@ -72,9 +70,10 @@ class ExpensiveSearchLine:
     async def hold(self, site_id: str) -> AsyncIterator[None]:
         line = {"line": search_line_key(site_id)}
         async with self._front(site_id), self._engine.connect() as connection:
-            await connection.execute(_TAKE, line)
-            yield
-            await connection.execute(_RELEASE, line)
+            held = await connection.execution_options(isolation_level="READ COMMITTED")
+            async with held.begin():
+                await held.execute(_TAKE, line)
+                yield
 
 
 class _Told:
@@ -140,9 +139,19 @@ def search_line_gate(
 
 
 def install_search_line(
-    database_url: str, expensive: ExpensiveSearch = runs_an_expensive_search
-) -> None:
+    database_url: str,
+    expensive: ExpensiveSearch = runs_an_expensive_search,
+    *,
+    pool_size: int = 1,
+    max_overflow: int = 1,
+    pool_timeout: float | None = None,
+) -> AsyncEngine:
     engine = create_async_engine(
-        database_url, poolclass=NullPool, isolation_level="AUTOCOMMIT"
+        database_url,
+        pool_size=pool_size,
+        max_overflow=max_overflow,
+        pool_timeout=pool_timeout,
+        pool_pre_ping=True,
     )
     use_search_gate(search_line_gate(ExpensiveSearchLine(engine), expensive))
+    return engine

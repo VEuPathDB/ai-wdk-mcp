@@ -33,6 +33,9 @@ class EmbeddingSettings(BaseSettings):
     # Statement echo on the engine this index builds. A host's own echo flag
     # drives a different engine.
     embedding_sql_echo: bool = False
+    embedding_db_pool_size: int = Field(default=2, ge=1)
+    embedding_db_max_overflow: int = Field(default=6, ge=0)
+    embedding_db_pool_timeout_seconds: float = Field(default=30.0, gt=0)
 
     openai_api_key: str = Field(default="", repr=False)
 

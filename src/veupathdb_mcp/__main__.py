@@ -13,6 +13,7 @@ from ipaddress import IPv4Address
 import uvicorn
 from mcp.server.auth.middleware.auth_context import AuthContextMiddleware
 from pydantic import BaseModel
+from sqlalchemy.ext.asyncio import AsyncEngine
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -29,6 +30,7 @@ from veupathdb_mcp.metadata import (
 )
 from veupathdb_mcp.search_line import install_search_line
 from veupathdb_mcp.server import SERVER_NAME, build_server
+from veupathdb_mcp.settings import get_mcp_settings
 
 HEALTH_PATH = "/health"
 SERVE_PORT = 8100
@@ -49,6 +51,16 @@ async def _health(request: Request) -> JSONResponse:
     return JSONResponse(health.model_dump())
 
 
+def _search_line(database_url: str) -> AsyncEngine:
+    settings = get_mcp_settings()
+    return install_search_line(
+        database_url,
+        pool_size=settings.search_line_pool_size,
+        max_overflow=settings.search_line_max_overflow,
+        pool_timeout=settings.search_line_pool_timeout_seconds,
+    )
+
+
 def build_app() -> Starlette:
     """The served app: a public probe, the RFC 9728 document, and guarded MCP."""
     mcp_app = build_server().http_app(path=DEFAULT_MCP_PATH, stateless_http=True)
@@ -58,11 +70,12 @@ def build_app() -> Starlette:
         del app
         setup_logging()
         database_url = get_embedding_settings().database_url
-        if database_url:
-            install_search_line(database_url)
+        line = _search_line(database_url) if database_url else None
         async with mcp_app.lifespan(mcp_app):
             yield
         await close_all_clients()
+        if line is not None:
+            await line.dispose()
 
     return Starlette(
         routes=[

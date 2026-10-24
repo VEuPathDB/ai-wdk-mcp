@@ -256,6 +256,10 @@ because a document naming the wrong host sends a client to the wrong authority.
 | `CATALOG_REFRESH_ENABLED` | whether this process rebuilds a stale catalog |
 | `EMBEDDING_INDEX_SYNC_ENABLED` | whether this process writes vectors, or only searches what another wrote |
 | `EMBEDDING_SQL_ECHO` | whether the index's own engine echoes its statements |
+| `EMBEDDING_DB_POOL_SIZE`, `EMBEDDING_DB_MAX_OVERFLOW` | the connections the index's own engine keeps, and the ones it opens past them (defaults 2 and 6) |
+| `EMBEDDING_DB_POOL_TIMEOUT_SECONDS` | how long the index's own engine waits for a connection before it fails (default 30) |
+| `SEARCH_LINE_POOL_SIZE`, `SEARCH_LINE_MAX_OVERFLOW` | the connections the expensive-search line keeps, and the ones it opens past them (defaults 1 and 1); each search holds one for its whole run |
+| `SEARCH_LINE_POOL_TIMEOUT_SECONDS` | how long a search waits for a line connection; empty waits without a limit, as the line does (the default) |
 
 Every setting answers to that one name. A host extends `McpSettings` and
 `EmbeddingSettings` with its own model, so a field neither declares is the
@@ -287,6 +291,8 @@ and `compute_plan_step_counts(strategy_name=...)`. A wire caller names the last
 two through the `strategy_name` argument of `create_gene_set_step` and
 `count_plan_steps`. The defaults name no application (`"control test"`,
 `"enrichment analysis"`, `"gene set"`, `"step counts"`).
+`counted_id_list(strategy_name=...)` checks an id list on a step under an internal
+strategy too, and deletes that strategy before it returns; the dataset stays.
 
 A control run's cleanup matches the name the run wrote, so it takes the same
 `IntersectionConfig` the run took:

@@ -9,12 +9,15 @@ import httpx
 import pytest
 from mcp.shared.auth import ProtectedResourceMetadata
 from mcp.types import CallToolResult, JSONRPCResponse, ListToolsResult, TextContent
+from sqlalchemy.ext.asyncio import AsyncEngine
 from starlette.applications import Starlette
 from veupathdb.wdk import open_search_gate, search_gate, use_search_gate
 
+from veupathdb_mcp import __main__ as entrypoint
 from veupathdb_mcp import __version__
 from veupathdb_mcp.__main__ import HEALTH_PATH, ServerHealth, build_app
 from veupathdb_mcp.metadata import DEFAULT_MCP_PATH
+from veupathdb_mcp.search_line import ExpensiveSearch, install_search_line
 from veupathdb_mcp.server import SERVER_NAME, TOOLS, build_server
 
 BASE_URL = "https://wdk-mcp.test"
@@ -190,3 +193,41 @@ async def test_a_server_without_a_database_keeps_the_open_gate(
         installed = search_gate()
 
     assert installed is open_search_gate
+
+
+@pytest.mark.usefixtures("mcp_deployment", "open_gate")
+async def test_the_served_line_uses_the_configured_pool(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://index@db.invalid/index")
+    monkeypatch.setenv("SEARCH_LINE_POOL_SIZE", "2")
+    monkeypatch.setenv("SEARCH_LINE_MAX_OVERFLOW", "0")
+    monkeypatch.setenv("SEARCH_LINE_POOL_TIMEOUT_SECONDS", "90")
+    built: list[AsyncEngine] = []
+
+    def recorded(
+        database_url: str,
+        expensive: ExpensiveSearch | None = None,
+        *,
+        pool_size: int,
+        max_overflow: int,
+        pool_timeout: float | None,
+    ) -> AsyncEngine:
+        assert expensive is None
+        engine = install_search_line(
+            database_url,
+            pool_size=pool_size,
+            max_overflow=max_overflow,
+            pool_timeout=pool_timeout,
+        )
+        built.append(engine)
+        return engine
+
+    monkeypatch.setattr(entrypoint, "install_search_line", recorded)
+
+    async with _serving():
+        pass
+
+    [engine] = built
+    assert engine.pool.size() == 2
+    assert engine.pool.timeout() == pytest.approx(90.0)

@@ -31,6 +31,9 @@ def test_the_server_settings_keep_the_environment_variable_names() -> None:
         "embedding_index_sync_enabled",
         "wdk_mcp_base_url",
         "wdk_mcp_service_tokens",
+        "search_line_max_overflow",
+        "search_line_pool_size",
+        "search_line_pool_timeout_seconds",
         "site_catalog_budget_mb",
     }
 

@@ -54,6 +54,9 @@ class McpSettings(BaseSettings):
     # name the same directory exchange what one of them refreshes. A relative
     # path is read from the working directory, so a deployment states its own.
     catalog_cache_dir: Path = DEFAULT_CATALOG_CACHE_DIR
+    search_line_pool_size: int = Field(default=1, ge=1)
+    search_line_max_overflow: int = Field(default=1, ge=0)
+    search_line_pool_timeout_seconds: float | None = Field(default=None, gt=0)
 
     @cached_property
     def mcp_service_tokens(self) -> ServiceTokenRegistry:

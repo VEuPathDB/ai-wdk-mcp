@@ -1,5 +1,45 @@
 # Knowledge log
 
+## 2026-10-25 - 0.2.0b52
+
+- The served process opens at most 10 connections by default: the index's own engine
+  keeps 2 and opens 6 past them (`EMBEDDING_DB_POOL_SIZE`, `EMBEDDING_DB_MAX_OVERFLOW`,
+  `EMBEDDING_DB_POOL_TIMEOUT_SECONDS` 30), and the expensive-search line keeps 1 and
+  opens 1 past it (`SEARCH_LINE_POOL_SIZE`, `SEARCH_LINE_MAX_OVERFLOW`,
+  `SEARCH_LINE_POOL_TIMEOUT_SECONDS`, empty for no limit). Before, the index engine took
+  SQLAlchemy's 5 and 10 and the line opened one connection per site.
+- `install_search_line(database_url, expensive, *, pool_size=1, max_overflow=1,
+  pool_timeout=None)` builds a pooled engine in place of `NullPool` and returns it; the
+  served lifespan disposes it at shutdown. A process now runs at most
+  `pool_size + max_overflow` expensive searches at once across its sites.
+- The line's lock is transaction-scoped (`pg_advisory_xact_lock` in a `READ COMMITTED`
+  transaction), so an error or a cancellation inside a hold returns a pooled connection
+  without the lock. `ExpensiveSearchLine(engine)` keeps its signature and sets the
+  isolation level on its own connection, so a host engine in autocommit still holds the
+  line. See [the decision](decisions/an-expensive-search-holds-one-line-on-the-database.md).
+- `counted_id_list(site_id, ids, *, record_type, strategy_name)` (`veupathdb_mcp.wdk`)
+  uploads an id list and answers `IdListDataset` (`search_name`, `param_name`,
+  `dataset_id`, `record_type`, and `params()` for a step). It creates a step and an
+  internal strategy, counts the step where the search is exact (`group`), refuses a
+  mismatch with `IdListStepCountError`, and deletes the strategy in a `finally`, on
+  success, refusal and error alike. It writes nothing to the `frozen_step_id` cache, so
+  a deleted strategy never answers a later call. A `transcript` list reads no count,
+  as in `frozen_step_id`, because one gene answers a row per transcript. An empty list
+  is refused before any write (`EmptyIdListError`), and a call with no WDK credential
+  with `WDKLoginRequiredError`.
+- `frozen_step_id` and `counted_id_list` share `id_list_dataset` (the upload, which
+  `id_list_params` now wraps), the step and its internal strategy, and the count check.
+  A test that replaced `id_list_params` to stub the upload replaces `id_list_dataset`.
+- The dataset outlives the strategy. In WDK, `StrategyService.deleteStrategy` (`DELETE
+  /users/{id}/strategies/{id}`) builds the strategy with `setDeleted(true)` and calls
+  `StepFactory.updateStrategy`, an `UPDATE` of the strategies table's row that sets
+  `is_deleted`. Datasets are rows of `datasets` and `dataset_values`, which only
+  `DatasetFactory` writes, and `DatasetFactory` has no delete; `StepFactory` notes that
+  WDK does not track which steps use a dataset param.
+- What a host does to take this release: a host that calls `install_search_line`
+  passes the pool it can afford, or takes 1 and 1. A host that saves an id list it
+  only needs as a dataset calls `counted_id_list` in place of `frozen_step_id`.
+
 ## 2026-10-24 - 0.2.0b51
 
 - A compare past one phyletic expression is computed, not refused. Under the caps the

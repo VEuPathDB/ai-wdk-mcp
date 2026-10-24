@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.pool import AsyncAdaptedQueuePool
 
 from veupathdb_mcp.embeddings import db
 from veupathdb_mcp.embeddings.db import (
@@ -33,6 +34,9 @@ def test_the_index_settings_keep_the_environment_variable_names() -> None:
         "database_url",
         "embedding_backend",
         "embedding_batch_size",
+        "embedding_db_max_overflow",
+        "embedding_db_pool_size",
+        "embedding_db_pool_timeout_seconds",
         "embedding_input_char_limit",
         "embedding_model",
         "embedding_request_concurrency",
@@ -92,3 +96,36 @@ def test_the_index_builds_its_own_engine_when_the_host_installs_none(
 
     assert isinstance(opened, AsyncSession)
     assert opened.get_bind().url == make_url(get_embedding_settings().database_url)
+
+
+def _own_pool(monkeypatch: pytest.MonkeyPatch) -> AsyncAdaptedQueuePool:
+    monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://u@db.test/index")
+    monkeypatch.setattr(db, "_source", db._SessionSource())
+    monkeypatch.setattr(db, "_own", db._OwnFactory())
+    pool = embedding_session().get_bind().pool
+    assert isinstance(pool, AsyncAdaptedQueuePool)
+    return pool
+
+
+def test_the_own_engine_keeps_a_small_pool_by_default(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    settings = EmbeddingSettings()
+    pool = _own_pool(monkeypatch)
+
+    assert settings.embedding_db_max_overflow == 6
+    assert pool.size() == 2
+    assert pool.timeout() == pytest.approx(30.0)
+
+
+def test_the_own_engine_uses_the_configured_pool(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("EMBEDDING_DB_POOL_SIZE", "4")
+    monkeypatch.setenv("EMBEDDING_DB_MAX_OVERFLOW", "0")
+    monkeypatch.setenv("EMBEDDING_DB_POOL_TIMEOUT_SECONDS", "7.5")
+
+    pool = _own_pool(monkeypatch)
+
+    assert pool.size() == 4
+    assert pool.timeout() == pytest.approx(7.5)

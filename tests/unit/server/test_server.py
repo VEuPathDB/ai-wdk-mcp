@@ -15,7 +15,7 @@ from mcp.types import TextContent, Tool
 from pydantic import JsonValue
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.domain import SearchContext
-from veupathdb.domain.parameters import InputDatasetValue, ParamValue, StringValue
+from veupathdb.domain.parameters import ParamValue, StringValue
 from veupathdb.domain.strategy import StrategyAst, StrategyStepNode
 from veupathdb.errors import ValidationError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
@@ -80,7 +80,7 @@ from veupathdb_mcp.wdk import (
     gene_set_steps,
     step_preview,
 )
-from veupathdb_mcp.wdk.gene_set_steps import IdListSearch
+from veupathdb_mcp.wdk.gene_set_steps import IdListDataset, IdListSearch
 from veupathdb_mcp.wdk.site_cache import SiteCache
 
 SITE = "plasmodb"
@@ -1039,19 +1039,20 @@ async def test_two_bearers_with_the_same_genes_get_two_gene_set_steps(
     """A step id names a step in one account, so no caller reads another's step."""
     api = _FakeStepApi(600)
 
-    async def params(
+    async def dataset(
         site_id: str, gene_ids: list[str], search: IdListSearch
-    ) -> tuple[str, dict[str, ParamValue], str]:
+    ) -> IdListDataset:
         del site_id, gene_ids
-        return (
-            search.search_name,
-            {search.param_name: InputDatasetValue(dataset_id="ds-1")},
-            search.record_type,
+        return IdListDataset(
+            search_name=search.search_name,
+            param_name=search.param_name,
+            dataset_id=1,
+            record_type=search.record_type,
         )
 
     gene_set_steps._FROZEN_STEPS.clear()
     monkeypatch.setattr(gene_set_steps, "get_strategy_api", lambda site_id: api)
-    monkeypatch.setattr(gene_set_steps, "id_list_params", params)
+    monkeypatch.setattr(gene_set_steps, "id_list_dataset", dataset)
 
     arguments = {"site_id": SITE, "gene_ids": ["PF3D7_1222600"]}
     async with _served(_user_credential("alice-bearer", "alice@example.org")) as client:

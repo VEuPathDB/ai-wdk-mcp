@@ -6,13 +6,13 @@ from typing import Any
 
 import pytest
 from veupathdb.auth_context import veupathdb_auth_token_ctx
-from veupathdb.domain.parameters import InputDatasetValue, ParamValue
 from veupathdb.errors import WDKLoginRequiredError
 from veupathdb.wdk import NewStepSpec, WDKIdentifier, WDKStepTree
 
 from veupathdb_mcp.wdk import gene_set_steps
 from veupathdb_mcp.wdk.gene_set_steps import (
     DEFAULT_GENE_SET_STRATEGY_NAME,
+    IdListDataset,
     IdListSearch,
     frozen_step_cache_key,
     frozen_step_id,
@@ -69,16 +69,17 @@ def api(monkeypatch: pytest.MonkeyPatch) -> Iterator[_FakeStrategyAPI]:
         "veupathdb_mcp.wdk.gene_set_steps.get_strategy_api", lambda site_id: built
     )
 
-    async def _params(
+    async def _dataset(
         site_id: str, gene_ids: list[str], search: IdListSearch
-    ) -> tuple[str, dict[str, ParamValue], str]:
-        return (
-            search.search_name,
-            {search.param_name: InputDatasetValue(dataset_id="ds-1")},
-            search.record_type,
+    ) -> IdListDataset:
+        return IdListDataset(
+            search_name=search.search_name,
+            param_name=search.param_name,
+            dataset_id=1,
+            record_type=search.record_type,
         )
 
-    monkeypatch.setattr("veupathdb_mcp.wdk.gene_set_steps.id_list_params", _params)
+    monkeypatch.setattr("veupathdb_mcp.wdk.gene_set_steps.id_list_dataset", _dataset)
     with _acting_as(ALICE):
         yield built
 

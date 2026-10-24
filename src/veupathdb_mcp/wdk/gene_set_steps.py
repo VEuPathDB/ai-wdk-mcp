@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from cachetools import LRUCache
+from pydantic import BaseModel, ConfigDict
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import InputDatasetValue, ParamValue
@@ -88,9 +89,30 @@ class IdListStepCountError(ValidationError):
         )
 
 
-async def id_list_params(
+class IdListDataset(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    search_name: str
+    param_name: str
+    dataset_id: int
+    record_type: str
+
+    def params(self) -> dict[str, ParamValue]:
+        return {self.param_name: InputDatasetValue(dataset_id=str(self.dataset_id))}
+
+
+class EmptyIdListError(ValidationError):
+    def __init__(self, search_name: str) -> None:
+        self.search_name = search_name
+        super().__init__(
+            title="The id list is empty",
+            detail=f"{search_name} takes a list of at least one id.",
+        )
+
+
+async def id_list_dataset(
     site_id: str, ids: list[str], search: IdListSearch
-) -> tuple[str, dict[str, ParamValue], str]:
+) -> IdListDataset:
     record_type = await listed_record_type(
         SearchContext(site_id, search.record_type, search.search_name)
     )
@@ -99,12 +121,19 @@ async def id_list_params(
         source_type="idList",
         source_content=WDKDatasetIdListContent(ids=ids),
     )
-    dataset_id = await api.create_dataset(config)
-    return (
-        search.search_name,
-        {search.param_name: InputDatasetValue(dataset_id=str(dataset_id))},
-        record_type,
+    return IdListDataset(
+        search_name=search.search_name,
+        param_name=search.param_name,
+        dataset_id=await api.create_dataset(config),
+        record_type=record_type,
     )
+
+
+async def id_list_params(
+    site_id: str, ids: list[str], search: IdListSearch
+) -> tuple[str, dict[str, ParamValue], str]:
+    dataset = await id_list_dataset(site_id, ids, search)
+    return dataset.search_name, dataset.params(), dataset.record_type
 
 
 async def build_enrichment_params_from_gene_ids(
@@ -209,14 +238,55 @@ async def frozen_step_id(
     if cached is not None:
         return cached
 
-    search_name, params, listed = await id_list_params(site_id, gene_ids, search)
+    dataset = await id_list_dataset(site_id, gene_ids, search)
     api = get_strategy_api(site_id)
+    held = await _held_step(api, dataset, strategy_name)
+    try:
+        await _require_the_ids(api, held, search, len(gene_ids))
+    except IdListStepCountError:
+        await api.delete_strategy(held.strategy_id)
+        raise
+    _FROZEN_STEPS[key] = held.step_id
+    return held.step_id
+
+
+async def counted_id_list(
+    site_id: str,
+    ids: list[str],
+    *,
+    record_type: IdListRecordType,
+    strategy_name: str = DEFAULT_GENE_SET_STRATEGY_NAME,
+) -> IdListDataset:
+    _calling_account()
+    search = ID_LIST_SEARCHES[record_type]
+    ids = search.distinct(ids)
+    if not ids:
+        raise EmptyIdListError(search.search_name)
+    dataset = await id_list_dataset(site_id, ids, search)
+    api = get_strategy_api(site_id)
+    held = await _held_step(api, dataset, strategy_name)
+    try:
+        await _require_the_ids(api, held, search, len(ids))
+    finally:
+        await api.delete_strategy(held.strategy_id)
+    return dataset
+
+
+@dataclass(frozen=True, slots=True)
+class _HeldStep:
+    step_id: int
+    strategy_id: int
+
+
+async def _held_step(
+    api: StrategyAPI, dataset: IdListDataset, strategy_name: str
+) -> _HeldStep:
     created = await api.create_step(
         NewStepSpec(
-            search_name=search_name,
-            search_config=WDKSearchConfig(parameters=encode_params(params)),
+            search_name=dataset.search_name,
+            search_config=WDKSearchConfig(parameters=encode_params(dataset.params())),
         ),
-        listed,
+        dataset.record_type,
     )
     # WDK refuses to run a step that belongs to no strategy, so the step is
     # held by an internal one that never appears in the user's workspace.
@@ -226,10 +296,14 @@ async def frozen_step_id(
         description=None,
         is_internal=True,
     )
-    if search.exact:
-        counted = await api.get_step_count(created.id)
-        if counted != len(gene_ids):
-            await api.delete_strategy(strategy.id)
-            raise IdListStepCountError(search_name, len(gene_ids), counted)
-    _FROZEN_STEPS[key] = created.id
-    return created.id
+    return _HeldStep(step_id=created.id, strategy_id=strategy.id)
+
+
+async def _require_the_ids(
+    api: StrategyAPI, held: _HeldStep, search: IdListSearch, uploaded: int
+) -> None:
+    if not search.exact:
+        return
+    counted = await api.get_step_count(held.step_id)
+    if counted != uploaded:
+        raise IdListStepCountError(search.search_name, uploaded, counted)
