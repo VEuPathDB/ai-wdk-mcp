@@ -274,8 +274,13 @@ async def test_an_intron_over_an_assembly_gap_is_left_unexplained(
             in_cds=True,
             outcome="UNEXPLAINED",
             replacement=[],
+            spans_assembly_gap=True,
         )
     ]
+    assert result.unread is not None
+    [unread] = result.unread
+    assert unread.spans_assembly_gap is True
+    assert result.evidence_unread == [unread.assembly_gap_note]
     assert result.evidence_unread == [
         "the intron 44981063-44981393 spans an assembly gap"
     ]
@@ -334,6 +339,7 @@ async def test_a_covered_unspliced_intron_is_retained(
         "RETAINED",
         "GT..AG",
     )
+    assert (unread.spans_assembly_gap, unread.assembly_gap_note) == (False, None)
     assert unread.depth is not None
     assert unread.depth.track == "E-MTAB-2880:E_20h_F (unique reverse)"
     assert (

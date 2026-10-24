@@ -88,7 +88,8 @@ intron (the organism's
 genome window, then its depth over one coverage track. A motif holding a base other than
 A, C, G or T is an assembly gap, not a splice site: on QA vectorbase 330 of the 331 bases
 of AGAP007279's annotated intron 44981063-44981393 are N, so that intron reads no motif
-and no depth and stays `UNEXPLAINED`. `RETAINED` reads the intron's median depth against
+and no depth and stays `UNEXPLAINED` with `spans_assembly_gap` true. The field is the
+fact; the `evidence_unread` sentence is written from it. `RETAINED` reads the intron's median depth against
 the exons' median and needs 0.9 of the intron's bases covered, because a minimum is
 undone by one base without a read. The experiment is chosen by measurement: the first
 time a gene of an organism reaches the coverage stage, the total summary of every

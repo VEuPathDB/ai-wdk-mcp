@@ -156,8 +156,9 @@ async def audit_intron_support(site_id: str, gene: str) -> IntronAudit:
     peptide supports it;
     UNEXPLAINED otherwise, an intron whose evidence was not read included.
     A motif holding a base other than A, C, G or T means the intron spans an
-    assembly gap: its motif and depth are not read, it stays UNEXPLAINED and
-    evidenceUnread names it, so no model is corrected.
+    assembly gap: its motif and depth are not read, spansAssemblyGap is true
+    (false for every other intron) whatever outcome its junctions give, and
+    evidenceUnread names it; one left UNEXPLAINED corrects no model.
     motif and depth are set whenever their stage read the intron; depth
     names the coverage subtrack read (track), its intronMedianDepth,
     exonMedianDepth, coveredShare and depthShare. evidenceUnread says which stage could

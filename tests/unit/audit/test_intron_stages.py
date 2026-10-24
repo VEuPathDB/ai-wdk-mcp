@@ -1,4 +1,5 @@
 import pytest
+from pydantic import ValidationError
 from tests._support.intron_genes import E1, E2, E3, E4, I1, I2, I3, junction, structure
 
 from veupathdb_mcp.audit.intron_judge import (
@@ -13,6 +14,7 @@ from veupathdb_mcp.audit.introns import (
     IntronJudgement,
     IntronSupport,
     PeptideSplit,
+    UnreadIntron,
 )
 
 KEY = f"{I2[0]}-{I2[1]}"
@@ -46,6 +48,50 @@ def test_an_intron_whose_evidence_was_not_read_is_unexplained() -> None:
 
     assert (unread.start, unread.end, unread.outcome) == (*I2, "UNEXPLAINED")
     assert (unread.motif, unread.depth, unread.replacement) == (None, None, [])
+    assert (unread.spans_assembly_gap, unread.assembly_gap_note) == (False, None)
+
+
+def test_an_intron_over_an_assembly_gap_is_unexplained_and_read_no_further() -> None:
+    judgement = judged(evidence=IntronEvidence(gaps=(KEY,)))
+    unread = only_unread(judgement)
+
+    assert (unread.outcome, unread.spans_assembly_gap) == ("UNEXPLAINED", True)
+    assert unread.assembly_gap_note == f"the intron {KEY} spans an assembly gap"
+    assert (needs_motifs(judgement), needs_depth(judgement)) == ([], [])
+
+
+def test_an_intron_over_an_assembly_gap_keeps_the_outcome_its_junction_gives() -> None:
+    shifted = [*READ, junction((I2[0] + 30, I2[1] + 30), 200)]
+
+    unread = only_unread(judged(shifted, IntronEvidence(gaps=(KEY,))))
+
+    assert (unread.outcome, unread.spans_assembly_gap) == ("SHIFTED", True)
+    assert unread.assembly_gap_note == f"the intron {KEY} spans an assembly gap"
+
+
+@pytest.mark.parametrize(
+    ("outcome", "fields"),
+    [
+        ("UNEXPLAINED", {"motif": "GT..AG"}),
+        ("UNEXPLAINED", {"depth": depth(1.0)}),
+        ("NONCANONICAL", {"motif": "AT..AC"}),
+    ],
+)
+def test_an_intron_over_an_assembly_gap_carries_no_motif_or_depth(
+    outcome: str, fields: dict[str, object]
+) -> None:
+    with pytest.raises(ValidationError, match="assembly gap"):
+        UnreadIntron.model_validate(
+            {
+                "start": I2[0],
+                "end": I2[1],
+                "in_cds": True,
+                "outcome": outcome,
+                "replacement": [],
+                "spans_assembly_gap": True,
+                **fields,
+            }
+        )
 
 
 def test_each_stage_names_the_introns_it_reads_next() -> None:

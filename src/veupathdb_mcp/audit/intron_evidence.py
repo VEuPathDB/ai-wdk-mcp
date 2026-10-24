@@ -175,7 +175,6 @@ async def stage_evidence(
             case peptides:
                 evidence = IntronEvidence(peptides=peptides)
                 judgement = judge_introns(structure, junctions, evidence)
-    gaps: list[Span] = []
     if spans := needs_motifs(judgement):
         try:
             window = await genome_reader(client).window(
@@ -188,20 +187,26 @@ async def stage_evidence(
             if window is None
             else {span: splice_motif(window, span, structure.strand) for span in spans}
         )
-        gaps = [span for span, motif in read.items() if motif and spans_gap(motif)]
-        unread += [f"the intron {a}-{b} spans an assembly gap" for a, b in gaps]
         motifs = {
-            intron_key(span): motif
-            for span, motif in read.items()
-            if motif is not None and span not in gaps
+            intron_key(span): motif for span, motif in read.items() if motif is not None
         }
-        evidence = IntronEvidence(peptides=evidence.peptides, motifs=motifs)
+        evidence = IntronEvidence(
+            peptides=evidence.peptides,
+            motifs={k: m for k, m in motifs.items() if not spans_gap(m)},
+            gaps=tuple(k for k, m in motifs.items() if spans_gap(m)),
+        )
         judgement = judge_introns(structure, junctions, evidence)
-    if spans := [span for span in needs_depth(judgement) if span not in gaps]:
+        unread += [
+            note for u in judgement.unread or [] if (note := u.assembly_gap_note)
+        ]
+    if spans := needs_depth(judgement):
         found = await read_depth(client, gene, structure.exons, spans)
         unread += found.notes
         if found.depth is not None:
             evidence = IntronEvidence(
-                peptides=evidence.peptides, motifs=evidence.motifs, depth=found.depth
+                peptides=evidence.peptides,
+                motifs=evidence.motifs,
+                gaps=evidence.gaps,
+                depth=found.depth,
             )
     return StagedEvidence(evidence=evidence, window=window, unread=unread)

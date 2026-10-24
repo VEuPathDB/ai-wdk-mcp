@@ -149,6 +149,7 @@ class _Gene(BaseModel):
             replacement=[_support(j.span, self.same) for j in links],
             motif=motif,
             depth=depth,
+            spans_assembly_gap=self.evidence.over_gap(intron),
         )
 
 
@@ -217,8 +218,16 @@ def needs_peptides(judgement: IntronJudgement) -> bool:
 
 
 def needs_motifs(judgement: IntronJudgement) -> list[Span]:
-    return [u.span for u in _unexplained(judgement) if u.motif is None]
+    return [
+        u.span
+        for u in _unexplained(judgement)
+        if u.motif is None and not u.spans_assembly_gap
+    ]
 
 
 def needs_depth(judgement: IntronJudgement) -> list[Span]:
-    return [u.span for u in _unexplained(judgement) if u.depth is None]
+    return [
+        u.span
+        for u in _unexplained(judgement)
+        if u.depth is None and not u.spans_assembly_gap
+    ]

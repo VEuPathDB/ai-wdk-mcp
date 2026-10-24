@@ -206,6 +206,10 @@ class IntronEvidence(CamelModel):
     peptides: tuple[PeptideSplit, ...] | None = None
     motifs: dict[str, str] | None = None
     depth: dict[str, IntronDepth] | None = None
+    gaps: tuple[str, ...] = ()
+
+    def over_gap(self, intron: Span) -> bool:
+        return intron_key(intron) in self.gaps
 
     def peptide_spans(self, intron: Span) -> bool:
         return any(peptide.spans(intron) for peptide in self.peptides or ())
@@ -240,6 +244,7 @@ class UnreadIntron(CamelModel):
     replacement: list[IntronSupport]
     motif: str | None = None
     depth: IntronDepth | None = None
+    spans_assembly_gap: bool = False
 
     @model_validator(mode="after")
     def _replaced_as_named(self) -> Self:
@@ -267,9 +272,25 @@ class UnreadIntron(CamelModel):
             raise ValueError(msg)
         return self
 
+    @model_validator(mode="after")
+    def _gap_left_unread(self) -> Self:
+        if self.spans_assembly_gap and (self.motif, self.depth) != (None, None):
+            msg = (
+                f"a {self.outcome} intron over an assembly gap carries a motif or "
+                "a depth; the genome over a gap gives neither"
+            )
+            raise ValueError(msg)
+        return self
+
     @property
     def span(self) -> Span:
         return self.start, self.end
+
+    @property
+    def assembly_gap_note(self) -> str | None:
+        if not self.spans_assembly_gap:
+            return None
+        return f"the intron {self.start}-{self.end} spans an assembly gap"
 
 
 def verdict_of(unread: list[UnreadIntron]) -> IntronVerdict:

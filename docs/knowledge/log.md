@@ -1,5 +1,24 @@
 # Knowledge log
 
+## 2026-10-24 - 0.2.0b44
+
+- Additive, not breaking. `UnreadIntron` carries `spans_assembly_gap: bool`
+  (`spansAssemblyGap` on the wire, default false): true when the intron's motif from the
+  genome window holds a base other than A, C, G or T. The gap is a fact about the
+  genome, not an outcome: such an intron carries no motif and no depth, and the model
+  refuses one that carries either, but its junctions still decide its outcome. Gap
+  evidence plus a junction within 30 bases at both ends judges `SHIFTED` with
+  `spans_assembly_gap` true; the staged read reads motifs only for `UNEXPLAINED`
+  introns, so a gap there stays `UNEXPLAINED`. The sentence
+  "the intron {start}-{end} spans an assembly gap" in `evidence_unread` is now written
+  from the field (`UnreadIntron.assembly_gap_note`), so a host reads the field and never
+  matches the sentence. On the recorded QA vectorbase case AGAP007279 the intron
+  44981063-44981393 reads `spans_assembly_gap` true; the recorded RETAINED intron of
+  AGAP003685 reads it false.
+- `IntronEvidence` carries the intron keys over a gap (`gaps`), and `needs_motifs` and
+  `needs_depth` skip an intron over a gap, so the staged read no longer keeps its own
+  list of gap spans.
+
 ## 2026-10-24 - 0.2.0b43
 
 - Breaking for hosts. Three arguments are gone and one sidecar changes shape, and a
