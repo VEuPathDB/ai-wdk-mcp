@@ -11,6 +11,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict
 
 from veupathdb_mcp.audit.genes import GeneRow, GroupMember, is_coding
+from veupathdb_mcp.catalog.group_ids import is_group_id, is_residual
 
 type LengthClass = Literal["SHORT", "LONG", "TYPICAL", "SPLIT", "UNQUALIFIED"]
 type RelativeTier = Literal["SAME_GENUS", "OTHER_GENERA"]
@@ -25,8 +26,6 @@ MIN_RELATIVES = 2
 MIN_MEDIAN = 80
 RELATIVE_SHORT_SHARE = 0.85
 RELATIVE_LONG_SHARE = 1.15
-ORTHOLOGY_GROUP = "OG"
-RESIDUAL_GROUP = "OGR"
 
 
 def species_of(organism: str) -> str:
@@ -37,12 +36,8 @@ def genus_of(organism: str) -> str:
     return organism.split(maxsplit=1)[0]
 
 
-def is_residual_group(group: str) -> bool:
-    return group.startswith(RESIDUAL_GROUP)
-
-
 def is_orthology_group(group: str) -> bool:
-    return group.startswith(ORTHOLOGY_GROUP) and not is_residual_group(group)
+    return is_group_id(group) and not is_residual(group)
 
 
 def _coding_length(row: GeneRow) -> int | None:

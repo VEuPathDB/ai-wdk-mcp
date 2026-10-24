@@ -295,14 +295,14 @@ async def test_a_residual_group_serves_no_ortholog_count(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     site = Site(monkeypatch)
-    site.row = site.row.model_copy(update={"ortholog_group": "OGR8_0001234"})
+    site.row = site.row.model_copy(update={"ortholog_group": "OGR8r1_0001234"})
     junctions(monkeypatch, READS)
 
     result = await audit_intron_support("plasmodb", GENE)
 
     assert result.corrected_protein == SPLICED
     assert result.orthologs == OrthologSupport.not_read(
-        "the ortholog group OGR8_0001234 of PcyX_1 is not an orthology group"
+        "the ortholog group OGR8r1_0001234 of PcyX_1 is not an orthology group"
     )
     assert site.tables_read == []
 

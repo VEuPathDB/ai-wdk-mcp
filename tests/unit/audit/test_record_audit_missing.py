@@ -62,7 +62,7 @@ def kept(call: WireCall) -> tuple[list[str], str | None, int]:
 
 
 def example_genome() -> SearchCall:
-    groups = {3: "OGR8_3", 5: "", 6: NA}
+    groups = {3: "OGR8r1_3", 5: "", 6: NA}
     return taxon(
         ARI,
         [
@@ -85,7 +85,7 @@ def absent_genome() -> SearchCall:
         [
             located("G2", GT1, "chrX", 50001, "OG8_2"),
             located("G0", GT1, "chrX", 60001, "OG8_0"),
-            located("G3", GT1, "chrX", 70001, "OGR8_3"),
+            located("G3", GT1, "chrX", 70001, "OGR8r1_3"),
             located("G6", GT1, "chrX", 80001, NA),
             located("GW", GT1, "chrVIIb", 2001, "OG8_99"),
             located("GO", GT1, "chrVIIb", 9001, "OG8_98"),

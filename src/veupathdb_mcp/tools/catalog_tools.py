@@ -30,10 +30,6 @@ from veupathdb_mcp.catalog.param_formatting import GetParameterOptionsResult
 from veupathdb_mcp.catalog.param_intent import ParamIntent
 from veupathdb_mcp.catalog.param_specs_formatting import build_param_specs
 from veupathdb_mcp.catalog.param_validation import ValidatedParams, validate_parameters
-from veupathdb_mcp.catalog.phyletic_builder import (
-    PhyleticExpressionResult,
-    write_phyletic_expression,
-)
 from veupathdb_mcp.catalog.phyletic_pattern import PhyleticPattern
 from veupathdb_mcp.catalog.search_inspection import UnknownSearchError
 from veupathdb_mcp.catalog.searches import VagueSearchQueryError
@@ -52,6 +48,10 @@ from veupathdb_mcp.tool_payloads import (
     rank_example_plans,
 )
 from veupathdb_mcp.tools.refusals import payload_or_error
+from veupathdb_mcp.wdk.phyletic_counts import (
+    PhyleticPatternResult,
+    answer_phyletic_pattern,
+)
 
 
 async def list_record_types(site_id: str) -> list[RecordTypeInfo]:
@@ -163,7 +163,7 @@ async def lookup_phyletic_codes(
 
 async def build_phyletic_expression(
     site_id: str, pattern: PhyleticPattern
-) -> PhyleticExpressionResult:
+) -> PhyleticPatternResult:
     """Write OrthoMCL's phyletic_expression from a pattern, check it against the
     site's taxonomy, and count the groups it returns with one count read.
 
@@ -207,7 +207,9 @@ async def build_phyletic_expression(
     only when p*N/100 is a whole number. Within each_species_of, N is each
     species' genome count. A compare factor rounds its bound the same way.
 
-    The result gives expression (the value for phyletic_expression; it can run to
+    The result names its route. route expression is a live search the site
+    re-runs; the rest of this paragraph and the next describe it. The result gives
+    expression (the value for phyletic_expression; it can run to
     hundreds of thousands of characters, so a host that sets the search for you
     should keep it and bind it by reference rather than ask you to repeat it),
     reading (the expression in words, or for a long expression the pattern's
@@ -222,12 +224,32 @@ async def build_phyletic_expression(
     compare reads takes up to 25 count reads, and a pattern whose reads would
     pass the call budget is refused before the first read.
 
+    A compare, the whole pattern, whose expression would pass those limits is
+    computed instead from each group's protein counts in each set, read with the
+    sequence search's group word cloud, at most 24 requests, one at a time. The
+    result then has route computed: a snapshot, not a search the site re-runs,
+    holding the same groups the expression would select. It gives groupIds and
+    groups, then the same groups split as bothHeld, leftOnly and rightOnly (held
+    by both sets, by left only, by right only), ties (groups held by both whose
+    two sides are equal), residualGroups (residual OGR groups among them), sets
+    (for left and right: genomes, species with the genomes of each, groups and
+    proteins), reading, probeRequests (count reads made before the expression
+    was found too large) and computeRequests. A compare that holds at 0 against
+    0 (at_least, at_most, exactly) also selects groups neither set holds, which
+    no count lists, so it is refused on this route. A compare inside all_of,
+    any_of or none_of is never computed and is refused past those limits.
+    A comparison that needs more than 24 requests is refused with narrower sets
+    to try; a per_genome compare reads each genome on its own and past 24
+    requests is refused as needing a background task. A genome that alone holds
+    more than 10,000 groups cannot be computed and is refused before any cloud,
+    and the route shares the same 300 s call budget.
+
     Args:
         site_id: The OrthoMCL site, 'orthomcl'.
         pattern: The groups to select, as described above.
     """
     try:
-        return await write_phyletic_expression(site_id, pattern)
+        return await answer_phyletic_pattern(site_id, pattern)
     except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc
 

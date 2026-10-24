@@ -15,11 +15,7 @@ from veupathdb.jbrowse import (
 from veupathdb_mcp.audit.gene_ids import GeneId, id_pairs
 from veupathdb_mcp.audit.gene_models import gene_organism
 from veupathdb_mcp.audit.genes import GeneRow, GroupMember, orthologs_of
-from veupathdb_mcp.audit.lengths import (
-    is_orthology_group,
-    is_residual_group,
-    species_of,
-)
+from veupathdb_mcp.audit.lengths import species_of
 from veupathdb_mcp.audit.served import (
     LengthDna,
     length_dna,
@@ -33,6 +29,7 @@ from veupathdb_mcp.audit.track_reads import (
     tabix_reader,
     tabix_track,
 )
+from veupathdb_mcp.catalog.group_ids import is_group_id, is_residual
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
 
 ANNOTATION_TRACK = "genomeAndProteome/gff/annotated_transcripts.gff.gz"
@@ -65,7 +62,7 @@ def _unpaired(strain: GeneRow, reference: GeneRow) -> ToolErrorPayload | None:
             "a strain gene is read against another strain of its species",
         )
     group = reference.ortholog_group
-    if not (is_orthology_group(group) or is_residual_group(group)):
+    if not is_group_id(group):
         return tool_error(
             VEuPathDBErrorCode.VALIDATION_ERROR,
             f"{strain.gene} and {reference.gene} lie in no ortholog group ({group}); "
@@ -100,7 +97,7 @@ async def strain_inputs(
             return refusal
         case proteins:
             pass
-    residual = is_residual_group(reference.ortholog_group)
+    residual = is_residual(reference.ortholog_group)
     return StrainInputs(
         strain=strain,
         reference=reference,

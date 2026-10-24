@@ -1,5 +1,81 @@
 # Knowledge log
 
+## 2026-10-24 - 0.2.0b51
+
+- A compare past one phyletic expression is computed, not refused. Under the caps the
+  answer is the expression, as before. The input stays `PhyleticPattern`. See
+  [the decision](decisions/a-compare-past-one-expression-is-computed-from-group-clouds.md).
+- Breaking on the wire only: `build_phyletic_expression` now returns
+  `PhyleticPatternResult`, a union tagged on `route`, so FastMCP serves its structured
+  content under `result`. `PhyleticExpressionResult` gains `route: "expression"` (the
+  default, so a stored result validates). `ComputedComparisonResult`
+  (`route: "computed"`) gives `groupIds` and `groups`, the groups the expression would
+  select, split as `bothHeld`, `leftOnly` and `rightOnly`, then `ties`,
+  `residualGroups`, `sets` (two `ComputedSet`: `side`, `genomes`, `species` as
+  `SpeciesGenomes`, `groups`, `proteins`), `reading`, `probeRequests` (the expression
+  route's probe reads before it fell back) and `computeRequests`.
+- One pattern, one set of groups: the count route evaluates the compare on every group
+  either set holds, absent genomes as 0. A compare that holds at 0 against 0
+  (`at_least`, `at_most`, `exactly`) would also select groups neither set holds, which
+  no cloud lists, so it is refused before any read (`catalog.AbsentGroupsCompareError`).
+- A whole-pattern compare whose smallest expression, every largest count read as 0,
+  already passes a cap reads no probe. `catalog.phyletic_builder` splits
+  `write_phyletic_expression` into `probe_pattern` and `expression_of`, so the probe
+  reads survive a fallback. A compare inside `all_of`, `any_of` or `none_of` past the
+  caps is refused with `wdk.NestedCompareTooLargeError`, whose detail says it is not
+  computed because it is not the whole pattern, when the pattern with its compares at
+  their smallest counts fits; otherwise the original too-large refusal stands.
+- Every set, a lone genome included, is counted before any cloud. A lone genome past
+  10,000 groups is refused in the plan with `wdk.GenomePastCloudCapError` (the genome
+  and its group count); `per_genome` costs 3 requests a genome. The count route shares
+  the 300 s call budget from the start of the call, sends each cloud and record count
+  with the time left as its budget, and refuses a call that runs out with
+  `wdk.ComparisonOutOfTimeError`.
+- `read_group_proteins` parses the reply once as the client's `WDKWordCounts`: its cap
+  sentinel maps to `GroupCloudCappedError`, any other shape to `DataParsingError`, a
+  repeated word to `GroupTagError`, and its `record_counts` mismatch to
+  `GroupCloudSumError`. `GROUP_ID`, `is_group_id` and `is_residual` live in
+  `catalog/group_ids.py`.
+- `answer_phyletic_pattern(site_id, pattern)` (`veupathdb_mcp.wdk`) is the in-process
+  call: `write_phyletic_expression`, then `compute_comparison(site_id, term)` when a
+  whole-pattern compare raises `PhyleticExpressionTooLargeError` or the new
+  `PhyleticExpressionTooSlowError` (`veupathdb_mcp.catalog`, a `ValidationError` with
+  the same title and detail the time refusal had). A compare nested in `all_of`,
+  `any_of` or `none_of` is still refused past the caps.
+- `read_group_proteins(site_id, genomes)` answers `GroupProteins` from
+  `group_link-wordCloud` on `sequence/ByTaxonomy`. It refuses a word that is no group id
+  (`GroupTagError`), counts that do not sum to the record count (`GroupCloudSumError`)
+  and the reporter's word cap (`GroupCloudCappedError`, `MAX_CLOUD_WORDS` 10,000).
+  `catalog.is_group_id` and `catalog.is_residual` read one pattern for core
+  (`OG8_0000011`) and residual (`OGR8r1_0000039`) groups.
+- Requests: one `>=1T` count per set of more than one genome, halving past 10,000
+  groups, then a cloud and a record count per slice, one at a time, at most
+  `MAX_COMPARISON_REQUESTS` (24). A larger plan is refused before its first cloud
+  (`ComparisonRequestsError`, naming the slices); `per_genome` reads a cloud per genome
+  and past 24 requests is refused as needing a background task
+  (`PerGenomeNeedsTaskError`).
+- `frozen_step_id` and the served `create_gene_set_step` take
+  `record_type: IdListRecordType`, `transcript` (the default, `GeneByLocusTag`) or
+  `group` (`GroupsByNameList`, param `group_names`). A group step that counts other than
+  the ids uploaded is deleted with its internal strategy and refused; group ids are
+  deduplicated without regard to case before the upload and the count, as the search
+  matches them
+  (`IdListStepCountError`), because the search also returns the current group of an id
+  from an earlier release. `frozen_step_cache_key` keys by record type too.
+  `build_enrichment_params_from_gene_ids` reads the one id-list table.
+- `audit.is_orthology_group` reads the one group-id pattern
+  (`catalog.is_group_id`, `catalog.is_residual`); the audit's prefix checks
+  `is_residual_group`, `ORTHOLOGY_GROUP` and `RESIDUAL_GROUP` are gone, and the strain
+  check refuses a group that is no group id. The audit suite's invented ids (`OG8_L1`,
+  `OGR8_0000001`) take the served shapes (`OG8_1000001`, `OGR8r1_0000001`).
+- `veupathdb_mcp.testing.ORTHOMCL_GROUP_CLOUDS` holds the QA recordings the suite reads:
+  the tgon, pfal, 15 Toxoplasma and 61 Plasmodium clouds, their counts and the set codes.
+  `catalog.group_counts.COUNT_ONLY` is public.
+- What a host does to take this release: call `answer_phyletic_pattern` where it called
+  `write_phyletic_expression`, branch on `route`, read `probeRequests` and
+  `computeRequests` where it read requests, and pass `record_type="group"` to save
+  a computed answer's `groupIds` as a step.
+
 ## 2026-10-24 - 0.2.0b50
 
 - Additive: no published name is removed or renamed, and no field changes type.

@@ -22,15 +22,15 @@ CONTIG = "TGGT1_chrVIIb"
 
 
 def neighbourhood(before: int, after: int) -> tuple[list[GeneRow], GeneRow]:
-    example = gene("EX", 100000, group="OG8_EX")
+    example = gene("EX", 100000, group="OG8_4000000")
     rows = [
         *(
-            gene(f"L{k}", 100000 - 2000 * k, group=f"OG8_L{k}")
+            gene(f"L{k}", 100000 - 2000 * k, group=f"OG8_10{k:05d}")
             for k in range(1, before + 1)
         ),
         example,
         *(
-            gene(f"R{k}", 100000 + 2000 * k, group=f"OG8_R{k}")
+            gene(f"R{k}", 100000 + 2000 * k, group=f"OG8_20{k:05d}")
             for k in range(1, after + 1)
         ),
     ]
@@ -59,11 +59,11 @@ def test_anchors_are_the_nearest_neighbours_with_one_copy_in_the_absent_genome()
 ):
     rows, example = neighbourhood(3, 3)
     genome = [
-        absent("G1", "OG8_L1", 4150000),
-        absent("G2", "OG8_L1", 4900000),
-        absent("GL2", "OG8_L2", 4152000),
-        absent("GR2", "OG8_R2", 4170000),
-        absent("GR3", "OG8_R3", 4172000),
+        absent("G1", "OG8_1000001", 4150000),
+        absent("G2", "OG8_1000001", 4900000),
+        absent("GL2", "OG8_1000002", 4152000),
+        absent("GR2", "OG8_2000002", 4170000),
+        absent("GR3", "OG8_2000003", 4172000),
     ]
 
     anchors = find_anchors(rows, example, genome)
@@ -76,9 +76,9 @@ def test_anchors_are_the_nearest_neighbours_with_one_copy_in_the_absent_genome()
 def test_a_neighbour_with_two_copies_is_not_an_anchor() -> None:
     rows, example = neighbourhood(1, 1)
     genome = [
-        absent("G1", "OG8_L1", 4150000),
-        absent("G2", "OG8_L1", 4160000),
-        absent("GR1", "OG8_R1", 4170000),
+        absent("G1", "OG8_1000001", 4150000),
+        absent("G2", "OG8_1000001", 4160000),
+        absent("GR1", "OG8_2000001", 4170000),
     ]
 
     assert find_anchors(rows, example, genome) is None
@@ -87,8 +87,8 @@ def test_a_neighbour_with_two_copies_is_not_an_anchor() -> None:
 def test_the_walk_stops_six_genes_out() -> None:
     rows, example = neighbourhood(ANCHOR_REACH + 1, 1)
     genome = [
-        absent("FAR", f"OG8_L{ANCHOR_REACH + 1}", 4150000),
-        absent("GR1", "OG8_R1", 4170000),
+        absent("FAR", f"OG8_10{ANCHOR_REACH + 1:05d}", 4150000),
+        absent("GR1", "OG8_2000001", 4170000),
     ]
 
     assert find_anchors(rows, example, genome) is None
@@ -96,11 +96,11 @@ def test_the_walk_stops_six_genes_out() -> None:
 
 def test_a_residual_group_neighbour_is_not_an_anchor() -> None:
     rows, example = neighbourhood(2, 1)
-    rows[0] = rows[0].model_copy(update={"ortholog_group": "OGR8_L1"})
+    rows[0] = rows[0].model_copy(update={"ortholog_group": "OGR8r1_1000001"})
     genome = [
-        absent("GL1", "OGR8_L1", 4151000),
-        absent("GL2", "OG8_L2", 4150000),
-        absent("GR1", "OG8_R1", 4170000),
+        absent("GL1", "OGR8r1_1000001", 4151000),
+        absent("GL2", "OG8_1000002", 4150000),
+        absent("GR1", "OG8_2000001", 4170000),
     ]
 
     assert picked(find_anchors(rows, example, genome)) == ("L2", "GL2", "R1", "GR1")
@@ -112,8 +112,8 @@ def test_an_orthology_label_that_is_no_group_is_not_an_anchor() -> None:
     rows[0] = rows[0].model_copy(update={"ortholog_group": label})
     genome = [
         absent("GL1", label, 4151000),
-        absent("GL2", "OG8_L2", 4150000),
-        absent("GR1", "OG8_R1", 4170000),
+        absent("GL2", "OG8_1000002", 4150000),
+        absent("GR1", "OG8_2000001", 4170000),
     ]
 
     assert picked(find_anchors(rows, example, genome)) == ("L2", "GL2", "R1", "GR1")
@@ -121,16 +121,19 @@ def test_an_orthology_label_that_is_no_group_is_not_an_anchor() -> None:
 
 def test_one_gene_on_both_sides_is_no_anchor_pair() -> None:
     rows, example = neighbourhood(1, 1)
-    rows[2] = rows[2].model_copy(update={"ortholog_group": "OG8_L1"})
-    genome = [absent("G1", "OG8_L1", 4150000)]
+    rows[2] = rows[2].model_copy(update={"ortholog_group": "OG8_1000001"})
+    genome = [absent("G1", "OG8_1000001", 4150000)]
 
     assert find_anchors(rows, example, genome) is None
 
 
 def test_a_gene_on_another_contig_is_no_neighbour() -> None:
     rows, example = neighbourhood(0, 1)
-    rows.append(gene("OTHER", 99000, group="OG8_O", sequence_id="KQ976400"))
-    genome = [absent("GO", "OG8_O", 4150000), absent("GR1", "OG8_R1", 4170000)]
+    rows.append(gene("OTHER", 99000, group="OG8_3000000", sequence_id="KQ976400"))
+    genome = [
+        absent("GO", "OG8_3000000", 4150000),
+        absent("GR1", "OG8_2000001", 4170000),
+    ]
 
     assert find_anchors(rows, example, genome) is None
 
@@ -138,8 +141,8 @@ def test_a_gene_on_another_contig_is_no_neighbour() -> None:
 def test_anchors_on_different_contigs_are_none() -> None:
     rows, example = neighbourhood(1, 1)
     genome = [
-        absent("GL1", "OG8_L1", 4150000),
-        absent("GR1", "OG8_R1", 4170000, "TGGT1_chrVIII"),
+        absent("GL1", "OG8_1000001", 4150000),
+        absent("GR1", "OG8_2000001", 4170000, "TGGT1_chrVIII"),
     ]
 
     assert find_anchors(rows, example, genome) is None
@@ -148,10 +151,10 @@ def test_anchors_on_different_contigs_are_none() -> None:
 def test_anchors_more_than_sixty_kilobases_apart_are_none() -> None:
     rows, example = neighbourhood(1, 1)
     near = [
-        absent("GL1", "OG8_L1", 100000),
-        absent("GR1", "OG8_R1", 100899 + ANCHOR_MAX_SPAN),
+        absent("GL1", "OG8_1000001", 100000),
+        absent("GR1", "OG8_2000001", 100899 + ANCHOR_MAX_SPAN),
     ]
-    far = [near[0], absent("GR1", "OG8_R1", 100900 + ANCHOR_MAX_SPAN)]
+    far = [near[0], absent("GR1", "OG8_2000001", 100900 + ANCHOR_MAX_SPAN)]
 
     anchors = find_anchors(rows, example, near)
 

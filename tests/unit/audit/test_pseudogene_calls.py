@@ -104,7 +104,7 @@ def test_a_product_pairs_only_when_it_is_identical() -> None:
 
 def test_a_residual_group_is_no_group() -> None:
     found = calls(
-        [pseudogene("P1", group="OGR8_0000001")],
+        [pseudogene("P1", group="OGR8r1_0000001")],
         [gene("R1", group="OG8_0000010")],
     )
 
@@ -123,7 +123,7 @@ def test_reference_pseudogenes_and_genes_without_a_group_are_not_coding() -> Non
 
 
 def test_a_reference_gene_in_a_residual_group_is_not_coding() -> None:
-    reference = [gene("R1", group="OGR8_0000010")]
+    reference = [gene("R1", group="OGR8r1_0000010")]
 
     assert pairs([pseudogene("P1")], reference) == []
 

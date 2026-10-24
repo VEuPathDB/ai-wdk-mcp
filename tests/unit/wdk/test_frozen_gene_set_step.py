@@ -13,6 +13,7 @@ from veupathdb.wdk import NewStepSpec, WDKIdentifier, WDKStepTree
 from veupathdb_mcp.wdk import gene_set_steps
 from veupathdb_mcp.wdk.gene_set_steps import (
     DEFAULT_GENE_SET_STRATEGY_NAME,
+    IdListSearch,
     frozen_step_cache_key,
     frozen_step_id,
 )
@@ -69,18 +70,15 @@ def api(monkeypatch: pytest.MonkeyPatch) -> Iterator[_FakeStrategyAPI]:
     )
 
     async def _params(
-        site_id: str, gene_ids: list[str]
+        site_id: str, gene_ids: list[str], search: IdListSearch
     ) -> tuple[str, dict[str, ParamValue], str]:
         return (
-            "GeneByLocusTag",
-            {"ds_gene_ids": InputDatasetValue(dataset_id="ds-1")},
-            "transcript",
+            search.search_name,
+            {search.param_name: InputDatasetValue(dataset_id="ds-1")},
+            search.record_type,
         )
 
-    monkeypatch.setattr(
-        "veupathdb_mcp.wdk.gene_set_steps.build_enrichment_params_from_gene_ids",
-        _params,
-    )
+    monkeypatch.setattr("veupathdb_mcp.wdk.gene_set_steps.id_list_params", _params)
     with _acting_as(ALICE):
         yield built
 
@@ -104,6 +102,11 @@ class TestTheKeyIsTheAccountAndTheMembership:
     def test_the_same_ids_on_another_site_key_another_step(self) -> None:
         assert frozen_step_cache_key(ALICE, "plasmodb", [GENE_A]) != (
             frozen_step_cache_key(ALICE, "toxodb", [GENE_A])
+        )
+
+    def test_the_same_ids_of_another_record_type_key_another_step(self) -> None:
+        assert frozen_step_cache_key(ALICE, "orthomcl", [GENE_A]) != (
+            frozen_step_cache_key(ALICE, "orthomcl", [GENE_A], record_type="group")
         )
 
     def test_the_same_ids_in_another_account_key_another_step(self) -> None:

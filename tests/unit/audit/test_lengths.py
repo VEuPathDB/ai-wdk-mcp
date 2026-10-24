@@ -373,7 +373,7 @@ def test_a_short_gene_beside_a_paralog_in_its_organism_cannot_judge() -> None:
 
 def test_a_residual_group_is_not_used_as_orthology() -> None:
     rows = [
-        r.model_copy(update={"ortholog_group": "OGR7_0001234"})
+        r.model_copy(update={"ortholog_group": "OGR7r1_0001234"})
         for r in [*tight(), row("ME", "Plasmodium speciesM X", 200)]
     ]
 

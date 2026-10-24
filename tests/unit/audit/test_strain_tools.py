@@ -153,7 +153,7 @@ async def test_a_residual_group_pair_is_unqualified_and_reads_no_genome(
 ) -> None:
     site = short_strain(monkeypatch)
     site.rows = [
-        r.model_copy(update={"ortholog_group": "OGR7_0000001"}) for r in site.rows
+        r.model_copy(update={"ortholog_group": "OGR7r1_0000001"}) for r in site.rows
     ]
 
     result = await audit_strain_model("plasmodb", STRAIN, REFERENCE)

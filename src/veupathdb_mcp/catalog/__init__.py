@@ -30,6 +30,7 @@ from veupathdb_mcp.catalog.gene_records import (
     NoGeneRecordsError,
     require_gene_records,
 )
+from veupathdb_mcp.catalog.group_ids import is_group_id, is_residual
 from veupathdb_mcp.catalog.hidden_params import HiddenParameterError
 from veupathdb_mcp.catalog.models import (
     UNIVERSAL_SEARCHES,
@@ -99,10 +100,17 @@ from veupathdb_mcp.catalog.phyletic_builder import (
     PhyleticExpressionResult,
     write_phyletic_expression,
 )
+from veupathdb_mcp.catalog.phyletic_compare import (
+    AbsentGroupsCompareError,
+    ComparedGroups,
+    SideCounts,
+    compare_counts,
+)
 from veupathdb_mcp.catalog.phyletic_logic import (
     MAX_EXPRESSION_TERMS,
     MAX_EXPRESSION_WORK,
     PhyleticExpressionTooLargeError,
+    PhyleticExpressionTooSlowError,
 )
 from veupathdb_mcp.catalog.phyletic_pattern import (
     AllExcept,
@@ -176,11 +184,13 @@ __all__ = [
     "RADIO_OFF",
     "SUBSET_QUERY",
     "UNIVERSAL_SEARCHES",
+    "AbsentGroupsCompareError",
     "AllExcept",
     "AllOf",
     "AnyOf",
     "CodeSet",
     "CompareTerm",
+    "ComparedGroups",
     "CountTerm",
     "EachGenomeOf",
     "EachSpeciesOf",
@@ -203,6 +213,7 @@ __all__ = [
     "PhrasingMatch",
     "PhyleticExpressionResult",
     "PhyleticExpressionTooLargeError",
+    "PhyleticExpressionTooSlowError",
     "PhyleticListError",
     "PhyleticNoSelection",
     "PhyleticPattern",
@@ -218,6 +229,7 @@ __all__ = [
     "SearchParametersResult",
     "SearchQueryRejection",
     "SheetEntry",
+    "SideCounts",
     "UnknownExperimentError",
     "UnknownParameterError",
     "UnknownSearchError",
@@ -236,6 +248,7 @@ __all__ = [
     "build_param_specs_from_list",
     "build_sheet",
     "check_radio_pairs",
+    "compare_counts",
     "contrast_role_of",
     "dataset_assay",
     "dataset_organisms",
@@ -259,7 +272,9 @@ __all__ = [
     "inspect_search",
     "is_direction_param",
     "is_eda_backed",
+    "is_group_id",
     "is_phyletic_sheet",
+    "is_residual",
     "is_upload_sentinel_vocabulary",
     "list_eda_backed",
     "list_searches",

@@ -80,6 +80,7 @@ from veupathdb_mcp.wdk import (
     gene_set_steps,
     step_preview,
 )
+from veupathdb_mcp.wdk.gene_set_steps import IdListSearch
 from veupathdb_mcp.wdk.site_cache import SiteCache
 
 SITE = "plasmodb"
@@ -991,9 +992,10 @@ async def test_a_gene_set_step_call_answers_from_the_frozen_step_service(
         gene_ids: list[str],
         *,
         strategy_name: str,
+        record_type: str,
     ) -> int | None:
         del site_id
-        assert strategy_name == "gene set"
+        assert (strategy_name, record_type) == ("gene set", "transcript")
         seen.append(gene_ids)
         return 4242
 
@@ -1038,18 +1040,18 @@ async def test_two_bearers_with_the_same_genes_get_two_gene_set_steps(
     api = _FakeStepApi(600)
 
     async def params(
-        site_id: str, gene_ids: list[str]
+        site_id: str, gene_ids: list[str], search: IdListSearch
     ) -> tuple[str, dict[str, ParamValue], str]:
         del site_id, gene_ids
         return (
-            "GeneByLocusTag",
-            {"ds_gene_ids": InputDatasetValue(dataset_id="ds-1")},
-            "transcript",
+            search.search_name,
+            {search.param_name: InputDatasetValue(dataset_id="ds-1")},
+            search.record_type,
         )
 
     gene_set_steps._FROZEN_STEPS.clear()
     monkeypatch.setattr(gene_set_steps, "get_strategy_api", lambda site_id: api)
-    monkeypatch.setattr(gene_set_steps, "build_enrichment_params_from_gene_ids", params)
+    monkeypatch.setattr(gene_set_steps, "id_list_params", params)
 
     arguments = {"site_id": SITE, "gene_ids": ["PF3D7_1222600"]}
     async with _served(_user_credential("alice-bearer", "alice@example.org")) as client:

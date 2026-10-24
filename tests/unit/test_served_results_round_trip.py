@@ -2,7 +2,7 @@ import typing
 from collections.abc import Awaitable, Callable
 
 import pytest
-from pydantic import AliasChoices, BaseModel, TypeAdapter, ValidationError
+from pydantic import AliasChoices, BaseModel, JsonValue, TypeAdapter, ValidationError
 from pydantic.fields import FieldInfo
 from scripts.record_audit_fusion import CASES, FusionRecording
 from scripts.record_audit_strain import StrainWire
@@ -29,6 +29,13 @@ from tests._support.evidence_site import (
     NF54,
     EvidenceSite,
     gene_record,
+)
+from tests._support.group_cloud_site import (
+    CloudSite,
+    recorded,
+    recorded_tree,
+    serve_clouds,
+    total_of,
 )
 from tests._support.group_count_site import install
 from tests._support.intron_wire import Served, load_introns
@@ -75,6 +82,7 @@ from veupathdb_mcp.tools import (
     audit_tools,
     catalog_tools,
 )
+from veupathdb_mcp.wdk import phyletic_counts
 
 type Recorded = Callable[[pytest.MonkeyPatch], Awaitable[list[BaseModel]]]
 
@@ -302,7 +310,34 @@ async def phyletic_expression(monkeypatch: pytest.MonkeyPatch) -> list[BaseModel
             "condition": "more_than",
         }
     )
-    return [await catalog_tools.build_phyletic_expression("orthomcl", pattern)]
+    written = await catalog_tools.build_phyletic_expression("orthomcl", pattern)
+    return [written, await _computed_comparison(monkeypatch)]
+
+
+async def _computed_comparison(monkeypatch: pytest.MonkeyPatch) -> BaseModel:
+    tgon, pfal = frozenset({"tgon"}), frozenset({"pfal"})
+    clouds: dict[frozenset[str], JsonValue] = {
+        tgon: recorded("r02_tgon_groupcloud"),
+        pfal: recorded("r02_pfal_groupcloud"),
+    }
+    records = {tgon: total_of("r02_tgon_std"), pfal: total_of("r02_pfal_std")}
+    serve_clouds(monkeypatch, CloudSite(clouds, records, len), recorded_tree())
+
+    async def too_large(site_id: str, pattern: PhyleticPattern) -> bool:
+        del site_id, pattern
+        return True
+
+    monkeypatch.setattr(phyletic_counts, "least_expression_too_large", too_large)
+    pattern = TypeAdapter(PhyleticPattern).validate_python(
+        {
+            "kind": "compare",
+            "left": {"kind": "codes", "codes": ["tgon"]},
+            "right": {"kind": "codes", "codes": ["pfal"]},
+            "reading": "per_genome",
+            "condition": "more_than",
+        }
+    )
+    return await catalog_tools.build_phyletic_expression("orthomcl", pattern)
 
 
 RECORDED: dict[str, Recorded] = {

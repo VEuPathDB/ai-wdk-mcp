@@ -12,7 +12,7 @@ from veupathdb_mcp.catalog.taxonomy import ortho_taxonomy
 
 GROUP_RECORD_TYPE = "group"
 
-_COUNT_ONLY: JSONObject = {
+COUNT_ONLY: JSONObject = {
     "attributes": ["primary_key"],
     "pagination": {"offset": 0, "numRecords": 0},
 }
@@ -36,7 +36,7 @@ class GroupCountReports:
             GROUP_RECORD_TYPE,
             PHYLETIC_EXPRESSION_SEARCH,
             WDKSearchConfig(parameters={PHYLETIC_EXPRESSION_PARAM: expression}),
-            _COUNT_ONLY,
+            COUNT_ONLY,
         )
         return answer.meta.records_returned()
 

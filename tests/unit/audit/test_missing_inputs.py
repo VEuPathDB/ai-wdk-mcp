@@ -39,18 +39,18 @@ def in_gt1(name: str, group: str, start: int, sequence_id: str = CONTIG) -> Gene
 def arranged(monkeypatch: pytest.MonkeyPatch) -> MissingSite:
     site = MissingSite(monkeypatch)
     site.rows = [
-        gene("TGARI_257070", START - 6000, group="OG8_A"),
-        gene("TGARI_257080", START - 3000, group="OG8_B"),
+        gene("TGARI_257070", START - 6000, group="OG8_5000001"),
+        gene("TGARI_257080", START - 3000, group="OG8_5000002"),
         gene(EXAMPLE, START, group="OG8_0003979").model_copy(
             update={"end": START + 602}
         ),
-        gene("TGARI_257100", START + 3000, group="OG8_C"),
-        in_gt1("TGGT1_257070", "OG8_A", 4150000),
-        in_gt1("TGGT1_257080", "OG8_B", 4160000),
-        in_gt1("TGGT1_999999", "OG8_B", 100000, "TGGT1_chrX"),
-        in_gt1("TGGT1_257100", "OG8_C", 4176004),
-        in_gt1("TGGT1_257110", "OG8_D", 4179000),
-        in_gt1("TGGT1_257200", "OG8_E", 4190000),
+        gene("TGARI_257100", START + 3000, group="OG8_5000003"),
+        in_gt1("TGGT1_257070", "OG8_5000001", 4150000),
+        in_gt1("TGGT1_257080", "OG8_5000002", 4160000),
+        in_gt1("TGGT1_999999", "OG8_5000002", 100000, "TGGT1_chrX"),
+        in_gt1("TGGT1_257100", "OG8_5000003", 4176004),
+        in_gt1("TGGT1_257110", "OG8_5000004", 4179000),
+        in_gt1("TGGT1_257200", "OG8_5000005", 4190000),
     ]
     site.proteins = {EXAMPLE: PROTEIN}
     site.models = {
@@ -171,8 +171,8 @@ async def test_an_example_without_an_orthology_group_checks_no_member(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     site = arranged(monkeypatch)
-    site.rows[2] = site.rows[2].model_copy(update={"ortholog_group": "OGR8_0000001"})
-    site.rows.append(in_gt1("TGGT1_999998", "OGR8_0000001", 500000, "TGGT1_chrX"))
+    site.rows[2] = site.rows[2].model_copy(update={"ortholog_group": "OGR8r1_0000001"})
+    site.rows.append(in_gt1("TGGT1_999998", "OGR8r1_0000001", 500000, "TGGT1_chrX"))
 
     result = payload_or_error(await missing_inputs("toxodb", EXAMPLE, GT1))
 

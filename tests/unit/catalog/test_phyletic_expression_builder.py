@@ -26,6 +26,7 @@ from veupathdb_mcp.catalog import (
     CountTerm,
     PhyleticExpressionResult,
     PhyleticExpressionTooLargeError,
+    PhyleticExpressionTooSlowError,
     PhyleticPattern,
     phyletic_builder,
     write_phyletic_expression,
@@ -593,7 +594,7 @@ def test_the_predicted_time_is_a_second_guard() -> None:
     slow = SiteCost(fixed=4.0, per_character=0.003, longest=10**9)
     guard = Guard(TREE, slow, probes=2)
 
-    with pytest.raises(ValidationError) as refused:
+    with pytest.raises(PhyleticExpressionTooSlowError) as refused:
         guard.admit(140_000, 100)
 
     assert refused.value.detail == (

@@ -38,11 +38,11 @@ type Span = tuple[int, int | None]
 type Key = tuple[frozenset[str], bool]
 
 
+_TITLE = "The phyletic pattern cannot be written as a phyletic_expression"
+
+
 def refuse(detail: str) -> NoReturn:
-    raise ValidationError(
-        title="The phyletic pattern cannot be written as a phyletic_expression",
-        detail=detail,
-    )
+    raise ValidationError(title=_TITLE, detail=detail)
 
 
 _NARROW_WRITING = (
@@ -104,6 +104,11 @@ class PhyleticExpressionTooLargeError(ValidationError):
     @property
     def work(self) -> int:
         return self.terms * self.characters
+
+
+class PhyleticExpressionTooSlowError(ValidationError):
+    def __init__(self, detail: str) -> None:
+        super().__init__(title=_TITLE, detail=detail)
 
 
 def _past_cap(characters: int, terms: int) -> Limit | None:
@@ -519,13 +524,14 @@ class Guard:
         if characters <= self.characters:
             self._on_time(characters)
             return
-        refuse(
+        detail = (
             f"{_counted(characters, terms, partial=partial)}: the site was measured "
             f"to count {self.cost.per_character * 1e6:.0f} ms per 1,000 characters "
             f"plus {self.cost.fixed:.1f} s, so it needs about "
             f"{self.seconds(characters):.0f} s, past the {CALL_SECONDS} s call "
             f"budget. {_NARROW_WRITING}"
         )
+        raise PhyleticExpressionTooSlowError(detail)
 
 
 @dataclass(frozen=True, slots=True)
@@ -554,11 +560,7 @@ def _clause_units(options: list[list[tuple[str, ...]]]) -> int:
     )
 
 
-def render(dnf: Dnf, guard: Guard) -> tuple[str, int]:
-    if not dnf:
-        refuse("The pattern matches no group, so it has no expression.")
-    if dnf == TRUE:
-        refuse("The pattern holds for every group, so it states no constraint.")
+def admit_rendering(dnf: Dnf, guard: Guard) -> list[list[list[tuple[str, ...]]]]:
     options = [[guard.options(one) for one in clause] for clause in dnf]
     terms = sum(prod(len(held) for held in clause) for clause in options)
     guard.admit(
@@ -566,6 +568,15 @@ def render(dnf: Dnf, guard: Guard) -> tuple[str, int]:
         terms,
         atoms=sum(_clause_units(clause) for clause in options),
     )
+    return options
+
+
+def render(dnf: Dnf, guard: Guard) -> tuple[str, int]:
+    if not dnf:
+        refuse("The pattern matches no group, so it has no expression.")
+    if dnf == TRUE:
+        refuse("The pattern holds for every group, so it states no constraint.")
+    options = admit_rendering(dnf, guard)
     written = dict.fromkeys(
         " AND ".join(unit for option in picked for unit in option)
         for clause in options

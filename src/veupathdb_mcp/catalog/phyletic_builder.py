@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass
+from typing import Literal
 
 from pydantic import ConfigDict, Field
 from veupathdb.domain.parameters import (
@@ -15,8 +16,11 @@ from veupathdb_mcp.catalog.group_counts import GroupCountReports, site_taxonomy
 from veupathdb_mcp.catalog.phyletic_logic import (
     CALL_SECONDS,
     Guard,
+    PhyleticExpressionTooLargeError,
+    PhyleticExpressionTooSlowError,
     Probe,
     Writing,
+    admit_rendering,
     clock,
     refuse,
     render,
@@ -36,6 +40,7 @@ _CUT = " ..."
 class PhyleticExpressionResult(CamelModel):
     model_config = ConfigDict(frozen=True)
 
+    route: Literal["expression"] = "expression"
     site_id: str
     expression: str
     reading: str
@@ -117,9 +122,34 @@ def _admit_reads(probes: int, ceiling: int) -> None:
         )
 
 
-async def write_phyletic_expression(
-    site_id: str, pattern: PhyleticPattern
-) -> PhyleticExpressionResult:
+@dataclass(frozen=True, slots=True)
+class Probed:
+    probing: Guard
+    probes: tuple[Probe, ...]
+    maxima: Maxima
+    reads: int
+
+
+def least_expression(pattern: PhyleticPattern, guard: Guard) -> None:
+    least = dict.fromkeys(probed(pattern, guard), 0)
+    admit_rendering(pattern.dnf(Writing(guard.tree, least, guard)), guard)
+
+
+async def admit_least_expression(site_id: str, pattern: PhyleticPattern) -> None:
+    tree = await site_taxonomy(site_id)
+    guard = Guard(tree, site_cost(), 0)
+    await asyncio.to_thread(least_expression, pattern, guard)
+
+
+async def least_expression_too_large(site_id: str, pattern: PhyleticPattern) -> bool:
+    try:
+        await admit_least_expression(site_id, pattern)
+    except PhyleticExpressionTooLargeError, PhyleticExpressionTooSlowError:
+        return True
+    return False
+
+
+async def probe_pattern(site_id: str, pattern: PhyleticPattern) -> Probed:
     start = clock()
     tree = await site_taxonomy(site_id)
     cost = site_cost()
@@ -129,13 +159,26 @@ async def write_phyletic_expression(
     _admit_reads(len(probes), ceiling)
     reports = GroupCountReports(site_id, ceiling)
     maxima = {probe: await _largest(reports, probe) for probe in probes}
-    maximum_reads = reports.sent
-    built = await asyncio.to_thread(written, pattern, probing, maxima, maximum_reads)
+    return Probed(probing, tuple(probes), maxima, reports.sent)
+
+
+async def expression_of(
+    site_id: str, pattern: PhyleticPattern, found: Probed
+) -> PhyleticExpressionResult:
+    built = await asyncio.to_thread(
+        written, pattern, found.probing, found.maxima, found.reads
+    )
     return PhyleticExpressionResult(
         site_id=site_id,
         expression=built.text,
         reading=built.reading,
         groups=await GroupCountReports(site_id, 1).groups(built.text),
         codes=built.codes,
-        maximum_reads=maximum_reads,
+        maximum_reads=found.reads,
     )
+
+
+async def write_phyletic_expression(
+    site_id: str, pattern: PhyleticPattern
+) -> PhyleticExpressionResult:
+    return await expression_of(site_id, pattern, await probe_pattern(site_id, pattern))

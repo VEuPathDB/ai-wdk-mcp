@@ -25,6 +25,7 @@ from veupathdb_mcp.wdk.helpers import extract_record_ids
 from veupathdb_mcp.wdk.step_report_filters import step_view_filters
 
 SetOperation = Literal["intersect", "union", "minus"]
+type IdListRecordType = Literal["transcript", "group"]
 
 DEFAULT_GENE_SET_STRATEGY_NAME = "gene set"
 
@@ -47,6 +48,65 @@ class GeneSetWdkContext:
 # ---------------------------------------------------------------------------
 
 
+@dataclass(frozen=True, slots=True)
+class IdListSearch:
+    record_type: str
+    search_name: str
+    param_name: str
+    exact: bool
+
+    def distinct(self, ids: list[str]) -> list[str]:
+        if not self.exact:
+            return ids
+        first: dict[str, str] = {}
+        for one in ids:
+            first.setdefault(one.casefold(), one)
+        return list(first.values())
+
+
+ID_LIST_SEARCHES: dict[IdListRecordType, IdListSearch] = {
+    "transcript": IdListSearch(
+        "transcript", "GeneByLocusTag", "ds_gene_ids", exact=False
+    ),
+    "group": IdListSearch("group", "GroupsByNameList", "group_names", exact=True),
+}
+
+
+class IdListStepCountError(ValidationError):
+    def __init__(self, search_name: str, uploaded: int, counted: int) -> None:
+        self.search_name = search_name
+        self.uploaded = uploaded
+        self.counted = counted
+        super().__init__(
+            title="The step does not hold the ids uploaded",
+            detail=(
+                f"{uploaded} ids were uploaded to {search_name} and its step holds "
+                f"{counted} records, so the step is not the list. An id the site does "
+                "not hold adds no record, and an id of an earlier release adds each "
+                "current record it maps to."
+            ),
+        )
+
+
+async def id_list_params(
+    site_id: str, ids: list[str], search: IdListSearch
+) -> tuple[str, dict[str, ParamValue], str]:
+    record_type = await listed_record_type(
+        SearchContext(site_id, search.record_type, search.search_name)
+    )
+    api = get_strategy_api(site_id)
+    config = WDKDatasetConfigIdList(
+        source_type="idList",
+        source_content=WDKDatasetIdListContent(ids=ids),
+    )
+    dataset_id = await api.create_dataset(config)
+    return (
+        search.search_name,
+        {search.param_name: InputDatasetValue(dataset_id=str(dataset_id))},
+        record_type,
+    )
+
+
 async def build_enrichment_params_from_gene_ids(
     site_id: str,
     gene_ids: list[str],
@@ -55,20 +115,7 @@ async def build_enrichment_params_from_gene_ids(
 
     The dataset is temporary and is addressed by a locus-tag search.
     """
-    record_type = await listed_record_type(
-        SearchContext(site_id, "transcript", "GeneByLocusTag")
-    )
-    api = get_strategy_api(site_id)
-    config = WDKDatasetConfigIdList(
-        source_type="idList",
-        source_content=WDKDatasetIdListContent(ids=gene_ids),
-    )
-    dataset_id = await api.create_dataset(config)
-    return (
-        "GeneByLocusTag",
-        {"ds_gene_ids": InputDatasetValue(dataset_id=str(dataset_id))},
-        record_type,
-    )
+    return await id_list_params(site_id, gene_ids, ID_LIST_SEARCHES["transcript"])
 
 
 class StepTooLargeError(ValidationError):
@@ -120,14 +167,20 @@ def _calling_account() -> str:
     return hashlib.sha256(token.encode()).hexdigest()
 
 
-def frozen_step_cache_key(account: str, site_id: str, gene_ids: list[str]) -> str:
+def frozen_step_cache_key(
+    account: str,
+    site_id: str,
+    gene_ids: list[str],
+    *,
+    record_type: IdListRecordType = "transcript",
+) -> str:
     """Key a materialized step by the account that holds it and its membership.
 
     Membership is a set, so order does not make a new step. A step id names a
     step in one account on one site, so both are part of the key.
     """
     digest = hashlib.sha256("\n".join(sorted(set(gene_ids))).encode()).hexdigest()
-    return f"{account}:{site_id}:{digest}"
+    return f"{account}:{site_id}:{record_type}:{digest}"
 
 
 async def frozen_step_id(
@@ -135,6 +188,7 @@ async def frozen_step_id(
     gene_ids: list[str],
     *,
     strategy_name: str = DEFAULT_GENE_SET_STRATEGY_NAME,
+    record_type: IdListRecordType = "transcript",
 ) -> int | None:
     """A WDK step holding exactly ``gene_ids``, or ``None`` when there are none.
 
@@ -144,31 +198,38 @@ async def frozen_step_id(
     ``strategy_name`` names the internal strategy that holds the step. A call
     that carries no WDK credential is refused, because no account holds it.
     """
+    search = ID_LIST_SEARCHES[record_type]
+    gene_ids = search.distinct(gene_ids)
     if not gene_ids:
         return None
-    key = frozen_step_cache_key(_calling_account(), site_id, gene_ids)
+    key = frozen_step_cache_key(
+        _calling_account(), site_id, gene_ids, record_type=record_type
+    )
     cached: int | None = _FROZEN_STEPS.get(key)
     if cached is not None:
         return cached
 
-    search_name, params, record_type = await build_enrichment_params_from_gene_ids(
-        site_id, gene_ids
-    )
+    search_name, params, listed = await id_list_params(site_id, gene_ids, search)
     api = get_strategy_api(site_id)
     created = await api.create_step(
         NewStepSpec(
             search_name=search_name,
             search_config=WDKSearchConfig(parameters=encode_params(params)),
         ),
-        record_type,
+        listed,
     )
     # WDK refuses to run a step that belongs to no strategy, so the step is
     # held by an internal one that never appears in the user's workspace.
-    await api.create_strategy(
+    strategy = await api.create_strategy(
         step_tree=WDKStepTree(step_id=created.id),
         name=strategy_name,
         description=None,
         is_internal=True,
     )
+    if search.exact:
+        counted = await api.get_step_count(created.id)
+        if counted != len(gene_ids):
+            await api.delete_strategy(strategy.id)
+            raise IdListStepCountError(search_name, len(gene_ids), counted)
     _FROZEN_STEPS[key] = created.id
     return created.id
