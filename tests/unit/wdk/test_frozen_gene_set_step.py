@@ -114,11 +114,11 @@ class TestTheKeyIsTheAccountAndTheMembership:
 
 class TestTheStepIsHeldByAnInternalStrategy:
     async def test_an_empty_set_creates_nothing(self, api: _FakeStrategyAPI) -> None:
-        assert await frozen_step_id("plasmodb", [], "transcript") is None
+        assert await frozen_step_id("plasmodb", []) is None
         assert api.step_specs == []
 
     async def test_the_step_holds_the_stored_ids(self, api: _FakeStrategyAPI) -> None:
-        step_id = await frozen_step_id("plasmodb", [GENE_A, GENE_B], "transcript")
+        step_id = await frozen_step_id("plasmodb", [GENE_A, GENE_B])
 
         assert step_id == 501
         assert api.step_specs[0].search_name == "GeneByLocusTag"
@@ -130,7 +130,6 @@ class TestTheStepIsHeldByAnInternalStrategy:
         await frozen_step_id(
             "plasmodb",
             [GENE_A],
-            "transcript",
             strategy_name="Pathfinder gene set",
         )
 
@@ -139,7 +138,7 @@ class TestTheStepIsHeldByAnInternalStrategy:
     async def test_the_default_name_names_no_product(
         self, api: _FakeStrategyAPI
     ) -> None:
-        await frozen_step_id("plasmodb", [GENE_A], "transcript")
+        await frozen_step_id("plasmodb", [GENE_A])
 
         assert api.created_strategy_names == [DEFAULT_GENE_SET_STRATEGY_NAME]
         assert "pathfinder" not in DEFAULT_GENE_SET_STRATEGY_NAME.lower()
@@ -147,8 +146,8 @@ class TestTheStepIsHeldByAnInternalStrategy:
     async def test_the_same_caller_twice_reuses_the_step(
         self, api: _FakeStrategyAPI
     ) -> None:
-        first = await frozen_step_id("plasmodb", [GENE_A, GENE_B], "transcript")
-        second = await frozen_step_id("plasmodb", [GENE_B, GENE_A], "transcript")
+        first = await frozen_step_id("plasmodb", [GENE_A, GENE_B])
+        second = await frozen_step_id("plasmodb", [GENE_B, GENE_A])
 
         assert first == second
         assert len(api.step_specs) == 1
@@ -157,9 +156,9 @@ class TestTheStepIsHeldByAnInternalStrategy:
         self, api: _FakeStrategyAPI
     ) -> None:
         """A step id names a step in one account, so the key names the account."""
-        first = await frozen_step_id("plasmodb", [GENE_A, GENE_B], "transcript")
+        first = await frozen_step_id("plasmodb", [GENE_A, GENE_B])
         with _acting_as(BOB):
-            second = await frozen_step_id("plasmodb", [GENE_A, GENE_B], "transcript")
+            second = await frozen_step_id("plasmodb", [GENE_A, GENE_B])
 
         assert first != second
         assert len(api.step_specs) == 2
@@ -170,7 +169,7 @@ class TestTheStepIsHeldByAnInternalStrategy:
         reset = veupathdb_auth_token_ctx.set(None)
         try:
             with pytest.raises(WDKLoginRequiredError):
-                await frozen_step_id("plasmodb", [GENE_A], "transcript")
+                await frozen_step_id("plasmodb", [GENE_A])
         finally:
             veupathdb_auth_token_ctx.reset(reset)
 

@@ -3,6 +3,7 @@
 from typing import Any
 
 import pytest
+from tests._support.listed_searches import list_searches
 from veupathdb import JSONObject
 from veupathdb.domain.parameters import StringValue
 from veupathdb.domain.strategy import CombineOp, StrategyAst, StrategyStepNode
@@ -168,6 +169,13 @@ class _FakeStrategyAPI:
         self, strategy_id: int, user_id: str | None = None
     ) -> None:
         self.deleted_strategies.append(strategy_id)
+
+
+@pytest.fixture(autouse=True)
+def _catalog(monkeypatch: pytest.MonkeyPatch) -> None:
+    list_searches(
+        monkeypatch, {"transcript": ["GenesByMolecularWeight", "GenesBySignalPeptide"]}
+    )
 
 
 @pytest.fixture

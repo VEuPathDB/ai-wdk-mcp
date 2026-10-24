@@ -4,6 +4,7 @@ Conversion is pure except for the canonicalization pass, which reads each
 search's parameter specs from WDK.
 """
 
+from pydantic import BaseModel, ConfigDict
 from veupathdb import get_logger
 from veupathdb.domain.strategy import StrategyAst, StrategyStepNode, parse_op, walk
 from veupathdb.errors import DataParsingError
@@ -18,9 +19,16 @@ from veupathdb.wdk import (
 
 from veupathdb_mcp.wdk.param_decoding import decode_wire_parameters, load_search_spec
 
-__all__ = ["build_snapshot_from_wdk", "canonicalize_synced_parameters"]
+__all__ = ["WireStep", "build_snapshot_from_wdk", "canonicalize_synced_parameters"]
 
 logger = get_logger(__name__)
+
+
+class WireStep(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    record_class: str | None
+    parameters: dict[str, str]
 
 
 def _extract_operator(parameters: dict[str, str]) -> str | None:
@@ -55,7 +63,7 @@ def _resolve_expanded_reference(
 def _build_node(
     tree_node: WDKStepTree,
     steps: dict[str, WDKStep],
-    wire_by_step_id: dict[str, dict[str, str]],
+    wire_by_step_id: dict[str, WireStep],
 ) -> StrategyStepNode:
     """Build a step node tree from typed WDK models.
 
@@ -74,7 +82,7 @@ def _node_of(
     node: WDKStepTree,
     built: dict[int, StrategyStepNode],
     steps: dict[str, WDKStep],
-    wire_by_step_id: dict[str, dict[str, str]],
+    wire_by_step_id: dict[str, WireStep],
 ) -> StrategyStepNode:
     """The AST node for one wire node, over the inputs already built."""
     step = steps.get(str(node.step_id))
@@ -111,7 +119,9 @@ def _node_of(
             expanded_name=expanded_name,
             id=local_id,
         )
-    wire_by_step_id[local_id] = dict(wire_parameters)
+    wire_by_step_id[local_id] = WireStep(
+        record_class=step.record_class_name, parameters=dict(wire_parameters)
+    )
     return StrategyStepNode(
         search_name=step.search_name,
         primary_input=(
@@ -144,7 +154,7 @@ def _extract_wdk_metadata(
 
 def build_snapshot_from_wdk(
     wdk_strategy: WDKStrategyDetails,
-) -> tuple[StrategyAst, dict[str, dict[str, str]]]:
+) -> tuple[StrategyAst, dict[str, WireStep]]:
     """Convert a typed WDK strategy into a strategy AST plus a wire-params sidecar.
 
     Wire-form parameters are returned separately because they need a WDK
@@ -156,7 +166,7 @@ def build_snapshot_from_wdk(
         raise DataParsingError(msg)
     record_type = record_type.strip()
 
-    wire_by_step_id: dict[str, dict[str, str]] = {}
+    wire_by_step_id: dict[str, WireStep] = {}
     root = _build_node(wdk_strategy.step_tree, wdk_strategy.steps, wire_by_step_id)
 
     step_counts, wdk_step_ids = _extract_wdk_metadata(root, wdk_strategy.steps)
@@ -174,7 +184,7 @@ def build_snapshot_from_wdk(
 async def canonicalize_synced_parameters(
     payload: StrategyAst,
     api: StrategyAPI,
-    wire_by_step_id: dict[str, dict[str, str]],
+    wire_by_step_id: dict[str, WireStep],
 ) -> None:
     """Decode and canonicalize wire parameters against their WDK search specs.
 
@@ -186,11 +196,18 @@ async def canonicalize_synced_parameters(
         if step.infer_kind() == "combine":
             continue
         search_name = step.search_name
-        record_type = payload.record_type
-        wire_params = wire_by_step_id.get(step.id)
-
-        if not search_name or not record_type or not wire_params:
+        wire = wire_by_step_id.get(step.id)
+        if not search_name or wire is None or not wire.parameters:
             continue
+        record_type = wire.record_class
+        if record_type is None:
+            logger.warning(
+                "A WDK step names no record class",
+                step_id=step.id,
+                search_name=search_name,
+            )
+            continue
+        wire_params = wire.parameters
 
         cache_key = (record_type, search_name)
         if cache_key not in spec_cache:

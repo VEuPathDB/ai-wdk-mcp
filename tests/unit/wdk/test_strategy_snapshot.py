@@ -9,9 +9,10 @@ from __future__ import annotations
 import json
 
 import pytest
-from veupathdb.domain.parameters import MultiPickValue
+import structlog.testing
+from veupathdb.domain.parameters import MultiPickValue, StringValue
 from veupathdb.domain.strategy import CombineOp, walk
-from veupathdb.errors import DataParsingError
+from veupathdb.errors import DataParsingError, WDKError
 from veupathdb.wdk import (
     WDKSearchConfig,
     WDKSearchResponse,
@@ -21,6 +22,7 @@ from veupathdb.wdk import (
 )
 
 from veupathdb_mcp.wdk import (
+    WireStep,
     build_snapshot_from_wdk,
     canonicalize_synced_parameters,
     param_decoding,
@@ -41,6 +43,7 @@ def _step(
             "search_name": search_name,
             "search_config": WDKSearchConfig(parameters=parameters or {}),
             "custom_name": f"name-{step_id}",
+            "record_class_name": "transcript",
             **extra,
         }
     )
@@ -112,9 +115,11 @@ class TestTheAstBuiltFromWdk:
         _, wire = build_snapshot_from_wdk(_details())
 
         assert wire == {
-            "10": {"text_expression": "kinase"},
-            "20": {},
-            "30": {},
+            "10": WireStep(
+                record_class="transcript", parameters={"text_expression": "kinase"}
+            ),
+            "20": WireStep(record_class="transcript", parameters={}),
+            "30": WireStep(record_class="transcript", parameters={}),
         }
 
     def test_counts_and_wdk_ids_come_back_keyed_by_step_id(self) -> None:
@@ -208,3 +213,115 @@ async def test_a_step_whose_spec_is_unreachable_keeps_its_empty_parameters(
 
     leaf = next(step for step in walk(ast.root) if step.search_name == "GenesByText")
     assert leaf.parameters == {}
+
+
+def _snp_under_genes() -> WDKStrategyDetails:
+    return WDKStrategyDetails(
+        strategy_id=8,
+        name="genes near snps",
+        root_step_id=60,
+        record_class_name="transcript",
+        step_tree=WDKStepTree(step_id=60, primary_input=WDKStepTree(step_id=50)),
+        steps={
+            "50": _step(
+                50,
+                "SnpsByLocation",
+                {"organism": json.dumps(["Plasmodium falciparum 3D7"])},
+                record_class_name="snp",
+            ),
+            "60": _step(60, "GenesBySnps", {"snp_result": "50", "upstream": "1000"}),
+        },
+    )
+
+
+def _search_listed_under(record_type: str, name: str) -> WDKSearchResponse:
+    if name == "GenesBySnps":
+        parameters = [
+            {"name": "snp_result", "displayName": "SNPs", "type": "input-step"},
+            {"name": "upstream", "displayName": "Upstream", "type": "string"},
+        ]
+    else:
+        parameters = [
+            {
+                "name": "organism",
+                "displayName": "Organism",
+                "type": "multi-pick-vocabulary",
+                "vocabulary": [["Plasmodium falciparum 3D7"] * 2 + [None]],
+            }
+        ]
+    return WDKSearchResponse.model_validate(
+        {
+            "searchData": {"urlSegment": name, "parameters": parameters},
+            "validation": {"level": "SEMANTIC", "isValid": True},
+        }
+    )
+
+
+async def test_each_step_of_a_mixed_strategy_is_read_under_its_own_class(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    listed = {"SnpsByLocation": "snp", "GenesBySnps": "transcript"}
+    reads: list[tuple[str, str]] = []
+
+    async def _read(
+        client: object,
+        record_type: str,
+        search_name: str,
+        context: dict[str, str],
+    ) -> WDKSearchResponse:
+        del client, context
+        reads.append((record_type, search_name))
+        if listed[search_name] != record_type:
+            msg = f"{search_name} is not a {record_type} search"
+            raise WDKError(msg, status=404)
+        return _search_listed_under(record_type, search_name)
+
+    monkeypatch.setattr(param_decoding, "get_search_params_under_context", _read)
+
+    ast, wire = build_snapshot_from_wdk(_snp_under_genes())
+    await canonicalize_synced_parameters(ast, _FakeStrategyAPI(), wire)
+
+    assert reads == [("snp", "SnpsByLocation"), ("transcript", "GenesBySnps")]
+    leaf = next(step for step in walk(ast.root) if step.search_name == "SnpsByLocation")
+    assert leaf.parameters == {
+        "organism": MultiPickValue(values=["Plasmodium falciparum 3D7"])
+    }
+
+
+async def test_a_retired_leaf_keeps_its_wire_values_and_the_root_still_decodes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    reads: list[tuple[str, str]] = []
+
+    async def _read(
+        client: object,
+        record_type: str,
+        search_name: str,
+        context: dict[str, str],
+    ) -> WDKSearchResponse:
+        del client, context
+        reads.append((record_type, search_name))
+        return _search_listed_under(record_type, search_name)
+
+    monkeypatch.setattr(param_decoding, "get_search_params_under_context", _read)
+    details = _snp_under_genes()
+    retired = details.steps["50"].model_copy(update={"record_class_name": None})
+    details = details.model_copy(update={"steps": {**details.steps, "50": retired}})
+
+    with structlog.testing.capture_logs() as logs:
+        ast, wire = build_snapshot_from_wdk(details)
+        await canonicalize_synced_parameters(ast, _FakeStrategyAPI(), wire)
+
+    assert reads == [("transcript", "GenesBySnps")]
+    leaf = next(step for step in walk(ast.root) if step.search_name == "SnpsByLocation")
+    assert leaf.parameters == {}
+    assert wire["50"] == WireStep(
+        record_class=None,
+        parameters={"organism": json.dumps(["Plasmodium falciparum 3D7"])},
+    )
+    assert ast.root.parameters == {"upstream": StringValue(value="1000")}
+    assert [
+        (event["step_id"], event["search_name"])
+        for event in logs
+        if event["event"] == "A WDK step names no record class"
+    ] == [("50", "SnpsByLocation")]

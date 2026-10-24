@@ -10,6 +10,7 @@ from typing import Any
 
 import httpx
 import pytest
+from tests._support.listed_searches import list_searches
 from tests._support.recordings import TEST_ROOT
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.domain.parameters import MultiPickValue, SinglePickValue
@@ -88,6 +89,7 @@ def _recorded() -> list[dict[str, Any]]:
 
 @pytest.fixture
 def replay(monkeypatch: pytest.MonkeyPatch) -> Iterator[_Replay]:
+    list_searches(monkeypatch, {"transcript": ["GeneByLocusTag"]})
     answering = _Replay(_recorded())
     real = httpx.AsyncClient
 

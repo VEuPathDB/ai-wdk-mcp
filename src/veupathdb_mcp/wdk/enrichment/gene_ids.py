@@ -134,14 +134,13 @@ async def enrich_gene_ids_by_value(
     ids = _clean_gene_ids(gene_ids)
     types = list(enrichment_types or ALL_ENRICHMENT_ANALYSIS_TYPES)
 
-    search_name, parameters, record_type = await build_enrichment_params_from_gene_ids(
+    search_name, parameters, _ = await build_enrichment_params_from_gene_ids(
         site_id, ids
     )
     results, errors = await EnrichmentService(background).run_batch(
         site_id=site_id,
         analysis_types=types,
         search_name=search_name,
-        record_type=record_type,
         parameters=parameters,
     )
     if len(errors) == len(types):

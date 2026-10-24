@@ -13,7 +13,8 @@ from tests._support.control_run_wdk import (
     patch_step_run,
 )
 from tests._support.dataset_trap import DatasetCreatedError, DatasetTrap
-from tests._support.enrichment_wdk import GO_ROW, FakeStrategyAPI
+from tests._support.enrichment_wdk import GENE_SEARCHES, GO_ROW, FakeStrategyAPI
+from tests._support.listed_searches import list_searches
 from tests.unit.audit.test_no_chat_dataset import CHECKS
 from tests.unit.gene_lookup import test_a_lookup_reads_by_record
 from tests.unit.test_served_results_round_trip import RECORDED
@@ -115,6 +116,7 @@ def lookup_records(monkeypatch: pytest.MonkeyPatch) -> Run:
 def enrichment_site(monkeypatch: pytest.MonkeyPatch) -> FakeStrategyAPI:
     api = FakeStrategyAPI()
     api.rows["go-enrichment"] = [GO_ROW]
+    list_searches(monkeypatch, GENE_SEARCHES)
     monkeypatch.setattr(service, "get_strategy_api", lambda site_id: api)
     monkeypatch.setattr(gene_set_steps, "get_strategy_api", lambda site_id: api)
     gene_set_steps._FROZEN_STEPS.clear()

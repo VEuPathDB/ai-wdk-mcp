@@ -1,5 +1,81 @@
 # Knowledge log
 
+## 2026-10-24 - 0.2.0b43
+
+- Breaking for hosts. Three arguments are gone and one sidecar changes shape, and a
+  step's record class is read from the catalog or from WDK where each one stated it:
+  - `create_gene_set_step(site_id, gene_ids, strategy_name)`, the served tool, takes no
+    `record_type`. A host drops the argument from its calls.
+  - `frozen_step_id(site_id, gene_ids, *, strategy_name)` takes no `record_type`. A
+    host drops the third positional argument.
+  - `EnrichmentService.run_batch(..., search_name=..., parameters=...)` takes no
+    `record_type`. A host drops the keyword; the class of `search_name` is read.
+  - `build_snapshot_from_wdk` returns its wire sidecar as `dict[str, WireStep]`
+    (`veupathdb_mcp.wdk.WireStep`: `record_class: str | None`, `parameters`), where
+    it was `dict[str, dict[str, str]]`, and `canonicalize_synced_parameters` takes that
+    shape. A host reads a step's wire values as `wire[step_id].parameters`, and a host
+    that builds a sidecar of its own builds `WireStep(record_class=..., parameters=...)`
+    with the class WDK states for the step, or `None` where WDK states none.
+  - `count_plan_steps` and `compute_plan_step_counts` keep their arguments, and the
+    plan's `record_type` (a field of the client's `StrategyAst`) no longer decides
+    the class of any step. A host that states another class for a step's search gets
+    the step counted under its listed class.
+- Every step of a counted plan is read under the record class the catalog lists its
+  own search under (`assign_step_record_classes`, through
+  `make_record_type_resolver`), and a combine under the class of the steps it
+  consumes (`record_class_of`), on both count paths. Every step was read under the
+  plan's `record_type`, so on QA OrthoMCL a `GroupsByNameList` leaf under a
+  `sequence` root was read as
+  `GET /record-types/sequence/searches/GroupsByNameList?expandParams=true`, and the
+  site answered 404, once per variant of a `compare_search_variants` call. A lone
+  group leaf stated as `sequence` was sent to
+  `POST /record-types/sequence/searches/GroupsByNameList/reports/standard`, which the
+  site test (`test_a_plan_step_is_created_under_its_own_record_class.py`) answers 404,
+  so the step counted as null. A step whose search the catalog lists under no record
+  type is refused by name (`UnlistedSearchError`) before any request, and never falls
+  back to the plan's class.
+- A saved strategy's steps are decoded under the record class WDK states for each
+  step (`WDKStep.record_class_name`, carried on `WireStep`), not under the strategy's
+  class. A `GenesBySnps` (transcript) root over a `SnpsByLocation` (snp) leaf read
+  `[('transcript', 'SnpsByLocation'), ('transcript', 'GenesBySnps')]`; the leaf read
+  is a 404, so its parameters stayed undecoded. It now reads
+  `[('snp', 'SnpsByLocation'), ('transcript', 'GenesBySnps')]`
+  (`test_strategy_snapshot.py`).
+- A step names no class when its search is gone: WDK writes `recordClassName` as
+  `step.getRecordClass().map(RecordClass::getUrlSegment).orElse(null)`
+  (`WDK: Service/src/main/java/org/gusdb/wdk/service/formatter/StepFormatter.java`,
+  line 88). Such a step reads no spec and keeps its wire values in the sidecar, and is
+  logged by step id and search name ("A WDK step names no record class"); the rest of
+  the strategy decodes.
+- `resolve_wdk_context` is removed, with the helpers only it used
+  (`_extract_step_search_context`, `_decode_step_parameters`, `_count_strategy_steps`,
+  `resolve_root_step_id`). Nothing called it, here or in PathFinder, and it took a step
+  id without checking that the step belongs to the strategy it named. Breaking for any
+  host that imports it from `veupathdb_mcp.wdk` (PathFinder does not). `GeneSetWdkContext`
+  stays: PathFinder reads it.
+- An unreachable second copy of the database-URL check after the `return` of
+  `EmbeddingSettings._database_url_from_the_postgres_settings` is removed.
+- The gene-list step and the enrichment target read their class the same way:
+  `GeneByLocusTag` is created under the class the catalog lists it under, and a site
+  that lists none refuses before the dataset upload; `run_batch` reads the class of the
+  search it is given, where it fell back to `transcript`.
+- A bearer the transport gate cannot verify because the VEuPathDB identity provider
+  cannot be read is refused with a 503 `application/problem+json` body, titled
+  "Identity provider unavailable", with `Retry-After: 30`, by the gate's own
+  `on_error`. The verifier raises `IdentityProviderUnavailableError`, an
+  `AuthenticationError`, from the client's `ExternalServiceError`. The error escaped
+  the gate before: with `https://auth.veupathdb.org/jwks` unreachable, a call carrying
+  a user bearer was logged as "Exception in ASGI application" and answered a raw 500.
+  The body names no URL and no client error text.
+- A bearer that is not a JWT (its header does not parse, `jwt.get_unverified_header`)
+  names nobody before the signing key is read, so it is refused with the 401 challenge
+  whether or not the identity provider answers. `pyjwt` is now a declared dependency.
+- Unchanged, and checked: a control run on a search reads both classes from the
+  catalog (`listed_record_type`); a control run on a built step takes the class WDK
+  reports for it and copies its tree server side (`duplicated-step-tree`); a
+  separation measures only searches the catalog lists under `transcript`
+  (`search_skip`), so its leaves and combines are created under that class.
+
 ## 2026-10-24 - 0.2.0b42
 
 - An AND product charges each pair it tries by its atoms, the left clause's plus the

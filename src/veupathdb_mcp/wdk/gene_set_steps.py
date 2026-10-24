@@ -5,27 +5,24 @@ from dataclasses import dataclass
 from typing import Literal
 
 from cachetools import LRUCache
-from veupathdb import get_logger
 from veupathdb.auth_context import veupathdb_auth_token_ctx
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import InputDatasetValue, ParamValue
-from veupathdb.errors import ValidationError, VEuPathDBError, WDKLoginRequiredError
+from veupathdb.errors import ValidationError, WDKLoginRequiredError
 from veupathdb.wdk import (
     NewStepSpec,
     StrategyAPI,
     WDKDatasetConfigIdList,
     WDKDatasetIdListContent,
     WDKSearchConfig,
-    WDKStep,
     WDKStepTree,
     encode_params,
     get_strategy_api,
 )
 
+from veupathdb_mcp.catalog.searches import listed_record_type
 from veupathdb_mcp.wdk.helpers import extract_record_ids
-from veupathdb_mcp.wdk.param_decoding import decode_wire_parameters, load_search_spec
 from veupathdb_mcp.wdk.step_report_filters import step_view_filters
-
-logger = get_logger(__name__)
 
 SetOperation = Literal["intersect", "union", "minus"]
 
@@ -58,6 +55,9 @@ async def build_enrichment_params_from_gene_ids(
 
     The dataset is temporary and is addressed by a locus-tag search.
     """
+    record_type = await listed_record_type(
+        SearchContext(site_id, "transcript", "GeneByLocusTag")
+    )
     api = get_strategy_api(site_id)
     config = WDKDatasetConfigIdList(
         source_type="idList",
@@ -67,14 +67,8 @@ async def build_enrichment_params_from_gene_ids(
     return (
         "GeneByLocusTag",
         {"ds_gene_ids": InputDatasetValue(dataset_id=str(dataset_id))},
-        "transcript",
+        record_type,
     )
-
-
-async def resolve_root_step_id(api: StrategyAPI, *, strategy_id: int) -> int:
-    """Get the root step ID from a WDK strategy."""
-    strategy = await api.get_strategy(strategy_id)
-    return strategy.root_step_id
 
 
 class StepTooLargeError(ValidationError):
@@ -114,118 +108,6 @@ async def fetch_gene_ids_from_step(
     return extract_record_ids(answer.records)
 
 
-# ---------------------------------------------------------------------------
-# WDK context resolution
-# ---------------------------------------------------------------------------
-
-
-async def resolve_wdk_context(
-    site_id: str,
-    gene_ids: list[str],
-    ctx: GeneSetWdkContext,
-    *,
-    limit: int,
-) -> tuple[list[str], GeneSetWdkContext, int]:
-    """Resolve gene IDs and search context from a WDK strategy."""
-    _require_a_positive_limit(limit)
-    wdk_strategy_id = ctx.wdk_strategy_id
-    if gene_ids or wdk_strategy_id is None:
-        return gene_ids, ctx, 1
-
-    api = get_strategy_api(site_id)
-    search_name = ctx.search_name
-    record_type = ctx.record_type
-    parameters = ctx.parameters
-
-    wdk_step_id = ctx.wdk_step_id
-    if wdk_step_id is None:
-        wdk_step_id = await resolve_root_step_id(api, strategy_id=wdk_strategy_id)
-    gene_ids = await fetch_gene_ids_from_step(api, step_id=wdk_step_id, limit=limit)
-    logger.info(
-        "Fetched gene IDs from WDK step", step_id=wdk_step_id, gene_count=len(gene_ids)
-    )
-    step_count = await _count_strategy_steps(api, wdk_strategy_id)
-
-    if search_name is None and step_count == 1:
-        (
-            search_name,
-            record_type,
-            parameters,
-        ) = await _extract_step_search_context(api, wdk_step_id, record_type)
-
-    updated = GeneSetWdkContext(
-        wdk_strategy_id=wdk_strategy_id,
-        wdk_step_id=wdk_step_id,
-        search_name=search_name,
-        record_type=record_type,
-        parameters=parameters,
-    )
-    return gene_ids, updated, step_count
-
-
-async def _count_strategy_steps(api: StrategyAPI, strategy_id: int) -> int:
-    try:
-        strategy = await api.get_strategy(strategy_id)
-        return len(strategy.steps)
-    except VEuPathDBError as exc:
-        logger.warning(
-            "Failed to count strategy steps",
-            strategy_id=strategy_id,
-            error=str(exc),
-        )
-        return 1
-
-
-async def _decode_step_parameters(
-    api: StrategyAPI,
-    step: WDKStep,
-    search_name: str | None,
-    record_type: str | None,
-) -> dict[str, ParamValue] | None:
-    """The typed values a leaf step sets, or None when its spec is unreadable."""
-    if search_name is None or not record_type:
-        return None
-    wire = dict(step.search_config.parameters)
-    search = await load_search_spec(api, record_type, search_name, wire)
-    if search is None:
-        return None
-    return decode_wire_parameters(search, wire)
-
-
-async def _extract_step_search_context(
-    api: StrategyAPI,
-    step_id: int,
-    record_type: str | None,
-) -> tuple[str | None, str | None, dict[str, ParamValue] | None]:
-    """The search name, the record type and the typed parameters of a WDK step.
-
-    Parameters are None when the search spec cannot be read, and an empty
-    mapping when the step sets no parameter the search declares.
-    """
-    try:
-        step = await api.find_step(step_id)
-    except VEuPathDBError as exc:
-        logger.warning(
-            "Failed to extract search context from step",
-            step_id=step_id,
-            error=str(exc),
-        )
-        return None, record_type, None
-
-    sn = step.search_name
-    search_name = None if sn.startswith("boolean_question_") else sn
-    # WDK names a step's record class by its url segment.
-    record_type = record_type or step.record_class_name
-    parameters = await _decode_step_parameters(api, step, search_name, record_type)
-    logger.info(
-        "Extracted search context from WDK step",
-        step_id=step_id,
-        search_name=search_name,
-        parameter_count=None if parameters is None else len(parameters),
-    )
-    return search_name, record_type, parameters
-
-
 def _calling_account() -> str:
     """The account a WDK write of this call lands in, named without its token.
 
@@ -251,7 +133,6 @@ def frozen_step_cache_key(account: str, site_id: str, gene_ids: list[str]) -> st
 async def frozen_step_id(
     site_id: str,
     gene_ids: list[str],
-    record_type: str,
     *,
     strategy_name: str = DEFAULT_GENE_SET_STRATEGY_NAME,
 ) -> int | None:
@@ -270,18 +151,16 @@ async def frozen_step_id(
     if cached is not None:
         return cached
 
-    (
-        search_name,
-        params,
-        dataset_record_type,
-    ) = await build_enrichment_params_from_gene_ids(site_id, gene_ids)
+    search_name, params, record_type = await build_enrichment_params_from_gene_ids(
+        site_id, gene_ids
+    )
     api = get_strategy_api(site_id)
     created = await api.create_step(
         NewStepSpec(
             search_name=search_name,
             search_config=WDKSearchConfig(parameters=encode_params(params)),
         ),
-        record_type or dataset_record_type,
+        record_type,
     )
     # WDK refuses to run a step that belongs to no strategy, so the step is
     # held by an internal one that never appears in the user's workspace.

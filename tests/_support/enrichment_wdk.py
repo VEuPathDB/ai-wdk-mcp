@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+from tests._support.listed_searches import list_searches
 from veupathdb import JSONObject
 from veupathdb.domain.strategy import StepValidation
 from veupathdb.errors import WDKError
@@ -20,6 +21,8 @@ from veupathdb.wdk import (
 
 from veupathdb_mcp.wdk import gene_set_steps
 from veupathdb_mcp.wdk.enrichment import service
+
+GENE_SEARCHES = {"transcript": ["GeneByLocusTag"]}
 
 _ANALYSIS_FAILED = "the analysis plugin refused"
 
@@ -158,6 +161,7 @@ class FakeStrategyAPI:
 def wdk(monkeypatch: pytest.MonkeyPatch) -> FakeStrategyAPI:
     """A site whose WDK calls this fake answers."""
     api = FakeStrategyAPI()
+    list_searches(monkeypatch, GENE_SEARCHES)
     monkeypatch.setattr(service, "get_strategy_api", lambda site_id: api)
     monkeypatch.setattr(gene_set_steps, "get_strategy_api", lambda site_id: api)
     return api

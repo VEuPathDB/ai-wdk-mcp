@@ -71,27 +71,6 @@ class EmbeddingSettings(BaseSettings):
             raise ValueError(msg)
         self.database_url = built
         return self
-        if self.database_url:
-            msg = "Set DATABASE_URL or POSTGRES_PASSWORD, not both."
-            raise ValueError(msg)
-        parts = {
-            "POSTGRES_HOST": self.postgres_host,
-            "POSTGRES_USER": self.postgres_user,
-            "POSTGRES_DB": self.postgres_db,
-        }
-        missing = [name for name, value in parts.items() if not value.strip()]
-        if missing:
-            msg = f"POSTGRES_PASSWORD is set and {', '.join(missing)} is not set."
-            raise ValueError(msg)
-        self.database_url = URL.create(
-            "postgresql+asyncpg",
-            username=self.postgres_user,
-            password=self.postgres_password,
-            host=self.postgres_host,
-            port=self.postgres_port,
-            database=self.postgres_db,
-        ).render_as_string(hide_password=False)
-        return self
 
 
 @lru_cache

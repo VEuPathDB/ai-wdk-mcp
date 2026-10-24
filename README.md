@@ -59,7 +59,7 @@ module name:
 
 | module | what it publishes |
 | --- | --- |
-| `veupathdb_mcp.auth` | the credential modes, the verified credential, the bearer verifier and the WDK identity |
+| `veupathdb_mcp.auth` | the credential modes, the verified credential, the bearer verifier, the refusal an unreachable identity provider earns and the WDK identity |
 | `veupathdb_mcp.metadata` | the resource name, the MCP path, the RFC 9728 routes and the transport gate |
 | `veupathdb_mcp.migrate` | the version table, the tables this distribution owns, the autogenerate filter and the upgrade |
 | `veupathdb_mcp.server` | the WDK server name, its tool list, its guards and its builder |

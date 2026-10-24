@@ -8,8 +8,10 @@ from enum import StrEnum
 
 from mcp.server.auth.provider import AccessToken
 from pydantic import ConfigDict, Field
+from starlette.authentication import AuthenticationError
 from veupathdb import get_logger
 from veupathdb.auth_context import veupathdb_auth_token_ctx
+from veupathdb.errors import ExternalServiceError
 
 from veupathdb_mcp.identity import resolve_oauth_subject
 from veupathdb_mcp.settings import get_mcp_settings
@@ -18,12 +20,19 @@ logger = get_logger(__name__)
 
 __all__ = [
     "CredentialMode",
+    "IdentityProviderUnavailableError",
     "McpCredential",
     "VEuPathDBTokenVerifier",
     "wdk_identity",
 ]
 
 _NO_REGISTERED_USER = "the bearer names no registered VEuPathDB user"
+_NO_IDENTITY_PROVIDER = "the VEuPathDB identity provider cannot be reached"
+
+
+class IdentityProviderUnavailableError(AuthenticationError):
+    def __init__(self) -> None:
+        super().__init__("The VEuPathDB identity provider cannot be reached.")
 
 
 class CredentialMode(StrEnum):
@@ -76,7 +85,11 @@ class VEuPathDBTokenVerifier:
                 mode=CredentialMode.SERVICE,
             )
 
-        subject = await resolve_oauth_subject(presented)
+        try:
+            subject = await resolve_oauth_subject(presented)
+        except ExternalServiceError as exc:
+            _refuse(CredentialMode.VEUPATHDB_USER, _NO_IDENTITY_PROVIDER)
+            raise IdentityProviderUnavailableError from exc
         if subject is None:
             _refuse(CredentialMode.VEUPATHDB_USER, _NO_REGISTERED_USER)
             return None

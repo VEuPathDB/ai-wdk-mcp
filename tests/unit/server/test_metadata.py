@@ -3,14 +3,18 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
+from http import HTTPStatus
 
 import httpx
 import pytest
+import structlog.testing
 from mcp.shared.auth import ProtectedResourceMetadata
 from starlette.applications import Starlette
 from starlette.responses import PlainTextResponse
 from starlette.routing import Route
 from starlette.types import Receive, Scope, Send
+from tests._support.bearers import jwt_shaped
+from veupathdb.errors import ExternalServiceError
 from veupathdb.wdk import VEuPathDBClaims
 
 from veupathdb_mcp import identity
@@ -25,6 +29,7 @@ BASE_URL = "https://wdk-mcp.test"
 MCP_PATH = "/mcp"
 METADATA_PATH = "/.well-known/oauth-protected-resource/mcp"
 SERVICE_SECRET = "wdk-mcp-service-secret-0123456789ab"
+REGISTERED = jwt_shaped("researcher@example.org")
 
 
 @pytest.fixture
@@ -152,7 +157,7 @@ async def test_a_registered_bearer_reaches_the_call_as_the_user(
 
     async with _client() as client:
         response = await client.post(
-            MCP_PATH, json={}, headers={"Authorization": "Bearer a-registered-token"}
+            MCP_PATH, json={}, headers={"Authorization": f"Bearer {REGISTERED}"}
         )
 
     assert response.status_code == 200
@@ -166,3 +171,69 @@ async def test_the_document_is_unreachable_without_a_public_base_url(
 
     with pytest.raises(ValueError, match="WDK_MCP_BASE_URL"):
         protected_resource_routes()
+
+
+async def test_an_unreadable_identity_provider_is_refused_as_unavailable(
+    mcp_deployment: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    del mcp_deployment
+
+    async def unreachable(token: str, oauth_url: str) -> VEuPathDBClaims | None:
+        del token, oauth_url
+        raise ExternalServiceError(
+            service="VEuPathDB identity provider",
+            detail=(
+                "VEuPathDB identity provider at https://oauth.test/jwks "
+                "cannot be read: All connection attempts failed"
+            ),
+            status=HTTPStatus.SERVICE_UNAVAILABLE,
+        )
+
+    monkeypatch.setattr(identity, "validate_oauth_token", unreachable)
+
+    with structlog.testing.capture_logs() as logs:
+        async with _client() as client:
+            response = await client.post(
+                MCP_PATH, json={}, headers={"Authorization": f"Bearer {REGISTERED}"}
+            )
+
+    assert response.status_code == 503
+    assert response.headers["content-type"] == "application/problem+json"
+    assert response.headers["retry-after"] == "30"
+    assert response.json() == {
+        "type": "about:blank",
+        "title": "Identity provider unavailable",
+        "status": 503,
+        "detail": "The VEuPathDB identity provider cannot be reached.",
+    }
+    assert [event for event in logs if event["log_level"] == "error"] == []
+
+
+async def test_a_malformed_bearer_is_refused_with_the_challenge_while_the_provider_is_down(
+    mcp_deployment: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    del mcp_deployment
+    read: list[str] = []
+
+    async def unreachable(token: str, oauth_url: str) -> VEuPathDBClaims | None:
+        del oauth_url
+        read.append(token)
+        raise ExternalServiceError(
+            service="VEuPathDB identity provider",
+            detail="the identity provider cannot be read",
+            status=HTTPStatus.SERVICE_UNAVAILABLE,
+        )
+
+    monkeypatch.setattr(identity, "validate_oauth_token", unreachable)
+
+    async with _client() as client:
+        response = await client.post(
+            MCP_PATH, json={}, headers={"Authorization": "Bearer not-a-jwt"}
+        )
+
+    assert response.status_code == 401
+    assert (
+        f'resource_metadata="{BASE_URL}{METADATA_PATH}"'
+        in (response.headers["www-authenticate"])
+    )
+    assert read == []

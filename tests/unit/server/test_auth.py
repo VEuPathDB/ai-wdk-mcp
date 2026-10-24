@@ -9,6 +9,7 @@ import httpx
 import pytest
 import respx
 import structlog.testing
+from tests._support.bearers import jwt_shaped
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.errors import ExternalServiceError, WDKLoginRequiredError
 from veupathdb.testing import HERMETIC_GUEST_TOKEN
@@ -17,14 +18,15 @@ from veupathdb.wdk import VEuPathDBClaims, VEuPathDBClient
 from veupathdb_mcp import identity
 from veupathdb_mcp.auth import (
     CredentialMode,
+    IdentityProviderUnavailableError,
     McpCredential,
     VEuPathDBTokenVerifier,
     wdk_identity,
 )
 
 SERVICE_SECRET = "wdk-mcp-service-secret-0123456789ab"
-USER_TOKEN = "a-registered-veupathdb-bearer-token"
-GUEST_TOKEN = "a-guest-veupathdb-bearer-token"
+USER_TOKEN = jwt_shaped("a-registered-veupathdb-user")
+GUEST_TOKEN = jwt_shaped("a-guest-veupathdb-user")
 SUBJECT = "researcher@example.org"
 _NO_SESSION = "the MCP auth path opened a database session"
 
@@ -153,7 +155,7 @@ async def test_an_unreadable_signing_key_is_not_a_refusal(
         ),
     )
 
-    with pytest.raises(ExternalServiceError):
+    with pytest.raises(IdentityProviderUnavailableError):
         await VEuPathDBTokenVerifier().verify_token(USER_TOKEN)
 
 
@@ -248,3 +250,20 @@ def test_the_credential_never_prints_its_token() -> None:
     )
 
     assert USER_TOKEN not in repr(credential)
+
+
+async def test_a_malformed_bearer_verifies_as_nothing_without_the_signing_key(
+    mcp_credentials: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    del mcp_credentials
+    verified = _stub_claims(
+        monkeypatch,
+        ExternalServiceError(
+            service="VEuPathDB identity provider",
+            detail="the identity provider cannot be read",
+            status=HTTPStatus.SERVICE_UNAVAILABLE,
+        ),
+    )
+
+    assert await VEuPathDBTokenVerifier().verify_token("not-a-jwt") is None
+    assert verified == []

@@ -326,6 +326,7 @@
   ],
   "veupathdb_mcp.auth": [
     "CredentialMode",
+    "IdentityProviderUnavailableError",
     "McpCredential",
     "VEuPathDBTokenVerifier",
     "wdk_identity"
@@ -706,6 +707,7 @@
     "StepCountResult",
     "StepTooLargeError",
     "TRANSCRIPTS_PER_GENE",
+    "WireStep",
     "build_enrichment_params_from_gene_ids",
     "build_snapshot_from_wdk",
     "canonicalize_synced_parameters",
@@ -724,7 +726,6 @@
     "get_gene_expression_summary",
     "group_genome_counts",
     "order_primary_key",
-    "resolve_wdk_context",
     "step_download_url",
     "step_sample_records",
     "step_view_filters",

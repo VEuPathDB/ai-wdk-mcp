@@ -360,7 +360,6 @@ async def count_plan_steps(
 async def create_gene_set_step(
     site_id: str,
     gene_ids: list[str],
-    record_type: str = "transcript",
     strategy_name: str = DEFAULT_GENE_SET_STRATEGY_NAME,
 ) -> int | None:
     """Materialize gene identifiers as a WDK step that holds exactly them.
@@ -369,16 +368,15 @@ async def create_gene_set_step(
     Each call that creates a step writes one dataset into the calling user's WDK
     account, which WDK cannot delete. A list this server already made a step of
     for the user reuses that step. An empty list creates nothing and answers null.
+    A site that lists no gene-list search refuses the call before it writes.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
         gene_ids: The genes the step holds, for example ['PF3D7_1222600'].
-        record_type: Record type. Gene searches are 'transcript'.
         strategy_name: Name of the internal strategy that holds the step.
     """
     return await frozen_step_id(
         site_id,
         normalize_gene_ids(gene_ids),
-        record_type,
         strategy_name=strategy_name,
     )

@@ -986,11 +986,10 @@ async def test_a_gene_set_step_call_answers_from_the_frozen_step_service(
     async def frozen(
         site_id: str,
         gene_ids: list[str],
-        record_type: str,
         *,
         strategy_name: str,
     ) -> int | None:
-        del site_id, record_type
+        del site_id
         assert strategy_name == "gene set"
         seen.append(gene_ids)
         return 4242

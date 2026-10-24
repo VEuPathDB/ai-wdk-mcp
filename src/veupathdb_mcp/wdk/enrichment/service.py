@@ -4,6 +4,7 @@ endpoints, gene set endpoints, and AI tools alike."""
 import asyncio
 
 from veupathdb import JSONObject, get_logger
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import ParamValue
 from veupathdb.errors import ValidationError, VEuPathDBError, VEuPathDBErrorCode
 from veupathdb.wdk import (
@@ -16,6 +17,7 @@ from veupathdb.wdk import (
     get_strategy_api,
 )
 
+from veupathdb_mcp.catalog.searches import listed_record_type
 from veupathdb_mcp.controls.control_helpers import delete_temp_strategy
 from veupathdb_mcp.wdk.enrichment.parser import (
     ANALYSIS_TYPE_MAP,
@@ -71,7 +73,6 @@ class EnrichmentService:
         analysis_types: list[EnrichmentAnalysisType],
         step_id: int | None = None,
         search_name: str | None = None,
-        record_type: str | None = None,
         parameters: dict[str, ParamValue] | None = None,
     ) -> tuple[list[EnrichmentResult], list[str]]:
         """Run multiple enrichment analyses concurrently on a shared step.
@@ -94,6 +95,9 @@ class EnrichmentService:
             msg = "Either step_id or search_name+parameters required"
             raise ValidationError(detail=msg)
 
+        record_type = await listed_record_type(
+            SearchContext(site_id, "transcript", search_name)
+        )
         api = get_strategy_api(site_id)
         step = await api.create_step(
             NewStepSpec(
@@ -101,7 +105,7 @@ class EnrichmentService:
                 search_config=WDKSearchConfig(parameters=encode_params(parameters)),
                 custom_name="Enrichment target",
             ),
-            record_type=record_type or "transcript",
+            record_type=record_type,
         )
         shared_step_id = step.id
         root = WDKStepTree(step_id=shared_step_id)

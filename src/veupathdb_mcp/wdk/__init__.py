@@ -13,7 +13,6 @@ from veupathdb_mcp.wdk.gene_set_steps import (
     build_enrichment_params_from_gene_ids,
     fetch_gene_ids_from_step,
     frozen_step_id,
-    resolve_wdk_context,
 )
 from veupathdb_mcp.wdk.group_genomes import (
     GROUP_GENOME_TABLE,
@@ -42,6 +41,7 @@ from veupathdb_mcp.wdk.step_report_filters import step_view_filters, view_filter
 from veupathdb_mcp.wdk.step_results_models import SampleRecordsResult
 from veupathdb_mcp.wdk.step_size import StepCountResult, get_estimated_size_for_site
 from veupathdb_mcp.wdk.strategy_snapshot import (
+    WireStep,
     build_snapshot_from_wdk,
     canonicalize_synced_parameters,
 )
@@ -59,6 +59,7 @@ __all__ = [
     "SetOperation",
     "StepCountResult",
     "StepTooLargeError",
+    "WireStep",
     "build_enrichment_params_from_gene_ids",
     "build_snapshot_from_wdk",
     "canonicalize_synced_parameters",
@@ -77,7 +78,6 @@ __all__ = [
     "get_gene_expression_summary",
     "group_genome_counts",
     "order_primary_key",
-    "resolve_wdk_context",
     "step_download_url",
     "step_sample_records",
     "step_view_filters",

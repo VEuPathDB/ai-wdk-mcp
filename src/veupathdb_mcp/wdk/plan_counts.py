@@ -13,8 +13,11 @@ from veupathdb.domain.strategy import (
     DEFAULT_COMBINE_OPERATOR,
     CombineOp,
     StrategyAst,
+    StrategyStep,
     StrategyStepNode,
+    flatten_tree,
     leaves,
+    record_class_of,
     walk,
 )
 from veupathdb.errors import VEuPathDBError, VEuPathDBErrorCode
@@ -30,6 +33,11 @@ from veupathdb.wdk import (
     get_wdk_client,
 )
 
+from veupathdb_mcp.catalog.searches import (
+    UnlistedSearchError,
+    assign_step_record_classes,
+    make_record_type_resolver,
+)
 from veupathdb_mcp.controls.control_helpers import delete_temp_strategy
 
 __all__ = [
@@ -60,13 +68,17 @@ async def compute_plan_step_counts(
     ``strategy_name`` names the temporary strategy a non-leaf-only plan needs.
     A step whose count cannot be read is reported as ``None``.
     """
+    all_steps = walk(payload.root)
+    record_classes = await _step_record_classes(site_id, all_steps, payload.root)
     if is_leaf_only_plan(payload.root):
-        return await _compute_leaf_counts_parallel(
-            site_id, payload.root, payload.record_type
-        )
-    api = get_strategy_api(site_id)
+        return await _compute_leaf_counts_parallel(site_id, all_steps, record_classes)
     return await _compute_counts_via_temp_strategy(
-        api, payload, site_id, strategy_name=strategy_name
+        get_strategy_api(site_id),
+        payload.root,
+        all_steps,
+        record_classes,
+        site_id,
+        strategy_name=strategy_name,
     )
 
 
@@ -148,15 +160,14 @@ async def count_search_answer(
 
 async def _compute_leaf_counts_parallel(
     site_id: str,
-    root: StrategyStepNode,
-    record_type: str,
+    all_steps: list[StrategyStepNode],
+    record_classes: dict[str, str],
 ) -> dict[str, int | None]:
     """Count every leaf step at once with anonymous reports."""
-    all_steps = walk(root)
     tasks = [
         count_search_answer(
             site_id,
-            record_type,
+            record_classes[step.id],
             step.search_name,
             step.parameters,
         )
@@ -274,19 +285,41 @@ async def _read_counts_from_strategy(
         logger.warning("Failed to read counts from strategy payload", error=str(e))
 
 
+def _listed_record_class(
+    site_id: str, steps: dict[str, StrategyStep], step_id: str
+) -> str:
+    found = record_class_of(step_id, steps)
+    if found is None:
+        raise UnlistedSearchError(site_id, steps[step_id].search_name or step_id)
+    return found
+
+
+async def _step_record_classes(
+    site_id: str, all_steps: list[StrategyStepNode], root: StrategyStepNode
+) -> dict[str, str]:
+    steps = flatten_tree(root)
+    await assign_step_record_classes(steps, await make_record_type_resolver(site_id))
+    return {
+        step.id: _listed_record_class(site_id, steps, step.id) for step in all_steps
+    }
+
+
 async def _compute_counts_via_temp_strategy(
     api: StrategyAPI,
-    payload: StrategyAst,
+    root: StrategyStepNode,
+    all_steps: list[StrategyStepNode],
+    record_classes: dict[str, str],
     site_id: str,
     *,
     strategy_name: str,
 ) -> dict[str, int | None]:
     """Count a plan through a temporary strategy, deleted once its counts are read."""
-    all_steps = walk(payload.root)
 
     wdk_step_ids: dict[str, int] = {}
     for step in all_steps:
-        wdk_id = await _create_wdk_step(api, step, payload.record_type, wdk_step_ids)
+        wdk_id = await _create_wdk_step(
+            api, step, record_classes[step.id], wdk_step_ids
+        )
         if wdk_id is not None:
             wdk_step_ids[step.id] = wdk_id
 
@@ -297,7 +330,7 @@ async def _compute_counts_via_temp_strategy(
         return counts
 
     try:
-        step_tree = build_wdk_step_tree(payload.root, wdk_step_ids)
+        step_tree = build_wdk_step_tree(root, wdk_step_ids)
     except MissingWDKStepIdError:
         return counts
 

@@ -10,8 +10,11 @@ from mcp.server.auth.routes import (
     build_resource_metadata_url,
     create_protected_resource_routes,
 )
-from pydantic import AnyHttpUrl
+from pydantic import AnyHttpUrl, BaseModel
+from starlette.authentication import AuthenticationError
 from starlette.middleware.authentication import AuthenticationMiddleware
+from starlette.requests import HTTPConnection
+from starlette.responses import JSONResponse, Response
 from starlette.routing import Route
 from starlette.types import ASGIApp
 from veupathdb import get_veupathdb_settings
@@ -29,6 +32,7 @@ __all__ = [
 RESOURCE_NAME = "veupathdb-wdk-mcp"
 DEFAULT_MCP_PATH = "/mcp"
 
+_RETRY_AFTER_SECONDS = 30
 _NO_BASE_URL = "WDK_MCP_BASE_URL must name the public URL of veupathdb-wdk-mcp."
 
 
@@ -56,6 +60,28 @@ def protected_resource_routes(mcp_path: str = DEFAULT_MCP_PATH) -> list[Route]:
     )
 
 
+class _Problem(BaseModel):
+    type: str = "about:blank"
+    title: str
+    status: int
+    detail: str
+
+
+def _identity_provider_unavailable(
+    conn: HTTPConnection, exc: AuthenticationError
+) -> Response:
+    del conn
+    problem = _Problem(
+        title="Identity provider unavailable", status=503, detail=str(exc)
+    )
+    return JSONResponse(
+        problem.model_dump(),
+        status_code=problem.status,
+        headers={"Retry-After": str(_RETRY_AFTER_SECONDS)},
+        media_type="application/problem+json",
+    )
+
+
 def guarded(app: ASGIApp, mcp_path: str = DEFAULT_MCP_PATH) -> ASGIApp:
     """Refuse a call carrying no verified credential, with the 401 challenge.
 
@@ -65,4 +91,5 @@ def guarded(app: ASGIApp, mcp_path: str = DEFAULT_MCP_PATH) -> ASGIApp:
     return AuthenticationMiddleware(
         RequireAuthMiddleware(app, [], _resource_metadata_url(mcp_path)),
         backend=BearerAuthBackend(VEuPathDBTokenVerifier()),
+        on_error=_identity_provider_unavailable,
     )

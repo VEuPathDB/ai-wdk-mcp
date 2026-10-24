@@ -6,19 +6,11 @@ from typing import Any
 
 import pytest
 from tests._support.step_report_wire import ReportWire, wire_api
-from veupathdb.errors import ValidationError, WDKError
-from veupathdb.wdk import StrategyAPI, VEuPathDBClient
+from veupathdb.errors import ValidationError
 
-from veupathdb_mcp.wdk import (
-    GeneSetWdkContext,
-    StepTooLargeError,
-    fetch_gene_ids_from_step,
-    gene_set_steps,
-    resolve_wdk_context,
-)
+from veupathdb_mcp.wdk import StepTooLargeError, fetch_gene_ids_from_step
 
 STEP_ID = 9
-STRATEGY_ID = 70
 
 
 def _page(size: int) -> dict[str, Any]:
@@ -93,106 +85,3 @@ async def test_a_limit_below_one_sends_no_request(
     with pytest.raises(ValueError, match="at least 1"):
         await fetch_gene_ids_from_step(api, step_id=STEP_ID, limit=limit)
     assert wire.bodies == []
-
-
-class _StrategyWire(ReportWire):
-    def __init__(
-        self, pages: list[dict[str, Any]], refusal: WDKError | None = None
-    ) -> None:
-        super().__init__("sequence", pages)
-        self.paths: list[str] = []
-        self._refusal = refusal
-
-    async def get(self, path: str, **kwargs: object) -> Any:
-        self.paths.append(path)
-        if path.endswith(f"/strategies/{STRATEGY_ID}"):
-            if self._refusal is not None:
-                raise self._refusal
-            return {
-                "strategyId": STRATEGY_ID,
-                "name": "proteins",
-                "rootStepId": STEP_ID,
-                "stepTree": {"stepId": STEP_ID},
-                "steps": {},
-            }
-        return await super().get(path, **kwargs)
-
-    async def post(
-        self, path: str, json: dict[str, Any] | None = None, **kwargs: object
-    ) -> Any:
-        self.paths.append(path)
-        if self._refusal is not None:
-            raise self._refusal
-        return await super().post(path, json, **kwargs)
-
-
-def _strategy_wire(
-    monkeypatch: pytest.MonkeyPatch, size: int, refusal: WDKError | None = None
-) -> _StrategyWire:
-    client = VEuPathDBClient("https://example.invalid/service")
-    wire = _StrategyWire([_page(size)], refusal)
-    monkeypatch.setattr(client, "get", wire.get)
-    monkeypatch.setattr(client, "post", wire.post)
-    api = StrategyAPI(client, user_id="1")
-    monkeypatch.setattr(gene_set_steps, "get_strategy_api", lambda site_id: api)
-    return wire
-
-
-def _strategy_context() -> GeneSetWdkContext:
-    return GeneSetWdkContext(wdk_strategy_id=STRATEGY_ID, search_name="ByIdList")
-
-
-async def test_a_strategy_read_passes_the_callers_limit(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    wire = _strategy_wire(monkeypatch, 2)
-
-    ids, ctx, _ = await resolve_wdk_context(
-        "orthomcl", [], _strategy_context(), limit=5
-    )
-
-    assert (len(ids), ctx.wdk_step_id) == (2, STEP_ID)
-    assert _pagination(wire) == [{"offset": 0, "numRecords": 6}]
-
-
-async def test_a_strategy_past_the_limit_is_refused_not_read_as_empty(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    wire = _strategy_wire(monkeypatch, 3)
-
-    with pytest.raises(StepTooLargeError, match=r"step 9 holds more than 2 records"):
-        await resolve_wdk_context("orthomcl", [], _strategy_context(), limit=2)
-    assert _pagination(wire) == [{"offset": 0, "numRecords": 3}]
-
-
-async def test_given_ids_send_no_request(monkeypatch: pytest.MonkeyPatch) -> None:
-    wire = _strategy_wire(monkeypatch, 3)
-
-    ids, _, _ = await resolve_wdk_context(
-        "orthomcl", ["PF3D7_0100100"], _strategy_context(), limit=2
-    )
-
-    assert ids == ["PF3D7_0100100"]
-    assert wire.bodies == []
-
-
-@pytest.mark.parametrize("ids", [[], ["PF3D7_0100100"]])
-async def test_a_limit_below_one_is_refused_before_any_request(
-    monkeypatch: pytest.MonkeyPatch, ids: list[str]
-) -> None:
-    wire = _strategy_wire(monkeypatch, 1)
-
-    with pytest.raises(ValueError, match="at least 1"):
-        await resolve_wdk_context("orthomcl", ids, _strategy_context(), limit=0)
-    assert wire.paths == []
-
-
-@pytest.mark.parametrize("step_id", [None, STEP_ID])
-async def test_a_site_refusal_is_raised_not_read_as_an_empty_step(
-    monkeypatch: pytest.MonkeyPatch, step_id: int | None
-) -> None:
-    _strategy_wire(monkeypatch, 1, WDKError("step report failed", status=502))
-    ctx = GeneSetWdkContext(wdk_strategy_id=STRATEGY_ID, wdk_step_id=step_id)
-
-    with pytest.raises(WDKError, match="step report failed"):
-        await resolve_wdk_context("orthomcl", [], ctx, limit=5)

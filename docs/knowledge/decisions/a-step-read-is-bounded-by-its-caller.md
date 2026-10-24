@@ -8,15 +8,14 @@ status: stable
 
 # The choice
 
-`fetch_gene_ids_from_step` and `resolve_wdk_context` (`veupathdb_mcp/wdk/gene_set_steps.py`)
-take a required `limit`. A limit below 1 raises `ValueError` before any request. The report
+`fetch_gene_ids_from_step` (`veupathdb_mcp/wdk/gene_set_steps.py`) takes a required
+`limit`. A limit below 1 raises `ValueError` before any request. The report
 asks for `limit + 1` records, and a step that returns more than `limit` records raises
 `StepTooLargeError`, a `veupathdb.errors.ValidationError` (422) that keeps `step_id` and
 `limit`. The count is of records, not of the ids read from them, so a record without an id
 does not hide one record past the limit.
 
-`resolve_wdk_context` lets every site refusal out: the refusal, a failed root-step read and
-a failed report all raise. None of them reads as an empty step. The served
+A failed report raises; it never reads as an empty step. The served
 `get_step_gene_ids` passes `MAX_GENE_IDS` and turns the refusal into a tool error that names
 `get_step_download_url`.
 
@@ -50,6 +49,6 @@ empty, and nothing tells the researcher that the site refused.
 
 `tests/unit/wdk/test_a_step_read_is_bounded.py`: a step of 2 under a limit of 2 is read with
 `numRecords: 3`, a step of 3 under the same limit is refused even when one record has no id,
-a limit of 0 or -1 sends no request on either path, and a site refusal raises.
+and a limit of 0 or -1 sends no request.
 `tests/unit/gene_lookup/test_a_lookup_is_bounded.py`: two ids send `numRecords: 16`, and an
 answer of 17 records is an error result.
