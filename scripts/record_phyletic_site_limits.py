@@ -16,16 +16,20 @@ from veupathdb.domain.parameters import (
 from veupathdb.testing import NO_CREDENTIALS_REASON, registered_wdk_token
 from veupathdb.wdk import WDKAnswer, get_site_router
 
-from veupathdb_mcp.catalog import ortho_taxonomy
+from veupathdb_mcp.catalog import (
+    MAX_EXPRESSION_TERMS,
+    MAX_EXPRESSION_WORK,
+    ortho_taxonomy,
+)
 
 SITE = "orthomcl"
 FILE = "orthomcl_phyletic_site_limits.json"
 DATA = Path(__file__).resolve().parent.parent / "src/veupathdb_mcp/catalog/data"
 MAX_READS = 30
 MAX_SECONDS = 300.0
-LADDER_TERMS = (250, 500, 1000, 2000, 4000, 8000, 16000, 32000)
+LADDER_TERMS = (250, 500, 1000, MAX_EXPRESSION_TERMS)
 WIDE_TERMS = 250
-WIDE_CODES = (8, 32, 128, 512)
+WIDE_CODES = (8, 32, 128)
 REPORT_PATH = (
     f"/record-types/group/searches/{PHYLETIC_EXPRESSION_SEARCH}/reports/standard"
 )
@@ -98,7 +102,12 @@ def plan(tree: PhyleticTree, left: str, right: str) -> list[Planned]:
                 ),
             )
         )
-    return planned
+    return [
+        step
+        for step in planned
+        if step.terms <= MAX_EXPRESSION_TERMS
+        and step.terms * len(step.expression) <= MAX_EXPRESSION_WORK
+    ]
 
 
 async def measure(

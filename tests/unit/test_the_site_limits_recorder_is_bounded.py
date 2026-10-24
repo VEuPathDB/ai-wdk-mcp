@@ -7,6 +7,8 @@ from scripts.record_phyletic_site_limits import (
 )
 from tests._support.phyletic_truth import wide_tree
 
+from veupathdb_mcp.catalog import MAX_EXPRESSION_TERMS, MAX_EXPRESSION_WORK
+
 
 class _Clock:
     def __init__(self) -> None:
@@ -35,6 +37,15 @@ def test_the_plan_grows_by_terms_and_by_characters_within_the_read_bound() -> No
     assert ladders[0].expression.startswith("wz=0 AND wa>=1 OR wz=1 AND wa>=2")
     assert [step.series for step in wides] == ["wide-8", "wide-25"]
     assert len(wides[-1].expression) > len(wides[0].expression)
+
+
+def test_the_plan_sends_nothing_past_the_expression_caps() -> None:
+    planned = plan(wide_tree(26), "wa", "wz")
+
+    assert max(step.terms for step in planned) == MAX_EXPRESSION_TERMS
+    assert all(
+        step.terms * len(step.expression) <= MAX_EXPRESSION_WORK for step in planned
+    )
 
 
 async def test_a_refusal_ends_the_run_at_the_read_it_answered() -> None:

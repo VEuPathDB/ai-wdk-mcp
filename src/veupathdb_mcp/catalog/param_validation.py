@@ -38,6 +38,7 @@ from veupathdb_mcp.catalog.param_adapters import (
     adapt_param_from_wdk,
     adapt_param_specs_from_search,
 )
+from veupathdb_mcp.catalog.phyletic_logic import admit_expression
 from veupathdb_mcp.catalog.search_context import context_for_metadata_read
 from veupathdb_mcp.catalog.taxonomy import ortho_taxonomy
 from veupathdb_mcp.catalog.wdk_substitution import substituted_params
@@ -301,13 +302,12 @@ async def _checked_phyletic_expression(
     if text is None:
         return stated
     expression = PhyleticExpression.parse(text)
+    rendered = expression.render()
+    admit_expression(rendered)
     tree = await ortho_taxonomy(site_id)
     if tree is not None:
         check_expression(expression, tree)
-    return {
-        **stated,
-        PHYLETIC_EXPRESSION_PARAM: StringValue(value=expression.render()),
-    }
+    return {**stated, PHYLETIC_EXPRESSION_PARAM: StringValue(value=rendered)}
 
 
 async def validate_parameters(

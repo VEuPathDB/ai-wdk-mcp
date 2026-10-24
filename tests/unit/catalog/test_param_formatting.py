@@ -472,8 +472,12 @@ class TestTheExpressionSheetStatesTheGrammarAndNamesTheBuilder:
         )
         assert "list<=(N-k)T" not in help_text
 
-    def test_it_declares_no_length_limit(self) -> None:
-        assert "The parameter declares no length limit." in self._help()
+    def test_it_states_the_caps_the_parameter_does_not_declare(self) -> None:
+        assert (
+            "The parameter declares no length limit, but an expression past 2000 OR "
+            "terms, 150000 characters, or 160000000 for its OR terms times its "
+            "characters is refused before it is sent." in " ".join(self._help().split())
+        )
 
     def test_it_names_the_builder_and_no_recipe(self) -> None:
         help_text = " ".join(self._help().split())

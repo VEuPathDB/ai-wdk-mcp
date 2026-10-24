@@ -53,7 +53,7 @@ from veupathdb_mcp.catalog.param_dag import ResolvedParams, UnknownParameterErro
 from veupathdb_mcp.catalog.param_intent import ParamIntent
 from veupathdb_mcp.catalog.param_validation import ValidatedParams
 from veupathdb_mcp.catalog.phyletic_builder import READS_PER_PROBE
-from veupathdb_mcp.catalog.phyletic_pattern import MAX_DEPTH, MAX_TERMS
+from veupathdb_mcp.catalog.phyletic_pattern import MAX_DEPTH, MAX_PATTERN_TERMS
 from veupathdb_mcp.catalog.search_inspection import (
     SearchInspection,
     UnknownSearchError,
@@ -1417,11 +1417,12 @@ async def test_the_phyletic_builder_states_its_rounding_and_its_budget() -> None
     assert "one count read" in text
     assert "expression (the value for phyletic_expression; it can run to" in text
     assert "bind it by reference" in text
-    assert "longest expression the site was measured to answer" in text
+    assert "the most one search was measured to run" in text
+    assert "not a site failure" in text
     assert "pass it whole" not in text
     assert '["ALL"] is every genome' in text
     assert f"nests at most {MAX_DEPTH} levels deep" in text
-    assert f"holds at most {MAX_TERMS} terms, nested terms counted" in text
+    assert f"holds at most {MAX_PATTERN_TERMS} terms, nested terms counted" in text
     assert f"takes up to {READS_PER_PROBE} count reads" in text
     assert "refused before the first read" in text
     assert tool.meta is not None

@@ -214,10 +214,11 @@ async def build_phyletic_expression(
     sets and conditions with its OR terms and characters), groups (the groups it
     returns), codes (the codes it names) and maximumReads (count reads made for
     the largest counts a compare needs). A refusal from the site is returned as
-    the site wrote it. A pattern whose expression would be longer than the
-    longest expression the site was measured to answer, or whose build and count
-    would pass the call budget, is refused before the count with its OR terms and
-    characters; narrow the pattern and call again. Each distinct right side a
+    the site wrote it. A pattern whose expression would pass 2,000 OR terms,
+    150,000 characters, or 160,000,000 for its OR terms times its characters (the
+    most one search was measured to run), or whose build and count would pass the
+    call budget, is refused before the count with its OR terms and characters, as
+    a limit of this tool and not a site failure; narrow the pattern and call again. Each distinct right side a
     compare reads takes up to 25 count reads, and a pattern whose reads would
     pass the call budget is refused before the first read.
 

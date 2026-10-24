@@ -26,7 +26,7 @@ from veupathdb_mcp.catalog.phyletic_logic import (
     atom,
     either,
 )
-from veupathdb_mcp.catalog.phyletic_pattern import MAX_DEPTH, MAX_TERMS
+from veupathdb_mcp.catalog.phyletic_pattern import MAX_DEPTH, MAX_PATTERN_TERMS
 from veupathdb_mcp.catalog.site_cost import SiteCost, site_cost
 
 PATTERN: TypeAdapter[PhyleticPattern] = TypeAdapter(PhyleticPattern)
@@ -102,13 +102,13 @@ async def test_the_most_compare_sides_the_budget_allows_are_read(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     sides = CEILING // READS_PER_PROBE
-    site = install(monkeypatch, _below(130), wide_tree(26))
+    site = install(monkeypatch, _below(70), wide_tree(26))
 
     result = await write_phyletic_expression(
         "orthomcl", PATTERN.validate_python(_sides(sides))
     )
 
-    assert result.maximum_reads == len(site.sent) - 1 == sides * 9
+    assert result.maximum_reads == len(site.sent) - 1 == sides * 8
 
 
 async def test_the_read_ceiling_holds_when_the_prediction_is_wrong(
@@ -146,19 +146,23 @@ def test_a_pattern_nests_up_to_its_depth_bound() -> None:
 
 def test_a_pattern_holds_up_to_its_term_bound() -> None:
     PATTERN.validate_python(
-        {"kind": "any_of", "terms": [_absent("XA")] * (MAX_TERMS - 1)}
+        {"kind": "any_of", "terms": [_absent("XA")] * (MAX_PATTERN_TERMS - 1)}
     )
 
-    with pytest.raises(PydanticValidationError, match=f"more than {MAX_TERMS} terms"):
+    with pytest.raises(
+        PydanticValidationError, match=f"more than {MAX_PATTERN_TERMS} terms"
+    ):
         PATTERN.validate_python(
-            {"kind": "any_of", "terms": [_absent("XA")] * MAX_TERMS}
+            {"kind": "any_of", "terms": [_absent("XA")] * MAX_PATTERN_TERMS}
         )
 
 
 def test_the_term_bound_counts_every_nested_term() -> None:
-    half = {"kind": "any_of", "terms": [_absent("XA")] * (MAX_TERMS // 2)}
+    half = {"kind": "any_of", "terms": [_absent("XA")] * (MAX_PATTERN_TERMS // 2)}
 
-    with pytest.raises(PydanticValidationError, match=f"more than {MAX_TERMS} terms"):
+    with pytest.raises(
+        PydanticValidationError, match=f"more than {MAX_PATTERN_TERMS} terms"
+    ):
         PATTERN.validate_python({"kind": "all_of", "terms": [half, half]})
 
 
@@ -175,7 +179,7 @@ class _Counting(Guard):
 
 
 def test_either_refuses_at_the_first_clause_past_the_cap() -> None:
-    guard = _Counting(SiteCost(fixed=0.0, per_character=1e-9, longest=600))
+    guard = _Counting(SiteCost(fixed=0.0, per_character=0.5, longest=600))
     built: list[int] = []
 
     def parts() -> Iterator[Dnf]:

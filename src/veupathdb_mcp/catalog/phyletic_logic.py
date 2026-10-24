@@ -13,10 +13,15 @@ from typing import Literal, NoReturn
 from veupathdb.domain.parameters import PhyleticNode, PhyleticTree
 from veupathdb.errors import ValidationError
 
-from veupathdb_mcp.catalog.site_cost import SiteCost
+from veupathdb_mcp.catalog.site_cost import (
+    CHARACTERS_WITHIN_READ_TIMEOUT,
+    READ_TIMEOUT_SECONDS,
+    SiteCost,
+)
 
 Condition = Literal["at_least", "at_most", "exactly", "more_than", "fewer_than"]
 Join = Literal["AND", "OR"]
+Limit = Literal["terms", "characters", "work"]
 
 CALL_SECONDS = 300
 AND_WIDTH = len(" AND ")
@@ -26,6 +31,8 @@ HOST_MARGIN = 2
 SECONDS_PER_ATOM = MEASURED_SECONDS_PER_ATOM * HOST_MARGIN
 MEASURED_SECONDS_PER_COVER = 19.14e-3
 SECONDS_PER_COVER = MEASURED_SECONDS_PER_COVER * HOST_MARGIN
+MAX_EXPRESSION_TERMS = 2000
+MAX_EXPRESSION_WORK = 160_000_000
 
 type Span = tuple[int, int | None]
 type Key = tuple[frozenset[str], bool]
@@ -36,6 +43,84 @@ def refuse(detail: str) -> NoReturn:
         title="The phyletic pattern cannot be written as a phyletic_expression",
         detail=detail,
     )
+
+
+_NARROW_WRITING = (
+    "Narrow the pattern: fewer genomes under a bound that admits absence, fewer "
+    "any_of terms under all_of, or a compare over a side with smaller counts."
+)
+_CAPS: dict[Limit, int] = {
+    "terms": MAX_EXPRESSION_TERMS,
+    "characters": CHARACTERS_WITHIN_READ_TIMEOUT,
+    "work": MAX_EXPRESSION_WORK,
+}
+
+
+def _counted(characters: int, terms: int, *, partial: bool) -> str:
+    if partial:
+        return (
+            f"Multiplied out, the pattern reaches at least {terms} OR terms and "
+            f"{characters} characters before its last step"
+        )
+    return f"The pattern writes {terms} OR terms, {characters} characters"
+
+
+class PhyleticExpressionTooLargeError(ValidationError):
+    def __init__(
+        self, limit: Limit, terms: int, characters: int, *, partial: bool
+    ) -> None:
+        self.limit: Limit = limit
+        self.terms = terms
+        self.characters = characters
+        self.cap = _CAPS[limit]
+        match limit:
+            case "terms":
+                reason = (
+                    f"past the {self.cap} OR terms one search can run; the site's "
+                    "parser recurses once per operator, and no longer expression was "
+                    "measured safe"
+                )
+            case "characters":
+                reason = (
+                    f"past the {self.cap} characters one search counts within the "
+                    f"{READ_TIMEOUT_SECONDS} s read timeout"
+                )
+            case "work":
+                reason = (
+                    f"and its OR terms times its characters, {self.work}, pass the "
+                    f"{self.cap} one search can parse; the site's parser reads the "
+                    "rest of the expression again at each operator"
+                )
+        super().__init__(
+            title="The pattern expands past what one search can run",
+            detail=(
+                "The pattern expands past what one search can run. "
+                f"{_counted(characters, terms, partial=partial)}, "
+                f"{reason}. This is a limit of this library, not a failure of the "
+                f"site. {_NARROW_WRITING}"
+            ),
+        )
+
+    @property
+    def work(self) -> int:
+        return self.terms * self.characters
+
+
+def _past_cap(characters: int, terms: int) -> Limit | None:
+    if terms > MAX_EXPRESSION_TERMS:
+        return "terms"
+    if characters > CHARACTERS_WITHIN_READ_TIMEOUT:
+        return "characters"
+    if terms * characters > MAX_EXPRESSION_WORK:
+        return "work"
+    return None
+
+
+def admit_expression(text: str) -> None:
+    terms = text.count(" OR ") + 1
+    limit = _past_cap(len(text), terms)
+    if limit is not None:
+        raise PhyleticExpressionTooLargeError(limit, terms, len(text), partial=False)
 
 
 @dataclass(frozen=True, slots=True)
@@ -360,7 +445,7 @@ class Guard:
     def characters(self) -> int:
         building = self.building
         return min(
-            self.cost.longest,
+            CHARACTERS_WITHIN_READ_TIMEOUT,
             self.cost.characters_within(CALL_SECONDS - building, self.probes),
         )
 
@@ -426,32 +511,20 @@ class Guard:
         self, characters: int, terms: int, *, atoms: int = 0, partial: bool = False
     ) -> None:
         self._add(atoms)
+        limit = _past_cap(characters, terms)
+        if limit is not None:
+            raise PhyleticExpressionTooLargeError(
+                limit, terms, characters, partial=partial
+            )
         if characters <= self.characters:
             self._on_time(characters)
             return
-        counted = (
-            f"Multiplied out, the pattern reaches at least {terms} OR terms and "
-            f"{characters} characters before its last step"
-            if partial
-            else f"The pattern writes {terms} OR terms, {characters} characters"
-        )
-        if characters > self.cost.longest:
-            reason = (
-                f"longer than {self.cost.longest} characters, the longest expression "
-                "the site was measured to answer; a longer expression needs recorded "
-                "rows before it is admitted"
-            )
-        else:
-            reason = (
-                f"the site was measured to count {self.cost.per_character * 1e6:.0f} "
-                f"ms per 1,000 characters plus {self.cost.fixed:.1f} s, so it needs "
-                f"about {self.seconds(characters):.0f} s, past the "
-                f"{CALL_SECONDS} s call budget"
-            )
         refuse(
-            f"{counted}: {reason}. Narrow the pattern: fewer genomes under a bound "
-            "that admits absence, fewer any_of terms under all_of, or a compare over "
-            "a side with smaller counts."
+            f"{_counted(characters, terms, partial=partial)}: the site was measured "
+            f"to count {self.cost.per_character * 1e6:.0f} ms per 1,000 characters "
+            f"plus {self.cost.fixed:.1f} s, so it needs about "
+            f"{self.seconds(characters):.0f} s, past the {CALL_SECONDS} s call "
+            f"budget. {_NARROW_WRITING}"
         )
 
 

@@ -10,6 +10,8 @@ SITE_LIMITS_FILE = "orthomcl_phyletic_site_limits.json"
 SITE_LIMITS = files("veupathdb_mcp.catalog") / "data" / SITE_LIMITS_FILE
 SECONDS_PER_PROBE = 0.3
 ANSWERED = 200
+READ_TIMEOUT_SECONDS = 30
+CHARACTERS_WITHIN_READ_TIMEOUT = 150_000
 
 
 class _Measured(BaseModel):

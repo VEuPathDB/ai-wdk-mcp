@@ -99,6 +99,11 @@ from veupathdb_mcp.catalog.phyletic_builder import (
     PhyleticExpressionResult,
     write_phyletic_expression,
 )
+from veupathdb_mcp.catalog.phyletic_logic import (
+    MAX_EXPRESSION_TERMS,
+    MAX_EXPRESSION_WORK,
+    PhyleticExpressionTooLargeError,
+)
 from veupathdb_mcp.catalog.phyletic_pattern import (
     AllExcept,
     AllOf,
@@ -148,6 +153,7 @@ from veupathdb_mcp.catalog.searches import (
 )
 from veupathdb_mcp.catalog.semantic_matching import search_similarity
 from veupathdb_mcp.catalog.shortlist import shortlist, shortlist_slot
+from veupathdb_mcp.catalog.site_cost import CHARACTERS_WITHIN_READ_TIMEOUT
 from veupathdb_mcp.catalog.sites import (
     get_record_types,
     list_sites,
@@ -160,10 +166,13 @@ from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
 from veupathdb_mcp.catalog.vocab_lookup import PhrasingMatch, VocabLookup
 
 __all__ = [
+    "CHARACTERS_WITHIN_READ_TIMEOUT",
     "COMPUTE_QUERY",
     "EDA_ANALYSIS_SPEC_PARAM",
     "EDA_DATASET_ID_PARAM",
     "GENE_RECORD_TYPE",
+    "MAX_EXPRESSION_TERMS",
+    "MAX_EXPRESSION_WORK",
     "RADIO_OFF",
     "SUBSET_QUERY",
     "UNIVERSAL_SEARCHES",
@@ -193,6 +202,7 @@ __all__ = [
     "ParentContextRequired",
     "PhrasingMatch",
     "PhyleticExpressionResult",
+    "PhyleticExpressionTooLargeError",
     "PhyleticListError",
     "PhyleticNoSelection",
     "PhyleticPattern",

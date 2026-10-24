@@ -167,11 +167,12 @@ the fewest taxonomy codes that cover it, refuses a pattern that holds for every 
 or for none, checks the expression with the client's `check_expression`, and counts
 it with one count report. A comparison first reads, by bisection over count reports
 sent one after another, the largest count of its right side in any group, and writes
-one band per count. A pattern whose expression would be longer than the longest
-expression the site was measured to answer (645,028 characters, from the QA
-recording), or whose count is predicted past the 300 second budget, is refused before
-its count with its terms and characters; a site refusal is returned as the site wrote
-it. A long expression's reading is an outline of the pattern, at most 2,000
+one band per count. A pattern whose expression would pass 2,000 OR terms, 150,000
+characters, or 160,000,000 for its OR terms times its characters (the most one search
+was measured to run within the client's 30 second read timeout), or whose count is
+predicted past the 300 second budget, is refused before its count with its terms
+and characters, as a limit of this library; a site refusal is returned as the site
+wrote it. A long expression's reading is an outline of the pattern, at most 2,000
 characters.
 
 A search the site publishes no description for may carry a measured note in its

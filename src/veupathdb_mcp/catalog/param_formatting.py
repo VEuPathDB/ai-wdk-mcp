@@ -23,7 +23,12 @@ from veupathdb_mcp.catalog.eda_backed import (
     UPLOAD_SENTINEL_NOTE,
     is_upload_sentinel_vocabulary,
 )
+from veupathdb_mcp.catalog.phyletic_logic import (
+    MAX_EXPRESSION_TERMS,
+    MAX_EXPRESSION_WORK,
+)
 from veupathdb_mcp.catalog.shortlist import shortlist_values
+from veupathdb_mcp.catalog.site_cost import CHARACTERS_WITHIN_READ_TIMEOUT
 from veupathdb_mcp.catalog.vocab_lookup import VocabLookup
 from veupathdb_mcp.catalog.vocab_rendering import (
     entries_of,
@@ -54,7 +59,10 @@ _PHYLETIC_EXPRESSION_HELP = (
     "into every pairing of their terms, each term repeating the shared units. <, <= "
     "and >= count only groups with at least one protein in the list; write absence "
     "as L=0T. ALL is every genome. Find codes with lookup_phyletic_codes. The "
-    "parameter declares no length limit. Build the expression with "
+    "parameter declares no length limit, but an expression past "
+    f"{MAX_EXPRESSION_TERMS} OR terms, {CHARACTERS_WITHIN_READ_TIMEOUT} characters, "
+    f"or {MAX_EXPRESSION_WORK} for its OR terms times its characters is refused "
+    "before it is sent. Build the expression with "
     "build_phyletic_expression, which takes the groups wanted as a typed pattern, "
     "writes the expression from the site's taxonomy and counts its groups."
 )

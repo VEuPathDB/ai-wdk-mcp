@@ -28,7 +28,7 @@ Reading = Literal["per_genome", "totals", "averages"]
 
 WHOLE = 100
 MAX_DEPTH = 8
-MAX_TERMS = 128
+MAX_PATTERN_TERMS = 128
 
 _CODES = Field(
     min_length=1,
@@ -322,7 +322,7 @@ class CompareTerm(CamelModel):
 class _Combination(CamelModel):
     model_config = ConfigDict(frozen=True)
 
-    terms: list[PhyleticPattern] = Field(min_length=1, max_length=MAX_TERMS)
+    terms: list[PhyleticPattern] = Field(min_length=1, max_length=MAX_PATTERN_TERMS)
 
     def depth(self) -> int:
         return 1 + max(term.depth() for term in self.terms)
@@ -341,10 +341,8 @@ class _Combination(CamelModel):
         if self.depth() > MAX_DEPTH:
             msg = f"A pattern nests no deeper than {MAX_DEPTH} levels."
             raise ValueError(msg)
-        if self.size() > MAX_TERMS:
-            msg = (
-                f"A pattern holds no more than {MAX_TERMS} terms, nested ones counted."
-            )
+        if self.size() > MAX_PATTERN_TERMS:
+            msg = f"A pattern holds no more than {MAX_PATTERN_TERMS} terms, nested ones counted."
             raise ValueError(msg)
         return self
 

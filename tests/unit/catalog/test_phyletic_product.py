@@ -8,6 +8,7 @@ from veupathdb.errors import ValidationError
 from veupathdb_mcp.catalog import phyletic_logic
 from veupathdb_mcp.catalog.phyletic_logic import (
     CALL_SECONDS,
+    MAX_EXPRESSION_TERMS,
     SECONDS_PER_ATOM,
     SECONDS_PER_COVER,
     Atom,
@@ -22,7 +23,7 @@ from veupathdb_mcp.catalog.phyletic_pattern import AllOf, CountTerm
 from veupathdb_mcp.catalog.site_cost import SiteCost, site_cost
 
 TREE = synthetic_tree()
-TOP = 16_000
+TOP = MAX_EXPRESSION_TERMS - 1
 WIDE = wide_tree(26)
 VALUES = 60
 
@@ -144,7 +145,7 @@ def test_atom_time_takes_its_share_of_the_character_cap() -> None:
     guard = Guard(TREE, site_cost(), 0)
     before = guard.characters
 
-    guard.charge(int(250 / SECONDS_PER_ATOM))
+    guard.charge(int(290 / SECONDS_PER_ATOM))
 
     assert guard.characters < before
     assert guard.seconds(guard.characters) <= CALL_SECONDS

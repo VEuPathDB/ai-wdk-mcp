@@ -1,5 +1,59 @@
 # Knowledge log
 
+## 2026-10-24 - 0.2.0b47
+
+- A tightened limit, not breaking for hosts: no published name is removed or renamed.
+  `build_phyletic_expression` and `write_phyletic_expression` admit an expression only
+  inside three caps, each checked as the build grows and on the rendered expression,
+  before its count; a pattern with no compare is refused before any read. OrthoMCL's
+  expression parser recurses once per AND or OR operator and reads the rest of the
+  expression again at each level, so its stack depth grows with the operators and its
+  work with operators times characters. Each cap is the measured safe range:
+  - `MAX_EXPRESSION_TERMS = 2000` OR terms: the longest ladder the QA recording
+    answered (2,000 terms, 53,779 characters, 14.2 s). The recorder sent no longer
+    ladder, so no more operators were measured safe. Inside the old 645,028-character
+    cap a ladder runs to about 22,000 terms.
+  - `CHARACTERS_WITHIN_READ_TIMEOUT = 150_000` characters: veupathdb-py reads a
+    component site with a 30 s timeout (`READ_TIMEOUT_SECONDS`, the client's
+    `component_timeout`) and a search is not retried, so a count past 30 s fails
+    whatever the 300 s call budget says. The character fit predicts 24.6 s at 150,000;
+    the longest recorded row under 30 s is 165,028 characters at 21.7 s.
+  - `MAX_EXPRESSION_WORK = 160_000_000`, OR terms times characters: half the largest
+    product measured safe on QA OrthoMCL outside the recording, 250 terms of three codes
+    at 1,298,778 characters (324,694,500, 17.2 s; 645,028 characters took 8.9 s). Within
+    the term and character caps it binds a long expression: 2,000 terms admit at most
+    80,000 characters.
+- A refusal raises `PhyleticExpressionTooLargeError`, a `ValidationError` with `limit`
+  (`terms`, `characters` or `work`), `terms`, `characters`, `cap` and `work`. Its detail
+  says the pattern expands past what one search can run, gives the OR terms and
+  characters, names the cap, and says it is a limit of this library, not a failure of
+  the site. The error and the three caps are exported from `veupathdb_mcp.catalog`.
+- A stated `phyletic_expression` is held to the same caps where
+  `validate_search_params` checks its grammar, before the taxonomy read, and the
+  `phyletic_expression` help states the three caps.
+- The count-time model stays the character fit, 3.94 s plus 0.138 ms per character
+  over the eight recorded rows. The recording varies terms (ladders, two codes a term)
+  and codes (250 terms of 9 to 513 codes) apart, so a fit by terms and codes exists:
+  3.36 s plus 3.51 ms per term plus 0.668 ms per code, worst row 18.6% off against
+  22.8%. It is not taken: on 250 terms of three codes, measured outside the recording,
+  it predicts 4.7 s at 645,028 characters where the count took 8.9 s, and the
+  character fit predicts more than the count took. The caps are the hard guard.
+- The pattern-level bound of 128 terms, nested ones counted, is `MAX_PATTERN_TERMS`
+  (was `MAX_TERMS` in the unpublished `catalog.phyletic_pattern`), apart from the
+  written expression's `MAX_EXPRESSION_TERMS`.
+- The read ceiling is unchanged, 690 reads: `SiteCost.reads_within` still reserves the
+  count of the longest recorded expression.
+- `scripts/record_phyletic_site_limits.py` plans nothing past `MAX_EXPRESSION_TERMS` or
+  `MAX_EXPRESSION_WORK`: its ladders stop at 2,000 terms and its widest unit is 128
+  codes. A new recording therefore holds no 645,028-character row.
+- Every build the unit suite made under 0.2.0b46 inside the three caps, 205 of 209
+  (the seven recorded count wires among them), is made again with the same expression.
+  The four outside them were tests of long expressions, now refused or rebuilt
+  smaller.
+- What a host does to take this release: nothing, unless it shows its own words for a
+  phyletic refusal; it may catch `PhyleticExpressionTooLargeError` to say the pattern
+  is too large for one search.
+
 ## 2026-10-24 - 0.2.0b46
 
 - Breaking for hosts. An audit run uploads no dataset. `read_gene_list(site_id,

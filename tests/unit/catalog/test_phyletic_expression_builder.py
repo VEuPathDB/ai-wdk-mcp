@@ -21,15 +21,18 @@ from veupathdb.domain.parameters import PhyleticExpression, check_expression
 from veupathdb.errors import ValidationError, WDKError
 
 from veupathdb_mcp.catalog import (
+    CHARACTERS_WITHIN_READ_TIMEOUT,
+    MAX_EXPRESSION_TERMS,
     CountTerm,
     PhyleticExpressionResult,
+    PhyleticExpressionTooLargeError,
     PhyleticPattern,
     phyletic_builder,
     write_phyletic_expression,
 )
 from veupathdb_mcp.catalog.phyletic_builder import READING_LIMIT
 from veupathdb_mcp.catalog.phyletic_logic import Guard, atom, both, either
-from veupathdb_mcp.catalog.site_cost import SiteCost, measured_rows, site_cost
+from veupathdb_mcp.catalog.site_cost import SiteCost
 from veupathdb_mcp.tools.catalog_tools import build_phyletic_expression
 
 PATTERN: TypeAdapter[PhyleticPattern] = TypeAdapter(PhyleticPattern)
@@ -490,47 +493,42 @@ def _each_wide_genome_at_most_one() -> JSONObject:
     return _count({"kind": "each_genome_of", "codes": ["WD"]}, "proteins", "at_most", 1)
 
 
-LONGEST = site_cost().longest
-
-
-async def test_a_pattern_longer_than_the_site_has_answered_is_refused_unsent(
+async def test_a_pattern_past_the_term_cap_is_refused_unsent(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     site = install(monkeypatch, lambda expression: 1, wide_tree(16))
 
-    with pytest.raises(ValidationError) as refused:
+    with pytest.raises(PhyleticExpressionTooLargeError) as refused:
         await write_phyletic_expression(
             "orthomcl", _pattern(_each_wide_genome_at_most_one())
         )
 
     characters = 2**16 * 139 + 4 * (2**16 - 1)
     assert refused.value.detail == (
-        f"The pattern writes {2**16} OR terms, {characters} characters: longer than "
-        f"{LONGEST} characters, the longest expression the site was measured to "
-        "answer; a longer expression needs recorded rows before it is admitted. "
-        "Narrow the pattern: fewer genomes under a bound that admits absence, fewer "
-        "any_of terms under all_of, or a compare over a side with smaller counts."
+        "The pattern expands past what one search can run. The pattern writes "
+        f"{2**16} OR terms, {characters} characters, past the {MAX_EXPRESSION_TERMS} "
+        "OR terms one search can run; the site's parser recurses once per operator, "
+        "and no longer expression was measured safe. This is a limit of this "
+        "library, not a failure of the site. Narrow the pattern: fewer genomes under "
+        "a bound that admits absence, fewer any_of terms under all_of, or a compare "
+        "over a side with smaller counts."
     )
     assert site.sent == []
-
-
-def test_the_cap_is_the_longest_expression_the_recording_answered() -> None:
-    assert max(characters for characters, _ in measured_rows()) == LONGEST
 
 
 async def test_a_long_pattern_within_the_cap_is_written_whole_and_read_short(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    site = install(monkeypatch, lambda expression: 1, wide_tree(12))
+    site = install(monkeypatch, lambda expression: 1, wide_tree(10))
 
     result = await write_phyletic_expression(
         "orthomcl", _pattern(_each_wide_genome_at_most_one())
     )
 
-    characters = 2**12 * 103 + 4 * (2**12 - 1)
-    assert len(result.expression) == characters <= LONGEST
+    characters = 2**10 * 85 + 4 * (2**10 - 1)
+    assert len(result.expression) == characters <= CHARACTERS_WITHIN_READ_TIMEOUT
     assert result.reading == (
-        "at most 1 proteins in each genome of WD; written as 4096 OR terms, "
+        "at most 1 proteins in each genome of WD; written as 1024 OR terms, "
         f"{characters} characters"
     )
     assert site.sent == [result.expression]
@@ -539,14 +537,14 @@ async def test_a_long_pattern_within_the_cap_is_written_whole_and_read_short(
 async def test_the_reading_stays_short_however_long_the_pattern(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    install(monkeypatch, lambda expression: 1, wide_tree(12))
+    install(monkeypatch, lambda expression: 1, wide_tree(10))
     repeated = {"kind": "any_of", "terms": [_each_wide_genome_at_most_one()] * 100}
 
     result = await write_phyletic_expression("orthomcl", _pattern(repeated))
 
     assert len(result.reading) == READING_LIMIT
     assert result.reading.startswith("any of (at most 1 proteins in each genome of WD;")
-    assert " ...; written as 4096 OR terms" in result.reading
+    assert " ...; written as 1024 OR terms" in result.reading
 
 
 def _largest_right(top: int) -> Callable[[str], int]:
@@ -569,36 +567,38 @@ async def test_a_comparison_past_the_cap_is_refused_before_its_count(
 ) -> None:
     site = install(monkeypatch, _largest_right(30000), wide_tree(26))
 
-    with pytest.raises(ValidationError) as refused:
+    with pytest.raises(PhyleticExpressionTooLargeError) as refused:
         await write_phyletic_expression("orthomcl", _wide_comparison())
 
     detail = refused.value.detail or ""
-    assert detail.startswith("Multiplied out, the pattern reaches at least ")
-    assert f"longer than {LONGEST} characters" in detail
+    assert detail.startswith(
+        "The pattern expands past what one search can run. Multiplied out, the "
+        "pattern reaches at least "
+    )
     assert all(sent.startswith("wz>=") for sent in site.sent)
 
 
 async def test_a_comparison_within_the_cap_sends_its_count(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    site = install(monkeypatch, _largest_right(2000), wide_tree(26))
+    site = install(monkeypatch, _largest_right(1200), wide_tree(26))
 
     result = await write_phyletic_expression("orthomcl", _wide_comparison())
 
-    assert result.expression.count(" OR ") == 2000
+    assert result.expression.count(" OR ") == 1200
     assert site.sent[-1] == result.expression
 
 
 def test_the_predicted_time_is_a_second_guard() -> None:
-    slow = SiteCost(fixed=4.0, per_character=0.001, longest=10**9)
+    slow = SiteCost(fixed=4.0, per_character=0.003, longest=10**9)
     guard = Guard(TREE, slow, probes=2)
 
     with pytest.raises(ValidationError) as refused:
-        guard.admit(400_000, 100)
+        guard.admit(140_000, 100)
 
     assert refused.value.detail == (
-        "The pattern writes 100 OR terms, 400000 characters: the site was measured "
-        "to count 1000 ms per 1,000 characters plus 4.0 s, so it needs about 405 s, "
+        "The pattern writes 100 OR terms, 140000 characters: the site was measured "
+        "to count 3000 ms per 1,000 characters plus 4.0 s, so it needs about 425 s, "
         "past the 300 s call budget. Narrow the pattern: fewer genomes under a bound "
         "that admits absence, fewer any_of terms under all_of, or a compare over a "
         "side with smaller counts."
@@ -606,7 +606,7 @@ def test_the_predicted_time_is_a_second_guard() -> None:
 
 
 def test_a_product_is_admitted_on_its_merged_size() -> None:
-    guard = Guard(TREE, SiteCost(fixed=0.0, per_character=1e-9, longest=600), 0)
+    guard = Guard(TREE, SiteCost(fixed=0.0, per_character=0.5, longest=600), 0)
     exact = either(
         [atom(frozenset({"xaa"}), (k, k), taxa=False) for k in range(1, 41)], guard
     )

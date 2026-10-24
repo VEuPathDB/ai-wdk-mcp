@@ -94,26 +94,40 @@ builders sent replay unit for unit against patterns the builder takes, so
 
 # The refusal: the site was not measured to answer it
 
-The expression has no length cap of its own choosing. The builder admits what the
-recording shows the site answering and refuses the rest:
+The expression's caps are measured, not chosen. The builder admits what the
+site was measured to run and refuses the rest. OrthoMCL's parser recurses once per AND
+or OR operator and reads the rest of the expression again at each level, so three caps
+hold, each from a measured row (`catalog/phyletic_logic.py`,
+`tests/unit/catalog/test_phyletic_expression_caps.py`):
 
-- The admission cap is the longest expression the site was measured to answer, read
-  from the recording (`SiteCost.longest`, 645,028 characters). A longer expression is
-  refused by name before its count, as longer than the longest expression the site
-  was measured to answer; it needs recorded rows before it is admitted.
+- At most 2,000 OR terms (`MAX_EXPRESSION_TERMS`), the longest ladder the recording
+  answered; no longer one was sent.
+- At most 150,000 characters (`CHARACTERS_WITHIN_READ_TIMEOUT`). The client reads a
+  component site with a 30 s timeout (`READ_TIMEOUT_SECONDS`) and a search is not
+  retried, so a count past 30 s fails whatever the call budget says; the fit below
+  predicts 24.6 s at 150,000, and the longest recorded row under 30 s is 165,028
+  characters at 21.7 s.
+- At most 160,000,000 for OR terms times characters (`MAX_EXPRESSION_WORK`), half the
+  largest product measured safe on QA, 250 terms at 1,298,778 characters.
+- A refusal at any cap raises `PhyleticExpressionTooLargeError` (a `ValidationError`
+  with the cap, the OR terms and the characters), worded as a limit of this library and
+  never as a site failure. A stated `phyletic_expression` is held to the same caps where
+  `validate_search_params` checks it, before the taxonomy read.
 - The predicted time is a second guard. `catalog/site_cost.py` fits the recording's
   answered reads as a fixed cost plus a cost per character, weighted by the inverse
   square of each read's time so every row counts by its relative error: about 3.9 s
   plus 0.138 s per 1,000 characters, every row within 25% (the worst at 22.8%,
   165,028 characters; `tests/unit/catalog/test_the_site_cost_fits_its_recording.py`).
-  Each bisection probe adds 0.3 s. A pattern predicted past the 300 s call budget
-  (`CALL_SECONDS`, the tool's `_meta`) is refused with the predicted seconds.
+  A fit by terms and codes per term fits the rows closer (worst 18.6%) but predicts
+  half the time a three-code expression of 645,028 characters took, so the character
+  fit stays. Each bisection probe adds 0.3 s. A pattern predicted past the 300 s call
+  budget (`CALL_SECONDS`, the tool's `_meta`) is refused with the predicted seconds.
 - Each refusal names the OR terms and characters. A pattern with no compare is refused
   before any read.
 - The bisection reads are bounded before the first one. A distinct compare side takes
   at most 25 count reads (`READS_PER_PROBE`: 10 doubling from 128 to 65,536, then 15
   halving), and the call admits at most the reads the budget leaves after the count of
-  the longest admitted expression, `(300 - 92.8) / 0.3`, 690 (`SiteCost.reads_within`).
+  the longest recorded expression, `(300 - 92.8) / 0.3`, 690 (`SiteCost.reads_within`).
   A pattern whose
   sides would need more is refused by name before any read; `GroupCountReports`
   refuses the read past that ceiling whatever the prediction said.
@@ -127,7 +141,7 @@ recording shows the site answering and refuses the rest:
   the most over 25 product and pattern shapes on the recorded OrthoMCL taxonomy, the
   median of 7 runs with the garbage collector on, once each genome's cover was read.
   Actual time over that charge is at most 1.00 before the margin, 0.50 after it. The
-  build time takes its share of the character cap. A product predicted past the budget
+  build time takes its share of the characters the budget leaves. A product predicted past the budget
   is refused by name with its atoms (`tests/unit/catalog/test_phyletic_product.py`).
 - The first cover read of each distinct genome set is charged to the same budget before
   it is read: 19.14 ms a set measured (`MEASURED_SECONDS_PER_COVER`), times the host
@@ -146,14 +160,14 @@ recording shows the site answering and refuses the rest:
   deadline, and a step past it is refused by name with the seconds the call ran. It
   ends a build the estimates miss, in the worker thread that cannot be cancelled.
 - A pattern nests at most 8 levels (`MAX_DEPTH`) and holds at most 128 terms, nested
-  terms counted (`MAX_TERMS`); the model refuses a larger one at validation.
-- The cap also bounds the build in memory. Each step of the OR-of-AND build, an AND
+  terms counted (`MAX_PATTERN_TERMS`); the model refuses a larger one at validation.
+- The caps also bound the build in memory. Each step of the OR-of-AND build, an AND
   product or an OR merge, is admitted after each clause it adds, and its parts are built
-  one at a time, so it holds at most the cap and one clause; it is admitted
+  one at a time, so it holds at most the caps and one clause; it is admitted
   on its merged clauses, after contradictions drop and duplicates merge, by the
   characters they write from the pattern's own code covers; a refusal there says the
   pattern reaches at least those counts before its last step. The final rendering is
-  admitted on its exact characters before the string exists. No term count is fixed.
+  admitted on its exact characters before the string exists.
 - The expansion, the client's parse, check and reading run in a worker thread
   (`asyncio.to_thread`); the client's 0.1.0b23 reads an expression in time linear in its
   units.
