@@ -16,6 +16,7 @@ from veupathdb_mcp.audit.gene_ids import GeneId, check_resolved
 from veupathdb_mcp.audit.gene_models import ModelSpans, check_models
 from veupathdb_mcp.audit.introns_orthologs import OrthologSupport
 from veupathdb_mcp.computed import computed
+from veupathdb_mcp.tool_meta import Sentence, Share
 
 STRONG_MIN_READS = 20
 EXPRESSED_MIN_READS = 50
@@ -190,7 +191,7 @@ class IntronDepth(CamelModel):
 
     intron_median_depth: float
     exon_median_depth: float
-    covered_share: float = Field(ge=0, le=1)
+    covered_share: Share = Field(ge=0, le=1)
     track: str
 
     @computed
@@ -341,7 +342,7 @@ class IntronJudgement(CamelModel):
     unread: list[UnreadIntron] | None
     best_junction_reads: int | None
     unstranded_ignored: int = Field(default=0, ge=0)
-    reason: str | None = None
+    reason: Sentence | None = None
 
     @model_validator(mode="after")
     def _consistent(self) -> Self:
@@ -389,7 +390,7 @@ class IntronAudit(IntronJudgement):
     code: GeneticCode | None
     code_inferred: bool
     orthologs: OrthologSupport | None
-    correction_reason: str | None = None
+    correction_reason: Sentence | None = None
     corrected_exons: list[Span] | None = None
     model: ModelSpans | None = None
     junction_tracks: JunctionTracks | None = None

@@ -19,6 +19,7 @@ from veupathdb_mcp.audit.genes import GeneRow, contig_sides
 from veupathdb_mcp.audit.lengths import is_orthology_group
 from veupathdb_mcp.audit.windows import FOUND, MISSING, STEP, WINDOW
 from veupathdb_mcp.computed import computed
+from veupathdb_mcp.tool_meta import Share
 
 type MissingVerdict = Literal[
     "IN_DNA_UNANNOTATED",
@@ -99,7 +100,7 @@ class Located(CamelModel):
         return self
 
     @computed
-    def share(self) -> float:
+    def share(self) -> Share:
         return round(self.found / self.windows, 3)
 
 

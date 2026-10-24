@@ -192,7 +192,12 @@ most `top` (1 to 200, 20 by default), with the number of distinct values; a numb
 column answers the site's bins and its minimum, maximum and mean. A refused report is
 a tool error, never an empty count. `get_step_columns` lists the columns, the
 record type's attributes and the search's own, with their data type and whether they
-can be counted. Neither creates a step or a dataset.
+can be counted, and `transforms`: each search of the site's catalog that takes the
+step's record type as its one input and produces another record type (a search with
+a second input, a combine among them, and a search back into the same record type are
+left out), the record type it produces and the columns of that record type
+and of the transform's own search that can be counted. Neither creates a step or a
+dataset.
 
 `get_step_gene_ids` answers at most 200 gene ids. It asks the site for one record
 more, refuses a larger step by its id and the limit, and names

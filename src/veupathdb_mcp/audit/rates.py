@@ -10,6 +10,7 @@ from pydantic import ConfigDict, Field, model_validator
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.computed import computed
+from veupathdb_mcp.tool_meta import Share
 
 WILSON_Z = 1.959963984540054
 
@@ -40,25 +41,25 @@ class RateBounds(CamelModel):
         return count / total if total else empty
 
     @computed
-    def rate(self) -> float:
+    def rate(self) -> Share:
         return self.confirmed / self.checked if self.checked else 0.0
 
     @computed
-    def low(self) -> float:
+    def low(self) -> Share:
         return self._wilson_low(self.confirmed) if self.checked else 0.0
 
     @computed
-    def high(self) -> float:
+    def high(self) -> Share:
         if not self.checked:
             return 1.0
         return 1 - self._wilson_low(self.checked - self.confirmed)
 
     @computed
-    def floor(self) -> float:
+    def floor(self) -> Share:
         return self._over_all(self.confirmed, 0.0)
 
     @computed
-    def ceiling(self) -> float:
+    def ceiling(self) -> Share:
         return self._over_all(self.confirmed + self.unresolved, 1.0)
 
 

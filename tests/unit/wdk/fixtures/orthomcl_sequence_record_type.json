@@ -1,0 +1,2567 @@
+{
+  "provenance": {
+    "site": "orthomcl",
+    "method": "GET",
+    "url": "https://qa.orthomcl.org/orthomcl.qa/service/record-types/sequence?format=expanded",
+    "status": 200,
+    "content_type": "application/json",
+    "recorded_at": "2026-10-21",
+    "reads": "the sequence record type, expanded: every attribute's column reporters and formats"
+  },
+  "body": {
+    "nativeDisplayName": "Protein",
+    "searches": [
+      {
+        "urlSegment": "ByIdList",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "primary_key",
+            "direction": "ASC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Protein ID(s) or VEuPathDB GeneID(s)",
+        "fullName": "SequenceQuestions.ByIdList",
+        "description": "Find Proteins by OrthoMCL Protein ID(s) (from the current or previous releases of OrthoMCL) or by VEuPathDB Gene ID(s).",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "source_ids"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Seq ID(s)",
+        "paramNames": [
+          "source_ids"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByIdList",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "ByAccession",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "primary_key",
+            "direction": "ASC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Group or Protein Name",
+        "fullName": "SequenceQuestions.ByAccession",
+        "description": "Find Proteins with the specified Protein or Group Name.",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "accession"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Group or Protein Name",
+        "paramNames": [
+          "accession"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": true,
+        "queryName": "ByAccession",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "ByPFamIdOrKeyword",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "primary_key",
+            "direction": "ASC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "PFam ID or Keyword",
+        "fullName": "SequenceQuestions.ByPFamIdOrKeyword",
+        "description": "Find Proteins with the specified PFam domain.",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "pfam_id_type_ahead"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "PFam",
+        "paramNames": [
+          "pfam_id_type_ahead"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByPFamIdOrKeyword",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "ByTaxonomy",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "primary_key",
+            "direction": "ASC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Taxonomy",
+        "fullName": "SequenceQuestions.ByTaxonomy",
+        "description": "Identify proteins by the taxon abbreviation or taxon name. Multiple taxa can be selected.",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "taxon_type_ahead"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Taxonomy",
+        "paramNames": [
+          "taxon_type_ahead"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByTaxonomy",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "summary": "Map Proteins by Diamond",
+        "urlSegment": "MapProteinsByDiamond",
+        "dynamicAttributes": [
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "E-Value-Mant",
+            "name": "evalue_mant",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "E-Value-Exp",
+            "name": "evalue_exp",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "score-histogram",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Score",
+            "name": "score",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Summary",
+            "name": "summary",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Alignment",
+            "name": "alignment",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "E-Value",
+            "name": "evalue",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "score",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Map Proteins by Diamond",
+        "fullName": "SequenceQuestions.MapProteinsByDiamond",
+        "description": "This tool will map a set of proteins (usually a complete proteome from an organism)\n            to OrthoMCL groups using Diamond blastp. Query proteins with no significant match to\n            any OrthoMCL proteins will be shown in the results list with an asterisk (*) for the\n            matched protein and an e-value of -1. The search could take from a few minutes to a\n            few hours depending on the size of your input file and the load on our servers.",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link",
+          "score",
+          "evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "BlastQuerySequence",
+              "BlastJobDescription"
+            ]
+          },
+          {
+            "displayType": "hidden",
+            "displayName": "",
+            "name": "_hidden",
+            "description": "",
+            "isVisible": false,
+            "parameters": [
+              "MultiBlastDatabaseType",
+              "BlastAlgorithm",
+              "ExpectationValue",
+              "MaxTargetSeqs",
+              "ReportUnaligned",
+              "Sensitivity",
+              "Masking",
+              "CompBasedStats",
+              "Iterate",
+              "DiamondOutputFields"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Map Proteins",
+        "paramNames": [
+          "BlastQuerySequence",
+          "BlastJobDescription",
+          "MultiBlastDatabaseType",
+          "BlastAlgorithm",
+          "ExpectationValue",
+          "MaxTargetSeqs",
+          "ReportUnaligned",
+          "Sensitivity",
+          "Masking",
+          "CompBasedStats",
+          "Iterate",
+          "DiamondOutputFields"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "MapProteinsByDiamond",
+        "defaultSummaryView": "blast-view",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "BLAST",
+            "name": "blast-view",
+            "description": ""
+          },
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "summary": "Find Proteins that have BLAST similarity to the input sequence.",
+        "urlSegment": "ByBlast",
+        "dynamicAttributes": [
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "E-Value-Mant",
+            "name": "evalue_mant",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "E-Value-Exp",
+            "name": "evalue_exp",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "score-histogram",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Score",
+            "name": "score",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Summary",
+            "name": "summary",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Alignment",
+            "name": "alignment",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "E-Value",
+            "name": "evalue",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "score",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "BLAST",
+        "fullName": "SequenceQuestions.ByBlast",
+        "description": "Find Sequences that have BLAST similarity to your input query sequence.\n           This search uses NCBI-BLAST to determine sequence similarity. \n\t\t\tSee the \n\t\t  <a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs\">NCBI-BLAST help</a> for \n\t\t  more information.",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link",
+          "score",
+          "evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "hidden",
+            "displayName": "",
+            "name": "_hidden",
+            "description": "",
+            "isVisible": false,
+            "parameters": [
+              "BlastDatabase",
+              "BlastRecordClass"
+            ]
+          },
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "BlastAlgorithm",
+              "BlastQuerySequence",
+              "-e",
+              "-b",
+              "-filter"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "BLAST",
+        "paramNames": [
+          "BlastDatabase",
+          "BlastAlgorithm",
+          "BlastQuerySequence",
+          "BlastRecordClass",
+          "-e",
+          "-b",
+          "-filter"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByBlast",
+        "defaultSummaryView": "blast-view",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "BLAST",
+            "name": "blast-view",
+            "description": ""
+          },
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "summary": "Find Proteins that contain a motif pattern that you specify such as two cysteines followed by one or more hydrophobic amino acids.",
+        "urlSegment": "ByMotif",
+        "dynamicAttributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Match Locations",
+            "name": "Locations",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "align": "center",
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "MatchCount-histogram",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Match Count",
+            "name": "MatchCount",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "align": "center",
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 4000,
+            "displayName": "Motif",
+            "name": "Sequence",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "MatchCount",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Protein Motif Pattern",
+        "fullName": "SequenceQuestions.ByMotif",
+        "description": "Find Proteins that contain a motif pattern that\n             you specify., e.g. \"CC6+RK\", which means \"two cysteines followed\n             by one or more hydrophobic amino acids, followed by arginine,\n             then lysine\". The pattern need not be well conserved. If \n             you can describe it in\n             words, you can probably use this tool to create an \"expression\"\n             that can search other proteins for similar patterns.  \n             <br><br>\n\n             Another example is the pattern of the\n             <a href=\"http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=pubmed&dopt=Abstract&list_uids=15591202&query_hl=2\">\n             Pexel motif</a>, which can be represented as \"R.L.[EQD]\", meaning\n             \"an arginine, then any amino acid, then a leucine, then any amino\n             acid, then either an aspartic acid, a glutamic acid, or a\n             glutamine\".\n             <br><br>\n\n             Specify the pattern with a (Perl style) \"regular expression\".\n             (Regular expressions are more powerful than PROSITE patterns.)\n             For a description of how to create regular expressions,\n             please see the <a href=\"/orthomcl.qa/app/static-content/regexp.html\">Regular Expression Tutorial</a>.\n             <br><br>\n\n             The following codes can be used to represent classes of amino acids.\n\t\t<table border columns=3>\n                   <TR>\n                      <TD><B>AA property</B>\n                      </TD>\n                      <TD><B>Amino acids</B>\n                      </TD>\n                      <TD><B>Code</B>\n                      </TD>\n                   </TR>\n\n                   <TR>\n                      <TD>\n                      <B>Acidic</B>\n                      </TD>\n                      <TD><B>DE</B>\n                      </TD>\n                      <TD><B>0</B>\n                      </TD>\n                   </TR>\n                   <TR>\n                      <TD><B>Alcohol</B>\n                      </TD>\n                      <TD><B>ST</B>\n                      </TD>\n                      <TD><B>1</B>\n                      </TD>\n                   </TR>\n                   <TR>\n                      <TD><B>Aliphatic</B>\n                      </TD>\n                      <TD><B>ILV</B>\n                      </TD>\n                      <TD><B>2</B>\n                      </TD>\n                   </TR>\n                   <TR>\n                      <TD><B>Aromatic</B>\n                      </TD>\n                      <TD><B>FHWY</B>\n                      </TD>\n                      <TD><B>3</B>\n                      </TD>\n                   </TR>\n                   <TR>\n                      <TD><B>Basic</B>\n                      </TD>\n                      <TD><B>KRH</B>\n                      </TD>\n                      <TD><B>4</B>\n                      </TD>\n                   </TR>\n                   <TR>\n                      <TD><B>Charged</B>\n                      </TD>\n                      <TD><B>DEHKR</B>\n                      </TD>\n                      <TD><B>5</B>\n                      </TD>\n                   </TR>\n                   <TR>\n                      <TD><B>Hydrophobic</B>\n                      </TD>\n                      <TD><B>AVILMFYW</B>\n                      </TD>\n                      <TD><B>6</B>\n                      </TD>\n                   </TR>\n                   <TR>\n                      <TD><B>Hydrophilic</B>\n                      </TD>\n                      <TD><B>KRHDENQ</B>\n                      </TD>\n                      <TD><B>7</B>\n                      </TD>\n                   </TR>\n                   <TR>\n                      <TD><B>Polar</B>\n                      </TD>\n                      <TD><B>CDEHKNQRST</B>\n                      </TD>\n                      <TD><B>8</B>\n                      </TD>\n                   </TR>\n                   <TR>\n                      <TD><B>Small</B>\n                      </TD>\n                      <TD><B>ACDGNPSTV</B>\n                      </TD>\n                      <TD><B>9</B>\n                      </TD>\n                   </TR>\n                   <TR>\n                      <TD><B>Tiny</B>\n                      </TD>\n                      <TD><B>AGS</B>\n                      </TD>\n                      <TD><B>B</B>\n                      </TD>\n                   </TR>\n                   <TR>\n                      <TD><B>Turnlike</B>\n                      </TD>\n                      <TD><B>ACDEGHKNQRST</B>\n                      </TD>\n                      <TD><B>Z</B>\n                      </TD>\n                   </TR>\n                   <TR>\n                      <TD><B>Any</B>\n                      </TD>\n                      <TD><b>ACDEFGHIKLM<br>\n                             NPQRSTVWY</b>\n                      </TD>\n                      <TD><B>.</B>\n                      </TD>\n                   </TR>\n                   </table>",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link",
+          "MatchCount",
+          "Locations"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "motif_expression",
+              "organism"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Motif",
+        "paramNames": [
+          "motif_expression",
+          "organism"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByMotif",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "FromGroups",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "primary_key",
+            "direction": "ASC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Transform Groups to Proteins",
+        "allowedPrimaryInputRecordClassNames": [
+          "group"
+        ],
+        "fullName": "SequenceQuestions.FromGroups",
+        "description": "Transform a Ortholog Groups result into the Proteins in those groups.",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link"
+        ],
+        "groups": [
+          {
+            "displayType": "hidden",
+            "displayName": "",
+            "name": "_hidden",
+            "description": "",
+            "isVisible": false,
+            "parameters": [
+              "group_answer"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "To Proteins",
+        "paramNames": [
+          "group_answer"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "FromGroups",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "ByEcNumber",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "primary_key",
+            "direction": "ASC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "EC Number",
+        "fullName": "SequenceQuestions.ByEcNumber",
+        "description": "Find proteins that are assigned to a specific Enzyme Commission (EC) Number",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "ec_number_type_ahead"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Enzymes",
+        "paramNames": [
+          "ec_number_type_ahead"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByEcNumber",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "AllSequences",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "primary_key",
+            "direction": "ASC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "All Proteins",
+        "fullName": "SequenceQuestions.AllSequences",
+        "description": "Find all Proteins in the current release of OrthoMCL.",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link"
+        ],
+        "groups": [],
+        "filters": [],
+        "shortDisplayName": "All",
+        "paramNames": [],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "AllSequences",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "SequencesByText",
+        "dynamicAttributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Score",
+            "name": "max_score",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "align": "center",
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "max_score",
+            "direction": "DESC"
+          },
+          {
+            "attributeName": "full_id",
+            "direction": "ASC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Text Terms",
+        "fullName": "SequenceQuestions.SequencesByText",
+        "description": "Find Proteins based on Text Terms",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link",
+          "max_score"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "text_expression",
+              "text_fields"
+            ]
+          },
+          {
+            "displayType": "hidden",
+            "displayName": "",
+            "name": "_hidden",
+            "description": "",
+            "isVisible": false,
+            "parameters": [
+              "document_type"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Text",
+        "paramNames": [
+          "text_expression",
+          "document_type",
+          "text_fields"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByTextSearch",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "BySharedOrtholog",
+        "dynamicAttributes": [
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Target ID",
+            "name": "target_id",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "group_link",
+            "direction": "ASC"
+          },
+          {
+            "attributeName": "full_id",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Shared Orthologs By Organisms",
+        "fullName": "SequenceQuestions.BySharedOrtholog",
+        "description": "Find orthologs shared between two organsims.",
+        "defaultAttributes": [
+          "primary_key",
+          "full_id",
+          "group_link",
+          "target_id"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "query_organism_type_ahead",
+              "target_organism_type_ahead"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Shared Orthologs By Organisms",
+        "paramNames": [
+          "query_organism_type_ahead",
+          "target_organism_type_ahead"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "BySharedOrtholog",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "BySharedOrthologFromSequenceList",
+        "dynamicAttributes": [
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Target ID",
+            "name": "target_id",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "group_link",
+            "direction": "ASC"
+          },
+          {
+            "attributeName": "full_id",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Shared Orthologs From List",
+        "fullName": "SequenceQuestions.BySharedOrthologFromSequenceList",
+        "description": "Find shared orthologs from a set of protein IDs.",
+        "defaultAttributes": [
+          "primary_key",
+          "full_id",
+          "group_link",
+          "target_id"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "querySequenceList",
+              "target_organism_type_ahead"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Shared Orthologs From List",
+        "paramNames": [
+          "querySequenceList",
+          "target_organism_type_ahead"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "BySharedOrthologFromSequenceList",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "SequenceRecordClasses_SequenceRecordClassByRealtimeBasket",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "primary_key",
+            "direction": "ASC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Current Protein Basket",
+        "fullName": "InternalQuestions.SequenceRecordClasses_SequenceRecordClassByRealtimeBasket",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": []
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Protein Basket",
+        "paramNames": [],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "SequenceRecordClasses_SequenceRecordClassByRealtimeBasket",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "SequenceRecordClasses_SequenceRecordClassBySnapshotBasket",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "primary_key",
+            "direction": "ASC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Copy of Protein Basket",
+        "fullName": "InternalQuestions.SequenceRecordClasses_SequenceRecordClassBySnapshotBasket",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "SequenceRecordClasses_SequenceRecordClassDataset"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Copy of Basket",
+        "paramNames": [
+          "SequenceRecordClasses_SequenceRecordClassDataset"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "SequenceRecordClasses_SequenceRecordClassBySnapshotBasket",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "boolean_question_SequenceRecordClasses_SequenceRecordClass",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "primary_key",
+            "direction": "ASC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Combine Protein results",
+        "allowedPrimaryInputRecordClassNames": [
+          "sequence"
+        ],
+        "fullName": "InternalQuestions.boolean_question_SequenceRecordClasses_SequenceRecordClass",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "bq_left_op_SequenceRecordClasses_SequenceRecordClass",
+              "bq_right_op_SequenceRecordClasses_SequenceRecordClass",
+              "bq_operator"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Combine Protein results",
+        "paramNames": [
+          "bq_left_op_SequenceRecordClasses_SequenceRecordClass",
+          "bq_right_op_SequenceRecordClasses_SequenceRecordClass",
+          "bq_operator"
+        ],
+        "isCacheable": true,
+        "allowedSecondaryInputRecordClassNames": [
+          "sequence"
+        ],
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "bq_SequenceRecordClasses_SequenceRecordClass",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "single_record_question_SequenceRecordClasses_SequenceRecordClass",
+        "dynamicAttributes": [],
+        "defaultSorting": [
+          {
+            "attributeName": "primary_key",
+            "direction": "ASC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Single Protein",
+        "fullName": "InternalQuestions.single_record_question_SequenceRecordClasses_SequenceRecordClass",
+        "defaultAttributes": [
+          "primary_key",
+          "taxon_name",
+          "product",
+          "length",
+          "ec_numbers",
+          "pfam_domains",
+          "core_peripheral",
+          "group_link"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "primaryKeys"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Single Protein",
+        "paramNames": [
+          "primaryKeys"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "sequence",
+        "noSummaryOnSingleRecord": false,
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Protein Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      }
+    ],
+    "urlSegment": "sequence",
+    "useBasket": true,
+    "nativeShortDisplayName": "Protein",
+    "formats": [
+      {
+        "isInReport": true,
+        "displayName": "Standard JSON",
+        "name": "standard",
+        "description": "Converts your result to the standard JSON used by the web service.",
+        "scopes": [
+          "results"
+        ],
+        "type": "standard"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Tab delimited (Excel) - choose columns to make a custom table",
+        "name": "attributesTabular",
+        "scopes": [
+          "results"
+        ],
+        "type": "attributesTabular"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Tab delimited (Excel) - choose a pre-configured table",
+        "name": "tableTabular",
+        "scopes": [
+          "results"
+        ],
+        "type": "tableTabular"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Text: choose from columns and/or tables",
+        "name": "fullRecord",
+        "scopes": [
+          "record"
+        ],
+        "type": "fullRecord"
+      },
+      {
+        "isInReport": true,
+        "displayName": "XML: choose from columns and/or tables",
+        "name": "xml",
+        "scopes": [],
+        "type": "xml"
+      },
+      {
+        "isInReport": true,
+        "displayName": "json: choose from columns and/or tables",
+        "name": "json",
+        "scopes": [],
+        "type": "json"
+      },
+      {
+        "isInReport": true,
+        "displayName": "FASTA: protein sequence",
+        "name": "fasta",
+        "scopes": [
+          "record",
+          "results"
+        ],
+        "type": "fasta"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Summary View for BLAST results",
+        "name": "blastSummaryView",
+        "scopes": [],
+        "type": "blastSummaryView"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Word Cloud",
+        "name": "group_link-wordCloud",
+        "scopes": [],
+        "type": "wordCloud"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "length-histogram",
+        "scopes": [],
+        "type": "histogram"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Word Cloud",
+        "name": "product-wordCloud",
+        "scopes": [],
+        "type": "wordCloud"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Word Cloud",
+        "name": "pfam_domains-wordCloud",
+        "scopes": [],
+        "type": "wordCloud"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Word Cloud",
+        "name": "abbreviation-wordCloud",
+        "scopes": [],
+        "type": "wordCloud"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Word Cloud",
+        "name": "taxon_name-wordCloud",
+        "scopes": [],
+        "type": "wordCloud"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Word Cloud",
+        "name": "ec_numbers-wordCloud",
+        "scopes": [],
+        "type": "wordCloud"
+      }
+    ],
+    "hasAllRecordsQuery": false,
+    "displayName": "Protein",
+    "nativeShortDisplayNamePlural": "Proteins",
+    "fullName": "SequenceRecordClasses.SequenceRecordClass",
+    "description": "",
+    "shortDisplayName": "Protein",
+    "shortDisplayNamePlural": "Proteins",
+    "tables": [
+      {
+        "isInReport": true,
+        "displayName": "Previous OrthoMCL Group IDs",
+        "name": "OldGroups",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Previous Group ID",
+            "name": "group_name",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": true,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": true,
+        "displayName": "Enzyme Commission Assignments",
+        "name": "EcNumbers",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "ec_number",
+            "name": "ec_number",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "EC Number",
+            "name": "ec_number_link",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "type": "link",
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Description",
+            "name": "description",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": true,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": false,
+        "displayName": "Pfam Domains",
+        "name": "PFamDomains",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Primary Identifier",
+            "name": "accession",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Remark",
+            "name": "description",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Length",
+            "name": "length",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "End",
+            "name": "start_min",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Start",
+            "name": "end_max",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "domain_index",
+            "name": "domain_index",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "max_index",
+            "name": "max_index",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": false,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": false,
+        "displayName": "Product",
+        "name": "Product",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "product",
+            "name": "product",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "id_string",
+            "name": "id_string",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": false,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": false,
+        "displayName": "Taxon",
+        "name": "Taxon",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Taxon",
+            "name": "taxon",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Abbreviation",
+            "name": "abbreviation",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": false,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": false,
+        "displayName": "OrthologGroupId",
+        "name": "OrthologGroupId",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "group_name",
+            "name": "group_name",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": false,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      }
+    ],
+    "nativeDisplayNamePlural": "Proteins",
+    "displayNamePlural": "Proteins",
+    "recordIdAttributeName": "primary_key",
+    "attributes": [
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Accession",
+        "name": "primary_key",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": false,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Word Cloud",
+            "name": "group_link-wordCloud",
+            "scopes": [],
+            "type": "wordCloud"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "Group ID",
+        "name": "group_link",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "type": "link",
+        "columnDataType": "OTHER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Link to Protein Source",
+        "name": "gene_source_link",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "type": "link",
+        "columnDataType": "OTHER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Record Overview HTML",
+        "name": "record_overview",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "full_id",
+        "name": "full_id",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Source ID",
+        "name": "source_id",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "help": "Protein length in amino acids",
+        "isInReport": true,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Histogram",
+            "name": "length-histogram",
+            "scopes": [],
+            "type": "histogram"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "Length",
+        "name": "length",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Word Cloud",
+            "name": "product-wordCloud",
+            "scopes": [],
+            "type": "wordCloud"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "Description",
+        "name": "product",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Word Cloud",
+            "name": "pfam_domains-wordCloud",
+            "scopes": [],
+            "type": "wordCloud"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "PFam Domains",
+        "name": "pfam_domains",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Word Cloud",
+            "name": "abbreviation-wordCloud",
+            "scopes": [],
+            "type": "wordCloud"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "Taxon Code",
+        "name": "abbreviation",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Word Cloud",
+            "name": "taxon_name-wordCloud",
+            "scopes": [],
+            "type": "wordCloud"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "Taxon Name",
+        "name": "taxon_name",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Word Cloud",
+            "name": "ec_numbers-wordCloud",
+            "scopes": [],
+            "type": "wordCloud"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "EC Numbers",
+        "name": "ec_numbers",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Group ID",
+        "name": "group_name",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Core/Peripheral Species",
+        "name": "core_peripheral",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Sequence",
+        "name": "sequence",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Protein Source ID",
+        "name": "gene_source_id",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Protein Source URL",
+        "name": "gene_source_url",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      }
+    ],
+    "primaryKeyColumnRefs": [
+      "full_id"
+    ],
+    "properties": {}
+  }
+}

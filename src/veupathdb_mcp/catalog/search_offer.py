@@ -6,13 +6,26 @@ from veupathdb.wdk import WDKSearch
 _BOOLEAN_PARAM_COUNT = 3
 
 
+def takes_an_input_step(search: WDKSearch) -> bool:
+    return bool(search.allowed_primary_input_record_class_names)
+
+
+def takes_two_input_steps(search: WDKSearch) -> bool:
+    return bool(search.allowed_secondary_input_record_class_names)
+
+
+def transforms_one_step_of(search: WDKSearch, record_type: str) -> bool:
+    taken = search.allowed_primary_input_record_class_names or []
+    return record_type in taken and not takes_two_input_steps(search)
+
+
 def is_boolean_search(search: WDKSearch) -> bool:
     """Return True for the boolean question WDK builds for a record class.
 
     It takes two input steps and one other parameter, the operator.
     """
     return (
-        bool(search.allowed_secondary_input_record_class_names)
+        takes_two_input_steps(search)
         and len(search.param_names) == _BOOLEAN_PARAM_COUNT
     )
 
@@ -22,7 +35,7 @@ def is_listed_search(search: WDKSearch) -> bool:
 
     A search that takes an input step is listed whatever its question set.
     """
-    if search.allowed_primary_input_record_class_names:
+    if takes_an_input_step(search):
         return not is_boolean_search(search)
     return not search.full_name.startswith("InternalQuestions.")
 

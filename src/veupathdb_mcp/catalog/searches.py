@@ -32,6 +32,7 @@ from veupathdb_mcp.catalog.search_offer import (
     is_boolean_search,
     is_listed_search,
     is_ranked_search,
+    takes_an_input_step,
 )
 from veupathdb_mcp.catalog.semantic_matching import apply_semantic_bonus
 
@@ -168,7 +169,7 @@ async def list_transforms(site_id: str, record_type: str) -> list[dict[str, str]
     searches = await discovery.get_searches(site_id, record_type)
     result: list[dict[str, str]] = []
     for s in searches:
-        if not s.allowed_primary_input_record_class_names:
+        if not takes_an_input_step(s):
             continue
         if is_boolean_search(s):
             continue

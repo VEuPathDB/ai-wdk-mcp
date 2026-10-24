@@ -93,7 +93,7 @@ async def test_the_served_columns_say_which_can_be_counted(
 
     assert not failed
     assert content is not None
-    assert content["recordType"] == "transcript"
+    assert (content["recordType"], content["transforms"]) == ("transcript", [])
     assert [
         (column["name"], column["dataType"], column["countable"])
         for column in content["columns"]

@@ -5,7 +5,16 @@ from pydantic import ConfigDict, model_validator
 from veupathdb.domain import WDKHistogramBin, WDKHistogramStatistics
 from veupathdb.errors import DataParsingError, ValidationError
 from veupathdb.model import CamelModel
-from veupathdb.wdk import StrategyAPI, WDKAttributeField, WDKStep, get_strategy_api
+from veupathdb.wdk import (
+    StrategyAPI,
+    WDKAttributeField,
+    WDKRecordType,
+    WDKStep,
+    get_strategy_api,
+)
+
+from veupathdb_mcp.catalog.search_offer import transforms_one_step_of
+from veupathdb_mcp.catalog.searches import get_raw_record_types
 
 DEFAULT_COLUMN_COUNT_TOP = 20
 MAX_COLUMN_COUNT_TOP = 200
@@ -26,6 +35,15 @@ class StepColumn(CamelModel):
     countable: bool
 
 
+class TransformColumns(CamelModel):
+    model_config = ConfigDict(frozen=True)
+
+    search_name: str
+    display_name: str
+    record_type: str
+    columns: tuple[StepColumn, ...]
+
+
 class StepColumns(CamelModel):
     model_config = ConfigDict(frozen=True)
 
@@ -33,6 +51,7 @@ class StepColumns(CamelModel):
     record_type: str
     search_name: str
     columns: tuple[StepColumn, ...]
+    transforms: tuple[TransformColumns, ...] = ()
 
     def countable_names(self) -> tuple[str, ...]:
         return tuple(sorted(column.name for column in self.columns if column.countable))
@@ -136,9 +155,36 @@ async def _step_columns(api: StrategyAPI, step: WDKStep) -> StepColumns:
     )
 
 
+def transforms_from(
+    record_types: Sequence[WDKRecordType], record_type: str
+) -> tuple[TransformColumns, ...]:
+    return tuple(
+        TransformColumns(
+            search_name=search.url_segment,
+            display_name=search.display_name or search.url_segment,
+            record_type=reached.url_segment,
+            columns=tuple(
+                column
+                for column in _merged(
+                    reached.attributes or [],
+                    list((reached.attributes_map or {}).values()),
+                    search.dynamic_attributes,
+                )
+                if column.countable
+            ),
+        )
+        for reached in record_types
+        if reached.url_segment != record_type
+        for search in reached.searches or []
+        if transforms_one_step_of(search, record_type)
+    )
+
+
 async def list_step_columns(site_id: str, step_id: int) -> StepColumns:
     api = get_strategy_api(site_id)
-    return await _step_columns(api, await api.find_step(step_id))
+    listed = await _step_columns(api, await api.find_step(step_id))
+    reached = transforms_from(await get_raw_record_types(site_id), listed.record_type)
+    return listed.model_copy(update={"transforms": reached})
 
 
 def _require_top(top: int) -> None:

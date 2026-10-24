@@ -1,9 +1,13 @@
 {
   "veupathdb_mcp": [
     "MAX_CALL_SECONDS_META_KEY",
+    "SENTENCE_FORMAT",
+    "SHARE_FORMAT",
     "STREAM_PART_META_KEY",
+    "Sentence",
     "ServiceToken",
     "ServiceTokenRegistry",
+    "Share",
     "ToolErrorPayload",
     "tool_error"
   ],
@@ -638,7 +642,11 @@
   ],
   "veupathdb_mcp.tool_meta": [
     "MAX_CALL_SECONDS_META_KEY",
-    "STREAM_PART_META_KEY"
+    "SENTENCE_FORMAT",
+    "SHARE_FORMAT",
+    "STREAM_PART_META_KEY",
+    "Sentence",
+    "Share"
   ],
   "veupathdb_mcp.tool_payloads": [
     "ControlOutcome",
@@ -719,6 +727,7 @@
     "StepCountResult",
     "StepTooLargeError",
     "TRANSCRIPTS_PER_GENE",
+    "TransformColumns",
     "WireStep",
     "build_enrichment_params_from_gene_ids",
     "build_snapshot_from_wdk",
@@ -743,6 +752,7 @@
     "step_download_url",
     "step_sample_records",
     "step_view_filters",
+    "transforms_from",
     "view_filters_for"
   ],
   "veupathdb_mcp.wdk.enrichment": [

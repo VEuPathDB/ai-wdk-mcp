@@ -13,8 +13,10 @@ from veupathdb_mcp.wdk.column_counts import (
     CountedValue,
     StepColumn,
     StepColumns,
+    TransformColumns,
     count_by_column,
     list_step_columns,
+    transforms_from,
 )
 from veupathdb_mcp.wdk.gene_set_steps import (
     DEFAULT_GENE_SET_STRATEGY_NAME,
@@ -77,6 +79,7 @@ __all__ = [
     "StepColumns",
     "StepCountResult",
     "StepTooLargeError",
+    "TransformColumns",
     "WireStep",
     "build_enrichment_params_from_gene_ids",
     "build_snapshot_from_wdk",
@@ -101,5 +104,6 @@ __all__ = [
     "step_download_url",
     "step_sample_records",
     "step_view_filters",
+    "transforms_from",
     "view_filters_for",
 ]

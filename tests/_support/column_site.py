@@ -6,9 +6,10 @@ from typing import Any
 import httpx
 import pytest
 import respx
+from tests._support.orthomcl_catalog import orthomcl_record_types, recorded_body
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.testing.wdk_fixtures import load_recorded
-from veupathdb.wdk import StrategyAPI, VEuPathDBClient
+from veupathdb.wdk import StrategyAPI, VEuPathDBClient, WDKRecordType
 
 from veupathdb_mcp.wdk import column_counts
 
@@ -16,6 +17,7 @@ SERVICE = "/plasmo.qa/service"
 USER = "42"
 STEP = 9
 BUILD_STEP = 11
+GROUP_STEP = 13
 ORGANISMS = {
     "Plasmodium berghei ANKA": 120,
     "Plasmodium falciparum 3D7": 310,
@@ -114,6 +116,7 @@ def exon_counts() -> dict[str, Any]:
 class ColumnSite:
     def __init__(self) -> None:
         self.requests: list[str] = []
+        self.record_types_read: list[str] = []
         self.reports: dict[str, httpx.Response] = {
             "organism": httpx.Response(200, json=organism_counts()),
             "exon_count": httpx.Response(200, json=exon_counts()),
@@ -121,11 +124,10 @@ class ColumnSite:
 
     @staticmethod
     def _step(step_id: str) -> httpx.Response:
-        record_type, search = (
-            ("build", "AllBuilds")
-            if step_id == str(BUILD_STEP)
-            else ("transcript", "GenesByMolecularWeight")
-        )
+        record_type, search = {
+            str(BUILD_STEP): ("build", "AllBuilds"),
+            str(GROUP_STEP): ("group", "GroupsBySequenceCount"),
+        }.get(step_id, ("transcript", "GenesByMolecularWeight"))
         return httpx.Response(
             200,
             json={
@@ -159,6 +161,10 @@ class ColumnSite:
                 answer = self._step(step_id)
             case "GET", ["record-types", "transcript"]:
                 answer = httpx.Response(200, json=transcript_record_type())
+            case "GET", ["record-types", "group"]:
+                answer = httpx.Response(
+                    200, json=recorded_body("orthomcl_group_record_type")
+                )
             case "GET", ["record-types", "build"]:
                 answer = httpx.Response(
                     200, json=load_recorded("record_type_build").body
@@ -191,10 +197,15 @@ class ColumnSite:
     def posts(self) -> list[str]:
         return [request for request in self.requests if request.startswith("POST")]
 
+    async def record_types(self, site_id: str) -> list[WDKRecordType]:
+        self.record_types_read.append(site_id)
+        return orthomcl_record_types()
+
 
 @pytest.fixture
-def column_site() -> Iterator[ColumnSite]:
+def column_site(monkeypatch: pytest.MonkeyPatch) -> Iterator[ColumnSite]:
     site = ColumnSite()
+    monkeypatch.setattr(column_counts, "get_raw_record_types", site.record_types)
     reset = veupathdb_auth_token_ctx.set("registered-token")
     with respx.mock(assert_all_called=False) as router:
         router.route().mock(side_effect=site)
@@ -221,4 +232,5 @@ def wire_column_api(monkeypatch: pytest.MonkeyPatch) -> ColumnSite:
     monkeypatch.setattr(client, "post", post)
     api = StrategyAPI(client, user_id=USER)
     monkeypatch.setattr(column_counts, "get_strategy_api", lambda site_id: api)
+    monkeypatch.setattr(column_counts, "get_raw_record_types", site.record_types)
     return site

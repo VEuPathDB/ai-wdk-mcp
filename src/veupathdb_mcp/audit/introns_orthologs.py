@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, model_validator
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.audit.windows import FOUND, STEP, WINDOW, best_identity
+from veupathdb_mcp.tool_meta import Sentence
 
 ORTHOLOG_SPECIES = 8
 _KMER = 3
@@ -37,7 +38,7 @@ class OrthologSupport(CamelModel):
     compared: list[str]
     for_corrected: int | None
     for_annotated: int | None
-    reason: str | None = None
+    reason: Sentence | None = None
 
     @model_validator(mode="after")
     def _counted_or_explained(self) -> Self:

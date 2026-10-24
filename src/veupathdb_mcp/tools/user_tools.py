@@ -322,7 +322,10 @@ async def get_step_columns(site_id: str, wdk_step_id: int) -> StepColumns:
     The columns are the attributes of the step's record type and the columns
     its own search adds. Each column gives its name, its display name, its data
     type (STRING, NUMBER, DATE or OTHER) and whether count_step_by_column can
-    count it. The call writes nothing into the account.
+    count it. transforms names each search that takes this step as its one
+    input, the record type it turns the records into, and the columns of that
+    record type count_step_by_column can count, so a column this step lacks is
+    one transform away. The call writes nothing into the account.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.

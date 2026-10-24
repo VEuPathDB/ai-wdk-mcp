@@ -1,0 +1,5539 @@
+{
+  "provenance": {
+    "site": "orthomcl",
+    "method": "GET",
+    "url": "https://qa.orthomcl.org/orthomcl.qa/service/record-types/group?format=expanded",
+    "status": 200,
+    "content_type": "application/json",
+    "recorded_at": "2026-10-21",
+    "reads": "the group record type, expanded: the names the site shows it by"
+  },
+  "body": {
+    "nativeDisplayName": "Ortholog Group",
+    "searches": [
+      {
+        "urlSegment": "GroupsBySequenceCount",
+        "dynamicAttributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Num Core Proteins",
+            "name": "core_num",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Num Peripheral Proteins",
+            "name": "peripheral_num",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Number of Sequences",
+        "fullName": "GroupQuestions.GroupsBySequenceCount",
+        "description": "Find Ortholog Groups that contain a specified number of proteins. To get Core Groups with peripheral proteins mapped in, choose >=1 for Min/Max Number of Core Proteins and >=1 for Min/Max Core Peripheral Proteins. To get Core Groups with NO peripheral proteins mapped in, choose >=1 for Min/Max Number of Core Proteins and 0 for Min/Max Number of Peripheral Proteins. To get Residual Groups, choose 0 for Min/Max Number of Core Proteins and >=1 for Min/Max Number of Peripheral Proteins. To restrict the total size of the group, set the Number of All Proteins. For example, setting a range of 2 to 499 for Number of All Proteins will show groups for which a cluster graph has been calculated.",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "all_count"
+            ]
+          },
+          {
+            "displayType": "ShowHide",
+            "displayName": "Advanced Parameters",
+            "name": "corePeripheralAdvancedParams",
+            "description": "OrthoMCL contains two sets of genomes. A Core set of 150 genomes have been chosen as well annotated reference organisms that broadly represent the major branches of the tree of life. All of the additional non-core VEuPathDB organisms (pathogens, hosts, and vectors) are called Peripheral organisms, in some cases including multiple strains and genome assemblies for the same species. The search ranges below can be used to filter the number of proteins {taxa} in each orthogroup by the number of Core and Peripheral  (minimum and maximum) in each group.  The number of Core and Peripheral will sum to the number of all proteins {taxa} in the group.",
+            "isVisible": false,
+            "parameters": [
+              "core_count",
+              "peripheral_count"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Number Seqs",
+        "paramNames": [
+          "all_count",
+          "core_count",
+          "peripheral_count"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "BySequenceCount",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupsByGenomeCount",
+        "dynamicAttributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Num Core Taxa",
+            "name": "core_count",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Num Peripheral Taxa",
+            "name": "peripheral_count",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Num Total Taxa",
+            "name": "all_count",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Number of Taxa",
+        "fullName": "GroupQuestions.GroupsByGenomeCount",
+        "description": "Configure the search to find Ortholog Groups that contain a specified number of Core taxa and Peripheral taxa. For each number, the first box represents the minimum (min) number and the second box represents the maximum (max) number.</p>\n                <ul>\n                 <li>The <b>Number of All Taxa</b> can be restricted to a range of your choice by inputting numbers into the min and max boxes.</li>\n                 <li>To get <b>core groups with peripheral proteins mapped in</b>, input\n                    <ul>\n                    <li>Number of Core Taxa: min=1 and max=150</li>\n                    <li>Number of Peripheral Taxa: min=1 and max=700</li>\n                    </ul>\n                 </li>\n                 <li>To get <b>core groups with NO peripheral proteins mapped in</b>, input\n                 <ul>\n                    <li>Number of Core Taxa: min=1 and max=150</li>\n                    <li>Number of Peripheral Taxa: min=0 and max=0</li>\n                    </ul>\n                 </li>\n                 <li>To get <b>residual groups</b>, input\n                 <ul>\n                    <li>Number of Core Taxa: min=0 and max=0</li>\n                    <li>Number of Peripheral Taxa: min=1 and max=700</li>\n                    </ul>\n                 </li>\n               </ul>",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "all_taxon"
+            ]
+          },
+          {
+            "displayType": "ShowHide",
+            "displayName": "Advanced Parameters",
+            "name": "corePeripheralAdvancedParams",
+            "description": "OrthoMCL contains two sets of genomes. A Core set of 150 genomes have been chosen as well annotated reference organisms that broadly represent the major branches of the tree of life. All of the additional non-core VEuPathDB organisms (pathogens, hosts, and vectors) are called Peripheral organisms, in some cases including multiple strains and genome assemblies for the same species. The search ranges below can be used to filter the number of proteins {taxa} in each orthogroup by the number of Core and Peripheral  (minimum and maximum) in each group.  The number of Core and Peripheral will sum to the number of all proteins {taxa} in the group.",
+            "isVisible": false,
+            "parameters": [
+              "core_taxon",
+              "peripheral_taxon"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Number of Taxa",
+        "paramNames": [
+          "all_taxon",
+          "core_taxon",
+          "peripheral_taxon"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByGenomeCount",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupsBySingleCopy",
+        "dynamicAttributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Num Core Taxa",
+            "name": "core_count",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Num Peripheral Taxa",
+            "name": "peripheral_count",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Num Total Taxa",
+            "name": "all_count",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Single Copy Orthogroups",
+        "fullName": "GroupQuestions.GroupsBySingleCopy",
+        "description": "",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "all_taxon"
+            ]
+          },
+          {
+            "displayType": "ShowHide",
+            "displayName": "Advanced Parameters",
+            "name": "corePeripheralAdvancedParams",
+            "description": "OrthoMCL contains two sets of genomes. A Core set of 150 genomes have been chosen as well annotated reference organisms that broadly represent the major branches of the tree of life. All of the additional non-core VEuPathDB organisms (pathogens, hosts, and vectors) are called Peripheral organisms, in some cases including multiple strains and genome assemblies for the same species. The search ranges below can be used to filter the number of proteins {taxa} in each orthogroup by the number of Core and Peripheral  (minimum and maximum) in each group.  The number of Core and Peripheral will sum to the number of all proteins {taxa} in the group.",
+            "isVisible": false,
+            "parameters": [
+              "core_taxon",
+              "peripheral_taxon"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Single Copy Orthogroups",
+        "paramNames": [
+          "all_taxon",
+          "core_taxon",
+          "peripheral_taxon"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByGenomeCount",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupsByOverlap",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Group Overlap",
+        "fullName": "GroupQuestions.GroupsByOverlap",
+        "description": "",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "pfam_id_type_ahead",
+              "min_num_proteins",
+              "min_fraction_proteins"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Overlap",
+        "paramNames": [
+          "pfam_id_type_ahead",
+          "min_num_proteins",
+          "min_fraction_proteins"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByPfamIdOrKeyword",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupsBySimilarity",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Number Of Similar Groups",
+        "fullName": "GroupQuestions.GroupsBySimilarity",
+        "description": "",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "pfam_id_type_ahead",
+              "min_num_proteins",
+              "min_fraction_proteins"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Similar",
+        "paramNames": [
+          "pfam_id_type_ahead",
+          "min_num_proteins",
+          "min_fraction_proteins"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByPfamIdOrKeyword",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupsByNameList",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Group ID(s)",
+        "fullName": "GroupQuestions.GroupsByNameList",
+        "description": "Find Ortholog Groups by ID(s) assigned in the current or previous releases of OrthoMCL.",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "group_names"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Group ID(s)",
+        "paramNames": [
+          "group_names"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByNameList",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupsByText",
+        "dynamicAttributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Score",
+            "name": "max_score",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "align": "center",
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Text Terms",
+        "fullName": "GroupQuestions.GroupsByText",
+        "description": "Find Ortholog Groups based on text terms.",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "text_expression",
+              "text_fields"
+            ]
+          },
+          {
+            "displayType": "hidden",
+            "displayName": "",
+            "name": "_hidden",
+            "description": "",
+            "isVisible": false,
+            "parameters": [
+              "document_type"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Text",
+        "paramNames": [
+          "text_expression",
+          "document_type",
+          "text_fields"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByTextSearch",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupsByPFamIdOrKeyword",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "PFam ID or Keyword",
+        "fullName": "GroupQuestions.GroupsByPFamIdOrKeyword",
+        "description": "Find Ortholog Groups that contain one or more Sequences with the specified PFam domain.",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "pfam_id_type_ahead",
+              "min_num_proteins",
+              "min_fraction_proteins"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "PFam",
+        "paramNames": [
+          "pfam_id_type_ahead",
+          "min_num_proteins",
+          "min_fraction_proteins"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByPfamIdOrKeyword",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupsByEcNumber",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "EC Number",
+        "fullName": "GroupQuestions.GroupsByEcNumber",
+        "description": "Find groups that have one or more proteins that are assigned a specific Enzyme Commission (EC) Number",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "ec_number_type_ahead",
+              "ec_wildcard"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Enzymes",
+        "paramNames": [
+          "ec_number_type_ahead",
+          "ec_wildcard"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByEcNumber",
+        "defaultSummaryView": "_default",
+        "properties": {
+          "radio-params": [
+            "ec_number_type_ahead",
+            "ec_wildcard"
+          ]
+        },
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupsByEValue",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "E-Value",
+        "fullName": "GroupQuestions.GroupsByEValue",
+        "description": "Identify ortholog groups based on the median percent identity of all protein sequences within each group. Median percent identity serves as an indicator of group cohesiveness: higher values suggest a tightly clustered group with minimal outliers, while lower values indicate a more dispersed group. Percent identity is represented in decimal form and ranges from 0 to 1 (the equivalent of 0% to 100%). For example, setting the percent identity threshold between 0.8 and 1 will return ortholog groups with a median percent identity between 80% and 100%.",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "evalue"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "E-Value",
+        "paramNames": [
+          "evalue"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByEValue",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupsByPhyleticPattern",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Phyletic Pattern",
+        "fullName": "GroupQuestions.GroupsByPhyleticPattern",
+        "description": "<p>Find Ortholog Groups by phyletic pattern.</p>\n\n<p>Phyletic Pattern Expression is a flexible and powerful way to identify ortholog groups with a certain conservation pattern. The pattern is used to identify groups based on whether proteins from specific taxa are present or absent. Also, the pattern finds groups with a certain copy number (e.g., duplications) within specified taxa.</p>\n\n<p><b>Examples</b></p>\nThese expressions find ortholog groups in which...\n<table>\n    <tr><th><code>hsap>=5</code></th><td>there are five or more human sequences</td></tr>\n    <tr><th><code>hsap+ecol=2T</code></th><td>both human and E. coli are present.</td></tr>\n    <tr><th><code>hsap+ecol=1T</code></th><td>only one species of human or E. coli is present.</td></tr>\n    <tr><th><code>hsap+ecol>=1T</code></th><td>only one or both species of human and E. coli is present.</td></tr>\n    <tr><th><code>hsap+ecol>=10</code></th><td>there are 10 or more human or E. Coli sequences.</td></tr>\n    <tr><th><code>EUKA=5</code></th><td>there are exactly eukaryotic 5 sequences</td></tr>\n    <tr><th><code>EUKA=5T</code></th><td>there are exactly eukaryotic 5 taxa</td></tr>\n    <tr><th><code>hsap+FIRM=2T</code></th><td>there are exactly 2 human or Gram-positive bacteria taxa</td></tr>\n    <tr><th><code>EUKA=35T</code></th><td>there are all 35 eukaryotic species, ie, Eukaryota-universal groups</td></tr>\n    <tr><th><code>EUKA>=5T AND hsap>=10</code></th><td>there are at least five eukaryotic species and containing at least 10 human sequences.</td></tr>\n    <tr><th><code>(EUKA>=5T AND hsap>=10) OR pfal<20</code></th><td>there are at least five eukaryotic species and containing at least 10 human sequences, or there are less than 20 P. falciparum sequences.</td></tr>\n    <tr><th><code>ALL=564T</code></th><td>there are 564 OrthoMCL species. (click on ALL in the graphical display to get up-to-date total number.</td></tr>\n</table>\n\n<p><b>Tips</b></p>\n<ul>\n  <li> Avoid redundancy in your PPE. For example, <code>hsap>=1</code> is equal to <code>hsap=1T</code>, so no need to mention them twice.</li>\n  <li> Merge different PPE units for faster execution.  For example <code>hsap=1T AND mmus=1T</code> can be merged as <code>hsap+mmus=2T</code>.</li>\n</ul>\n\n<p><b>The PPE Grammar in Detail</b></p>\n<p>Individual grammatical units of PPE expressions are composed of two parts:</p>\n<ol>\n  <li> <b>A taxa specification.</b>  This can be any one of:\n    <ul>\n    <li>a species abbreviation (e.g. <code>tgon</code>)</li>\n    <li>a clade abbreviation (e.g., <code>BACT</code> for all Eubacteria taxa)</li>\n    <li>a list of species or clade abbreviations linked by plus sign \"+\" (e.g. <code>tgon+pfal+hsap+FIRM</code>). </li>\n    <li><code>ALL</code> to represent all taxa in OrthoMCL.</li>\n    </ul>\n  </li>\n  <li> <b>A logical comparison operator followed by a count.</b> \n    <ul>\n    <li>operators allowed are: <code>></code>, <code><</code>, <code>=</code>, <code>>=</code>, and <code><=</code></li>\n    <li>the count is either:\n      <ul>\n      <li>a number, such as <code>5</code>.  This is a count of <i>sequences</i> that the operator applies to.</li>\n      <li>a number with a <code>T</code>, such as <code>5T</code>.  This is a count of <i>taxa</i> that the operator applies to.</li>\n      </ul>\n    </ul>\n  </li>\n</ol>\n\n<p>Multiple expression units may be combined using <code>AND</code> or <code>OR</code>, and may use parentheses to provide explicit execution ordering.</p>",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "phyletic_expression"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Phyletic",
+        "paramNames": [
+          "phyletic_expression"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "ByPhyleticPattern",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupsFromSequences",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Transform Proteins to Groups",
+        "allowedPrimaryInputRecordClassNames": [
+          "sequence"
+        ],
+        "fullName": "GroupQuestions.GroupsFromSequences",
+        "description": "Transform Protein results into Groups.",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "hidden",
+            "displayName": "",
+            "name": "_hidden",
+            "description": "",
+            "isVisible": false,
+            "parameters": [
+              "sequence_answer"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "To Groups",
+        "paramNames": [
+          "sequence_answer"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "FromSequences",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "AllGroups",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "All Groups",
+        "fullName": "GroupQuestions.AllGroups",
+        "description": "Find ALL of the Ortholog Groups in the current release of OrthoMCL. Note that this search retrives all 'Core' and 'Residual' Ortholog Groups.",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [],
+        "filters": [],
+        "shortDisplayName": "All Groups",
+        "paramNames": [],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "AllGroups",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupRecordClasses_GroupRecordClassByRealtimeBasket",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Current Ortholog Group Basket",
+        "fullName": "InternalQuestions.GroupRecordClasses_GroupRecordClassByRealtimeBasket",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": []
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Ortholog Group Basket",
+        "paramNames": [],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "GroupRecordClasses_GroupRecordClassByRealtimeBasket",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "GroupRecordClasses_GroupRecordClassBySnapshotBasket",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Copy of Ortholog Group Basket",
+        "fullName": "InternalQuestions.GroupRecordClasses_GroupRecordClassBySnapshotBasket",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "GroupRecordClasses_GroupRecordClassDataset"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Copy of Basket",
+        "paramNames": [
+          "GroupRecordClasses_GroupRecordClassDataset"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "GroupRecordClasses_GroupRecordClassBySnapshotBasket",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "boolean_question_GroupRecordClasses_GroupRecordClass",
+        "dynamicAttributes": [
+          {
+            "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "wdk_weight-histogram",
+                "description": "Display a histogram of weight distribution",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Search Weight",
+            "name": "wdk_weight",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "NUMBER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Combine Ortholog Group results",
+        "allowedPrimaryInputRecordClassNames": [
+          "group"
+        ],
+        "fullName": "InternalQuestions.boolean_question_GroupRecordClasses_GroupRecordClass",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "bq_left_op_GroupRecordClasses_GroupRecordClass",
+              "bq_right_op_GroupRecordClasses_GroupRecordClass",
+              "bq_operator"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Combine Ortholog Group results",
+        "paramNames": [
+          "bq_left_op_GroupRecordClasses_GroupRecordClass",
+          "bq_right_op_GroupRecordClasses_GroupRecordClass",
+          "bq_operator"
+        ],
+        "isCacheable": true,
+        "allowedSecondaryInputRecordClassNames": [
+          "group"
+        ],
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "queryName": "bq_GroupRecordClasses_GroupRecordClass",
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "urlSegment": "single_record_question_GroupRecordClasses_GroupRecordClass",
+        "dynamicAttributes": [],
+        "defaultSorting": [
+          {
+            "attributeName": "number_of_members",
+            "direction": "DESC"
+          }
+        ],
+        "isAnalyzable": false,
+        "displayName": "Single Ortholog Group",
+        "fullName": "InternalQuestions.single_record_question_GroupRecordClasses_GroupRecordClass",
+        "defaultAttributes": [
+          "primary_key",
+          "number_of_members",
+          "keywords",
+          "descriptions",
+          "ec_numbers",
+          "archaea",
+          "bacteria",
+          "alveolata",
+          "amoeba",
+          "euglenozoa",
+          "fungi",
+          "metazoa",
+          "viridiplantae",
+          "other_eukaryotes",
+          "core_min_evalue",
+          "core_25_evalue",
+          "core_median_evalue",
+          "core_75_evalue",
+          "core_max_evalue",
+          "all_min_evalue",
+          "all_25_evalue",
+          "all_median_evalue",
+          "all_75_evalue",
+          "all_max_evalue"
+        ],
+        "groups": [
+          {
+            "displayType": "empty",
+            "displayName": "",
+            "name": "empty",
+            "description": "",
+            "isVisible": true,
+            "parameters": [
+              "primaryKeys"
+            ]
+          }
+        ],
+        "filters": [],
+        "shortDisplayName": "Single Ortholog Group",
+        "paramNames": [
+          "primaryKeys"
+        ],
+        "isCacheable": true,
+        "outputRecordClassName": "group",
+        "noSummaryOnSingleRecord": false,
+        "defaultSummaryView": "_default",
+        "properties": {},
+        "summaryViewPlugins": [
+          {
+            "displayName": "Ortholog Group Results",
+            "name": "_default",
+            "description": ""
+          }
+        ]
+      }
+    ],
+    "urlSegment": "group",
+    "useBasket": true,
+    "nativeShortDisplayName": "Ortholog Group",
+    "formats": [
+      {
+        "isInReport": true,
+        "displayName": "Standard JSON",
+        "name": "standard",
+        "description": "Converts your result to the standard JSON used by the web service.",
+        "scopes": [
+          "results"
+        ],
+        "type": "standard"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Tab delimited (Excel) - choose columns to make a custom table",
+        "name": "attributesTabular",
+        "scopes": [
+          "results"
+        ],
+        "type": "attributesTabular"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Tab delimited (Excel) - choose a pre-configured table",
+        "name": "tableTabular",
+        "scopes": [
+          "results"
+        ],
+        "type": "tableTabular"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Text: choose from columns and/or tables",
+        "name": "fullRecord",
+        "scopes": [
+          "record"
+        ],
+        "type": "fullRecord"
+      },
+      {
+        "isInReport": true,
+        "displayName": "XML: choose from columns and/or tables",
+        "name": "xml",
+        "scopes": [],
+        "type": "xml"
+      },
+      {
+        "isInReport": true,
+        "displayName": "json: choose from columns and/or tables",
+        "name": "json",
+        "scopes": [],
+        "type": "json"
+      },
+      {
+        "isInReport": true,
+        "displayName": "FASTA: protein sequence",
+        "name": "fasta",
+        "scopes": [
+          "record",
+          "results"
+        ],
+        "type": "fasta"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "number_of_members-histogram",
+        "scopes": [],
+        "type": "histogram"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "number_of_peripheral_members-histogram",
+        "scopes": [],
+        "type": "histogram"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "number_of_core_members-histogram",
+        "scopes": [],
+        "type": "histogram"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Word Cloud",
+        "name": "group_type-wordCloud",
+        "scopes": [],
+        "type": "wordCloud"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Word Cloud",
+        "name": "keywords-wordCloud",
+        "scopes": [],
+        "type": "wordCloud"
+      },
+      {
+        "isInReport": true,
+        "displayName": "Word Cloud",
+        "name": "descriptions-wordCloud",
+        "scopes": [],
+        "type": "wordCloud"
+      }
+    ],
+    "hasAllRecordsQuery": false,
+    "displayName": "Ortholog Group",
+    "nativeShortDisplayNamePlural": "Ortholog Groups",
+    "fullName": "GroupRecordClasses.GroupRecordClass",
+    "description": "",
+    "shortDisplayName": "Ortholog Group",
+    "shortDisplayNamePlural": "Ortholog Groups",
+    "tables": [
+      {
+        "help": "Numbers refer to the number of proteins in that organism or taxonomic group. In order to see organisms and taxonomic groups without proteins in this ortholog group, uncheck 'Hide zero counts.'",
+        "isInReport": false,
+        "displayName": "Phlyetic Distribution of Proteins",
+        "name": "TaxonCounts",
+        "description": "Numbers refer to the number of proteins in that organism or taxonomic group.",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Taxon ID",
+            "name": "taxon_id",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Taxon Abbreviation",
+            "name": "abbrev",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Count",
+            "name": "count",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": true,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": true,
+        "displayName": "List of All Proteins",
+        "name": "Sequences",
+        "description": "This section features a Clustal Omega alignment tool (max 1000 sequences) and a tree visualization of proteins in this group. The proteins can be filtered in a number of ways, \n              <ul>\n\t      <li>Filter via text search on any/specific columns in the table.</li>\n              <li>Select one or more Pfam domains from the Pfam filter.</li>\n              <li>Restrict to Core Only, Peripheral Only or Core & Peripheral using the dropdown filter.</li>\n              <li>Filter taxonomically using the Organism filter.</li>\n              </ul>\n              The tree visualization is automatically updated with each selection. To run a Clustal Omega alignment after proteins are selected, choose the \u2018Output format\u2019 below the Protein List table and click the \u2018Run Clustal Omega for selected genes\u2019 button.",
+        "attributes": [
+          {
+            "help": "Select proteins to submit to clustal Omega at bottom of this table",
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Clustal Omega",
+            "name": "clustalInput",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "STRING",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "formats": [],
+            "displayName": "Accession",
+            "isSortable": true,
+            "type": "link",
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "help": "Taxon-abbreviation|Protein-Id. Click to visit this protein's page at OrthoMCL.",
+            "isInReport": false,
+            "truncateTo": 100,
+            "name": "sequence_link",
+            "isDisplayable": true,
+            "isRemovable": true,
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Word Cloud",
+                "name": "description-wordCloud",
+                "scopes": [],
+                "type": "wordCloud"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Description",
+            "name": "description",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Word Cloud",
+                "name": "organism_name-wordCloud",
+                "scopes": [],
+                "type": "wordCloud"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Organism",
+            "name": "organism_name",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "The taxonomic category of the organism.",
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Clade",
+            "name": "taxon_group",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "Whether the protein is from a core or peripheral species.",
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Core/Peripheral",
+            "name": "core_peripheral",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "Length of protein in amino acids",
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "length-histogram",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Length",
+            "name": "length",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "EC Numbers",
+            "name": "ec_numbers",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "full_id",
+            "name": "full_id",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Taxon Abbreviation",
+            "name": "taxon_abbrev",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": true,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": true,
+        "displayName": "Summary of Pfam domains",
+        "name": "PFams",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Accession Number",
+            "name": "accession",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Description",
+            "name": "description",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "help": "Number of proteins that contain this domain.",
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Count",
+            "name": "num_proteins",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "domain_index",
+            "name": "domain_index",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "max_index",
+            "name": "max_index",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": true,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": true,
+        "displayName": "PFam Architecture of Each Protein",
+        "name": "ProteinPFams",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Accession Number",
+            "name": "accession",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Source Id",
+            "name": "full_id",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Taxon",
+            "name": "taxon_name",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Core/Peripheral",
+            "name": "core_peripheral",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [
+              {
+                "isInReport": true,
+                "displayName": "Histogram",
+                "name": "protein_length-histogram",
+                "scopes": [],
+                "type": "histogram"
+              }
+            ],
+            "truncateTo": 100,
+            "displayName": "Length (aa)",
+            "name": "protein_length",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "End",
+            "name": "start_min",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Start",
+            "name": "end_max",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "domain_index",
+            "name": "domain_index",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": true,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": true,
+        "displayName": "Summary of EC Numbers",
+        "name": "EcNumber",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "ec_number",
+            "name": "ec_number",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "EC Number",
+            "name": "ec_number_link",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "type": "link",
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "EC Description",
+            "name": "description",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "# Proteins",
+            "name": "sequence_count",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": true,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": true,
+        "displayName": "All previous groups",
+        "name": "previousGroups",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Ortholog Group",
+            "name": "group_name",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Previous Ortholog Groups",
+            "name": "group_id",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": true,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": true,
+        "displayName": "Similar Groups",
+        "name": "SimilarGroup",
+        "description": "Similar groups are computed by a Diamond BLASTX comparison of the Representative Sequences (centroids) of all groups with each other. Groups with pairwise BLAST scores better than 1e-5 are considered similar.",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "similar_group",
+            "name": "similar_group",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": false,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Similar Group ID",
+            "name": "similar_group_link",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "type": "link",
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "# Proteins",
+            "name": "protein_count",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Keyword",
+            "name": "keyword",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Pfam Domain",
+            "name": "pfam",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "E-value",
+            "name": "evalue",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": true,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "help": "Group Statistics are a measure of cohesiveness for the proteins in an orthogroup. A pairwise BLAST e-value is computed between each protein and the Representative Sequence, which is the centroid of the group. A tight group will have a highly significant median of these pairwise e-values and also a significant maximum e-value (ie. less than 1e-10, since smaller e-values are more significant). The maximum e-value is a measure of the distance between the most dissimilar protein compared to the Representative Sequence.",
+        "isInReport": true,
+        "displayName": "Group Statistics",
+        "name": "GroupStat",
+        "description": "Group Statistics are a measure of dispersion for an orthogroup. E-values are computed between all of the proteins vs. a central protein in the group.",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "group_name",
+            "name": "group_name",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "Protein Subset",
+            "name": "group_type",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "min",
+            "name": "min",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "25th",
+            "name": "twentyfive",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "median",
+            "name": "median",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "75th",
+            "name": "seventyfive",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "max",
+            "name": "max",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": true,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": true,
+        "displayName": "GroupName",
+        "name": "GroupName",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "name_string",
+            "name": "name_string",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": true,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": true,
+        "displayName": "Keyword Frequency",
+        "name": "KeywordFrequency",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "keyword",
+            "name": "keyword",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "frequency",
+            "name": "frequency",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": false,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": true,
+        "displayName": "Domain Frequency",
+        "name": "DomainFrequency",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "keyword",
+            "name": "keyword",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "frequency",
+            "name": "frequency",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": false,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      },
+      {
+        "isInReport": true,
+        "displayName": "Phyletic Distribution clade abundance",
+        "name": "PhyleticDistributionCounts",
+        "description": "",
+        "attributes": [
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "group_name",
+            "name": "group_name",
+            "isSortable": true,
+            "isDisplayable": false,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "alveolata_actual",
+            "name": "alveolata_actual",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "alveolata_total",
+            "name": "alveolata_total",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "alveolata_percent",
+            "name": "alveolata_percent",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "archaea_actual",
+            "name": "archaea_actual",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "archaea_total",
+            "name": "archaea_total",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "archaea_percent",
+            "name": "archaea_percent",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "amoeba_actual",
+            "name": "amoeba_actual",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "amoeba_total",
+            "name": "amoeba_total",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "amoeba_percent",
+            "name": "amoeba_percent",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "bacteria_actual",
+            "name": "bacteria_actual",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "bacteria_total",
+            "name": "bacteria_total",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "bacteria_percent",
+            "name": "bacteria_percent",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "fungi_actual",
+            "name": "fungi_actual",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "fungi_total",
+            "name": "fungi_total",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "fungi_percent",
+            "name": "fungi_percent",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "euglenozoa_actual",
+            "name": "euglenozoa_actual",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "euglenozoa_total",
+            "name": "euglenozoa_total",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "euglenozoa_percent",
+            "name": "euglenozoa_percent",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "metazoa_actual",
+            "name": "metazoa_actual",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "metazoa_total",
+            "name": "metazoa_total",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "metazoa_percent",
+            "name": "metazoa_percent",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "viridiplantae_actual",
+            "name": "viridiplantae_actual",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "viridiplantae_total",
+            "name": "viridiplantae_total",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "viridiplantae_percent",
+            "name": "viridiplantae_percent",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "other_eukaryotes_actual",
+            "name": "other_eukaryotes_actual",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "other_eukaryotes_total",
+            "name": "other_eukaryotes_total",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          },
+          {
+            "isInReport": true,
+            "formats": [],
+            "truncateTo": 100,
+            "displayName": "other_eukaryotes_percent",
+            "name": "other_eukaryotes_percent",
+            "isSortable": true,
+            "isDisplayable": true,
+            "isRemovable": true,
+            "columnDataType": "OTHER",
+            "tools": {
+              "reports": [],
+              "filters": []
+            },
+            "properties": {}
+          }
+        ],
+        "isDisplayable": true,
+        "properties": {},
+        "supportsSingleRecordOnly": false,
+        "clientSortSpec": []
+      }
+    ],
+    "nativeDisplayNamePlural": "Ortholog Groups",
+    "displayNamePlural": "Ortholog Groups",
+    "recordIdAttributeName": "primary_key",
+    "attributes": [
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Ortholog Group",
+        "name": "primary_key",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": false,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100000,
+        "displayName": "Alveolata",
+        "name": "alveolata",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100000,
+        "displayName": "Archaea",
+        "name": "archaea",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100000,
+        "displayName": "Amoeba",
+        "name": "amoeba",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100000,
+        "displayName": "Bacteria",
+        "name": "bacteria",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100000,
+        "displayName": "Fungi",
+        "name": "fungi",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100000,
+        "displayName": "Euglenozoa",
+        "name": "euglenozoa",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100000,
+        "displayName": "Metazoa",
+        "name": "metazoa",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100000,
+        "displayName": "Viridiplantae",
+        "name": "viridiplantae",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100000,
+        "displayName": "Other_Eukaryotes",
+        "name": "other_eukaryotes",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Record Overview HTML",
+        "name": "record_overview",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "group_name",
+        "name": "group_name",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Histogram",
+            "name": "number_of_members-histogram",
+            "scopes": [],
+            "type": "histogram"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "Total Number Proteins",
+        "name": "number_of_members",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Histogram",
+            "name": "number_of_peripheral_members-histogram",
+            "scopes": [],
+            "type": "histogram"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "Number of Peripheral Proteins",
+        "name": "number_of_peripheral_members",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Histogram",
+            "name": "number_of_core_members-histogram",
+            "scopes": [],
+            "type": "histogram"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "Number of Peripheral Proteins",
+        "name": "number_of_core_members",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "help": "Core groups are first formed with core proteins and subsequently peripheral proteins are mapped in. Residual groups are formed with peripheral proteins that fail to map to any of the core groups.",
+        "isInReport": true,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Word Cloud",
+            "name": "group_type-wordCloud",
+            "scopes": [],
+            "type": "wordCloud"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "Group Type",
+        "name": "group_type",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Longest Sequence",
+        "name": "max_length",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Min E-value (CORE)",
+        "name": "core_min_evalue",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "25% E-value (CORE)",
+        "name": "core_25_evalue",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Median E-value (CORE)",
+        "name": "core_median_evalue",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "75% E-value (CORE)",
+        "name": "core_75_evalue",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Max E-value (CORE)",
+        "name": "core_max_evalue",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Min E-value (ALL)",
+        "name": "all_min_evalue",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "25% E-value (ALL)",
+        "name": "all_25_evalue",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Median E-value (ALL)",
+        "name": "all_median_evalue",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "75% E-value (ALL)",
+        "name": "all_75_evalue",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": false,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Max E-value (ALL)",
+        "name": "all_max_evalue",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_actual",
+        "name": "alveolata_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_total",
+        "name": "alveolata_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_percent",
+        "name": "alveolata_percent",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_actual",
+        "name": "archaea_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_total",
+        "name": "archaea_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_percent",
+        "name": "archaea_percent",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "amoeba_actual",
+        "name": "amoeba_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "amoeba_total",
+        "name": "amoeba_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "amoeba_percent",
+        "name": "amoeba_percent",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_actual",
+        "name": "bacteria_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_total",
+        "name": "bacteria_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_percent",
+        "name": "bacteria_percent",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_actual",
+        "name": "fungi_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_total",
+        "name": "fungi_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_percent",
+        "name": "fungi_percent",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "euglenozoa_actual",
+        "name": "euglenozoa_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "euglenozoa_total",
+        "name": "euglenozoa_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "euglenozoa_percent",
+        "name": "euglenozoa_percent",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_actual",
+        "name": "metazoa_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_total",
+        "name": "metazoa_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_percent",
+        "name": "metazoa_percent",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "viridiplantae_actual",
+        "name": "viridiplantae_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "viridiplantae_total",
+        "name": "viridiplantae_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "viridiplantae_percent",
+        "name": "viridiplantae_percent",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "other_eukaryotes_actual",
+        "name": "other_eukaryotes_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "other_eukaryotes_total",
+        "name": "other_eukaryotes_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "other_eukaryotes_percent",
+        "name": "other_eukaryotes_percent",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_firm_actual",
+        "name": "bacteria_firm_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_firm_total",
+        "name": "bacteria_firm_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_proa_actual",
+        "name": "bacteria_proa_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_proa_total",
+        "name": "bacteria_proa_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_prob_actual",
+        "name": "bacteria_prob_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_prob_total",
+        "name": "bacteria_prob_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_prod_actual",
+        "name": "bacteria_prod_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_prod_total",
+        "name": "bacteria_prod_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_proe_actual",
+        "name": "bacteria_proe_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_proe_total",
+        "name": "bacteria_proe_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_prog_actual",
+        "name": "bacteria_prog_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_prog_total",
+        "name": "bacteria_prog_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_obac_actual",
+        "name": "bacteria_obac_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "bacteria_obac_total",
+        "name": "bacteria_obac_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_arch_actual",
+        "name": "archaea_arch_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_arch_total",
+        "name": "archaea_arch_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_eury_actual",
+        "name": "archaea_eury_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_eury_total",
+        "name": "archaea_eury_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_cren_actual",
+        "name": "archaea_cren_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_cren_total",
+        "name": "archaea_cren_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_nano_actual",
+        "name": "archaea_nano_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_nano_total",
+        "name": "archaea_nano_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_kora_actual",
+        "name": "archaea_kora_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "archaea_kora_total",
+        "name": "archaea_kora_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_alve_actual",
+        "name": "alveolata_alve_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_alve_total",
+        "name": "alveolata_alve_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_cili_actual",
+        "name": "alveolata_cili_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_cili_total",
+        "name": "alveolata_cili_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_apic_actual",
+        "name": "alveolata_apic_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_apic_total",
+        "name": "alveolata_apic_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_cocc_actual",
+        "name": "alveolata_cocc_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_cocc_total",
+        "name": "alveolata_cocc_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_haem_actual",
+        "name": "alveolata_haem_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_haem_total",
+        "name": "alveolata_haem_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_piro_actual",
+        "name": "alveolata_piro_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "alveolata_piro_total",
+        "name": "alveolata_piro_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "viridiplantae_stre_actual",
+        "name": "viridiplantae_stre_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "viridiplantae_stre_total",
+        "name": "viridiplantae_stre_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "viridiplantae_chlo_actual",
+        "name": "viridiplantae_chlo_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "viridiplantae_chlo_total",
+        "name": "viridiplantae_chlo_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "viridiplantae_rhod_actual",
+        "name": "viridiplantae_rhod_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "viridiplantae_rhod_total",
+        "name": "viridiplantae_rhod_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "viridiplantae_cryp_actual",
+        "name": "viridiplantae_cryp_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "viridiplantae_cryp_total",
+        "name": "viridiplantae_cryp_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_fung_actual",
+        "name": "fungi_fung_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_fung_total",
+        "name": "fungi_fung_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_micr_actual",
+        "name": "fungi_micr_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_micr_total",
+        "name": "fungi_micr_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_basi_actual",
+        "name": "fungi_basi_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_basi_total",
+        "name": "fungi_basi_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_asco_actual",
+        "name": "fungi_asco_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_asco_total",
+        "name": "fungi_asco_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_muco_actual",
+        "name": "fungi_muco_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_muco_total",
+        "name": "fungi_muco_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_chyt_actual",
+        "name": "fungi_chyt_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "fungi_chyt_total",
+        "name": "fungi_chyt_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_omet_actual",
+        "name": "metazoa_omet_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_omet_total",
+        "name": "metazoa_omet_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_nema_actual",
+        "name": "metazoa_nema_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_nema_total",
+        "name": "metazoa_nema_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_arth_actual",
+        "name": "metazoa_arth_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_arth_total",
+        "name": "metazoa_arth_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_chor_actual",
+        "name": "metazoa_chor_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_chor_total",
+        "name": "metazoa_chor_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_acti_actual",
+        "name": "metazoa_acti_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_acti_total",
+        "name": "metazoa_acti_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_aves_actual",
+        "name": "metazoa_aves_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_aves_total",
+        "name": "metazoa_aves_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_mamm_actual",
+        "name": "metazoa_mamm_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_mamm_total",
+        "name": "metazoa_mamm_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_tuni_actual",
+        "name": "metazoa_tuni_actual",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "metazoa_tuni_total",
+        "name": "metazoa_tuni_total",
+        "isSortable": true,
+        "isDisplayable": false,
+        "isRemovable": true,
+        "columnDataType": "NUMBER",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "help": "Number of proteins in parentheses.",
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "EC Numbers",
+        "name": "ec_numbers",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "help": "Previous Groups that now have Proteins within this Group.",
+        "isInReport": true,
+        "formats": [],
+        "truncateTo": 100,
+        "displayName": "Previous Groups",
+        "name": "previous_groups",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "help": "Words found in at least 50% of protein descriptions.",
+        "isInReport": true,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Word Cloud",
+            "name": "keywords-wordCloud",
+            "scopes": [],
+            "type": "wordCloud"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "Keywords",
+        "name": "keywords",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      },
+      {
+        "help": "Number of proteins in parentheses. Shown are the three most frequent domains (or more if there are ties in frequency).",
+        "isInReport": true,
+        "formats": [
+          {
+            "isInReport": true,
+            "displayName": "Word Cloud",
+            "name": "descriptions-wordCloud",
+            "scopes": [],
+            "type": "wordCloud"
+          }
+        ],
+        "truncateTo": 100,
+        "displayName": "Top PFam Domains",
+        "name": "descriptions",
+        "isSortable": true,
+        "isDisplayable": true,
+        "isRemovable": true,
+        "columnDataType": "STRING",
+        "tools": {
+          "reports": [],
+          "filters": []
+        },
+        "properties": {}
+      }
+    ],
+    "primaryKeyColumnRefs": [
+      "group_name"
+    ],
+    "properties": {}
+  }
+}

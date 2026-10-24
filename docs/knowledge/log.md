@@ -1,5 +1,36 @@
 # Knowledge log
 
+## 2026-10-24 - 0.2.0b50
+
+- Additive: no published name is removed or renamed, and no field changes type.
+- `Share` (`veupathdb_mcp.tool_meta`, on the root surface with `SHARE_FORMAT`) is a
+  float a host shows as a percentage; its JSON schema carries `"format": "share"`, so a host reads the
+  display form from the schema. The served shares are marked:
+  `IntronDepth.coveredShare`, `Located.share` and `RateBounds.rate`, `low`, `high`,
+  `floor` and `ceiling`, each bounded to 0..1 (`confirmed` never exceeds `checked`).
+  `IntronDepth.depthShare` is the intron median depth over the exon median depth and can
+  pass 1, so it stays a plain number, as do a length ratio and a BUSCO percentage.
+- `Sentence` (`veupathdb_mcp.tool_meta`, on the root surface with `SENTENCE_FORMAT`) is a
+  string whose JSON schema carries `"format": "sentence"`: free text a host cites and never
+  places inline. It is a plain `Annotated` assignment, so a field keeps its own bounds and
+  no `$ref` replaces it. The marked fields are `IntronAudit.correctionReason`,
+  `IntronJudgement.reason` (which `IntronAudit` inherits) and `OrthologSupport.reason`.
+- `StepColumns.transforms: tuple[TransformColumns, ...]` (`transforms`, empty by
+  default) names each search that takes the step's record type as its one input and
+  produces another record type, from the site's catalog
+  (`allowedPrimaryInputRecordClassNames`, no `allowedSecondaryInputRecordClassNames`;
+  a search back into the same record type, `GenesByOrthologs` among them, reaches no
+  column the step lacks), the record type it produces and the columns
+  of that record type and of its own search that `count_step_by_column` can count.
+  `list_step_columns` and the served `get_step_columns` fill it; `count_by_column`
+  reads no catalog for it.
+- `transforms_from(record_types, record_type)` is the pure reading, so a host that
+  counts a column by another report reads the same transforms.
+- `catalog/search_offer.py` holds one predicate for a search that takes input steps
+  (`takes_an_input_step`, `takes_two_input_steps`, `transforms_one_step_of`); the boolean
+  check, `list_transforms` and `transforms_from` read it. `list_transforms` still lists
+  a search that takes two steps and is no boolean (span logic).
+
 ## 2026-10-24 - 0.2.0b49
 
 - Additive: no published name is removed or renamed, and no field changes type.

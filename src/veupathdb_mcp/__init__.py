@@ -8,15 +8,26 @@ imports this package and carries neither a WDK account nor a database.
 
 from veupathdb_mcp.service_tokens import ServiceToken, ServiceTokenRegistry
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
-from veupathdb_mcp.tool_meta import MAX_CALL_SECONDS_META_KEY, STREAM_PART_META_KEY
+from veupathdb_mcp.tool_meta import (
+    MAX_CALL_SECONDS_META_KEY,
+    SENTENCE_FORMAT,
+    SHARE_FORMAT,
+    STREAM_PART_META_KEY,
+    Sentence,
+    Share,
+)
 
-__version__ = "0.2.0b49"
+__version__ = "0.2.0b50"
 
 __all__ = [
     "MAX_CALL_SECONDS_META_KEY",
+    "SENTENCE_FORMAT",
+    "SHARE_FORMAT",
     "STREAM_PART_META_KEY",
+    "Sentence",
     "ServiceToken",
     "ServiceTokenRegistry",
+    "Share",
     "ToolErrorPayload",
     "tool_error",
 ]
