@@ -15,6 +15,7 @@ type PseudogeneVerdict = Literal[
 ]
 
 _COVERED = 0.9
+PREMATURE_STOPS_LISTED = 20
 
 
 class CdsPart(BaseModel):
@@ -74,6 +75,14 @@ class PseudogeneCheck(CamelModel):
     covered: int
     premature_stops: list[int]
     residue_differences: int
+    premature_stops_truncated: bool = False
+
+    @model_validator(mode="after")
+    def _cut_from_a_list(self) -> Self:
+        if self.premature_stops_truncated and not self.premature_stops:
+            msg = "a pseudogene check cuts its stop list only when it lists stops"
+            raise ValueError(msg)
+        return self
 
 
 def _strain_coding(reference: str, mask: list[bool], strain: str) -> tuple[str, int]:
@@ -133,8 +142,9 @@ def check_pseudogene_call(
         reference_cds_length=len(reference_coding),
         strain_cds_length=len(strain_coding),
         covered=covered,
-        premature_stops=stops[:20],
+        premature_stops=stops[:PREMATURE_STOPS_LISTED],
         residue_differences=_residue_differences(
             translate(reference_coding, code), protein
         ),
+        premature_stops_truncated=len(stops) > PREMATURE_STOPS_LISTED,
     )

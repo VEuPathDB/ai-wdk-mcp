@@ -28,6 +28,7 @@ RETAINED_MIN_SHARE = 0.25
 RETAINED_MIN_COVERED = 0.9
 PEPTIDE_SLACK = 3
 CANONICAL_MOTIFS = frozenset({"GT..AG", "GC..AG"})
+JUNCTION_TRACKS_READ = 4
 
 type Span = tuple[int, int]
 type Strand = Literal["+", "-"]
@@ -293,6 +294,33 @@ class UnreadIntron(CamelModel):
         return f"the intron {self.start}-{self.end} spans an assembly gap"
 
 
+class JunctionTracks(CamelModel):
+    model_config = ConfigDict(frozen=True)
+
+    organism_abbrev: str
+    listed: int = Field(ge=0)
+    read: int = Field(ge=0)
+
+    @model_validator(mode="after")
+    def _read_from_the_list(self) -> Self:
+        if self.read > self.listed:
+            msg = (
+                f"{self.organism_abbrev} lists {self.listed} junction tracks and "
+                f"cannot read {self.read}"
+            )
+            raise ValueError(msg)
+        return self
+
+    @property
+    def cap_note(self) -> str | None:
+        if self.read >= self.listed:
+            return None
+        return (
+            f"{self.organism_abbrev} lists {self.listed} junction tracks; the first "
+            f"{self.read} were read"
+        )
+
+
 def verdict_of(unread: list[UnreadIntron]) -> IntronVerdict:
     outcomes = {u.outcome for u in unread}
     return next(verdict for outcome, verdict in _RANKED if outcome in outcomes)
@@ -356,11 +384,20 @@ class IntronAudit(IntronJudgement):
     orthologs: OrthologSupport | None
     correction_reason: str | None = None
     model: ModelSpans | None = None
+    junction_tracks: JunctionTracks | None = None
 
     @model_validator(mode="after")
     def _named_as_resolved(self) -> Self:
         check_resolved(self.gene_ids, [self.gene])
         check_models([self.model] if self.model else [], [self.gene])
+        return self
+
+    @model_validator(mode="after")
+    def _cut_named(self) -> Self:
+        note = self.junction_tracks.cap_note if self.junction_tracks else None
+        if note is not None and note not in self.evidence_unread:
+            msg = f"an intron audit names its junction track cut: {note}"
+            raise ValueError(msg)
         return self
 
     @model_validator(mode="after")

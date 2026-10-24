@@ -9,7 +9,7 @@ from tests._support.record_site import (
     load_records,
 )
 
-from veupathdb_mcp.audit import introns_inputs
+from veupathdb_mcp.audit import JunctionTracks, introns_inputs
 from veupathdb_mcp.audit.codes import GeneticCode
 from veupathdb_mcp.audit.intron_coverage import (
     COVERAGE_CANDIDATE_PAIRS,
@@ -46,6 +46,9 @@ async def test_the_recorded_pkac_model_misses_its_atp_site_exon(
     result = await audit_intron_support("plasmodb", "PcyM_0736700")
 
     assert result.verdict == "UNSUPPORTED_MISSING_EXON"
+    assert result.junction_tracks == JunctionTracks(
+        organism_abbrev="pcynM", listed=1, read=1
+    )
     assert result.introns == [
         IntronSupport(start=1381746, end=1382305, reads=0, tracks=0),
         IntronSupport(start=1382466, end=1382630, reads=1970, tracks=1),

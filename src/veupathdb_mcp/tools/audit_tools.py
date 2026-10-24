@@ -90,7 +90,9 @@ async def audit_pseudogene_call(
     Yes); any other gene is refused. The strain's genome around the gene is
     aligned to the reference gene's coding sequence and translated. INTACT
     means one open frame from start to stop; the other verdicts name what
-    breaks it. The check translates with the standard genetic code; it does
+    breaks it. prematureStops lists the residue positions of the first 20
+    in-frame stops before the last codon, and prematureStopsTruncated is
+    true when the frame holds more. The check translates with the standard genetic code; it does
     not infer the gene's code, so a gene of a clade that reads TGA or CTG
     otherwise can read a stop or a substitution here. referenceModel gives
     the reference transcript's exon and CDS spans (genome coordinates, 1-based, inclusive, ascending), its seqid and strand.

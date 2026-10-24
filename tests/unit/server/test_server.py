@@ -34,6 +34,7 @@ from veupathdb_mcp.audit import (
     RECORD_READS_PER_CALL,
     FusionInputs,
     GeneId,
+    JunctionTracks,
     LengthInputs,
     LengthScreen,
     ModelSpans,
@@ -1303,6 +1304,7 @@ async def test_an_intron_audit_with_no_junction_track_answers_camel_case(
             reason="plasmodb lists no RNA-seq junction track for pcynM",
             transcript="PcyM_0736700-t36_1",
             other_transcripts=0,
+            junction_tracks=JunctionTracks(organism_abbrev="pcynM", listed=0, read=0),
         )
 
     monkeypatch.setattr(audit_intron_tools, "intron_inputs", inputs)
@@ -1334,6 +1336,7 @@ async def test_an_intron_audit_with_no_junction_track_answers_camel_case(
         "orthologs": None,
         "correctionReason": None,
         "model": None,
+        "junctionTracks": {"organismAbbrev": "pcynM", "listed": 0, "read": 0},
     }
 
 

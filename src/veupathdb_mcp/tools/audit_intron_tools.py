@@ -54,7 +54,8 @@ def _unchecked(unchecked: UncheckedIntrons) -> IntronAudit:
             "transcript": unchecked.transcript,
             "other_transcripts": unchecked.other_transcripts,
             "tracks_refused": unchecked.tracks_refused,
-            "evidence_unread": [],
+            "junction_tracks": unchecked.junction_tracks,
+            "evidence_unread": unchecked.evidence_unread,
             "corrected_cds": None,
             "corrected_protein": None,
             "frame_kept": None,
@@ -93,6 +94,7 @@ async def _judged(site_id: str, reads: IntronReads) -> IntronAudit:
         "transcript": structure.transcript,
         "other_transcripts": structure.other_transcripts,
         "tracks_refused": reads.tracks_refused,
+        "junction_tracks": reads.junction_tracks,
         "evidence_unread": [*reads.evidence_unread, *reads.models.evidence_unread],
         "corrected_cds": None,
         "corrected_protein": None,
@@ -129,9 +131,11 @@ async def audit_intron_support(site_id: str, gene: str) -> IntronAudit:
     Only the transcript with the longest CDS is judged (transcript); the
     gene's other transcripts are counted (otherTranscripts), not judged.
     The first 4 RNA-seq junction tracks the site serves for the gene's
-    organism are read over the gene (evidenceUnread names how many it
-    lists past that); junctions with no strand are set aside and counted
-    (unstrandedIgnored). bestJunctionReads is what the expression gate
+    organism are read over the gene; junctionTracks gives how many the
+    organism lists (listed) and how many were read (read), and
+    evidenceUnread names the cut when listed is past read. junctionTracks
+    is null when the call ends before the track list is read. Junctions
+    with no strand are set aside and counted (unstrandedIgnored). bestJunctionReads is what the expression gate
     measured: the reads of the best annotated intron, or, when no annotated
     intron has a read, of the best Strong Evidence junction on the gene's
     strand that lies wholly inside the gene. The gene is NOT_EXPRESSED when

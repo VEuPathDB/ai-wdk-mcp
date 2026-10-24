@@ -31,9 +31,11 @@ from veupathdb_mcp.audit.intron_evidence import (
     stage_evidence,
 )
 from veupathdb_mcp.audit.introns import (
+    JUNCTION_TRACKS_READ,
     NO_EVIDENCE,
     GeneStructure,
     IntronEvidence,
+    JunctionTracks,
     RnaJunction,
     Span,
 )
@@ -56,7 +58,6 @@ from veupathdb_mcp.tool_errors import ToolErrorPayload
 
 INTRON_READ_THROUGH = 3000
 INTRON_JUNCTION_PAD = 200
-JUNCTION_TRACKS_READ = 4
 ORTHOLOG_PROTEINS_READ = 16
 
 
@@ -68,6 +69,8 @@ class UncheckedIntrons(BaseModel):
     transcript: str | None = None
     other_transcripts: int | None = None
     tracks_refused: list[str] | None = None
+    junction_tracks: JunctionTracks | None = None
+    evidence_unread: list[str] = Field(default_factory=list)
 
 
 class _TrackReads(BaseModel):
@@ -75,7 +78,7 @@ class _TrackReads(BaseModel):
 
     junctions: list[RnaJunction]
     refused: list[str]
-    unread: list[str]
+    tracks: JunctionTracks
 
 
 class _NoTrack(BaseModel):
@@ -83,6 +86,7 @@ class _NoTrack(BaseModel):
 
     reason: str
     refused: list[str] | None
+    tracks: JunctionTracks
 
 
 class IntronReads(BaseModel):
@@ -95,6 +99,7 @@ class IntronReads(BaseModel):
     structure: GeneStructure
     junctions: list[RnaJunction]
     tracks_refused: list[str]
+    junction_tracks: JunctionTracks
     evidence: IntronEvidence = NO_EVIDENCE
     window: GenomeWindow | None = None
     evidence_unread: list[str] = Field(default_factory=list)
@@ -171,15 +176,16 @@ async def _junctions(
 ) -> _TrackReads | _NoTrack:
     listed = await client.junction_tracks(abbrev)
     tracks = listed[:JUNCTION_TRACKS_READ]
-    capped = (
-        f"{abbrev} lists {len(listed)} junction tracks; the first "
-        f"{JUNCTION_TRACKS_READ} were read"
+    counted = JunctionTracks(
+        organism_abbrev=abbrev,
+        listed=len(listed),
+        read=min(len(listed), JUNCTION_TRACKS_READ),
     )
-    unread = [capped] if len(listed) > JUNCTION_TRACKS_READ else []
     if not tracks:
         return _NoTrack(
             reason=f"{site_id} lists no RNA-seq junction track for {abbrev}",
             refused=None,
+            tracks=counted,
         )
     start, end = junction_region(row)
     reader = tabix_reader(client)
@@ -193,8 +199,8 @@ async def _junctions(
             continue
         found += _features(lines, track.data_path)
     if len(refused) == len(tracks):
-        return _NoTrack(reason="; ".join(refused), refused=refused)
-    return _TrackReads(junctions=found, refused=refused, unread=unread)
+        return _NoTrack(reason="; ".join(refused), refused=refused, tracks=counted)
+    return _TrackReads(junctions=found, refused=refused, tracks=counted)
 
 
 async def _staged(
@@ -232,6 +238,8 @@ async def _read_junctions(
                 transcript=structure.transcript,
                 other_transcripts=structure.other_transcripts,
                 tracks_refused=missing.refused,
+                junction_tracks=missing.tracks,
+                evidence_unread=list(filter(None, [missing.tracks.cap_note])),
             )
         case _TrackReads() as read:
             staged = await _staged(client, row, model, structure, read.junctions)
@@ -243,9 +251,13 @@ async def _read_junctions(
                 structure=structure,
                 junctions=read.junctions,
                 tracks_refused=read.refused,
+                junction_tracks=read.tracks,
                 evidence=staged.evidence,
                 window=staged.window,
-                evidence_unread=[*read.unread, *staged.unread],
+                evidence_unread=[
+                    *filter(None, [read.tracks.cap_note]),
+                    *staged.unread,
+                ],
             )
 
 

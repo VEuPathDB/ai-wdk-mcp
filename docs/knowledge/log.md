@@ -1,5 +1,31 @@
 # Knowledge log
 
+## 2026-10-24 - 0.2.0b45
+
+- Additive, not breaking. Two caps a host had to copy as numbers or read out of a
+  sentence are typed and exported from `veupathdb_mcp.audit`:
+  - `PREMATURE_STOPS_LISTED = 20` is the most stops `PseudogeneCheck.premature_stops`
+    lists, and `PseudogeneCheck` carries `premature_stops_truncated: bool`
+    (`prematureStopsTruncated` on the wire, default false): true when the frame holds
+    more stops than the list. The cap applies where the check is built, never in the
+    model, so a record stored under one cap still validates under another; the model
+    refuses only a cut list that is empty. A synthetic frame with 23 stops lists the
+    first 20 and reads `premature_stops_truncated` true; one with exactly 20 reads it
+    false.
+  - `JUNCTION_TRACKS_READ = 4` moves from `introns_inputs` to `introns` and is
+    exported. `IntronAudit` carries `junction_tracks: JunctionTracks | None`
+    (`junctionTracks`, null when the call ends before the track list is read), where
+    `JunctionTracks` holds `organism_abbrev: str`, `listed: int` and `read: int`.
+    The read count is the lesser of `listed` and the cap where the record is built;
+    the model refuses only a `read` past `listed`, so a record stored under one cap
+    still validates under another. The sentence
+    "{abbrev} lists {listed} junction tracks; the first {read} were read" in
+    `evidence_unread` is written from the record alone (`JunctionTracks.cap_note`,
+    when `read` is under `listed`), and the audit refuses a cut its
+    `evidence_unread` does not name. A NOT_CHECKED answer whose tracks all refuse
+    the gene's sequence now names the cut too. On the recorded QA plasmodb case
+    PcyM_0736700 the record reads `pcynM`, listed 1, read 1.
+
 ## 2026-10-24 - 0.2.0b44
 
 - Additive, not breaking. `UnreadIntron` carries `spans_assembly_gap: bool`

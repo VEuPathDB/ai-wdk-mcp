@@ -5,9 +5,11 @@ import pytest
 from pydantic import ValidationError
 from scripts.record_audit_fixtures import Region
 
+from veupathdb_mcp.audit import PREMATURE_STOPS_LISTED
 from veupathdb_mcp.audit.codes import GeneticCode, reverse_complement
 from veupathdb_mcp.audit.pseudogene import (
     CdsPart,
+    PseudogeneCheck,
     ReferenceGene,
     check_pseudogene_call,
 )
@@ -103,6 +105,57 @@ def test_a_premature_stop_is_a_real_nonsense_allele() -> None:
     result = check_pseudogene_call(whole(coding_dna, "+"), broken, GeneticCode.STANDARD)
     assert result.verdict == "PREMATURE_STOP"
     assert result.premature_stops == [12]
+    assert result.premature_stops_truncated is False
+
+
+def test_stops_past_the_cap_are_cut_and_the_cut_is_stated() -> None:
+    body = sense_codons(random.Random(11), 300)
+    stops = list(range(10, 300, 13))
+    codons = [body[i : i + 3] for i in range(0, len(body), 3)]
+    for at in stops:
+        codons[at] = "TAA"
+    coding_dna = "ATG" + body + "TAA"
+    broken = "ATG" + "".join(codons) + "TAA"
+    result = check_pseudogene_call(whole(coding_dna, "+"), broken, GeneticCode.STANDARD)
+    assert len(stops) > PREMATURE_STOPS_LISTED
+    assert result.verdict == "PREMATURE_STOP"
+    assert result.premature_stops == [at + 2 for at in stops][:PREMATURE_STOPS_LISTED]
+    assert result.premature_stops_truncated is True
+
+
+def stop_check(stops: list[int], truncated: bool) -> PseudogeneCheck:
+    return PseudogeneCheck(
+        verdict="PREMATURE_STOP",
+        reference_cds_length=906,
+        strain_cds_length=906,
+        covered=906,
+        premature_stops=stops,
+        premature_stops_truncated=truncated,
+        residue_differences=len(stops),
+    )
+
+
+def test_exactly_the_cap_of_stops_is_not_cut() -> None:
+    body = sense_codons(random.Random(13), 300)
+    stops = [10 + 13 * n for n in range(PREMATURE_STOPS_LISTED)]
+    codons = [body[i : i + 3] for i in range(0, len(body), 3)]
+    for at in stops:
+        codons[at] = "TAA"
+    coding_dna = "ATG" + body + "TAA"
+    broken = "ATG" + "".join(codons) + "TAA"
+    result = check_pseudogene_call(whole(coding_dna, "+"), broken, GeneticCode.STANDARD)
+    assert result.premature_stops == [at + 2 for at in stops]
+    assert result.premature_stops_truncated is False
+
+
+def test_a_check_built_under_a_larger_cap_still_validates() -> None:
+    stops = list(range(1, PREMATURE_STOPS_LISTED + 6))
+    assert stop_check(stops, truncated=False).premature_stops == stops
+
+
+def test_a_cut_list_is_never_empty() -> None:
+    with pytest.raises(ValidationError, match="only when it lists stops"):
+        stop_check([], truncated=True)
 
 
 def test_a_lost_stop_codon_is_not_called_intact() -> None:

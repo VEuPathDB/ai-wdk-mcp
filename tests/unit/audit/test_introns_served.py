@@ -21,13 +21,17 @@ from tests._support.intron_site import (
 from tests._support.proteins import row
 from veupathdb.jbrowse import GenomeWindow, TrackReadError
 
-from veupathdb_mcp.audit import served, track_reads
+from veupathdb_mcp.audit import (
+    JUNCTION_TRACKS_READ,
+    JunctionTracks,
+    served,
+    track_reads,
+)
 from veupathdb_mcp.audit.codes import GeneticCode
 from veupathdb_mcp.audit.genes import OrthologGroup
 from veupathdb_mcp.audit.introns import IntronAudit
 from veupathdb_mcp.audit.introns_inputs import (
     INTRON_READ_THROUGH,
-    JUNCTION_TRACKS_READ,
     ortholog_choice,
 )
 from veupathdb_mcp.tools.audit_intron_tools import audit_intron_support
@@ -63,6 +67,9 @@ async def test_an_organism_with_no_junction_track_is_not_checked(
     assert result.verdict == "NOT_CHECKED"
     assert result.reason == "plasmodb lists no RNA-seq junction track for pcynX"
     assert (result.tracks_refused, result.introns) == (None, None)
+    assert result.junction_tracks == JunctionTracks(
+        organism_abbrev="pcynX", listed=0, read=0
+    )
     assert jbrowse.track_reads == []
 
 
@@ -78,6 +85,7 @@ async def test_a_gene_with_one_exon_is_not_checked(
     assert result.verdict == "NOT_CHECKED"
     assert result.reason == f"{GENE} has no annotated intron on plasmodb"
     assert result.transcript == f"{GENE}-t1"
+    assert result.junction_tracks is None
     assert jbrowse.abbrevs == []
 
 
@@ -310,10 +318,72 @@ async def test_past_four_junction_tracks_the_first_four_are_read_and_named(
     assert [read[0] for read in jbrowse.track_reads] == list(
         paths[:JUNCTION_TRACKS_READ]
     )
-    assert (
-        result.evidence_unread[0]
-        == "pcynX lists 5 junction tracks; the first 4 were read"
+    assert result.junction_tracks == JunctionTracks(
+        organism_abbrev="pcynX", listed=5, read=JUNCTION_TRACKS_READ
     )
+    assert result.junction_tracks.cap_note == (
+        "pcynX lists 5 junction tracks; the first 4 were read"
+    )
+    assert result.evidence_unread[0] == result.junction_tracks.cap_note
+
+
+async def test_tracks_within_the_cap_are_all_read_and_name_no_cut(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    Site(monkeypatch)
+    junctions(monkeypatch, READS)
+
+    result = await audit_intron_support("plasmodb", GENE)
+
+    assert result.junction_tracks == JunctionTracks(
+        organism_abbrev="pcynX", listed=1, read=1
+    )
+    assert result.junction_tracks.cap_note is None
+
+
+async def test_an_organism_past_the_cap_whose_tracks_all_refuse_names_the_cut(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    Site(monkeypatch)
+    paths = tuple(f"PcynomolgiX/genomeBrowser/gff/junction{n}.gff.gz" for n in range(6))
+    junctions(monkeypatch, READS, paths=paths, indexed=())
+
+    result = await audit_intron_support("plasmodb", GENE)
+
+    assert result.verdict == "NOT_CHECKED"
+    assert result.junction_tracks == JunctionTracks(
+        organism_abbrev="pcynX", listed=6, read=JUNCTION_TRACKS_READ
+    )
+    assert result.evidence_unread == [
+        "pcynX lists 6 junction tracks; the first 4 were read"
+    ]
+
+
+def test_a_track_record_reads_no_more_than_it_lists() -> None:
+    with pytest.raises(ValueError, match="cannot read 6"):
+        JunctionTracks(organism_abbrev="pcynX", listed=5, read=6)
+
+
+def test_a_track_record_built_under_a_larger_cap_still_validates() -> None:
+    tracks = JunctionTracks(organism_abbrev="pcynX", listed=6, read=6)
+    assert tracks.cap_note is None
+
+
+def test_a_cut_note_speaks_from_the_record_alone() -> None:
+    tracks = JunctionTracks(organism_abbrev="pcynX", listed=9, read=6)
+    assert tracks.cap_note == "pcynX lists 9 junction tracks; the first 6 were read"
+
+
+async def test_an_audit_whose_unread_list_omits_the_cut_is_refused(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    Site(monkeypatch)
+    paths = tuple(f"PcynomolgiX/genomeBrowser/gff/junction{n}.gff.gz" for n in range(5))
+    junctions(monkeypatch, READS, paths=paths, indexed=paths)
+    result = await audit_intron_support("plasmodb", GENE)
+
+    with pytest.raises(ValueError, match="names its junction track cut"):
+        IntronAudit.model_validate({**result.model_dump(), "evidence_unread": []})
 
 
 def test_an_ortholog_with_no_protein_is_never_chosen_for_a_species() -> None:
