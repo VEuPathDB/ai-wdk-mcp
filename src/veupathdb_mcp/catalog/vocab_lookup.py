@@ -40,6 +40,26 @@ class PhrasingMatch(CamelModel):
     values: list[str] = Field(default_factory=list)
 
 
+class AccessionNames(CamelModel):
+    model_config = ConfigDict(frozen=True)
+
+    entries: int
+    one_token: int
+    nameless: int
+
+
+def accession_names(options: Sequence[VocabOption]) -> AccessionNames | None:
+    named = [(o.value, o.display) for o in options if o.display != o.value]
+    if not named or not all(display.startswith(value) for value, display in named):
+        return None
+    names = [display[len(value) :].lstrip(" :") for value, display in named]
+    return AccessionNames(
+        entries=len(names),
+        one_token=sum(len(name.split()) <= 1 for name in names),
+        nameless=sum(not _WORD.search(name) for name in names),
+    )
+
+
 class VocabLookup(CamelModel):
     """The terms a read narrowed a vocabulary by, and the phrasings that matched.
 
@@ -54,6 +74,7 @@ class VocabLookup(CamelModel):
     matches: list[PhrasingMatch] = Field(default_factory=list)
     request_terms: list[str] = Field(default_factory=list)
     request_matches: list[PhrasingMatch] = Field(default_factory=list)
+    accession: AccessionNames | None = None
 
     def request_values(self) -> list[str]:
         """The kept entries that carry the request's words, in rank order."""
@@ -176,6 +197,7 @@ def read_options(
             matches=_matched(by_term),
             request_terms=list(request_terms),
             request_matches=_matched(by_request),
+            accession=accession_names(options),
         ),
         phrasings=tuple(phrasings),
     )

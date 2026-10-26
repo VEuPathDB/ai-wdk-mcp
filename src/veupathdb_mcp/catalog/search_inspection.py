@@ -39,6 +39,8 @@ from veupathdb_mcp.catalog.param_formatting import (
     phyletic_options_for,
     shown_facets,
 )
+from veupathdb_mcp.catalog.radio_pairs import radio_pairs
+from veupathdb_mcp.catalog.radio_readings import RadioReadings, radio_readings
 from veupathdb_mcp.catalog.search_context import (
     get_search_params_under_context,
 )
@@ -279,6 +281,28 @@ async def inspect_search(
         query=query or "",
     )
     return SearchInspection(record_type=rt, definition=search, overview=overview)
+
+
+async def read_radio_readings(
+    site_id: str,
+    search_name: str,
+    term: str,
+    *,
+    record_type: str | None = None,
+    context_values: Mapping[str, object] | None = None,
+) -> list[RadioReadings]:
+    context = coerce_context_values(dict(context_values)) if context_values else {}
+    rt = await resolve_search_record_type(
+        site_id, search_name, _auto_resolved_record_type(record_type)
+    )
+    result = await get_search_params_under_context(
+        get_wdk_client(site_id),
+        rt,
+        search_name,
+        encode_wdk_params(context) if context else {},
+    )
+    data = result.search_data
+    return radio_readings(radio_pairs(data.properties), data.parameters or [], term)
 
 
 async def read_parameter_options(

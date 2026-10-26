@@ -200,3 +200,49 @@ class TestAFilledFreeTextHalfIsAnIssue:
         assert overrides == {"ec_wildcard": RADIO_OFF}
         assert issue is not None
         assert issue.pair.free_text == "go_term"
+
+
+def _domain_sheet(entries: list[str]) -> list[ParameterInfo]:
+    vocabulary = _vocab("domain_typeahead", entries, "[]").model_copy(
+        update={"type": "multi-pick-vocabulary"}
+    )
+    return [vocabulary, _free_text("domain_accession", RADIO_OFF)]
+
+
+_DOMAIN_PROPERTIES = {"radio-params": ["domain_typeahead", "domain_accession"]}
+
+
+class TestTheFreeTextHalfAloneIsItsOwnReading:
+    def test_a_wildcard_beside_the_off_entry_binds(self) -> None:
+        overrides, issue = check_radio_pairs(
+            radio_pairs(_DOMAIN_PROPERTIES),
+            _domain_sheet(["IPR011009", RADIO_OFF]),
+            {"domain_typeahead": [RADIO_OFF], "domain_accession": "*protein kinase*"},
+        )
+
+        assert overrides == {}
+        assert issue is None
+
+    def test_a_wildcard_beside_a_real_entry_is_an_issue(self) -> None:
+        _, issue = check_radio_pairs(
+            radio_pairs(_DOMAIN_PROPERTIES),
+            _domain_sheet(["IPR011009", RADIO_OFF]),
+            {
+                "domain_typeahead": ["IPR011009"],
+                "domain_accession": "*protein kinase*",
+            },
+        )
+
+        assert issue is not None
+        assert issue.free_value == "*protein kinase*"
+
+    def test_a_vocabulary_without_the_off_entry_cannot_be_switched_off(
+        self,
+    ) -> None:
+        _, issue = check_radio_pairs(
+            radio_pairs(_DOMAIN_PROPERTIES),
+            _domain_sheet(["IPR011009"]),
+            {"domain_typeahead": [RADIO_OFF], "domain_accession": "*protein kinase*"},
+        )
+
+        assert issue is not None

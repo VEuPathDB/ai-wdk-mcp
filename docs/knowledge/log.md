@@ -1,5 +1,21 @@
 # Knowledge log
 
+## 2026-10-27 - 0.2.0b53
+
+- `radio_readings(pairs, params, term)` and `read_radio_readings(site_id, search_name,
+  term, *, record_type=None, context_values=None)` (`veupathdb_mcp.catalog`) answer
+  `RadioReadings` per declared pair: `label` (`LabelReading`: `parameter`, `values`,
+  `params`), `description` (`DescriptionReading`: `parameter`, `text`, `params`),
+  `label_values` and `accession`. Each `params` is a `dict[str, ParamValue]` that
+  `count_search_answer` counts. See
+  [the decision](decisions/a-radio-pair-offers-a-term-as-two-readings.md).
+- `check_radio_pairs` accepts a free-text value beside a vocabulary half bound to `N/A`
+  when that vocabulary holds `N/A`.
+- `VocabLookup.accession` (`AccessionNames`: `entries`, `one_token`, `nameless`) counts
+  the names of an accession vocabulary, and a narrowed read's `allowed_values_note`
+  says how many entries a name cannot reach.
+- `veupathdb-py` is pinned at `v0.1.0b25`.
+
 ## 2026-10-25 - 0.2.0b52
 
 - The served process opens at most 10 connections by default: the index's own engine

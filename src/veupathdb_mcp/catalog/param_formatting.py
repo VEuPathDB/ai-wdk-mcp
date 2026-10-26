@@ -299,6 +299,18 @@ def _request_note(held: int, lookup: VocabLookup) -> str:
     )
 
 
+def _accession_note(lookup: VocabLookup | None) -> str | None:
+    names = None if lookup is None else lookup.accession
+    if names is None or not names.one_token:
+        return None
+    return (
+        f"{names.one_token} of {names.entries} entries carry a name of one token "
+        f"past their accession, and {names.nameless} of them carry no name, so a "
+        "lookup by name does not reach them. An entry no label names can still be "
+        "on the site."
+    )
+
+
 def _capped_vocab_fields(
     options: list[VocabOption], lookup: VocabLookup | None
 ) -> _VocabFields:
@@ -311,14 +323,21 @@ def _capped_vocab_fields(
     cap = _MAX_VOCAB_ENTRIES if lookup is None else _MAX_NARROWED_ENTRIES
     shown = options[:cap]
     held = _from_request(shown, lookup)
+    unreached = _accession_note(lookup)
     if len(options) <= cap:
-        return _VocabFields(allowed_values=shown, allowed_values_from_request=held)
+        return _VocabFields(
+            allowed_values=shown,
+            allowed_values_note=unreached,
+            allowed_values_from_request=held,
+        )
     note = (
         f"Showing {cap} of {len(options)} values (list truncated). "
         "Use the exact value/ID you need; it does not have to appear in this list."
     )
     if held is not None and lookup is not None:
         note += _request_note(held, lookup)
+    if unreached is not None:
+        note += f" {unreached}"
     return _VocabFields(
         allowed_values=shown,
         allowed_values_total=len(options),

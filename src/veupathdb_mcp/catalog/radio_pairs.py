@@ -69,13 +69,25 @@ def _has_radio_shape(by_name: Mapping[str, ParameterInfo], pair: RadioPair) -> b
     return bool(vocabulary.vocabulary()) and not free_text.vocabulary()
 
 
+def _switched_off(info: ParameterInfo, proposal: str | list[str] | None) -> bool:
+    match proposal:
+        case str() as one:
+            picks = [one]
+        case [*many]:
+            picks = many
+        case _:
+            picks = []
+    offered = any(option.value == RADIO_OFF for option in info.vocabulary())
+    return picks == [RADIO_OFF] and offered
+
+
 def check_radio_pairs(
     pairs: Sequence[RadioPair],
     infos: list[ParameterInfo],
     proposals: Mapping[str, str | list[str] | None],
 ) -> tuple[dict[str, str], RadioPairIssue | None]:
     """The off value for every free-text half that states nothing, and the first
-    half that states a criterion the vocabulary half must carry instead."""
+    half that states a criterion beside a vocabulary half that is not off."""
     by_name = {info.name: info for info in infos}
     overrides: dict[str, str] = {}
     issue: RadioPairIssue | None = None
@@ -85,6 +97,8 @@ def check_radio_pairs(
         value = _stated(by_name[pair.free_text], proposals.get(pair.free_text))
         if value is None:
             overrides[pair.free_text] = RADIO_OFF
+        elif _switched_off(by_name[pair.vocabulary], proposals.get(pair.vocabulary)):
+            continue
         elif issue is None:
             issue = RadioPairIssue(
                 pair=pair,

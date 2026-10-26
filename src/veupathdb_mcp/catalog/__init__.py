@@ -125,9 +125,16 @@ from veupathdb_mcp.catalog.phyletic_pattern import (
     PhyleticPattern,
 )
 from veupathdb_mcp.catalog.radio_pairs import (
+    RadioPair,
     RadioPairIssue,
     check_radio_pairs,
     radio_pairs,
+)
+from veupathdb_mcp.catalog.radio_readings import (
+    DescriptionReading,
+    LabelReading,
+    RadioReadings,
+    radio_readings,
 )
 from veupathdb_mcp.catalog.search_context import get_search_params_under_context
 from veupathdb_mcp.catalog.search_inspection import (
@@ -136,6 +143,7 @@ from veupathdb_mcp.catalog.search_inspection import (
     VocabNarrowing,
     inspect_search,
     read_parameter_options,
+    read_radio_readings,
 )
 from veupathdb_mcp.catalog.searches import (
     SearchQueryRejection,
@@ -171,7 +179,11 @@ from veupathdb_mcp.catalog.taxonomy import (
     phyletic_tree_for_search,
 )
 from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
-from veupathdb_mcp.catalog.vocab_lookup import PhrasingMatch, VocabLookup
+from veupathdb_mcp.catalog.vocab_lookup import (
+    AccessionNames,
+    PhrasingMatch,
+    VocabLookup,
+)
 
 __all__ = [
     "CHARACTERS_WITHIN_READ_TIMEOUT",
@@ -185,6 +197,7 @@ __all__ = [
     "SUBSET_QUERY",
     "UNIVERSAL_SEARCHES",
     "AbsentGroupsCompareError",
+    "AccessionNames",
     "AllExcept",
     "AllOf",
     "AnyOf",
@@ -192,6 +205,7 @@ __all__ = [
     "CompareTerm",
     "ComparedGroups",
     "CountTerm",
+    "DescriptionReading",
     "EachGenomeOf",
     "EachSpeciesOf",
     "EdaBackedSearch",
@@ -201,6 +215,7 @@ __all__ = [
     "FilterFieldInfo",
     "GetParameterOptionsResult",
     "HiddenParameterError",
+    "LabelReading",
     "NoGeneRecordsError",
     "NoneOf",
     "OverrideMap",
@@ -219,7 +234,9 @@ __all__ = [
     "PhyleticPattern",
     "PhyleticUnresolvedProposal",
     "Provenance",
+    "RadioPair",
     "RadioPairIssue",
+    "RadioReadings",
     "RecordTypeInfo",
     "ResolvedParams",
     "ResolvedSearch",
@@ -289,9 +306,11 @@ __all__ = [
     "ortho_taxonomy",
     "phyletic_tree_for_search",
     "radio_pairs",
+    "radio_readings",
     "rank_experiments_elsewhere",
     "read_experiment",
     "read_parameter_options",
+    "read_radio_readings",
     "read_search_definition",
     "require_gene_records",
     "resolve_params_with_intent",

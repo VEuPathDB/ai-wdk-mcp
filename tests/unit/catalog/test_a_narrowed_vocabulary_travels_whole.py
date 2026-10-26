@@ -60,7 +60,11 @@ async def test_every_peptidase_entry_travels(monkeypatch: pytest.MonkeyPatch) ->
     assert len(info.allowed_values) == 66
     assert set(_HIDDEN_BY_THE_OLD_CUT) <= _values(info.allowed_values)
     assert info.allowed_values_total is None
-    assert info.allowed_values_note is None
+    assert info.allowed_values_note == (
+        "140 of 3744 entries carry a name of one token past their accession, and "
+        "0 of them carry no name, so a lookup by name does not reach them. An "
+        "entry no label names can still be on the site."
+    )
 
 
 @pytest.mark.skipif(

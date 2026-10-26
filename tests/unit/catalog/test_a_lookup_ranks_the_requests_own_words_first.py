@@ -166,7 +166,10 @@ async def test_a_cut_list_holds_every_entry_the_request_words_name(
     assert info.allowed_values_note == (
         "Showing 300 of 496 values (list truncated). Use the exact value/ID you "
         "need; it does not have to appear in this list. The list holds all 30 "
-        "entries whose labels carry the request's words 'RNA-binding', first."
+        "entries whose labels carry the request's words 'RNA-binding', first. "
+        "93 of 2440 entries carry a name of one token past their accession, and 0 "
+        "of them carry no name, so a lookup by name does not reach them. An entry "
+        "no label names can still be on the site."
     )
 
 
