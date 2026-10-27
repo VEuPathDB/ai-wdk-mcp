@@ -73,6 +73,9 @@ class SearchMatch:
     # The cosine of the query against the search's indexed text. None when
     # the semantic index did not score this search.
     semantic_similarity: float | None = None
+    # The probability a Decisions choice over the offered searches gave this
+    # search. None when the choice did not pick it.
+    decision_probability: float | None = None
 
     def to_dict(self) -> dict[str, str | float]:
         """Serialize to the camelCase dict shape expected by AI tool callers."""
@@ -90,6 +93,8 @@ class SearchMatch:
             result["relevance"] = round(self.relevance, 2)
         if self.semantic_similarity is not None:
             result["semanticSimilarity"] = round(self.semantic_similarity, 2)
+        if self.decision_probability is not None:
+            result["decisionProbability"] = round(self.decision_probability, 2)
         return result
 
 

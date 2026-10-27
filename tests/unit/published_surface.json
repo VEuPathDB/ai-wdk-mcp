@@ -407,6 +407,7 @@
     "ValidationResponse",
     "VocabLookup",
     "VocabNarrowing",
+    "VocabPick",
     "adapt_param_specs_from_search",
     "assign_step_record_classes",
     "browse_search_categories",

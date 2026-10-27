@@ -76,7 +76,10 @@ async def search_for_searches(
     A query nothing matches returns an empty list. `relevance` is the score
     divided by the best hit's score, so the top hit reads 1.0 however weak it
     is. `semantic_similarity` is the cosine of the query against the search's
-    indexed text, or null when the index did not score that search.
+    indexed text, or null when the index did not score that search. When the
+    deployment runs the Decisions choice over every offered search, the searches
+    it picks carry `decision_probability`, and the picks the ranking missed
+    follow it with no `relevance`.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
@@ -311,7 +314,10 @@ async def get_parameter_options(
         context_values: Values of the parameters this one depends on.
         query: One phrase, or several phrasings of one concept, that narrow the
             vocabulary. Hyphen and space match alike, and a phrase also
-            matches its words in any order.
+            matches its words in any order. A narrowed read carries
+            `vocab_pick` when the deployment runs the Decisions choice: the
+            entry it picks, or none when no entry fits, and whether its
+            confidence settles the pick. Ask the researcher when it does not.
     """
     try:
         return await search_inspection.read_parameter_options(

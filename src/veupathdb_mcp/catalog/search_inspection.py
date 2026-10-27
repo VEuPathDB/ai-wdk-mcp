@@ -52,6 +52,7 @@ from veupathdb_mcp.catalog.searches import (
     resolve_search_record_type,
 )
 from veupathdb_mcp.catalog.vocab_lookup import VocabLookup, VocabRead, read_options
+from veupathdb_mcp.catalog.vocab_pick import pick_vocab_entry
 from veupathdb_mcp.catalog.vocab_rendering import entries_of
 
 _SEARCH_NOT_FOUND_STATUS = 404
@@ -316,7 +317,9 @@ async def read_parameter_options(
 ) -> GetParameterOptionsResult:
     """Read one parameter's vocabulary under the parent values supplied.
 
-    ``narrowing`` cuts a vocabulary too large to travel whole.
+    ``narrowing`` cuts a vocabulary too large to travel whole. A narrowed read
+    carries the entry a Decisions choice picks among the kept entries, when the
+    service answers.
     """
     narrow = narrowing or VocabNarrowing()
     context = coerce_context_values(dict(context_values)) if context_values else {}
@@ -374,6 +377,17 @@ async def read_parameter_options(
                     or None
                 }
             )
+            if lookup or phyletic_lookup:
+                read = read.model_copy(
+                    update={
+                        "vocab_pick": await pick_vocab_entry(
+                            site_id,
+                            read.display_name,
+                            "; ".join(narrow.request_terms or narrow.terms),
+                            read.vocabulary(),
+                        )
+                    }
+                )
             query = " ".join((*narrow.terms, *narrow.request_terms))
             if not query or not read.facets():
                 return read

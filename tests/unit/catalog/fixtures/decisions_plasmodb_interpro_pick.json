@@ -1,0 +1,265 @@
+{
+ "site": "plasmodb",
+ "query": "protein kinase",
+ "exchanges": [
+  {
+   "request": {
+    "model": "gpt-6-luna",
+    "input": "VEuPathDB site: plasmodb. Parameter: Specific Domain(s).\nResearcher's requirement: protein kinase",
+    "questions": [
+     {
+      "type": "choice",
+      "name": "value",
+      "instructions": "Which parameter value states the requirement? Read each label; choose none_fits when no value states it.",
+      "choices": [
+       {
+        "value": "e0",
+        "description": "IPR011009 : Protein kinase-like (PK-like)"
+       },
+       {
+        "value": "e1",
+        "description": "IPR050205 : SERINE/THREONINE-PROTEIN KINASE"
+       },
+       {
+        "value": "e2",
+        "description": "IPR011641 : Tyrosine-protein kinase ephrin type A/B receptor-like"
+       },
+       {
+        "value": "e3",
+        "description": "IPR050108 : CELL DIVISION PROTEIN KINASE"
+       },
+       {
+        "value": "e4",
+        "description": "IPR051681 : SERINE/THREONINE-PROTEIN KINASE TNNI3K-RELATED"
+       },
+       {
+        "value": "e5",
+        "description": "IPR030616 : SERINE/THREONINE-PROTEIN KINASE IAL-RELATED"
+       },
+       {
+        "value": "e6",
+        "description": "IPR051131 : CAMK FAMILY PROTEIN KINASE"
+       },
+       {
+        "value": "e7",
+        "description": "IPR045269 : SERINE/THREONINE-PROTEIN KINASE UNC-51-RELATED"
+       },
+       {
+        "value": "e8",
+        "description": "IPR016149 : protein kinase ck2 holoenzyme, chain C, domain 1"
+       },
+       {
+        "value": "e9",
+        "description": "IPR050494 : DUAL SPECIFICITY PROTEIN KINASE"
+       },
+       {
+        "value": "e10",
+        "description": "IPR051272 : SERINE/THREONINE-PROTEIN KINASE RIO1"
+       },
+       {
+        "value": "e11",
+        "description": "IPR050117 : MITOGEN-ACTIVATED PROTEIN KINASE"
+       },
+       {
+        "value": "e12",
+        "description": "IPR045223 : RECEPTOR FOR ACTIVATED PROTEIN KINASE C  RACK1"
+       },
+       {
+        "value": "e13",
+        "description": "IPR050167 : SERINE-THREONINE PROTEIN KINASE"
+       },
+       {
+        "value": "e14",
+        "description": "IPR051175 : SERINE/THREONINE-PROTEIN KINASE DOA-RELATED"
+       },
+       {
+        "value": "e15",
+        "description": "IPR051177 : SCY1-RELATED S/T PROTEIN KINASE-LIKE"
+       },
+       {
+        "value": "e16",
+        "description": "IPR050660 : SERINE/THREONINE-PROTEIN KINASE NEK"
+       },
+       {
+        "value": "e17",
+        "description": "IPR050236 : SERINE/THREONINE-PROTEIN KINASE"
+       },
+       {
+        "value": "e18",
+        "description": "IPR050503 : CAMP-DEPENDENT PROTEIN KINASE REGULATORY CHAIN"
+       },
+       {
+        "value": "e19",
+        "description": "IPR051334 : PROTEIN KINASE DOMAIN-CONTAINING PROTEIN-RELATED"
+       },
+       {
+        "value": "e20",
+        "description": "IPR052945 : ACTIVATOR OF C KINASE PROTEIN 1-RELATED"
+       },
+       {
+        "value": "e21",
+        "description": "IPR013926 : Kinase binding protein CGI-121"
+       },
+       {
+        "value": "none_fits",
+        "description": "None of these values states the requirement: each is obsolete, broader, narrower or about something else."
+       }
+      ]
+     }
+    ]
+   },
+   "response": {
+    "model": "gpt-6-luna",
+    "answers": [
+     {
+      "type": "choice",
+      "name": "value",
+      "choice": "e0",
+      "probabilities": [
+       {
+        "value": "e0",
+        "probability": 0.89
+       },
+       {
+        "value": "e1",
+        "probability": 0.03
+       },
+       {
+        "value": "e2",
+        "probability": 0.0
+       },
+       {
+        "value": "e3",
+        "probability": 0.0
+       },
+       {
+        "value": "e4",
+        "probability": 0.01
+       },
+       {
+        "value": "e5",
+        "probability": 0.0
+       },
+       {
+        "value": "e6",
+        "probability": 0.0
+       },
+       {
+        "value": "e7",
+        "probability": 0.0
+       },
+       {
+        "value": "e8",
+        "probability": 0.01
+       },
+       {
+        "value": "e9",
+        "probability": 0.01
+       },
+       {
+        "value": "e10",
+        "probability": 0.0
+       },
+       {
+        "value": "e11",
+        "probability": 0.0
+       },
+       {
+        "value": "e12",
+        "probability": 0.0
+       },
+       {
+        "value": "e13",
+        "probability": 0.01
+       },
+       {
+        "value": "e14",
+        "probability": 0.0
+       },
+       {
+        "value": "e15",
+        "probability": 0.0
+       },
+       {
+        "value": "e16",
+        "probability": 0.0
+       },
+       {
+        "value": "e17",
+        "probability": 0.0
+       },
+       {
+        "value": "e18",
+        "probability": 0.0
+       },
+       {
+        "value": "e19",
+        "probability": 0.01
+       },
+       {
+        "value": "e20",
+        "probability": 0.0
+       },
+       {
+        "value": "e21",
+        "probability": 0.0
+       },
+       {
+        "value": "none_fits",
+        "probability": 0.03
+       }
+      ],
+      "confidence": 0.89
+     }
+    ],
+    "usage": {
+     "input_tokens": 711,
+     "input_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0
+     },
+     "output_tokens": 0,
+     "output_tokens_details": {
+      "reasoning_tokens": 0
+     },
+     "total_tokens": 711
+    }
+   }
+  },
+  {
+   "request": {
+    "model": "gpt-6-luna",
+    "input": "VEuPathDB site: plasmodb. Parameter: Specific Domain(s).\nResearcher's requirement: protein kinase\nProposed value: IPR011009 : Protein kinase-like (PK-like)",
+    "questions": [
+     {
+      "type": "predicate",
+      "name": "fits",
+      "instructions": "The proposed value states the requirement: it is a current entry, not obsolete, and it is neither broader, narrower nor about something else."
+     }
+    ]
+   },
+   "response": {
+    "model": "gpt-6-luna",
+    "answers": [
+     {
+      "type": "predicate",
+      "name": "fits",
+      "probability": 0.31
+     }
+    ],
+    "usage": {
+     "input_tokens": 215,
+     "input_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0
+     },
+     "output_tokens": 0,
+     "output_tokens_details": {
+      "reasoning_tokens": 0
+     },
+     "total_tokens": 215
+    }
+   }
+  }
+ ]
+}

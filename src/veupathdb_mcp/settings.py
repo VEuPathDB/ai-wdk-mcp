@@ -3,8 +3,9 @@
 from collections.abc import Callable
 from functools import cached_property, lru_cache
 from pathlib import Path
+from typing import Self
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from veupathdb_mcp.service_tokens import ServiceTokenRegistry
@@ -57,6 +58,20 @@ class McpSettings(BaseSettings):
     search_line_pool_size: int = Field(default=1, ge=1)
     search_line_max_overflow: int = Field(default=1, ge=0)
     search_line_pool_timeout_seconds: float | None = Field(default=None, gt=0)
+    # Whether catalog reads ask the OpenAI Decisions API, and on which key. Off,
+    # every read ranks and narrows as it does without the service.
+    decisions_enabled: bool = False
+    openai_api_key: str = Field(default="", repr=False)
+    decisions_timeout_seconds: float = Field(default=15.0, gt=0)
+    # A vocabulary pick whose confidence is below this is not settled.
+    decisions_vocab_min_confidence: float = Field(default=0.5, ge=0, le=1)
+
+    @model_validator(mode="after")
+    def _decisions_need_a_key(self) -> Self:
+        if self.decisions_enabled and not self.openai_api_key.strip():
+            msg = "DECISIONS_ENABLED is set and OPENAI_API_KEY is not set."
+            raise ValueError(msg)
+        return self
 
     @cached_property
     def mcp_service_tokens(self) -> ServiceTokenRegistry:

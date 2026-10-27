@@ -247,7 +247,7 @@ because a document naming the wrong host sends a client to the wrong authority.
 | --- | --- |
 | `DATABASE_URL` | the Postgres holding the two embedding tables |
 | `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | the same address in parts, in place of `DATABASE_URL`; setting `POSTGRES_PASSWORD` and `DATABASE_URL` together fails startup |
-| `OPENAI_API_KEY`, `EMBEDDING_*` | the embedder behind semantic search |
+| `OPENAI_API_KEY`, `EMBEDDING_*` | the embedder behind semantic search, and the Decisions API when `DECISIONS_ENABLED` is on |
 | `VEUPATHDB_SITES_CONFIG` | the `sites.yaml` this deployment serves; required, because the client library ships no default list and the first site read fails without one |
 | `VEUPATHDB_OAUTH_URL` | the OAuth server that signs VEuPathDB bearers |
 | `WDK_MCP_BASE_URL` | the URL a client reads the RFC 9728 document at |
@@ -260,6 +260,9 @@ because a document naming the wrong host sends a client to the wrong authority.
 | `EMBEDDING_DB_POOL_TIMEOUT_SECONDS` | how long the index's own engine waits for a connection before it fails (default 30) |
 | `SEARCH_LINE_POOL_SIZE`, `SEARCH_LINE_MAX_OVERFLOW` | the connections the expensive-search line keeps, and the ones it opens past them (defaults 1 and 1); each search holds one for its whole run |
 | `SEARCH_LINE_POOL_TIMEOUT_SECONDS` | how long a search waits for a line connection; empty waits without a limit, as the line does (the default) |
+| `DECISIONS_ENABLED` | whether `search_for_searches` and a narrowed `get_parameter_options` ask the OpenAI Decisions API (default off); on, it needs `OPENAI_API_KEY` and startup fails without one |
+| `DECISIONS_TIMEOUT_SECONDS` | how long one Decisions request may take before the read keeps its own result (default 15) |
+| `DECISIONS_VOCAB_MIN_CONFIDENCE` | the confidence at or above which a vocabulary pick is settled (default 0.5) |
 
 Every setting answers to that one name. A host extends `McpSettings` and
 `EmbeddingSettings` with its own model, so a field neither declares is the

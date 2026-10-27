@@ -1,6 +1,7 @@
 """Search listing, filtering, and discovery. Scoring, semantic matching, and
 candidate collection live in sibling modules."""
 
+import asyncio
 import re
 from collections.abc import Awaitable, Callable
 from dataclasses import replace
@@ -34,6 +35,7 @@ from veupathdb_mcp.catalog.search_offer import (
     is_ranked_search,
     takes_an_input_step,
 )
+from veupathdb_mcp.catalog.search_picks import decision_picks, with_decision_picks
 from veupathdb_mcp.catalog.semantic_matching import apply_semantic_bonus
 
 logger = get_logger(__name__)
@@ -196,7 +198,8 @@ async def search_for_searches(
 
     A category restricts the candidates to that category plus the universal
     searches. A query nothing matches returns an empty list. A query too vague
-    to rank raises ``VagueSearchQueryError``.
+    to rank raises ``VagueSearchQueryError``. The searches a Decisions choice
+    picks follow the ranking, which they do not reorder.
     """
     kw_list = keywords or []
     rejection = _query_rejection(query, has_keywords=bool(kw_list))
@@ -216,7 +219,10 @@ async def search_for_searches(
 
     await apply_site_search_bonus(scored, site_id, query, limit)
 
-    await apply_semantic_bonus(scored, discovery, site_id, query, record_types)
+    picks, _ = await asyncio.gather(
+        decision_picks(site_id, record_types, query, [s for s, _ in candidates]),
+        apply_semantic_bonus(scored, discovery, site_id, query, record_types),
+    )
 
     # A search no term, keyword or embedding matched is not a result.
     ranked = sorted(
@@ -227,21 +233,17 @@ async def search_for_searches(
             item[1].display_name,
         ),
     )
-    if not ranked:
-        return []
-    best_score = ranked[0][0]
-
     seen: set[str] = set()
     result: list[SearchMatch] = []
     for sc, entry in ranked:
         if entry.name in seen:
             continue
         seen.add(entry.name)
-        result.append(replace(entry, relevance=sc / best_score))
+        result.append(replace(entry, relevance=sc / ranked[0][0]))
         if len(result) >= limit:
             break
 
-    return result
+    return with_decision_picks(result, scored, picks)
 
 
 async def read_search_definition(

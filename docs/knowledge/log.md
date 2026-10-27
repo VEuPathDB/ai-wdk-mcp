@@ -1,5 +1,19 @@
 # Knowledge log
 
+## 2026-10-27 - 0.2.0b54
+
+- `McpSettings` reads `DECISIONS_ENABLED` (default off), `OPENAI_API_KEY`,
+  `DECISIONS_TIMEOUT_SECONDS` (15) and `DECISIONS_VOCAB_MIN_CONFIDENCE` (0.5). It
+  refuses to load when the flag is on and the key is empty.
+- `search_for_searches` appends the searches an OpenAI Decisions choice over every
+  offered search picks after its ranking. `SearchMatch.decision_probability` carries
+  each pick's probability.
+- `ParameterInfo.vocab_pick` (`VocabPick`, on the `veupathdb_mcp.catalog` surface) is
+  the entry a choice picks among the entries a query kept. It carries
+  `choice_confidence`, `fit_probability`, `confidence` and `settled`. Off or failing,
+  both reads are what they were. See
+  [the decision](decisions/a-decisions-choice-widens-the-candidates-and-doubts-a-vocabulary-pick.md).
+
 ## 2026-10-27 - 0.2.0b53
 
 - `radio_readings(pairs, params, term)` and `read_radio_readings(site_id, search_name,

@@ -29,6 +29,7 @@ from veupathdb_mcp.settings import McpSettings, use_mcp_settings_source
 
 # No test embeds against a paid API.
 os.environ["EMBEDDING_BACKEND"] = "fake"
+os.environ["DECISIONS_ENABLED"] = "false"
 os.environ["VEUPATHDB_SITES_CONFIG"] = str(QA_SITES_FILE)
 # No test reads or writes the warm catalog cache the image serves.
 _CATALOGS = tempfile.mkdtemp(prefix="veupathdb-mcp-catalogs-")

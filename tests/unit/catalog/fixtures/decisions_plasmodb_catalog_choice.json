@@ -1,0 +1,126 @@
+{
+ "site": "plasmodb",
+ "query": "Plasmodium falciparum 3D7 genes with a protein kinase domain",
+ "exchanges": [
+  {
+   "request": {
+    "model": "gpt-6-luna",
+    "input": "VEuPathDB site: plasmodb. Record types: transcript.\nRequirement to find a search for: Plasmodium falciparum 3D7 genes with a protein kinase domain",
+    "questions": [
+     {
+      "type": "choice",
+      "name": "chunk0",
+      "instructions": "Which of these searches, if any, states the requirement?",
+      "choices": [
+       {
+        "value": "GenesByText",
+        "description": "Text (product name, notes, etc.): Find genes whose annotation text holds a word or phrase."
+       },
+       {
+        "value": "GenesByGoTerm",
+        "description": "GO Term: Find genes annotated with a Gene Ontology term."
+       },
+       {
+        "value": "GenesByInterproDomain",
+        "description": "InterPro Domain: Find genes whose proteins hold a domain from InterPro or its"
+       },
+       {
+        "value": "GenesByEcNumber",
+        "description": "EC Number: Find genes by the Enzyme Commission number of their product."
+       },
+       {
+        "value": "GenesByMolecularWeight",
+        "description": "Molecular Weight: Find genes by the predicted molecular weight of their protei"
+       },
+       {
+        "value": "GenesByExportPrediction",
+        "description": "Exported Protein: Find genes whose proteins carry a PEXEL export motif."
+       },
+       {
+        "value": "GenesBySignalPeptide",
+        "description": "Signal Peptide: Find genes whose proteins are predicted to carry a signal pe"
+       },
+       {
+        "value": "GenesByTransmembraneDomains",
+        "description": "Transmembrane Domain Count: Find genes by the predicted number of transmembrane domains."
+       },
+       {
+        "value": "GenesByLocation",
+        "description": "Genomic Location: Find genes in a chromosome region."
+       },
+       {
+        "value": "GenesByOrthologPattern",
+        "description": "Orthology Phylogenetic Profile: Find genes by the species their ortholog group holds or lack"
+       }
+      ]
+     }
+    ]
+   },
+   "response": {
+    "model": "gpt-6-luna",
+    "answers": [
+     {
+      "type": "choice",
+      "name": "chunk0",
+      "choice": "GenesByInterproDomain",
+      "probabilities": [
+       {
+        "value": "GenesByText",
+        "probability": 0.0
+       },
+       {
+        "value": "GenesByGoTerm",
+        "probability": 0.0
+       },
+       {
+        "value": "GenesByInterproDomain",
+        "probability": 1.0
+       },
+       {
+        "value": "GenesByEcNumber",
+        "probability": 0.0
+       },
+       {
+        "value": "GenesByMolecularWeight",
+        "probability": 0.0
+       },
+       {
+        "value": "GenesByExportPrediction",
+        "probability": 0.0
+       },
+       {
+        "value": "GenesBySignalPeptide",
+        "probability": 0.0
+       },
+       {
+        "value": "GenesByTransmembraneDomains",
+        "probability": 0.0
+       },
+       {
+        "value": "GenesByLocation",
+        "probability": 0.0
+       },
+       {
+        "value": "GenesByOrthologPattern",
+        "probability": 0.0
+       }
+      ],
+      "confidence": 1.0
+     }
+    ],
+    "usage": {
+     "input_tokens": 380,
+     "input_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0
+     },
+     "output_tokens": 0,
+     "output_tokens_details": {
+      "reasoning_tokens": 0
+     },
+     "total_tokens": 380
+    }
+   }
+  }
+ ]
+}

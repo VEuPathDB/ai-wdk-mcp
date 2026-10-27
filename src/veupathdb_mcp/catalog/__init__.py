@@ -184,6 +184,7 @@ from veupathdb_mcp.catalog.vocab_lookup import (
     PhrasingMatch,
     VocabLookup,
 )
+from veupathdb_mcp.catalog.vocab_pick import VocabPick
 
 __all__ = [
     "CHARACTERS_WITHIN_READ_TIMEOUT",
@@ -258,6 +259,7 @@ __all__ = [
     "ValidationResponse",
     "VocabLookup",
     "VocabNarrowing",
+    "VocabPick",
     "adapt_param_specs_from_search",
     "assign_step_record_classes",
     "browse_search_categories",

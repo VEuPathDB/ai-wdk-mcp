@@ -30,6 +30,7 @@ from veupathdb_mcp.catalog.phyletic_logic import (
 from veupathdb_mcp.catalog.shortlist import shortlist_values
 from veupathdb_mcp.catalog.site_cost import CHARACTERS_WITHIN_READ_TIMEOUT
 from veupathdb_mcp.catalog.vocab_lookup import VocabLookup
+from veupathdb_mcp.catalog.vocab_pick import VocabPick
 from veupathdb_mcp.catalog.vocab_rendering import (
     entries_of,
     prompts_of,
@@ -160,6 +161,8 @@ class ParameterInfo(CamelModel):
     prompt_values: list[str] = Field(default_factory=list)
     # The phrasings a query read, when one narrowed the vocabulary.
     vocab_lookup: VocabLookup | None = None
+    # The entry a Decisions choice picked among the narrowed entries.
+    vocab_pick: VocabPick | None = None
     controls_vocab_of: list[str] | None = None
     vocab_depends_on: list[str] | None = None
     note: str | None = None
