@@ -32,6 +32,16 @@ warning. When `decide` answers None, the read returns what it returned before.
 
 Neither read holds a rule for a term, a search or a site.
 
+# The searches offered whatever the ranking
+
+`universal_searches(site_id, record_type)` (`catalog/universal.py`) answers the
+searches a host appends to every discovery result: the site's text search, when the
+site lists it, then every listed search that declares a pair in its `radio-params`
+property, in the order the site lists them. It reads the held catalog listing and
+sends no request. A vocabulary search that the ranking misses for a term is still
+offered, and a site with no declared pair offers text only. A fixed list of search
+names was rejected: it cannot follow what each site declares.
+
 # What was measured
 
 The pairs below are the September scorecard sets, scored against the same items' recorded Jev

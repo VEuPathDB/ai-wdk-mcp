@@ -123,28 +123,26 @@ def score_candidates(
     scored: list[tuple[float, SearchMatch]] = []
     for s, rt_name in candidates:
         display = s.display_name or s.url_segment
-        desc = s.description
-
         sc = score_search(
             query_terms=terms,
             keywords=kw_list,
             search_name=s.url_segment,
             display_name=display,
-            description=desc,
+            description=s.description,
             corpus=SearchCorpus(doc_count=doc_count, term_counts=dict(corpus_counts)),
         )
-        category = ""
-        dc = s.properties.get("displayCategory", [])
-        if dc:
-            category = str(dc[0])
-
-        entry = SearchMatch(
-            name=s.url_segment,
-            display_name=display,
-            description=s.summary or desc,
-            record_type=rt_name,
-            category=category,
-            returns=resolve_returns(s.output_record_class_name),
-        )
-        scored.append((sc, entry))
+        scored.append((sc, search_match(s, rt_name)))
     return scored
+
+
+def search_match(search: WDKSearch, record_type: str) -> SearchMatch:
+    """The unscored match a catalog search is offered as."""
+    category = search.properties.get("displayCategory", [])
+    return SearchMatch(
+        name=search.url_segment,
+        display_name=search.display_name or search.url_segment,
+        description=search.summary or search.description,
+        record_type=record_type,
+        category=str(category[0]) if category else "",
+        returns=resolve_returns(search.output_record_class_name),
+    )

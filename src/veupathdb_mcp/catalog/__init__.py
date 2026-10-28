@@ -33,7 +33,6 @@ from veupathdb_mcp.catalog.gene_records import (
 from veupathdb_mcp.catalog.group_ids import is_group_id, is_residual
 from veupathdb_mcp.catalog.hidden_params import HiddenParameterError
 from veupathdb_mcp.catalog.models import (
-    UNIVERSAL_SEARCHES,
     ParamSpecResponse,
     RecordTypeInfo,
     SearchMatch,
@@ -178,6 +177,7 @@ from veupathdb_mcp.catalog.taxonomy import (
     ortho_taxonomy,
     phyletic_tree_for_search,
 )
+from veupathdb_mcp.catalog.universal import universal_searches
 from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
 from veupathdb_mcp.catalog.vocab_lookup import (
     AccessionNames,
@@ -196,7 +196,6 @@ __all__ = [
     "MAX_EXPRESSION_WORK",
     "RADIO_OFF",
     "SUBSET_QUERY",
-    "UNIVERSAL_SEARCHES",
     "AbsentGroupsCompareError",
     "AccessionNames",
     "AllExcept",
@@ -326,6 +325,7 @@ __all__ = [
     "sites_publishing",
     "study_assay",
     "study_organisms",
+    "universal_searches",
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at",

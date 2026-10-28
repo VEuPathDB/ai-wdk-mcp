@@ -96,17 +96,3 @@ class SearchMatch:
         if self.decision_probability is not None:
             result["decisionProbability"] = round(self.decision_probability, 2)
         return result
-
-
-# Searches that answer on every site and rank against no query, so a discovery
-# result carries them whatever it ranked.
-UNIVERSAL_SEARCHES: tuple[SearchMatch, ...] = (
-    SearchMatch(
-        name="GenesByText",
-        display_name="Gene Text Search",
-        description="Search all text fields for genes matching a keyword or phrase.",
-        record_type="transcript",
-        category="general",
-        returns="transcript",
-    ),
-)

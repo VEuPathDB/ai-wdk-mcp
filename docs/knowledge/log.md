@@ -1,5 +1,12 @@
 # Knowledge log
 
+## 2026-10-28 - 0.2.0b55
+
+- `universal_searches(site_id, record_type) -> tuple[SearchMatch, ...]`
+  (`veupathdb_mcp.catalog`) replaces `UNIVERSAL_SEARCHES`. It answers the site's text
+  search and every search the held listing marks with a `radio-params` pair. See
+  [the decision](decisions/a-decisions-choice-widens-the-candidates-and-doubts-a-vocabulary-pick.md).
+
 ## 2026-10-27 - 0.2.0b54
 
 - `McpSettings` reads `DECISIONS_ENABLED` (default off), `OPENAI_API_KEY`,
