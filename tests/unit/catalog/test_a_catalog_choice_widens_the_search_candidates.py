@@ -13,7 +13,7 @@ import respx
 from scripts.record_decisions import CATALOG_QUERY, OFFERED
 from veupathdb.wdk import WDKSearch
 
-from veupathdb_mcp.catalog import searches
+from veupathdb_mcp.catalog import post_decision, searches, use_decisions_transport
 from veupathdb_mcp.catalog.decisions import DECISIONS_URL, MAX_CHOICES
 from veupathdb_mcp.catalog.models import SearchMatch
 from veupathdb_mcp.catalog.search_picks import catalog_choice_request
@@ -51,9 +51,9 @@ def _rank_text_first(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(searches, "apply_semantic_bonus", _semantic)
 
 
-def _turn_on(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("DECISIONS_ENABLED", "true")
+def _reach_the_service(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test-not-a-key")
+    use_decisions_transport(post_decision)
 
 
 async def _rank() -> list[str]:
@@ -85,22 +85,18 @@ class TestTheRequest:
 
 
 class TestWhatTheRankingReturns:
-    async def test_off_the_ranking_stands_and_nothing_is_sent(
+    async def test_unanswered_the_ranking_stands(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _rank_text_first(monkeypatch)
-        with respx.mock(assert_all_called=False) as router:
-            route = router.post(DECISIONS_URL)
-            names = await _rank()
 
-        assert names == ["GenesByText", "GenesByGoTerm"]
-        assert not route.called
+        assert await _rank() == ["GenesByText", "GenesByGoTerm"]
 
-    async def test_on_the_pick_the_ranking_missed_follows_it(
+    async def test_the_pick_the_ranking_missed_follows_it(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _rank_text_first(monkeypatch)
-        _turn_on(monkeypatch)
+        _reach_the_service(monkeypatch)
         with respx.mock() as router:
             router.post(DECISIONS_URL).respond(json=_recorded()["response"])
             result = await searches.search_for_searches(
@@ -122,7 +118,7 @@ class TestWhatTheRankingReturns:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _rank_text_first(monkeypatch)
-        _turn_on(monkeypatch)
+        _reach_the_service(monkeypatch)
         with respx.mock() as router:
             router.post(DECISIONS_URL).mock(side_effect=httpx.ReadTimeout("slow"))
             names = await _rank()

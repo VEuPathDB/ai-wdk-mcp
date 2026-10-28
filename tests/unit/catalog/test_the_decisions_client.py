@@ -11,6 +11,7 @@ import respx
 from pydantic import ValidationError
 from structlog.testing import capture_logs
 
+from veupathdb_mcp.catalog import post_decision, use_decisions_transport
 from veupathdb_mcp.catalog.decisions import (
     DECISIONS_URL,
     Choice,
@@ -31,9 +32,9 @@ def _exchange(index: int) -> tuple[DecisionRequest, dict[str, object]]:
     return DecisionRequest.model_validate(recorded["request"]), recorded["response"]
 
 
-def _turn_on(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("DECISIONS_ENABLED", "true")
+def _reach_the_service(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test-not-a-key")
+    use_decisions_transport(post_decision)
 
 
 def _request() -> DecisionRequest:
@@ -96,7 +97,14 @@ class TestTheWireShape:
         assert response.usage.input_tokens > 0
 
 
-class TestWhenTheServiceIsOff:
+class TestTheKey:
+    @pytest.mark.parametrize("key", ["", "   "])
+    def test_settings_refuse_an_empty_key(self, key: str) -> None:
+        with pytest.raises(ValidationError, match="OPENAI_API_KEY is not set"):
+            McpSettings(openai_api_key=key)
+
+
+class TestTheOfflineTransport:
     async def test_it_sends_nothing_and_answers_none(self) -> None:
         with respx.mock(assert_all_called=False) as router:
             route = router.post(DECISIONS_URL)
@@ -104,16 +112,12 @@ class TestWhenTheServiceIsOff:
 
         assert not route.called
 
-    def test_it_cannot_be_on_without_a_key(self) -> None:
-        with pytest.raises(ValidationError, match="OPENAI_API_KEY"):
-            McpSettings(decisions_enabled=True, openai_api_key="")
 
-
-class TestWhenTheServiceIsOn:
+class TestTheService:
     async def test_it_posts_the_request_with_the_key(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        _turn_on(monkeypatch)
+        _reach_the_service(monkeypatch)
         request, body = _exchange(0)
         with respx.mock() as router:
             route = router.post(DECISIONS_URL).respond(json=body)
@@ -135,7 +139,7 @@ class TestWhenTheServiceIsOn:
     async def test_a_failure_is_logged_and_answers_none(
         self, monkeypatch: pytest.MonkeyPatch, reply: httpx.Response | Exception
     ) -> None:
-        _turn_on(monkeypatch)
+        _reach_the_service(monkeypatch)
         with respx.mock() as router, capture_logs() as logs:
             router.post(DECISIONS_URL).mock(
                 side_effect=reply if isinstance(reply, Exception) else None,

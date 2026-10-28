@@ -346,6 +346,7 @@
     "CompareTerm",
     "ComparedGroups",
     "CountTerm",
+    "DecisionsTransport",
     "DescriptionReading",
     "EDA_ANALYSIS_SPEC_PARAM",
     "EDA_DATASET_ID_PARAM",
@@ -454,6 +455,7 @@
     "organism_parameter",
     "ortho_taxonomy",
     "phyletic_tree_for_search",
+    "post_decision",
     "radio_pairs",
     "radio_readings",
     "rank_experiments_elsewhere",
@@ -474,6 +476,7 @@
     "study_assay",
     "study_organisms",
     "universal_searches",
+    "use_decisions_transport",
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at",
@@ -654,7 +657,8 @@
   "veupathdb_mcp.testing": [
     "FIXTURE_ROOT",
     "ORTHOMCL_COUNTS",
-    "ORTHOMCL_GROUP_CLOUDS"
+    "ORTHOMCL_GROUP_CLOUDS",
+    "offline_decisions"
   ],
   "veupathdb_mcp.tool_meta": [
     "MAX_CALL_SECONDS_META_KEY",

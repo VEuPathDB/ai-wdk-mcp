@@ -1,4 +1,5 @@
-"""The process-wide state a test must not inherit: settings, the log and the embedder."""
+"""The process-wide state a test must not inherit: settings, the log, the embedder
+and the Decisions transport."""
 
 import atexit
 import logging
@@ -14,6 +15,7 @@ from veupathdb.guest_token import use_guest_tokens
 from veupathdb.testing import QA_SITES_FILE, hermetic_guest_tokens
 from veupathdb.wdk import reset_site_router
 
+from veupathdb_mcp.catalog import use_decisions_transport
 from veupathdb_mcp.embeddings import embedder
 from veupathdb_mcp.embeddings.embedder import get_embedder
 from veupathdb_mcp.embeddings.fake import FakeEmbedder
@@ -26,10 +28,11 @@ from veupathdb_mcp.research.settings import (
     use_research_settings_source,
 )
 from veupathdb_mcp.settings import McpSettings, use_mcp_settings_source
+from veupathdb_mcp.testing import offline_decisions
 
 # No test embeds against a paid API.
 os.environ["EMBEDDING_BACKEND"] = "fake"
-os.environ["DECISIONS_ENABLED"] = "false"
+os.environ["OPENAI_API_KEY"] = "sk-offline-test-key"
 os.environ["VEUPATHDB_SITES_CONFIG"] = str(QA_SITES_FILE)
 # No test reads or writes the warm catalog cache the image serves.
 _CATALOGS = tempfile.mkdtemp(prefix="veupathdb-mcp-catalogs-")
@@ -41,9 +44,10 @@ os.environ["CATALOG_CACHE_DIR"] = _CATALOGS
 def _settings_read_the_environment() -> Generator[None]:
     """Every read builds a fresh instance, so a monkeypatched variable applies.
 
-    The guest token is minted without a network.
+    The guest token is minted and the Decisions API answered without a network.
     """
     use_guest_tokens(hermetic_guest_tokens())
+    use_decisions_transport(offline_decisions)
     use_mcp_settings_source(McpSettings)
     use_research_settings_source(ResearchSettings)
     use_embedding_settings_source(EmbeddingSettings)

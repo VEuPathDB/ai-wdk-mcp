@@ -1,5 +1,15 @@
 # Knowledge log
 
+## 2026-10-28 - 0.2.0b56
+
+- `McpSettings` no longer reads `DECISIONS_ENABLED`. Every `search_for_searches` and
+  every narrowed parameter read asks the Decisions API, and the settings refuse to load
+  when `OPENAI_API_KEY` is empty. A failure or timeout still leaves both reads as they were.
+- `use_decisions_transport(send)` and `post_decision` (`veupathdb_mcp.catalog`) name
+  what `decide` sends through; `offline_decisions` (`veupathdb_mcp.testing`) answers
+  None with no network, for a test tier. See
+  [the decision](decisions/a-decisions-choice-widens-the-candidates-and-doubts-a-vocabulary-pick.md).
+
 ## 2026-10-28 - 0.2.0b55
 
 - `universal_searches(site_id, record_type) -> tuple[SearchMatch, ...]`

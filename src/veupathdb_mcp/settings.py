@@ -58,9 +58,8 @@ class McpSettings(BaseSettings):
     search_line_pool_size: int = Field(default=1, ge=1)
     search_line_max_overflow: int = Field(default=1, ge=0)
     search_line_pool_timeout_seconds: float | None = Field(default=None, gt=0)
-    # Whether catalog reads ask the OpenAI Decisions API, and on which key. Off,
-    # every read ranks and narrows as it does without the service.
-    decisions_enabled: bool = False
+    # The key catalog reads ask the OpenAI Decisions API on. The server does
+    # not start without it.
     openai_api_key: str = Field(default="", repr=False)
     decisions_timeout_seconds: float = Field(default=15.0, gt=0)
     # A vocabulary pick whose confidence is below this is not settled.
@@ -68,8 +67,8 @@ class McpSettings(BaseSettings):
 
     @model_validator(mode="after")
     def _decisions_need_a_key(self) -> Self:
-        if self.decisions_enabled and not self.openai_api_key.strip():
-            msg = "DECISIONS_ENABLED is set and OPENAI_API_KEY is not set."
+        if not self.openai_api_key.strip():
+            msg = "OPENAI_API_KEY is not set. The Decisions API needs it."
             raise ValueError(msg)
         return self
 

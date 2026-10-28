@@ -14,7 +14,12 @@ from scripts.record_decisions import VOCAB_TERM
 from veupathdb.domain.parameters import VocabOption
 from veupathdb.wdk import WDKSearchResponse
 
-from veupathdb_mcp.catalog import search_inspection, searches
+from veupathdb_mcp.catalog import (
+    post_decision,
+    search_inspection,
+    searches,
+    use_decisions_transport,
+)
 from veupathdb_mcp.catalog.decisions import DECISIONS_URL
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 from veupathdb_mcp.catalog.search_inspection import (
@@ -45,9 +50,9 @@ def _serve_the_site(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
 
 
-def _turn_on(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("DECISIONS_ENABLED", "true")
+def _reach_the_service(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test-not-a-key")
+    use_decisions_transport(post_decision)
 
 
 async def _read(narrowing: VocabNarrowing) -> ParameterInfo:
@@ -68,7 +73,7 @@ class TestTheRecordedInterProLookup:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _serve_the_site(monkeypatch)
-        _turn_on(monkeypatch)
+        _reach_the_service(monkeypatch)
         choice, fit = _exchanges()
         with respx.mock() as router:
             route = router.post(DECISIONS_URL).mock(
@@ -86,7 +91,7 @@ class TestTheRecordedInterProLookup:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _serve_the_site(monkeypatch)
-        _turn_on(monkeypatch)
+        _reach_the_service(monkeypatch)
         choice, fit = _exchanges()
         with respx.mock() as router:
             router.post(DECISIONS_URL).mock(
@@ -110,22 +115,20 @@ class TestTheRecordedInterProLookup:
             "settled": False,
         }
 
-    async def test_off_the_read_carries_no_pick_and_sends_nothing(
+    async def test_unanswered_the_read_carries_no_pick(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _serve_the_site(monkeypatch)
-        with respx.mock(assert_all_called=False) as router:
-            route = router.post(DECISIONS_URL)
-            read = await _read(VocabNarrowing(query=VOCAB_TERM))
+
+        read = await _read(VocabNarrowing(query=VOCAB_TERM))
 
         assert read.vocab_pick is None
-        assert not route.called
 
     async def test_a_read_no_query_narrowed_asks_nothing(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _serve_the_site(monkeypatch)
-        _turn_on(monkeypatch)
+        _reach_the_service(monkeypatch)
         with respx.mock(assert_all_called=False) as router:
             route = router.post(DECISIONS_URL)
             read = await _read(VocabNarrowing())
@@ -137,7 +140,7 @@ class TestTheRecordedInterProLookup:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _serve_the_site(monkeypatch)
-        _turn_on(monkeypatch)
+        _reach_the_service(monkeypatch)
         choice, _ = _exchanges()
         with respx.mock() as router:
             router.post(DECISIONS_URL).mock(
@@ -182,7 +185,7 @@ class TestTheShapeOfAPick:
     async def test_none_fits_is_a_pick_with_no_value_and_no_fit_asked(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        _turn_on(monkeypatch)
+        _reach_the_service(monkeypatch)
         with respx.mock() as router:
             route = router.post(DECISIONS_URL).respond(json=_none_fits(0.72))
             pick = await pick_vocab_entry(

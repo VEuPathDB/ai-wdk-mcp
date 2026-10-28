@@ -1,7 +1,7 @@
 ---
 type: Decision
 title: A Decisions choice widens the search candidates and doubts a vocabulary pick
-description: With DECISIONS_ENABLED on, search_for_searches adds the searches an OpenAI Decisions choice over every offered search picks after its own ranking, and a narrowed parameter read carries the entry a choice picks with a confidence that a fit predicate caps; off or failing, both reads are what they were; and why Jev through OpenRouter, Luna picking in free text and the single Choice confidence were rejected.
+description: search_for_searches always adds the searches an OpenAI Decisions choice over every offered search picks after its own ranking, and a narrowed parameter read carries the entry a choice picks with a confidence that a fit predicate caps; when the service fails, both reads are what they were; and why Jev through OpenRouter, Luna picking in free text, the single Choice confidence and an on-off flag were rejected.
 tags: [catalog, search-discovery, vocabulary, decisions-api]
 status: stable
 ---
@@ -9,8 +9,8 @@ status: stable
 # The choice
 
 Both reads ask the OpenAI Decisions API (`POST /v1/decisions`, model `gpt-6-luna`)
-through `decide` in `src/veupathdb_mcp/catalog/decisions.py`. `decide` answers None when
-`DECISIONS_ENABLED` is off, and also when the service fails, times out
+through `decide` in `src/veupathdb_mcp/catalog/decisions.py`, on every read. The server
+does not start without `OPENAI_API_KEY`. `decide` answers None when the service fails, times out
 (`DECISIONS_TIMEOUT_SECONDS`) or answers a body that does not parse. A failure logs a
 warning. When `decide` answers None, the read returns what it returned before.
 
@@ -85,6 +85,10 @@ over 578 requests.
 - **The Choice confidence alone.** One request is cheaper, but at the threshold that
   asks about as many right picks (0.8, 8 of 34), it leaves 7 obsolete picks settled.
   The fit predicate leaves none.
+- **A flag that turns the service on.** Each deployment would have to change its
+  environment to get the measured recall and the guard, and a deployment that did not
+  would serve the weaker reads with no sign. The key the service needs is the key the
+  deployment already holds.
 - **The picks merged into the score.** A bonus would reorder the ranking a caller
   already reads. Appending the picks keeps that ranking and still raises recall.
 

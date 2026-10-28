@@ -1,11 +1,12 @@
 """The OpenAI Decisions API: typed questions over shared evidence, typed answers.
 
-The service is optional. Off, unreachable or answering a body that does not
-parse, ``decide`` answers None and the caller keeps its own result.
+Unreachable or answering a body that does not parse, ``decide`` answers None
+and the caller keeps its own result.
 """
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 from typing import Annotated, Literal
 
 import httpx
@@ -114,22 +115,41 @@ class DecisionResponse(_Wire):
         return None
 
 
-async def decide(request: DecisionRequest, *, purpose: str) -> DecisionResponse | None:
-    """Ask the service, or None when it is off or does not answer."""
+type DecisionsTransport = Callable[
+    [DecisionRequest], Awaitable[DecisionResponse | None]
+]
+
+
+async def post_decision(request: DecisionRequest) -> DecisionResponse:
+    """Send one request to the service on the configured key."""
     settings = get_mcp_settings()
-    if not settings.decisions_enabled:
-        return None
+    async with httpx.AsyncClient(timeout=settings.decisions_timeout_seconds) as client:
+        response = await client.post(
+            DECISIONS_URL,
+            json=request.model_dump(mode="json"),
+            headers={"Authorization": f"Bearer {settings.openai_api_key}"},
+        )
+    response.raise_for_status()
+    return DecisionResponse.model_validate_json(response.content)
+
+
+class _Transport:
+    def __init__(self) -> None:
+        self.send: DecisionsTransport = post_decision
+
+
+_transport = _Transport()
+
+
+def use_decisions_transport(send: DecisionsTransport) -> None:
+    """Install what ``decide`` sends a request through."""
+    _transport.send = send
+
+
+async def decide(request: DecisionRequest, *, purpose: str) -> DecisionResponse | None:
+    """Ask the service, or None when it does not answer."""
     try:
-        async with httpx.AsyncClient(
-            timeout=settings.decisions_timeout_seconds
-        ) as client:
-            response = await client.post(
-                DECISIONS_URL,
-                json=request.model_dump(mode="json"),
-                headers={"Authorization": f"Bearer {settings.openai_api_key}"},
-            )
-        response.raise_for_status()
-        return DecisionResponse.model_validate_json(response.content)
+        return await _transport.send(request)
     except (httpx.HTTPError, ValidationError) as exc:
         logger.warning(
             "Decisions did not answer; the catalog read keeps its own result",

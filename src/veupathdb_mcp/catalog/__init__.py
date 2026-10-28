@@ -2,6 +2,11 @@
 
 from veupathdb_mcp.catalog._param_binding import OverrideMap, UnreadableValueError
 from veupathdb_mcp.catalog._param_filters import has_contrast_sibling
+from veupathdb_mcp.catalog.decisions import (
+    DecisionsTransport,
+    post_decision,
+    use_decisions_transport,
+)
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service
 from veupathdb_mcp.catalog.eda_backed import (
     COMPUTE_QUERY,
@@ -205,6 +210,7 @@ __all__ = [
     "CompareTerm",
     "ComparedGroups",
     "CountTerm",
+    "DecisionsTransport",
     "DescriptionReading",
     "EachGenomeOf",
     "EachSpeciesOf",
@@ -306,6 +312,7 @@ __all__ = [
     "organism_parameter",
     "ortho_taxonomy",
     "phyletic_tree_for_search",
+    "post_decision",
     "radio_pairs",
     "radio_readings",
     "rank_experiments_elsewhere",
@@ -326,6 +333,7 @@ __all__ = [
     "study_assay",
     "study_organisms",
     "universal_searches",
+    "use_decisions_transport",
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at",
