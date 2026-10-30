@@ -31,6 +31,8 @@ from veupathdb_mcp.separation.models import (
     SkippedCandidate,
     SkipReason,
     ThreadSearch,
+    TooFewControls,
+    too_few_controls,
 )
 from veupathdb_mcp.separation.run import separate
 from veupathdb_mcp.separation.stats import hypergeometric_log_sf
@@ -62,8 +64,10 @@ __all__ = [
     "SkipReason",
     "SkippedCandidate",
     "ThreadSearch",
+    "TooFewControls",
     "confirm_requests",
     "hypergeometric_log_sf",
     "leaf_ids",
     "separate",
+    "too_few_controls",
 ]

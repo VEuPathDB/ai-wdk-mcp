@@ -56,6 +56,8 @@ from veupathdb_mcp.separation.models import (
     SeparationResult,
     SeparationUpdate,
     SkippedCandidate,
+    TooFewControls,
+    too_few_controls,
 )
 
 
@@ -96,6 +98,21 @@ async def _resolve_both(
             msg = f"no {name} control resolves on {site_id}: {resolved.unresolved}"
             raise ValueError(msg)
     return positives, negatives
+
+
+def _too_few_resolved(
+    positives: _Resolved, negatives: _Resolved, budget: WdkCallBudget
+) -> TooFewControls | None:
+    short = too_few_controls(positives.ids, negatives.ids)
+    if short is None:
+        return None
+    return TooFewControls(
+        positives=short.positives,
+        negatives=short.negatives,
+        unresolved_positive=positives.unresolved,
+        unresolved_negative=negatives.unresolved,
+        charged_requests=budget.spent,
+    )
 
 
 async def _clean_up(
@@ -249,13 +266,16 @@ async def separate(
     *,
     strategy_name: str,
     progress: SeparationProgress,
-) -> SeparationResult:
+) -> SeparationResult | TooFewControls:
     """Find the strategy that separates the positives from the negatives on the site.
 
     Every count is read from WDK. ``strategy_name`` names the internal strategies
     the run writes and the leftovers its cleanup deletes. The run reads each search
     definition once.
     """
+    short = too_few_controls(request.positives, request.negatives)
+    if short is not None:
+        return short
     with search_definitions_read_once():
         return await _separate(
             site_id, request, strategy_name=strategy_name, progress=progress
@@ -268,7 +288,7 @@ async def _separate(
     *,
     strategy_name: str,
     progress: SeparationProgress,
-) -> SeparationResult:
+) -> SeparationResult | TooFewControls:
     budget = WdkCallBudget(limit=request.budget)
     budget.reserve(CONFIRM_RESERVATION)
     positives, negatives = await _resolve_both(site_id, request, budget)
@@ -286,6 +306,9 @@ async def _separate(
             },
         )
     )
+    short = _too_few_resolved(positives, negatives, budget)
+    if short is not None:
+        return short
     api = get_strategy_api(site_id)
     await _clean_up(api, strategy_name, budget)
     budget.charge(UPLOAD_REQUESTS)

@@ -635,11 +635,13 @@
     "SkipReason",
     "SkippedCandidate",
     "ThreadSearch",
+    "TooFewControls",
     "UPLOAD_REQUESTS",
     "confirm_requests",
     "hypergeometric_log_sf",
     "leaf_ids",
-    "separate"
+    "separate",
+    "too_few_controls"
   ],
   "veupathdb_mcp.server": [
     "SERVER_NAME",

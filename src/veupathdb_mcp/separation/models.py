@@ -1,8 +1,9 @@
 """The shapes a separation run takes, measures and returns."""
 
 import math
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Sequence
 from enum import StrEnum
+from itertools import count
 from typing import Literal, Self
 
 from pydantic import ConfigDict, Field, JsonValue, model_validator
@@ -12,6 +13,7 @@ from veupathdb.model import CamelModel
 
 from veupathdb_mcp.computed import computed
 from veupathdb_mcp.controls import NegativeControls, PositiveControls
+from veupathdb_mcp.gene_lookup import normalize_gene_ids
 from veupathdb_mcp.separation.budget import CONFIRM_RESERVATION
 from veupathdb_mcp.separation.stats import hypergeometric_log_sf
 
@@ -47,6 +49,88 @@ def informs(positive: PositiveControls, negative: NegativeControls) -> Informs:
     ):
         return "excluding"
     return "neither"
+
+
+def _best_read_beats_chance(positives: int, negatives: int) -> bool:
+    return _beats_chance(positives, positives, positives + negatives, positives)
+
+
+def _controls_words(added: int, kind: str) -> str:
+    noun = "control" if added == 1 else "controls"
+    return f"{added} more {kind} {noun}"
+
+
+class TooFewControls(CamelModel):
+    model_config = ConfigDict(frozen=True)
+
+    positives: int = Field(ge=1)
+    negatives: int = Field(ge=1)
+    unresolved_positive: list[str] = Field(default_factory=list)
+    unresolved_negative: list[str] = Field(default_factory=list)
+    charged_requests: int = Field(default=0, ge=0)
+
+    @model_validator(mode="after")
+    def _no_read_beats_chance(self) -> Self:
+        if _best_read_beats_chance(self.positives, self.negatives):
+            msg = (
+                f"{self.positives} positive and {self.negatives} negative controls "
+                "can return the positives above chance"
+            )
+            raise ValueError(msg)
+        return self
+
+    @computed
+    def threshold(self) -> float:
+        return INFORMATIVE_P_VALUE
+
+    @computed
+    def best_p_value(self) -> float:
+        total = self.positives + self.negatives
+        return math.exp(
+            hypergeometric_log_sf(self.positives, total, self.positives, self.positives)
+        )
+
+    @computed
+    def more_negatives(self) -> int:
+        return next(
+            added
+            for added in count(1)
+            if _best_read_beats_chance(self.positives, self.negatives + added)
+        )
+
+    @computed
+    def more_positives(self) -> int:
+        return next(
+            added
+            for added in count(1)
+            if _best_read_beats_chance(self.positives + added, self.negatives)
+        )
+
+    @computed
+    def sentence(self) -> str:
+        return (
+            f"With {self.positives} positive and {self.negatives} negative controls, "
+            f"the best any search can reach is p = {self.best_p_value:.3f}, and a "
+            f"result needs p under {self.threshold:g}. Add "
+            f"{_controls_words(self.more_negatives, 'negative')} or "
+            f"{_controls_words(self.more_positives, 'positive')}."
+        )
+
+
+def too_few_controls(
+    positives: Sequence[str], negatives: Sequence[str]
+) -> TooFewControls | None:
+    counted = {
+        "positive": len(normalize_gene_ids(list(positives))),
+        "negative": len(normalize_gene_ids(list(negatives))),
+    }
+    for kind, held in counted.items():
+        if not held:
+            msg = f"no {kind} control to test"
+            raise ValueError(msg)
+    if _best_read_beats_chance(counted["positive"], counted["negative"]):
+        return None
+    return TooFewControls(positives=counted["positive"], negatives=counted["negative"])
 
 
 class CandidateSource(StrEnum):
