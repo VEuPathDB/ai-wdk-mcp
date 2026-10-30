@@ -8,7 +8,10 @@ from pydantic import ValidationError
 from veupathdb_mcp.controls import NegativeControls, PositiveControls
 from veupathdb_mcp.separation import (
     INFORMATIVE_P_VALUE,
+    MAX_CONTROLS,
+    SeparationRequest,
     TooFewControls,
+    models,
     too_few_controls,
 )
 from veupathdb_mcp.separation.models import informs
@@ -151,3 +154,43 @@ def test_the_wire_carries_the_computed_counts() -> None:
         "threshold": INFORMATIVE_P_VALUE,
     }
     assert wire["chargedRequests"] == 0
+
+
+@pytest.mark.parametrize("side", ["positives", "negatives"])
+def test_a_request_over_the_control_limit_is_refused(side: str) -> None:
+    fields = {
+        "positives": _ids("01", 4),
+        "negatives": _ids("02", 3),
+        "mode": "exact",
+        "budget": 600,
+    } | {side: _ids("03", MAX_CONTROLS + 1)}
+
+    with pytest.raises(ValidationError, match=side):
+        SeparationRequest.model_validate(fields)
+
+
+def test_a_request_at_the_control_limit_is_held() -> None:
+    request = SeparationRequest(
+        positives=_ids("01", MAX_CONTROLS),
+        negatives=_ids("02", MAX_CONTROLS),
+        mode="exact",
+        budget=600,
+    )
+
+    assert (len(request.positives), len(request.negatives)) == (500, 500)
+
+
+def test_counts_over_the_control_limit_are_refused() -> None:
+    with pytest.raises(ValueError, match="at most 500"):
+        too_few_controls(_ids("01", MAX_CONTROLS + 1), _ids("02", 1))
+    with pytest.raises(ValidationError, match="less than or equal to 500"):
+        TooFewControls(positives=MAX_CONTROLS + 1, negatives=1)
+
+
+def test_the_search_for_more_controls_ends_at_the_limit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(models, "MAX_CONTROLS", 5)
+
+    with pytest.raises(ValidationError, match="no addition up to 5 controls of a kind"):
+        TooFewControls(positives=1, negatives=1)

@@ -620,6 +620,7 @@
     "FIRST_INTERSECTION_REQUESTS",
     "INFORMATIVE_P_VALUE",
     "Informs",
+    "MAX_CONTROLS",
     "MAX_CRITERIA",
     "MEASURE_REQUESTS",
     "MeasuredCandidate",

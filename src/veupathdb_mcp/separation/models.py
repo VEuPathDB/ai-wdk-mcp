@@ -4,10 +4,9 @@ import math
 from collections.abc import Awaitable, Callable, Sequence
 from enum import StrEnum
 from fractions import Fraction
-from itertools import count
 from typing import Literal, Self
 
-from pydantic import ConfigDict, Field, JsonValue, model_validator
+from pydantic import ConfigDict, Field, JsonValue, PrivateAttr, model_validator
 from veupathdb.domain.parameters import ParamValue
 from veupathdb.domain.strategy import CombineOp
 from veupathdb.model import CamelModel
@@ -24,6 +23,9 @@ INFORMATIVE_P_VALUE = 0.05
 """The tail under which returned controls tell the positives from the negatives."""
 
 _INFORMATIVE_TAIL = Fraction(str(INFORMATIVE_P_VALUE))
+
+MAX_CONTROLS = 500
+"""The most controls of one kind a run takes."""
 
 Informs = Literal["recovering", "excluding", "neither"]
 """Which control set a candidate returns more of than chance, if either."""
@@ -58,6 +60,11 @@ def _best_read_beats_chance(positives: int, negatives: int) -> bool:
     return _beats_chance(positives, positives, positives + negatives, positives)
 
 
+def _smallest_addition(passes: Callable[[int], bool], held: int) -> int | None:
+    room = MAX_CONTROLS - held
+    return next((added for added in range(1, room + 1) if passes(added)), None)
+
+
 def _controls_words(added: int, kind: str) -> str:
     noun = "control" if added == 1 else "controls"
     return f"{added} more {kind} {noun}"
@@ -66,20 +73,37 @@ def _controls_words(added: int, kind: str) -> str:
 class TooFewControls(CamelModel):
     model_config = ConfigDict(frozen=True)
 
-    positives: int = Field(ge=1)
-    negatives: int = Field(ge=1)
+    positives: int = Field(ge=1, le=MAX_CONTROLS)
+    negatives: int = Field(ge=1, le=MAX_CONTROLS)
     unresolved_positive: list[str] = Field(default_factory=list)
     unresolved_negative: list[str] = Field(default_factory=list)
     charged_requests: int = Field(default=0, ge=0)
+    _more: tuple[int, int] = PrivateAttr()
 
     @model_validator(mode="after")
     def _no_read_beats_chance(self) -> Self:
-        if _best_read_beats_chance(self.positives, self.negatives):
+        positives, negatives = self.positives, self.negatives
+        if _best_read_beats_chance(positives, negatives):
             msg = (
-                f"{self.positives} positive and {self.negatives} negative controls "
+                f"{positives} positive and {negatives} negative controls "
                 "can return the positives above chance"
             )
             raise ValueError(msg)
+        more_negatives = _smallest_addition(
+            lambda added: _best_read_beats_chance(positives, negatives + added),
+            negatives,
+        )
+        more_positives = _smallest_addition(
+            lambda added: _best_read_beats_chance(positives + added, negatives),
+            positives,
+        )
+        if more_negatives is None or more_positives is None:
+            msg = (
+                f"no addition up to {MAX_CONTROLS} controls of a kind lets {positives} "
+                f"positive and {negatives} negative controls beat chance"
+            )
+            raise ValueError(msg)
+        self._more = (more_negatives, more_positives)
         return self
 
     @computed
@@ -95,19 +119,11 @@ class TooFewControls(CamelModel):
 
     @computed
     def more_negatives(self) -> int:
-        return next(
-            added
-            for added in count(1)
-            if _best_read_beats_chance(self.positives, self.negatives + added)
-        )
+        return self._more[0]
 
     @computed
     def more_positives(self) -> int:
-        return next(
-            added
-            for added in count(1)
-            if _best_read_beats_chance(self.positives + added, self.negatives)
-        )
+        return self._more[1]
 
     @computed
     def sentence(self) -> str:
@@ -130,6 +146,9 @@ def too_few_controls(
     for kind, held in counted.items():
         if not held:
             msg = f"no {kind} control to test"
+            raise ValueError(msg)
+        if held > MAX_CONTROLS:
+            msg = f"{held} {kind} controls; a run takes at most {MAX_CONTROLS}"
             raise ValueError(msg)
     if _best_read_beats_chance(counted["positive"], counted["negative"]):
         return None
@@ -169,8 +188,8 @@ class SeparationRequest(CamelModel):
 
     model_config = ConfigDict(frozen=True)
 
-    positives: list[str] = Field(min_length=1)
-    negatives: list[str] = Field(min_length=1)
+    positives: list[str] = Field(min_length=1, max_length=MAX_CONTROLS)
+    negatives: list[str] = Field(min_length=1, max_length=MAX_CONTROLS)
     mode: SeparationMode
     literature: list[CandidateProposal] = Field(default_factory=list)
     thread: list[ThreadSearch] = Field(default_factory=list)
