@@ -48,6 +48,36 @@ def test_four_positives_and_three_negatives_can_separate() -> None:
     assert _short(4, 3) is None
 
 
+def test_a_best_tail_of_exactly_the_threshold_is_too_few() -> None:
+    short = _short(3, 3)
+
+    assert short is not None
+    assert short.best_p_value == pytest.approx(1 / 20)
+    assert (short.more_negatives, short.more_positives) == (1, 1)
+
+
+@pytest.mark.parametrize(
+    ("positives", "negatives", "too_few"),
+    [(5, 2, False), (3, 3, True), (1, 20, False), (1, 19, True), (19, 1, True)],
+)
+def test_the_boundary_is_strict_on_each_side(
+    positives: int, negatives: int, too_few: bool
+) -> None:
+    assert (_short(positives, negatives) is not None) == too_few
+
+
+def test_every_positive_and_no_negative_of_three_each_informs_nothing() -> None:
+    tested_positive, tested_negative = _ids("01", 3), _ids("02", 3)
+
+    assert (
+        informs(
+            PositiveControls.filed(tested_positive, set(tested_positive)),
+            NegativeControls.filed(tested_negative, set()),
+        )
+        == "neither"
+    )
+
+
 @pytest.mark.parametrize(
     ("positives", "negatives", "more_negatives", "more_positives"),
     [(1, 1, 19, 19), (2, 2, 3, 3), (10, 1, 1, 10), (1, 5, 15, 1), (2, 4, 1, 1)],
