@@ -35,7 +35,7 @@ a candidate returned from the tested controls (`separation/stats.py`,
 `MeasuredCandidate.informs`). It is `recovering` when P(X >= recovered), with the
 positives as the successes, is under 0.05; `excluding` when the mirror,
 P(Y >= admitted) with the negatives as the successes, is under 0.05; and `neither`
-otherwise. A candidate that passes both is `recovering`. A candidate of `neither` stays
+otherwise. A candidate that passes both is `recovering`. The comparison is exact: the tail is a fraction of integer binomials (`hypergeometric_sf`), compared with 1/20, so a tail of exactly 0.05 does not pass. A log-space tail rounds such a case either way. A candidate of `neither` stays
 in `measured` and never enters a tree. On plasmodb, GenesWithAlphafold (80 of 80
 positives, 39 of 40 negatives) and GenesByGeneModelChars (80 of 80, 55 of 55) are
 `neither`, and GenesWithSignalPeptide at SignalP-6.0 (52 of 80, 2 of 40) is
@@ -127,7 +127,7 @@ the caller reads the papers and passes queries with their references.
 # What would prove this wrong
 
 `tests/unit/separation/`: the too-few-controls check against every read of up to
-eight controls of each kind, the counts it asks for, and a run that returns it before a
+eight controls of each kind, a best tail of exactly 1/20 (3 and 3) refused, the counts it asks for, and a run that returns it before a
 request or after a resolution that drops a control; the assembly by direction, the verdicts of the three plasmodb
 searches above, a subtraction of an excluding candidate and the refusal of one that
 holds a recovered positive, the hypergeometric tail against the exact sum, the

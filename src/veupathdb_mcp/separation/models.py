@@ -3,6 +3,7 @@
 import math
 from collections.abc import Awaitable, Callable, Sequence
 from enum import StrEnum
+from fractions import Fraction
 from itertools import count
 from typing import Literal, Self
 
@@ -15,12 +16,14 @@ from veupathdb_mcp.computed import computed
 from veupathdb_mcp.controls import NegativeControls, PositiveControls
 from veupathdb_mcp.gene_lookup import normalize_gene_ids
 from veupathdb_mcp.separation.budget import CONFIRM_RESERVATION
-from veupathdb_mcp.separation.stats import hypergeometric_log_sf
+from veupathdb_mcp.separation.stats import hypergeometric_log_sf, hypergeometric_sf
 
 SeparationMode = Literal["exact", "similar"]
 
 INFORMATIVE_P_VALUE = 0.05
 """The tail under which returned controls tell the positives from the negatives."""
+
+_INFORMATIVE_TAIL = Fraction(str(INFORMATIVE_P_VALUE))
 
 Informs = Literal["recovering", "excluding", "neither"]
 """Which control set a candidate returns more of than chance, if either."""
@@ -31,8 +34,8 @@ _COMBINE_INPUTS = 2
 def _beats_chance(held: int, tested: int, population: int, returned: int) -> bool:
     """Whether a draw of ``returned`` controls holds ``held`` of ``tested`` by chance
     with a probability under ``INFORMATIVE_P_VALUE``."""
-    tail = hypergeometric_log_sf(held, population, tested, returned)
-    return tail < math.log(INFORMATIVE_P_VALUE)
+    tail = hypergeometric_sf(held, population, tested, returned)
+    return tail < _INFORMATIVE_TAIL
 
 
 def informs(positive: PositiveControls, negative: NegativeControls) -> Informs:

@@ -7,6 +7,9 @@
   request when the given ids are too few, and stops after the resolution when the ids
   the site holds are too few. `too_few_controls(positives, negatives)` is the same
   check for a host. See [the decision](decisions/a-separation-is-measured-on-the-site.md).
+- `informs` and `too_few_controls` compare the tail with 0.05 exactly, as a fraction
+  (`separation.stats.hypergeometric_sf`). 3 positives and 3 negatives, a best tail of
+  exactly 1/20, no longer pass on a floating-point rounding.
 
 ## 2026-10-28 - 0.2.0b56
 
