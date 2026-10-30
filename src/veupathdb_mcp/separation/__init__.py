@@ -16,6 +16,7 @@ from veupathdb_mcp.separation.budget import (
 )
 from veupathdb_mcp.separation.models import (
     INFORMATIVE_P_VALUE,
+    MAX_CONTROLS,
     Candidate,
     CandidateProposal,
     CandidateSource,
@@ -43,6 +44,7 @@ __all__ = [
     "ENRICHMENT_REQUESTS",
     "FIRST_INTERSECTION_REQUESTS",
     "INFORMATIVE_P_VALUE",
+    "MAX_CONTROLS",
     "MAX_CRITERIA",
     "MEASURE_REQUESTS",
     "RESOLVE_REQUESTS",

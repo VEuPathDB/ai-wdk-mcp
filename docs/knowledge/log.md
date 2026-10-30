@@ -10,6 +10,9 @@
 - `informs` and `too_few_controls` compare the tail with 0.05 exactly, as a fraction
   (`separation.stats.hypergeometric_sf`). 3 positives and 3 negatives, a best tail of
   exactly 1/20, no longer pass on a floating-point rounding.
+- `MAX_CONTROLS` (500, `veupathdb_mcp.separation`) bounds each control list of a
+  `SeparationRequest`, the counts of `TooFewControls` and `too_few_controls`. The
+  search for the controls to add stops at it.
 
 ## 2026-10-28 - 0.2.0b56
 

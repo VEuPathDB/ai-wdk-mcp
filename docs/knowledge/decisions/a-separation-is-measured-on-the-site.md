@@ -51,7 +51,7 @@ and again after the resolution, because an id the site does not hold lowers a co
 negatives, and of positives, that would bring the best tail under 0.05. With 4
 positives and 2 negatives the best tail is 1/15, about 0.067, and one more control of
 either kind is enough (1/35 and 1/21). `too_few_controls(positives, negatives)` is the
-same check, for a host that refuses before it defers a run.
+same check, for a host that refuses before it defers a run. A run takes at most `MAX_CONTROLS` (500) controls of each kind: `SeparationRequest` and `TooFewControls` refuse more, so the exact tail and the search for the controls to add are bounded.
 
 **The assembly is greedy, and the tree it builds is read back**
 (`separation/assemble.py`). COVER takes the recovering candidate that holds every
