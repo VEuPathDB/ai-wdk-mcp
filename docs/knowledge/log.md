@@ -1,5 +1,13 @@
 # Knowledge log
 
+## 2026-10-30 - 0.2.0b57
+
+- `separate` returns `TooFewControls` (`veupathdb_mcp.separation`) when no candidate
+  can return the positives above chance with the given control counts. It makes no
+  request when the given ids are too few, and stops after the resolution when the ids
+  the site holds are too few. `too_few_controls(positives, negatives)` is the same
+  check for a host. See [the decision](decisions/a-separation-is-measured-on-the-site.md).
+
 ## 2026-10-28 - 0.2.0b56
 
 - `McpSettings` no longer reads `DECISIONS_ENABLED`. Every `search_for_searches` and

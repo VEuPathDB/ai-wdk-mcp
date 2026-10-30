@@ -31,6 +31,7 @@ from veupathdb_mcp.separation import (
     SeparationRequest,
     SeparationUpdate,
     ThreadSearch,
+    TooFewControls,
     confirm_requests,
     separate,
 )
@@ -41,6 +42,7 @@ NAME = "control separation"
 POSITIVES = [f"PF3D7_01001{i}0" for i in range(5)]
 NEGATIVES = [f"PF3D7_02001{i}0" for i in range(5)]
 UNKNOWN = "PF3D7_9999999"
+UNHELD = [f"PF3D7_99001{i}0" for i in range(5)]
 # Two resolutions, the cleanup and its one delete, the upload, the enrichment,
 # three search reads (the weight search, its catalog binding, the locus-tag
 # search), one first measurement, and the confirm read of one leaf.
@@ -90,7 +92,7 @@ def account(monkeypatch: pytest.MonkeyPatch) -> _Account:
         records = [
             GeneResult(gene_id=gene_id, organism=FALCIPARUM, product="rhoptry protein")
             for gene_id in gene_ids
-            if gene_id != UNKNOWN
+            if gene_id != UNKNOWN and gene_id not in UNHELD
         ]
         return GeneResolveResult(records=records, total_count=len(records))
 
@@ -272,7 +274,7 @@ def test_an_id_on_both_lists_is_refused() -> None:
 )
 async def test_no_resolved_negative_fails_the_run(account: _Account) -> None:
     with pytest.raises(ValueError, match="no negative control resolves"):
-        await _run(_request(negatives=[UNKNOWN]))
+        await _run(_request(negatives=UNHELD))
 
 
 @pytest.mark.skipif(
@@ -332,3 +334,58 @@ async def test_a_run_reads_each_search_definition_once(
     await _run(_request())
 
     assert reads == ["/record-types/transcript/searches/GenesByMolecularWeight"]
+
+
+class _NoSite:
+    def __init__(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        self.resolved: list[list[str]] = []
+        self.opened: list[str] = []
+        monkeypatch.setattr(separation_run, "resolve_gene_ids", self.resolve)
+        monkeypatch.setattr(separation_run, "get_strategy_api", self.open)
+
+    async def resolve(self, site_id: str, gene_ids: list[str]) -> GeneResolveResult:
+        del site_id
+        self.resolved.append(gene_ids)
+        records = [
+            GeneResult(gene_id=gene_id, organism=FALCIPARUM, product="kinase")
+            for gene_id in gene_ids
+            if gene_id != UNKNOWN
+        ]
+        return GeneResolveResult(records=records, total_count=len(records))
+
+    def open(self, site_id: str) -> None:
+        self.opened.append(site_id)
+        msg = "the run opened the site"
+        raise AssertionError(msg)
+
+
+async def test_too_few_controls_return_before_any_site_request(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = _NoSite(monkeypatch)
+
+    result, rows = await _run(
+        _request(positives=POSITIVES[:4], negatives=NEGATIVES[:2], thread=[])
+    )
+
+    assert result == TooFewControls(positives=4, negatives=2)
+    assert (result.more_negatives, result.more_positives) == (1, 1)
+    assert (site.resolved, site.opened, rows) == ([], [], [])
+
+
+async def test_an_unresolved_control_can_leave_too_few_before_the_upload(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = _NoSite(monkeypatch)
+
+    result, rows = await _run(_request(negatives=[NEGATIVES[0], UNKNOWN], thread=[]))
+
+    assert result == TooFewControls(
+        positives=5,
+        negatives=1,
+        unresolved_negative=[UNKNOWN],
+        charged_requests=2 * RESOLVE_REQUESTS,
+    )
+    assert len(site.resolved) == 2
+    assert site.opened == []
+    assert [row.phase for row in rows] == ["resolved"]

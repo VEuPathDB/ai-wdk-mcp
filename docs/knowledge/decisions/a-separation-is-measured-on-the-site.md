@@ -1,8 +1,8 @@
 ---
 type: Decision
 title: A separation is measured on the site
-description: A run that looks for the strategy separating positive genes from negative ones scores every candidate with a real WDK count, assembles each candidate by the control set its controls beat chance in, reports the assembled tree's own read, charges a request budget from measured request counts, and reads both control sets from one intersection against one uploaded dataset.
-tags: [controls, separation, wdk, budget]
+description: A run that looks for the strategy separating positive genes from negative ones refuses control counts no candidate can tell apart before its first request, scores every candidate with a real WDK count, assembles each candidate by the control set its controls beat chance in, reports the assembled tree's own read, charges a request budget from measured request counts, and reads both control sets from one intersection against one uploaded dataset.
+tags: [controls, separation, wdk, budget, statistics]
 status: stable
 ---
 
@@ -40,6 +40,18 @@ in `measured` and never enters a tree. On plasmodb, GenesWithAlphafold (80 of 80
 positives, 39 of 40 negatives) and GenesByGeneModelChars (80 of 80, 55 of 55) are
 `neither`, and GenesWithSignalPeptide at SignalP-6.0 (52 of 80, 2 of 40) is
 `recovering`.
+
+**Too few controls stop the run before its first request.** The best read any
+candidate can return is every positive and no negative, a tail of 1 / C(P + N, P) for
+P positives and N negatives. When that tail is not under 0.05, no candidate can be
+`recovering`, so nothing can be assembled. `separate` then returns `TooFewControls`
+instead of a `SeparationResult`, and makes no request. It checks the given ids first,
+and again after the resolution, because an id the site does not hold lowers a count.
+`TooFewControls` carries the two counts, the best tail, and the smallest number of
+negatives, and of positives, that would bring the best tail under 0.05. With 4
+positives and 2 negatives the best tail is 1/15, about 0.067, and one more control of
+either kind is enough (1/35 and 1/21). `too_few_controls(positives, negatives)` is the
+same check, for a host that refuses before it defers a run.
 
 **The assembly is greedy, and the tree it builds is read back**
 (`separation/assemble.py`). COVER takes the recovering candidate that holds every
@@ -114,7 +126,9 @@ the caller reads the papers and passes queries with their references.
 
 # What would prove this wrong
 
-`tests/unit/separation/`: the assembly by direction, the verdicts of the three plasmodb
+`tests/unit/separation/`: the too-few-controls check against every read of up to
+eight controls of each kind, the counts it asks for, and a run that returns it before a
+request or after a resolution that drops a control; the assembly by direction, the verdicts of the three plasmodb
 searches above, a subtraction of an excluding candidate and the refusal of one that
 holds a recovered positive, the hypergeometric tail against the exact sum, the
 shortfall sentences, the eligibility rules on recorded search bodies, the pathway entry
