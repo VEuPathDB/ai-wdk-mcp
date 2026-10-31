@@ -58,8 +58,8 @@ class McpSettings(BaseSettings):
     search_line_pool_size: int = Field(default=1, ge=1)
     search_line_max_overflow: int = Field(default=1, ge=0)
     search_line_pool_timeout_seconds: float | None = Field(default=None, gt=0)
-    strategy_line_pool_size: int = Field(default=2, ge=1)
-    strategy_line_max_overflow: int = Field(default=2, ge=0)
+    strategy_line_pool_size: int = Field(default=1, ge=1)
+    strategy_line_max_overflow: int = Field(default=1, ge=0)
     strategy_line_pool_timeout_seconds: float | None = Field(default=None, gt=0)
     # The key catalog reads ask the OpenAI Decisions API on. The server does
     # not start without it.
