@@ -1,5 +1,12 @@
 # Knowledge log
 
+## 2026-10-31 - 0.2.0b60
+
+- The offline `FakeEmbedder` computes its vectors in a worker thread with NumPy's
+  `default_rng`, so a large batch no longer holds the event loop and a batch of 2000
+  texts of 60 words takes 1.5 s instead of 11 s. The vectors differ from 0.2.0b59's;
+  one text still gives one vector and shared words still lie close.
+
 ## 2026-10-31 - 0.2.0b59
 
 - The offline `FakeEmbedder` sums one seeded vector per word of a text, so texts that share
