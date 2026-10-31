@@ -20,6 +20,7 @@ PACKAGES = (
     "veupathdb_mcp.gene_lookup",
     "veupathdb_mcp.research",
     "veupathdb_mcp.search_line",
+    "veupathdb_mcp.strategy_line",
     "veupathdb_mcp.separation",
     "veupathdb_mcp.testing",
     "veupathdb_mcp.tools",
