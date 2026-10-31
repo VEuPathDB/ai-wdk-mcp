@@ -21,7 +21,7 @@ from starlette.routing import Mount, Route
 from veupathdb.wdk import close_all_clients
 
 from veupathdb_mcp import __version__
-from veupathdb_mcp.embeddings import get_embedding_settings
+from veupathdb_mcp.embeddings import embedding_session, get_embedding_settings
 from veupathdb_mcp.logging_setup import setup_logging
 from veupathdb_mcp.metadata import (
     DEFAULT_MCP_PATH,
@@ -31,6 +31,7 @@ from veupathdb_mcp.metadata import (
 from veupathdb_mcp.search_line import install_search_line
 from veupathdb_mcp.server import SERVER_NAME, build_server
 from veupathdb_mcp.settings import get_mcp_settings
+from veupathdb_mcp.strategy_line import install_strategy_line
 
 HEALTH_PATH = "/health"
 SERVE_PORT = 8100
@@ -71,6 +72,8 @@ def build_app() -> Starlette:
         setup_logging()
         database_url = get_embedding_settings().database_url
         line = _search_line(database_url) if database_url else None
+        if database_url:
+            install_strategy_line(embedding_session)
         async with mcp_app.lifespan(mcp_app):
             yield
         await close_all_clients()

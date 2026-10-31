@@ -657,6 +657,12 @@
     "get_mcp_settings",
     "use_mcp_settings_source"
   ],
+  "veupathdb_mcp.strategy_line": [
+    "OpenSession",
+    "StrategyLine",
+    "install_strategy_line",
+    "strategy_line_key"
+  ],
   "veupathdb_mcp.testing": [
     "FIXTURE_ROOT",
     "ORTHOMCL_COUNTS",
