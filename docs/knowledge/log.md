@@ -2,10 +2,12 @@
 
 ## 2026-10-31 - A strategy holds one line on the database
 
-- `veupathdb_mcp.strategy_line.install_strategy_line(open_session)` installs veupathdb-py's
-  strategy gate: each request on one strategy holds the Postgres advisory lock
-  `wdk-strategy:<site>:<strategy id>` on a session of the host's pool. The served process
-  installs it when it has a database. Needs veupathdb-py 0.1.0b27. See
+- `veupathdb_mcp.strategy_line.install_strategy_line(database_url, *, pool_size=2,
+  max_overflow=2, pool_timeout=None)` installs veupathdb-py's strategy gate: each request on
+  one strategy holds the Postgres advisory lock `wdk-strategy:<site>:<strategy id>` on a
+  connection of the line's own pool. The served process installs it when it has a
+  database (`STRATEGY_LINE_POOL_SIZE`, `STRATEGY_LINE_MAX_OVERFLOW`,
+  `STRATEGY_LINE_POOL_TIMEOUT_SECONDS`). Needs veupathdb-py 0.1.0b27. See
   [the decision](decisions/a-strategy-holds-one-line-on-the-database.md).
 
 ## 2026-10-30 - 0.2.0b57

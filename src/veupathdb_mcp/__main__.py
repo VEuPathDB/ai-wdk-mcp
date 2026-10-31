@@ -21,7 +21,7 @@ from starlette.routing import Mount, Route
 from veupathdb.wdk import close_all_clients
 
 from veupathdb_mcp import __version__
-from veupathdb_mcp.embeddings import embedding_session, get_embedding_settings
+from veupathdb_mcp.embeddings import get_embedding_settings
 from veupathdb_mcp.logging_setup import setup_logging
 from veupathdb_mcp.metadata import (
     DEFAULT_MCP_PATH,
@@ -62,6 +62,16 @@ def _search_line(database_url: str) -> AsyncEngine:
     )
 
 
+def _strategy_line(database_url: str) -> AsyncEngine:
+    settings = get_mcp_settings()
+    return install_strategy_line(
+        database_url,
+        pool_size=settings.strategy_line_pool_size,
+        max_overflow=settings.strategy_line_max_overflow,
+        pool_timeout=settings.strategy_line_pool_timeout_seconds,
+    )
+
+
 def build_app() -> Starlette:
     """The served app: a public probe, the RFC 9728 document, and guarded MCP."""
     mcp_app = build_server().http_app(path=DEFAULT_MCP_PATH, stateless_http=True)
@@ -72,13 +82,14 @@ def build_app() -> Starlette:
         setup_logging()
         database_url = get_embedding_settings().database_url
         line = _search_line(database_url) if database_url else None
-        if database_url:
-            install_strategy_line(embedding_session)
+        strategy_line = _strategy_line(database_url) if database_url else None
         async with mcp_app.lifespan(mcp_app):
             yield
         await close_all_clients()
         if line is not None:
             await line.dispose()
+        if strategy_line is not None:
+            await strategy_line.dispose()
 
     return Starlette(
         routes=[

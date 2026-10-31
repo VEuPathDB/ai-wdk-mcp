@@ -7,6 +7,7 @@ from typing import Any, Protocol
 from weakref import WeakValueDictionary
 
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
 from veupathdb.wdk import StrategyRequest, use_strategy_gate
 
 _TAKE = text("SELECT pg_advisory_xact_lock(hashtextextended(:line, 0))")
@@ -43,7 +44,19 @@ class StrategyLine:
             yield
 
 
-def install_strategy_line(open_session: OpenSession) -> StrategyLine:
-    line = StrategyLine(open_session)
-    use_strategy_gate(line.hold)
-    return line
+def install_strategy_line(
+    database_url: str,
+    *,
+    pool_size: int = 2,
+    max_overflow: int = 2,
+    pool_timeout: float | None = None,
+) -> AsyncEngine:
+    engine = create_async_engine(
+        database_url,
+        pool_size=pool_size,
+        max_overflow=max_overflow,
+        pool_timeout=pool_timeout,
+        pool_pre_ping=True,
+    )
+    use_strategy_gate(StrategyLine(async_sessionmaker(engine)).hold)
+    return engine

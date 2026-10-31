@@ -26,6 +26,7 @@ from veupathdb_mcp.__main__ import HEALTH_PATH, ServerHealth, build_app
 from veupathdb_mcp.metadata import DEFAULT_MCP_PATH
 from veupathdb_mcp.search_line import ExpensiveSearch, install_search_line
 from veupathdb_mcp.server import SERVER_NAME, TOOLS, build_server
+from veupathdb_mcp.strategy_line import install_strategy_line
 
 BASE_URL = "https://wdk-mcp.test"
 METADATA_PATH = "/.well-known/oauth-protected-resource/mcp"
@@ -264,3 +265,39 @@ async def test_the_served_line_uses_the_configured_pool(
     [engine] = built
     assert engine.pool.size() == 2
     assert engine.pool.timeout() == pytest.approx(90.0)
+
+
+@pytest.mark.usefixtures("mcp_deployment", "open_gate")
+async def test_the_strategy_line_has_a_pool_of_its_own_not_the_index_pool(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://index@db.invalid/index")
+    monkeypatch.setenv("STRATEGY_LINE_POOL_SIZE", "3")
+    monkeypatch.setenv("STRATEGY_LINE_MAX_OVERFLOW", "0")
+    monkeypatch.setenv("STRATEGY_LINE_POOL_TIMEOUT_SECONDS", "45")
+    built: list[AsyncEngine] = []
+
+    def recorded(
+        database_url: str,
+        *,
+        pool_size: int,
+        max_overflow: int,
+        pool_timeout: float | None,
+    ) -> AsyncEngine:
+        engine = install_strategy_line(
+            database_url,
+            pool_size=pool_size,
+            max_overflow=max_overflow,
+            pool_timeout=pool_timeout,
+        )
+        built.append(engine)
+        return engine
+
+    monkeypatch.setattr(entrypoint, "install_strategy_line", recorded)
+
+    async with _serving():
+        pass
+
+    [engine] = built
+    assert engine.pool.size() == 3
+    assert engine.pool.timeout() == pytest.approx(45.0)
