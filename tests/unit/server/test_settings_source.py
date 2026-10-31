@@ -37,6 +37,9 @@ def test_the_server_settings_keep_the_environment_variable_names() -> None:
         "search_line_max_overflow",
         "search_line_pool_size",
         "search_line_pool_timeout_seconds",
+        "strategy_line_pool_size",
+        "strategy_line_max_overflow",
+        "strategy_line_pool_timeout_seconds",
         "site_catalog_budget_mb",
     }
 

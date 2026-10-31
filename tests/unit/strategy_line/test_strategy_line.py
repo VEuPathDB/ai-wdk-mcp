@@ -116,9 +116,10 @@ async def test_two_strategies_hold_their_lines_side_by_side() -> None:
 
 
 @pytest.mark.usefixtures("restored_gate")
-def test_installing_the_line_replaces_the_open_gate() -> None:
+async def test_installing_the_line_replaces_the_open_gate() -> None:
     use_strategy_gate(open_strategy_gate)
 
-    install_strategy_line(_Sessions())
+    engine = install_strategy_line("postgresql+asyncpg://index@db.invalid/index")
+    await engine.dispose()
 
     assert strategy_gate() is not open_strategy_gate

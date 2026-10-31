@@ -1,7 +1,7 @@
 ---
 type: Decision
 title: A strategy holds one line on the database
-description: veupathdb_mcp.strategy_line is the gate a deployment installs for veupathdb-py's strategy requests. Each request on one strategy holds the Postgres advisory lock wdk-strategy:<site>:<strategy id> on a session of the host's own pool, behind one in-process lock per strategy. The served process installs it on the index's sessions; a host installs it on its own. A pool of its own and a lock per site were rejected.
+description: veupathdb_mcp.strategy_line is the gate a deployment installs for veupathdb-py's strategy requests. Each request on one strategy holds the Postgres advisory lock wdk-strategy:<site>:<strategy id> on a connection of the line's own small pool, behind one in-process lock per strategy. The served process and a host install it at startup. Sessions of the index or the host pool and a lock per site were rejected.
 tags: [wdk, strategy, postgres, load]
 generated: { by: claude-code/opus-5.5, at: 2026-10-31T00:00:00Z }
 verified: { by: claude-code/opus-5.5, at: 2026-10-31T00:00:00Z }
@@ -17,20 +17,25 @@ client passes every request on one strategy through a gate the host installs
 (`use_strategy_gate`, the same decision as its search gate,
 `veupathdb-py: docs/knowledge/decisions/a-search-waits-in-line-and-the-host-owns-the-gate.md`).
 
-`install_strategy_line(open_session)` installs `StrategyLine.hold` as that gate. A hold
-waits for the process's own lock on the strategy, opens one session, and takes
+`install_strategy_line(database_url, pool_size=2, max_overflow=2, pool_timeout=None)`
+builds an engine of its own and installs `StrategyLine.hold` as that gate. A hold waits for
+the process's own lock on the strategy, opens one session on that engine, and takes
 `pg_advisory_xact_lock(hashtextextended('wdk-strategy:<site>:<strategy id>', 0))`; the
 session's close ends the transaction and frees the lock. So one process opens at most one
 session per strategy, and every process on one database sends one request per strategy at
 a time. The control tests' read of a step's strategy, and every other strategy request
 this package sends, goes through the client and so through the gate.
 
-The served process installs it on `embedding_session` when it has a database. A host
-installs it on the session factory of its own pool.
+The served process installs it when it has a database, sized by
+`STRATEGY_LINE_POOL_SIZE`, `STRATEGY_LINE_MAX_OVERFLOW` and
+`STRATEGY_LINE_POOL_TIMEOUT_SECONDS`. A host installs it the same way. A request beyond the
+pool waits for a connection; it never takes one from another pool.
 
 # What was rejected
 
-- **A pool of its own.** A small pool would hold every strategy request of the process
-  to its size, across researchers; one request holds a session for one WDK request only.
+- **Sessions of the index or the host's request pool.** Many requests on many strategies
+  would hold connections that pool's other users need, so a burst of strategy requests
+  could starve them. The line's own pool bounds what it holds; the cost is that the
+  process sends at most pool size plus overflow strategy requests at a time.
 - **A lock per site.** Requests on different strategies do not overwrite each other and
   would wait for nothing.
