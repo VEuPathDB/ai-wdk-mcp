@@ -47,8 +47,8 @@ class StrategyLine:
 def install_strategy_line(
     database_url: str,
     *,
-    pool_size: int = 2,
-    max_overflow: int = 2,
+    pool_size: int = 1,
+    max_overflow: int = 1,
     pool_timeout: float | None = None,
 ) -> AsyncEngine:
     engine = create_async_engine(
