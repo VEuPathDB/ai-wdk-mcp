@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+
 from veupathdb_mcp.embeddings.fake import FakeEmbedder
 
 _TITLE = "5 asexual and sexual stage transcriptomes"
@@ -35,3 +37,17 @@ async def test_one_text_always_gives_one_vector() -> None:
 
     assert second == [first]
     assert abs(_cosine(first, first) - 1.0) < 1e-9
+
+
+async def test_a_large_batch_leaves_the_event_loop_free() -> None:
+    texts = [
+        " ".join(f"word{(n * 31 + k) % 5000}" for k in range(80)) for n in range(1500)
+    ]
+    embedding = asyncio.create_task(FakeEmbedder().embed_documents(texts))
+    ticks = 0
+    while not embedding.done():
+        ticks += 1
+        await asyncio.sleep(0)
+
+    assert ticks > 1
+    assert len(await embedding) == len(texts)
