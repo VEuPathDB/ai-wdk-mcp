@@ -17,7 +17,7 @@ client passes every request on one strategy through a gate the host installs
 (`use_strategy_gate`, the same decision as its search gate,
 `veupathdb-py: docs/knowledge/decisions/a-search-waits-in-line-and-the-host-owns-the-gate.md`).
 
-`install_strategy_line(database_url, pool_size=1, max_overflow=1, pool_timeout=None)`
+`install_strategy_line(database_url, pool_size=1, max_overflow=0, pool_timeout=None)`
 builds an engine of its own and installs `StrategyLine.hold` as that gate. A hold waits for
 the process's own lock on the strategy, opens one session on that engine, and takes
 `pg_advisory_xact_lock(hashtextextended('wdk-strategy:<site>:<strategy id>', 0))`; the
