@@ -113,6 +113,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       WDK_MCP_BASE_URL: http://localhost:8100
+      OPENAI_API_KEY: wdk-mcp-conformance-placeholder
       MCP_CONFORMANCE_ENDPOINT: http://localhost:8100/mcp
       MCP_CONFORMANCE_BEARER: wdk-mcp-conformance-secret-0123456789ab
       CONFORMANCE: veupathdb-mcp-conformance @ git+https://github.com/VEuPathDB/ai-assistant-platform@v0.3.0a5#subdirectory=packages/mcp-conformance
