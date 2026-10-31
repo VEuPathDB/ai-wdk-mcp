@@ -105,7 +105,6 @@ async def test_the_own_site_answer_is_the_same_with_other_sites_indexed(
     assert [name for name, _, _ in _answer(before)] == [
         "GenesByRNASeqpfal3D7_Excystation",
         "GenesByTimeCourse",
-        "GenesByMolecularWeight",
     ]
     assert all(similarity is not None for _, _, similarity in _answer(before))
     assert _answer(after) == _answer(before)

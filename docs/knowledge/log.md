@@ -1,5 +1,11 @@
 # Knowledge log
 
+## 2026-10-31 - 0.2.0b59
+
+- The offline `FakeEmbedder` sums one seeded vector per word of a text, so texts that share
+  words lie close and a study's title finds the study whose index text holds it. One text
+  still gives one vector. The live embedder is unchanged.
+
 ## 2026-10-31 - 0.2.0b58
 
 - `veupathdb_mcp.strategy_line.install_strategy_line(database_url, *, pool_size=1,
