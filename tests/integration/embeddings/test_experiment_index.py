@@ -56,8 +56,21 @@ async def _sync(*cards: ExperimentCard) -> None:
 
 
 # Every card named _EXCYSTATION carries the same index text, so a query of that
-# text scores each of them 1.0 and scores any other card near 0.
+# text scores each of them 1.0 and scores a card that shares none of its words near 0.
 _QUERY = _card("cryptodb", "DS_any").index_text()
+
+_HYPHAL = ExperimentCard(
+    site_id="fungidb",
+    dataset_id="DS_f1",
+    name="Hyphal growth on glucose",
+    organism="Aspergillus fumigatus Af293",
+    assay="Microarray",
+    attribution="Nierman 2005",
+    summary="Mycelia grown in minimal medium.",
+    pmids=["16372009"],
+    searches=["GenesByMicroarrayDS_f1"],
+    record_url="https://qa.fungidb.org/fungidb.qa/app/record/dataset/DS_f1",
+)
 
 
 @pytest.fixture
@@ -76,7 +89,7 @@ async def four_sites(db: None) -> None:
         _card("cryptodb", "DS_c1"),
         _card("cryptodb", "DS_c2"),
         _card("toxodb", "DS_t1"),
-        _card("fungidb", "DS_f1", name="Hyphal growth on glucose"),
+        _HYPHAL,
     )
 
 
@@ -111,7 +124,9 @@ async def test_the_limit_counts_sites(four_sites: None) -> None:
 async def test_a_card_under_the_floor_is_not_returned(four_sites: None) -> None:
     del four_sites
 
-    unrelated = await rank_experiments_elsewhere("plasmodb", "Hyphal growth")
+    unrelated = await rank_experiments_elsewhere(
+        "plasmodb", "Mosquito salivary proteome"
+    )
     matched = await rank_experiments_elsewhere("plasmodb", _QUERY)
 
     assert unrelated == []
