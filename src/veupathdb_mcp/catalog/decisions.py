@@ -10,7 +10,14 @@ from collections.abc import Awaitable, Callable
 from typing import Annotated, Literal
 
 import httpx
-from pydantic import BaseModel, ConfigDict, Discriminator, Field, ValidationError
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Discriminator,
+    Field,
+    ValidationError,
+    model_validator,
+)
 from veupathdb import get_logger
 
 from veupathdb_mcp.settings import get_mcp_settings
@@ -86,8 +93,29 @@ Answer = Annotated[
 ]
 
 
+class _InputDetails(_Wire):
+    cached_tokens: int = 0
+    cache_write_tokens: int = 0
+
+
 class DecisionUsage(_Wire):
     input_tokens: int = 0
+    cached_tokens: int = 0
+    cache_write_tokens: int = 0
+
+    @model_validator(mode="before")
+    @classmethod
+    def _flatten_details(cls, value: object) -> object:
+        match value:
+            case {"input_tokens_details": dict() as details, **rest}:
+                read = _InputDetails.model_validate(details)
+                return {
+                    **rest,
+                    "cached_tokens": read.cached_tokens,
+                    "cache_write_tokens": read.cache_write_tokens,
+                }
+            case _:
+                return value
 
 
 class DecisionResponse(_Wire):

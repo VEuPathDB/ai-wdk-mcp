@@ -1,5 +1,14 @@
 # Knowledge log
 
+## 2026-11-02 - 0.2.0b61
+
+- `veupathdb_mcp.catalog` exports the Decisions client: `DecisionRequest`, the choice and
+  predicate questions and answers, `DecisionResponse`, `DecisionUsage`, `decide` and
+  `DECISIONS_URL`, beside `post_decision` and `use_decisions_transport`. A host installs a
+  transport that sends on the key that pays for the turn and meters each call.
+  `DecisionUsage` reads `cached_tokens` and `cache_write_tokens` from
+  `input_tokens_details`, so a host can price a call at the cache rates.
+
 ## 2026-10-31 - 0.2.0b60
 
 - The offline `FakeEmbedder` computes its vectors in a worker thread with NumPy's
