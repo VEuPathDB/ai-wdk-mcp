@@ -53,6 +53,15 @@ from veupathdb_mcp.audit.evidence_inputs import (
     gene_evidence,
     genome_provenance,
 )
+from veupathdb_mcp.audit.frameshift import (
+    Frameshift,
+    ReferenceRun,
+    RepeatRun,
+)
+from veupathdb_mcp.audit.frameshift_inputs import (
+    StrainReference,
+    compared_to_reference,
+)
 from veupathdb_mcp.audit.fusion import (
     NEIGHBOUR_SHARE,
     NEIGHBOUR_WINDOWS,
@@ -93,6 +102,8 @@ from veupathdb_mcp.audit.gene_models import (
     ORGANISM_ATTRIBUTE,
     GeneModel,
     GeneSpan,
+    ModelReads,
+    ModelRecord,
     ModelRow,
     ModelSpans,
     ReadModels,
@@ -211,7 +222,6 @@ from veupathdb_mcp.audit.introns_orthologs import (
     ortholog_support,
 )
 from veupathdb_mcp.audit.length import (
-    DnaWindow,
     LengthCheck,
     LengthVerdict,
     check_length,
@@ -371,11 +381,18 @@ from veupathdb_mcp.audit.track_reads import (
     tabix_reader,
     tabix_track,
 )
+from veupathdb_mcp.audit.variant_calls import (
+    StrainCall,
+    VariantAnswer,
+    VariantCalls,
+)
 from veupathdb_mcp.audit.windows import (
     FOUND,
     MISSING,
     STEP,
     WINDOW,
+    DnaWindow,
+    GenomeSource,
     SegmentTrack,
     WindowState,
     best_identity,
@@ -485,6 +502,7 @@ __all__ = [
     "DnaWindow",
     "EndOverlap",
     "Frame",
+    "Frameshift",
     "FusionAudit",
     "FusionCheck",
     "FusionInputs",
@@ -509,6 +527,7 @@ __all__ = [
     "GenomePriority",
     "GenomeProvenance",
     "GenomePseudogeneCalls",
+    "GenomeSource",
     "GroupMember",
     "GroupProfile",
     "IntronAudit",
@@ -534,6 +553,8 @@ __all__ = [
     "MissingScan",
     "MissingVerdict",
     "ModelAnatomy",
+    "ModelReads",
+    "ModelRecord",
     "ModelRow",
     "ModelSpans",
     "NoRelatives",
@@ -565,9 +586,11 @@ __all__ = [
     "RateBounds",
     "ReadModels",
     "ReferenceGene",
+    "ReferenceRun",
     "Relative",
     "RelativeTier",
     "Relatives",
+    "RepeatRun",
     "RnaJunction",
     "SecCheck",
     "SecVerdict",
@@ -577,9 +600,11 @@ __all__ = [
     "SeqEdit",
     "SideVerdict",
     "StagedEvidence",
+    "StrainCall",
     "StrainCheck",
     "StrainInputs",
     "StrainModelAudit",
+    "StrainReference",
     "StrainRelatives",
     "TooManyIdsError",
     "UncheckedIntrons",
@@ -588,6 +613,8 @@ __all__ = [
     "UnpairedPseudogene",
     "UnreadIntron",
     "UnreadOutcome",
+    "VariantAnswer",
+    "VariantCalls",
     "WindowState",
     "annotated_genes",
     "beside",
@@ -603,6 +630,7 @@ __all__ = [
     "closest_orthologs",
     "closest_reference",
     "coding_parts",
+    "compared_to_reference",
     "confirm_in_dna",
     "copies_beside",
     "correct_model",

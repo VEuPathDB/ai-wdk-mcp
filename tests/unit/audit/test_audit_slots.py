@@ -17,10 +17,11 @@ from tests._support.proteins import PROTEIN, back_translate
 
 from veupathdb_mcp.audit.codes import GeneticCode
 from veupathdb_mcp.audit.gene_models import GeneModel, ModelRecord, ModelRow
-from veupathdb_mcp.audit.length import DnaWindow, LengthCheck, check_length
+from veupathdb_mcp.audit.length import LengthCheck, check_length
 from veupathdb_mcp.audit.pseudogene import CdsPart, PseudogeneCheck, ReferenceGene
 from veupathdb_mcp.audit.selenocysteine import SecCheck, check_sec_stop
 from veupathdb_mcp.audit.served import LengthDna, LengthInputs, LengthScreen
+from veupathdb_mcp.audit.windows import DnaWindow, GenomeSource
 from veupathdb_mcp.tools import audit_tools
 
 
@@ -204,6 +205,10 @@ async def test_the_length_check_runs_off_the_event_loop(
                 reference_protein=PROTEIN,
                 model_proteins=[PROTEIN[:60] + PROTEIN[120:]],
                 window=DnaWindow(
+                    source=GenomeSource(
+                        site="plasmodb", organism="pfal3D7", seqid="chr1"
+                    ),
+                    start=1,
                     sequence="CCCC" + back_translate(PROTEIN) + "CCCC",
                     strand="+",
                     at_contig_edge=False,
@@ -231,6 +236,7 @@ async def test_the_length_check_runs_off_the_event_loop(
                     )
                     for gene in genes
                 ],
+                strain_reference=None,
             ),
         )
 

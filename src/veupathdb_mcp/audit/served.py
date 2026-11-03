@@ -10,6 +10,7 @@ from veupathdb.jbrowse import GenomeReader, GenomeWindow, get_jbrowse_client
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.audit.codes import GeneticCode, infer_code, reverse_complement
+from veupathdb_mcp.audit.frameshift_inputs import StrainReference
 from veupathdb_mcp.audit.gene_ids import (
     GeneId,
     GeneReads,
@@ -29,17 +30,19 @@ from veupathdb_mcp.audit.gene_models import (
     gene_organism,
     model_record,
 )
-from veupathdb_mcp.audit.genes import GeneRow, orthologs_of
-from veupathdb_mcp.audit.length import DnaWindow, LengthCheck
+from veupathdb_mcp.audit.genes import GeneRow, GroupMember, orthologs_of
+from veupathdb_mcp.audit.length import LengthCheck
 from veupathdb_mcp.audit.lengths import (
     Confirmable,
     LengthClass,
     NotChecked,
     call_length,
+    species_reference,
 )
 from veupathdb_mcp.audit.pseudogene import PseudogeneCheck, ReferenceGene
 from veupathdb_mcp.audit.record_reads import record_proteins
 from veupathdb_mcp.audit.selenocysteine import SecCheck, sec_tail
+from veupathdb_mcp.audit.windows import DnaWindow, GenomeSource
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
 
 AUDIT_MAX_WINDOW_BASES = 250_000
@@ -124,6 +127,7 @@ class LengthDna(BaseModel):
     code: GeneticCode
     code_inferred: bool
     models: list[ModelRecord] = Field(min_length=1)
+    strain_reference: StrainReference | None
 
 
 class LengthInputs(BaseModel):
@@ -492,6 +496,7 @@ async def length_dna(
     span: tuple[int, int],
     reference_protein: str,
     model_proteins: list[str],
+    strain_reference: StrainReference | None,
 ) -> LengthDna:
     first, last = min(p.start for p in parts), max(p.end for p in parts)
     records = [await model_record(site_id, part.gene) for part in parts]
@@ -516,6 +521,8 @@ async def length_dna(
         reference_protein=reference_protein,
         model_proteins=model_proteins,
         window=DnaWindow(
+            source=GenomeSource(site=site_id, organism=abbrev, seqid=seqid),
+            start=window.start,
             sequence=window.sequence,
             strand=strand,
             at_contig_edge=first <= LENGTH_EDGE or contig - last <= LENGTH_EDGE,
@@ -523,11 +530,12 @@ async def length_dna(
         code=code or GeneticCode.STANDARD,
         code_inferred=code is not None,
         models=records,
+        strain_reference=strain_reference,
     )
 
 
 async def _confirmed_dna(
-    site_id: str, parts: list[GeneRow], call: Confirmable
+    site_id: str, parts: list[GeneRow], call: Confirmable, group: list[GroupMember]
 ) -> LengthDna | ToolErrorPayload:
     match length_window(parts, call.reference_length - sum(call.lengths)):
         case ToolErrorPayload() as refusal:
@@ -540,7 +548,17 @@ async def _confirmed_dna(
             return refusal
         case proteins:
             models = [proteins[gene] for gene in genes]
-    return await length_dna(site_id, parts, span, proteins[call.reference.gene], models)
+    named = species_reference(parts[0], group)
+    return await length_dna(
+        site_id,
+        parts,
+        span,
+        proteins[call.reference.gene],
+        models,
+        None
+        if named is None
+        else StrainReference(gene=named.gene, organism=named.organism),
+    )
 
 
 async def length_inputs(
@@ -562,7 +580,7 @@ async def length_inputs(
         case NotChecked() as call:
             return LengthInputs(screen=length_screen(parts, call, ids), dna=None)
         case Confirmable() as call:
-            dna = await _confirmed_dna(site_id, parts, call)
+            dna = await _confirmed_dna(site_id, parts, call, group.members)
     match dna:
         case ToolErrorPayload() as refusal:
             return refusal

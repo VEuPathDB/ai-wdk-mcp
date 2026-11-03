@@ -150,7 +150,10 @@ in the model (identity 0.5 or more), then in the six frames of the window
 (`confirm_in_dna`). A window is looked for on the gene's strand first, so a window that
 both strands hold counts on the gene's strand; this is the phase 1 behaviour the
 thresholds were calibrated with. `GENOME_ENCODES` needs at least three missing windows
-on the gene's own strand and at least half of all missing windows; else `ASSEMBLY` when
+on the gene's own strand and at least half of all missing windows, and becomes
+`FRAMESHIFT` when those windows lie in another reading frame
+([a short model names the frameshift that cut it](a-short-model-names-the-frameshift-that-cut-it.md));
+else `ASSEMBLY` when
 the window holds an N or the gene lies within `LENGTH_EDGE` (2,000) bases of a contig
 end, the contig length read from the genome index; else `ABSENT`. A model that holds
 every window answers `NOT_SHORT`.
@@ -240,7 +243,8 @@ not seen: a pseudogene, which the Orthologs table omits, or an unannotated copy.
 read uses the length check's window and flank (12 bases per residue of length
 difference, 6 to 30 kb) and confirms the lost segment with the length check, against
 the two proteins the check already read. A side is judged only when the strain's genome
-encodes the lost segment. The strain is short when the reference is within 10% of its
+encodes the lost segment in the model's frame, so a `FRAMESHIFT` judges no side. The
+strain is short when the reference is within 10% of its
 relatives' median and the shorter strain is not. The reference is long when the strain
 is within 10% and the longer reference is not: the strain's genome encodes a segment
 the relatives lack, as a model that starts too early does. The relatives are the

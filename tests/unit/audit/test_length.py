@@ -2,7 +2,8 @@ import pytest
 from tests._support.proteins import PROTEIN, back_translate
 
 from veupathdb_mcp.audit.codes import GeneticCode, reverse_complement
-from veupathdb_mcp.audit.length import DnaWindow, LengthCheck, check_length
+from veupathdb_mcp.audit.length import LengthCheck, check_length
+from veupathdb_mcp.audit.windows import DnaWindow, GenomeSource
 
 STANDARD = GeneticCode.STANDARD
 SHORT_MODEL = PROTEIN[:60] + PROTEIN[120:]
@@ -10,7 +11,13 @@ SHORT_MODEL = PROTEIN[:60] + PROTEIN[120:]
 
 def window(dna: str, *, strand: str = "+", edge: bool = False) -> DnaWindow:
     return DnaWindow.model_validate(
-        {"sequence": dna, "strand": strand, "at_contig_edge": edge}
+        {
+            "source": GenomeSource(site="plasmodb", organism="pfal", seqid="chr"),
+            "start": 1,
+            "sequence": dna,
+            "strand": strand,
+            "at_contig_edge": edge,
+        }
     )
 
 

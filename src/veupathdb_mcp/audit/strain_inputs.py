@@ -12,6 +12,7 @@ from veupathdb.jbrowse import (
     parse_gff_line,
 )
 
+from veupathdb_mcp.audit.frameshift_inputs import StrainReference
 from veupathdb_mcp.audit.gene_ids import GeneId, id_pairs
 from veupathdb_mcp.audit.gene_models import gene_organism
 from veupathdb_mcp.audit.genes import GeneRow, GroupMember, orthologs_of
@@ -187,4 +188,8 @@ async def strain_dna(
                 span,
                 inputs.reference_protein,
                 [inputs.strain_protein],
+                StrainReference(
+                    gene=inputs.reference.gene,
+                    organism=inputs.reference.organism,
+                ),
             )

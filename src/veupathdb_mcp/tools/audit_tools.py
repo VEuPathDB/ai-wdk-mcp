@@ -16,12 +16,16 @@ from veupathdb_mcp.audit import (
     GeneLengthAudit,
     GeneticCode,
     LengthCheck,
+    LengthDna,
+    ModelReads,
+    ModelRecord,
     PseudogeneCallAudit,
     ReadModels,
     SelenoproteinEndAudit,
     check_length,
     check_pseudogene_call,
     check_sec_stop,
+    compared_to_reference,
     length_inputs,
     pseudogene_inputs,
     selenoprotein_inputs,
@@ -197,6 +201,23 @@ async def audit_selenoprotein_end(
     )
 
 
+async def compared_check(
+    site_id: str,
+    check: LengthCheck,
+    dna: LengthDna,
+    record: ModelRecord | None = None,
+) -> LengthCheck:
+    reference = dna.strain_reference
+    if reference is None or not check.frameshifts:
+        return check
+    if record is None:
+        record = await read_inputs(site_id, ModelReads(site_id).read(reference.gene))
+    return await read_inputs(
+        site_id,
+        compared_to_reference(site_id, check, dna.window, reference, record),
+    )
+
+
 async def _length_audit(site_id: str, genes: list[str]) -> GeneLengthAudit:
     inputs = await read_inputs(site_id, length_inputs(site_id, genes))
     dna = inputs.dna
@@ -210,6 +231,7 @@ async def _length_audit(site_id: str, genes: list[str]) -> GeneLengthAudit:
             dna.window,
             dna.code,
         )
+        check = await compared_check(site_id, check, dna)
     return GeneLengthAudit.model_validate(
         {
             **check.model_dump(),
@@ -235,8 +257,24 @@ async def audit_gene_length(site_id: str, gene: str) -> GeneLengthAudit:
     gene's own organism holds another member of the group (check that pair
     with audit_gene_split). Only a SHORT gene's genome region is read, for
     the protein of the closest single-copy ortholog: GENOME_ENCODES means
-    the genome holds the missing segment on the gene's strand, so the model
-    misses it; ASSEMBLY means a gap or a contig end can explain it; ABSENT
+    the genome holds the missing segment on the gene's strand and in the
+    model's reading frame, so the model misses it; FRAMESHIFT means it holds
+    the segment one or two bases over in another frame, within 20 bases of
+    where the windows leave the first frame, so the model follows the
+    assembly to a stop (frameshifts names each change: its genome span,
+    both frames, the bases the genome holds beyond the reference, the
+    residues of the reference protein and the longest homopolymer of 6 or
+    more bases there, or else a tandem repeat of 3 or more copies of up to
+    6 bases). When the group marks one other strain of the species as its
+    reference strain, referenceRun gives the same stretch in its gene,
+    found between the 15 bases on each side, and variantCalls what the
+    site's VariantsByLocation search and VariantStrains table say of the
+    audited strain's sample there: INDEL_CALLED; NO_INDEL_CALLED;
+    NO_VARIANT_CALLED in any sample; NOT_COVERED, no reads at the variants;
+    NOT_SAMPLED, the strain is not among the samples. determinable is false
+    when the answer cannot tell, and an uncalled homopolymer of 7 or more
+    bases cannot tell. A site with no such search or no calls for the
+    organism gives null. ASSEMBLY means a gap or a contig end can explain it; ABSENT
     means the genome lacks it; NOT_SHORT means the model holds every window.
     Every other class answers NOT_CHECKED with no genome read, and then
     nsInWindow and atContigEdge are null; organisms, groupMedian,
@@ -249,7 +287,10 @@ async def audit_gene_length(site_id: str, gene: str) -> GeneLengthAudit:
     whatever the group's size; the group's protein lengths are the table's,
     and a member it gives no length counts as not coding). Only a SHORT
     gene adds the proteins of the gene and the reference (two record reads
-    each), its gene model (one read) and one genome window.
+    each), its gene model (one read) and one genome window. A FRAMESHIFT
+    with a reference strain adds its gene model (one read), one genome
+    window and, per change whose flanks it holds, one search read, one
+    search and one record read per variant, up to 50.
     geneIds pairs each id given with the site's own gene id it names (the
     same id, an alias or a previous id its gene record read resolves, a
     transcript id the site's text search names, or the one gene whose own id

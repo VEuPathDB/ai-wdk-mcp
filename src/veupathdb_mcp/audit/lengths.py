@@ -252,6 +252,17 @@ def closest_reference(gene: GeneRow, group: Group) -> GroupMember | None:
     )
 
 
+def species_reference(gene: GeneRow, group: Group) -> GroupMember | None:
+    named = [
+        member
+        for member in group
+        if member.reference_strain
+        and member.organism != gene.organism
+        and species_of(member.organism) == species_of(gene.organism)
+    ]
+    return named[0] if len(named) == 1 else None
+
+
 class Relatives(BaseModel):
     model_config = ConfigDict(frozen=True)
 

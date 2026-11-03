@@ -1283,6 +1283,7 @@ async def test_a_length_audit_the_group_cannot_judge_answers_camel_case(
         "track": "",
         "nsInWindow": None,
         "atContigEdge": None,
+        "frameshifts": [],
         "geneIds": [{"given": "PCYB_062670", "resolved": "PCYB_062670"}],
         "genes": ["PCYB_062670"],
         "lengthClass": "UNQUALIFIED",

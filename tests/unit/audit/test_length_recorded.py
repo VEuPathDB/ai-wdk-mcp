@@ -10,9 +10,11 @@ from tests._support.wdk_genes import serve_private
 
 from veupathdb_mcp.audit import served
 from veupathdb_mcp.audit.codes import GeneticCode, infer_code
+from veupathdb_mcp.audit.frameshift import RepeatRun
 from veupathdb_mcp.audit.gene_models import gene_model
 from veupathdb_mcp.audit.genes import proteins_of, rows_of
-from veupathdb_mcp.audit.length import DnaWindow, check_length
+from veupathdb_mcp.audit.length import check_length
+from veupathdb_mcp.audit.windows import DnaWindow, GenomeSource
 from veupathdb_mcp.tools import audit_tools
 
 PKAC = "PcyM_0736700"
@@ -67,7 +69,11 @@ async def test_the_recorded_pkac_genome_encodes_its_missing_exon(
         proteins[PKAC_REFERENCE],
         [proteins[PKAC]],
         DnaWindow(
-            sequence=wire.window[first:last], strand=me.strand, at_contig_edge=False
+            source=GenomeSource(site="plasmodb", organism="pcynM", seqid="PcyM_07"),
+            start=wire.window_start + first,
+            sequence=wire.window[first:last],
+            strand=me.strand,
+            at_contig_edge=False,
         ),
         code or GeneticCode.STANDARD,
     )
@@ -83,3 +89,37 @@ async def test_the_recorded_pkac_genome_encodes_its_missing_exon(
     assert result.verdict == "GENOME_ENCODES"
     assert result.counts == {"model": 27, "genome_same_strand": 5, "weak": 1}
     assert result.track == "MMMMGGGGGw" + "M" * 23
+
+
+async def test_a_recorded_window_with_one_base_more_in_a_poly_a_run_is_a_frameshift(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    wire = load_wire(PKAC_FIXTURE)
+    install_records(monkeypatch, wire)
+    serve_private(monkeypatch, answers(wire.protein_answers))
+    proteins = await proteins_of("plasmodb", [PKAC, PKAC_REFERENCE])
+    model = await gene_model("plasmodb", PKAC)
+    exon = model.cds[-1]
+    run = exon.start + 88
+    at = run - wire.window_start
+    assert wire.window[at : at + 7] == "AAAAAAT"
+    edited = wire.window[:at] + "A" + wire.window[at:]
+    cut = proteins[PKAC].index("ADWWTLG") + 88 // 3
+
+    result = check_length(
+        proteins[PKAC_REFERENCE],
+        [proteins[PKAC][:cut]],
+        DnaWindow(
+            source=GenomeSource(site="plasmodb", organism="pcynM", seqid="PcyM_07"),
+            start=wire.window_start,
+            sequence=edited,
+            strand="+",
+            at_contig_edge=False,
+        ),
+        GeneticCode.STANDARD,
+    )
+
+    assert result.verdict == "FRAMESHIFT"
+    [shift] = result.frameshifts
+    assert shift.run == RepeatRun(unit="A", bases=7, start=run, end=run + 6)
+    assert shift.shift == 1

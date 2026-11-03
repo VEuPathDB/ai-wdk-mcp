@@ -19,7 +19,11 @@ from veupathdb_mcp.audit.strain_inputs import (
     strain_dna,
     strain_inputs,
 )
-from veupathdb_mcp.tools.audit_tools import read_inputs, run_in_a_slot
+from veupathdb_mcp.tools.audit_tools import (
+    compared_check,
+    read_inputs,
+    run_in_a_slot,
+)
 
 
 def _not_read(
@@ -44,7 +48,8 @@ async def _genome_check(
     reference = await read_inputs(
         site_id, ModelReads(site_id).read(inputs.reference.gene)
     )
-    return check, dna, ReadModels.of([*dna.models, reference])
+    compared = await compared_check(site_id, check, dna, reference)
+    return compared, dna, ReadModels.of([*dna.models, reference])
 
 
 async def audit_strain_model(
@@ -63,7 +68,10 @@ async def audit_strain_model(
     residues) and windows repeated elsewhere in the same protein are not
     counted. When the strain lost a run, its genome region is read for the
     reference protein as in audit_gene_length: GENOME_ENCODES means the
-    strain's genome holds the lost segment on the gene's strand. notRead
+    strain's genome holds the lost segment on the gene's strand and in the
+    model's frame, and FRAMESHIFT that it holds it in another frame, with
+    frameshifts, referenceRun and variantCalls as in audit_gene_length, the
+    reference run read in reference_gene. notRead
     says why no genome was read: NO_LOST_RUN; UNQUALIFIED, a residual (OGR)
     group, which is not orthology; or PARALOG_IN_WINDOW, another member of
     the group in the strain's organism, coding or not, on the same sequence
@@ -92,7 +100,9 @@ async def audit_strain_model(
     one, each); the reference's Orthologs table (one read whatever the
     group's size). A lost run adds the strain's gene model and one genome
     window, and a genome read adds the reference's gene model (one gene
-    record read); when the group has another member in the strain's organism, it
+    record read); a FRAMESHIFT adds one window of the reference's genome
+    and, per change whose flanks it holds, one search read, one search and
+    one record read per variant, up to 50; when the group has another member in the strain's organism, it
     first adds the strain's organism (one gene record read), that organism's
     JBrowse track list and the tabix index of its annotated transcripts
     track (once per organism and process), and up to ANNOTATION_MAX_GROUPS

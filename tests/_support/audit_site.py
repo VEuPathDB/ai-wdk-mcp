@@ -5,7 +5,13 @@ from pydantic import BaseModel, ConfigDict
 from veupathdb.errors import WDKError
 from veupathdb.jbrowse import GenomeWindow
 
-from veupathdb_mcp.audit import gene_ids, gene_models, record_reads, served
+from veupathdb_mcp.audit import (
+    frameshift_inputs,
+    gene_ids,
+    gene_models,
+    record_reads,
+    served,
+)
 from veupathdb_mcp.audit.gene_ids import GeneId, GeneReads
 from veupathdb_mcp.audit.gene_models import GeneModel, ModelRecord, ModelRow
 from veupathdb_mcp.audit.genes import GeneRow, GroupMember, OrthologGroup
@@ -47,6 +53,10 @@ class Genome:
         self.refusal: Exception | None = None
         monkeypatch.setattr(served, "get_jbrowse_client", lambda site_id: self)
         monkeypatch.setattr(served, "GenomeReader", self.reader)
+        monkeypatch.setattr(
+            frameshift_inputs, "get_jbrowse_client", lambda site_id: self
+        )
+        monkeypatch.setattr(frameshift_inputs, "GenomeReader", self.reader)
 
     def reader(self, client: "Genome") -> "Genome":
         return client

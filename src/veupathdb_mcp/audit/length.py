@@ -5,13 +5,15 @@ from __future__ import annotations
 from collections import Counter
 from typing import Literal, Self
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import ConfigDict, Field, model_validator
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.audit.codes import GeneticCode
+from veupathdb_mcp.audit.frameshift import Frameshift, locate_frameshifts
 from veupathdb_mcp.audit.windows import (
     STEP,
     WINDOW,
+    DnaWindow,
     SegmentTrack,
     WindowState,
     best_identity,
@@ -20,6 +22,7 @@ from veupathdb_mcp.audit.windows import (
 
 type LengthVerdict = Literal[
     "GENOME_ENCODES",
+    "FRAMESHIFT",
     "ASSEMBLY",
     "ABSENT",
     "NOT_SHORT",
@@ -42,18 +45,6 @@ _MISSING: tuple[WindowLabel, ...] = (
 _PARTS: tuple[WindowLabel, WindowLabel] = ("part1", "part2")
 
 
-class DnaWindow(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    sequence: str
-    strand: Literal["+", "-"]
-    at_contig_edge: bool
-
-    @property
-    def ns(self) -> int:
-        return self.sequence.upper().count("N")
-
-
 class LengthCheck(CamelModel):
     model_config = ConfigDict(frozen=True)
 
@@ -63,6 +54,14 @@ class LengthCheck(CamelModel):
     track: str
     ns_in_window: int | None
     at_contig_edge: bool | None
+    frameshifts: list[Frameshift] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _names_frameshifts(self) -> Self:
+        if (self.verdict == "FRAMESHIFT") != bool(self.frameshifts):
+            msg = "a FRAMESHIFT verdict and only that verdict names its frameshifts"
+            raise ValueError(msg)
+        return self
 
     @model_validator(mode="after")
     def _window_facts(self) -> Self:
@@ -147,8 +146,14 @@ def check_length(
     verdict = (
         _short(counts, window) if len(models) == 1 else _split(counts, len(labels))
     )
+    frameshifts = (
+        locate_frameshifts(reference, track, window, code)
+        if verdict == "GENOME_ENCODES"
+        else []
+    )
     return LengthCheck(
-        verdict=verdict,
+        verdict="FRAMESHIFT" if frameshifts else verdict,
+        frameshifts=frameshifts,
         windows=len(labels),
         counts=dict(counts),
         track="".join(

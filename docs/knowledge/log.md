@@ -1,5 +1,15 @@
 # Knowledge log
 
+## 2026-11-03 - 0.2.0b62
+
+- `LengthVerdict` gains `FRAMESHIFT`: the genome holds the part a short model lacks in
+  another reading frame, close by. `LengthCheck.frameshifts` names each change: source,
+  genome span, both frames, `shift`, the reference residues, `run`, `referenceRun` and
+  `variantCalls`. `GENOME_ENCODES` now means the same frame. A strain's `FRAMESHIFT` judges
+  no side. `DnaWindow` moves to `audit.windows` and takes `source` and `start`;
+  `SegmentTrack` takes `hits` and serves `frames`. See
+  [the decision](decisions/a-short-model-names-the-frameshift-that-cut-it.md).
+
 ## 2026-11-02 - 0.2.0b61
 
 - `veupathdb_mcp.catalog` exports the Decisions client: `DecisionRequest`, the choice and
