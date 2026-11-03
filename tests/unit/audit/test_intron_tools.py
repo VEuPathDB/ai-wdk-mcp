@@ -254,7 +254,7 @@ async def test_a_track_that_does_not_index_the_sequence_is_named(
         ),
         (
             httpx.ReadTimeout("timed out"),
-            "plasmodb did not answer the ortholog reads: ReadTimeout timed out",
+            "plasmodb did not answer the ortholog reads",
         ),
     ],
 )
@@ -286,9 +286,7 @@ async def test_an_ortholog_read_the_site_refuses_names_its_status(
     assert result.corrected_protein == SPLICED
     assert result.orthologs is not None
     assert result.orthologs.reason is not None
-    assert result.orthologs.reason.startswith(
-        "plasmodb answered 502 to the ortholog reads: Request failed after retries"
-    )
+    assert result.orthologs.reason == "plasmodb answered 502 to the ortholog reads"
 
 
 async def test_a_residual_group_serves_no_ortholog_count(
@@ -392,6 +390,6 @@ async def test_a_genome_window_the_site_refuses_leaves_the_motif_unread(
     assert [(u.outcome, u.motif) for u in result.unread] == [("UNEXPLAINED", None)]
     assert result.evidence_unread == [
         "pcynX lists no unifiedGenomicMassSpec track",
-        "the genome window read failed: GET https://qa.example/genome answered 503",
+        "the genome window read failed: the site answered 503",
         "pcynX lists no RNA-seq coverage track",
     ]

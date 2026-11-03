@@ -56,9 +56,7 @@ async def test_a_site_that_does_not_answer_is_a_tool_error(
 ) -> None:
     serve(monkeypatch, FailingSite(httpx.ConnectTimeout("slow")))
 
-    with pytest.raises(
-        ToolError, match="plasmodb did not answer the audit reads: ConnectTimeout"
-    ):
+    with pytest.raises(ToolError, match=r"^plasmodb did not answer the audit reads$"):
         await audit_genome_priority("plasmodb")
 
 

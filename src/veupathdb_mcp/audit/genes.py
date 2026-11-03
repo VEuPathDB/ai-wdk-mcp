@@ -31,6 +31,7 @@ from veupathdb.wdk import (
 )
 
 from veupathdb_mcp.audit.gene_models import gene_record
+from veupathdb_mcp.parse_failures import WrittenParseError
 from veupathdb_mcp.wdk import TRANSCRIPTS_PER_GENE, dataset_client
 
 GENE_ATTRIBUTES = (
@@ -200,7 +201,7 @@ def _row(record: WDKRecordInstance, search_name: str) -> GeneRow:
             f"the WDK {search_name} report served a record ({ids}) "
             f"that is not a gene row: unreadable {fields}"
         )
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
 
 
 def rows_of(answer: WDKAnswer, search_name: str) -> list[GeneRow]:
@@ -259,7 +260,7 @@ async def ortholog_table(site_id: str, gene: str) -> list[OrthologRow]:
         msg = (
             f"the gene record of {gene} on {site_id} gives no readable {ORTHOLOG_TABLE}"
         )
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
 
 
 async def orthologs_of(site_id: str, gene: str) -> OrthologGroup:

@@ -7,11 +7,12 @@ from collections.abc import Sequence
 import pydantic
 from fastmcp.exceptions import ToolError
 from pydantic import BaseModel, ConfigDict, Field, field_validator
-from veupathdb.errors import DataParsingError, WDKError
+from veupathdb.errors import WDKError
 from veupathdb.wdk import WDKRecordInstance, get_site, get_strategy_api
 
 from veupathdb_mcp.audit.gene_models import NO_RECORD, gene_record
 from veupathdb_mcp.audit.genes import PROTEIN_ATTRIBUTE, GeneRow
+from veupathdb_mcp.parse_failures import WrittenParseError
 
 RECORD_READS_PER_CALL = 80
 MAX_LIST_IDS = 400
@@ -86,7 +87,7 @@ def _transcripts(site_id: str, record: WDKRecordInstance) -> _Transcripts:
             f"the gene record of {_key(record)} on {site_id} gives no readable "
             f"{TRANSCRIPT_TABLE}"
         )
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
 
 
 def record_row(site_id: str, record: WDKRecordInstance) -> GeneRow:
@@ -115,7 +116,7 @@ def record_row(site_id: str, record: WDKRecordInstance) -> GeneRow:
             f"the gene record of {_key(record)} on {site_id} is not a gene row: "
             f"unreadable {fields}"
         )
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
 
 
 async def _row(site_id: str, gene: str) -> GeneRow:

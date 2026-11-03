@@ -99,10 +99,6 @@ class WindowHit(BaseModel):
     in_model: float
 
     @property
-    def frame(self) -> int:
-        return self.base % 3
-
-    @property
     def beyond_model(self) -> bool:
         return self.identity > self.in_model
 
@@ -127,10 +123,6 @@ class SegmentTrack(BaseModel):
     @property
     def track(self) -> str:
         return "".join(_LETTER[s] for s in self.states)
-
-    @property
-    def frames(self) -> list[int | None]:
-        return [hit.frame if hit else None for hit in self.hits]
 
 
 def _nearest_hit(

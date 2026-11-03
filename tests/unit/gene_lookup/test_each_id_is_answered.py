@@ -77,7 +77,7 @@ async def test_each_id_of_a_mixed_list_has_its_own_answer(
         GeneIdRefusal(
             given=SEVERAL,
             problem=GeneIdProblem.SEVERAL_GENES,
-            message=f"{SEVERAL} names several genes of {SITE}: {SEVERAL} names 2 records",
+            message=f"{SEVERAL} names several genes of {SITE}",
         ),
         GeneIdRefusal(
             given=UNKNOWN,
@@ -101,9 +101,7 @@ async def test_the_whole_list_read_stops_at_the_first_refused_id(
     result = await read_gene_ids(SITE, [BESIDE, SEVERAL, UNKNOWN])
 
     assert (result.records, result.total_count) == ([], 0)
-    assert result.error == (
-        f"{SEVERAL} names several genes of {SITE}: {SEVERAL} names 2 records"
-    )
+    assert result.error == (f"{SEVERAL} names several genes of {SITE}")
     assert (reads.reads, text.searches) == ([BESIDE, SEVERAL], [])
 
 

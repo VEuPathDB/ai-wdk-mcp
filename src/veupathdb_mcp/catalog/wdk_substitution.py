@@ -6,16 +6,19 @@ from collections.abc import Callable, Mapping
 
 from pydantic import TypeAdapter, ValidationError
 from veupathdb.domain.parameters import (
+    PHYLETIC_EXPRESSION_PARAM,
     FilterClauseKey,
     FilterValue,
     ParamSpecNormalized,
     ParamValue,
+    PhyleticExpression,
     to_wire,
 )
+from veupathdb.errors import VEuPathDBError
 
 _SELECTION_ADAPTER: TypeAdapter[list[str]] = TypeAdapter(list[str])
 
-Comparable = str | frozenset[str] | frozenset[FilterClauseKey]
+Comparable = str | frozenset[str] | frozenset[FilterClauseKey] | PhyleticExpression
 """A value reduced to what it states, so serialization cannot differ."""
 
 
@@ -29,9 +32,19 @@ def _selection(wire: str) -> frozenset[str]:
         return frozenset({wire})
 
 
-def _clauses(wire: str) -> frozenset[FilterClauseKey]:
+def _clauses(wire: str) -> frozenset[FilterClauseKey] | str:
     """The clauses a filter wire form states, order and key order aside."""
-    return FilterValue.model_validate_json(wire or '{"filters": []}').clause_set
+    try:
+        return FilterValue.model_validate_json(wire or '{"filters": []}').clause_set
+    except ValidationError:
+        return wire
+
+
+def _expression(wire: str) -> PhyleticExpression | str:
+    try:
+        return PhyleticExpression.parse(wire)
+    except VEuPathDBError, ValidationError, RecursionError:
+        return wire
 
 
 _COMPARATORS: dict[str, Callable[[str], Comparable]] = {
@@ -45,6 +58,8 @@ _UNREPORTED_TYPES = frozenset({"input-step"})
 
 
 def _comparable(spec: ParamSpecNormalized | None, wire: str) -> Comparable:
+    if spec is not None and spec.name == PHYLETIC_EXPRESSION_PARAM:
+        return _expression(wire)
     reader = _COMPARATORS.get(spec.param_type) if spec is not None else None
     return reader(wire) if reader is not None else wire
 
@@ -59,7 +74,8 @@ def substituted_params(
     """Params whose echoed value is WDK's rather than the caller's.
 
     Each kind is compared as what it states: a vocabulary as its selection, a
-    filter as its clauses, everything else as its wire form. A definition WDK
+    filter as its clauses, an expression as its parsed form, everything else as
+    its wire form. A definition WDK
     built without reading the caller's values describes no caller at all, so
     only the params left unset are read from it.
     """

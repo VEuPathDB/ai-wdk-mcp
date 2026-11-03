@@ -414,9 +414,7 @@ async def test_a_header_the_site_refuses_drops_its_pair_once_for_the_organism(
     first = await read_depth(store, GENE, EXONS, [INTRON])
     second = await read_depth(store, GENE, EXONS, [INTRON])
 
-    refusal = (
-        "the header read of r5.bw failed: GET https://qa.example/r5.bw answered 404"
-    )
+    refusal = "the header read of r5.bw failed: the site answered 404"
     assert first.notes == second.notes == [refusal]
     assert first.depth is not None
     assert first.depth["1041-1060"].track == FORWARD.name
@@ -440,7 +438,7 @@ async def test_a_refused_track_list_is_read_again_by_the_next_gene(
     read = await read_depth(store, GENE, EXONS, [INTRON])
     again = await read_depth(store, GENE, EXONS, [INTRON])
 
-    reason = "the RNA-seq track list read failed: ReadTimeout timed out"
+    reason = "the RNA-seq track list read failed: the site did not answer"
     assert refused == DepthRead(depth=None, notes=[reason])
     assert read.depth is not None
     assert again == read
@@ -466,7 +464,7 @@ async def test_past_its_tries_an_organisms_coverage_waits_out_a_cool_down(
     clock.now += TRACK_LIST_RETRY_SECONDS - 1
     waiting = await read_depth(store, GENE, EXONS, [INTRON])
 
-    reason = "the RNA-seq track list read failed: ReadTimeout timed out"
+    reason = "the RNA-seq track list read failed: the site did not answer"
     assert [one.notes for one in found] == [[reason]] * TRACK_LIST_TRIES
     cooling = (
         f"the RNA-seq track list of exaA failed {TRACK_LIST_TRIES} times; "
@@ -671,12 +669,12 @@ class RefusedPeptides(Peptides):
         (
             JBrowseError("GET", "https://qa.example/list", 500),
             "list",
-            "the peptide reads failed: GET https://qa.example/list answered 500",
+            "the peptide reads failed: the site answered 500",
         ),
         (
             httpx.ConnectError("refused"),
             "lines",
-            "the peptide reads failed: ConnectError refused",
+            "the peptide reads failed: the site did not answer",
         ),
     ],
 )

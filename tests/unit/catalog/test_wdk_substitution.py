@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import pytest
 from veupathdb.domain.parameters import (
     FilterTermClause,
     FilterValue,
@@ -325,3 +326,24 @@ class TestAnInputStepIsNotReported:
         )
 
         assert filled == []
+
+
+_UNPARSED_SPECS = {"filter_param": _spec("filter_param", "filter")}
+_NO_CLAUSES = '{"filters": []}'
+
+
+def _filter_substituted(sent: str, echoed: str) -> list[str]:
+    return substituted_params(
+        sent={"filter_param": StringValue(value=sent)},
+        echoed={"filter_param": echoed},
+        specs=_UNPARSED_SPECS,
+        values_were_read=True,
+    )
+
+
+@pytest.mark.parametrize("wire", ["not json", '{"filters":"x"}', "[]", "<html>oops"])
+def test_a_filter_that_does_not_parse_compares_as_written(wire: str) -> None:
+    assert _filter_substituted(_NO_CLAUSES, wire) == ["filter_param"]
+    assert _filter_substituted(wire, _NO_CLAUSES) == ["filter_param"]
+    assert _filter_substituted(wire, wire) == []
+    assert _filter_substituted(wire, wire + " ") == ["filter_param"]

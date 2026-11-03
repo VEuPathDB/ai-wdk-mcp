@@ -177,6 +177,20 @@ async def test_a_contig_over_the_window_limit_is_refused_before_any_read(
     assert site.windows == []
 
 
+async def test_a_refusal_the_check_computed_is_not_chained(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = mito_site(monkeypatch)
+    site.contigs["pstr", MITO] = Contig.whole("G" * 600 + "C" * 599)
+
+    with pytest.raises(ToolError) as caught:
+        await audit_organelle_gene("plasmodb", STRAIN, MITO, REFERENCE)
+
+    assert caught.value.__cause__ is None
+    assert caught.value.__suppress_context__ is True
+    assert isinstance(caught.value.__context__, ValueError)
+
+
 async def test_a_reference_longer_than_half_the_contig_is_refused(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

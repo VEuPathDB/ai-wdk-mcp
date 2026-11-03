@@ -9,7 +9,13 @@ from pydantic import ConfigDict, Field, model_validator
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.audit.codes import GeneticCode
-from veupathdb_mcp.audit.frameshift import Frameshift, locate_frameshifts
+from veupathdb_mcp.audit.frameshift import (
+    FRAMES_NOT_READ,
+    MAX_FRAME_CHANGES,
+    FrameChange,
+    FrameRead,
+    read_frames,
+)
 from veupathdb_mcp.audit.windows import (
     STEP,
     WINDOW,
@@ -23,6 +29,7 @@ from veupathdb_mcp.audit.windows import (
 type LengthVerdict = Literal[
     "GENOME_ENCODES",
     "FRAMESHIFT",
+    "OTHER_FRAME",
     "ASSEMBLY",
     "ABSENT",
     "NOT_SHORT",
@@ -54,12 +61,41 @@ class LengthCheck(CamelModel):
     track: str
     ns_in_window: int | None
     at_contig_edge: bool | None
-    frameshifts: list[Frameshift] = Field(default_factory=list)
+    frame_changes: list[FrameChange] = Field(
+        default_factory=list, max_length=MAX_FRAME_CHANGES
+    )
+
+    unlisted_changes: list[FrameChange] = Field(default_factory=list)
+    part_open: bool = False
+    part_stop: int | None = None
+    ns_in_part: int = 0
+
+    @property
+    def _every_change(self) -> list[FrameChange]:
+        return [*self.frame_changes, *self.unlisted_changes]
+
+    @property
+    def every_change_at_a_splice_pair(self) -> bool:
+        changes = self._every_change
+        return bool(changes) and all(
+            change.splice_pair is not None for change in changes
+        )
+
+    @property
+    def reading_frame_holds(self) -> bool:
+        return self.part_open and all(
+            change.keeps_frame and change.splice_pair is None
+            for change in self._every_change
+        )
+
+    @property
+    def lists_a_run_that_explains_a_shift(self) -> bool:
+        return any(change.run_explains_shift for change in self.frame_changes)
 
     @model_validator(mode="after")
-    def _names_frameshifts(self) -> Self:
-        if (self.verdict == "FRAMESHIFT") != bool(self.frameshifts):
-            msg = "a FRAMESHIFT verdict and only that verdict names its frameshifts"
+    def _names_frame_changes(self) -> Self:
+        if self.verdict == "FRAMESHIFT" and not self.lists_a_run_that_explains_a_shift:
+            msg = "a FRAMESHIFT verdict names its frame change"
             raise ValueError(msg)
         return self
 
@@ -122,13 +158,17 @@ def _split(counts: Counter[WindowLabel], windows: int) -> LengthVerdict:
     return "SPLIT_UNCLEAR"
 
 
-def _short(counts: Counter[WindowLabel], window: DnaWindow) -> LengthVerdict:
+def _short(
+    counts: Counter[WindowLabel], window: DnaWindow, read: FrameRead
+) -> LengthVerdict:
     missing = sum(counts[state] for state in _MISSING)
     same = counts["genome_same_strand"]
     if not missing:
         return "NOT_SHORT"
+    if read.gapped:
+        return "ASSEMBLY"
     if same >= ENCODED_WINDOWS and same >= ENCODED_SHARE * missing:
-        return "GENOME_ENCODES"
+        return read.verdict
     if window.ns or window.at_contig_edge:
         return "ASSEMBLY"
     return "ABSENT"
@@ -143,17 +183,19 @@ def check_length(
     track = confirm_in_dna(reference, models, window.sequence, window.strand, code)
     labels = _labels(reference, models, track)
     counts = Counter(labels)
-    verdict = (
-        _short(counts, window) if len(models) == 1 else _split(counts, len(labels))
-    )
-    frameshifts = (
-        locate_frameshifts(reference, track, window, code)
-        if verdict == "GENOME_ENCODES"
-        else []
-    )
+    if len(models) == 1:
+        read = read_frames(reference, track, window, code)
+        verdict = _short(counts, window, read)
+    else:
+        read = FRAMES_NOT_READ
+        verdict = _split(counts, len(labels))
     return LengthCheck(
-        verdict="FRAMESHIFT" if frameshifts else verdict,
-        frameshifts=frameshifts,
+        verdict=verdict,
+        frame_changes=read.frame_changes,
+        unlisted_changes=read.unlisted_changes,
+        part_open=read.part.part_open,
+        part_stop=read.part.part_stop,
+        ns_in_part=read.part.ns_in_part,
         windows=len(labels),
         counts=dict(counts),
         track="".join(

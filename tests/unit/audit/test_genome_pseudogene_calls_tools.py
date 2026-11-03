@@ -86,7 +86,7 @@ async def test_a_site_error_is_a_tool_error(
 
     monkeypatch.setattr(pseudogene_calls_inputs, "genes_of_genome", refused)
 
-    with pytest.raises(ToolError, match="Number of selected values"):
+    with pytest.raises(ToolError, match=r"^plasmodb answered 502 to the audit reads$"):
         await audit_genome_pseudogene_calls("plasmodb", "Plasmodium nonesuch", PF3D7)
 
 

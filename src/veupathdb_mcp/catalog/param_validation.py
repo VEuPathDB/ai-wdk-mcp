@@ -294,7 +294,8 @@ async def _checked_phyletic_expression(
     site_id: str, response: WDKSearchResponse, stated: dict[str, ParamValue]
 ) -> dict[str, ParamValue]:
     """Judge a stated ``phyletic_expression`` against its grammar and the site's
-    taxonomy, and hold it in the site's spelling. OrthoMCL answers a fault with a 500."""
+    taxonomy, and send it as rendered. The site has no spelling of its own, it echoes
+    what it receives. OrthoMCL answers a fault with a 500."""
     specs = response.search_data.parameters or []
     if PHYLETIC_EXPRESSION_PARAM not in {spec.name for spec in specs}:
         return stated

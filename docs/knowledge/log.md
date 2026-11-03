@@ -2,13 +2,28 @@
 
 ## 2026-11-03 - 0.2.0b62
 
-- `LengthVerdict` gains `FRAMESHIFT`: the genome holds the part a short model lacks in
-  another reading frame, close by. `LengthCheck.frameshifts` names each change: source,
-  genome span, both frames, `shift`, the reference residues, `run`, `referenceRun` and
-  `variantCalls`. `GENOME_ENCODES` now means the same frame. A strain's `FRAMESHIFT` judges
-  no side. `DnaWindow` moves to `audit.windows` and takes `source` and `start`;
-  `SegmentTrack` takes `hits` and serves `frames`. See
+- `LengthVerdict` gains `FRAMESHIFT` and `OTHER_FRAME`. An N between the parts answers
+  `ASSEMBLY`, `GENOME_ENCODES` now needs the part in the model's open frame, and a part in
+  another frame is `FRAMESHIFT` when one miscount fits and no splice pair sits at the change,
+  else `OTHER_FRAME`. `LengthCheck.frameChanges` states each change of the track under every
+  verdict with the served variant records, and `every_change_at_a_splice_pair` says when a pair
+  sits at each. A strain's side is judged under either answer as under `GENOME_ENCODES`. `DnaWindow` moves to `audit.windows` and takes
+  `source` and `start`; `SegmentTrack` takes `hits`. See
   [the decision](decisions/a-short-model-names-the-frameshift-that-cut-it.md).
+- `frameChanges` lists every jump between diagonals with a computed `keepsFrame`, `unlistedChanges` holds
+  those past the cap, and `readingFrameHolds` and `everyChangeAtASplicePair` read both lists.
+- `FRAMESHIFT` needs a run that explains the shift, and that jump lists first. `partOpen`, `partStop` and
+  `nsInPart` state the frame across the part; an N on one diagonal is no `ASSEMBLY`. Only a jump with
+  `runExplainsShift` reads the reference strain and the calls, with details read once for a check.
+- `substituted_params` compares a `phyletic_expression` by its parsed form, and by its string when
+  it does not parse, so a rendered spelling is not read as a value WDK supplied. A filter that does not
+  parse compares by its string too.
+- An audit tool's site failure and a refused store read hold no URL, query string, response
+  body or exception text; the `ToolError` keeps the failure as its `__cause__`.
+  An answer that does not parse reads "the site's answer could not be read", and
+  `WrittenParseError` (`veupathdb_mcp.parse_failures`) marks a parse failure this library wrote.
+  Only the organelle check's computed refusal is raised `from None`. `rows_named` no longer
+  repeats a several-records answer.
 
 ## 2026-11-02 - 0.2.0b61
 

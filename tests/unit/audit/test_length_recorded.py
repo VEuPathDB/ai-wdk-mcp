@@ -9,7 +9,7 @@ from tests._support.row_reads import serve_recorded_rows
 from tests._support.wdk_genes import serve_private
 
 from veupathdb_mcp.audit import served
-from veupathdb_mcp.audit.codes import GeneticCode, infer_code
+from veupathdb_mcp.audit.codes import GeneticCode, infer_code, translate
 from veupathdb_mcp.audit.frameshift import RepeatRun
 from veupathdb_mcp.audit.gene_models import gene_model
 from veupathdb_mcp.audit.genes import proteins_of, rows_of
@@ -86,7 +86,7 @@ async def test_the_recorded_pkac_genome_encodes_its_missing_exon(
     assert (len(proteins[PKAC]), len(proteins[PKAC_REFERENCE])) == (280, 341)
     assert len(model.cds) == 4
     assert code == GeneticCode.STANDARD
-    assert result.verdict == "GENOME_ENCODES"
+    assert result.verdict == "OTHER_FRAME"
     assert result.counts == {"model": 27, "genome_same_strand": 5, "weak": 1}
     assert result.track == "MMMMGGGGGw" + "M" * 23
 
@@ -105,10 +105,13 @@ async def test_a_recorded_window_with_one_base_more_in_a_poly_a_run_is_a_framesh
     assert wire.window[at : at + 7] == "AAAAAAT"
     edited = wire.window[:at] + "A" + wire.window[at:]
     cut = proteins[PKAC].index("ADWWTLG") + 88 // 3
+    codon = exon.start + 3 * (88 // 3) - wire.window_start
+    read_on = translate(edited[codon:])
+    model = proteins[PKAC][:cut] + read_on[: read_on.index("*")]
 
     result = check_length(
         proteins[PKAC_REFERENCE],
-        [proteins[PKAC][:cut]],
+        [model],
         DnaWindow(
             source=GenomeSource(site="plasmodb", organism="pcynM", seqid="PcyM_07"),
             start=wire.window_start,
@@ -120,6 +123,10 @@ async def test_a_recorded_window_with_one_base_more_in_a_poly_a_run_is_a_framesh
     )
 
     assert result.verdict == "FRAMESHIFT"
-    [shift] = result.frameshifts
+    shift, intron, _ = result.frame_changes
+    assert (intron.shift, intron.run) == (141, None)
+    assert intron.keeps_frame is True
+    assert intron.splice_pair is not None
+    assert intron.splice_pair.motif == "GT..AG"
     assert shift.run == RepeatRun(unit="A", bases=7, start=run, end=run + 6)
     assert shift.shift == 1

@@ -273,7 +273,7 @@ async def test_a_gene_without_a_protein_is_a_tool_error(
     [
         (
             JBrowseError("GET", "https://qa.plasmodb.org/store", 500),
-            "https://qa.plasmodb.org/store answered 500",
+            "^plasmodb answered 500 to the audit reads$",
         ),
         (
             GenomeIndexError("the genome index of pfal3D7 has no sequence Pf3D7_10_v3"),

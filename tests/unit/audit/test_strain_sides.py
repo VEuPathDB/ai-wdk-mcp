@@ -145,7 +145,9 @@ async def test_a_member_off_the_strain_sequence_or_organism_does_not_stop_the_re
     result = await audit_strain_model("plasmodb", STRAIN, REFERENCE)
 
     assert (result.not_read, result.nearby_paralogs) == (None, [])
-    assert len(site.windows) == 1
+    assert site.windows[0][0] == "pfalDd2"
+    assert result.dna.verdict == "OTHER_FRAME"
+    assert result.side == "STRAIN_SHORT"
 
 
 async def test_a_paralog_the_annotation_does_not_index_on_the_sequence_is_not_seen(
@@ -158,7 +160,7 @@ async def test_a_paralog_the_annotation_does_not_index_on_the_sequence_is_not_se
 
     assert (result.not_read, result.nearby_paralogs) == (None, [])
     assert site.annotation.reads == []
-    assert len(site.windows) == 1
+    assert site.windows[0][0] == "pfalDd2"
 
 
 async def test_an_annotation_past_the_chunk_group_cap_is_a_tool_error(

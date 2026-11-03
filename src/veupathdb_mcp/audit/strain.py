@@ -30,6 +30,9 @@ MIN_RUN = 2
 LOW_COMPLEXITY_SHARE = 0.4
 LOW_COMPLEXITY_LETTERS = 6
 RELATIVES_WITHIN = 0.1
+_PART_ENCODED: frozenset[LengthVerdict] = frozenset(
+    {"GENOME_ENCODES", "FRAMESHIFT", "OTHER_FRAME"}
+)
 
 
 def _low_complexity(window: str) -> bool:
@@ -96,7 +99,7 @@ def judged_side(
     strain_length: int,
     relatives: float | None,
 ) -> SideVerdict:
-    if dna != "GENOME_ENCODES":
+    if dna not in _PART_ENCODED:
         return "NOT_JUDGED"
     return tie_break(reference_length, strain_length, relatives)
 
@@ -233,7 +236,7 @@ class StrainCheck(CamelModel):
 
     @model_validator(mode="after")
     def _side(self) -> Self:
-        encoded = self.dna.verdict == "GENOME_ENCODES"
+        encoded = self.dna.verdict in _PART_ENCODED
         if encoded == (self.side == "NOT_JUDGED"):
             msg = (
                 "a check judges a side when and only when the strain's genome "

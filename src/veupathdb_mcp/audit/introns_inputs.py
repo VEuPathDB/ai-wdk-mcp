@@ -54,6 +54,7 @@ from veupathdb_mcp.audit.track_reads import (
     genome_reader,
     tabix_reader,
 )
+from veupathdb_mcp.parse_failures import WrittenParseError
 from veupathdb_mcp.tool_errors import ToolErrorPayload
 
 INTRON_READ_THROUGH = 3000
@@ -160,7 +161,7 @@ def _structure(
         )
     except ValidationError as exc:
         msg = f"the model of {row.gene} has a part outside the gene's span"
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
 
 
 def _features(lines: list[str], path: str) -> list[RnaJunction]:
@@ -168,7 +169,7 @@ def _features(lines: list[str], path: str) -> list[RnaJunction]:
         return [RnaJunction.from_feature(parse_gff_line(line), path) for line in lines]
     except ValidationError as exc:
         msg = f"a junction of {path} gives no readable totalscore or evidence"
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
 
 
 async def _junctions(

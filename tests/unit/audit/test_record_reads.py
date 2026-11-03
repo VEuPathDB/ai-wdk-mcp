@@ -304,6 +304,24 @@ async def test_an_empty_list_reads_nothing(monkeypatch: pytest.MonkeyPatch) -> N
     assert (await read_gene_list("plasmodb", []), records.reads) == ([], [])
 
 
+async def test_several_records_never_interpolate_the_site_answer(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def several(site_id: str, gene: str) -> GeneRow:
+        msg = "GET /x?api_key=SECRET -> HTTP 300: <html>source_id = EXA_0001\nSECRET"
+        raise WDKError(msg, status=300)
+
+    monkeypatch.setattr(record_reads, "_row", several)
+    text_site(monkeypatch, answer_of([]))
+
+    refusal = await rows_named("plasmodb", ["OLD_EXA"])
+
+    assert refusal == tool_error(
+        VEuPathDBErrorCode.VALIDATION_ERROR,
+        "OLD_EXA names several genes of plasmodb",
+    )
+
+
 async def test_an_id_that_maps_to_several_records_is_refused_by_the_site_answer(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -318,7 +336,6 @@ async def test_an_id_that_maps_to_several_records_is_refused_by_the_site_answer(
 
     assert refusal == tool_error(
         VEuPathDBErrorCode.VALIDATION_ERROR,
-        "OLD_EXA names several genes of plasmodb: "
-        "source_id = EXA_0001\nsource_id = EXA_0002",
+        "OLD_EXA names several genes of plasmodb",
     )
     assert text.reads == []

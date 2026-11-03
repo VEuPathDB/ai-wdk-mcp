@@ -16,11 +16,11 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from veupathdb.errors import DataParsingError
 from veupathdb.model import CamelModel
 from veupathdb.wdk import WDKRecordInstance
 
 from veupathdb_mcp.computed import computed
+from veupathdb_mcp.parse_failures import WrittenParseError
 
 BUSCO_ATTRIBUTES = (
     "organism_full",
@@ -124,7 +124,7 @@ def _scores(record: WDKRecordInstance) -> OrganismScores:
             f"the organism report served a record ({ids}) with unreadable "
             f"BUSCO scores: {fields}"
         )
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
 
 
 def ranked_genomes(records: Sequence[WDKRecordInstance]) -> list[GenomePriority]:

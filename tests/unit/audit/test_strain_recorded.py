@@ -53,7 +53,10 @@ async def test_the_recorded_pkac_strain_model_misses_an_exon_its_genome_encodes(
 
     assert (result.strain_length, result.reference_length) == (280, 341)
     assert (result.lost, result.extra) == ([(41, 100)], [])
-    assert result.dna.verdict == "GENOME_ENCODES"
+    assert result.dna.verdict == "OTHER_FRAME"
+    intron = result.dna.frame_changes[0]
+    assert intron.splice_pair is not None
+    assert intron.splice_pair.motif == "GT..AG"
     assert result.dna.counts == {"model": 27, "genome_same_strand": 5, "weak": 1}
     assert result.dna.track == "MMMMGGGGGw" + "M" * 23
     assert (result.dna.ns_in_window, result.dna.at_contig_edge) == (0, False)
@@ -64,7 +67,7 @@ async def test_the_recorded_pkac_strain_model_misses_an_exon_its_genome_encodes(
         "PARALOGS",
         8,
     )
-    assert genome.windows == [("pcynM", "PcyM_07", 1375622, 1389462)]
+    assert genome.windows[0] == ("pcynM", "PcyM_07", 1375622, 1389462)
     assert strain.reports.datasets == []
     assert rows.protein_reads == ["PcyM_0736700", "PCYB_074210"]
     assert rows.reads == ["PcyM_0736700", "PCYB_074210"]
@@ -138,7 +141,7 @@ async def test_the_recorded_dd2_yip1_lost_segment_is_encoded_but_relatives_split
     assert wire.gene == "PfDd2_140076300"
     assert (result.strain_length, result.reference_length) == (289, 314)
     assert (result.lost, result.extra) == ([(271, 310)], [])
-    assert result.dna.verdict == "GENOME_ENCODES"
+    assert result.dna.verdict == "OTHER_FRAME"
     assert result.dna.counts == {"model": 27, "genome_same_strand": 3}
     assert result.dna.track == "M" * 27 + "GGG"
     assert (result.code, result.code_inferred) == (GeneticCode.STANDARD, True)
@@ -150,7 +153,7 @@ async def test_the_recorded_dd2_yip1_lost_segment_is_encoded_but_relatives_split
     assert result.relatives.members[0] == Relative(
         organism="Plasmodium adleri G01", length=320
     )
-    assert genome.windows == [("pfalDd2", "PfDd2_14", 2913589, 2927032)]
+    assert genome.windows[0] == ("pfalDd2", "PfDd2_14", 2913589, 2927032)
     assert annotation.reads == []
     assert strain.reports.datasets == []
     assert rows.protein_reads == [wire.gene, "PF3D7_1472100"]

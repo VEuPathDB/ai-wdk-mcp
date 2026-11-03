@@ -6,10 +6,13 @@ from __future__ import annotations
 import asyncio
 import weakref
 from collections.abc import Awaitable, Callable
+from enum import StrEnum
+from typing import Literal
 
 import httpx
+import pydantic
 from pydantic import BaseModel, ConfigDict
-from veupathdb.errors import VEuPathDBError
+from veupathdb.errors import DataParsingError, VEuPathDBError, WDKError
 from veupathdb.jbrowse import (
     GenomeIndexError,
     GenomeReader,
@@ -22,7 +25,9 @@ from veupathdb.jbrowse import (
 )
 
 from veupathdb_mcp.audit.introns import Span, Strand
+from veupathdb_mcp.parse_failures import WrittenParseError
 
+UNREADABLE_ANSWER = "the site's answer could not be read"
 READ_FAILURES = (JBrowseError, TrackReadError, GenomeIndexError, httpx.HTTPError)
 
 type ReadFailure = JBrowseError | TrackReadError | GenomeIndexError | httpx.HTTPError
@@ -89,12 +94,39 @@ def genome_reader(client: JBrowseClient) -> GenomeReader:
     return _GENOMES[client]
 
 
-def failed_read(reads: str, exc: ReadFailure) -> str:
+def upstream_answer(
+    exc: VEuPathDBError[StrEnum] | httpx.HTTPError,
+) -> int | Literal["silent", "unreadable"] | None:
     match exc:
-        case VEuPathDBError():
-            return f"the {reads} failed: {exc.detail or exc.title}"
-        case httpx.HTTPError():
-            return f"the {reads} failed: {type(exc).__name__} {exc}"
+        case WrittenParseError():
+            return None
+        case DataParsingError(__cause__=pydantic.ValidationError()):
+            return "unreadable"
+        case (
+            VEuPathDBError(__cause__=httpx.HTTPStatusError(response=response))
+            | httpx.HTTPStatusError(response=response)
+        ):
+            return response.status_code
+        case VEuPathDBError(__cause__=httpx.HTTPError()) | httpx.HTTPError():
+            return "silent"
+        case JBrowseError(upstream_status=status) | WDKError(status=status):
+            return status
+        case _:
+            return None
+
+
+def failed_read(reads: str, exc: VEuPathDBError[StrEnum] | httpx.HTTPError) -> str:
+    match (upstream_answer(exc), exc):
+        case (int() as status, _):
+            return f"the {reads} failed: the site answered {status}"
+        case ("silent", _):
+            return f"the {reads} failed: the site did not answer"
+        case ("unreadable", _):
+            return f"the {reads} failed: {UNREADABLE_ANSWER}"
+        case (_, VEuPathDBError() as refusal):
+            return f"the {reads} failed: {refusal.detail or refusal.title}"
+        case _:
+            return f"the {reads} failed"
 
 
 async def organism_tracks(client: JBrowseClient, abbrev: str) -> TrackList:

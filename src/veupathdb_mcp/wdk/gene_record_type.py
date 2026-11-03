@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pydantic
 from pydantic import BaseModel, ConfigDict, Field
-from veupathdb.errors import DataParsingError
 from veupathdb.wdk import get_wdk_client
 
+from veupathdb_mcp.parse_failures import WrittenParseError
 from veupathdb_mcp.wdk.site_cache import SiteCache
 
 GENE_RECORD_TYPE_PATH = "/record-types/gene"
@@ -35,7 +35,7 @@ async def _read(site_id: str) -> GeneRecordType:
         return GeneRecordType.model_validate(served)
     except pydantic.ValidationError as exc:
         msg = f"the gene record type of {site_id} is not readable"
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
 
 
 _SERVED: SiteCache[GeneRecordType] = SiteCache()

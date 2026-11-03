@@ -59,7 +59,7 @@ async def test_a_site_error_is_a_tool_error(monkeypatch: pytest.MonkeyPatch) -> 
 
     monkeypatch.setattr(audit_evidence_tools, "gene_evidence", refused)
 
-    with pytest.raises(ToolError, match="the gene record of NOT_A_GENE was not found"):
+    with pytest.raises(ToolError, match=r"^plasmodb answered 502 to the audit reads$"):
         await audit_evidence_tools.audit_gene_evidence("plasmodb", "NOT_A_GENE")
 
 

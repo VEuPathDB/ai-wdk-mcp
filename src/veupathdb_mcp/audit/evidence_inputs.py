@@ -16,6 +16,7 @@ from veupathdb_mcp.audit.gene_ids import id_pairs
 from veupathdb_mcp.audit.gene_models import ORGANISM_ATTRIBUTE, gene_record
 from veupathdb_mcp.audit.genes import organism_report
 from veupathdb_mcp.audit.served import located
+from veupathdb_mcp.parse_failures import WrittenParseError
 from veupathdb_mcp.tool_errors import ToolErrorPayload, tool_error
 from veupathdb_mcp.wdk.gene_record_type import gene_record_type
 
@@ -60,7 +61,7 @@ async def gene_evidence(site_id: str, gene: str) -> GeneEvidence | ToolErrorPayl
             f"the gene record of {named.resolved} on {site_id} serves unreadable "
             f"evidence: {', '.join(parts)}"
         )
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
 
 
 async def genome_provenance(
@@ -71,7 +72,7 @@ async def genome_provenance(
         provenance = provenance_of(answer, organism)
     except pydantic.ValidationError as exc:
         msg = f"the organism record of {organism} on {site_id} is not readable"
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
     if provenance is None:
         return tool_error(
             VEuPathDBErrorCode.VALIDATION_ERROR,

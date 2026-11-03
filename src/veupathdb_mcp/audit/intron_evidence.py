@@ -6,7 +6,6 @@ from __future__ import annotations
 from itertools import pairwise
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
-from veupathdb.errors import DataParsingError
 from veupathdb.jbrowse import (
     GenomeWindow,
     JBrowseClient,
@@ -46,6 +45,7 @@ from veupathdb_mcp.audit.track_reads import (
     tabix_reader,
     tabix_track,
 )
+from veupathdb_mcp.parse_failures import WrittenParseError
 
 PEPTIDE_TRACK = "unifiedGenomicMassSpec"
 PEPTIDE_MAX_GROUPS = 2
@@ -95,7 +95,7 @@ def _segments(lines: list[str]) -> list[_Segment]:
         ]
     except ValidationError as exc:
         msg = "a genomic peptide line is not a readable GFF feature"
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
 
 
 def peptide_splits(lines: list[str], strand: Strand) -> tuple[PeptideSplit, ...]:

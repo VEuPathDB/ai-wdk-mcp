@@ -70,7 +70,7 @@ async def audit_strain_model(
     reference protein as in audit_gene_length: GENOME_ENCODES means the
     strain's genome holds the lost segment on the gene's strand and in the
     model's frame, and FRAMESHIFT that it holds it in another frame, with
-    frameshifts, referenceRun and variantCalls as in audit_gene_length, the
+    frame_changes, referenceRun and variantCalls as in audit_gene_length, the
     reference run read in reference_gene. notRead
     says why no genome was read: NO_LOST_RUN; UNQUALIFIED, a residual (OGR)
     group, which is not orthology; or PARALOG_IN_WINDOW, another member of
@@ -82,8 +82,9 @@ async def audit_strain_model(
     out the organisms of both genes, and relatives.median is their median;
     missing says why there are none:
     RESIDUAL_GROUP; PARALOGS when the group's copiesPerOrganism is not 1;
-    or FEWER_THAN_TWO. side is judged only
-    when the DNA verdict is GENOME_ENCODES, and is NOT_JUDGED otherwise:
+    or FEWER_THAN_TWO. side is judged when the
+    genome encodes the lost run in any frame (GENOME_ENCODES, FRAMESHIFT or
+    OTHER_FRAME), and is NOT_JUDGED otherwise:
     STRAIN_SHORT means the reference is within 10% of relatives.median and
     the shorter strain is not, so the strain model misses what its genome
     encodes; REFERENCE_LONG means the strain is within 10% and the longer

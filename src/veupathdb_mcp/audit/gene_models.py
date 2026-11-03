@@ -20,6 +20,7 @@ from veupathdb.wdk import WDKRecordInstance, get_site, get_strategy_api
 
 from veupathdb_mcp.audit.pseudogene import CdsPart
 from veupathdb_mcp.catalog import GENE_RECORD_TYPE, require_gene_records
+from veupathdb_mcp.parse_failures import WrittenParseError
 
 MODEL_TABLE = "GeneModelDump"
 NO_RECORD = 404
@@ -225,7 +226,7 @@ async def gene_organism(site_id: str, gene: str) -> str:
         return _RecordOrganism.model_validate(record.attributes).organism
     except ValidationError as exc:
         msg = f"the gene record of {gene} on {site_id} gives no {ORGANISM_ATTRIBUTE}"
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
 
 
 class ModelRecord(BaseModel):
@@ -276,7 +277,7 @@ async def model_record(site_id: str, gene: str) -> ModelRecord:
             f"the gene record of {gene} on {site_id} gives no organismAbbrev "
             f"or no readable {MODEL_TABLE}"
         )
-        raise DataParsingError(msg) from exc
+        raise WrittenParseError(msg) from exc
     model = GeneModel(organism_abbrev=parts.organism, cds=coding_parts(parts.rows))
     return ModelRecord(gene=gene, model=model, rows=parts.rows)
 

@@ -213,9 +213,7 @@ async def test_a_genome_window_the_site_does_not_serve_keeps_the_judgement(
     result = await audit_intron_support("plasmodb", GENE)
 
     assert result.verdict == "UNSUPPORTED_MISSING_EXON"
-    assert result.correction_reason == (
-        "plasmodb did not answer the correction reads: ReadTimeout read timed out"
-    )
+    assert result.correction_reason == ("plasmodb did not answer the correction reads")
     assert uncorrected(result) == (None, None, None, None, None, False, None)
 
 

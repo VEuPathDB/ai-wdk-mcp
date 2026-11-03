@@ -54,9 +54,12 @@ from veupathdb_mcp.audit.evidence_inputs import (
     genome_provenance,
 )
 from veupathdb_mcp.audit.frameshift import (
-    Frameshift,
+    FrameChange,
+    ReferenceMiss,
     ReferenceRun,
     RepeatRun,
+    SplicePair,
+    VariantsUnread,
 )
 from veupathdb_mcp.audit.frameshift_inputs import (
     StrainReference,
@@ -383,8 +386,8 @@ from veupathdb_mcp.audit.track_reads import (
 )
 from veupathdb_mcp.audit.variant_calls import (
     StrainCall,
-    VariantAnswer,
     VariantCalls,
+    VariantSite,
 )
 from veupathdb_mcp.audit.windows import (
     FOUND,
@@ -502,7 +505,7 @@ __all__ = [
     "DnaWindow",
     "EndOverlap",
     "Frame",
-    "Frameshift",
+    "FrameChange",
     "FusionAudit",
     "FusionCheck",
     "FusionInputs",
@@ -586,6 +589,7 @@ __all__ = [
     "RateBounds",
     "ReadModels",
     "ReferenceGene",
+    "ReferenceMiss",
     "ReferenceRun",
     "Relative",
     "RelativeTier",
@@ -599,6 +603,7 @@ __all__ = [
     "SelenoproteinInputs",
     "SeqEdit",
     "SideVerdict",
+    "SplicePair",
     "StagedEvidence",
     "StrainCall",
     "StrainCheck",
@@ -613,8 +618,9 @@ __all__ = [
     "UnpairedPseudogene",
     "UnreadIntron",
     "UnreadOutcome",
-    "VariantAnswer",
     "VariantCalls",
+    "VariantSite",
+    "VariantsUnread",
     "WindowState",
     "annotated_genes",
     "beside",

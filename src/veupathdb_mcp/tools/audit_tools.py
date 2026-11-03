@@ -10,7 +10,6 @@ from enum import StrEnum
 import httpx
 from fastmcp.exceptions import ToolError
 from veupathdb.errors import VEuPathDBError
-from veupathdb.jbrowse import JBrowseError
 
 from veupathdb_mcp.audit import (
     GeneLengthAudit,
@@ -30,6 +29,7 @@ from veupathdb_mcp.audit import (
     pseudogene_inputs,
     selenoprotein_inputs,
 )
+from veupathdb_mcp.audit.track_reads import UNREADABLE_ANSWER, upstream_answer
 from veupathdb_mcp.tool_errors import ToolErrorPayload
 from veupathdb_mcp.tools.refusals import payload_or_error
 
@@ -59,21 +59,17 @@ async def run_in_a_slot[**P, T](
 def site_failure(
     site_id: str, exc: VEuPathDBError[StrEnum] | httpx.HTTPError, reads: str
 ) -> str:
-    match exc:
-        case JBrowseError(upstream_status=status):
-            return f"{site_id} answered {status} to the {reads}: {exc.detail}"
-        case VEuPathDBError(__cause__=httpx.HTTPStatusError(response=response)):
-            return f"{site_id} answered {response.status_code} to the {reads}: {exc.detail}"
-        case VEuPathDBError(__cause__=httpx.HTTPError() as cause):
-            return (
-                f"{site_id} did not answer the {reads}: {type(cause).__name__} {cause}"
-            )
-        case VEuPathDBError():
-            return exc.detail or exc.title
-        case httpx.HTTPStatusError(response=response):
-            return f"{site_id} answered {response.status_code} to the {reads}: {exc}"
+    match (upstream_answer(exc), exc):
+        case (int() as status, _):
+            return f"{site_id} answered {status} to the {reads}"
+        case ("silent", _):
+            return f"{site_id} did not answer the {reads}"
+        case ("unreadable", _):
+            return UNREADABLE_ANSWER
+        case (_, VEuPathDBError() as refusal):
+            return refusal.detail or refusal.title
         case _:
-            return f"{site_id} did not answer the {reads}: {type(exc).__name__} {exc}"
+            return f"{site_id} did not answer the {reads}"
 
 
 async def read_inputs[T](site_id: str, inputs: Awaitable[T | ToolErrorPayload]) -> T:
@@ -208,7 +204,7 @@ async def compared_check(
     record: ModelRecord | None = None,
 ) -> LengthCheck:
     reference = dna.strain_reference
-    if reference is None or not check.frameshifts:
+    if reference is None or not check.lists_a_run_that_explains_a_shift:
         return check
     if record is None:
         record = await read_inputs(site_id, ModelReads(site_id).read(reference.gene))
@@ -246,62 +242,65 @@ async def _length_audit(site_id: str, genes: list[str]) -> GeneLengthAudit:
 async def audit_gene_length(site_id: str, gene: str) -> GeneLengthAudit:
     """Check whether a protein is much shorter or longer than its orthologs, and why.
 
-    The protein length is read against the median of the other organisms of
-    its genus in its ortholog group (the group median when the genus has
-    fewer than two others). SHORT is under 0.7 of it and LONG over 1.5.
-    The class is UNQUALIFIED when the group has under 8 organisms, a median
-    under 80 residues, an interquartile range over 0.3 of the median, more
-    than one copy per organism or no single-copy member in another organism;
-    when the group is residual (OGR); when a genus relative is itself under
-    0.85 (for SHORT) or over 1.15 (for LONG) of the median; or when the
-    gene's own organism holds another member of the group (check that pair
-    with audit_gene_split). Only a SHORT gene's genome region is read, for
-    the protein of the closest single-copy ortholog: GENOME_ENCODES means
-    the genome holds the missing segment on the gene's strand and in the
-    model's reading frame, so the model misses it; FRAMESHIFT means it holds
-    the segment one or two bases over in another frame, within 20 bases of
-    where the windows leave the first frame, so the model follows the
-    assembly to a stop (frameshifts names each change: its genome span,
-    both frames, the bases the genome holds beyond the reference, the
-    residues of the reference protein and the longest homopolymer of 6 or
-    more bases there, or else a tandem repeat of 3 or more copies of up to
-    6 bases). When the group marks one other strain of the species as its
-    reference strain, referenceRun gives the same stretch in its gene,
-    found between the 15 bases on each side, and variantCalls what the
-    site's VariantsByLocation search and VariantStrains table say of the
-    audited strain's sample there: INDEL_CALLED; NO_INDEL_CALLED;
-    NO_VARIANT_CALLED in any sample; NOT_COVERED, no reads at the variants;
-    NOT_SAMPLED, the strain is not among the samples. determinable is false
-    when the answer cannot tell, and an uncalled homopolymer of 7 or more
-    bases cannot tell. A site with no such search or no calls for the
-    organism gives null. ASSEMBLY means a gap or a contig end can explain it; ABSENT
-    means the genome lacks it; NOT_SHORT means the model holds every window.
-    Every other class answers NOT_CHECKED with no genome read, and then
-    nsInWindow and atContigEdge are null; organisms, groupMedian,
-    groupCopies and groupSpread show what the group holds. models gives the
-    gene's longest coding transcript (exon and CDS spans (genome coordinates, 1-based, inclusive, ascending), its seqid and strand)
-    when the genome was read, and is empty otherwise. A model is null when
-    its GeneModelDump rows give no CDS row, no Exon row or more than one
-    sequence or strand; evidenceUnread gives one reason for each null model.
-    Reads: the record of the id; the gene record's Orthologs table (one read
-    whatever the group's size; the group's protein lengths are the table's,
-    and a member it gives no length counts as not coding). Only a SHORT
-    gene adds the proteins of the gene and the reference (two record reads
-    each), its gene model (one read) and one genome window. A FRAMESHIFT
-    with a reference strain adds its gene model (one read), one genome
-    window and, per change whose flanks it holds, one search read, one
-    search and one record read per variant, up to 50.
-    geneIds pairs each id given with the site's own gene id it names (the
-    same id, an alias or a previous id its gene record read resolves, a
-    transcript id the site's text search names, or the one gene whose own id
-    is the id with a ":" qualifier added); every other gene field holds that
-    id. Each id given costs one gene record read; an id no record names adds
-    one text search and one record read of the gene it names. Resolving ids
-    uploads no gene list, and a refusal names an id that names several genes.
+        The protein length is read against the median of the other organisms of
+        its genus in its ortholog group (the group median when the genus has
+        fewer than two others). SHORT is under 0.7 of it and LONG over 1.5.
+        The class is UNQUALIFIED when the group has under 8 organisms, a median
+        under 80 residues, an interquartile range over 0.3 of the median, more
+        than one copy per organism or no single-copy member in another organism;
+        when the group is residual (OGR); when a genus relative is itself under
+        0.85 (for SHORT) or over 1.15 (for LONG) of the median; or when the
+        gene's own organism holds another member of the group (check that pair
+        with audit_gene_split). Only a SHORT gene's genome region is read, for
+        the protein of the closest single-copy ortholog: GENOME_ENCODES means
+        the genome holds the missing segment on the gene's strand and in the
+        model's open reading frame, so the model misses it; an N in the stretch
+        between the parts answers ASSEMBLY first. A part in another frame answers
+        FRAMESHIFT when a run sits at a change, the shift is 1 or 2 copies of its unit
+        and no splice pair sits at it; else OTHER_FRAME, whose cause is not
+        shown. frameChanges states each jump between frames of the whole track under
+        every verdict, whatever its size: its genome span, both frames, the shift,
+        keepsFrame for a shift that is a multiple of 3, the residues of the reference
+        protein, the run, the splice pair at it and whether the model goes on past it.
+        unlistedChanges holds the jumps past the third, not read further. A jump with
+        runExplainsShift lists first, and only it reads further. When the group
+        marks one other strain of the species as its reference strain, referenceRun
+        gives the same stretch in its gene, found between flanks that each occur
+        once, else referenceUnread says why, and countsMatchShift says whether the
+        two counts differ by the shift. variantCalls states each record of the
+        site's VariantsByLocation search over it, with variantType, indelRefAllele
+        and indelFrameEffect as served and the genotype, allele, depth and read
+        frequency of each sample matched by name, else variantsUnread says why; it
+        draws no conclusion. callsSayLittle is true over a homopolymer of 7 or more
+        bases with no indel record, where the served calls hold almost no indel.
+    ASSEMBLY means a gap or a contig end can explain it; ABSENT
+        means the genome lacks it; NOT_SHORT means the model holds every window.
+        Every other class answers NOT_CHECKED with no genome read, and then
+        nsInWindow and atContigEdge are null; organisms, groupMedian,
+        groupCopies and groupSpread show what the group holds. models gives the
+        gene's longest coding transcript (exon and CDS spans (genome coordinates, 1-based, inclusive, ascending), its seqid and strand)
+        when the genome was read, and is empty otherwise. A model is null when
+        its GeneModelDump rows give no CDS row, no Exon row or more than one
+        sequence or strand; evidenceUnread gives one reason for each null model.
+        Reads: the record of the id; the gene record's Orthologs table (one read
+        whatever the group's size; the group's protein lengths are the table's,
+        and a member it gives no length counts as not coding). Only a SHORT
+        gene adds the proteins of the gene and the reference (two record reads
+        each), its gene model (one read) and one genome window. A FRAMESHIFT
+        with a reference strain adds its gene model (one read), one genome
+        window and, per change whose flanks it holds, one search read, one
+        search and one record read per variant, up to 50.
+        geneIds pairs each id given with the site's own gene id it names (the
+        same id, an alias or a previous id its gene record read resolves, a
+        transcript id the site's text search names, or the one gene whose own id
+        is the id with a ":" qualifier added); every other gene field holds that
+        id. Each id given costs one gene record read; an id no record names adds
+        one text search and one record read of the gene it names. Resolving ids
+        uploads no gene list, and a refusal names an id that names several genes.
 
-    Args:
-        site_id: VEuPathDB site, for example 'plasmodb'.
-        gene: The gene whose protein length is checked.
+        Args:
+            site_id: VEuPathDB site, for example 'plasmodb'.
+            gene: The gene whose protein length is checked.
     """
     return await _length_audit(site_id, [gene])
 

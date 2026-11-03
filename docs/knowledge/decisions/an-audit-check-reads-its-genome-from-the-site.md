@@ -150,8 +150,8 @@ in the model (identity 0.5 or more), then in the six frames of the window
 (`confirm_in_dna`). A window is looked for on the gene's strand first, so a window that
 both strands hold counts on the gene's strand; this is the phase 1 behaviour the
 thresholds were calibrated with. `GENOME_ENCODES` needs at least three missing windows
-on the gene's own strand and at least half of all missing windows, and becomes
-`FRAMESHIFT` when those windows lie in another reading frame
+on the gene's own strand and at least half of all missing windows, in the model's open
+frame; in another frame the answer is `FRAMESHIFT` or `OTHER_FRAME`
 ([a short model names the frameshift that cut it](a-short-model-names-the-frameshift-that-cut-it.md));
 else `ASSEMBLY` when
 the window holds an N or the gene lies within `LENGTH_EDGE` (2,000) bases of a contig
@@ -192,10 +192,17 @@ a gene record with no organism, a record that is not a gene row, a WDK refusal, 
 truncated report, a sequence the genome index lacks, a JBrowse error, a site that does
 not answer) is a tool error that names it, as `tests/unit/audit/test_audit_tools.py`
 and `tests/unit/audit/test_length_tools.py` show. The label comes from the error the
-client raises: a WDK error caused by an HTTP status, or a `JBrowseError` with its
-`upstream_status`, reads "<site> answered <status> to the audit reads: <detail>"; one
-caused by a timeout or a failed connection reads "<site> did not answer the audit
-reads"; any other refusal keeps its own detail. A report served short of its total is
+client raises: a WDK error caused by an HTTP status, a WDK error with its own status, or a
+`JBrowseError` with its `upstream_status`, reads "<site> answered <status> to the audit
+reads"; one caused by a timeout or a failed connection reads "<site> did not answer the
+audit reads"; an answer that does not parse reads "the site's answer could not be read", and a parse failure
+this library wrote is a `WrittenParseError` that keeps its words; any other refusal keeps its
+own detail. Every read failure stays chained. Only a computed refusal that is a verdict, such as
+the organelle one, is raised `from None`. These
+words reach the model and stored rows, so they hold no URL, query string, response body or
+exception text; the `ToolError` keeps the failure as its `__cause__` for the host's log. A
+refused store read in the evidence reads "the <read> failed: the site answered <status>"
+by the same rule (`upstream_answer`, `failed_read`). A report served short of its total is
 a `DataParsingError` naming the search and both counts, a data fact and not an outage,
 so a caller that retries outages does not retry it.
 
@@ -243,8 +250,7 @@ not seen: a pseudogene, which the Orthologs table omits, or an unannotated copy.
 read uses the length check's window and flank (12 bases per residue of length
 difference, 6 to 30 kb) and confirms the lost segment with the length check, against
 the two proteins the check already read. A side is judged only when the strain's genome
-encodes the lost segment in the model's frame, so a `FRAMESHIFT` judges no side. The
-strain is short when the reference is within 10% of its
+encodes the lost segment, in any frame. The strain is short when the reference is within 10% of its
 relatives' median and the shorter strain is not. The reference is long when the strain
 is within 10% and the longer reference is not: the strain's genome encodes a segment
 the relatives lack, as a model that starts too early does. The relatives are the

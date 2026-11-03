@@ -105,7 +105,7 @@ async def _named(site_id: str, gene_id: str) -> list[GeneRow] | GeneIdRefusal:
         return GeneIdRefusal(
             given=gene_id,
             problem=GeneIdProblem.SEVERAL_GENES,
-            message=f"{gene_id} names several genes of {site_id}: {exc.detail}",
+            message=f"{gene_id} names several genes of {site_id}",
         )
     if row is not None:
         return [row]

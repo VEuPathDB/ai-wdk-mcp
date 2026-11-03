@@ -56,7 +56,7 @@ async def audit_organelle_gene(
         )
     except ValueError as exc:
         msg = f"{reference_gene} against {sequence_id}: {exc}"
-        raise ToolError(msg) from exc
+        raise ToolError(msg) from None
     return OrganelleGeneAudit.model_validate(
         {
             **check.model_dump(),
