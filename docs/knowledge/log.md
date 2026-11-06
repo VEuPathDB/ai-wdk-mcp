@@ -1,5 +1,9 @@
 # Knowledge log
 
+## 2026-11-06 - 0.9.0b1
+
+- Takes the PathFinder release line, and veupathdb-py v0.9.0b1. No code change.
+
 ## 2026-11-03 - 0.2.0b62
 
 - `LengthVerdict` gains `FRAMESHIFT` and `OTHER_FRAME`. An N between the parts answers
