@@ -20,7 +20,9 @@ so a search ranking never finds them.
   under `COLUMN_FLOOR`.
 - `read_search_table(site_id, TableRequest)` runs one search of a record type that is not
   `gene` or `transcript` and returns its rows: one record per row, or one table row per row.
-  It reads at most 5000 records, keeps the rows that hold `contains`, and shows at most 200.
+  It asks the site for no more records than the rows it shows (at most 200). Only `contains`
+  on records without a table scans more, up to 1000, so a search of millions of sequences or
+  groups never sends the site a large report.
   A record type, search, column or table the site lacks is refused with the nearest names
   it has; a WDK refusal is passed on with its message.
 - `read_site_link(url)` reads a link that `veupathdb.wdk.parse_site_link` places under a

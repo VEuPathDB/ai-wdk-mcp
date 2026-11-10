@@ -193,3 +193,77 @@ async def test_a_refusal_from_wdk_names_the_parameter_it_needs(
                 search_name="GenomeDataTypes",
             ),
         )
+
+
+def _asked_records(route: respx.Route) -> int:
+    return json.loads(route.calls.last.request.content)["reportConfig"]["pagination"][
+        "numRecords"
+    ]
+
+
+async def test_a_read_asks_the_site_for_only_the_records_it_shows(
+    wdk: respx.MockRouter,
+) -> None:
+    route = wdk.post(PORTAL_REPORT).mock(
+        return_value=httpx.Response(
+            200, json=recorded_body("veupathdb_genome_data_types_report.json")
+        )
+    )
+
+    await read_search_table(
+        "veupathdb",
+        TableRequest(
+            record_type="organism",
+            search_name="GenomeDataTypes",
+            columns=BUSCO,
+            limit=2,
+        ),
+    )
+
+    assert _asked_records(route) == 2
+
+
+async def test_contains_scans_a_thousand_records_at_most(
+    wdk: respx.MockRouter,
+) -> None:
+    route = wdk.post(PORTAL_REPORT).mock(
+        return_value=httpx.Response(
+            200, json=recorded_body("veupathdb_genome_data_types_report.json")
+        )
+    )
+
+    await read_search_table(
+        "veupathdb",
+        TableRequest(
+            record_type="organism",
+            search_name="GenomeDataTypes",
+            columns=BUSCO,
+            contains="aspergillus",
+        ),
+    )
+
+    assert _asked_records(route) == 1000
+
+
+async def test_a_table_read_asks_for_no_more_records_than_rows_it_shows(
+    wdk: respx.MockRouter,
+) -> None:
+    route = wdk.post(ORTHOMCL_REPORT).mock(
+        return_value=httpx.Response(
+            200, json=recorded_body("orthomcl_data_summary_report.json")
+        )
+    )
+
+    await read_search_table(
+        "orthomcl",
+        TableRequest(
+            record_type="helper",
+            search_name="ByDefault",
+            table="DataSummary",
+            columns=["name", "sequences", "groups"],
+            contains="falciparum",
+            limit=20,
+        ),
+    )
+
+    assert _asked_records(route) == 20

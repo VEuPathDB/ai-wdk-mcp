@@ -29,7 +29,7 @@ from veupathdb_mcp.records.columns import (
 
 DEFAULT_ROWS = 50
 MAX_ROWS = 200
-READ_RECORDS = 5000
+SCAN_RECORDS = 1000
 
 _TABLE_ROWS: TypeAdapter[list[dict[str, JsonValue]]] = TypeAdapter(
     list[dict[str, JsonValue]]
@@ -182,6 +182,12 @@ class TableRequest(CamelModel):
     limit: int = Field(default=DEFAULT_ROWS, ge=1, le=MAX_ROWS)
 
 
+def _records_to_read(request: TableRequest) -> int:
+    if request.contains and request.table is None:
+        return SCAN_RECORDS
+    return request.limit
+
+
 async def _answer(
     site_id: str, request: TableRequest, chosen: list[ColumnInfo]
 ) -> WDKAnswer:
@@ -189,7 +195,7 @@ async def _answer(
     report: JSONObject = {
         "attributes": [] if table else [column.name for column in chosen],
         "tables": [table] if table else [],
-        "pagination": {"offset": 0, "numRecords": READ_RECORDS},
+        "pagination": {"offset": 0, "numRecords": _records_to_read(request)},
     }
     try:
         return await get_wdk_client(site_id).run_search_report(
