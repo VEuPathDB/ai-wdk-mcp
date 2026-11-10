@@ -150,8 +150,33 @@ async def test_a_snapshot_without_a_format_is_refused_and_rebuilt(
     assert json.loads(path.read_text())["format_version"] == SNAPSHOT_FORMAT_VERSION
 
 
-def test_the_snapshot_holds_cards_from_format_two() -> None:
-    assert SNAPSHOT_FORMAT_VERSION == 2
+def test_the_snapshot_holds_record_tables_from_format_three() -> None:
+    assert SNAPSHOT_FORMAT_VERSION == 3
+
+
+def test_a_snapshot_carries_its_record_tables(tmp_path: Path) -> None:
+    organism = WDKRecordType.model_validate(
+        {
+            "urlSegment": "organism",
+            "tables": [
+                {
+                    "name": "GeneCounts",
+                    "displayName": "Gene types",
+                    "attributes": [{"name": "gene_type", "columnDataType": "STRING"}],
+                }
+            ],
+        }
+    )
+    snapshot = _snapshot().model_copy(update={"record_types": [organism]})
+    save_catalog_cache("testdb", snapshot, cache_dir=tmp_path)
+
+    restored = try_load_catalog_cache("testdb", cache_dir=tmp_path)
+
+    assert restored is not None
+    assert [
+        (table.name, [column.name for column in table.attributes])
+        for table in restored.record_types[0].tables or []
+    ] == [("GeneCounts", ["gene_type"])]
 
 
 def test_a_snapshot_carries_its_cards(tmp_path: Path) -> None:
@@ -183,7 +208,7 @@ async def test_a_format_one_snapshot_is_rebuilt_with_cards(
     written = json.loads((tmp_path / "testdb.json").read_text())
     assert catalog._searches == {}
     assert catalog._datasets == [_CARD]
-    assert written["format_version"] == 2
+    assert written["format_version"] == SNAPSHOT_FORMAT_VERSION
     assert [card["datasetId"] for card in written["datasets"]] == ["DS_00f985857c"]
 
 

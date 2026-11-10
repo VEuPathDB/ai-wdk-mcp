@@ -6,11 +6,13 @@ import asyncio
 from pathlib import Path
 
 import pytest
+from tests._support.record_columns_site import recorded_record_type
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog.discovery import CatalogPolicy, SearchCatalog
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.experiments import read_experiment
+from veupathdb_mcp.embeddings.column_index import column_entries, column_index_id
 from veupathdb_mcp.embeddings.experiment_index import experiment_index_id
 from veupathdb_mcp.embeddings.fake import FakeEmbedder
 from veupathdb_mcp.embeddings.record_manager import index_size
@@ -276,3 +278,20 @@ async def test_a_catalog_of_datasets_alone_still_syncs_them(db: None) -> None:
     await _finish_sync(catalog)
 
     assert await index_size(experiment_index_id("datasetdb")) == 1
+
+
+async def test_a_catalog_build_indexes_its_record_columns(
+    db: None,
+    fake_embedder: FakeEmbedder,
+) -> None:
+    del db, fake_embedder
+    organism = recorded_record_type("veupathdb_organism_record_type.json")
+    catalog = _catalog("columnsdb", sync=True)
+    catalog._record_types = [organism]
+
+    catalog._collect_semantic_index()
+    await _finish_sync(catalog)
+
+    assert await index_size(column_index_id("columnsdb")) == len(
+        column_entries([organism])
+    )

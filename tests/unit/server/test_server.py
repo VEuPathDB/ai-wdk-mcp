@@ -94,7 +94,9 @@ ADDITIVE_WRITE = {
 
 # One row per tool of the published inventory. This mapping is the pin.
 EXPECTED_ANNOTATIONS: dict[str, dict[str, bool]] = {
+    "list_record_columns": READ_ONLY,
     "list_record_types": READ_ONLY,
+    "read_search_table": READ_ONLY,
     "search_for_searches": READ_ONLY,
     "browse_search_categories": READ_ONLY,
     "list_searches": READ_ONLY,

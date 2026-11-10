@@ -38,6 +38,7 @@ from veupathdb_mcp.tools.catalog_tools import (
     search_for_searches,
     validate_search_parameters,
 )
+from veupathdb_mcp.tools.record_tools import list_record_columns, read_search_table
 from veupathdb_mcp.tools.user_tools import (
     count_plan_steps,
     count_step_by_column,
@@ -85,6 +86,7 @@ __all__ = [
     "get_step_estimated_size",
     "get_step_gene_ids",
     "get_step_sample_records",
+    "list_record_columns",
     "list_record_types",
     "list_searches",
     "list_transforms",
@@ -92,6 +94,7 @@ __all__ = [
     "lookup_phyletic_codes",
     "rank_experiments_elsewhere",
     "read_experiment",
+    "read_search_table",
     "resolve_gene_ids_to_records",
     "resolve_search_parameters",
     "run_control_tests_on_search",

@@ -22,7 +22,7 @@ from tests.unit.test_served_results_round_trip import RECORDED
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.wdk import WDKAnswer, WDKSearch
 
-from veupathdb_mcp import server
+from veupathdb_mcp import records, server
 from veupathdb_mcp.catalog import (
     experiments,
     parameters,
@@ -36,7 +36,8 @@ from veupathdb_mcp.catalog.param_dag import ResolvedParams
 from veupathdb_mcp.catalog.param_validation import ValidatedParams
 from veupathdb_mcp.catalog.search_inspection import SearchInspection
 from veupathdb_mcp.gene_lookup import GeneResult, lookup
-from veupathdb_mcp.tools import catalog_tools, user_tools
+from veupathdb_mcp.records import RecordColumns, SearchTable, TableRequest
+from veupathdb_mcp.tools import catalog_tools, record_tools, user_tools
 from veupathdb_mcp.wdk import gene_set_steps, step_preview
 from veupathdb_mcp.wdk.enrichment import service
 from veupathdb_mcp.wdk.step_size import StepCountResult
@@ -186,7 +187,45 @@ CARD = ExperimentCard(
     record_url="https://qa.cryptodb.org/cryptodb.qa/app/record/dataset/DS_c1",
 )
 
+_COLUMNS = RecordColumns(
+    site_id=SITE,
+    record_type="organism",
+    display_name="Organism",
+    columns=[],
+    tables=[],
+    searches=[],
+)
+_TABLE = SearchTable(
+    site_id=SITE,
+    record_type="organism",
+    search_name="GenomeDataTypes",
+    search_display_name="Organisms: Genome Info and Stats",
+    table=None,
+    columns=[],
+    total_records=0,
+    matched_rows=0,
+    rows=[],
+    note="",
+)
+
 DRIVERS: dict[str, Drive] = {
+    "list_record_columns": catalog(
+        records,
+        "record_columns",
+        _COLUMNS,
+        lambda: lambda: record_tools.list_record_columns(SITE, "organism"),
+    ),
+    "read_search_table": catalog(
+        records,
+        "read_search_table",
+        _TABLE,
+        lambda: (
+            lambda: record_tools.read_search_table(
+                SITE,
+                TableRequest(record_type="organism", search_name="GenomeDataTypes"),
+            )
+        ),
+    ),
     "list_record_types": catalog(
         sites,
         "get_record_types",

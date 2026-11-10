@@ -23,6 +23,7 @@ from veupathdb_mcp.catalog.disk_cache import (
 )
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.search_notes import described
+from veupathdb_mcp.embeddings.column_index import sync_record_columns
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
 from veupathdb_mcp.embeddings.experiment_index import sync_experiments
 from veupathdb_mcp.embeddings.semantic_index import SemanticSearchIndex
@@ -224,7 +225,9 @@ class SearchCatalog:
             category_labels=self._search_category_labels,
         )
         self._semantic_index = index
-        if self._policy.sync and (index.entries or self._datasets):
+        if self._policy.sync and (
+            index.entries or self._datasets or self._record_types
+        ):
             self._index_sync = self._spawn(
                 self._sync_semantic_index(index, list(self._datasets)),
                 name=f"index-sync-{self.site_id}",
@@ -239,6 +242,7 @@ class SearchCatalog:
             await sync_experiments(
                 self.site_id, [card.index_entry() for card in datasets]
             )
+            await sync_record_columns(self.site_id, self._record_types)
         except SemanticIndexUnavailableError as exc:
             logger.warning(
                 "The semantic indexes were not synced, so ranking stays lexical "

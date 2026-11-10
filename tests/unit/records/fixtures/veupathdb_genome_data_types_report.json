@@ -1,0 +1,149 @@
+{
+ "provenance": {
+  "site": "veupathdb",
+  "method": "POST",
+  "url": "https://qa.veupathdb.org/veupathdb.qa/service/record-types/organism/searches/GenomeDataTypes/reports/standard",
+  "status": 200,
+  "recorded_at": "2026-11-10",
+  "request_json": {
+   "searchConfig": {
+    "parameters": {}
+   },
+   "reportConfig": {
+    "attributes": [
+     "species",
+     "genecount",
+     "busco_genome",
+     "busco_protein",
+     "busco_lineage_dataset"
+    ],
+    "tables": [],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 5
+    }
+   }
+  }
+ },
+ "body": {
+  "records": [
+   {
+    "tables": {},
+    "displayName": "<i>Edhazardia aedis</i> USNM 41457",
+    "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+    "attributes": {
+     "species": "Edhazardia aedis",
+     "genecount": "4262",
+     "busco_lineage_dataset": "microsporidia_odb12",
+     "busco_protein": "C:  95.1%[S:  94.1%,D:   0.9%],F:   2.8%,M:   2.1%,n:425",
+     "busco_genome": "C:  97.4%[S:  96.5%,D:   0.9%],F:   0.5%,M:   2.1%,n:425"
+    },
+    "id": [
+     {
+      "name": "source_id",
+      "value": "NCBITAXON_1003232"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "<i>Kluyveromyces marxianus</i> DMKU3-1042",
+    "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+    "attributes": {
+     "species": "Kluyveromyces marxianus",
+     "genecount": "5151",
+     "busco_lineage_dataset": "saccharomycetes_odb12",
+     "busco_protein": "C:  97.0%[S:  96.6%,D:   0.4%],F:   0.6%,M:   2.3%,n:2319",
+     "busco_genome": "C:  97.8%[S:  97.6%,D:   0.2%],F:   0.4%,M:   1.8%,n:2319"
+    },
+    "id": [
+     {
+      "name": "source_id",
+      "value": "NCBITAXON_1003335"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "<i>Aspergillus luchuensis</i> IFO 4308",
+    "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+    "attributes": {
+     "species": "Aspergillus luchuensis",
+     "genecount": "11755",
+     "busco_lineage_dataset": "eurotiomycetes_odb12",
+     "busco_protein": "C:  97.3%[S:  97.0%,D:   0.3%],F:   1.2%,M:   1.5%,n:3665",
+     "busco_genome": "C:  98.0%[S:  97.7%,D:   0.3%],F:   0.2%,M:   1.8%,n:3665"
+    },
+    "id": [
+     {
+      "name": "source_id",
+      "value": "NCBITAXON_1033177"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "<i>Epichloe glyceriae</i> E277",
+    "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+    "attributes": {
+     "species": "Epichloe glyceriae",
+     "genecount": null,
+     "busco_lineage_dataset": "sordariomycetes_odb12",
+     "busco_protein": null,
+     "busco_genome": "C:  95.7%[S:  95.5%,D:   0.1%],F:   1.0%,M:   3.3%,n:4492"
+    },
+    "id": [
+     {
+      "name": "source_id",
+      "value": "NCBITAXON_1035635"
+     }
+    ],
+    "tableErrors": []
+   },
+   {
+    "tables": {},
+    "displayName": "<i>Aspergillus versicolor</i> CBS 583.65",
+    "recordClassName": "OrganismRecordClasses.OrganismRecordClass",
+    "attributes": {
+     "species": "Aspergillus versicolor",
+     "genecount": "13364",
+     "busco_lineage_dataset": "eurotiomycetes_odb12",
+     "busco_protein": "C:  96.8%[S:  96.2%,D:   0.6%],F:   1.2%,M:   2.0%,n:3665",
+     "busco_genome": "C:  98.0%[S:  97.4%,D:   0.6%],F:   0.4%,M:   1.6%,n:3665"
+    },
+    "id": [
+     {
+      "name": "source_id",
+      "value": "NCBITAXON_1036611"
+     }
+    ],
+    "tableErrors": []
+   }
+  ],
+  "meta": {
+   "displayViewTotalCount": 831,
+   "tables": [],
+   "pagination": {
+    "offset": 0,
+    "numRecords": 5
+   },
+   "cachePreviouslyExisted": true,
+   "viewTotalCount": 831,
+   "sorting": [],
+   "recordClassName": "organism",
+   "responseCount": 5,
+   "attributes": [
+    "species",
+    "genecount",
+    "busco_genome",
+    "busco_protein",
+    "busco_lineage_dataset"
+   ],
+   "totalCount": 831,
+   "displayTotalCount": 831
+  }
+ }
+}

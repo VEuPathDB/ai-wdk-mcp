@@ -66,6 +66,7 @@ from veupathdb_mcp.tools.catalog_tools import (
     search_for_searches,
     validate_search_parameters,
 )
+from veupathdb_mcp.tools.record_tools import list_record_columns, read_search_table
 from veupathdb_mcp.tools.user_tools import (
     count_plan_steps,
     count_step_by_column,
@@ -182,6 +183,8 @@ class _ToolRow:
 
 TOOLS: tuple[_ToolRow, ...] = (
     _ToolRow(list_record_types, _READ),
+    _ToolRow(list_record_columns, _READ),
+    _ToolRow(read_search_table, _READ),
     _ToolRow(search_for_searches, _READ),
     _ToolRow(browse_search_categories, _READ),
     _ToolRow(list_searches, _READ),

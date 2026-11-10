@@ -16,7 +16,7 @@ _CACHE_TTL_SECONDS = 7 * 24 * 60 * 60
 
 # The shape of the file two images exchange through the catalogs volume. Raise
 # it whenever a field changes meaning, is added or is dropped.
-SNAPSHOT_FORMAT_VERSION = 2
+SNAPSHOT_FORMAT_VERSION = 3
 
 
 class CatalogSnapshot(BaseModel):

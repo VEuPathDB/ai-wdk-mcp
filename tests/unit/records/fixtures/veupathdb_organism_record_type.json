@@ -1,0 +1,4469 @@
+{
+ "provenance": {
+  "site": "veupathdb",
+  "method": "GET",
+  "url": "https://qa.veupathdb.org/veupathdb.qa/service/record-types/organism?format=expanded",
+  "status": 200,
+  "recorded_at": "2026-11-10"
+ },
+ "body": {
+  "nativeDisplayName": "Organism",
+  "searches": [
+   {
+    "urlSegment": "OrganismRecordClasses_OrganismRecordClassByRealtimeBasket",
+    "dynamicAttributes": [
+     {
+      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "wdk_weight-histogram",
+        "description": "Display a histogram of weight distribution",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Search Weight",
+      "name": "wdk_weight",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     }
+    ],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Current Organism Basket",
+    "fullName": "InternalQuestions.OrganismRecordClasses_OrganismRecordClassByRealtimeBasket",
+    "defaultAttributes": [
+     "primary_key",
+     "overview",
+     "URLGenomeFasta",
+     "URLtranscriptFasta",
+     "URLcdsFasta",
+     "URLproteinFasta"
+    ],
+    "groups": [
+     {
+      "displayType": "empty",
+      "displayName": "",
+      "name": "empty",
+      "description": "",
+      "isVisible": true,
+      "parameters": []
+     }
+    ],
+    "filters": [],
+    "shortDisplayName": "Organism Basket",
+    "paramNames": [],
+    "isCacheable": true,
+    "outputRecordClassName": "organism",
+    "noSummaryOnSingleRecord": false,
+    "queryName": "OrganismRecordClasses_OrganismRecordClassByRealtimeBasket",
+    "defaultSummaryView": "_default",
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    },
+    "summaryViewPlugins": [
+     {
+      "displayName": "Organism Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "urlSegment": "OrganismRecordClasses_OrganismRecordClassBySnapshotBasket",
+    "dynamicAttributes": [
+     {
+      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "wdk_weight-histogram",
+        "description": "Display a histogram of weight distribution",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Search Weight",
+      "name": "wdk_weight",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     }
+    ],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Copy of Organism Basket",
+    "fullName": "InternalQuestions.OrganismRecordClasses_OrganismRecordClassBySnapshotBasket",
+    "defaultAttributes": [
+     "primary_key",
+     "overview",
+     "URLGenomeFasta",
+     "URLtranscriptFasta",
+     "URLcdsFasta",
+     "URLproteinFasta"
+    ],
+    "groups": [
+     {
+      "displayType": "empty",
+      "displayName": "",
+      "name": "empty",
+      "description": "",
+      "isVisible": true,
+      "parameters": [
+       "OrganismRecordClasses_OrganismRecordClassDataset"
+      ]
+     }
+    ],
+    "filters": [],
+    "shortDisplayName": "Copy of Basket",
+    "paramNames": [
+     "OrganismRecordClasses_OrganismRecordClassDataset"
+    ],
+    "isCacheable": true,
+    "outputRecordClassName": "organism",
+    "noSummaryOnSingleRecord": false,
+    "queryName": "OrganismRecordClasses_OrganismRecordClassBySnapshotBasket",
+    "defaultSummaryView": "_default",
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    },
+    "summaryViewPlugins": [
+     {
+      "displayName": "Organism Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "urlSegment": "boolean_question_OrganismRecordClasses_OrganismRecordClass",
+    "dynamicAttributes": [
+     {
+      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "wdk_weight-histogram",
+        "description": "Display a histogram of weight distribution",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Search Weight",
+      "name": "wdk_weight",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     }
+    ],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Combine Organism results",
+    "allowedPrimaryInputRecordClassNames": [
+     "organism"
+    ],
+    "fullName": "InternalQuestions.boolean_question_OrganismRecordClasses_OrganismRecordClass",
+    "defaultAttributes": [
+     "primary_key",
+     "overview",
+     "URLGenomeFasta",
+     "URLtranscriptFasta",
+     "URLcdsFasta",
+     "URLproteinFasta"
+    ],
+    "groups": [
+     {
+      "displayType": "empty",
+      "displayName": "",
+      "name": "empty",
+      "description": "",
+      "isVisible": true,
+      "parameters": [
+       "bq_left_op_OrganismRecordClasses_OrganismRecordClass",
+       "bq_right_op_OrganismRecordClasses_OrganismRecordClass",
+       "bq_operator"
+      ]
+     }
+    ],
+    "filters": [],
+    "shortDisplayName": "Combine Organism results",
+    "paramNames": [
+     "bq_left_op_OrganismRecordClasses_OrganismRecordClass",
+     "bq_right_op_OrganismRecordClasses_OrganismRecordClass",
+     "bq_operator"
+    ],
+    "isCacheable": true,
+    "allowedSecondaryInputRecordClassNames": [
+     "organism"
+    ],
+    "outputRecordClassName": "organism",
+    "noSummaryOnSingleRecord": false,
+    "queryName": "bq_OrganismRecordClasses_OrganismRecordClass",
+    "defaultSummaryView": "_default",
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    },
+    "summaryViewPlugins": [
+     {
+      "displayName": "Organism Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "urlSegment": "single_record_question_OrganismRecordClasses_OrganismRecordClass",
+    "dynamicAttributes": [],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Single Organism",
+    "fullName": "InternalQuestions.single_record_question_OrganismRecordClasses_OrganismRecordClass",
+    "defaultAttributes": [
+     "primary_key",
+     "overview",
+     "URLGenomeFasta",
+     "URLtranscriptFasta",
+     "URLcdsFasta",
+     "URLproteinFasta"
+    ],
+    "groups": [
+     {
+      "displayType": "empty",
+      "displayName": "",
+      "name": "empty",
+      "description": "",
+      "isVisible": true,
+      "parameters": [
+       "primaryKeys"
+      ]
+     }
+    ],
+    "filters": [],
+    "shortDisplayName": "Single Organism",
+    "paramNames": [
+     "primaryKeys"
+    ],
+    "isCacheable": true,
+    "outputRecordClassName": "organism",
+    "noSummaryOnSingleRecord": false,
+    "defaultSummaryView": "_default",
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    },
+    "summaryViewPlugins": [
+     {
+      "displayName": "Organism Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "urlSegment": "AllOrganisms",
+    "dynamicAttributes": [
+     {
+      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "wdk_weight-histogram",
+        "description": "Display a histogram of weight distribution",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Search Weight",
+      "name": "wdk_weight",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     }
+    ],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "All Organisms",
+    "fullName": "OrganismQuestions.AllOrganisms",
+    "defaultAttributes": [
+     "primary_key",
+     "overview",
+     "URLGenomeFasta",
+     "URLtranscriptFasta",
+     "URLcdsFasta",
+     "URLproteinFasta"
+    ],
+    "groups": [],
+    "filters": [],
+    "shortDisplayName": "All Organisms",
+    "paramNames": [],
+    "isCacheable": true,
+    "outputRecordClassName": "organism",
+    "noSummaryOnSingleRecord": false,
+    "queryName": "AllOrganisms",
+    "defaultSummaryView": "_default",
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    },
+    "summaryViewPlugins": [
+     {
+      "displayName": "Organism Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "summary": "Organisms Genome Information and Statistics",
+    "urlSegment": "GenomeDataTypes",
+    "dynamicAttributes": [
+     {
+      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "wdk_weight-histogram",
+        "description": "Display a histogram of weight distribution",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Search Weight",
+      "name": "wdk_weight",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     }
+    ],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Organisms: Genome Info and Stats",
+    "fullName": "OrganismQuestions.GenomeDataTypes",
+    "description": "This search allows you to identify organisms based on the name of the organism.",
+    "defaultAttributes": [
+     "primary_key",
+     "species_ncbi_taxon_url",
+     "ncbi_taxon_url",
+     "genome_source",
+     "genome_version",
+     "megabpsurl",
+     "annotation_version",
+     "genecounturl",
+     "is_reference_strain",
+     "is_in_apollo",
+     "apollolink",
+     "isOrganellar_flag",
+     "contigCount",
+     "supercontigCount",
+     "chromosomeCount",
+     "codinggenecount",
+     "othergenecount",
+     "pseudogenecount",
+     "gocount",
+     "ecnumbercount",
+     "busco_protein",
+     "busco_genome"
+    ],
+    "groups": [],
+    "filters": [],
+    "shortDisplayName": "GnmsInfoStats",
+    "paramNames": [],
+    "isCacheable": true,
+    "outputRecordClassName": "organism",
+    "noSummaryOnSingleRecord": false,
+    "queryName": "GenomeDataTypes",
+    "defaultSummaryView": "_default",
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    },
+    "summaryViewPlugins": [
+     {
+      "displayName": "Organism Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "urlSegment": "SitemapGenomeDataTypes",
+    "dynamicAttributes": [
+     {
+      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "wdk_weight-histogram",
+        "description": "Display a histogram of weight distribution",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Search Weight",
+      "name": "wdk_weight",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     }
+    ],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Sitemap",
+    "fullName": "OrganismQuestions.SitemapGenomeDataTypes",
+    "description": "Find organisms for use by sitemap.xml",
+    "defaultAttributes": [
+     "primary_key",
+     "overview",
+     "URLGenomeFasta",
+     "URLtranscriptFasta",
+     "URLcdsFasta",
+     "URLproteinFasta"
+    ],
+    "groups": [],
+    "filters": [],
+    "shortDisplayName": "Sitemap",
+    "paramNames": [],
+    "isCacheable": true,
+    "outputRecordClassName": "organism",
+    "noSummaryOnSingleRecord": false,
+    "queryName": "GenomeDataTypes",
+    "defaultSummaryView": "_default",
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": [],
+     "forSitemap": []
+    },
+    "summaryViewPlugins": [
+     {
+      "displayName": "Organism Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "summary": "Gene Metrics",
+    "urlSegment": "GeneMetrics",
+    "dynamicAttributes": [
+     {
+      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "wdk_weight-histogram",
+        "description": "Display a histogram of weight distribution",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Search Weight",
+      "name": "wdk_weight",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     }
+    ],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Gene Metrics",
+    "fullName": "OrganismQuestions.GeneMetrics",
+    "description": "This search allows you to identify organisms based on the name of the organism.",
+    "defaultAttributes": [
+     "primary_key",
+     "genecount",
+     "codinggenecount",
+     "othergenecount",
+     "pseudogenecount",
+     "gocount",
+     "ecnumbercount",
+     "arraygenecount",
+     "estcount",
+     "proteomicscount",
+     "chipchipgenecount",
+     "rnaseqcount",
+     "rtpcrcount",
+     "tfbscount"
+    ],
+    "groups": [],
+    "filters": [],
+    "shortDisplayName": "Gene Metrics",
+    "paramNames": [],
+    "isCacheable": true,
+    "outputRecordClassName": "organism",
+    "noSummaryOnSingleRecord": false,
+    "queryName": "GeneMetrics",
+    "defaultSummaryView": "_default",
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    },
+    "summaryViewPlugins": [
+     {
+      "displayName": "Organism Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "summary": "Find organisms with a text search",
+    "urlSegment": "OrganismsByText",
+    "dynamicAttributes": [
+     {
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "max_score-histogram",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Score",
+      "name": "max_score",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "align": "center",
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     },
+     {
+      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "wdk_weight-histogram",
+        "description": "Display a histogram of weight distribution",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Search Weight",
+      "name": "wdk_weight",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     }
+    ],
+    "defaultSorting": [
+     {
+      "attributeName": "max_score",
+      "direction": "DESC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Text (product name, notes, etc.)",
+    "fullName": "OrganismQuestions.OrganismsByText",
+    "description": "Find organisms by searching text attributes",
+    "defaultAttributes": [
+     "primary_key",
+     "max_score"
+    ],
+    "groups": [
+     {
+      "displayType": "empty",
+      "displayName": "",
+      "name": "empty",
+      "description": "",
+      "isVisible": true,
+      "parameters": [
+       "text_search_organism",
+       "text_expression",
+       "text_fields"
+      ]
+     },
+     {
+      "displayType": "hidden",
+      "displayName": "",
+      "name": "_hidden",
+      "description": "",
+      "isVisible": false,
+      "parameters": [
+       "document_type"
+      ]
+     }
+    ],
+    "filters": [],
+    "shortDisplayName": "Text",
+    "paramNames": [
+     "text_search_organism",
+     "text_expression",
+     "document_type",
+     "text_fields"
+    ],
+    "isCacheable": true,
+    "outputRecordClassName": "organism",
+    "noSummaryOnSingleRecord": false,
+    "queryName": "OrganismsByText",
+    "defaultSummaryView": "_default",
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    },
+    "summaryViewPlugins": [
+     {
+      "displayName": "Organism Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   }
+  ],
+  "urlSegment": "organism",
+  "useBasket": true,
+  "nativeShortDisplayName": "Organism",
+  "formats": [
+   {
+    "isInReport": true,
+    "displayName": "Standard JSON",
+    "name": "standard",
+    "description": "Converts your result to the standard JSON used by the web service.",
+    "scopes": [
+     "results"
+    ],
+    "type": "standard"
+   },
+   {
+    "isInReport": true,
+    "displayName": "Tab- or comma-delimited (openable in Excel) - choose columns to make a custom table",
+    "name": "attributesTabular",
+    "scopes": [
+     "results"
+    ],
+    "type": "attributesTabular"
+   },
+   {
+    "isInReport": true,
+    "displayName": "Tab- or comma-delimited (openable in Excel) - choose a pre-configured table",
+    "name": "tableTabular",
+    "scopes": [
+     "results"
+    ],
+    "type": "tableTabular"
+   },
+   {
+    "isInReport": true,
+    "displayName": "Text - choose from columns and/or tables",
+    "name": "fullRecord",
+    "scopes": [
+     "record"
+    ],
+    "type": "fullRecord"
+   },
+   {
+    "isInReport": true,
+    "displayName": "XML: choose from columns and/or tables",
+    "name": "xml",
+    "scopes": [],
+    "type": "xml"
+   },
+   {
+    "isInReport": true,
+    "displayName": "json: choose from columns and/or tables",
+    "name": "json",
+    "scopes": [],
+    "type": "json"
+   }
+  ],
+  "hasAllRecordsQuery": false,
+  "displayName": "Organism",
+  "nativeShortDisplayNamePlural": "Organisms",
+  "fullName": "OrganismRecordClasses.OrganismRecordClass",
+  "description": "",
+  "shortDisplayName": "Organism",
+  "shortDisplayNamePlural": "Organisms",
+  "tables": [
+   {
+    "isInReport": true,
+    "displayName": "Sequence types",
+    "name": "SequenceCounts",
+    "description": "",
+    "attributes": [
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "source_id",
+      "name": "source_id",
+      "isSortable": true,
+      "isDisplayable": false,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "project_id",
+      "name": "project_id",
+      "isSortable": true,
+      "isDisplayable": false,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Sequence type",
+      "name": "sequence_type",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Count",
+      "name": "sequence_count",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     }
+    ],
+    "isDisplayable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    },
+    "supportsSingleRecordOnly": false,
+    "clientSortSpec": []
+   },
+   {
+    "isInReport": true,
+    "displayName": "Gene types",
+    "name": "GeneCounts",
+    "description": "",
+    "attributes": [
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "source_id",
+      "name": "source_id",
+      "isSortable": true,
+      "isDisplayable": false,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "project_id",
+      "name": "project_id",
+      "isSortable": true,
+      "isDisplayable": false,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Gene type",
+      "name": "gene_type",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Pseudogene",
+      "name": "pseudo",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Count",
+      "name": "gene_count",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     }
+    ],
+    "isDisplayable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    },
+    "supportsSingleRecordOnly": false,
+    "clientSortSpec": []
+   },
+   {
+    "isInReport": false,
+    "displayName": "Genome Sequencing and Annotation",
+    "name": "GenomeSequencingAndAnnotationAttribution",
+    "description": "",
+    "attributes": [
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Description",
+      "name": "description",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     }
+    ],
+    "isDisplayable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    },
+    "supportsSingleRecordOnly": false,
+    "clientSortSpec": []
+   },
+   {
+    "isInReport": true,
+    "displayName": "Available searches",
+    "name": "Searches",
+    "description": "",
+    "attributes": [
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "source_id",
+      "name": "source_id",
+      "isSortable": true,
+      "isDisplayable": false,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "project_id",
+      "name": "project_id",
+      "isSortable": true,
+      "isDisplayable": false,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Organism",
+      "name": "organism_name",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Record type",
+      "name": "record_type",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Search",
+      "name": "target_name",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {
+       "organisms": [
+        "P. falciparum",
+        "P. vivax",
+        "P. yoelii",
+        "P. berghei",
+        "P. chabaudi",
+        "P. knowlesi",
+        "C. hominus",
+        "C. parvum",
+        "T. gondii"
+       ],
+       "specificAttribution": []
+      }
+     }
+    ],
+    "isDisplayable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    },
+    "supportsSingleRecordOnly": false,
+    "clientSortSpec": []
+   }
+  ],
+  "nativeDisplayNamePlural": "Organisms",
+  "displayNamePlural": "Organisms",
+  "recordIdAttributeName": "primary_key",
+  "attributes": [
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Organism",
+    "name": "primary_key",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": false,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Overview",
+    "name": "overview",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Genome Fasta Download Link",
+    "name": "URLGenomeFasta",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Transcript Fasta Download Link",
+    "name": "URLtranscriptFasta",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "CDS Fasta Download Link",
+    "name": "URLcdsFasta",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Protein Fasta Download Link",
+    "name": "URLproteinFasta",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "GFF Download Link",
+    "name": "URLgff",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "source_id",
+    "name": "source_id",
+    "isSortable": true,
+    "isDisplayable": false,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "project_id",
+    "name": "project_id",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "orthomcl_abbrev",
+    "name": "orthomcl_abbrev",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "name_for_filenames",
+    "name": "name_for_filenames",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Strain",
+    "name": "strain",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Contigs",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Total contig count",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "contigCount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Supercontigs",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Total supercontig count",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "supercontigCount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Chromosomes",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Total chromosome count",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "chromosomeCount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Genes",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Total gene count",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "genecount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "genecount_number",
+    "name": "genecount_number",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Protein coding genes",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Protein coding gene count: it includes pseudogenes",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "codinggenecount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Pseudogenes",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Pseudogene count",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "pseudogenecount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Non Protein coding genes",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Number of genes that code for products other than proteins, for example: rRNA,tRNA,etc.",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "othergenecount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "EC#",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Number of genes with assigned Enzyme Commission numbers",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "ecnumbercount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "GO terms",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Number of genes with assigned Gene Ontology terms",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "gocount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "RNA Seq",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Number of genes that have evidence for transcript expression based on Transcriptome sequencing (RNA-Seq) experiments",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "rnaseqcount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "ChIP chip",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Number of genes that have evidence of transcript expression based on the ChIP on chip studies",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "chipchipgenecount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "RT-PCR",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Number of genes that have evidence for transcript expression based on Real Time PCR experiments",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "rtpcrcount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "ESTs",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Number of genes that have evidence of transcript expression based on Expressed Sequence Tags studies",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "estcount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Microarray",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Number of genes that have evidence of transcript expression based on Microarray studies",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "arraygenecount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Proteomics",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Number of genes that have evidence of protein expression based on Mass Spectrometry studies",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "proteomicscount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "TFBS",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Total number of genes having evidence of expression based on transcription factor binding site identification experiments",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "tfbscount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Organism (text)",
+    "name": "organism_name",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Organism",
+    "name": "organism_full",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Species",
+    "name": "species",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Species ",
+    "name": "species_display",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Is Annotated",
+    "name": "is_annotated_genome",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "help": "Reference genome indicates the genome used by us as the reference sequence to which other data sets are mapped",
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Is Reference Strain",
+    "name": "is_reference_strain",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Download Directory",
+    "name": "download_link",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Organism",
+    "name": "organism",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Strain NCBI taxon ID",
+    "name": "ncbi_tax_id",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Strain NCBI taxon ID",
+    "isSortable": true,
+    "align": "center",
+    "type": "link",
+    "columnDataType": "OTHER",
+    "tools": {
+     "reports": [],
+     "filters": []
+    },
+    "help": "Click to access this Taxon ID in NCBI",
+    "isInReport": false,
+    "truncateTo": 100,
+    "name": "ncbi_taxon_url",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Species NCBI taxon ID",
+    "name": "species_ncbi_tax_id",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Species NCBI taxon ID",
+    "isSortable": true,
+    "align": "center",
+    "type": "link",
+    "columnDataType": "OTHER",
+    "tools": {
+     "reports": [],
+     "filters": []
+    },
+    "help": "Click to access this Taxon ID in NCBI",
+    "isInReport": false,
+    "truncateTo": 100,
+    "name": "species_ncbi_taxon_url",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Genome version",
+    "name": "database_version",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Mega base Pairs",
+    "name": "megabps",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Genome size (Mbp)",
+    "isSortable": true,
+    "align": "right",
+    "type": "link",
+    "columnDataType": "OTHER",
+    "tools": {
+     "reports": [],
+     "filters": []
+    },
+    "help": "Available Megabase pairs; click to run a search and get all genomic sequences for this genome",
+    "isInReport": false,
+    "truncateTo": 100,
+    "name": "megabpsurl",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Genes",
+    "isSortable": true,
+    "align": "right",
+    "type": "link",
+    "columnDataType": "OTHER",
+    "tools": {
+     "reports": [],
+     "filters": []
+    },
+    "help": "Total Gene Count; click to run a search and retrieve all genes annotated in this genome. The total number of genes may differ between NCBI (RefSeq or GenBank) and VEuPathDB. VEuPathDB's total number of genes includes genes in mitochondrial (MT) or other organellar chromosomes. The counts on the NCBI FTP are generally more precise than those on the NCBI website, make sure to check the former.",
+    "isInReport": false,
+    "truncateTo": 100,
+    "name": "genecounturl",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "help": "Presence or absence of  organellar genome(s) sequence in the database",
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Organellar genome(s)",
+    "name": "isOrganellar_flag",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Organellar genome(s)",
+    "name": "isOrganellar",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "align": "center",
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "chipchip_flag",
+    "name": "chipchip_flag",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "ChIP chip",
+    "name": "hasChipChip",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "align": "center",
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "array_flag",
+    "name": "array_flag",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Microarray",
+    "name": "hasArray",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "align": "center",
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "rtpcr_flag",
+    "name": "rtpcr_flag",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "RT-PCR",
+    "name": "hasRTPCR",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "align": "center",
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "ec_flag",
+    "name": "ec_flag",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "EC#",
+    "name": "hasEC",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "align": "center",
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "go_flag",
+    "name": "go_flag",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Ontology",
+    "name": "hasGO",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "align": "center",
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "tfbs_flag",
+    "name": "tfbs_flag",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "TFBS site",
+    "name": "hasTFBS",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "align": "center",
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "rnaseq_flag",
+    "name": "rnaseq_flag",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "RNA Seq",
+    "name": "hasRNASeq",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "align": "center",
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "est_flag",
+    "name": "est_flag",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "ESTs",
+    "name": "hasEST",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "align": "center",
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "proteomics_flag",
+    "name": "proteomics_flag",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Proteomics",
+    "name": "hasProteomics",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "align": "center",
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "hasHTSIsolate_flag",
+    "name": "hasHTSIsolate_flag",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Genome-wide reseq",
+    "name": "hasHTSIsolate",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "align": "center",
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "record_overview",
+    "name": "record_overview",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "help": "For genomes loaded through the new EBI pipeline we offer assembly IDs. For the others (soon to be loaded through the new pipeline)  we have the  data set provider's version number or publication date. In the rare case neither is available, the download date",
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Genome Version/Assembly ID",
+    "name": "genome_version",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "help": "INSDC: http://www.insdc.org/ International Nucleotide Sequence Database Collaboration",
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Genome Source",
+    "name": "genome_source",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Structural Annotation Version",
+    "name": "annotation_version",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Structural Annotation Source",
+    "name": "annotation_source",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "User comments",
+    "isSortable": true,
+    "align": "right",
+    "type": "number",
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "help": "Number of genes with comments/notes from the research community",
+    "isInReport": true,
+    "truncateTo": 100,
+    "name": "communitycount",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "community_flag",
+    "name": "community_flag",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": false,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Community",
+    "name": "hasCommunity",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "align": "center",
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "help": "Benchmarking Universal Single-Copy Orthologs completeness score of the annotated genome.",
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "BUSCO Protein",
+    "name": "busco_protein",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "help": "Benchmarking Universal Single-Copy Orthologs completeness score of the genome assembly",
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "BUSCO Genomic",
+    "name": "busco_genome",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "help": "Clade-specific BUSCO set of conserved single copy orthologs used as reference",
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "BUSCO Lineage Dataset",
+    "name": "busco_lineage_dataset",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Is Published",
+    "name": "is_published",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Genome Data Set",
+    "name": "dataset_page",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Release policy",
+    "name": "release_policy",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Build introduced",
+    "name": "build_introduced",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Build latest update",
+    "name": "build_latest_update",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": true,
+    "columnDataType": "NUMBER",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Apollo ID",
+    "name": "apolloidurl",
+    "isSortable": true,
+    "isDisplayable": false,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "Available for community annotation",
+    "name": "is_in_apollo",
+    "isSortable": true,
+    "isDisplayable": false,
+    "isRemovable": true,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [
+      "byValue"
+     ],
+     "filters": [
+      "byValue"
+     ]
+    },
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   },
+   {
+    "formats": [],
+    "displayName": "Available for community annotation",
+    "isSortable": true,
+    "align": "right",
+    "type": "link",
+    "columnDataType": "OTHER",
+    "tools": {
+     "reports": [],
+     "filters": []
+    },
+    "help": "If the organism is available for community annotation then clicking on the Apollo link will open the Apollo annotation editor.",
+    "isInReport": false,
+    "truncateTo": 100,
+    "name": "apollolink",
+    "isDisplayable": true,
+    "isRemovable": true,
+    "properties": {
+     "organisms": [
+      "P. falciparum",
+      "P. vivax",
+      "P. yoelii",
+      "P. berghei",
+      "P. chabaudi",
+      "P. knowlesi",
+      "C. hominus",
+      "C. parvum",
+      "T. gondii"
+     ],
+     "specificAttribution": []
+    }
+   }
+  ],
+  "primaryKeyColumnRefs": [
+   "source_id"
+  ],
+  "properties": {
+   "organisms": [
+    "P. falciparum",
+    "P. vivax",
+    "P. yoelii",
+    "P. berghei",
+    "P. chabaudi",
+    "P. knowlesi",
+    "C. hominus",
+    "C. parvum",
+    "T. gondii"
+   ],
+   "specificAttribution": []
+  }
+ }
+}

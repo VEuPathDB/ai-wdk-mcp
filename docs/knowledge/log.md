@@ -1,5 +1,11 @@
 # Knowledge log
 
+## 2026-11-10 - A record that is not a gene is read as a table
+
+- [A record that is not a gene is read as a table](decisions/a-record-that-is-not-a-gene-is-read-as-a-table.md):
+  the record column index, `read_search_table`, `list_record_columns` and `read_site_link`.
+  The catalog snapshot is format 3.
+
 ## 2026-11-06 - 0.9.0b1
 
 - Takes the PathFinder release line, and veupathdb-py v0.9.0b1. No code change.

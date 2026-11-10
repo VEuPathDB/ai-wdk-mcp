@@ -1,0 +1,880 @@
+{
+ "provenance": {
+  "site": "orthomcl",
+  "method": "GET",
+  "url": "https://qa.orthomcl.org/orthomcl.qa/service/record-types/helper?format=expanded",
+  "status": 200,
+  "recorded_at": "2026-11-10"
+ },
+ "body": {
+  "nativeDisplayName": "Helper",
+  "searches": [
+   {
+    "urlSegment": "ByDefault",
+    "dynamicAttributes": [
+     {
+      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "wdk_weight-histogram",
+        "description": "Display a histogram of weight distribution",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Search Weight",
+      "name": "wdk_weight",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     }
+    ],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Taxon Helper",
+    "fullName": "HelperQuestions.ByDefault",
+    "description": "Creates a Taxon help record instance.",
+    "defaultAttributes": [
+     "primary_key"
+    ],
+    "groups": [],
+    "filters": [],
+    "shortDisplayName": "Taxon Helper",
+    "paramNames": [],
+    "isCacheable": true,
+    "outputRecordClassName": "helper",
+    "noSummaryOnSingleRecord": false,
+    "queryName": "ByDefault",
+    "defaultSummaryView": "_default",
+    "properties": {},
+    "summaryViewPlugins": [
+     {
+      "displayName": "Helper Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "urlSegment": "HelperRecordClasses_HelperRecordClassByRealtimeBasket",
+    "dynamicAttributes": [
+     {
+      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "wdk_weight-histogram",
+        "description": "Display a histogram of weight distribution",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Search Weight",
+      "name": "wdk_weight",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     }
+    ],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Current Helper Basket",
+    "fullName": "InternalQuestions.HelperRecordClasses_HelperRecordClassByRealtimeBasket",
+    "defaultAttributes": [
+     "primary_key"
+    ],
+    "groups": [
+     {
+      "displayType": "empty",
+      "displayName": "",
+      "name": "empty",
+      "description": "",
+      "isVisible": true,
+      "parameters": []
+     }
+    ],
+    "filters": [],
+    "shortDisplayName": "Helper Basket",
+    "paramNames": [],
+    "isCacheable": true,
+    "outputRecordClassName": "helper",
+    "noSummaryOnSingleRecord": false,
+    "queryName": "HelperRecordClasses_HelperRecordClassByRealtimeBasket",
+    "defaultSummaryView": "_default",
+    "properties": {},
+    "summaryViewPlugins": [
+     {
+      "displayName": "Helper Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "urlSegment": "HelperRecordClasses_HelperRecordClassBySnapshotBasket",
+    "dynamicAttributes": [
+     {
+      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "wdk_weight-histogram",
+        "description": "Display a histogram of weight distribution",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Search Weight",
+      "name": "wdk_weight",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     }
+    ],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Copy of Helper Basket",
+    "fullName": "InternalQuestions.HelperRecordClasses_HelperRecordClassBySnapshotBasket",
+    "defaultAttributes": [
+     "primary_key"
+    ],
+    "groups": [
+     {
+      "displayType": "empty",
+      "displayName": "",
+      "name": "empty",
+      "description": "",
+      "isVisible": true,
+      "parameters": [
+       "HelperRecordClasses_HelperRecordClassDataset"
+      ]
+     }
+    ],
+    "filters": [],
+    "shortDisplayName": "Copy of Basket",
+    "paramNames": [
+     "HelperRecordClasses_HelperRecordClassDataset"
+    ],
+    "isCacheable": true,
+    "outputRecordClassName": "helper",
+    "noSummaryOnSingleRecord": false,
+    "queryName": "HelperRecordClasses_HelperRecordClassBySnapshotBasket",
+    "defaultSummaryView": "_default",
+    "properties": {},
+    "summaryViewPlugins": [
+     {
+      "displayName": "Helper Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "urlSegment": "boolean_question_HelperRecordClasses_HelperRecordClass",
+    "dynamicAttributes": [
+     {
+      "help": "The *search result weight*. This is the sum of the weights you specified for individual searches that found this record.   The more searches that found this record the higher will be its weight.  To give a search a weight, click \"Use Weights\" on the search page, and provide the desired weight.",
+      "isInReport": true,
+      "formats": [
+       {
+        "isInReport": true,
+        "displayName": "Histogram",
+        "name": "wdk_weight-histogram",
+        "description": "Display a histogram of weight distribution",
+        "scopes": [],
+        "type": "histogram"
+       }
+      ],
+      "truncateTo": 100,
+      "displayName": "Search Weight",
+      "name": "wdk_weight",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "NUMBER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     }
+    ],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Combine Helper results",
+    "allowedPrimaryInputRecordClassNames": [
+     "helper"
+    ],
+    "fullName": "InternalQuestions.boolean_question_HelperRecordClasses_HelperRecordClass",
+    "defaultAttributes": [
+     "primary_key"
+    ],
+    "groups": [
+     {
+      "displayType": "empty",
+      "displayName": "",
+      "name": "empty",
+      "description": "",
+      "isVisible": true,
+      "parameters": [
+       "bq_left_op_HelperRecordClasses_HelperRecordClass",
+       "bq_right_op_HelperRecordClasses_HelperRecordClass",
+       "bq_operator"
+      ]
+     }
+    ],
+    "filters": [],
+    "shortDisplayName": "Combine Helper results",
+    "paramNames": [
+     "bq_left_op_HelperRecordClasses_HelperRecordClass",
+     "bq_right_op_HelperRecordClasses_HelperRecordClass",
+     "bq_operator"
+    ],
+    "isCacheable": true,
+    "allowedSecondaryInputRecordClassNames": [
+     "helper"
+    ],
+    "outputRecordClassName": "helper",
+    "noSummaryOnSingleRecord": false,
+    "queryName": "bq_HelperRecordClasses_HelperRecordClass",
+    "defaultSummaryView": "_default",
+    "properties": {},
+    "summaryViewPlugins": [
+     {
+      "displayName": "Helper Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "urlSegment": "single_record_question_HelperRecordClasses_HelperRecordClass",
+    "dynamicAttributes": [],
+    "defaultSorting": [
+     {
+      "attributeName": "primary_key",
+      "direction": "ASC"
+     }
+    ],
+    "isAnalyzable": false,
+    "displayName": "Single Helper",
+    "fullName": "InternalQuestions.single_record_question_HelperRecordClasses_HelperRecordClass",
+    "defaultAttributes": [
+     "primary_key"
+    ],
+    "groups": [
+     {
+      "displayType": "empty",
+      "displayName": "",
+      "name": "empty",
+      "description": "",
+      "isVisible": true,
+      "parameters": [
+       "primaryKeys"
+      ]
+     }
+    ],
+    "filters": [],
+    "shortDisplayName": "Single Helper",
+    "paramNames": [
+     "primaryKeys"
+    ],
+    "isCacheable": true,
+    "outputRecordClassName": "helper",
+    "noSummaryOnSingleRecord": false,
+    "defaultSummaryView": "_default",
+    "properties": {},
+    "summaryViewPlugins": [
+     {
+      "displayName": "Helper Results",
+      "name": "_default",
+      "description": ""
+     }
+    ]
+   }
+  ],
+  "urlSegment": "helper",
+  "useBasket": true,
+  "nativeShortDisplayName": "Helper",
+  "formats": [
+   {
+    "isInReport": true,
+    "displayName": "Standard JSON",
+    "name": "standard",
+    "description": "Converts your result to the standard JSON used by the web service.",
+    "scopes": [
+     "results"
+    ],
+    "type": "standard"
+   }
+  ],
+  "hasAllRecordsQuery": false,
+  "displayName": "Helper",
+  "nativeShortDisplayNamePlural": "Helpers",
+  "fullName": "HelperRecordClasses.HelperRecordClass",
+  "description": "",
+  "shortDisplayName": "Helper",
+  "shortDisplayNamePlural": "Helpers",
+  "tables": [
+   {
+    "isInReport": true,
+    "displayName": "Taxons",
+    "name": "Taxons",
+    "description": "",
+    "attributes": [
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "orthomcl_clade_id",
+      "name": "orthomcl_clade_id",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "taxon_group",
+      "name": "taxon_group",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "parent_id",
+      "name": "parent_id",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "three_letter_abbrev",
+      "name": "three_letter_abbrev",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "name",
+      "name": "name",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "color",
+      "name": "color",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "core_peripheral",
+      "name": "core_peripheral",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     }
+    ],
+    "isDisplayable": true,
+    "properties": {},
+    "supportsSingleRecordOnly": false,
+    "clientSortSpec": []
+   },
+   {
+    "isInReport": true,
+    "displayName": "Data Summary",
+    "name": "DataSummary",
+    "description": "",
+    "attributes": [
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Category",
+      "name": "root_taxon",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "STRING",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Name",
+      "name": "name",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Core/Peripheral",
+      "name": "core_peripheral",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Abbreviation",
+      "name": "three_letter_abbrev",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Resource",
+      "name": "resource_name",
+      "isSortable": true,
+      "isDisplayable": false,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "URL for proteome",
+      "name": "resource_url",
+      "isSortable": true,
+      "isDisplayable": false,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": false,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "URL for proteome",
+      "name": "resource_url_link",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "type": "link",
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Proteome Version",
+      "name": "resource_version",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "# Proteins",
+      "name": "sequences",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "# Proteins in Groups",
+      "name": "clustered_sequences",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "# Ortholog Groups",
+      "name": "groups",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Most recent version",
+      "name": "most_recent",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "ncbi_taxon_id",
+      "name": "ncbi_taxon_id",
+      "isSortable": true,
+      "isDisplayable": false,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "ncbi_taxon_url",
+      "name": "ncbi_taxon_url",
+      "isSortable": true,
+      "isDisplayable": false,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": false,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "URL for NCBI Taxonomy",
+      "name": "ncbi_taxon_url_link",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "type": "link",
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     }
+    ],
+    "isDisplayable": true,
+    "properties": {},
+    "supportsSingleRecordOnly": false,
+    "clientSortSpec": []
+   },
+   {
+    "isInReport": true,
+    "displayName": "RootTaxons",
+    "name": "RootTaxons",
+    "description": "",
+    "attributes": [
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Orthomcl Clade Id",
+      "name": "orthomcl_clade_id",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Parent Id",
+      "name": "parent_id",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Taxon Abbrev",
+      "name": "taxon_abbrev",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Color",
+      "name": "color",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     },
+     {
+      "isInReport": true,
+      "formats": [],
+      "truncateTo": 100,
+      "displayName": "Name",
+      "name": "name",
+      "isSortable": true,
+      "isDisplayable": true,
+      "isRemovable": true,
+      "columnDataType": "OTHER",
+      "tools": {
+       "reports": [],
+       "filters": []
+      },
+      "properties": {}
+     }
+    ],
+    "isDisplayable": true,
+    "properties": {},
+    "supportsSingleRecordOnly": false,
+    "clientSortSpec": []
+   }
+  ],
+  "nativeDisplayNamePlural": "Helpers",
+  "displayNamePlural": "Helpers",
+  "recordIdAttributeName": "primary_key",
+  "attributes": [
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "ID",
+    "name": "primary_key",
+    "isSortable": true,
+    "isDisplayable": true,
+    "isRemovable": false,
+    "columnDataType": "STRING",
+    "tools": {
+     "reports": [],
+     "filters": []
+    },
+    "properties": {}
+   },
+   {
+    "isInReport": true,
+    "formats": [],
+    "truncateTo": 100,
+    "displayName": "helper_id",
+    "name": "helper_id",
+    "isSortable": true,
+    "isDisplayable": false,
+    "isRemovable": true,
+    "columnDataType": "OTHER",
+    "tools": {
+     "reports": [],
+     "filters": []
+    },
+    "properties": {}
+   }
+  ],
+  "primaryKeyColumnRefs": [
+   "helper_id"
+  ],
+  "properties": {}
+ }
+}

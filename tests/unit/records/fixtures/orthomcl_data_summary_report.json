@@ -1,0 +1,171 @@
+{
+ "provenance": {
+  "site": "orthomcl",
+  "method": "POST",
+  "url": "https://qa.orthomcl.org/orthomcl.qa/service/record-types/helper/searches/ByDefault/reports/standard",
+  "status": 200,
+  "recorded_at": "2026-11-10",
+  "request_json": {
+   "searchConfig": {
+    "parameters": {}
+   },
+   "reportConfig": {
+    "attributes": [],
+    "tables": [
+     "DataSummary"
+    ],
+    "pagination": {
+     "offset": 0,
+     "numRecords": 5
+    }
+   }
+  },
+  "trimmed": "DataSummary keeps the first 6 of its 857 rows, without resource_url and resource_url_link"
+ },
+ "body": {
+  "records": [
+   {
+    "tables": {
+     "DataSummary": [
+      {
+       "most_recent": "most_recent",
+       "clustered_sequences": "14977",
+       "three_letter_abbrev": "acas",
+       "groups": "7711",
+       "sequences": "14977",
+       "resource_version": "2015-03-19",
+       "root_taxon": "This attribute is just a place holder, the content will be determined in jsp",
+       "core_peripheral": "Core",
+       "name": "Acanthamoeba castellanii str. Neff",
+       "ncbi_taxon_id": "1257118",
+       "ncbi_taxon_url_link": {
+        "displayText": "1257118",
+        "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1257118"
+       },
+       "ncbi_taxon_url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1257118",
+       "resource_name": "AmoebaDB"
+      },
+      {
+       "most_recent": "most_recent",
+       "clustered_sequences": "2329",
+       "three_letter_abbrev": "ahos",
+       "groups": "1925",
+       "sequences": "2329",
+       "resource_version": "test",
+       "root_taxon": "This attribute is just a place holder, the content will be determined in jsp",
+       "core_peripheral": "Core",
+       "name": "Acidianus hospitalis W1",
+       "ncbi_taxon_id": "933801",
+       "ncbi_taxon_url_link": {
+        "displayText": "933801",
+        "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=933801"
+       },
+       "ncbi_taxon_url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=933801",
+       "resource_name": "uniprot"
+      },
+      {
+       "most_recent": "most_recent",
+       "clustered_sequences": "3363",
+       "three_letter_abbrev": "acid",
+       "groups": "2631",
+       "sequences": "3363",
+       "resource_version": "test",
+       "root_taxon": "This attribute is just a place holder, the content will be determined in jsp",
+       "core_peripheral": "Core",
+       "name": "Acidobacterium capsulatum ATCC 51196",
+       "ncbi_taxon_id": "240015",
+       "ncbi_taxon_url_link": {
+        "displayText": "240015",
+        "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=240015"
+       },
+       "ncbi_taxon_url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=240015",
+       "resource_name": "uniprot"
+      },
+      {
+       "most_recent": "most_recent",
+       "clustered_sequences": "23441",
+       "three_letter_abbrev": "apis",
+       "groups": "7590",
+       "sequences": "23441",
+       "resource_version": "test",
+       "root_taxon": "This attribute is just a place holder, the content will be determined in jsp",
+       "core_peripheral": "Core",
+       "name": "Acyrthosiphon pisum",
+       "ncbi_taxon_id": "7029",
+       "ncbi_taxon_url_link": {
+        "displayText": "7029",
+        "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=7029"
+       },
+       "ncbi_taxon_url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=7029",
+       "resource_name": "uniprot"
+      },
+      {
+       "most_recent": "most_recent",
+       "clustered_sequences": "14718",
+       "three_letter_abbrev": "aaeg",
+       "groups": "7659",
+       "sequences": "14718",
+       "resource_version": "AaegL5",
+       "root_taxon": "This attribute is just a place holder, the content will be determined in jsp",
+       "core_peripheral": "Core",
+       "name": "Aedes aegypti LVP_AGWG",
+       "ncbi_taxon_id": "9900000001",
+       "ncbi_taxon_url_link": {
+        "displayText": "9900000001",
+        "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=9900000001"
+       },
+       "ncbi_taxon_url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=9900000001",
+       "resource_name": "VectorBase"
+      },
+      {
+       "most_recent": "most_recent",
+       "clustered_sequences": "28638",
+       "three_letter_abbrev": "aalc",
+       "groups": "7852",
+       "sequences": "28638",
+       "resource_version": "2017-02-03",
+       "root_taxon": "This attribute is just a place holder, the content will be determined in jsp",
+       "core_peripheral": "Peripheral",
+       "name": "Aedes albopictus C6/36 cell line",
+       "ncbi_taxon_id": "9900000061",
+       "ncbi_taxon_url_link": {
+        "displayText": "9900000061",
+        "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=9900000061"
+       },
+       "ncbi_taxon_url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=9900000061",
+       "resource_name": "VectorBase"
+      }
+     ]
+    },
+    "displayName": "helper",
+    "recordClassName": "HelperRecordClasses.HelperRecordClass",
+    "attributes": {},
+    "id": [
+     {
+      "name": "helper_id",
+      "value": "helper"
+     }
+    ],
+    "tableErrors": []
+   }
+  ],
+  "meta": {
+   "displayViewTotalCount": 1,
+   "tables": [
+    "DataSummary"
+   ],
+   "pagination": {
+    "offset": 0,
+    "numRecords": 5
+   },
+   "cachePreviouslyExisted": false,
+   "viewTotalCount": 1,
+   "sorting": [],
+   "recordClassName": "helper",
+   "responseCount": 1,
+   "attributes": [],
+   "totalCount": 1,
+   "displayTotalCount": 1
+  }
+ }
+}
