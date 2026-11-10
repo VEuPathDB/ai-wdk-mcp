@@ -189,7 +189,8 @@ class PubmedClient(BaseClient):
                         if m:
                             abstracts_by_pmid[pmid] = strip_tags(m.group(1))
         except httpx.HTTPError as exc:
-            raise ExternalServiceError(_SERVICE, str(exc)) from exc
+            told = str(exc).replace(key, "***") if key else str(exc)
+            raise ExternalServiceError(_SERVICE, told) from exc
 
         items: list[JsonValue] = []
         for pmid in pmids:

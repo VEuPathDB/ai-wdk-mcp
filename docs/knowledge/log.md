@@ -3,7 +3,8 @@
 ## 2026-11-10 - PubMed takes an NCBI key
 
 - The PubMed client sends `RESEARCH_MCP_NCBI_API_KEY` as `api_key` on every E-utilities
-  call when it is set, which raises the NCBI rate limit for the deployment.
+  call when it is set, which raises the NCBI rate limit for the deployment. A failed call's
+  message names the key as `***`.
 
 ## 2026-11-10 - A record that is not a gene is read as a table
 

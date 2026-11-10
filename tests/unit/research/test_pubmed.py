@@ -5,8 +5,10 @@ from __future__ import annotations
 from types import TracebackType
 from typing import ClassVar
 
+import httpx
 import pytest
 from pydantic import JsonValue
+from veupathdb.errors import ExternalServiceError
 
 from veupathdb_mcp.research.literature.clients import pubmed
 from veupathdb_mcp.research.literature.clients.pubmed import PubmedClient
@@ -109,3 +111,29 @@ async def test_no_key_sends_no_key_parameter(monkeypatch: pytest.MonkeyPatch) ->
         ["db", "retmax", "retmode", "term"],
         ["db", "id", "retmode"],
     ]
+
+
+class _RefusingClient(_StubClient):
+    async def get(self, url: str, params: dict[str, str]) -> _StubResponse:
+        request = httpx.Request("GET", url, params=params)
+        httpx.Response(500, request=request).raise_for_status()
+        return _StubResponse({})
+
+
+async def test_a_failed_call_never_names_the_key(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(pubmed.httpx, "AsyncClient", _RefusingClient)
+    monkeypatch.setattr(
+        pubmed,
+        "get_research_settings",
+        lambda: ResearchSettings(ncbi_api_key="secret-ncbi-key"),
+    )
+
+    with pytest.raises(ExternalServiceError) as refused:
+        await PubmedClient().search(
+            "kinase", limit=2, include_abstract=False, abstract_max_chars=200
+        )
+
+    assert "secret-ncbi-key" not in str(refused.value)
+    assert "api_key=***" in str(refused.value)
