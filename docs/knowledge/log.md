@@ -1,5 +1,9 @@
 # Knowledge log
 
+## 2026-11-10 - 0.9.0b6
+
+- Takes veupathdb-py v0.9.0b3, whose new EDA analysis names both versions.
+
 ## 2026-11-10 - PubMed takes an NCBI key
 
 - The PubMed client sends `RESEARCH_MCP_NCBI_API_KEY` as `api_key` on every E-utilities
