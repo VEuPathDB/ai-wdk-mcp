@@ -14,6 +14,8 @@ except the boolean question. `list_searches` keeps the same input-step searches 
 searches that take no input, those outside `InternalQuestions`.
 `browse_search_categories`, the lexical candidates of `search_for_searches` and the
 searches its semantic index injects also leave out the chooser searches (`hideOperation`).
+Every listing but `list_transforms` also offers only the searches the site's ontology names
+([the decision](the-agent-finds-only-the-searches-the-ontology-offers.md)).
 
 The boolean question is the search that takes a secondary input step and declares three
 parameters: the two operands and `bq_operator`, which is what `BooleanQuery.setRecordClass`

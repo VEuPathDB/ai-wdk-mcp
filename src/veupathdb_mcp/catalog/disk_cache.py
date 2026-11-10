@@ -16,7 +16,7 @@ _CACHE_TTL_SECONDS = 7 * 24 * 60 * 60
 
 # The shape of the file two images exchange through the catalogs volume. Raise
 # it whenever a field changes meaning, is added or is dropped.
-SNAPSHOT_FORMAT_VERSION = 3
+SNAPSHOT_FORMAT_VERSION = 4
 
 
 class CatalogSnapshot(BaseModel):
@@ -32,6 +32,7 @@ class CatalogSnapshot(BaseModel):
     search_categories: dict[str, str]
     search_category_labels: dict[str, str] = Field(default_factory=dict)
     available_categories: list[str]
+    offered_searches: list[str] = Field(default_factory=list)
     # Serialized length of this snapshot, the scale of the strings a loaded
     # catalog holds. Excluded from the file it describes.
     payload_bytes: int = Field(default=0, exclude=True)

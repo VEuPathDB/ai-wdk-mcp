@@ -150,8 +150,8 @@ async def test_a_snapshot_without_a_format_is_refused_and_rebuilt(
     assert json.loads(path.read_text())["format_version"] == SNAPSHOT_FORMAT_VERSION
 
 
-def test_the_snapshot_holds_record_tables_from_format_three() -> None:
-    assert SNAPSHOT_FORMAT_VERSION == 3
+def test_the_snapshot_holds_the_offered_searches_from_format_four() -> None:
+    assert SNAPSHOT_FORMAT_VERSION == 4
 
 
 def test_a_snapshot_carries_its_record_tables(tmp_path: Path) -> None:

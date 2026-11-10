@@ -11,12 +11,14 @@ from pathlib import Path
 from typing import cast
 
 import pytest
+from tests._support.offered_catalog import offered_catalog
 from tests._support.recorded_searches import recorded_search
 from tests._support.recordings import TEST_ROOT
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog import searches
+from veupathdb_mcp.catalog.discovery import SearchCatalog
 from veupathdb_mcp.catalog.discovery_service import DiscoveryService
 from veupathdb_mcp.catalog.search_collection import collect_search_candidates
 
@@ -36,12 +38,6 @@ def _boolean() -> WDKSearch:
     return recorded_search("search_boolean_transcript").search_data
 
 
-class _Catalog:
-    def get_search_category(self, search_name: str) -> str | None:
-        del search_name
-        return None
-
-
 class _Discovery:
     def __init__(self, listing: list[WDKSearch]) -> None:
         self._listing = listing
@@ -50,9 +46,9 @@ class _Discovery:
         del site_id, record_type
         return list(self._listing)
 
-    async def get_catalog(self, site_id: str) -> _Catalog:
+    async def get_catalog(self, site_id: str) -> SearchCatalog:
         del site_id
-        return _Catalog()
+        return offered_catalog()
 
 
 def _discovery(listing: list[WDKSearch]) -> DiscoveryService:

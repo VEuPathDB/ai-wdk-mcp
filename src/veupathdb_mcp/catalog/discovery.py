@@ -23,6 +23,7 @@ from veupathdb_mcp.catalog.disk_cache import (
 )
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.search_notes import described
+from veupathdb_mcp.catalog.search_offer import is_listed_search, is_ranked_search
 from veupathdb_mcp.embeddings.column_index import sync_record_columns
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
 from veupathdb_mcp.embeddings.experiment_index import sync_experiments
@@ -81,6 +82,7 @@ class SearchCatalog:
         self._search_categories: dict[str, str] = {}
         self._search_category_labels: dict[str, str] = {}
         self._available_categories: set[str] = set()
+        self._offered_searches: frozenset[str] = frozenset()
         self._payload_bytes = 0
 
     @property
@@ -103,6 +105,7 @@ class SearchCatalog:
         self._search_categories = snapshot.search_categories
         self._search_category_labels = snapshot.search_category_labels
         self._available_categories = set(snapshot.available_categories)
+        self._offered_searches = frozenset(snapshot.offered_searches)
         self._payload_bytes = snapshot.payload_bytes
 
     def _to_snapshot(self) -> CatalogSnapshot:
@@ -114,6 +117,7 @@ class SearchCatalog:
             search_categories=self._search_categories,
             search_category_labels=self._search_category_labels,
             available_categories=sorted(self._available_categories),
+            offered_searches=sorted(self._offered_searches),
         )
 
     # ------------------------------------------------------------------
@@ -138,6 +142,7 @@ class SearchCatalog:
             self._search_categories = onto.search_categories
             self._search_category_labels = onto.search_category_labels
             self._available_categories = onto.available_categories
+            self._offered_searches = onto.offered_searches
 
             self._collect_semantic_index()
             snapshot = self._to_snapshot()
@@ -353,6 +358,15 @@ class SearchCatalog:
         site publishes no such record."""
         card = self._study_card(dataset_id)
         return [] if card is None else list(card.organisms)
+
+    def _offers(self, search: WDKSearch) -> bool:
+        return not self._offered_searches or search.full_name in self._offered_searches
+
+    def lists(self, search: WDKSearch) -> bool:
+        return is_listed_search(search) and self._offers(search)
+
+    def ranks(self, search: WDKSearch) -> bool:
+        return is_ranked_search(search) and self._offers(search)
 
     def get_search_category(self, search_name: str) -> str | None:
         """Get the ontology subcategory for a search, or None if universal."""

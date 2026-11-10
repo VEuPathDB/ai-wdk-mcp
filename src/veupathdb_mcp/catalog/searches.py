@@ -31,8 +31,6 @@ from veupathdb_mcp.catalog.search_collection import (
 from veupathdb_mcp.catalog.search_notes import described
 from veupathdb_mcp.catalog.search_offer import (
     is_boolean_search,
-    is_listed_search,
-    is_ranked_search,
     takes_an_input_step,
 )
 from veupathdb_mcp.catalog.search_picks import decision_picks, with_decision_picks
@@ -122,7 +120,7 @@ async def browse_search_categories(
 
     groups: dict[str, list[str]] = {}
     for s in searches:
-        if not is_ranked_search(s):
+        if not catalog.ranks(s):
             continue
         cat = catalog.get_search_category(s.url_segment) or "(universal)"
         groups.setdefault(cat, []).append(s.display_name or s.url_segment)
@@ -147,10 +145,11 @@ async def list_searches(site_id: str, record_type: str) -> list[dict[str, str]]:
     Only names are returned, because descriptions make the payload large.
     """
     discovery = get_discovery_service()
+    catalog = await discovery.get_catalog(site_id)
     searches = await discovery.get_searches(site_id, record_type)
     result: list[dict[str, str]] = []
     for s in searches:
-        if not is_listed_search(s):
+        if not catalog.lists(s):
             continue
         result.append(
             {

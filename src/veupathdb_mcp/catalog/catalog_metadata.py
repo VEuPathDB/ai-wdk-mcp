@@ -61,17 +61,27 @@ async def load_dataset_metadata(
 class OntologyCategories:
     """Mappings from search name to ontology category and label."""
 
-    __slots__ = ("available_categories", "search_categories", "search_category_labels")
+    __slots__ = (
+        "available_categories",
+        "offered_searches",
+        "search_categories",
+        "search_category_labels",
+    )
 
     def __init__(
         self,
         search_categories: dict[str, str],
         available_categories: set[str],
         search_category_labels: dict[str, str],
+        offered_searches: frozenset[str] = frozenset(),
     ) -> None:
         self.search_categories = search_categories
         self.available_categories = available_categories
         self.search_category_labels = search_category_labels
+        self.offered_searches = offered_searches
+
+
+_OFFERED_SCOPES = frozenset({"webservice", "menu"})
 
 
 class _OntologyNodeProps(CamelModel):
@@ -80,10 +90,21 @@ class _OntologyNodeProps(CamelModel):
     model_config = ConfigDict(extra="ignore")
 
     label: list[str] = Field(default_factory=list)
+    name: list[str] = Field(default_factory=list)
+    target_type: list[str] = Field(default_factory=list)
+    scope: list[str] | None = None
     eu_path_db_alternative_term: list[str] = Field(
         default_factory=list,
         alias="EuPathDB alternative term",
     )
+
+    @property
+    def offered_search(self) -> str | None:
+        if self.target_type != ["search"] or not self.name:
+            return None
+        if self.scope is not None and not _OFFERED_SCOPES.intersection(self.scope):
+            return None
+        return self.name[0]
 
     @property
     def label_str(self) -> str:
@@ -123,6 +144,7 @@ async def load_ontology_categories(
     search_categories: dict[str, str] = {}
     search_category_labels: dict[str, str] = {}
     available_categories: set[str] = set()
+    offered_searches: set[str] = set()
 
     try:
         data = await client.get("/ontologies/Categories")
@@ -136,6 +158,9 @@ async def load_ontology_categories(
         ) -> None:
             label = node.properties.label_str
             display_name = node.properties.display_name
+            offered = node.properties.offered_search
+            if offered is not None:
+                offered_searches.add(offered)
 
             if not node.children and "GeneQuestions" in label:
                 search_name = label.split(".")[-1]
@@ -172,6 +197,7 @@ async def load_ontology_categories(
         search_categories=search_categories,
         available_categories=available_categories,
         search_category_labels=search_category_labels,
+        offered_searches=frozenset(offered_searches),
     )
 
 

@@ -7,12 +7,14 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from tests._support.offered_catalog import offered_catalog
 from tests._support.orthomcl_catalog import orthomcl_record_types
 from tests._support.recorded_searches import site_recorded_search
 from tests._support.recordings import TEST_ROOT
 from veupathdb.wdk import WDKSearch, WDKSearchResponse
 
 from veupathdb_mcp.catalog import universal, universal_searches
+from veupathdb_mcp.catalog.discovery import SearchCatalog
 
 type Listings = dict[str, list[WDKSearch]]
 
@@ -55,6 +57,9 @@ class _HeldCatalog:
 
     async def get_searches(self, _site_id: str, record_type: str) -> list[WDKSearch]:
         return self._listings.get(record_type, [])
+
+    async def get_catalog(self, _site_id: str) -> SearchCatalog:
+        return offered_catalog()
 
     async def get_record_types(self, _site_id: str) -> list[SimpleNamespace]:
         return [SimpleNamespace(url_segment=name) for name in self._listings]

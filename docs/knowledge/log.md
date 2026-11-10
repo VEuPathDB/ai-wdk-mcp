@@ -1,5 +1,12 @@
 # Knowledge log
 
+## 2026-11-10 - 0.9.0b7: the agent finds only the searches the ontology offers
+
+- The listings, the categories and the ranking of `search_for_searches` offer a search only
+  when the site's Categories ontology names it with a scope that is absent or names the
+  webservice or the menu. The catalog snapshot is format 4. See
+  [the decision](decisions/the-agent-finds-only-the-searches-the-ontology-offers.md).
+
 ## 2026-11-10 - 0.9.0b6
 
 - Takes veupathdb-py v0.9.0b3, whose new EDA analysis names both versions.

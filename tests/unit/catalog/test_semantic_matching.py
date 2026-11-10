@@ -18,6 +18,7 @@ from veupathdb_mcp import catalog
 from veupathdb_mcp.catalog import semantic_matching
 from veupathdb_mcp.catalog.discovery_service import DiscoveryService
 from veupathdb_mcp.catalog.models import SearchMatch
+from veupathdb_mcp.catalog.search_offer import is_ranked_search
 from veupathdb_mcp.embeddings.embedder import EmbeddingUnavailableError
 from veupathdb_mcp.embeddings.semantic_index import SemanticSearchIndex
 
@@ -50,6 +51,9 @@ class _FakeCatalog:
 
     def get_semantic_index(self) -> SemanticSearchIndex | None:
         return self._index
+
+    def ranks(self, search: WDKSearch) -> bool:
+        return is_ranked_search(search)
 
     def find_search(self, record_type: str, search_name: str) -> None:
         """No catalog entry, so an injected search is skipped."""

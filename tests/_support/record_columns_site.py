@@ -4,8 +4,10 @@ import json
 from pathlib import Path
 
 import pytest
+from tests._support.offered_catalog import offered_catalog
 from veupathdb.wdk import WDKRecordType, WDKSearch, WDKSearchResponse
 
+from veupathdb_mcp.catalog.discovery import SearchCatalog
 from veupathdb_mcp.records import columns
 
 FIXTURES = Path(__file__).parents[1] / "unit" / "records" / "fixtures"
@@ -27,8 +29,15 @@ def recorded_record_type(name: str) -> WDKRecordType:
 
 
 class _Catalog:
-    def __init__(self, held: dict[str, list[WDKRecordType]]) -> None:
+    def __init__(
+        self, held: dict[str, list[WDKRecordType]], offered: list[str] | None
+    ) -> None:
         self._held = held
+        self._offered = offered
+
+    async def get_catalog(self, site_id: str) -> SearchCatalog:
+        del site_id
+        return offered_catalog(self._offered)
 
     async def get_record_types(self, site_id: str) -> list[WDKRecordType]:
         return self._held.get(site_id, [])
@@ -40,7 +49,9 @@ class _Catalog:
         return []
 
 
-def serve_recorded_records(monkeypatch: pytest.MonkeyPatch) -> None:
+def serve_recorded_records(
+    monkeypatch: pytest.MonkeyPatch, offered: list[str] | None = None
+) -> None:
     held = {
         "veupathdb": [
             recorded_record_type("veupathdb_organism_record_type.json"),
@@ -52,4 +63,6 @@ def serve_recorded_records(monkeypatch: pytest.MonkeyPatch) -> None:
         ],
         "orthomcl": [recorded_record_type("orthomcl_helper_record_type.json")],
     }
-    monkeypatch.setattr(columns, "get_discovery_service", lambda: _Catalog(held))
+    monkeypatch.setattr(
+        columns, "get_discovery_service", lambda: _Catalog(held, offered)
+    )

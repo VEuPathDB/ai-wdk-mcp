@@ -9,8 +9,8 @@ from pydantic import ConfigDict
 from veupathdb.model import CamelModel
 from veupathdb.wdk import WDKRecordType, WDKSearch
 
+from veupathdb_mcp.catalog.discovery import SearchCatalog
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service
-from veupathdb_mcp.catalog.search_offer import is_listed_search
 from veupathdb_mcp.record_fields import (
     GENE_RECORD_TYPES,
     ColumnInfo,
@@ -61,12 +61,14 @@ class RecordColumns(CamelModel):
     searches: list[SearchInfo]
 
 
-def listed_searches(searches: list[WDKSearch]) -> list[SearchInfo]:
+def listed_searches(
+    catalog: SearchCatalog, searches: list[WDKSearch]
+) -> list[SearchInfo]:
     """The searches a researcher can run, by name and display name."""
     return [
         SearchInfo(name=search.url_segment, display_name=search.display_name)
         for search in searches
-        if is_listed_search(search)
+        if catalog.lists(search)
     ]
 
 
@@ -101,11 +103,12 @@ async def record_columns(site_id: str, record_type: str) -> RecordColumns:
     """The columns, tables and searches of one record type of a site."""
     found = await readable_record_type(site_id, record_type)
     searches = await searches_of(site_id, record_type)
+    catalog = await get_discovery_service().get_catalog(site_id)
     return RecordColumns(
         site_id=site_id,
         record_type=record_type,
         display_name=found.display_name or record_type,
         columns=shown_columns(found),
         tables=shown_tables(found),
-        searches=listed_searches(searches),
+        searches=listed_searches(catalog, searches),
     )

@@ -17,7 +17,7 @@ from veupathdb_mcp.tool_meta import (
     Share,
 )
 
-__version__ = "0.9.0b6"
+__version__ = "0.9.0b7"
 
 __all__ = [
     "MAX_CALL_SECONDS_META_KEY",

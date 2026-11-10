@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pytest
+from tests._support.record_columns_site import serve_recorded_records
 
 from veupathdb_mcp.record_fields import ColumnInfo
 from veupathdb_mcp.records import UnreadableRecordError, record_columns
@@ -62,3 +63,13 @@ async def test_a_gene_record_type_is_refused_by_name() -> None:
 async def test_an_unknown_record_type_is_refused_with_the_ones_there_are() -> None:
     with pytest.raises(UnreadableRecordError, match="organism"):
         await record_columns("veupathdb", "organisms")
+
+
+async def test_a_record_type_lists_only_the_searches_the_ontology_offers(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    serve_recorded_records(monkeypatch, offered=["OrganismQuestions.GenomeDataTypes"])
+
+    listed = await record_columns("veupathdb", "organism")
+
+    assert [search.name for search in listed.searches] == ["GenomeDataTypes"]
