@@ -41,6 +41,8 @@ class ResearchSettings(BaseSettings):
     # Semantic Scholar raises the anonymous rate limit for a keyed caller.
     s2_api_key: str = Field(default="", repr=False)
 
+    ncbi_api_key: str = Field(default="", repr=False)
+
     # A SearXNG instance this deployment runs answers web searches first. It
     # is asked at its JSON search endpoint; empty means no instance.
     searxng_url: str = ""

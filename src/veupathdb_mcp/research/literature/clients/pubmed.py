@@ -25,6 +25,7 @@ from veupathdb_mcp.research.literature.papers import (
     PubMedRawArticle,
     _PubMedSummaryAuthor,
 )
+from veupathdb_mcp.research.settings import get_research_settings
 from veupathdb_mcp.research.text import strip_tags, truncate_text
 
 logger = get_logger(__name__)
@@ -128,6 +129,8 @@ class PubmedClient(BaseClient):
         self, query: str, *, limit: int, include_abstract: bool
     ) -> list[JsonValue]:
         """esearch + esummary (+ optional efetch) -> list of flat per-PMID dicts."""
+        key = get_research_settings().ncbi_api_key
+        keyed = {"api_key": key} if key else {}
         try:
             async with httpx.AsyncClient(
                 timeout=self._timeout, headers={"User-Agent": API_USER_AGENT}
@@ -139,6 +142,7 @@ class PubmedClient(BaseClient):
                         "term": query,
                         "retmax": str(limit),
                         "retmode": "json",
+                        **keyed,
                     },
                 )
                 esearch.raise_for_status()
@@ -151,7 +155,12 @@ class PubmedClient(BaseClient):
 
                 esummary = await client.get(
                     "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi",
-                    params={"db": "pubmed", "id": ",".join(pmids), "retmode": "json"},
+                    params={
+                        "db": "pubmed",
+                        "id": ",".join(pmids),
+                        "retmode": "json",
+                        **keyed,
+                    },
                 )
                 esummary.raise_for_status()
                 sum_resp = _ESummaryResponse.model_validate(
@@ -166,6 +175,7 @@ class PubmedClient(BaseClient):
                             "db": "pubmed",
                             "id": ",".join(pmids),
                             "retmode": "xml",
+                            **keyed,
                         },
                     )
                     efetch.raise_for_status()

@@ -284,6 +284,7 @@ server itself as the authority.
 | `RESEARCH_MCP_TIMEOUT_SECONDS` | one outbound call's budget (default 15) |
 | `RESEARCH_MCP_MAX_RETRIES` | how many times a client repeats a rate-limited call (default 3) |
 | `RESEARCH_MCP_S2_API_KEY` | raises the Semantic Scholar rate limit for a keyed caller |
+| `RESEARCH_MCP_NCBI_API_KEY` | raises the NCBI E-utilities (PubMed) rate limit for a keyed caller |
 | `RESEARCH_MCP_CROSSREF_MAILTO` | a mailbox Crossref reads out of the User-Agent, which routes the call to its polite pool; empty keeps the anonymous pool |
 
 ## The names this server writes into a WDK account
