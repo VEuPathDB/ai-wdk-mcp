@@ -1,5 +1,9 @@
 # Knowledge log
 
+## 2026-11-12 - 0.9.0b8
+
+- Takes veupathdb-py v0.9.0b4, whose organism scope of a combine folds both inputs.
+
 ## 2026-11-10 - 0.9.0b7: the agent finds only the searches the ontology offers
 
 - The listings, the categories and the ranking of `search_for_searches` offer a search only
