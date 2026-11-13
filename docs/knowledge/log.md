@@ -1,5 +1,9 @@
 # Knowledge log
 
+## 2026-11-13 - 0.9.0b9
+
+- Takes veupathdb-py v0.9.0b5, which still recognises a helper strategy under a prefix the deployment wrote before.
+
 ## 2026-11-12 - 0.9.0b8
 
 - Takes veupathdb-py v0.9.0b4, whose organism scope of a combine folds both inputs.
