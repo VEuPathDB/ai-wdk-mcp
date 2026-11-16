@@ -23,17 +23,17 @@ async def test_the_default_name_names_no_product(wdk: FakeStrategyAPI) -> None:
     )
 
     assert wdk.strategy_names == [DEFAULT_ENRICHMENT_STRATEGY_NAME]
-    assert "pathfinder" not in DEFAULT_ENRICHMENT_STRATEGY_NAME.lower()
+    assert "strategist" not in DEFAULT_ENRICHMENT_STRATEGY_NAME.lower()
 
 
 async def test_the_caller_names_the_strategy(wdk: FakeStrategyAPI) -> None:
     wdk.rows["go-enrichment"] = [GO_ROW]
 
-    await EnrichmentService(strategy_name="Pathfinder enrichment analysis").run_batch(
+    await EnrichmentService(strategy_name="Strategist enrichment analysis").run_batch(
         site_id="plasmodb",
         analysis_types=["go_function"],
         search_name="GeneByLocusTag",
         parameters={},
     )
 
-    assert wdk.strategy_names == ["Pathfinder enrichment analysis"]
+    assert wdk.strategy_names == ["Strategist enrichment analysis"]

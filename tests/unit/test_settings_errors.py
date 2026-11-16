@@ -31,8 +31,8 @@ def test_a_postgres_error_does_not_echo_the_password(
 ) -> None:
     monkeypatch.delenv("DATABASE_URL", raising=False)
     monkeypatch.delenv("POSTGRES_HOST", raising=False)
-    monkeypatch.setenv("POSTGRES_USER", "pathfinder")
-    monkeypatch.setenv("POSTGRES_DB", "pathfinder")
+    monkeypatch.setenv("POSTGRES_USER", "strategist")
+    monkeypatch.setenv("POSTGRES_DB", "strategist")
     monkeypatch.setenv("POSTGRES_PASSWORD", _GIVEN)
 
     with pytest.raises(ValidationError, match="POSTGRES_HOST is not set") as error:

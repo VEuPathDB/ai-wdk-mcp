@@ -308,10 +308,10 @@ class TestAPlanWithACombineUsesATemporaryStrategy:
         self, api: _FakeStrategyAPI
     ) -> None:
         await compute_plan_step_counts(
-            _combine_plan(), "plasmodb", strategy_name="Pathfinder step counts"
+            _combine_plan(), "plasmodb", strategy_name="Strategist step counts"
         )
 
-        assert api.created_strategy_names == ["Pathfinder step counts"]
+        assert api.created_strategy_names == ["Strategist step counts"]
 
     async def test_the_default_name_names_no_product(
         self, api: _FakeStrategyAPI
@@ -319,7 +319,7 @@ class TestAPlanWithACombineUsesATemporaryStrategy:
         await compute_plan_step_counts(_combine_plan(), "plasmodb")
 
         assert api.created_strategy_names == [DEFAULT_PLAN_COUNTS_STRATEGY_NAME]
-        assert "pathfinder" not in DEFAULT_PLAN_COUNTS_STRATEGY_NAME.lower()
+        assert "strategist" not in DEFAULT_PLAN_COUNTS_STRATEGY_NAME.lower()
 
     async def test_a_step_wdk_refused_leaves_every_count_unknown(
         self, monkeypatch: pytest.MonkeyPatch

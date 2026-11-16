@@ -82,7 +82,7 @@ class TestServiceTokenRegistry:
         )
 
         assert registry.secret_for("gene-page") == OTHER_SECRET
-        assert registry.secret_for("pathfinder") is None
+        assert registry.secret_for("strategist") is None
 
 
 @pytest.mark.parametrize(

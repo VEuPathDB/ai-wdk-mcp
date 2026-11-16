@@ -62,8 +62,8 @@ def test_a_variable_named_after_one_host_is_not_read(
     """Each setting answers to one name, and that name states no application."""
     monkeypatch.delenv("WDK_MCP_BASE_URL", raising=False)
     monkeypatch.delenv("WDK_MCP_SERVICE_TOKENS", raising=False)
-    monkeypatch.setenv("PATHFINDER_MCP_BASE_URL", "https://wdk-mcp.test")
-    monkeypatch.setenv("PATHFINDER_MCP_SERVICE_TOKENS", f"gene-page:{SECRET}")
+    monkeypatch.setenv("STRATEGIST_MCP_BASE_URL", "https://wdk-mcp.test")
+    monkeypatch.setenv("STRATEGIST_MCP_SERVICE_TOKENS", f"gene-page:{SECRET}")
 
     settings = McpSettings()
 

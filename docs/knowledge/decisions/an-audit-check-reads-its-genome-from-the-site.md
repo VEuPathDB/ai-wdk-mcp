@@ -232,7 +232,7 @@ expression summary read the gene record type once per site in a process
 reads its tables and the summary its key columns. The anatomy, the intron check and
 `gene_model` read a gene's `GeneModelDump` record through one parser (`model_record`).
 
-Of the readers no served check calls, `rate_with_bounds` is kept for PathFinder's audit
+Of the readers no served check calls, `rate_with_bounds` is kept for Strategist's audit
 pass, which states a rate over the calls a later check confirms; the region reader and
 `covered` (the peptides over a residue span) had no planned consumer and are gone.
 

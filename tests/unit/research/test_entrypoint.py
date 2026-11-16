@@ -24,7 +24,7 @@ SERVICE_SECRET = "research-mcp-service-secret-0123456789ab"
 @pytest.fixture
 def research_deployment(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     monkeypatch.setenv("RESEARCH_MCP_BASE_URL", BASE_URL)
-    monkeypatch.setenv("RESEARCH_MCP_SERVICE_TOKENS", f"pathfinder:{SERVICE_SECRET}")
+    monkeypatch.setenv("RESEARCH_MCP_SERVICE_TOKENS", f"strategist:{SERVICE_SECRET}")
     return
 
 

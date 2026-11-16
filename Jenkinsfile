@@ -8,7 +8,7 @@ node('podbuild') {
 
   builder.gitClone()
   builder.buildContainers([
-    [ name: 'pathfinder-wdk-mcp' ],
-    [ name: 'pathfinder-research-mcp', dockerfile: 'Dockerfile.research' ]
+    [ name: 'wdk-mcp' ],
+    [ name: 'research-mcp', dockerfile: 'Dockerfile.research' ]
   ])
 }

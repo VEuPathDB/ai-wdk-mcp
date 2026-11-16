@@ -73,8 +73,8 @@ class TestCleanupMatchesTheNameTheRunWrote:
 
         await cleanup_internal_control_test_strategies(
             api,
-            [_internal(12, "Pathfinder control test")],
-            _config(internal_strategy_name="Pathfinder control test"),
+            [_internal(12, "Strategist control test")],
+            _config(internal_strategy_name="Strategist control test"),
         )
 
         assert api.deleted == [12]
@@ -84,7 +84,7 @@ class TestCleanupMatchesTheNameTheRunWrote:
 
         await cleanup_internal_control_test_strategies(
             api,
-            [_internal(13, "Pathfinder control test")],
+            [_internal(13, "Strategist control test")],
             _config(),
         )
 
@@ -120,17 +120,17 @@ class TestTheRunWritesTheNameItWasGiven:
         self, run_api: RunFakeAPI
     ) -> None:
         await run_positive_negative_controls(
-            _config(internal_strategy_name="Pathfinder control test"),
+            _config(internal_strategy_name="Strategist control test"),
             positive_controls=["PF3D7_0100100"],
         )
 
         [written] = run_api.created_strategy_names
-        assert written.startswith("Pathfinder control test ")
+        assert written.startswith("Strategist control test ")
 
 
 class TestOneConfigWritesAndMatches:
     @pytest.mark.parametrize(
-        "name", [DEFAULT_CONTROL_TEST_STRATEGY_NAME, "Pathfinder control test"]
+        "name", [DEFAULT_CONTROL_TEST_STRATEGY_NAME, "Strategist control test"]
     )
     async def test_a_run_s_leftover_is_matched_by_the_same_config(
         self, run_api: RunFakeAPI, name: str

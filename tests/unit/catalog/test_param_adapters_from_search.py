@@ -83,7 +83,7 @@ class TestWdkParam011HiddenIsPresentationOnly:
 
         assert sorted(specs) == sorted(search.param_names)
 
-    def test_wdk_param_011_a_client_must_supply_it_so_pathfinder_fills_it(self) -> None:
+    def test_wdk_param_011_a_client_must_supply_it_so_strategist_fills_it(self) -> None:
         specs = adapt_param_specs_from_search(
             _search("search_with_a_hidden_required_parameter")
         )

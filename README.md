@@ -415,8 +415,8 @@ last stage of a file does not build on the install stage, or when it serves anot
 module.
 
 `Jenkinsfile` publishes both to Docker Hub, the WDK server as
-`veupathdb/pathfinder-wdk-mcp` and the research server as
-`veupathdb/pathfinder-research-mcp`. A push to `main` publishes `latest`. A release
+`veupathdb/wdk-mcp` and the research server as
+`veupathdb/research-mcp`. A push to `main` publishes `latest`. A release
 tag publishes its version, and the builder reads a tag only in its semver spelling:
 `v`, then the version with a hyphen before a pre-release. Version `0.2.0b5` is tagged
 `v0.2.0-b5` and publishes `0.2.0-b5`; version `0.2.0` is tagged `v0.2.0` and
@@ -426,7 +426,7 @@ publishes no image. `__version__` keeps its PEP 440 spelling, because PEP 440 re
 tag.
 
 `tests/unit/test_package_boundary.py` is the isolation proof: no module reaches
-`pathfinder`, `assistant_core`, `pydantic_ai`, `langgraph` or `fastapi`, and
+`strategist`, `assistant_core`, `pydantic_ai`, `langgraph` or `fastapi`, and
 `uv sync --frozen` in this folder is what makes that an installation fact rather
 than a lint rule.
 

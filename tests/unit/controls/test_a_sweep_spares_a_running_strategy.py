@@ -34,7 +34,7 @@ ACCOUNT = [
     _internal(2, "control test 0be311", wdk_time(timedelta(days=3))),
     _internal(3, "control test 9d4e70", ""),
     _internal(4, "control test 77aa01", "yesterday"),
-    _internal(5, "Pathfinder gene set 1", wdk_time(timedelta(days=3))),
+    _internal(5, "Strategist gene set 1", wdk_time(timedelta(days=3))),
     WDKStrategySummary(
         strategy_id=6,
         name="control test",

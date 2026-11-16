@@ -20,10 +20,10 @@ def _clean_environment(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def _postgres(monkeypatch: pytest.MonkeyPatch, value: str = "s3cret") -> None:
-    monkeypatch.setenv("POSTGRES_HOST", "pathfinder-db")
-    monkeypatch.setenv("POSTGRES_USER", "pathfinder")
+    monkeypatch.setenv("POSTGRES_HOST", "strategist-db")
+    monkeypatch.setenv("POSTGRES_USER", "strategist")
     monkeypatch.setenv("POSTGRES_PASSWORD", value)
-    monkeypatch.setenv("POSTGRES_DB", "pathfinder")
+    monkeypatch.setenv("POSTGRES_DB", "strategist")
 
 
 def test_the_postgres_settings_build_the_address(
@@ -32,7 +32,7 @@ def test_the_postgres_settings_build_the_address(
     _postgres(monkeypatch)
 
     assert EmbeddingSettings().database_url == (
-        "postgresql+asyncpg://pathfinder:s3cret@pathfinder-db:5432/pathfinder"
+        "postgresql+asyncpg://strategist:s3cret@strategist-db:5432/strategist"
     )
 
 
@@ -43,7 +43,7 @@ def test_a_password_with_reserved_characters_is_escaped(
     monkeypatch.setenv("POSTGRES_PORT", "6543")
 
     assert EmbeddingSettings().database_url == (
-        "postgresql+asyncpg://pathfinder:p%40ss%3Aw%2Frd%231@pathfinder-db:6543/pathfinder"
+        "postgresql+asyncpg://strategist:p%40ss%3Aw%2Frd%231@strategist-db:6543/strategist"
     )
 
 

@@ -244,7 +244,7 @@ async def test_a_refusal_names_the_mode_and_never_the_credential(
 def test_the_credential_never_prints_its_token() -> None:
     credential = McpCredential(
         token=USER_TOKEN,
-        client_id="pathfinder",
+        client_id="strategist",
         scopes=[],
         mode=CredentialMode.VEUPATHDB_USER,
     )

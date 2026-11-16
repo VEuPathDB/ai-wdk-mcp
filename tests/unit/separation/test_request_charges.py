@@ -156,7 +156,7 @@ async def _one_run() -> None:
         positives=positives,
         negatives=negatives,
         dataset=dataset,
-        strategy_name="PathFinder control separation",
+        strategy_name="Strategist control separation",
     )
     budget = WdkCallBudget(limit=1000)
     await measure_candidates(

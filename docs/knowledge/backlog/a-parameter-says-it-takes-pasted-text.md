@@ -9,13 +9,13 @@ status: draft
 # What is wrong
 
 WDK marks a string parameter that takes pasted text (a BLAST query sequence) with
-`isMultiLine`. `veupathdb_mcp.ParameterInfo` does not carry it, so PathFinder reads the raw
+`isMultiLine`. `veupathdb_mcp.ParameterInfo` does not carry it, so Strategist reads the raw
 `WDKSearch` definition to know a slot takes pasted text and no readings.
 
 # What changes
 
 `ParameterInfo` gains `multi_line: bool` from `isMultiLine`, published on the catalog surface
-and in the served parameter payloads; PathFinder then reads it from the catalog.
+and in the served parameter payloads; Strategist then reads it from the catalog.
 
 # How it is checked
 

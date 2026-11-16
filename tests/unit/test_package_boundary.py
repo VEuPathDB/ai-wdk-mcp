@@ -1,6 +1,6 @@
 """The boundary is an installation fact; this suite is the belt.
 
-The package declares no dependency on ``pathfinder``, ``assistant-core`` or an
+The package declares no dependency on ``strategist``, ``assistant-core`` or an
 agent framework, so those imports cannot resolve in this environment. The walk
 below fails on the import statement instead, and names the module that added it.
 """
@@ -21,7 +21,7 @@ import veupathdb_mcp
 SERVER = veupathdb_mcp.__name__
 
 FORBIDDEN_ROOTS = {
-    "pathfinder",
+    "strategist",
     "assistant_core",
     "pydantic_ai",
     "langgraph",
@@ -117,7 +117,7 @@ def test_no_module_names_a_consuming_application() -> None:
     offenders = [
         module.__name__
         for module in _server_modules()
-        if "pathfinder" in Path(str(module.__file__)).read_text().lower()
+        if "strategist" in Path(str(module.__file__)).read_text().lower()
     ]
 
     assert offenders == []

@@ -134,10 +134,10 @@ class TestTheStepIsHeldByAnInternalStrategy:
         await frozen_step_id(
             "plasmodb",
             [GENE_A],
-            strategy_name="Pathfinder gene set",
+            strategy_name="Strategist gene set",
         )
 
-        assert api.created_strategy_names == ["Pathfinder gene set"]
+        assert api.created_strategy_names == ["Strategist gene set"]
 
     async def test_the_default_name_names_no_product(
         self, api: _FakeStrategyAPI
@@ -145,7 +145,7 @@ class TestTheStepIsHeldByAnInternalStrategy:
         await frozen_step_id("plasmodb", [GENE_A])
 
         assert api.created_strategy_names == [DEFAULT_GENE_SET_STRATEGY_NAME]
-        assert "pathfinder" not in DEFAULT_GENE_SET_STRATEGY_NAME.lower()
+        assert "strategist" not in DEFAULT_GENE_SET_STRATEGY_NAME.lower()
 
     async def test_the_same_caller_twice_reuses_the_step(
         self, api: _FakeStrategyAPI

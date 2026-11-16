@@ -39,10 +39,10 @@ def test_the_wdk_service_tokens_do_not_admit_a_research_call(
 def test_a_configured_application_is_named_by_its_secret(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setenv("RESEARCH_MCP_SERVICE_TOKENS", f"pathfinder:{SECRET}")
+    monkeypatch.setenv("RESEARCH_MCP_SERVICE_TOKENS", f"strategist:{SECRET}")
 
     assert ResearchSettings().research_service_tokens.application_for(SECRET) == (
-        "pathfinder"
+        "strategist"
     )
 
 
