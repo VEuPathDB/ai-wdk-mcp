@@ -414,16 +414,10 @@ the one lock and the research image carries dependencies it never imports.
 last stage of a file does not build on the install stage, or when it serves another
 module.
 
-`Jenkinsfile` publishes both to Docker Hub, the WDK server as
-`veupathdb/wdk-mcp` and the research server as
-`veupathdb/research-mcp`. A push to `main` publishes `latest`. A release
-tag publishes its version, and the builder reads a tag only in its semver spelling:
-`v`, then the version with a hyphen before a pre-release. Version `0.2.0b5` is tagged
-`v0.2.0-b5` and publishes `0.2.0-b5`; version `0.2.0` is tagged `v0.2.0` and
-publishes `0.2.0`, `0.2` and `0`. A tag in the PEP 440 spelling (`v0.2.0b5`)
-publishes no image. `__version__` keeps its PEP 440 spelling, because PEP 440 reads
-`0.2.0-b5` as `0.2.0b5`, and a host that pins this repository by tag names the semver
-tag.
+No image is published. A host builds one from a release tag, which keeps its semver
+spelling: `v`, then the version with a hyphen before a pre-release. Version `0.2.0b5`
+is tagged `v0.2.0-b5`. `__version__` keeps its PEP 440 spelling, because PEP 440
+reads `0.2.0-b5` as `0.2.0b5`.
 
 `tests/unit/test_package_boundary.py` is the isolation proof: no module reaches
 `strategist`, `assistant_core`, `pydantic_ai`, `langgraph` or `fastapi`, and
