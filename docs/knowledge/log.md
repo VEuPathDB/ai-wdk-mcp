@@ -1,5 +1,48 @@
 # Knowledge log
 
+## 2026-11-21 - 0.9.0b13: a value is read by its parameter
+
+- A caller states each value in the shape its parameter declares. `ParameterInfo` and
+  `ParamOverviewEntry` carry `stated_schema`, the JSON Schema of that shape, read from the
+  declaration. `value_format` is gone.
+- The served tools take `dict[str, JsonValue]`: `resolve_search_parameters.overrides`,
+  `validate_search_parameters.parameter_values` and
+  `get_parameter_options.context_values`. A value is a native JSON value. The typed
+  wrapper (`{"type": ..., "value": ...}`), the filter shorthand (`<=<n>`, `<lo>..<hi>`,
+  `term=value`) and a name that is not a parameter of the search are refused.
+- One reader, `read_under_parents`, reads each stated value under the declarations its
+  stated and site-set parents give, and refuses a filter value as the walk does (below)
+  through the `FilterReads` it takes. `read_stated_parameters` serves it for one search,
+  so every served read refuses the same values. `read_declared` reads values against a
+  fixed form with no site read; `encode_named_param_value` reads an analysis form
+  through it and is synchronous again. `ParamFetcher` returns the declarations.
+  `resolve_params_with_intent` takes `stated: Mapping[str, JsonValue]` and a
+  `filter_reads: FilterReads`.
+  `UnreadableValueError`, `param_value_from_raw`, `coerce_context_values` and
+  `encode_param_value` are gone.
+- A filter value is a list of `{field, value, includeUnknown}` statements. Each one binds
+  to the facet it names exactly. A statement that names no facet is refused with the facet
+  list. `FilterFacet` replaces `FilterFieldInfo`, and `filter_fields_note` says when the
+  shown facets are cut.
+- A bound range clause is read from the facet's ontology term summary under the bound
+  parents and the other clauses of the value. A range that selects nothing is refused
+  with the facet's range and units (`EmptyRangeError`). A value that selects fewer
+  records than the parameter's `minSelectedCount` is refused (`TooFewSelectedError`); a
+  count the site does not know passes. The ranges are cached on the site catalog, at most
+  512 of them.
+- `read_parameter_options` takes the context as read `ParamValue`s. With a query, it reads
+  the ranges of up to three matched range facets and shows them first.
+- New on the catalog surface: `EmptyRangeError`, `FilterReads`, `TooFewSelectedError`,
+  `WDKFilterReads`, `read_declared`, `read_stated_parameters` and `read_under_parents`.
+- What a host does to take this release: take the client at `v0.9.0b8`; send native values
+  where it sent the wrapper or a filter shorthand; pass `stated` and
+  `filter_reads=WDKFilterReads(site_id, record_type, search_name)` to
+  `resolve_params_with_intent` and the same reads to `read_under_parents`; read
+  `stated_schema` in place of `value_format` and `FilterFacet` in place of
+  `FilterFieldInfo`; call `encode_named_param_value` without `await`; and catch
+  `StatedValuesError`, `EmptyRangeError` and `TooFewSelectedError` in place of
+  `UnreadableValueError`.
+
 ## 2026-11-21 - 0.9.0b12: a site-set refusal names the search
 
 - `resolve_params_with_intent` takes a required `search_name`. Every
