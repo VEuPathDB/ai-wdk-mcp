@@ -49,8 +49,9 @@ and `veupathdb_mcp.tool_payloads` flattens that into `ControlOutcome` for a host
 that renders one row. The vocabulary a WDK parameter offers and the defaults a
 form states are `veupathdb_mcp.wdk.params`, read by the parent package rather
 than by way of a subpackage. What a value looks like on the wire is not decided
-here: `encode_param_value` asks the client's codec for the kind the parameter
-declares, so this distribution and the client never disagree about one value.
+here: `read_param_values` reads each stated value with the client's read for
+the kind the parameter declares, so this distribution and the client never
+disagree about one value.
 
 The root package holds what both servers share, and nothing else: the research
 process imports it and carries neither a WDK account, a WDK catalog nor a

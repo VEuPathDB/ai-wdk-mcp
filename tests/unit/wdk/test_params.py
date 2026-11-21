@@ -4,16 +4,13 @@ import pytest
 from pydantic import TypeAdapter
 from veupathdb.domain.parameters import (
     FAKE_ALL_SENTINEL,
+    StatedValuesError,
     WDKTreeBoxVocabNode,
     WDKVocabNodeData,
 )
 from veupathdb.wdk import WDKEnumParam, WDKNumberParam, WDKParameter, WDKStringParam
 
-from veupathdb_mcp.wdk import (
-    encode_param_value,
-    extract_default_params,
-    extract_vocab_values,
-)
+from veupathdb_mcp.wdk import extract_default_params, extract_vocab_values
 from veupathdb_mcp.wdk.params import encode_named_param_value
 
 
@@ -69,8 +66,8 @@ class TestTheFormDefaultsAreCarriedBack:
         assert "organism" not in extract_default_params(form)
 
 
-class TestTheWireFormIsTheClientsCodec:
-    """One codec states every wire form. A single pick is the bare term."""
+class TestTheWireFormIsTheStatedRead:
+    """A single pick is the bare term, and a multi pick a JSON array."""
 
     def test_a_single_pick_value_is_the_bare_term(self) -> None:
         param = WDKEnumParam(
@@ -79,7 +76,9 @@ class TestTheWireFormIsTheClientsCodec:
             type="single-pick-vocabulary",
         )
 
-        assert encode_param_value(param, "Molecular Function") == "Molecular Function"
+        assert encode_named_param_value(
+            [param], "goAssociationsOntologies", "Molecular Function"
+        ) == ("Molecular Function")
 
     def test_a_multi_pick_value_is_a_json_array(self) -> None:
         param = WDKEnumParam(
@@ -88,14 +87,9 @@ class TestTheWireFormIsTheClientsCodec:
             type="multi-pick-vocabulary",
         )
 
-        assert encode_param_value(param, ["Computed", "Curated"]) == (
-            '["Computed", "Curated"]'
-        )
-
-    def test_a_number_keeps_the_value_the_caller_named(self) -> None:
-        param = WDKNumberParam(name="pValueCutoff", display_name="P-value")
-
-        assert encode_param_value(param, "0.05") == "0.05"
+        assert encode_named_param_value(
+            [param], "goEvidenceCodes", ["Computed", "Curated"]
+        ) == ('["Computed", "Curated"]')
 
 
 class TestTheVocabularyAParamOffers:
@@ -177,27 +171,30 @@ class TestTheVocabularyAParamOffers:
 class TestANamedValueTakesTheKindItsFormDeclares:
     """An analysis request puts each supplied value on the wire through the form."""
 
-    def test_a_number_takes_its_canonical_form(self) -> None:
-        assert encode_named_param_value(_form(), "pValueCutoff", "1.0") == "1"
+    def test_a_number_takes_its_shortest_decimal(self) -> None:
+        assert encode_named_param_value(_form(), "pValueCutoff", 1.0) == "1"
 
-    def test_a_range_handed_over_as_a_wire_string_takes_its_canonical_form(
-        self,
-    ) -> None:
+    def test_a_number_written_as_text_is_refused(self) -> None:
+        with pytest.raises(StatedValuesError, match="pValueCutoff"):
+            encode_named_param_value(_form(), "pValueCutoff", "1.0")
+
+    def test_a_range_is_read_from_its_object(self) -> None:
         span = TypeAdapter(WDKParameter).validate_python(
             {"name": "span", "type": "number-range", "displayName": "Span"}
         )
 
-        assert encode_named_param_value(
-            [span], "span", '{"min": "2", "max": "4"}'
-        ) == encode_named_param_value([span], "span", {"min": 2, "max": 4})
+        assert encode_named_param_value([span], "span", {"min": 2, "max": 4}) == (
+            '{"min": 2.0, "max": 4.0}'
+        )
 
-    def test_a_range_handed_over_as_other_text_is_refused(self) -> None:
+    @pytest.mark.parametrize("stated", ["2-4", '{"min": "2", "max": "4"}'])
+    def test_a_range_written_as_text_is_refused(self, stated: str) -> None:
         span = TypeAdapter(WDKParameter).validate_python(
             {"name": "span", "type": "number-range", "displayName": "Span"}
         )
 
-        with pytest.raises(ValueError, match="number-range"):
-            encode_named_param_value([span], "span", "2-4")
+        with pytest.raises(StatedValuesError, match="span"):
+            encode_named_param_value([span], "span", stated)
 
     def test_a_name_the_form_does_not_carry_stands_as_written(self) -> None:
         assert encode_named_param_value(_form(), "goSubset", "No") == "No"

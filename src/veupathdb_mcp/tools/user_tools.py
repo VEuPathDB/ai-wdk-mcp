@@ -5,14 +5,13 @@ from __future__ import annotations
 from typing import Annotated, Literal
 
 from fastmcp.exceptions import ToolError
-from pydantic import Field
-from veupathdb.domain.parameters import ParamValue
+from pydantic import Field, JsonValue
 from veupathdb.domain.strategy import StrategyAst
 from veupathdb.errors import ValidationError, VEuPathDBError
 from veupathdb.wdk import WDKAnswer, get_strategy_api
 
 from veupathdb_mcp.audit import RECORD_READS_PER_CALL
-from veupathdb_mcp.catalog import NoGeneRecordsError
+from veupathdb_mcp.catalog import NoGeneRecordsError, read_stated_parameters
 from veupathdb_mcp.controls.control_tests import (
     run_positive_negative_controls,
     run_step_control_tests,
@@ -226,7 +225,7 @@ async def get_step_download_url(
 async def run_control_tests_on_search(
     site_id: str,
     target_search_name: str,
-    target_parameters: dict[str, ParamValue],
+    target_parameters: dict[str, JsonValue],
     positive_controls: list[str] | None = None,
     negative_controls: list[str] | None = None,
     record_type: str = "transcript",
@@ -240,7 +239,8 @@ async def run_control_tests_on_search(
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
         target_search_name: WDK search urlSegment to test.
-        target_parameters: Parameter values, each in its typed shape.
+        target_parameters: Values stated by name in the shape each parameter's
+            statedSchema gives.
         positive_controls: Gene ids the search should return.
         negative_controls: Gene ids the search should not return.
         record_type: Record type. Gene searches are 'transcript'.
@@ -249,11 +249,17 @@ async def run_control_tests_on_search(
     negatives = normalize_gene_ids(negative_controls or [])
     if not positives and not negatives:
         raise ToolError(_NO_CONTROL_GENE)
+    try:
+        parameters = await read_stated_parameters(
+            site_id, target_search_name, target_parameters, record_type=record_type
+        )
+    except VEuPathDBError as exc:
+        raise ToolError(exc.detail or exc.title) from exc
     config = IntersectionConfig(
         site_id=site_id,
         record_type=record_type,
         target_search_name=target_search_name,
-        target_parameters=dict(target_parameters),
+        target_parameters=parameters,
         controls_search_name="GeneByLocusTag",
         controls_param_name="ds_gene_ids",
         controls_value_format="newline",

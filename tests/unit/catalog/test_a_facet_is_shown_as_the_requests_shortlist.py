@@ -17,6 +17,7 @@ from veupathdb_mcp.catalog import (
     format_param_info_typed,
     read_parameter_options,
     search_inspection,
+    searches,
 )
 from veupathdb_mcp.catalog.shortlist import TOP_K
 
@@ -79,6 +80,7 @@ async def test_a_read_with_a_query_shows_the_facet_values_it_names(
     client = MagicMock()
     client.get_search_details = AsyncMock(return_value=response)
     client.get_search_details_with_params = AsyncMock(return_value=response)
+    monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
     monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
 
     read = await read_parameter_options(
@@ -87,7 +89,7 @@ async def test_a_read_with_a_query_shows_the_facet_values_it_names(
         "variation_sample_meta",
         record_type="transcript",
         context_values={
-            "organismSinglePick": "Plasmodium falciparum 3D7",
+            "organismSinglePick": ["Plasmodium falciparum 3D7"],
             "eda_sample_table_suffix": "s3be28bbe14_sample",
         },
         narrowing=VocabNarrowing(query="UGK_661.1"),

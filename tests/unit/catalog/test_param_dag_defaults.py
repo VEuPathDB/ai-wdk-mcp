@@ -10,16 +10,17 @@ from __future__ import annotations
 import json
 
 import pytest
+from pydantic import JsonValue
 from veupathdb.domain.parameters import (
     MultiPickValue,
     SinglePickValue,
+    StatedValuesError,
     StringValue,
     VocabOption,
     to_wire,
 )
 
 from veupathdb_mcp.catalog.param_dag import (
-    OverrideMap,
     ParameterInfo,
     ParamFetcher,
     ResolvedParams,
@@ -27,7 +28,7 @@ from veupathdb_mcp.catalog.param_dag import (
 )
 from veupathdb_mcp.catalog.param_intent import ParamIntent, Provenance
 
-from .conftest import fetcher, param_info, vocab
+from .conftest import declared, fetcher, param_info, vocab
 
 _PCT = "min_expression_percentile"
 _STAGES = vocab("ring", "trophozoite")
@@ -58,13 +59,14 @@ def _text(name: str, default: str = "") -> ParameterInfo:
 
 
 async def _resolve(
-    text: str, *infos: ParameterInfo, overrides: OverrideMap | None = None
+    text: str, *infos: ParameterInfo, stated: dict[str, JsonValue] | None = None
 ) -> ResolvedParams:
     return await resolve_params_with_intent(
         fetch_at=fetcher(*infos),
         search_name="GenesByDefaults",
         intent=ParamIntent(text=text),
-        overrides=overrides,
+        stated=stated or {},
+        definition=declared(*infos),
     )
 
 
@@ -82,7 +84,7 @@ class TestTheWalkDisclosesWhatItDefaulted:
 
     async def test_an_override_binds_as_stated(self) -> None:
         resolved = await _resolve(
-            "", param_info("stage", allowed=_STAGES), overrides={"stage": "trophozoite"}
+            "", param_info("stage", allowed=_STAGES), stated={"stage": "trophozoite"}
         )
 
         assert resolved.provenance["stage"] is Provenance.STATED
@@ -98,7 +100,7 @@ class TestTheWalkDisclosesWhatItDefaulted:
         resolved = await _resolve(
             "anything",
             param_info("stage", allowed=_STAGES),
-            overrides={"stage": "ring"},
+            stated={"stage": "ring"},
         )
 
         assert resolved.defaulted() == []
@@ -149,7 +151,7 @@ class TestAStatedQuantityIsReportedUnread:
 class TestTheStatedValueBinds:
     async def test_passing_the_value_leaves_nothing_unread(self) -> None:
         resolved = await _resolve(
-            "top 10 percent, so percentile 90", _numeric(_PCT), overrides={_PCT: "90"}
+            "top 10 percent, so percentile 90", _numeric(_PCT), stated={_PCT: 90}
         )
 
         assert resolved.unread == []
@@ -254,12 +256,13 @@ def _genes_by_text() -> ParamFetcher:
     )
 
 
-async def _resolve_text(overrides: OverrideMap | None = None) -> ResolvedParams:
+async def _resolve_text(stated: dict[str, JsonValue] | None = None) -> ResolvedParams:
     return await resolve_params_with_intent(
         fetch_at=_genes_by_text(),
         search_name="GenesByDefaults",
         intent=ParamIntent(),
-        overrides=overrides,
+        stated=stated or {},
+        definition=declared(*await _genes_by_text()({})),
     )
 
 
@@ -303,7 +306,9 @@ class TestFreeTextAndFullListDefaults:
         )
 
     async def test_an_explicit_override_still_narrows_the_field_list(self) -> None:
-        fields = (await _resolve_text({"text_fields": "product"})).params["text_fields"]
+        fields = (await _resolve_text({"text_fields": ["product"]})).params[
+            "text_fields"
+        ]
 
         assert isinstance(fields, MultiPickValue)
         assert fields.values == ["product"]
@@ -323,23 +328,19 @@ class TestFreeTextAndFullListDefaults:
 
 
 class TestAListOverrideStaysAList:
-    """A multi-pick override serialized to WDK wire form before the walk reads it
-    matches the vocabulary as ONE option and is then reported invalid."""
+    """A multi-pick value is a list, every element one vocabulary entry."""
 
     @staticmethod
-    async def _resolve_samples(override: str | list[str]) -> MultiPickValue:
-        resolved = await resolve_params_with_intent(
-            fetch_at=fetcher(
-                param_info(
-                    "samples_percentile_generic",
-                    "multi-pick-vocabulary",
-                    display_name="Samples",
-                    leaves=vocab(*_HOURS),
-                )
+    async def _resolve_samples(override: JsonValue) -> MultiPickValue:
+        resolved = await _resolve(
+            "",
+            param_info(
+                "samples_percentile_generic",
+                "multi-pick-vocabulary",
+                display_name="Samples",
+                leaves=vocab(*_HOURS),
             ),
-            search_name="GenesByDefaults",
-            intent=ParamIntent(),
-            overrides={"samples_percentile_generic": override},
+            stated={"samples_percentile_generic": override},
         )
         value = resolved.params["samples_percentile_generic"]
         assert isinstance(value, MultiPickValue)
@@ -357,17 +358,14 @@ class TestAListOverrideStaysAList:
         )
 
     async def test_it_closes_the_open_slot(self) -> None:
-        resolved = await resolve_params_with_intent(
-            fetch_at=fetcher(
-                param_info(
-                    "samples_percentile_generic",
-                    "multi-pick-vocabulary",
-                    leaves=vocab(*_HOURS),
-                )
+        resolved = await _resolve(
+            "",
+            param_info(
+                "samples_percentile_generic",
+                "multi-pick-vocabulary",
+                leaves=vocab(*_HOURS),
             ),
-            search_name="GenesByDefaults",
-            intent=ParamIntent(),
-            overrides={"samples_percentile_generic": _TROPHOZOITE},
+            stated={"samples_percentile_generic": _TROPHOZOITE},
         )
 
         assert resolved.open_slots == []
@@ -376,8 +374,9 @@ class TestAListOverrideStaysAList:
     async def test_a_single_element_list_is_still_a_list(self) -> None:
         assert (await self._resolve_samples(["20 Hour"])).values == ["20 Hour"]
 
-    async def test_a_scalar_override_still_resolves(self) -> None:
-        assert (await self._resolve_samples("20 Hour")).values == ["20 Hour"]
+    async def test_a_bare_term_is_refused(self) -> None:
+        with pytest.raises(StatedValuesError, match="samples_percentile_generic"):
+            await self._resolve_samples("20 Hour")
 
 
 _PF_PROFILESETS = vocab("DeRisi 3D7 Smoothed", "Su 3D7 strand-specific")
@@ -420,7 +419,8 @@ async def _under_organism(
         fetch_at=fetch_at,
         search_name="GenesByDefaults",
         intent=ParamIntent(text="expression profile of the protease genes"),
-        overrides={"organism": [chosen]},
+        stated={"organism": [chosen]},
+        definition=declared(*await fetch_at({})),
     )
     return (
         {name: to_wire(value) for name, value in resolved.params.items()},

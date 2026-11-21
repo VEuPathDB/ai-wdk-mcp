@@ -8,7 +8,6 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from veupathdb.domain.parameters import (
     FAKE_ALL_SENTINEL,
-    SinglePickValue,
     WDKTreeBoxVocabNode,
     WDKVocabNodeData,
     collect_leaf_terms,
@@ -352,36 +351,13 @@ class TestReadParameterOptions:
             "GenesByLocation",
             "chromosomeOptional",
             record_type="transcript",
-            context_values={"organismSinglePick": "Plasmodium falciparum 3D7"},
+            context_values={"organismSinglePick": ["Plasmodium falciparum 3D7"]},
         )
 
         assert result.kind == "parameter_info"
         assert client.get_search_details_with_params.await_count == 1
         context = client.get_search_details_with_params.await_args.kwargs["context"]
-        assert context["organismSinglePick"] == "Plasmodium falciparum 3D7"
-
-    @pytest.mark.skipif(
-        needs_qa_recording("wdk/search_genes_by_location.json"),
-        reason=NEEDS_QA_RECORDING,
-    )
-    async def test_it_accepts_already_typed_context(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        client = _stub_client(monkeypatch, "search_genes_by_location")
-
-        result = await read_parameter_options(
-            "plasmodb",
-            "GenesByLocation",
-            "chromosomeOptional",
-            record_type="transcript",
-            context_values={
-                "organismSinglePick": SinglePickValue(value="Plasmodium falciparum 3D7")
-            },
-        )
-
-        assert result.kind == "parameter_info"
-        context = client.get_search_details_with_params.await_args.kwargs["context"]
-        assert context["organismSinglePick"] == "Plasmodium falciparum 3D7"
+        assert context["organismSinglePick"] == '["Plasmodium falciparum 3D7"]'
 
     @pytest.mark.skipif(
         needs_qa_recording("wdk/search_genes_by_location.json"),

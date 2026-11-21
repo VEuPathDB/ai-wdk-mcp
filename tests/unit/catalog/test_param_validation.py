@@ -8,7 +8,12 @@ import pytest
 from pydantic import JsonValue
 from veupathdb import JSONObject
 from veupathdb.domain import SearchContext
-from veupathdb.domain.parameters import ParamSpecNormalized, ParamValue, SinglePickValue
+from veupathdb.domain.parameters import (
+    MultiPickValue,
+    ParamSpecNormalized,
+    ParamValue,
+    SinglePickValue,
+)
 from veupathdb.errors import ValidationError, WDKError
 from veupathdb.wdk import WDKEnumParam, WDKParameter, WDKSearchResponse
 
@@ -268,7 +273,7 @@ class TestAHiddenParentIsFilledBeforeRefresh:
         # The caller never mentions `channel`, exactly what the model sends.
         return await param_validation.validate_parameters(
             SearchContext("plasmodb", "transcript", "GenesByMicroarray"),
-            parameters={"samples": SinglePickValue(value="TaxonA")},
+            parameters={"samples": MultiPickValue(values=["TaxonA"])},
             callbacks=validation_callbacks(),
         )
 

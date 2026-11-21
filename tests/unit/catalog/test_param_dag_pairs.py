@@ -8,10 +8,10 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
+from pydantic import JsonValue
 from veupathdb.domain.parameters import ParamValue, VocabOption
 
 from veupathdb_mcp.catalog.param_dag import (
-    OverrideMap,
     ParameterInfo,
     ParamFetcher,
     ResolvedParams,
@@ -19,7 +19,7 @@ from veupathdb_mcp.catalog.param_dag import (
 )
 from veupathdb_mcp.catalog.param_intent import ParamIntent
 
-from .conftest import bound, fetcher, param_info, vocab
+from .conftest import bound, declared, fetcher, param_info, vocab
 
 MALE = VocabOption(value="male", display="male")
 FEMALE = VocabOption(value="female", display="female")
@@ -40,13 +40,14 @@ def _assert_distinct(params: Mapping[str, ParamValue], a: str, b: str) -> None:
 
 
 async def _resolve(
-    fetch_at: ParamFetcher, overrides: OverrideMap | None = None
+    fetch_at: ParamFetcher, stated: dict[str, JsonValue] | None = None
 ) -> ResolvedParams:
     return await resolve_params_with_intent(
         fetch_at=fetch_at,
         search_name="GenesByPairs",
         intent=ParamIntent(),
-        overrides=overrides,
+        stated=stated or {},
+        definition=declared(*await fetch_at({})),
     )
 
 
@@ -144,7 +145,7 @@ class TestVocabularyPairs:
             ),
         )
 
-        resolved = await _resolve(pair, {"samples_fc_comp_generic": "female"})
+        resolved = await _resolve(pair, {"samples_fc_comp_generic": ["female"]})
 
         ref = bound(resolved.params["samples_fc_ref_generic"])
         comp = bound(resolved.params["samples_fc_comp_generic"])
@@ -204,7 +205,7 @@ class TestADeferredSelector:
         self,
     ) -> None:
         resolved = await _resolve(
-            _vectorbase_microarray_fetch(), {"samples_fc_comp_generic": "female"}
+            _vectorbase_microarray_fetch(), {"samples_fc_comp_generic": ["female"]}
         )
 
         assert bound(resolved.params["samples_fc_comp_generic"]) == ["female"]
@@ -217,7 +218,7 @@ class TestADeferredSelector:
     async def test_both_selectors_pinned_is_honored_verbatim(self) -> None:
         resolved = await _resolve(
             _vectorbase_microarray_fetch(),
-            {"samples_fc_ref_generic": "male", "samples_fc_comp_generic": "female"},
+            {"samples_fc_ref_generic": ["male"], "samples_fc_comp_generic": ["female"]},
         )
 
         assert bound(resolved.params["samples_fc_ref_generic"]) == ["male"]
@@ -226,7 +227,7 @@ class TestADeferredSelector:
 
     async def test_every_required_param_is_either_bound_or_asked_about(self) -> None:
         resolved = await _resolve(
-            _vectorbase_microarray_fetch(), {"samples_fc_comp_generic": "female"}
+            _vectorbase_microarray_fetch(), {"samples_fc_comp_generic": ["female"]}
         )
 
         accounted = set(resolved.params) | {s.param_name for s in resolved.open_slots}
@@ -276,7 +277,7 @@ class TestEviction:
             param_info("comp", "multi-pick-vocabulary", allowed=SEXES),
         )
 
-        resolved = await _resolve(pair, {"ref": "female", "comp": "female"})
+        resolved = await _resolve(pair, {"ref": ["female"], "comp": ["female"]})
 
         assert bound(resolved.params["ref"]) == ["female"]
         assert bound(resolved.params["comp"]) == ["female"]
@@ -409,7 +410,7 @@ class TestTheContrastDirection:
         self,
     ) -> None:
         resolved = await _resolve(
-            _fold_change_fetch(), {"samples_fc_comp_generic": "female"}
+            _fold_change_fetch(), {"samples_fc_comp_generic": ["female"]}
         )
 
         comp = resolved.params.get("samples_fc_comp_generic")
@@ -423,7 +424,7 @@ class TestTheContrastDirection:
         """A substring of the both-directions label must not silently replace it."""
         resolved = await _resolve(
             _fold_change_fetch(),
-            {"samples_fc_comp_generic": "female", "regulated_dir": "up-regulated"},
+            {"samples_fc_comp_generic": ["female"], "regulated_dir": "up-regulated"},
         )
 
         direction = resolved.params.get("regulated_dir")
@@ -438,7 +439,7 @@ class TestTheContrastDirection:
         """Absent a statement, WDK's own default is the honest choice: inventing a
         direction would filter out half the answer without being asked to."""
         resolved = await _resolve(
-            _fold_change_fetch(), {"samples_fc_comp_generic": "female"}
+            _fold_change_fetch(), {"samples_fc_comp_generic": ["female"]}
         )
 
         assert bound(resolved.params["regulated_dir"]) == ["up or down regulated"]
@@ -446,7 +447,7 @@ class TestTheContrastDirection:
     async def test_both_sides_stated_are_honored_verbatim(self) -> None:
         resolved = await _resolve(
             _fold_change_fetch(),
-            {"samples_fc_ref_generic": "female", "samples_fc_comp_generic": "male"},
+            {"samples_fc_ref_generic": ["female"], "samples_fc_comp_generic": ["male"]},
         )
 
         assert bound(resolved.params["samples_fc_ref_generic"]) == ["female"]
@@ -454,7 +455,7 @@ class TestTheContrastDirection:
 
     async def test_the_pair_is_never_degenerate(self) -> None:
         resolved = await _resolve(
-            _fold_change_fetch(), {"samples_fc_comp_generic": "female"}
+            _fold_change_fetch(), {"samples_fc_comp_generic": ["female"]}
         )
 
         ref = resolved.params.get("samples_fc_ref_generic")

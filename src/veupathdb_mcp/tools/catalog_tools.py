@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from fastmcp.exceptions import ToolError
+from pydantic import JsonValue
 from veupathdb import JSONObject
 from veupathdb.domain import SearchContext
-from veupathdb.domain.parameters import PHYLETIC_LIST_PARAMS, ParamValue
 from veupathdb.errors import VEuPathDBError
 
 from veupathdb_mcp.catalog import (
@@ -33,7 +33,6 @@ from veupathdb_mcp.catalog.phyletic_pattern import PhyleticPattern
 from veupathdb_mcp.catalog.search_inspection import UnknownSearchError
 from veupathdb_mcp.catalog.searches import VagueSearchQueryError
 from veupathdb_mcp.catalog.shortlist import shortlist_slot
-from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
 from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
 from veupathdb_mcp.embeddings.record_manager import IndexHit, search_index
@@ -301,7 +300,7 @@ async def get_parameter_options(
     search_name: str,
     parameter_id: str,
     record_type: str | None = None,
-    context_values: dict[str, str] | None = None,
+    context_values: dict[str, JsonValue] | None = None,
     query: str | list[str] | None = None,
 ) -> GetParameterOptionsResult:
     """Read one parameter's vocabulary under the parent values supplied.
@@ -311,7 +310,8 @@ async def get_parameter_options(
         search_name: WDK search urlSegment the parameter belongs to.
         parameter_id: Parameter name to read.
         record_type: Record type. Omit to resolve it from the site catalog.
-        context_values: Values of the parameters this one depends on.
+        context_values: Values of the parameters this one depends on, each in the
+            shape its statedSchema gives.
         query: One phrase, or several phrasings of one concept, that narrow the
             vocabulary. Hyphen and space match alike, and a phrase also
             matches its words in any order. A narrowed read carries
@@ -328,7 +328,7 @@ async def get_parameter_options(
             context_values=context_values,
             narrowing=search_inspection.VocabNarrowing(query=query),
         )
-    except SiteSetParameterError as exc:
+    except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc
 
 
@@ -361,7 +361,7 @@ async def get_search_param_specs(
 async def validate_search_parameters(
     site_id: str,
     search_name: str,
-    parameter_values: dict[str, ParamValue],
+    parameter_values: dict[str, JsonValue],
     record_type: str | None = None,
 ) -> ValidatedParams:
     """Canonicalize a search's parameter values, and have WDK judge them.
@@ -372,13 +372,16 @@ async def validate_search_parameters(
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
         search_name: WDK search urlSegment the values belong to.
-        parameter_values: Parameter values, each in its typed shape.
+        parameter_values: Values stated by name in the shape each parameter's
+            statedSchema gives.
         record_type: Record type. Omit to resolve it from the site catalog.
     """
     try:
         return await validate_parameters(
             SearchContext(site_id, record_type or "", search_name),
-            parameters=parameter_values,
+            parameters=await search_inspection.read_stated_parameters(
+                site_id, search_name, parameter_values, record_type=record_type
+            ),
             callbacks=make_validation_callbacks(site_id),
         )
     except VEuPathDBError as exc:
@@ -451,7 +454,7 @@ async def resolve_search_parameters(
     search_name: str,
     record_type: str = "transcript",
     criterion: str = "",
-    overrides: dict[str, str | list[str]] | None = None,
+    overrides: dict[str, JsonValue] | None = None,
 ) -> ResolvedParams:
     """Bind a search's parameters, and name the ones nothing bound.
 
@@ -466,8 +469,8 @@ async def resolve_search_parameters(
         search_name: WDK search urlSegment to bind.
         record_type: Record type. Gene searches are 'transcript'.
         criterion: The criterion the binding runs against, in your own words.
-        overrides: Values stated by name, each a string or a list of strings.
-            A parameter the site sets (hidden or read-only) takes no
+        overrides: Values stated by name in the shape each parameter's
+            statedSchema gives. A parameter the site sets (hidden or read-only) takes no
             stated value. On a phylogenetic profile search, state
             included_species and excluded_species; profile_pattern is derived
             from them.
@@ -481,14 +484,14 @@ async def resolve_search_parameters(
                 )
             ).search_data.parameters
             or []
-            if PHYLETIC_LIST_PARAMS & (overrides or {}).keys()
+            if overrides
             else []
         )
         resolved = await resolve_params_with_intent(
             fetch_at=wdk_fetch_at(site_id, record_type, search_name),
             intent=ParamIntent(text=criterion),
             search_name=search_name,
-            overrides=overrides,
+            stated=overrides or {},
             definition=definition,
         )
     except VEuPathDBError as exc:

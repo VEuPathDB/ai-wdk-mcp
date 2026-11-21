@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 import pytest
+from veupathdb.domain import SearchContext
 from veupathdb.wdk import WDKSearch, WDKSearchResponse
 
 from veupathdb_mcp.catalog import ParameterInfo, format_param_info_typed
@@ -19,10 +20,14 @@ class RecordedCatalog:
     """The catalog listing and the parameter reads, from recorded definitions."""
 
     def __init__(self, responses: Sequence[WDKSearchResponse]) -> None:
+        self.responses = {r.search_data.url_segment: r for r in responses}
         self.by_name: dict[str, WDKSearch] = {
-            r.search_data.url_segment: r.search_data for r in responses
+            name: r.search_data for name, r in self.responses.items()
         }
         self.reads: list[tuple[str, dict[str, str]]] = []
+
+    async def get_search_details(self, ctx: SearchContext) -> WDKSearchResponse:
+        return self.responses[ctx.search_name]
 
     async def get_searches(self, site_id: str, record_type: str) -> list[WDKSearch]:
         del site_id, record_type

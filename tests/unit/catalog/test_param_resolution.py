@@ -17,7 +17,6 @@ from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     MultiPickValue,
     ParamValue,
-    SinglePickValue,
     StringValue,
 )
 from veupathdb.errors import WDKError
@@ -95,7 +94,7 @@ class _Client:
 
 
 def _context() -> dict[str, ParamValue]:
-    return {"organism": SinglePickValue(value=_STRAIN)}
+    return {"organism": MultiPickValue(values=[_STRAIN])}
 
 
 @pytest.fixture

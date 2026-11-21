@@ -10,20 +10,19 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from difflib import get_close_matches
 
+from pydantic import JsonValue
 from veupathdb.domain.parameters import (
+    FilterFacets,
+    FilterProposals,
     ParamGraph,
     ParamValue,
     VocabOption,
     WDKTreeBoxVocabNode,
-    coerce_context_values,
+    read_stated_values,
+    wire_map,
 )
 from veupathdb.errors import WDKError
-from veupathdb.wdk import (
-    WDKParameter,
-    WDKSearch,
-    encode_wdk_params,
-    get_wdk_client,
-)
+from veupathdb.wdk import WDKParameter, WDKSearch, get_wdk_client
 
 from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
@@ -279,23 +278,52 @@ async def inspect_search(
     return SearchInspection(record_type=rt, definition=search, overview=overview)
 
 
+def read_param_values(
+    params: Sequence[WDKParameter], stated: Mapping[str, JsonValue]
+) -> dict[str, ParamValue]:
+    """The typed value of each stated name, read by the kind its form declares."""
+    declared = {p.name: p for p in params}
+    return {
+        name: FilterFacets.of(declared[name]).bind(read)
+        if isinstance(read, FilterProposals)
+        else read
+        for name, read in read_stated_values(params, stated).items()
+    }
+
+
+async def read_stated_parameters(
+    site_id: str,
+    search_name: str,
+    stated: Mapping[str, JsonValue] | None,
+    *,
+    record_type: str | None = None,
+) -> dict[str, ParamValue]:
+    """The values a caller states for one search, read through its definition."""
+    if not stated:
+        return {}
+    rt = await resolve_search_record_type(
+        site_id, search_name, _auto_resolved_record_type(record_type)
+    )
+    search = await read_search_definition(site_id, rt, search_name)
+    return read_param_values(search.parameters or [], stated)
+
+
 async def read_radio_readings(
     site_id: str,
     search_name: str,
     term: str,
     *,
     record_type: str | None = None,
-    context_values: Mapping[str, object] | None = None,
+    context_values: Mapping[str, JsonValue] | None = None,
 ) -> list[RadioReadings]:
-    context = coerce_context_values(dict(context_values)) if context_values else {}
     rt = await resolve_search_record_type(
         site_id, search_name, _auto_resolved_record_type(record_type)
     )
+    context = await read_stated_parameters(
+        site_id, search_name, context_values, record_type=rt
+    )
     result = await get_search_params_under_context(
-        get_wdk_client(site_id),
-        rt,
-        search_name,
-        encode_wdk_params(context) if context else {},
+        get_wdk_client(site_id), rt, search_name, wire_map(context)
     )
     data = result.search_data
     return radio_readings(radio_pairs(data.properties), data.parameters or [], term)
@@ -307,7 +335,7 @@ async def read_parameter_options(
     parameter_id: str,
     *,
     record_type: str | None = None,
-    context_values: Mapping[str, object] | None = None,
+    context_values: Mapping[str, JsonValue] | None = None,
     narrowing: VocabNarrowing | None = None,
 ) -> GetParameterOptionsResult:
     """Read one parameter's vocabulary under the parent values supplied.
@@ -317,15 +345,14 @@ async def read_parameter_options(
     service answers.
     """
     narrow = narrowing or VocabNarrowing()
-    context = coerce_context_values(dict(context_values)) if context_values else {}
     rt = await resolve_search_record_type(
         site_id, search_name, _auto_resolved_record_type(record_type)
     )
+    context = await read_stated_parameters(
+        site_id, search_name, context_values, record_type=rt
+    )
     result = await get_search_params_under_context(
-        get_wdk_client(site_id),
-        rt,
-        search_name,
-        encode_wdk_params(context) if context else {},
+        get_wdk_client(site_id), rt, search_name, wire_map(context)
     )
     all_params = result.search_data.parameters or []
     if any(p.name == parameter_id and p.site_set for p in all_params):

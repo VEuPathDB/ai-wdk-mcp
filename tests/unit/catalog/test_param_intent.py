@@ -2,21 +2,13 @@
 
 from __future__ import annotations
 
-from veupathdb.domain.parameters import VocabOption
-
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 from veupathdb_mcp.catalog.param_intent import (
     contrast_pair_key,
     contrast_role,
     is_aggregation_param,
     is_direction_param,
-    match_option,
 )
-
-_OPTIONS = [
-    VocabOption(value="Plasmodium falciparum 3D7", display="P. falciparum 3D7"),
-    VocabOption(value="Plasmodium vivax P01", display="P. vivax P01"),
-]
 
 
 def _pi(name: str, display_name: str = "") -> ParameterInfo:
@@ -29,20 +21,6 @@ def _pi(name: str, display_name: str = "") -> ParameterInfo:
         site_set=False,
         help="",
     )
-
-
-class TestMatchOption:
-    def test_an_exact_term_wins(self) -> None:
-        assert match_option(_OPTIONS, "Plasmodium vivax P01") == "Plasmodium vivax P01"
-
-    def test_an_exact_label_wins(self) -> None:
-        assert match_option(_OPTIONS, "p. vivax p01") == "Plasmodium vivax P01"
-
-    def test_a_substring_falls_back_to_the_first_containing_entry(self) -> None:
-        assert match_option(_OPTIONS, "vivax") == "Plasmodium vivax P01"
-
-    def test_no_entry_matches_returns_none(self) -> None:
-        assert match_option(_OPTIONS, "Toxoplasma gondii ME49") is None
 
 
 class TestContrastRole:

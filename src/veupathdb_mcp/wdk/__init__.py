@@ -54,7 +54,6 @@ from veupathdb_mcp.wdk.helpers import (
 )
 from veupathdb_mcp.wdk.id_list_datasets import TRANSCRIPTS_PER_GENE, dataset_client
 from veupathdb_mcp.wdk.params import (
-    encode_param_value,
     extract_default_params,
     extract_vocab_values,
 )
@@ -139,7 +138,6 @@ __all__ = [
     "counted_id_list",
     "dataset_client",
     "describe_step_refusal",
-    "encode_param_value",
     "extract_default_params",
     "extract_pk",
     "extract_record_ids",

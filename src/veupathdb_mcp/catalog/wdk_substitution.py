@@ -7,7 +7,7 @@ from collections.abc import Callable, Mapping
 from pydantic import TypeAdapter, ValidationError
 from veupathdb.domain.parameters import (
     PHYLETIC_EXPRESSION_PARAM,
-    FilterClauseKey,
+    ClauseKey,
     FilterValue,
     ParamSpecNormalized,
     ParamValue,
@@ -18,7 +18,7 @@ from veupathdb.errors import VEuPathDBError
 
 _SELECTION_ADAPTER: TypeAdapter[list[str]] = TypeAdapter(list[str])
 
-Comparable = str | frozenset[str] | frozenset[FilterClauseKey] | PhyleticExpression
+Comparable = str | frozenset[str] | frozenset[ClauseKey] | PhyleticExpression
 """A value reduced to what it states, so serialization cannot differ."""
 
 
@@ -32,7 +32,7 @@ def _selection(wire: str) -> frozenset[str]:
         return frozenset({wire})
 
 
-def _clauses(wire: str) -> frozenset[FilterClauseKey] | str:
+def _clauses(wire: str) -> frozenset[ClauseKey] | str:
     """The clauses a filter wire form states, order and key order aside."""
     try:
         return FilterValue.model_validate_json(wire or '{"filters": []}').clause_set

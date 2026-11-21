@@ -104,7 +104,7 @@ async def test_a_narrowed_read_matches_no_prompt(
         "GenesByLocation",
         "chromosomeOptional",
         record_type="transcript",
-        context_values={"organismSinglePick": "Plasmodium falciparum 3D7"},
+        context_values={"organismSinglePick": ["Plasmodium falciparum 3D7"]},
         narrowing=VocabNarrowing(query="chromosome"),
     )
 

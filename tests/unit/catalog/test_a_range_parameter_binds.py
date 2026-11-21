@@ -1,18 +1,17 @@
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain.parameters import param_value_from_raw
+from pydantic import JsonValue
+from veupathdb.domain.parameters import StatedValuesError
 
-from veupathdb_mcp.catalog import UnreadableValueError
 from veupathdb_mcp.catalog.param_dag import (
-    OverrideMap,
     ParameterInfo,
     ResolvedParams,
     resolve_params_with_intent,
 )
 from veupathdb_mcp.catalog.param_intent import ParamIntent, Provenance
 
-from .conftest import fetcher, param_info
+from .conftest import declared, fetcher, param_info
 
 _RANGE = "period_range"
 
@@ -22,22 +21,21 @@ def _range(default: str = '{"min":"20","max":"28"}') -> ParameterInfo:
 
 
 async def _resolve(
-    *infos: ParameterInfo, overrides: OverrideMap | None = None
+    *infos: ParameterInfo, stated: dict[str, JsonValue] | None = None
 ) -> ResolvedParams:
     return await resolve_params_with_intent(
         fetch_at=fetcher(*infos),
         search_name="GenesByRhythm",
         intent=ParamIntent(text="genes with a rhythm"),
-        overrides=overrides,
+        stated=stated or {},
+        definition=declared(*infos),
     )
 
 
 async def test_a_range_with_no_stated_value_takes_the_site_default() -> None:
     resolved = await _resolve(_range())
 
-    assert resolved.params[_RANGE] == param_value_from_raw(
-        {"min": 20.0, "max": 28.0}, "number-range"
-    )
+    assert resolved.params[_RANGE].to_decoded() == {"min": 20.0, "max": 28.0}
     assert resolved.provenance[_RANGE] is Provenance.DEFAULTED
     assert resolved.open_slots == []
 
@@ -49,20 +47,16 @@ async def test_a_date_range_with_no_stated_value_takes_the_site_default() -> Non
         )
     )
 
-    assert resolved.params["dates"] == param_value_from_raw(
-        {"min": "2020-01-01", "max": "2020-12-31"}, "date-range"
-    )
+    assert resolved.params["dates"].to_decoded() == {
+        "min": "2020-01-01",
+        "max": "2020-12-31",
+    }
 
 
-@pytest.mark.parametrize(
-    "stated", ['{"min":"22","max":"26"}', '{"min": 22, "max": 26}']
-)
-async def test_a_range_stated_as_its_json_text_binds(stated: str) -> None:
-    resolved = await _resolve(_range(), overrides={_RANGE: stated})
+async def test_a_range_stated_as_its_object_binds() -> None:
+    resolved = await _resolve(_range(), stated={_RANGE: {"min": 22, "max": 26}})
 
-    assert resolved.params[_RANGE] == param_value_from_raw(
-        {"min": 22.0, "max": 26.0}, "number-range"
-    )
+    assert resolved.params[_RANGE].to_decoded() == {"min": 22.0, "max": 26.0}
     assert resolved.provenance[_RANGE] is Provenance.STATED
 
 
@@ -72,11 +66,14 @@ async def test_a_required_range_with_no_default_is_an_open_slot() -> None:
     assert [slot.param_name for slot in resolved.open_slots] == [_RANGE]
 
 
-@pytest.mark.parametrize("stated", ["22-26", "22..26", "[22, 26]"])
-async def test_a_stated_value_the_kind_cannot_read_is_refused(stated: str) -> None:
-    with pytest.raises(UnreadableValueError) as refused:
-        await _resolve(_range(), overrides={_RANGE: stated})
+@pytest.mark.parametrize(
+    "stated", ["22-26", "22..26", [22, 26], '{"min": 22, "max": 26}']
+)
+async def test_a_stated_value_the_kind_cannot_read_is_refused(
+    stated: JsonValue,
+) -> None:
+    with pytest.raises(StatedValuesError) as refused:
+        await _resolve(_range(), stated={_RANGE: stated})
 
-    assert refused.value.param_name == _RANGE
-    assert refused.value.value == stated
+    assert [(f.name, f.read) for f in refused.value.faults] == [(_RANGE, stated)]
     assert _RANGE in str(refused.value.detail)

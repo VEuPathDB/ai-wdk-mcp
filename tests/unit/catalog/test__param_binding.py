@@ -5,7 +5,6 @@ from __future__ import annotations
 from veupathdb.domain.parameters import (
     FAKE_ALL_SENTINEL,
     MultiPickValue,
-    NumberValue,
     SinglePickValue,
     StringValue,
     VocabOption,
@@ -21,7 +20,6 @@ from veupathdb_mcp.catalog._param_binding import (
     _single_valid_value,
     _vocab_signature,
     _VocabLedger,
-    param_value_for,
 )
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 
@@ -77,76 +75,57 @@ def _free_text(name: str, default: str) -> ParameterInfo:
     return param_info(name, "string", default=default)
 
 
-class TestParamValueFor:
-    def test_a_multipick_wraps_a_bare_term_as_a_json_array(self) -> None:
-        value = param_value_for(
-            param_info("organism", "multi-pick-vocabulary"),
-            "Plasmodium falciparum 3D7",
-        )
-
-        assert isinstance(value, MultiPickValue)
-        assert value.values == ["Plasmodium falciparum 3D7"]
-        assert value.to_wire() == '["Plasmodium falciparum 3D7"]'
-
-    def test_scalars(self) -> None:
-        number = param_value_for(param_info("min_tm", "number"), "2")
-        assert isinstance(number, NumberValue)
-        assert number.value == 2.0
-
-        single = param_value_for(param_info("go_term_evidence"), "Curated")
-        assert isinstance(single, SinglePickValue)
-        assert single.value == "Curated"
-
-    def test_a_resolved_numeric_default_is_a_string_param_value(self) -> None:
-        info = _numeric("dn_ds_ratio_lower", "0")
-        value = param_value_for(info, _scalar_default(info) or "")
-
-        assert isinstance(value, StringValue)
-        assert value.value == "0"
+def _picks(*terms: str) -> MultiPickValue:
+    return MultiPickValue(values=list(terms))
 
 
 class TestApplyOverride:
     def test_a_tree_box_leaf_matches_by_term_or_by_label(self) -> None:
         info = _tree_box_organism()
 
-        assert _apply_override(info, "plasmodium vivax p01") == "Plasmodium vivax P01"
-        assert _apply_override(info, "P. vivax P01") == "Plasmodium vivax P01"
+        assert _apply_override(info, _picks("plasmodium vivax p01")) == _picks(
+            "Plasmodium vivax P01"
+        )
+        assert _apply_override(info, _picks("P. vivax P01")) == _picks(
+            "Plasmodium vivax P01"
+        )
 
     def test_a_substring_does_not_snap_to_a_leaf(self) -> None:
-        # "Plasmodium vivax" is a genus, not the strain leaf. Snapping it binds a
-        # strain the request never named.
-        assert (
-            _apply_override(_tree_box_organism(), "Plasmodium vivax")
-            == "Plasmodium vivax"
-        )
+        assert _apply_override(
+            _tree_box_organism(), _picks("Plasmodium vivax")
+        ) == _picks("Plasmodium vivax")
 
     def test_it_matches_beyond_the_wire_cap(self) -> None:
         full = _many(300)
 
         assert _apply_override(
-            _go_param(allowed=full[:50], leaves=full), "term 299"
-        ) == ("GO:0000299")
+            _go_param(allowed=full[:50], leaves=full), _picks("term 299")
+        ) == _picks("GO:0000299")
 
     def test_it_matches_every_element_of_a_list(self) -> None:
-        assert _apply_override(_samples_param(), _TROPHOZOITE) == _TROPHOZOITE
+        assert _apply_override(_samples_param(), _picks(*_TROPHOZOITE)) == _picks(
+            *_TROPHOZOITE
+        )
 
     def test_it_snaps_each_element_to_its_vocabulary_entry(self) -> None:
-        assert _apply_override(_samples_param(), ["20 hour", "21 HOUR"]) == [
-            "20 Hour",
-            "21 Hour",
-        ]
+        assert _apply_override(
+            _samples_param(), _picks("20 hour", "21 HOUR")
+        ) == _picks("20 Hour", "21 Hour")
 
     def test_it_keeps_an_unmatched_element_for_wdk_to_reject(self) -> None:
-        assert _apply_override(_samples_param(), ["20 Hour", "99 Hour"]) == [
-            "20 Hour",
-            "99 Hour",
-        ]
+        assert _apply_override(
+            _samples_param(), _picks("20 Hour", "99 Hour")
+        ) == _picks("20 Hour", "99 Hour")
 
-    def test_it_still_handles_a_plain_string(self) -> None:
-        assert _apply_override(_samples_param(), "20 Hour") == "20 Hour"
+    def test_a_single_pick_snaps_to_its_entry(self) -> None:
+        info = param_info("stage", leaves=vocab(*_HOURS))
+
+        assert _apply_override(info, SinglePickValue(value="20 hour")) == (
+            SinglePickValue(value="20 Hour")
+        )
 
     def test_an_empty_list_stays_empty(self) -> None:
-        assert _apply_override(_samples_param(), []) == []
+        assert _apply_override(_samples_param(), _picks()) == _picks()
 
 
 class TestVocabularyIsTheWholeList:
@@ -253,11 +232,15 @@ class TestTheLedgerSeesTreeBoxVocabularies:
 
 class TestScalarDefaults:
     def test_a_zero_lower_bound_resolves(self) -> None:
-        assert _scalar_default(_numeric("dn_ds_ratio_lower", "0")) == "0"
+        assert _scalar_default(_numeric("dn_ds_ratio_lower", "0")) == StringValue(
+            value="0"
+        )
 
     def test_a_curated_non_zero_default_resolves(self) -> None:
         # WDK ships 20 here; asking the user is less faithful than using it.
-        assert _scalar_default(_numeric("MinPercentIsolateCalls", "20")) == "20"
+        assert _scalar_default(_numeric("MinPercentIsolateCalls", "20")) == StringValue(
+            value="20"
+        )
 
     def test_every_snp_bound_from_the_live_search_resolves(self) -> None:
         live = {
@@ -286,7 +269,7 @@ class TestScalarDefaults:
     def test_a_read_only_text_default_is_the_sites_value(self) -> None:
         info = param_info("document_type", "string", site_set=True, default="gene")
 
-        assert _scalar_default(info) == "gene"
+        assert _scalar_default(info) == StringValue(value="gene")
 
     def test_a_number_flagged_search_text_is_still_suppressed(self) -> None:
         info = _free_text("text_expression", "odorant")

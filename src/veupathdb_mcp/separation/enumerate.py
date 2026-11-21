@@ -8,18 +8,18 @@ from collections import Counter
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 
-from veupathdb.domain.parameters import ParamValue
+from pydantic import JsonValue
+from veupathdb.domain import SearchContext
+from veupathdb.domain.parameters import ParamValue, StatedValuesError
 from veupathdb.errors import VEuPathDBError
 from veupathdb.wdk import WDKSearch, encode_params
 
 from veupathdb_mcp.catalog import (
     RADIO_OFF,
-    OverrideMap,
     ParameterInfo,
     ParamFetcher,
     ParamIntent,
     UnknownParameterError,
-    UnreadableValueError,
     VagueSearchQueryError,
     get_discovery_service,
     radio_pairs,
@@ -68,7 +68,10 @@ ANNOTATION_QUOTA = 5
 CATALOG_RANKED = 50
 
 TEXT_SEARCH = "GenesByText"
-_PRODUCT_TEXT: OverrideMap = {"text_fields": ["product"], "document_type": "gene"}
+_PRODUCT_TEXT: dict[str, JsonValue] = {
+    "text_fields": ["product"],
+    "document_type": "gene",
+}
 _UNINFORMATIVE = ("unknown function", "hypothetical")
 _PUTATIVE = ", putative"
 _SHARED = 2
@@ -132,7 +135,7 @@ class Proposal:
     source: CandidateSource
     basis: str
     reference: str | None = None
-    stated: OverrideMap = field(default_factory=dict)
+    stated: dict[str, JsonValue] = field(default_factory=dict)
     pick: Pick | None = None
     intent: str = ""
     parameters: dict[str, ParamValue] | None = None
@@ -147,7 +150,7 @@ class Positives:
     products: list[str]
 
 
-def _picked(infos: list[ParameterInfo], pick: Pick) -> OverrideMap:
+def _picked(infos: list[ParameterInfo], pick: Pick) -> dict[str, JsonValue]:
     """The pick's entry, or a vocabulary miss when the parameter does not list it."""
     info = next((i for i in infos if i.name == pick.param_name), None)
     listed = info is not None and any(
@@ -166,7 +169,7 @@ def _overrides(
     infos: list[ParameterInfo],
     proposal: Proposal,
     organisms: list[str],
-) -> OverrideMap:
+) -> dict[str, JsonValue]:
     """The organism, the switched-off free-text halves, and what the proposal states."""
     overrides = organism_overrides(infos, organisms)
     overrides.update(
@@ -207,9 +210,10 @@ async def bind(
             fetch_at=fetch_at,
             intent=ParamIntent(text=proposal.intent),
             search_name=search.url_segment,
-            overrides=_overrides(search, infos, proposal, organisms),
+            stated=_overrides(search, infos, proposal, organisms),
+            definition=search.parameters or [],
         )
-    except (UnknownParameterError, UnreadableValueError) as exc:
+    except (UnknownParameterError, StatedValuesError) as exc:
         raise CandidateSkippedError(reason="unbound_required", detail=str(exc)) from exc
     gap = binding_gap(resolved)
     if gap:
@@ -272,6 +276,10 @@ class _Collector:
         if search is None:
             detail = "the site lists no gene search by this name"
             raise CandidateSkippedError(reason="not_a_gene_search", detail=detail)
+        if search_skip(search) is None:
+            ctx = SearchContext(self.site_id, GENE_RECORD_CLASS, proposal.search_name)
+            published = await get_discovery_service().get_search_details(ctx)
+            search = published.search_data
         fetch = _charged(
             wdk_fetch_at(self.site_id, GENE_RECORD_CLASS, proposal.search_name),
             self.budget,

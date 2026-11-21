@@ -3,13 +3,9 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import Literal
 
-from veupathdb.domain.parameters import VocabOption
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
-
-# One value, or the several values a multi-pick param takes.
-ParamAnswer = str | list[str]
 
 
 class Provenance(StrEnum):
@@ -19,29 +15,10 @@ class Provenance(StrEnum):
     DEFAULTED = "defaulted"
 
 
-class IntentMatch(CamelModel):
-    """A value together with how it was found."""
-
-    value: ParamAnswer
-    provenance: Provenance
-
-
 class ParamIntent(CamelModel):
     """The criterion text a resolution runs against."""
 
     text: str = ""
-
-
-def match_option(options: list[VocabOption], hint: str) -> str | None:
-    """Map a free-text hint to a vocab value: exact match first, then substring."""
-    h = hint.lower()
-    for o in options:
-        if h in (o.value.lower(), o.display.lower()):
-            return o.value
-    for o in options:
-        if h in o.display.lower() or h in o.value.lower():
-            return o.value
-    return None
 
 
 _REFERENCE_MARKERS = ("_ref_", "_ref", "reference")

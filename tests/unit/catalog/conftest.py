@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Final, Literal, TypedDict, Unpack, cast
 
-from pydantic import JsonValue
+from pydantic import JsonValue, TypeAdapter
 from veupathdb import JSONObject
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
@@ -122,6 +122,39 @@ def fetcher(*infos: ParameterInfo) -> ParamFetcher:
         return list(infos)
 
     return fetch_at
+
+
+_DECLARATION: TypeAdapter[WDKParameter] = TypeAdapter(WDKParameter)
+
+
+def declared(*infos: ParameterInfo) -> list[WDKParameter]:
+    """The published declaration each test parameter stands for."""
+    return [
+        _DECLARATION.validate_python(
+            {
+                "name": info.name,
+                "displayName": info.display_name,
+                "type": info.param_kind,
+                "isNumber": info.is_number,
+                "isVisible": info.is_visible,
+                "min": info.min,
+                "max": info.max,
+                "vocabulary": [[o.value, o.display, None] for o in info.vocabulary()]
+                or None,
+                "ontology": [
+                    {
+                        "term": f.term,
+                        "display": f.display,
+                        "type": f.type,
+                        "isRange": f.is_range,
+                    }
+                    for f in info.facets().root
+                ],
+                "values": {f.term: f.members for f in info.facets().root},
+            }
+        )
+        for info in infos
+    ]
 
 
 def bound(value: ParamValue) -> list[str]:

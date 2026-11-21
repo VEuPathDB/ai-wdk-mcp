@@ -5,11 +5,11 @@ search with an answer parameter is a transform (WDK-STEP-001), and a search that
 takes a dataset scores the controls against themselves (WDK-PARAM-009).
 """
 
+from pydantic import JsonValue
 from veupathdb.domain.parameters import match_exact_option
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog import (
-    OverrideMap,
     ParameterInfo,
     ResolvedParams,
     is_eda_backed,
@@ -46,13 +46,15 @@ def binding_gap(resolved: ResolvedParams) -> str:
     return ", ".join(sorted(names))
 
 
-def organism_overrides(infos: list[ParameterInfo], organisms: list[str]) -> OverrideMap:
+def organism_overrides(
+    infos: list[ParameterInfo], organisms: list[str]
+) -> dict[str, JsonValue]:
     """Bind the organisms into every pick parameter whose vocabulary holds them all.
 
     The organism parameter has no one name across searches, so its vocabulary
     finds it. A single pick takes one organism only.
     """
-    overrides: OverrideMap = {}
+    overrides: dict[str, JsonValue] = {}
     if not organisms:
         return overrides
     for info in infos:
@@ -60,7 +62,7 @@ def organism_overrides(infos: list[ParameterInfo], organisms: list[str]) -> Over
             continue
         options = info.vocabulary()
         terms = [match_exact_option(options, organism) for organism in organisms]
-        held = [term for term in terms if term is not None]
+        held: list[JsonValue] = [term for term in terms if term is not None]
         if len(held) != len(organisms):
             continue
         if info.param_kind == "multi-pick-vocabulary":

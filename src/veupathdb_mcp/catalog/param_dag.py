@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable, Sequence
+from collections.abc import Awaitable, Callable, Mapping, Sequence
 
-from pydantic import Field
+from pydantic import Field, JsonValue
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     PHYLETIC_LIST_PARAMS,
     ParamValue,
     PhyleticBinding,
+    StringValue,
     UnboundParameter,
+    read_stated_values,
     to_wire,
 )
 from veupathdb.errors import ValidationError
@@ -71,17 +73,15 @@ class UnknownParameterError(ValidationError):
 
 
 def _refuse_unknown_overrides(
-    infos: list[ParameterInfo], overrides: OverrideMap, *, first_pass: bool
+    infos: list[ParameterInfo], stated: Mapping[str, JsonValue]
 ) -> None:
     """Refuses an override that names no parameter of the search.
 
     The search names every parameter on the first fetch, so a name the walk would
     never read is a mistake, not a value to drop.
     """
-    if not first_pass or not overrides:
-        return
     names = {i.name for i in infos}
-    unknown = sorted(set(overrides) - names)
+    unknown = sorted(set(stated) - names)
     if unknown:
         raise UnknownParameterError(
             unknown, sorted(i.name for i in infos if i.bindable)
@@ -89,10 +89,10 @@ def _refuse_unknown_overrides(
 
 
 def _refuse_hidden_overrides(
-    infos: list[ParameterInfo], overrides: OverrideMap, search_name: str
+    infos: list[ParameterInfo], stated: Mapping[str, JsonValue], search_name: str
 ) -> None:
     for info in infos:
-        if info.name in overrides and info.site_set:
+        if info.name in stated and info.site_set:
             raise SiteSetParameterError(info.name, search_name)
 
 
@@ -106,11 +106,13 @@ def _with_derived_phyletic(
     if not PHYLETIC_LIST_PARAMS & overrides.keys():
         raise PhyleticListError(PhyleticNoSelection())
     lists = {
-        name: overrides[name] for name in PHYLETIC_LIST_PARAMS if name in overrides
+        name: value.value
+        for name, value in overrides.items()
+        if name in PHYLETIC_LIST_PARAMS and isinstance(value, StringValue)
     }
     match derive_phyletic_overrides(list(definition), lists):
         case PhyleticBinding() as binding:
-            return {**overrides, **binding.model_dump()}
+            return {**overrides, **read_stated_values(definition, binding.model_dump())}
         case refused:
             raise PhyleticListError(refused)
 
@@ -125,17 +127,14 @@ def _visible_slot(
     return None
 
 
-def _checked_overrides(
+def _read_overrides(
     infos: list[ParameterInfo],
-    stated: OverrideMap,
+    stated: Mapping[str, JsonValue],
     definition: Sequence[WDKParameter],
-    *,
-    first_pass: bool,
-    search_name: str,
-) -> OverrideMap | None:
-    _refuse_unknown_overrides(infos, stated, first_pass=first_pass)
-    _refuse_hidden_overrides(infos, stated, search_name)
-    return _with_derived_phyletic(infos, stated, definition) if first_pass else None
+) -> OverrideMap:
+    _refuse_unknown_overrides(infos, stated)
+    read = read_stated_values(definition, stated)
+    return _with_derived_phyletic(infos, read, definition)
 
 
 ParamFetcher = Callable[[dict[str, str]], Awaitable[list[ParameterInfo]]]
@@ -280,17 +279,17 @@ async def resolve_params_with_intent(
     fetch_at: ParamFetcher,
     intent: ParamIntent,
     search_name: str,
-    overrides: OverrideMap | None = None,
-    definition: Sequence[WDKParameter] = (),
+    stated: Mapping[str, JsonValue],
+    definition: Sequence[WDKParameter],
 ) -> ResolvedParams:
-    """Walks the dependency DAG and resolves each param from an override, an automatic
-    value, the scalar default, or an open slot. Re-fetches after each pick so dependent
-    params surface.
+    """Walks the dependency DAG and resolves each param from a stated value, an
+    automatic value, the scalar default, or an open slot. Re-fetches after each pick
+    so dependent params surface.
 
-    An override that names no parameter of the search raises ``UnknownParameterError``.
+    ``stated`` is read once through ``definition``. A name that is no parameter of
+    the search raises ``UnknownParameterError``.
     """
-    stated = overrides or {}
-    overrides = stated
+    overrides: OverrideMap = {}
     context: dict[str, str] = {}
     params: dict[str, ParamValue] = {}
     open_slots: list[UnboundParameter] = []
@@ -299,19 +298,11 @@ async def resolve_params_with_intent(
     seen: set[str] = set()
     provenance: dict[str, Provenance] = {}
     ledger = _VocabLedger()
-    resolution = _Resolution(intent=intent, overrides=overrides)
     for pass_index in range(_MAX_RESOLVE_DEPTH):
         infos = await fetch_at(context)
-        overrides = (
-            _checked_overrides(
-                infos,
-                stated,
-                definition,
-                first_pass=pass_index == 0,
-                search_name=search_name,
-            )
-            or overrides
-        )
+        _refuse_hidden_overrides(infos, stated, search_name)
+        if pass_index == 0:
+            overrides = _read_overrides(infos, stated, definition)
         # Siblings decide whether one numeric param owns a stated quantity.
         resolution = _Resolution(
             intent=intent, overrides=overrides, siblings=tuple(infos)
@@ -330,11 +321,13 @@ async def resolve_params_with_intent(
                 context=context,
                 seen=seen,
             )
-            if info.name in seen or _defer_to_next_pass(
-                info, context=context, resolved_this_pass=resolved_this_pass
+            if (
+                info.name in seen
+                or _defer_to_next_pass(
+                    info, context=context, resolved_this_pass=resolved_this_pass
+                )
+                or _awaits_comparator(info, infos, set(params) | set(unresolved))
             ):
-                continue
-            if _awaits_comparator(info, infos, set(params) | set(unresolved)):
                 continue
             outcome = _outcome_for(info, infos, resolution, ledger)
             if isinstance(outcome, Unread):

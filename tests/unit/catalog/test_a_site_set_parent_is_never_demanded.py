@@ -7,7 +7,7 @@ import pytest
 from tests._support.recorded_searches import recorded_search
 from tests._support.recordings import TEST_ROOT
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
-from veupathdb.wdk import WDKSearchResponse, WDKStringParam
+from veupathdb.wdk import WDKParameter, WDKSearchResponse, WDKStringParam
 
 from veupathdb_mcp.catalog import (
     ParamIntent,
@@ -82,7 +82,7 @@ async def test_a_dependent_reads_under_its_stated_parent_alone(
         "plasmodb",
         SNPS,
         "variation_sample_meta",
-        context_values={"organismSinglePick": '["Plasmodium falciparum 3D7"]'},
+        context_values={"organismSinglePick": ["Plasmodium falciparum 3D7"]},
     )
 
     assert isinstance(read, ParameterInfo)
@@ -168,18 +168,20 @@ async def test_reading_a_site_set_parameter_is_refused_in_the_sites_words(
     )
 
 
+def _read_only_definition() -> list[WDKParameter]:
+    return [
+        WDKStringParam(
+            name="fixed",
+            is_read_only=True,
+            allow_empty_value=False,
+            initial_display_value="gene",
+        ),
+        WDKStringParam(name="text", allow_empty_value=False),
+    ]
+
+
 def _read_only_search() -> list[ParameterInfo]:
-    return format_param_info_typed(
-        [
-            WDKStringParam(
-                name="fixed",
-                is_read_only=True,
-                allow_empty_value=False,
-                initial_display_value="gene",
-            ),
-            WDKStringParam(name="text", allow_empty_value=False),
-        ]
-    )
+    return format_param_info_typed(_read_only_definition())
 
 
 def test_a_visible_read_only_parameter_is_off_the_sheet() -> None:
@@ -194,7 +196,8 @@ async def test_an_override_of_a_visible_read_only_parameter_is_refused() -> None
             fetch_at=fetcher(*_read_only_search()),
             search_name="GenesByReadOnly",
             intent=ParamIntent(),
-            overrides={"fixed": "gene", "text": "kinase"},
+            stated={"fixed": "gene", "text": "kinase"},
+            definition=_read_only_definition(),
         )
 
 
@@ -222,7 +225,8 @@ async def test_an_unknown_override_lists_no_read_only_name() -> None:
             fetch_at=fetcher(*_read_only_search()),
             search_name="GenesByReadOnly",
             intent=ParamIntent(),
-            overrides={"txt": "kinase"},
+            stated={"txt": "kinase"},
+            definition=_read_only_definition(),
         )
 
     assert refused.value.valid == ["text"]

@@ -3,14 +3,19 @@ the fetcher that reads WDK."""
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 import pytest
+from pydantic import JsonValue
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     FilterFacet,
+    FilterStatementError,
     FilterValue,
     MultiPickValue,
     NumberValue,
     SinglePickValue,
+    StatedValuesError,
     VocabOption,
 )
 from veupathdb.errors import ValidationError, VEuPathDBErrorCode
@@ -28,6 +33,7 @@ from veupathdb_mcp.catalog.param_intent import ParamIntent
 
 from .conftest import (
     bound,
+    declared,
     facet,
     fetcher,
     param_info,
@@ -37,17 +43,27 @@ from .conftest import (
 
 Clauses = list[tuple[str, str, bool, list[str]]]
 
+
+async def _walk(
+    *,
+    fetch_at: ParamFetcher,
+    stated: dict[str, JsonValue] | None = None,
+    published: Sequence[ParameterInfo] | None = None,
+    intent: ParamIntent | None = None,
+) -> ResolvedParams:
+    return await resolve_params_with_intent(
+        fetch_at=fetch_at,
+        search_name="GenesByRNASeqEvidence",
+        intent=intent or ParamIntent(),
+        stated=stated or {},
+        definition=declared(*(published or await fetch_at({}))),
+    )
+
+
 _SAMPLE_FACETS = [
     facet("Sample type", members=("specimen from organism", "culture", "blood")),
     facet("Country", members=("India",)),
 ]
-_FULL_FILTER_JSON = (
-    '{"filters": [{"field": "Sample type", "type": "string", "isRange": false, '
-    '"includeUnknown": false, "value": ["culture", "blood"]}]}'
-)
-_PARTIAL_FILTER_JSON = (
-    '{"filters": [{"field": "Sample type", "value": "specimen from organism"}]}'
-)
 
 
 def _filter(name: str, fields: list[FilterFacet]) -> ParameterInfo:
@@ -62,10 +78,8 @@ class TestFilterParams:
     async def test_a_filter_param_defaults_to_include_all(self) -> None:
         """The WDK default for a filter param is the empty filter set, and it
         resolves rather than opening a slot."""
-        resolved = await resolve_params_with_intent(
+        resolved = await _walk(
             fetch_at=_strain_meta(),
-            search_name="GenesByRNASeqEvidence",
-            intent=ParamIntent(),
         )
 
         value = resolved.params["ngsSnp_strain_meta"]
@@ -75,56 +89,48 @@ class TestFilterParams:
         assert resolved.unresolved_required == []
         assert resolved.open_slots == []
 
+    async def test_a_statement_builds_the_clause_the_ontology_types(self) -> None:
+        resolved = await _walk(
+            fetch_at=_strain_meta(),
+            stated={
+                "ngsSnp_strain_meta": [
+                    {"field": "Sample type", "value": ["culture", "blood"]}
+                ]
+            },
+        )
+
+        value = resolved.params["ngsSnp_strain_meta"]
+        assert isinstance(value, FilterValue)
+        assert [(c.field, c.type, c.is_range, c.value) for c in value.filters] == [
+            ("Sample type", "string", False, ["culture", "blood"])
+        ]
+
     @pytest.mark.parametrize(
-        ("override", "expected"),
+        "stated",
         [
-            (
-                "Sample type=culture,blood",
-                [("Sample type", "string", False, ["culture", "blood"])],
-            ),
-            ("sample type=culture", [("Sample type", "string", False, ["culture"])]),
-            (
-                _FULL_FILTER_JSON,
-                [("Sample type", "string", False, ["culture", "blood"])],
-            ),
-            (
-                _PARTIAL_FILTER_JSON,
-                [("Sample type", "string", False, ["specimen from organism"])],
-            ),
-            ('{"filters": []}', []),
-            ("not a filter at all", []),
+            "Sample type=culture,blood",
+            '{"filters": []}',
+            "All field isolates",
+            [],
+            {"filters": [{"field": "Sample type", "value": ["culture"]}]},
         ],
     )
-    async def test_an_override_builds_the_clauses_the_ontology_types(
-        self, override: str, expected: Clauses
+    async def test_a_value_that_is_no_list_of_statements_is_refused(
+        self, stated: JsonValue
     ) -> None:
-        resolved = await resolve_params_with_intent(
-            fetch_at=_strain_meta(),
-            search_name="GenesByRNASeqEvidence",
-            intent=ParamIntent(),
-            overrides={"ngsSnp_strain_meta": override},
-        )
+        with pytest.raises(StatedValuesError) as refused:
+            await _walk(fetch_at=_strain_meta(), stated={"ngsSnp_strain_meta": stated})
 
-        value = resolved.params["ngsSnp_strain_meta"]
-        assert isinstance(value, FilterValue)
-        assert [
-            (c.field, c.type, c.is_range, c.value) for c in value.filters
-        ] == expected
+        assert [fault.name for fault in refused.value.faults] == ["ngsSnp_strain_meta"]
 
-    async def test_an_override_without_a_facet_means_include_all(self) -> None:
-        resolved = await resolve_params_with_intent(
-            fetch_at=_strain_meta(),
-            search_name="GenesByRNASeqEvidence",
-            intent=ParamIntent(),
-            overrides={"ngsSnp_strain_meta": "All field isolates"},
-        )
-
-        value = resolved.params["ngsSnp_strain_meta"]
-        assert isinstance(value, FilterValue)
-        assert value.filters == []
-        assert not any(
-            s.param_name == "ngsSnp_strain_meta" for s in resolved.open_slots
-        )
+    async def test_a_member_the_facet_lacks_is_refused(self) -> None:
+        with pytest.raises(FilterStatementError, match="has no member"):
+            await _walk(
+                fetch_at=_strain_meta(),
+                stated={
+                    "ngsSnp_strain_meta": [{"field": "Sample type", "value": ["soil"]}]
+                },
+            )
 
 
 _LOFFLER_FACETS = [facet("PCR result", members=("Negative", "Positive"))]
@@ -147,10 +153,8 @@ class TestFilterPairs:
     async def test_a_ref_comp_pair_surfaces_instead_of_all_vs_all(self) -> None:
         # A reference and comparison filter pair must not both take the empty
         # filter, because that compares a set against itself.
-        resolved = await resolve_params_with_intent(
+        resolved = await _walk(
             fetch_at=_loffler(),
-            search_name="GenesByRNASeqEvidence",
-            intent=ParamIntent(),
         )
 
         assert "ref_samples_filter_metadata_loffler" not in resolved.params
@@ -163,13 +167,15 @@ class TestFilterPairs:
     async def test_a_ref_comp_pair_resolves_to_distinct_groups_when_overridden(
         self,
     ) -> None:
-        resolved = await resolve_params_with_intent(
+        resolved = await _walk(
             fetch_at=_loffler(),
-            search_name="GenesByRNASeqEvidence",
-            intent=ParamIntent(),
-            overrides={
-                "ref_samples_filter_metadata_loffler": "PCR result=Negative",
-                "comp_samples_filter_metadata_loffler": "PCR result=Positive",
+            stated={
+                "ref_samples_filter_metadata_loffler": [
+                    {"field": "PCR result", "value": ["Negative"]}
+                ],
+                "comp_samples_filter_metadata_loffler": [
+                    {"field": "PCR result", "value": ["Positive"]}
+                ],
             },
         )
 
@@ -202,11 +208,9 @@ class TestTheDependentChain:
                 )
             return params
 
-        resolved = await resolve_params_with_intent(
+        resolved = await _walk(
             fetch_at=fetch_at,
-            search_name="GenesByRNASeqEvidence",
-            intent=ParamIntent(),
-            overrides={"organism": "Plasmodium falciparum 3D7"},
+            stated={"organism": ["Plasmodium falciparum 3D7"]},
         )
 
         assert isinstance(resolved, ResolvedParams)
@@ -233,16 +237,12 @@ class TestTheDependentChain:
             )
         )
 
-        without = await resolve_params_with_intent(
-            fetch_at=stage, search_name="GenesByRNASeqEvidence", intent=ParamIntent()
-        )
+        without = await _walk(fetch_at=stage)
         assert any(s.param_name == "samples_de_comp" for s in without.open_slots)
 
-        filled = await resolve_params_with_intent(
+        filled = await _walk(
             fetch_at=stage,
-            search_name="GenesByRNASeqEvidence",
-            intent=ParamIntent(),
-            overrides={"samples_de_comp": "Gametocyte"},
+            stated={"samples_de_comp": "gametocyte"},
         )
         assert filled.open_slots == []
         assert bound(filled.params["samples_de_comp"]) == ["gametocyte"]
@@ -274,11 +274,10 @@ class TestAnUnknownOverrideIsRefused:
 
     async def test_a_misspelled_override_raises_with_the_real_names(self) -> None:
         with pytest.raises(UnknownParameterError) as info:
-            await resolve_params_with_intent(
+            await _walk(
                 fetch_at=fetcher(_pct()),
-                search_name="GenesByRNASeqEvidence",
                 intent=ParamIntent(text="top 10 percent"),
-                overrides={"min_percentile": "90"},
+                stated={"min_percentile": "90"},
             )
 
         assert info.value.unknown == ["min_percentile"]
@@ -286,11 +285,10 @@ class TestAnUnknownOverrideIsRefused:
 
     async def test_it_is_a_validation_error_carrying_every_unknown_name(self) -> None:
         with pytest.raises(UnknownParameterError) as info:
-            await resolve_params_with_intent(
+            await _walk(
                 fetch_at=fetcher(_pct(), _stage()),
-                search_name="GenesByRNASeqEvidence",
                 intent=ParamIntent(text="top 10 percent"),
-                overrides={"percentile": "90", "life_stage": "gametocyte"},
+                stated={"percentile": "90", "life_stage": "gametocyte"},
             )
 
         exc = info.value
@@ -303,19 +301,17 @@ class TestAnUnknownOverrideIsRefused:
         assert "min_expression_percentile" in exc.detail
 
     async def test_a_known_override_still_resolves(self) -> None:
-        resolved = await resolve_params_with_intent(
+        resolved = await _walk(
             fetch_at=fetcher(_stage()),
-            search_name="GenesByRNASeqEvidence",
             intent=ParamIntent(text="anything"),
-            overrides={"stage": "Gametocyte"},
+            stated={"stage": "gametocyte"},
         )
 
         assert bound(resolved.params["stage"]) == ["gametocyte"]
 
     async def test_no_overrides_never_raises(self) -> None:
-        resolved = await resolve_params_with_intent(
+        resolved = await _walk(
             fetch_at=fetcher(_pct()),
-            search_name="GenesByRNASeqEvidence",
             intent=ParamIntent(text="anything"),
         )
 
@@ -344,11 +340,10 @@ class TestAnUnknownOverrideIsRefused:
                 ),
             ]
 
-        resolved = await resolve_params_with_intent(
+        resolved = await _walk(
             fetch_at=fetch_at,
-            search_name="GenesByRNASeqEvidence",
             intent=ParamIntent(text="anything"),
-            overrides={"stage": "gametocyte"},
+            stated={"stage": "gametocyte"},
         )
 
         assert bound(resolved.params["stage"]) == ["gametocyte"]

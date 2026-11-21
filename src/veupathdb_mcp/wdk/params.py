@@ -1,20 +1,17 @@
 """The vocabulary a WDK parameter offers, the defaults a form states, and the
 wire form of one value.
 
-Pure module. The wire form of every parameter kind is the client's codec.
+Pure module. A value is read by the kind its parameter declares.
 """
 
 from collections.abc import Sequence
 
 from pydantic import JsonValue
 from veupathdb import JSONObject
-from veupathdb.domain.parameters import (
-    flatten_vocab,
-    param_value_from_raw,
-    to_wire,
-    vocab_keys,
-)
+from veupathdb.domain.parameters import flatten_vocab, vocab_keys
 from veupathdb.wdk import WDKParameter
+
+from veupathdb_mcp.catalog import read_param_values
 
 
 def extract_vocab_values(params: Sequence[WDKParameter], param_name: str) -> list[str]:
@@ -35,11 +32,6 @@ def extract_vocab_values(params: Sequence[WDKParameter], param_name: str) -> lis
     return []
 
 
-def encode_param_value(param: WDKParameter, value: JsonValue) -> str:
-    """The wire form of one value, for the kind the parameter declares."""
-    return to_wire(param_value_from_raw(value, param.type))
-
-
 def encode_named_param_value(
     params: Sequence[WDKParameter], name: str, value: JsonValue
 ) -> JsonValue:
@@ -48,10 +40,8 @@ def encode_named_param_value(
     A form that does not carry the name states no kind, so the value stands as
     the caller wrote it.
     """
-    for p in params:
-        if p.name == name:
-            return encode_param_value(p, value)
-    return value
+    read = read_param_values(params, {name: value})
+    return read[name].to_wire() if name in read else value
 
 
 def extract_default_params(params: Sequence[WDKParameter]) -> JSONObject:
