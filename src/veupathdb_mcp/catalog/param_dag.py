@@ -121,7 +121,7 @@ def _with_derived_phyletic(
     }
     match derive_phyletic_overrides(list(declarations), lists):
         case PhyleticBinding() as binding:
-            return {**overrides, **_read(declarations, binding.model_dump())}
+            return {**overrides, **read_declared(declarations, binding.model_dump())}
         case refused:
             raise PhyleticListError(refused)
 
@@ -168,7 +168,7 @@ def _bound(declaration: WDKParameter, read: Stated) -> ParamValue:
             return read
 
 
-def _read(
+def read_declared(
     declarations: Sequence[WDKParameter], stated: Mapping[str, JsonValue]
 ) -> dict[str, ParamValue]:
     declared = {d.name: d for d in declarations}
@@ -207,7 +207,7 @@ def _read_ready(
         for d in declarations
         if d.name in stated and d.name not in read and d.name not in waiting
     ]
-    return _read(ready, stated)
+    return read_declared(ready, stated)
 
 
 def _read_pass(
@@ -225,14 +225,36 @@ def _read_pass(
     return _with_derived_phyletic(infos, read, declarations) if first else read
 
 
+async def _refuse_misses(
+    declarations: Sequence[WDKParameter],
+    read: Mapping[str, ParamValue],
+    context: dict[str, str],
+    reads: FilterReads,
+) -> None:
+    parents = ParamGraph.of(declarations).wire_parents
+    for declaration in declarations:
+        if declaration.name in read:
+            await refuse_filter_misses(
+                declaration,
+                read[declaration.name],
+                {
+                    p: context[p]
+                    for p in parents.get(declaration.name, ())
+                    if p in context
+                },
+                reads,
+            )
+
+
 ParamFetcher = Callable[[dict[str, str]], Awaitable[list[WDKParameter]]]
 
 
 async def read_under_parents(
-    fetch_at: ParamFetcher, stated: Mapping[str, JsonValue]
+    fetch_at: ParamFetcher, stated: Mapping[str, JsonValue], reads: FilterReads
 ) -> dict[str, ParamValue]:
     """Reads each stated value under the declarations its stated and site-set parents
-    give. A name of no parameter is refused before any value is read."""
+    give, and refuses a filter that selects nothing. A name of no parameter is
+    refused before any value is read."""
     context: dict[str, str] = {}
     read: dict[str, ParamValue] = {}
     declarations = await fetch_at(context)
@@ -252,9 +274,10 @@ async def read_under_parents(
         }
         new = _read_ready(declarations, stated, context, read)
         if not new and not sited:
-            new = _read([d for d in declarations if d.name in missing], stated)
+            new = read_declared([d for d in declarations if d.name in missing], stated)
         if not new and not sited:
             break
+        await _refuse_misses(declarations, new, context, reads)
         read |= new
         context |= sited | wire_map(new)
         if stated.keys() - read.keys():

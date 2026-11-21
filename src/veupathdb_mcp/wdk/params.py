@@ -11,7 +11,7 @@ from veupathdb import JSONObject
 from veupathdb.domain.parameters import flatten_vocab, vocab_keys
 from veupathdb.wdk import WDKParameter
 
-from veupathdb_mcp.catalog import read_under_parents
+from veupathdb_mcp.catalog import read_declared
 
 
 def extract_vocab_values(params: Sequence[WDKParameter], param_name: str) -> list[str]:
@@ -32,7 +32,7 @@ def extract_vocab_values(params: Sequence[WDKParameter], param_name: str) -> lis
     return []
 
 
-async def encode_named_param_value(
+def encode_named_param_value(
     params: Sequence[WDKParameter], name: str, value: JsonValue
 ) -> JsonValue:
     """The wire form of one named value, for the kind the form declares.
@@ -40,15 +40,8 @@ async def encode_named_param_value(
     A form that does not carry the name states no kind, so the value stands as
     the caller wrote it.
     """
-    if all(p.name != name for p in params):
-        return value
-
-    async def form(context: dict[str, str]) -> list[WDKParameter]:
-        del context
-        return list(params)
-
-    read = await read_under_parents(form, {name: value})
-    return read[name].to_wire()
+    read = read_declared(params, {name: value})
+    return read[name].to_wire() if name in read else value
 
 
 def extract_default_params(params: Sequence[WDKParameter]) -> JSONObject:

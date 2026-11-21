@@ -487,6 +487,7 @@
     "radio_pairs",
     "radio_readings",
     "rank_experiments_elsewhere",
+    "read_declared",
     "read_experiment",
     "read_parameter_options",
     "read_radio_readings",

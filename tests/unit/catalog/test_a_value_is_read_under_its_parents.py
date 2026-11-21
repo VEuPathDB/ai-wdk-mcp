@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 from pydantic import JsonValue, TypeAdapter
+from tests._support.filter_reads import FilterReadsDouble
 from veupathdb.domain.parameters import FAKE_ALL_SENTINEL, MultiPickValue
 from veupathdb.wdk import WDKParameter
 
@@ -58,6 +59,7 @@ async def test_a_parent_stated_by_its_label_reaches_the_fetch_as_its_term() -> N
     read = await read_under_parents(
         _recording(seen, declarations, declarations),
         {"organism": ["P. vivax P01"], "strain": "x"},
+        FilterReadsDouble(),
     )
 
     assert read["organism"] == MultiPickValue(values=[_VIVAX])
@@ -74,6 +76,7 @@ async def test_a_label_matches_its_leaf_and_a_genus_stays_as_stated() -> None:
     read = await read_under_parents(
         _recording(seen, [organism], [organism]),
         {"organism": ["plasmodium vivax p01", "Plasmodium vivax"]},
+        FilterReadsDouble(),
     )
 
     assert read["organism"] == MultiPickValue(values=[_VIVAX, "Plasmodium vivax"])
@@ -87,6 +90,7 @@ async def test_a_name_no_later_fetch_declares_is_refused_by_name() -> None:
         await read_under_parents(
             _recording(seen, first, [first[0]]),
             {"organism": [_VIVAX], "strain": "x"},
+            FilterReadsDouble(),
         )
 
     assert len(seen) <= 6

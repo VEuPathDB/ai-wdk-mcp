@@ -186,9 +186,7 @@ class EnrichmentService:
                     background_size=0,
                 )
 
-            analysis_params[
-                "goAssociationsOntologies"
-            ] = await encode_named_param_value(
+            analysis_params["goAssociationsOntologies"] = encode_named_param_value(
                 wdk_params, "goAssociationsOntologies", requested_ontology
             )
 
@@ -196,7 +194,7 @@ class EnrichmentService:
         # that no gene in the result belongs to.
         background_organism = self._background_organism()
         if background_organism is not None:
-            analysis_params["organism"] = await encode_named_param_value(
+            analysis_params["organism"] = encode_named_param_value(
                 wdk_params, "organism", background_organism
             )
 

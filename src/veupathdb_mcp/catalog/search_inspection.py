@@ -290,7 +290,11 @@ async def read_stated_parameters(
     rt = await resolve_search_record_type(
         site_id, search_name, _auto_resolved_record_type(record_type)
     )
-    return await read_under_parents(wdk_fetch_at(site_id, rt, search_name), stated)
+    return await read_under_parents(
+        wdk_fetch_at(site_id, rt, search_name),
+        stated,
+        WDKFilterReads(site_id, rt, search_name),
+    )
 
 
 async def read_radio_readings(

@@ -99,6 +99,9 @@ async def test_a_site_set_name_is_refused_before_its_value_is_read() -> None:
 def served(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(catalog_tools, "wdk_fetch_at", lambda *args: by_organism)
     monkeypatch.setattr(search_inspection, "wdk_fetch_at", lambda *args: by_organism)
+    monkeypatch.setattr(
+        search_inspection, "WDKFilterReads", lambda *args: FilterReadsDouble()
+    )
 
 
 @pytest.fixture
