@@ -4,8 +4,10 @@
 
 - `get_parameter_options` says that its `query` reads the range of up to three range
   facets it names, and that a facet it does not name shows no range.
-- The help of `included_species` and `excluded_species` says each is one string of codes
-  or labels separated by commas.
+- `PHYLETIC_LISTS_FORM` is the one text that says `included_species` and
+  `excluded_species` each take one string of codes or labels separated by commas; the
+  help of both, the `profile_pattern` help and `LOOKUP_HINT` read it, and the refusals
+  no longer call them lists. `PhyleticProposals` holds strings only.
 
 ## 2026-11-21 - 0.9.0b13: a value is read by its parameter
 
