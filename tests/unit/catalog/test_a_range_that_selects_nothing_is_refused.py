@@ -51,7 +51,6 @@ from .test_a_filter_statement_binds_by_its_facet import (
 )
 
 _PF = ["Plasmodium falciparum 3D7"]
-_COUNTS = Path(__file__).parent / "fixtures" / "plasmodb_ngs_snps_summary_counts.json"
 _SAMPLE_CONTEXT = {
     "organismSinglePick": '["Plasmodium falciparum 3D7"]',
     "eda_sample_table_suffix": "s3be28bbe14_sample",
@@ -188,12 +187,12 @@ async def test_the_wdk_reads_cache_one_range_and_read_the_native_count(
     summary = WDKOntologyTermSummary.model_validate(
         load_recorded("ontology_term_summary_ngs_snps_collection_date").json_body()
     )
-    counts = WDKExchange.model_validate_json(_COUNTS.read_text())
+    counts = WDKFilterSummaryCounts.model_validate(
+        load_recorded("filter_summary_counts_ngs_snps").json_body()
+    )
     client = MagicMock()
     client.get_ontology_term_summary = AsyncMock(return_value=summary)
-    client.get_filter_summary_counts = AsyncMock(
-        return_value=WDKFilterSummaryCounts.model_validate(counts.response_json)
-    )
+    client.get_filter_summary_counts = AsyncMock(return_value=counts)
     _site(monkeypatch, client)
     reads = WDKFilterReads("plasmodb", "transcript", "GenesByNgsSnps")
     facet = _collection_date()
