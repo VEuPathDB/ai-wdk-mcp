@@ -21,6 +21,8 @@ from veupathdb_mcp.catalog import discovery
 from veupathdb_mcp.catalog.catalog_metadata import OntologyCategories
 from veupathdb_mcp.catalog.discovery import (
     _EMPTY_CATALOG_BYTES,
+    _FACET_RANGE_BYTES,
+    _FACET_RANGES_HELD,
     CatalogPolicy,
     SearchCatalog,
 )
@@ -146,8 +148,11 @@ async def test_a_catalog_reports_the_bytes_it_holds(tmp_path: Path) -> None:
     catalog._semantic_index = SemanticSearchIndex(site_id="testdb")
 
     assert restored.payload_bytes == (tmp_path / "testdb.json").stat().st_size
-    # The vectors live in Postgres, so a catalog costs what its snapshot does.
-    assert catalog.memory_bytes == _EMPTY_CATALOG_BYTES + restored.payload_bytes * 4
+    assert catalog.memory_bytes == (
+        _EMPTY_CATALOG_BYTES
+        + _FACET_RANGES_HELD * _FACET_RANGE_BYTES
+        + restored.payload_bytes * 4
+    )
 
 
 async def test_an_unloaded_catalog_reports_a_size() -> None:

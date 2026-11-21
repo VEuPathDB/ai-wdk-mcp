@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from tests._support.wdk_reads import serve_reads
-from veupathdb.domain.parameters import ParamGraph
+from veupathdb.domain.parameters import MultiPickValue, ParamGraph
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKEnumParam, WDKSearchResponse
@@ -106,7 +106,9 @@ async def test_a_narrowed_read_matches_no_prompt(
         "GenesByLocation",
         "chromosomeOptional",
         record_type="transcript",
-        context_values={"organismSinglePick": ["Plasmodium falciparum 3D7"]},
+        context_values={
+            "organismSinglePick": MultiPickValue(values=["Plasmodium falciparum 3D7"])
+        },
         narrowing=VocabNarrowing(query="chromosome"),
     )
 

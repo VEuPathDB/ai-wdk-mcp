@@ -69,7 +69,7 @@ async def test_a_range_statement_binds_its_facet_and_reads_its_range_once() -> N
         None,
     )
     assert resolved.provenance["gene_variant_stats"] is Provenance.STATED
-    assert [term for _, term, _ in reads.ranges_read] == ["total_variants"]
+    assert [term for _, term, _, _ in reads.ranges_read] == ["total_variants"]
 
 
 async def test_a_facet_named_by_a_part_of_its_name_is_refused() -> None:

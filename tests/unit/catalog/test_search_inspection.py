@@ -6,17 +6,20 @@ from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from pydantic import TypeAdapter
 from tests._support.wdk_reads import serve_reads
 from veupathdb.domain.parameters import (
     FAKE_ALL_SENTINEL,
+    MultiPickValue,
     WDKTreeBoxVocabNode,
     WDKVocabNodeData,
     collect_leaf_terms,
+    from_wire,
 )
 from veupathdb.errors import WDKError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
-from veupathdb.wdk import WDKSearchResponse
+from veupathdb.wdk import WDKParameter, WDKSearchResponse
 
 from veupathdb_mcp.catalog import search_inspection, searches
 from veupathdb_mcp.catalog.search_inspection import (
@@ -27,9 +30,14 @@ from veupathdb_mcp.catalog.search_inspection import (
     read_parameter_options,
 )
 
+from .conftest import wdk_search_response
+
 
 def _response(name: str) -> WDKSearchResponse:
     return WDKSearchResponse.model_validate(load_recorded(name).json_body())
+
+
+_DECLARED: TypeAdapter[list[WDKParameter]] = TypeAdapter(list[WDKParameter])
 
 
 def _stub_client(monkeypatch: pytest.MonkeyPatch, fixture: str) -> MagicMock:
@@ -353,7 +361,11 @@ class TestReadParameterOptions:
             "GenesByLocation",
             "chromosomeOptional",
             record_type="transcript",
-            context_values={"organismSinglePick": ["Plasmodium falciparum 3D7"]},
+            context_values={
+                "organismSinglePick": MultiPickValue(
+                    values=["Plasmodium falciparum 3D7"]
+                )
+            },
         )
 
         assert result.kind == "parameter_info"
@@ -435,3 +447,45 @@ class TestPrioritizedBranches:
             "Anopheles",
             "Plasmodium",
         ]
+
+
+async def test_an_options_read_takes_a_half_open_range_bound_on_the_search(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    declared = _DECLARED.validate_python(
+        [
+            {
+                "type": "number-range",
+                "name": "period_range",
+                "displayName": "Period",
+                "initialDisplayValue": '{"min": 20, "max": 28}',
+                "min": 0,
+                "dependentParams": ["phase"],
+            },
+            {
+                "type": "single-pick-vocabulary",
+                "name": "phase",
+                "displayName": "Phase",
+                "vocabulary": [["early", "early", None], ["late", "late", None]],
+            },
+        ]
+    )
+    response = wdk_search_response("GenesByPeriod", declared)
+    client = MagicMock()
+    client.get_search_details = AsyncMock(return_value=response)
+    client.get_search_details_with_params = AsyncMock(return_value=response)
+    monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
+    monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
+    serve_reads(monkeypatch, response, client)
+
+    result = await read_parameter_options(
+        "plasmodb",
+        "GenesByPeriod",
+        "phase",
+        record_type="transcript",
+        context_values={"period_range": from_wire("number-range", '{"min": 22}')},
+    )
+
+    assert result.kind == "parameter_info"
+    context = client.get_search_details_with_params.await_args.kwargs["context"]
+    assert context["period_range"] == '{"min": 22.0}'

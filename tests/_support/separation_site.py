@@ -50,7 +50,7 @@ def patch_site(
     catalog = RecordedCatalog(responses)
     monkeypatch.setattr(enumeration, "get_discovery_service", lambda: catalog)
     monkeypatch.setattr(enumeration, "wdk_fetch_at", catalog.wdk_fetch_at)
-    monkeypatch.setattr(enumeration, "wdk_filter_reads", lambda *_: FilterReadsDouble())
+    monkeypatch.setattr(enumeration, "WDKFilterReads", lambda *_: FilterReadsDouble())
 
     async def ranked(
         site_id: str, record_type: str, query: str, **kwargs: object

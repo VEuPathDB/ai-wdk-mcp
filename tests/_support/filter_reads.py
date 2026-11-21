@@ -17,12 +17,15 @@ from veupathdb.wdk import WDKOntologyTermSummary
 
 @dataclass
 class FilterReadsDouble:
-    """Answers each range from the recorded term summary its facet names, and
-    the selected count it holds; records every read."""
+    """Answers each range from the recorded term summary its facet names, alone or
+    under sibling clauses, and the selected count it holds; records every read."""
 
     summaries: dict[str, str] = field(default_factory=dict)
     count: int | None = None
-    ranges_read: list[tuple[str, str, dict[str, str]]] = field(default_factory=list)
+    under_siblings: dict[str, str] = field(default_factory=dict)
+    ranges_read: list[tuple[str, str, dict[str, str], tuple[FilterClause, ...]]] = (
+        field(default_factory=list)
+    )
     counts_read: list[tuple[str, dict[str, str], FilterValue]] = field(
         default_factory=list
     )
@@ -34,9 +37,9 @@ class FilterReadsDouble:
         context: dict[str, str],
         others: Sequence[FilterClause],
     ) -> FacetRange | None:
-        del others
-        self.ranges_read.append((param, facet.term, context))
-        name = self.summaries.get(facet.term)
+        self.ranges_read.append((param, facet.term, context, tuple(others)))
+        held = self.under_siblings if others else self.summaries
+        name = held.get(facet.term)
         if name is None:
             return None
         summary = WDKOntologyTermSummary.model_validate(load_recorded(name).json_body())

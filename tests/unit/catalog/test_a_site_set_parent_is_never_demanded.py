@@ -8,6 +8,7 @@ from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recorded_searches import recorded_search
 from tests._support.recordings import TEST_ROOT
 from tests._support.wdk_reads import serve_reads
+from veupathdb.domain.parameters import MultiPickValue
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKParameter, WDKSearchResponse, WDKStringParam
 
@@ -85,7 +86,9 @@ async def test_a_dependent_reads_under_its_stated_parent_alone(
         "plasmodb",
         SNPS,
         "variation_sample_meta",
-        context_values={"organismSinglePick": ["Plasmodium falciparum 3D7"]},
+        context_values={
+            "organismSinglePick": MultiPickValue(values=["Plasmodium falciparum 3D7"])
+        },
     )
 
     assert isinstance(read, ParameterInfo)

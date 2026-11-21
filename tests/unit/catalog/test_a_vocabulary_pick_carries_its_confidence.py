@@ -12,7 +12,12 @@ import pytest
 import respx
 from scripts.record_decisions import VOCAB_TERM
 from tests._support.wdk_reads import serve_reads
-from veupathdb.domain.parameters import VocabOption
+from veupathdb.domain.parameters import (
+    MultiPickValue,
+    ParamValue,
+    SinglePickValue,
+    VocabOption,
+)
 from veupathdb.wdk import WDKSearchResponse
 
 from veupathdb_mcp.catalog import (
@@ -32,7 +37,10 @@ from veupathdb_mcp.catalog.vocab_pick import VocabPick, pick_vocab_entry
 FIXTURES = Path(__file__).parent / "fixtures"
 INTERPRO = FIXTURES / "plasmodb_3d7_interpro_vocabulary_half_off.json"
 PICK = FIXTURES / "decisions_plasmodb_interpro_pick.json"
-CONTEXT = {"organism": ["Plasmodium falciparum 3D7"], "domain_database": "INTERPRO"}
+CONTEXT: dict[str, ParamValue] = {
+    "organism": MultiPickValue(values=["Plasmodium falciparum 3D7"]),
+    "domain_database": SinglePickValue(value="INTERPRO"),
+}
 
 
 def _exchanges() -> list[dict[str, Any]]:

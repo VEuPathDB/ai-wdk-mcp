@@ -8,6 +8,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from tests._support.wdk_reads import serve_reads
+from veupathdb.domain.parameters import ParamValue, SinglePickValue
 from veupathdb.wdk import WDKSearchResponse
 
 from veupathdb_mcp.catalog import search_inspection, searches
@@ -17,7 +18,7 @@ DAL972 = "tritrypdb_dal972_pfam_refresh"
 FOWLERI = "amoebadb_nfowleri_pfam_refresh"
 SEARCH = "GenesByInterproDomain"
 PARAMETER = "domain_typeahead"
-CONTEXT = {"domain_database": "Pfam"}
+CONTEXT: dict[str, ParamValue] = {"domain_database": SinglePickValue(value="Pfam")}
 
 
 def _domain_database() -> dict[str, object]:

@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
+from cachetools import LRUCache
 from veupathdb import get_logger
 from veupathdb.domain.parameters import FacetRange
 from veupathdb.errors import VEuPathDBError
@@ -40,6 +41,8 @@ _CATALOG_BUILD = asyncio.Semaphore(1)
 # warm site. The floor covers a catalog whose snapshot is not yet known.
 _RESIDENT_PER_PAYLOAD_BYTE = 4
 _EMPTY_CATALOG_BYTES = 1024 * 1024
+_FACET_RANGES_HELD = 512
+_FACET_RANGE_BYTES = 2048
 
 
 @dataclass(frozen=True, slots=True)
@@ -85,15 +88,22 @@ class SearchCatalog:
         self._available_categories: set[str] = set()
         self._offered_searches: frozenset[str] = frozenset()
         self._payload_bytes = 0
-        self.facet_ranges: dict[tuple[object, ...], FacetRange | None] = {}
+        self.facet_ranges: LRUCache[tuple[object, ...], FacetRange | None] = LRUCache(
+            maxsize=_FACET_RANGES_HELD
+        )
 
     @property
     def memory_bytes(self) -> int:
         """Accounted resident cost of this catalog, for the eviction budget.
 
-        The vectors live in Postgres, so a catalog costs what its snapshot does.
+        The vectors live in Postgres, so a catalog costs its snapshot and its
+        bounded facet range cache.
         """
-        return _EMPTY_CATALOG_BYTES + self._payload_bytes * _RESIDENT_PER_PAYLOAD_BYTE
+        return (
+            _EMPTY_CATALOG_BYTES
+            + _FACET_RANGES_HELD * _FACET_RANGE_BYTES
+            + self._payload_bytes * _RESIDENT_PER_PAYLOAD_BYTE
+        )
 
     # ------------------------------------------------------------------
     # Snapshot helpers

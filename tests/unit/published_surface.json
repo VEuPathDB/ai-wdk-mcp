@@ -434,6 +434,7 @@
     "VocabLookup",
     "VocabNarrowing",
     "VocabPick",
+    "WDKFilterReads",
     "adapt_param_specs_from_search",
     "assign_step_record_classes",
     "browse_search_categories",
@@ -509,7 +510,6 @@
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at",
-    "wdk_filter_reads",
     "write_phyletic_expression"
   ],
   "veupathdb_mcp.controls": [

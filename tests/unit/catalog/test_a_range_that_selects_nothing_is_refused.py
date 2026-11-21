@@ -10,11 +10,18 @@ import pytest
 from tests._support.filter_reads import FilterReadsDouble
 from tests._support.wdk_reads import serve_reads
 from veupathdb.devtools import WDKExchange
-from veupathdb.domain.parameters import FilterFacets, FilterValue
+from veupathdb.domain.parameters import (
+    FilterFacet,
+    FilterFacets,
+    FilterValue,
+    MultiPickValue,
+    StringMembers,
+)
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import (
     WDKFilterParam,
+    WDKFilterSummaryCounts,
     WDKOntologyTermSummary,
     WDKParameter,
     WDKSearchResponse,
@@ -28,10 +35,11 @@ from veupathdb_mcp.catalog import (
     search_inspection,
     searches,
 )
+from veupathdb_mcp.catalog.discovery import CatalogPolicy, SearchCatalog
 from veupathdb_mcp.catalog.facet_ranges import (
     EmptyRangeError,
     TooFewSelectedError,
-    wdk_filter_reads,
+    WDKFilterReads,
 )
 from veupathdb_mcp.catalog.param_dag import resolve_params_with_intent
 from veupathdb_mcp.catalog.param_intent import ParamIntent
@@ -86,7 +94,7 @@ async def test_a_range_past_the_facets_largest_value_is_refused() -> None:
 
     assert caught.value.detail == (
         "total_variants (Total variants) on gene_variant_stats spans 1 to 4,823 "
-        'variants over 5,643 records; {"min": 4824.0} selects none of it. '
+        'variants over 5,643 records; {"min": 4824} selects none of it. '
         "State a range inside it."
     )
 
@@ -112,7 +120,7 @@ async def test_a_date_range_is_read_under_the_bound_organism_and_site_suffix() -
         )
 
     assert reads.ranges_read == [
-        ("variation_sample_meta", "VAR_338f1760", _SAMPLE_CONTEXT)
+        ("variation_sample_meta", "VAR_338f1760", _SAMPLE_CONTEXT, ())
     ]
     assert "spans 2001-11-22 to 2014-08-30 over 200 records" in caught.value.detail
     assert reads.counts_read == []
@@ -153,6 +161,27 @@ def _declared(params: list[WDKParameter], name: str) -> WDKFilterParam:
     return param
 
 
+def _collection_date() -> FilterFacet:
+    facet = FilterFacets.of(_declared(ngs_snps(), "variation_sample_meta")).find(
+        "Collection date"
+    )
+    assert facet is not None
+    return facet
+
+
+def _site(monkeypatch: pytest.MonkeyPatch, client: MagicMock) -> SearchCatalog:
+    catalog = SearchCatalog(
+        "plasmodb",
+        cache_dir=Path("/nonexistent"),
+        policy=CatalogPolicy(),
+        spawn=MagicMock(),
+    )
+    service = MagicMock(get_catalog=AsyncMock(return_value=catalog))
+    monkeypatch.setattr(facet_ranges, "get_wdk_client", lambda _site: client)
+    monkeypatch.setattr(facet_ranges, "get_discovery_service", lambda: service)
+    return catalog
+
+
 async def test_the_wdk_reads_cache_one_range_and_read_the_native_count(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -162,16 +191,12 @@ async def test_the_wdk_reads_cache_one_range_and_read_the_native_count(
     counts = WDKExchange.model_validate_json(_COUNTS.read_text())
     client = MagicMock()
     client.get_ontology_term_summary = AsyncMock(return_value=summary)
-    client.post = AsyncMock(return_value=counts.response_json)
-    catalog = MagicMock(facet_ranges={})
-    service = MagicMock(get_catalog=AsyncMock(return_value=catalog))
-    monkeypatch.setattr(facet_ranges, "get_wdk_client", lambda _site: client)
-    monkeypatch.setattr(facet_ranges, "get_discovery_service", lambda: service)
-    facet = FilterFacets.of(_declared(ngs_snps(), "variation_sample_meta")).find(
-        "Collection date"
+    client.get_filter_summary_counts = AsyncMock(
+        return_value=WDKFilterSummaryCounts.model_validate(counts.response_json)
     )
-    assert facet is not None
-    reads = wdk_filter_reads("plasmodb", "transcript", "GenesByNgsSnps")
+    _site(monkeypatch, client)
+    reads = WDKFilterReads("plasmodb", "transcript", "GenesByNgsSnps")
+    facet = _collection_date()
 
     first = await reads.range("variation_sample_meta", facet, _SAMPLE_CONTEXT, [])
     second = await reads.range("variation_sample_meta", facet, _SAMPLE_CONTEXT, [])
@@ -184,7 +209,62 @@ async def test_the_wdk_reads_cache_one_range_and_read_the_native_count(
     assert (first.min, first.max, first.records) == ("2001-11-22", "2014-08-30", 200)
     client.get_ontology_term_summary.assert_awaited_once()
     assert count == 538
-    assert client.post.await_args.kwargs["json"] == counts.request_json
+    client.get_filter_summary_counts.assert_awaited_once_with(
+        "transcript",
+        "GenesByNgsSnps",
+        "variation_sample_meta",
+        {**_SAMPLE_CONTEXT, "variation_sample_meta": '{"filters": []}'},
+        filters=[],
+    )
+
+
+async def test_the_range_cache_never_holds_more_than_its_bound(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    summary = WDKOntologyTermSummary.model_validate(
+        load_recorded("ontology_term_summary_ngs_snps_collection_date").json_body()
+    )
+    client = MagicMock(get_ontology_term_summary=AsyncMock(return_value=summary))
+    catalog = _site(monkeypatch, client)
+    reads = WDKFilterReads("plasmodb", "transcript", "GenesByNgsSnps")
+    facet = _collection_date()
+    bound = catalog.facet_ranges.maxsize
+
+    for day in range(bound + 5):
+        sibling = StringMembers(
+            field="VAR_68bb04bd",
+            type="string",
+            is_range=False,
+            include_unknown=False,
+            value=[f"stated {day}"],
+        )
+        await reads.range("variation_sample_meta", facet, _SAMPLE_CONTEXT, [sibling])
+
+    assert len(catalog.facet_ranges) == bound
+    assert client.get_ontology_term_summary.await_count == bound + 5
+
+
+async def test_a_range_is_read_under_its_sibling_clauses() -> None:
+    reads = FilterReadsDouble(
+        {"total_variants": "ontology_term_summary_total_variants"},
+        under_siblings={
+            "total_variants": "ontology_term_summary_total_variants_under_high_impact"
+        },
+    )
+
+    with pytest.raises(EmptyRangeError) as caught:
+        await _variant_stats(
+            [
+                {"field": "most_severe_impact", "value": ["HIGH"]},
+                {"field": "total_variants", "value": {"max": 1}},
+            ],
+            reads,
+        )
+
+    [(_, term, _, others)] = reads.ranges_read
+    assert term == "total_variants"
+    assert [(c.field, c.value) for c in others] == [("most_severe_impact", ["HIGH"])]
+    assert "spans 2 to 4,823 variants over 3,207 records" in caught.value.detail
 
 
 async def test_a_queried_options_read_carries_the_ranges_it_names(
@@ -207,24 +287,25 @@ async def test_a_queried_options_read_carries_the_ranges_it_names(
     reads = FilterReadsDouble(
         {"total_variants": "ontology_term_summary_total_variants"}
     )
-    monkeypatch.setattr(search_inspection, "wdk_filter_reads", lambda *_: reads)
+    monkeypatch.setattr(search_inspection, "WDKFilterReads", lambda *_: reads)
 
     read = await read_parameter_options(
         "plasmodb",
         "GenesByVariantCharacteristics",
         "gene_variant_stats",
         record_type="transcript",
-        context_values={"organism_select_none": _PF},
+        context_values={"organism_select_none": MultiPickValue(values=_PF)},
         narrowing=VocabNarrowing(query="variants per kb"),
     )
 
     assert isinstance(read, ParameterInfo)
-    terms = [term for _, term, _ in reads.ranges_read]
+    terms = [term for _, term, _, _ in reads.ranges_read]
     assert terms == ["variants_per_kb", "total_variants", "n_missense"]
     assert [f.term for f in read.filter_fields[:3]] == terms
     ranged = {f.term: f.range for f in read.filter_fields if f.range is not None}
     assert list(ranged) == ["total_variants"]
     assert ranged["total_variants"].text() == "1 to 4,823 variants over 5,643 records"
-    assert reads.ranges_read[0][2] == {
-        "organism_select_none": '["Plasmodium falciparum 3D7"]'
-    }
+    assert reads.ranges_read[0][2:] == (
+        {"organism_select_none": '["Plasmodium falciparum 3D7"]'},
+        (),
+    )

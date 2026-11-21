@@ -7,6 +7,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from tests._support.wdk_reads import serve_reads
+from veupathdb.domain.parameters import MultiPickValue, SinglePickValue
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKSearchResponse
@@ -91,8 +92,8 @@ async def test_a_read_with_a_query_shows_the_facet_values_it_names(
         "variation_sample_meta",
         record_type="transcript",
         context_values={
-            "organismSinglePick": ["Plasmodium falciparum 3D7"],
-            "eda_sample_table_suffix": "s3be28bbe14_sample",
+            "organismSinglePick": MultiPickValue(values=["Plasmodium falciparum 3D7"]),
+            "eda_sample_table_suffix": SinglePickValue(value="s3be28bbe14_sample"),
         },
         narrowing=VocabNarrowing(query="UGK_661.1"),
     )

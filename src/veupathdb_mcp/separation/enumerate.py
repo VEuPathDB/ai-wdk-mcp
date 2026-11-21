@@ -5,12 +5,16 @@ A candidate is never guessed: a parameter nothing binds skips the search.
 """
 
 from collections import Counter
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 
 from pydantic import JsonValue
 from veupathdb.domain.parameters import (
+    FacetRange,
+    FilterClause,
+    FilterFacet,
     FilterStatementError,
+    FilterValue,
     ParamValue,
     StatedValuesError,
 )
@@ -27,13 +31,13 @@ from veupathdb_mcp.catalog import (
     TooFewSelectedError,
     UnknownParameterError,
     VagueSearchQueryError,
+    WDKFilterReads,
     format_param_info_typed,
     get_discovery_service,
     radio_pairs,
     resolve_params_with_intent,
     search_for_searches,
     wdk_fetch_at,
-    wdk_filter_reads,
 )
 from veupathdb_mcp.separation.budget import (
     ENRICHMENT_REQUESTS,
@@ -253,6 +257,28 @@ def _charged(
     return fetch
 
 
+@dataclass(frozen=True)
+class _ChargedReads:
+    reads: FilterReads
+    budget: WdkCallBudget
+
+    async def range(
+        self,
+        param: str,
+        facet: FilterFacet,
+        context: dict[str, str],
+        others: Sequence[FilterClause],
+    ) -> FacetRange | None:
+        self.budget.charge(SEARCH_READ_REQUESTS)
+        return await self.reads.range(param, facet, context, others)
+
+    async def selected(
+        self, param: str, context: dict[str, str], value: FilterValue
+    ) -> int | None:
+        self.budget.charge(SEARCH_READ_REQUESTS)
+        return await self.reads.selected(param, context, value)
+
+
 def _wire_key(search_name: str, parameters: dict[str, ParamValue]) -> str:
     return f"{search_name}?{sorted(encode_params(parameters).items())}"
 
@@ -300,7 +326,10 @@ class _Collector:
         parameters = await bind(
             search,
             fetch,
-            wdk_filter_reads(self.site_id, GENE_RECORD_CLASS, proposal.search_name),
+            _ChargedReads(
+                WDKFilterReads(self.site_id, GENE_RECORD_CLASS, proposal.search_name),
+                self.budget,
+            ),
             proposal,
             self.organisms,
         )

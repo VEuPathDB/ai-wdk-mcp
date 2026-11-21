@@ -21,7 +21,7 @@ from veupathdb.domain.parameters import (
 from veupathdb.errors import WDKError
 from veupathdb.wdk import WDKParameter, WDKSearch, get_wdk_client
 
-from veupathdb_mcp.catalog.facet_ranges import wdk_filter_reads, with_ranges
+from veupathdb_mcp.catalog.facet_ranges import WDKFilterReads, with_ranges
 from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
@@ -320,7 +320,7 @@ async def read_parameter_options(
     parameter_id: str,
     *,
     record_type: str | None = None,
-    context_values: Mapping[str, JsonValue] | None = None,
+    context_values: Mapping[str, ParamValue] | None = None,
     narrowing: VocabNarrowing | None = None,
 ) -> GetParameterOptionsResult:
     """Read one parameter's vocabulary under the parent values supplied.
@@ -333,9 +333,7 @@ async def read_parameter_options(
     rt = await resolve_search_record_type(
         site_id, search_name, _auto_resolved_record_type(record_type)
     )
-    context = await read_stated_parameters(
-        site_id, search_name, context_values, record_type=rt
-    )
+    context = dict(context_values or {})
     all_params = await wdk_fetch_at(site_id, rt, search_name)(wire_map(context))
     if any(p.name == parameter_id and p.site_set for p in all_params):
         raise SiteSetParameterError(parameter_id, search_name)
@@ -396,7 +394,7 @@ async def read_parameter_options(
                     for d in all_params
                     if d.name in parents and d.initial_display_value is not None
                 },
-                wdk_filter_reads(site_id, rt, search_name),
+                WDKFilterReads(site_id, rt, search_name),
             )
             return shown.model_copy(update={"filter_fields": ranged})
 

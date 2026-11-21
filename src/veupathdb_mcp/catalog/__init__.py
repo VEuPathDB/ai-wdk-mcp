@@ -46,7 +46,7 @@ from veupathdb_mcp.catalog.facet_ranges import (
     EmptyRangeError,
     FilterReads,
     TooFewSelectedError,
-    wdk_filter_reads,
+    WDKFilterReads,
 )
 from veupathdb_mcp.catalog.gene_records import (
     GENE_RECORD_TYPE,
@@ -296,6 +296,7 @@ __all__ = [
     "VocabLookup",
     "VocabNarrowing",
     "VocabPick",
+    "WDKFilterReads",
     "adapt_param_specs_from_search",
     "assign_step_record_classes",
     "browse_search_categories",
@@ -371,6 +372,5 @@ __all__ = [
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at",
-    "wdk_filter_reads",
     "write_phyletic_expression",
 ]

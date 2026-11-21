@@ -229,7 +229,10 @@ async def test_a_name_read_states_the_entries_it_cannot_reach(
         SEARCH,
         PAIR.vocabulary,
         record_type="transcript",
-        context_values=CONTEXT,
+        context_values={
+            "organism": MultiPickValue(values=["Plasmodium falciparum 3D7"]),
+            "domain_database": SinglePickValue(value="INTERPRO"),
+        },
         narrowing=search_inspection.VocabNarrowing(query="protein kinase"),
     )
 

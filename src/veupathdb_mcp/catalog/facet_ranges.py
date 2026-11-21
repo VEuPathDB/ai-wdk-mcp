@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Protocol
@@ -21,9 +20,7 @@ from veupathdb.domain.parameters import (
     VocabOption,
 )
 from veupathdb.errors import ValidationError
-from veupathdb.model import CamelModel
-from veupathdb.wdk import WDKFilterParam, WDKParameter, get_wdk_client
-from veupathdb.wdk.search_load import in_turn_line
+from veupathdb.wdk import WDKFilterParam, WDKParameter, get_wdk_client, in_turn_line
 
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service
 from veupathdb_mcp.catalog.shortlist import matched
@@ -53,12 +50,11 @@ class EmptyRangeError(ValidationError):
         span: FacetRange,
         stated: NumberBounds | DateBounds,
     ) -> None:
-        bounds = json.dumps(stated.model_dump(mode="json", exclude_none=True))
         super().__init__(
             title="Range selects nothing",
             detail=(
                 f"{facet.term} ({facet.display}) on {param} spans {span.text()}; "
-                f"{bounds} selects none of it. State a range inside it."
+                f"{stated.text()} selects none of it. State a range inside it."
             ),
             errors=[{"param": param, "field": facet.term}],
         )
@@ -133,12 +129,8 @@ async def with_ranges(
     ]
 
 
-class _SummaryCounts(CamelModel):
-    native_filtered: int | None = None
-
-
 @dataclass(frozen=True)
-class _WDKFilterReads:
+class WDKFilterReads:
     site_id: str
     record_type: str
     search_name: str
@@ -176,19 +168,11 @@ class _WDKFilterReads:
         self, param: str, context: dict[str, str], value: FilterValue
     ) -> int | None:
         async with in_turn_line(self.site_id):
-            raw = await get_wdk_client(self.site_id).post(
-                f"/record-types/{self.record_type}/searches/{self.search_name}"
-                f"/{param}/summary-counts",
-                json={
-                    "filters": value.model_dump(by_alias=True, mode="json")["filters"],
-                    "contextParamValues": {
-                        **context,
-                        param: FilterValue().to_wire(),
-                    },
-                },
+            counts = await get_wdk_client(self.site_id).get_filter_summary_counts(
+                self.record_type,
+                self.search_name,
+                param,
+                {**context, param: FilterValue().to_wire()},
+                filters=value.filters,
             )
-        return _SummaryCounts.model_validate(raw).native_filtered
-
-
-def wdk_filter_reads(site_id: str, record_type: str, search_name: str) -> FilterReads:
-    return _WDKFilterReads(site_id, record_type, search_name)
+        return counts.native_filtered
