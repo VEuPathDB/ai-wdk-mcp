@@ -12,6 +12,7 @@ from veupathdb.wdk import WDKSearchResponse, WDKStringParam
 from veupathdb_mcp.catalog import (
     ParamIntent,
     SiteSetParameterError,
+    UnknownParameterError,
     format_param_info_typed,
     resolve_params_with_intent,
     search_inspection,
@@ -208,4 +209,18 @@ async def test_the_served_specs_list_visible_parameters_with_their_read_only_mar
     dumped = {spec.name: spec.model_dump(by_alias=True) for spec in specs}
     assert set(dumped) == visible
     assert all(entry["isReadOnly"] is False for entry in dumped.values())
-    assert dumped["organismSinglePick"]["dependentParams"] == ["variation_sample_meta"]
+    assert dumped["organismSinglePick"]["dependentParams"] == [
+        "eda_sample_table_suffix",
+        "variation_sample_meta",
+    ]
+
+
+async def test_an_unknown_override_lists_no_read_only_name() -> None:
+    with pytest.raises(UnknownParameterError) as refused:
+        await resolve_params_with_intent(
+            fetch_at=fetcher(*_read_only_search()),
+            intent=ParamIntent(),
+            overrides={"txt": "kinase"},
+        )
+
+    assert refused.value.valid == ["text"]

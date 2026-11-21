@@ -84,7 +84,7 @@ def _refuse_unknown_overrides(
     unknown = sorted(set(overrides) - names)
     if unknown:
         raise UnknownParameterError(
-            unknown, sorted(i.name for i in infos if i.is_visible)
+            unknown, sorted(i.name for i in infos if i.bindable)
         )
 
 

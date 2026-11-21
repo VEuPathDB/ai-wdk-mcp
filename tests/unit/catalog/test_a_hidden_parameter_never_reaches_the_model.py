@@ -93,7 +93,10 @@ async def test_the_served_specs_list_visible_parameters_only() -> None:
 
     names = {spec.name for spec in specs}
     assert (len(names), names & HIDDEN) == (12, set())
-    assert all(set(spec.dependent_params).isdisjoint(HIDDEN) for spec in specs)
+    wdk = {
+        p.name: list(p.dependent_params) for p in _snps().search_data.parameters or []
+    }
+    assert all(spec.dependent_params == wdk[spec.name] for spec in specs)
 
 
 def test_a_hosts_spec_builder_keeps_every_parameter() -> None:

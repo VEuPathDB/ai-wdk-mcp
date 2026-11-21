@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastmcp.exceptions import ToolError
 from veupathdb import JSONObject
 from veupathdb.domain import SearchContext
-from veupathdb.domain.parameters import PHYLETIC_LIST_PARAMS, ParamGraph, ParamValue
+from veupathdb.domain.parameters import PHYLETIC_LIST_PARAMS, ParamValue
 from veupathdb.errors import VEuPathDBError
 
 from veupathdb_mcp.catalog import (
@@ -351,13 +351,8 @@ async def get_search_param_specs(
     except UnknownSearchError as exc:
         msg = f"search_name is not on this site. {exc.guidance}"
         raise ToolError(msg) from exc
-    graph = ParamGraph.of(inspection.definition.parameters or [])
     return [
-        spec.model_copy(
-            update={"dependent_params": list(graph.stated_children.get(spec.name, ()))}
-        )
-        for spec in build_param_specs(inspection.definition)
-        if spec.is_visible
+        spec for spec in build_param_specs(inspection.definition) if spec.is_visible
     ]
 
 
@@ -470,9 +465,10 @@ async def resolve_search_parameters(
         record_type: Record type. Gene searches are 'transcript'.
         criterion: The criterion the binding runs against, in your own words.
         overrides: Values stated by name, each a string or a list of strings.
-            A hidden parameter takes no stated value. On a phylogenetic profile
-            search, state included_species and excluded_species; profile_pattern
-            is derived from them.
+            A parameter the site sets (hidden or read-only) takes no
+            stated value. On a phylogenetic profile search, state
+            included_species and excluded_species; profile_pattern is derived
+            from them.
     """
     try:
         definition = (
