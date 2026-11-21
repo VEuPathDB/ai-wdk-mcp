@@ -114,7 +114,31 @@ def test_a_hidden_dependent_is_not_named_under_dependencies() -> None:
     overview = _overview([parent, hidden_child])
 
     assert overview.dependencies == {}
-    assert [p.name for p in overview.required] == ["organism"]
+    [entry] = overview.required
+    assert (entry.name, entry.controls_vocab_of) == ("organism", None)
+
+
+def test_a_read_only_parent_is_named_neither_as_a_parent_nor_a_control() -> None:
+    parent = WDKStringParam.model_validate(
+        {
+            "name": "document_type",
+            "isReadOnly": True,
+            "dependentParams": ["text_fields"],
+            "initialDisplayValue": "gene",
+        }
+    )
+    child = WDKEnumParam.model_validate(
+        {
+            "name": "text_fields",
+            "type": "multi-pick-vocabulary",
+            "vocabulary": _vocab("primary_key"),
+        }
+    )
+
+    overview = _overview([parent, child])
+
+    assert overview.dependencies == {}
+    assert [p.name for p in overview.required + overview.optional] == ["text_fields"]
 
 
 def test_hidden_params_are_not_in_the_overview() -> None:

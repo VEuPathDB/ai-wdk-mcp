@@ -43,6 +43,7 @@ def build_param_specs_from_list(
                 increment=param.increment,
                 display_type=param.display_type or None,
                 is_visible=param.is_visible,
+                is_read_only=param.is_read_only,
                 group=param.group or None,
                 dependent_params=list(param.dependent_params),
                 help=param.help,

@@ -239,7 +239,9 @@ def _genes_by_text() -> ParamFetcher:
             default="[]",
         ),
         param_info("text_expression", "string", default="*reductase"),
-        param_info("document_type", "string", default="gene", visible=False),
+        param_info(
+            "document_type", "string", default="gene", visible=False, site_set=True
+        ),
         param_info(
             "text_fields",
             "multi-pick-vocabulary",

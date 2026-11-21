@@ -31,7 +31,6 @@ from veupathdb_mcp.catalog._param_filters import _resolve_filter_param
 from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,
 )
-from veupathdb_mcp.catalog.hidden_params import HiddenParameterError
 from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,
     format_param_info_typed,
@@ -51,6 +50,7 @@ from veupathdb_mcp.catalog.param_phyletic import (
 from veupathdb_mcp.catalog.search_context import (
     get_search_params_under_context,
 )
+from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
 
 _MAX_RESOLVE_DEPTH = 6
 
@@ -92,8 +92,8 @@ def _refuse_hidden_overrides(
     infos: list[ParameterInfo], overrides: OverrideMap
 ) -> None:
     for info in infos:
-        if info.name in overrides and not info.is_visible:
-            raise HiddenParameterError(info.name)
+        if info.name in overrides and info.site_set:
+            raise SiteSetParameterError(info.name)
 
 
 def _with_derived_phyletic(
@@ -118,10 +118,10 @@ def _with_derived_phyletic(
 def _visible_slot(
     info: ParameterInfo, slot: UnboundParameter
 ) -> UnboundParameter | None:
-    if info.is_visible:
+    if info.bindable:
         return slot
     if info.param_kind != "input-step":
-        raise HiddenParameterError(info.name, unset=True)
+        raise SiteSetParameterError(info.name, unset=True)
     return None
 
 

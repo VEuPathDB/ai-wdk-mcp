@@ -167,6 +167,7 @@ class ParameterInfo(CamelModel):
     stated_children: list[str] = Field(default_factory=list)
     wire_parents: list[str] = Field(default_factory=list, exclude=True)
     wire_children: list[str] = Field(default_factory=list, exclude=True)
+    site_set: bool = Field(exclude=True)
     note: str | None = None
     filter_fields: list[FilterFieldInfo] = Field(default_factory=list)
     filter_leaves: list[FilterFieldInfo] = Field(default_factory=list, exclude=True)
@@ -179,10 +180,6 @@ class ParameterInfo(CamelModel):
     def _derive_param_kind(self) -> Self:
         self.param_kind = _to_param_kind(self.type)
         return self
-
-    @property
-    def site_set(self) -> bool:
-        return not self.is_visible or self.is_read_only
 
     @property
     def bindable(self) -> bool:
@@ -456,6 +453,7 @@ def format_typed_param(
         stated_children=list(graph.stated_children.get(name, ())),
         wire_parents=list(graph.wire_parents.get(name, ())),
         wire_children=list(graph.wire_children.get(name, ())),
+        site_set=param.site_set,
         note=note,
         filter_fields=shown_facets(facets, ""),
         filter_leaves=facets,

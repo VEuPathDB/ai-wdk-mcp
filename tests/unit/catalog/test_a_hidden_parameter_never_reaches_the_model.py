@@ -9,9 +9,9 @@ from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKEnumParam, WDKParameter, WDKSearchResponse, WDKStringParam
 
 from veupathdb_mcp.catalog import (
-    HiddenParameterError,
     ParamIntent,
     PhyleticListError,
+    SiteSetParameterError,
     UnknownParameterError,
     build_param_specs,
     format_param_info_typed,
@@ -59,20 +59,21 @@ def served(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.mark.usefixtures("served")
 async def test_the_options_of_a_hidden_parameter_are_refused_by_name() -> None:
-    with pytest.raises(HiddenParameterError) as refused:
+    with pytest.raises(SiteSetParameterError) as refused:
         await search_inspection.read_parameter_options(
             "plasmodb", SEARCH, "eda_sample_table_suffix"
         )
 
     assert refused.value.detail == (
-        "eda_sample_table_suffix is a hidden parameter of GenesByNgsSnps: the site "
-        "sets it, so it takes no value from you."
+        "eda_sample_table_suffix on GenesByNgsSnps is set by the site: the website "
+        "does not offer it, and it is sent at the value the site gives it under the "
+        "other values. Leave it out."
     )
 
 
 @pytest.mark.usefixtures("served")
 async def test_the_served_options_read_answers_the_refusal_as_a_tool_error() -> None:
-    with pytest.raises(ToolError, match="the site sets it"):
+    with pytest.raises(ToolError, match="is set by the site"):
         await catalog_tools.get_parameter_options("plasmodb", SEARCH, "WebServicesPath")
 
 
@@ -137,11 +138,11 @@ async def test_a_hidden_required_parameter_with_no_default_refuses_the_search() 
     unset = WDKStringParam(name="site_only", is_visible=False, allow_empty_value=False)
     infos = format_param_info_typed([*(_snps().search_data.parameters or []), unset])
 
-    with pytest.raises(HiddenParameterError) as refused:
+    with pytest.raises(SiteSetParameterError) as refused:
         await resolve_params_with_intent(fetch_at=fetcher(*infos), intent=ParamIntent())
 
     assert refused.value.detail == (
-        "site_only is a hidden parameter with no value the site sets, so the search "
+        "site_only is set by the site, and the site gives it no value, so the search "
         "cannot run from the values given."
     )
 
@@ -164,7 +165,7 @@ async def test_a_hidden_input_step_is_left_to_the_step_tree() -> None:
 async def test_the_resolve_walk_refuses_a_hidden_override_by_name() -> None:
     infos = format_param_info_typed(_snps().search_data.parameters or [])
 
-    with pytest.raises(HiddenParameterError, match="WebServicesPath"):
+    with pytest.raises(SiteSetParameterError, match="WebServicesPath"):
         await resolve_params_with_intent(
             fetch_at=fetcher(*infos),
             intent=ParamIntent(),
@@ -295,7 +296,7 @@ async def test_the_served_resolve_refuses_a_stated_profile_pattern(
         lambda *args: fetcher(*format_param_info_typed(definition)),
     )
 
-    with pytest.raises(ToolError, match="profile_pattern is a hidden parameter"):
+    with pytest.raises(ToolError, match="profile_pattern is set by the site"):
         await catalog_tools.resolve_search_parameters(
             "plasmodb",
             "GenesByOrthologPattern",

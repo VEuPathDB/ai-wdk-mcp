@@ -59,21 +59,17 @@ class SearchOverviewResult(CamelModel):
 def _build_dependency_section(
     infos: list[ParameterInfo],
 ) -> dict[str, DependencyEntry]:
-    """Name the parents each visible dependent parameter is read under.
-
-    A hidden parameter is absent from the overview, so naming it here sends the
-    model after a parameter it cannot see.
-    """
+    """Name the parents a caller states for each dependent parameter."""
     return {
         info.name: DependencyEntry(
-            depends_on=info.wire_parents,
+            depends_on=info.stated_parents,
             instruction=(
-                f"Set {', '.join(info.wire_parents)} first, then call "
+                f"Set {', '.join(info.stated_parents)} first, then call "
                 "get_parameter_options(...)"
             ),
         )
         for info in infos
-        if info.wire_parents and info.is_visible
+        if info.stated_parents
     }
 
 
@@ -109,12 +105,7 @@ def format_search_overview(
             vocabulary=sheet.vocabulary,
             vocabulary_total=sheet.vocabulary_total,
             vocabulary_note=sheet.vocabulary_note,
-            controls_vocab_of=[
-                name
-                for name in info.wire_children
-                if name in by_name and by_name[name].is_visible
-            ]
-            or None,
+            controls_vocab_of=info.stated_children or None,
             filter_facets=sheet.filter_facets,
         )
         if sheet.required:

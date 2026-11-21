@@ -57,8 +57,8 @@ def _note(
         )
     if info.allowed_values_tree is not None:
         parts.append("A parent term selects all of its children.")
-    if info.wire_parents:
-        parents = ", ".join(info.wire_parents)
+    if info.stated_parents:
+        parents = ", ".join(info.stated_parents)
         parts.append(
             f"This vocabulary depends on {parents} and is shown under the search defaults; "
             f"it is re-read under the values you propose."
@@ -68,11 +68,10 @@ def _note(
 
 def build_sheet(infos: list[ParameterInfo], *, query: str) -> list[SheetEntry]:
     """Every parameter a value can be proposed for. A vocabulary over
-    ``DIRECT_MAX`` is shortlisted. A hidden parameter is never listed: the site
-    sets it."""
+    ``DIRECT_MAX`` is shortlisted. A site-set parameter is never listed."""
     entries: list[SheetEntry] = []
     for info in infos:
-        if not info.is_visible:
+        if info.site_set:
             continue
         options = info.vocabulary()
         shown = shortlist(options, query)
@@ -90,7 +89,7 @@ def build_sheet(infos: list[ParameterInfo], *, query: str) -> list[SheetEntry]:
                 default=info.default_value,
                 min=info.min,
                 max=info.max,
-                depends_on=list(info.wire_parents),
+                depends_on=list(info.stated_parents),
                 vocabulary=shown,
                 vocabulary_total=len(options),
                 vocabulary_note=_note(info, len(shown), len(options), facets),

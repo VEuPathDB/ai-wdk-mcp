@@ -48,7 +48,6 @@ from veupathdb_mcp.catalog.gene_records import (
     require_gene_records,
 )
 from veupathdb_mcp.catalog.group_ids import is_group_id, is_residual
-from veupathdb_mcp.catalog.hidden_params import HiddenParameterError
 from veupathdb_mcp.catalog.models import (
     ParamSpecResponse,
     RecordTypeInfo,
@@ -186,6 +185,7 @@ from veupathdb_mcp.catalog.searches import (
 from veupathdb_mcp.catalog.semantic_matching import search_similarity
 from veupathdb_mcp.catalog.shortlist import shortlist, shortlist_slot
 from veupathdb_mcp.catalog.site_cost import CHARACTERS_WITHIN_READ_TIMEOUT
+from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
 from veupathdb_mcp.catalog.sites import (
     get_record_types,
     list_sites,
@@ -240,7 +240,6 @@ __all__ = [
     "ExperimentMatch",
     "FilterFieldInfo",
     "GetParameterOptionsResult",
-    "HiddenParameterError",
     "LabelReading",
     "NoGeneRecordsError",
     "NoneOf",
@@ -276,6 +275,7 @@ __all__ = [
     "SearchQueryRejection",
     "SheetEntry",
     "SideCounts",
+    "SiteSetParameterError",
     "UnknownExperimentError",
     "UnknownParameterError",
     "UnknownSearchError",

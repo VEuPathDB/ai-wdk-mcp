@@ -31,6 +31,7 @@ class ParamSpecResponse(CamelModel):
     increment: float | None = None
     display_type: str | None = Field(default=None)
     is_visible: bool = Field(default=True)
+    is_read_only: bool = False
     group: str | None = None
     dependent_params: list[str] = Field(default_factory=list)
     help: str | None = None

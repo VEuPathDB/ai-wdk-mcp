@@ -40,6 +40,7 @@ class ParamFields(TypedDict, total=False):
     default: str | None
     required: bool
     visible: bool
+    site_set: bool
     is_number: bool
     depends_on: list[str]
     filter_fields: list[FilterFieldInfo]
@@ -54,6 +55,7 @@ _INFO_FIELD_NAMES: Final[dict[str, str]] = {
     "default": "default_value",
     "required": "required",
     "visible": "is_visible",
+    "site_set": "site_set",
     "is_number": "is_number",
     "depends_on": "wire_parents",
     "filter_fields": "filter_fields",
@@ -74,6 +76,7 @@ def param_info(
         "type": param_type,
         "required": True,
         "is_visible": True,
+        "site_set": False,
         "is_number": False,
         "help": "",
         "value_format": "",

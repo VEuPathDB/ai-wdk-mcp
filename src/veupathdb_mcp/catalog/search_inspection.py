@@ -25,7 +25,6 @@ from veupathdb.wdk import (
     get_wdk_client,
 )
 
-from veupathdb_mcp.catalog.hidden_params import HiddenParameterError
 from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
@@ -51,6 +50,7 @@ from veupathdb_mcp.catalog.searches import (
     read_search_definition,
     resolve_search_record_type,
 )
+from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
 from veupathdb_mcp.catalog.vocab_lookup import VocabLookup, VocabRead, read_options
 from veupathdb_mcp.catalog.vocab_pick import pick_vocab_entry
 from veupathdb_mcp.catalog.vocab_rendering import entries_of
@@ -236,20 +236,16 @@ def _prioritize_organisms(
 
 
 def _unbound_parents(
-    all_params: list[WDKParameter],
+    graph: ParamGraph,
     parameter_id: str,
     bound: Mapping[str, ParamValue],
 ) -> list[str]:
-    """The parents of `parameter_id` that carry no value yet.
+    """The stated parents of `parameter_id` that carry no value yet.
 
     A dependent vocabulary is generated under its parents, so a read without
     them answers about the search's default parent rather than the one meant.
     """
-    return sorted(
-        p.name
-        for p in all_params
-        if parameter_id in (p.dependent_params or []) and p.name not in bound
-    )
+    return [p for p in graph.stated_parents.get(parameter_id, ()) if p not in bound]
 
 
 async def inspect_search(
@@ -333,11 +329,11 @@ async def read_parameter_options(
         encode_wdk_params(context) if context else {},
     )
     all_params = result.search_data.parameters or []
-    shown = {p.name for p in all_params if p.is_visible}
-    if any(p.name == parameter_id for p in all_params) and parameter_id not in shown:
-        raise HiddenParameterError(parameter_id, search_name)
+    if any(p.name == parameter_id and p.site_set for p in all_params):
+        raise SiteSetParameterError(parameter_id, search_name)
 
-    unbound = _unbound_parents(all_params, parameter_id, context)
+    graph = ParamGraph.of(all_params)
+    unbound = _unbound_parents(graph, parameter_id, context)
     if unbound:
         return ParentContextRequired(
             search_name=search_name,
@@ -359,7 +355,7 @@ async def read_parameter_options(
             )
             read = format_typed_param(
                 _prioritize_organisms(filtered, narrow.organism_hints),
-                graph=ParamGraph.of(all_params),
+                graph=graph,
                 applied_context=context or None,
                 parent_defaults={
                     other.name: other.initial_display_value
@@ -368,13 +364,6 @@ async def read_parameter_options(
                 },
                 phyletic_options=phyletic,
                 lookup=lookup or phyletic_lookup,
-            )
-            read = read.model_copy(
-                update={
-                    "wire_children": [
-                        name for name in read.wire_children if name in shown
-                    ]
-                }
             )
             if lookup or phyletic_lookup:
                 read = read.model_copy(
@@ -394,7 +383,7 @@ async def read_parameter_options(
                 update={"filter_fields": shown_facets(read.facets(), query)}
             )
 
-    valid = [p.name for p in all_params]
+    valid = [p.name for p in all_params if p.bindable]
     return ParameterNotOnSearch(
         search_name=search_name,
         requested_parameter_id=parameter_id,

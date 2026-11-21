@@ -81,6 +81,7 @@ def test_a_vocabulary_term_is_never_a_placeholder() -> None:
             "type": "single-pick-vocabulary",
             "required": True,
             "is_visible": True,
+            "site_set": False,
             "help": "",
             "value_format": "",
             "allowed_values": [{"value": RADIO_OFF, "display": "not applicable"}],

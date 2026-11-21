@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastmcp.exceptions import ToolError
 from veupathdb import JSONObject
 from veupathdb.domain import SearchContext
-from veupathdb.domain.parameters import PHYLETIC_LIST_PARAMS, ParamValue
+from veupathdb.domain.parameters import PHYLETIC_LIST_PARAMS, ParamGraph, ParamValue
 from veupathdb.errors import VEuPathDBError
 
 from veupathdb_mcp.catalog import (
@@ -18,7 +18,6 @@ from veupathdb_mcp.catalog import (
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.experiments import ExperimentMatch, UnknownExperimentError
-from veupathdb_mcp.catalog.hidden_params import HiddenParameterError
 from veupathdb_mcp.catalog.models import ParamSpecResponse, RecordTypeInfo, SearchMatch
 from veupathdb_mcp.catalog.overview_formatting import SearchOverviewResult
 from veupathdb_mcp.catalog.param_dag import (
@@ -34,6 +33,7 @@ from veupathdb_mcp.catalog.phyletic_pattern import PhyleticPattern
 from veupathdb_mcp.catalog.search_inspection import UnknownSearchError
 from veupathdb_mcp.catalog.searches import VagueSearchQueryError
 from veupathdb_mcp.catalog.shortlist import shortlist_slot
+from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
 from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
 from veupathdb_mcp.embeddings.record_manager import IndexHit, search_index
@@ -328,7 +328,7 @@ async def get_parameter_options(
             context_values=context_values,
             narrowing=search_inspection.VocabNarrowing(query=query),
         )
-    except HiddenParameterError as exc:
+    except SiteSetParameterError as exc:
         raise ToolError(exc.detail or exc.title) from exc
 
 
@@ -351,18 +351,13 @@ async def get_search_param_specs(
     except UnknownSearchError as exc:
         msg = f"search_name is not on this site. {exc.guidance}"
         raise ToolError(msg) from exc
-    specs = build_param_specs(inspection.definition)
-    shown = {spec.name for spec in specs if spec.is_visible}
+    graph = ParamGraph.of(inspection.definition.parameters or [])
     return [
         spec.model_copy(
-            update={
-                "dependent_params": [
-                    name for name in spec.dependent_params if name in shown
-                ]
-            }
+            update={"dependent_params": list(graph.stated_children.get(spec.name, ()))}
         )
-        for spec in specs
-        if spec.name in shown
+        for spec in build_param_specs(inspection.definition)
+        if spec.is_visible
     ]
 
 

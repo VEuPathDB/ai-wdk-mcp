@@ -192,6 +192,7 @@ def _sheet_info(name: str, *, visible: bool = True) -> Any:
         "string",
         required=False,
         visible=visible,
+        site_set=not visible,
         leaves=vocab("pfal"),
     )
 

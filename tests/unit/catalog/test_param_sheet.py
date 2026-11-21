@@ -33,10 +33,11 @@ def _param(
         type="multi-pick-vocabulary",
         required=True,
         is_visible=True,
+        site_set=False,
         help="h",
         value_format="",
         vocab_leaves=leaves,
-        wire_parents=list(depends),
+        stated_parents=list(depends),
         allowed_values_tree=tree,
     )
 
@@ -242,6 +243,7 @@ def test_a_hidden_param_without_a_vocabulary_is_not_on_the_sheet() -> None:
         type="string",
         required=True,
         is_visible=False,
+        site_set=True,
         help="",
         value_format="",
         default_value="dflt",

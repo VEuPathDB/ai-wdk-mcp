@@ -1,4 +1,4 @@
-"""A read-only parameter is marked as WDK marks it, and no hidden parameter is
+"""A read-only parameter is marked as WDK marks it, and no site-set parameter is
 on the sheet, because the site's form never lets a person set one."""
 
 from __future__ import annotations
