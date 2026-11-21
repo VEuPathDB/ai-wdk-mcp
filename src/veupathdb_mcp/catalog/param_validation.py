@@ -17,8 +17,8 @@ from veupathdb.domain.parameters import (
     StringValue,
     census_states,
     check_expression,
-    fill_hidden_required_defaults,
-    filled_hidden_defaults,
+    fill_site_set_defaults,
+    filled_site_set_defaults,
     to_decoded_map,
     validate_phyletic_codes,
 )
@@ -368,7 +368,7 @@ async def validate_parameters(
     )
     # The refresh below skips a parent whose value is empty, so site-set required
     # parents must get their defaults first.
-    canonical = fill_hidden_required_defaults(param_spec_map, canonical)
+    canonical = fill_site_set_defaults(param_spec_map, canonical)
     param_spec_map = await _refresh_dependent_vocabularies(
         ctx=refreshed_ctx,
         param_spec_map=param_spec_map,
@@ -376,7 +376,7 @@ async def validate_parameters(
     )
     canonicalizer = ParameterCanonicalizer(param_spec_map)
     caller_canonical = canonicalizer.canonicalize(parameters)
-    canonical = fill_hidden_required_defaults(param_spec_map, caller_canonical)
+    canonical = fill_site_set_defaults(param_spec_map, caller_canonical)
     echoed = {
         spec.name: spec.initial_display_value
         for spec in response.search_data.parameters or []
@@ -394,7 +394,7 @@ async def validate_parameters(
                 values_were_read=resolved.values_were_read,
             )
         )
-        | set(filled_hidden_defaults(param_spec_map, caller_canonical))
+        | set(filled_site_set_defaults(param_spec_map, caller_canonical))
     )
     return ValidatedParams(
         params=canonical,

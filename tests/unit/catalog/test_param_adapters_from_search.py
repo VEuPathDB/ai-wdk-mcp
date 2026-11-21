@@ -16,8 +16,8 @@ from veupathdb.domain.parameters import (
     FilterValue,
     ParamGraph,
     ParamSpecNormalized,
-    fill_hidden_required_defaults,
-    filled_hidden_defaults,
+    fill_site_set_defaults,
+    filled_site_set_defaults,
 )
 from veupathdb.domain.strategy import StepValidation
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
@@ -92,10 +92,10 @@ class TestWdkParam011HiddenIsPresentationOnly:
             _search("search_with_a_hidden_required_parameter")
         )
 
-        filled = fill_hidden_required_defaults(specs, {})
+        filled = fill_site_set_defaults(specs, {})
 
         assert "eda_dataset_id" in filled
-        assert filled_hidden_defaults(specs, {}) == ["eda_dataset_id"]
+        assert filled_site_set_defaults(specs, {}) == ["eda_dataset_id"]
 
 
 class TestWdkVocab003DependentParamsPointsAtChildren:

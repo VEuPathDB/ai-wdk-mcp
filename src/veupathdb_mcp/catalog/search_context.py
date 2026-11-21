@@ -17,8 +17,9 @@ def context_for_metadata_read(
 ) -> dict[str, str]:
     """Adds the published default of every unset site-set parameter.
 
-    WDK fills an omitted site-set value under the given parents and replaces a
-    stale one, but it judges an omitted one as missing.
+    WDK fills an omitted site-set value in the definition it returns, but its
+    verdict still calls the omitted value missing. The published value travels
+    with the read.
     """
     filled = dict(context)
     for spec in published or []:

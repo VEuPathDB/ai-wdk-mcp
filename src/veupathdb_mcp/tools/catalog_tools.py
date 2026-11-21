@@ -339,6 +339,8 @@ async def get_search_param_specs(
 ) -> list[ParamSpecResponse]:
     """Read one search's parameters in their normalized spec shape.
 
+    A spec marked isReadOnly is set by the site and takes no stated value.
+
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
         search_name: WDK search urlSegment, for example 'GenesByMolecularWeight'.

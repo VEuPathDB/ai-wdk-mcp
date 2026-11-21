@@ -50,7 +50,7 @@ def _published() -> WDKSearchResponse:
 
 
 def _under_vivax() -> WDKSearchResponse:
-    """The definition WDK built under the vivax organism, judged on a whole shape."""
+    """The vivax definition; its recording was judged with only the organism set."""
     read = recorded_search("search_genes_by_ngs_snps_under_another_organism")
     return read.model_copy(update={"validation": _published().validation})
 

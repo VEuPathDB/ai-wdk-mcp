@@ -186,7 +186,7 @@ class TestHiddenParamsJoinTheRead:
         """WDK judges the shape it receives, so an omitted one reads as empty.
 
         The run path still decides the value through
-        ``fill_hidden_required_defaults``; this is the metadata read.
+        ``fill_site_set_defaults``; this is the metadata read.
         """
         published = [
             _param("document_type", visible=False, allow_empty=False, default="gene")

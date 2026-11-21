@@ -1,5 +1,26 @@
 # Knowledge log
 
+## 2026-11-21 - 0.9.0b11: a parameter states who sets it
+
+- This entry amends [No hidden parameter reaches the model](#no-hidden-parameter-reaches-the-model).
+  The rule there now covers every site-set parameter. A parameter is site-set when it is
+  hidden or read-only. A caller binds only a bindable parameter.
+- A read names only stated parents. `ParameterInfo` carries `stated_parents` and
+  `stated_children`. `ParamDependencies` and `param_dependencies` are gone.
+- A refusal of a site-set parameter is `SiteSetParameterError`, in
+  `catalog/site_set_params.py`. `HiddenParameterError` is gone.
+- Dependent refresh and the deferral of a dependent read the wire parents
+  (`wire_parents` and `wire_children`). These fields stay off the served payload.
+- A metadata read sends the published value of each unset site-set parameter. WDK fills
+  an omitted value in the definition it returns, but its verdict calls that value missing.
+- `get_search_param_specs` keeps WDK's `dependentParams` and adds `isReadOnly`. A spec
+  marked `isReadOnly` takes no stated value.
+- The client's fill is now `fill_site_set_defaults`, and its report is
+  `filled_site_set_defaults`.
+- What a host does to take this release: catch `SiteSetParameterError` in place of
+  `HiddenParameterError`, read `stated_parents` and `stated_children` in place of
+  `param_dependencies`, and call the two renamed client functions.
+
 ## 2026-11-21 - 0.9.0b10
 
 - Takes veupathdb-py v0.9.0b6, which counts a step's column by its `histogram` reporter.
