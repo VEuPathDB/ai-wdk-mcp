@@ -1,4 +1,4 @@
-"""Phyletic code lookup, and the binding the two species lists derive."""
+"""Phyletic code lookup, and the binding the two species parameters derive."""
 
 import re
 from collections.abc import Mapping, Sequence
@@ -37,7 +37,7 @@ from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,
 )
 from veupathdb_mcp.catalog.param_discovery import fetch_search_details
-from veupathdb_mcp.catalog.param_formatting import ParameterInfo
+from veupathdb_mcp.catalog.param_formatting import PHYLETIC_LISTS_FORM, ParameterInfo
 from veupathdb_mcp.catalog.taxonomy import ortho_taxonomy
 from veupathdb_mcp.embeddings.embedder import (
     EmbeddingUnavailableError,
@@ -50,13 +50,12 @@ logger = get_logger(__name__)
 # The tree holds hundreds of entries, so the response returns only the best matches.
 _MAX_TREE_MATCHES = 20
 
-PhyleticProposals = Mapping[str, str | list[str] | None]
+PhyleticProposals = Mapping[str, str | None]
 
 LOOKUP_HINT = (
     "Put a code or its label in included_species (an ortholog must be present) "
     "or in excluded_species (it must be absent). A code with leaf=false is a "
-    "clade and selects every species under it. profile_pattern is derived from "
-    "the two lists; never write it."
+    f"clade. {PHYLETIC_LISTS_FORM}"
 )
 
 EXPRESSION_LOOKUP_HINT = (
@@ -103,7 +102,10 @@ class PhyleticListError(ValidationError):
                     if terms
                 ]
                 if unresolved.conflicts:
-                    named.append(f"both lists name {unresolved.conflicts}")
+                    named.append(
+                        f"included_species and excluded_species both name "
+                        f"{unresolved.conflicts}"
+                    )
                 detail = f"{'; '.join(named)}. Nearest entries: {nearest}."
             case PhyleticNoSelection():
                 detail = (
@@ -118,7 +120,7 @@ class PhyleticListError(ValidationError):
                     "and the call passed none."
                 )
         super().__init__(
-            title="The species lists derive no profile_pattern",
+            title="The species parameters derive no profile_pattern",
             detail=detail,
             errors=param_message_rows({"profile_pattern": [detail]}),
         )

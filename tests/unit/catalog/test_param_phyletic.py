@@ -8,7 +8,12 @@ from typing import Any
 
 import pytest
 from veupathdb.domain import SearchContext
-from veupathdb.domain.parameters import PhyleticBinding, PhyleticNode, PhyleticTree
+from veupathdb.domain.parameters import (
+    PhyleticBinding,
+    PhyleticNode,
+    PhyleticTree,
+    PhyleticUnresolved,
+)
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import (
     WDKAnswer,
@@ -23,9 +28,13 @@ from veupathdb.wdk import (
 )
 
 from veupathdb_mcp.catalog import param_phyletic
-from veupathdb_mcp.catalog.param_formatting import _PROFILE_PATTERN_HELP
+from veupathdb_mcp.catalog.param_formatting import (
+    _PROFILE_PATTERN_HELP,
+    PHYLETIC_LISTS_FORM,
+)
 from veupathdb_mcp.catalog.param_phyletic import (
     LOOKUP_HINT,
+    PhyleticListError,
     PhyleticNoSelection,
     PhyleticUnresolvedProposal,
     derive_phyletic_overrides,
@@ -344,16 +353,21 @@ class TestEveryPhyleticStringSaysThePatternIsDerived:
     def test_the_hidden_parameter_help_says_it_is_derived(self) -> None:
         help_text = self._normalized(_PROFILE_PATTERN_HELP)
 
-        assert "It is DERIVED from included_species and excluded_species" in help_text
-        assert "never write it" in help_text
+        assert PHYLETIC_LISTS_FORM in help_text
         assert "QUANTIFIER" not in help_text
 
     def test_the_lookup_result_hint_says_it_is_derived(self) -> None:
-        hint = self._normalized(LOOKUP_HINT)
+        assert PHYLETIC_LISTS_FORM in self._normalized(LOOKUP_HINT)
 
-        assert "profile_pattern is derived from the two lists; never write it" in hint
-        assert "included_species" in hint
-        assert "excluded_species" in hint
+    @pytest.mark.parametrize("text", [_PROFILE_PATTERN_HELP, LOOKUP_HINT])
+    def test_no_text_calls_the_species_parameters_lists(self, text: str) -> None:
+        assert "lists" not in text
+
+    def test_the_form_states_one_string_separated_by_commas(self) -> None:
+        assert (
+            "included_species and excluded_species each take one string of species "
+            "or clade codes or labels from the phyletic tree, separated by commas"
+        ) in PHYLETIC_LISTS_FORM
 
 
 def _recorded_tree() -> PhyleticTree:
@@ -504,3 +518,14 @@ async def test_a_genomics_site_names_genome_counts_and_species(
     assert result["species"] == [{"species": "Homo sapiens", "genomes": ["hsap"]}]
     assert result["hint"] == LOOKUP_HINT
     assert plasmodb == []
+
+
+def test_a_conflict_refusal_names_both_parameters() -> None:
+    refused = PhyleticListError(
+        PhyleticUnresolvedProposal(unresolved=PhyleticUnresolved(conflicts=["hsap"]))
+    )
+
+    assert "included_species and excluded_species both name ['hsap']" in str(
+        refused.detail
+    )
+    assert "lists" not in f"{refused.title} {refused.detail}"

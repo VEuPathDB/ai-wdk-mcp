@@ -16,6 +16,7 @@ from veupathdb.wdk import WDKEnumParam, WDKFilterParam, WDKParameter, WDKStringP
 
 from veupathdb_mcp.catalog.param_formatting import (
     _MAX_VOCAB_ENTRIES,
+    PHYLETIC_LISTS_FORM,
     ParameterInfo,
     format_param_info_typed,
     format_typed_param,
@@ -32,11 +33,6 @@ _PHYLETIC_TERMS = vocab_terms(
 )
 _PHYLETIC_INDENTS = vocab_terms(
     ("EUKA", "1"), ("MAMM", "2"), ("hsap", "3"), ("pfal", "2")
-)
-_PHYLETIC_HELP_SENTENCE = (
-    "Species or clade codes or labels from the phyletic tree, written as one "
-    "string separated by commas; a clade selects all of its species; "
-    "profile_pattern is derived from included_species and excluded_species."
 )
 
 
@@ -315,9 +311,9 @@ class TestThePhyleticListsCarryTheTree:
     def test_the_help_ends_by_naming_the_derivation(self) -> None:
         sheet = self._sheet()
 
-        assert sheet["included_species"].help.endswith(_PHYLETIC_HELP_SENTENCE)
+        assert sheet["included_species"].help.endswith(PHYLETIC_LISTS_FORM)
         assert sheet["included_species"].help.startswith("For documentation only.")
-        assert sheet["excluded_species"].help == _PHYLETIC_HELP_SENTENCE
+        assert sheet["excluded_species"].help == PHYLETIC_LISTS_FORM
 
     def test_the_codes_reach_the_wire_through_allowed_values(self) -> None:
         # ``vocab_leaves`` is excluded from serialization, so a tool result that

@@ -52,10 +52,11 @@ RADIO_OFF = "N/A"
 # The prompt a site prints in a free-text box, for example "(Example: chr22)".
 _EXAMPLE_PROMPT = re.compile(r"\(example:.*\)", re.IGNORECASE | re.DOTALL)
 
-_PHYLETIC_LIST_HELP = (
-    "Species or clade codes or labels from the phyletic tree, written as one "
-    "string separated by commas; a clade selects all of its species; "
-    "profile_pattern is derived from included_species and excluded_species."
+PHYLETIC_LISTS_FORM = (
+    "included_species and excluded_species each take one string of species or "
+    "clade codes or labels from the phyletic tree, separated by commas; a clade "
+    "selects all of its species; profile_pattern is derived from them and is never "
+    "written."
 )
 
 
@@ -87,15 +88,17 @@ def _to_param_kind(type_str: str) -> ParamKind:
         return "string"
 
 
-_PROFILE_PATTERN_HELP = (
-    "Phylogenetic profile pattern. It is DERIVED from included_species and "
-    "excluded_species; never write it. State the criterion by naming species or "
-    "clades in those two lists.\n"
-    "\n"
-    "CRITICAL: The 'organism' parameter controls which organisms' genes appear in "
-    "results. Select every relevant organism by listing the leaf values from the "
-    "organism vocabulary tree. A parent term selects the leaves beneath it. "
-    "If you only select one organism, you will get 0 results even if the pattern is correct."
+_PROFILE_PATTERN_HELP = "\n\n".join(
+    (
+        f"Phylogenetic profile pattern. {PHYLETIC_LISTS_FORM}",
+        (
+            "CRITICAL: The 'organism' parameter controls which organisms' genes "
+            "appear in results. Select every relevant organism by listing the leaf "
+            "values from the organism vocabulary tree. A parent term selects the "
+            "leaves beneath it. If you only select one organism, you will get 0 "
+            "results even if the pattern is correct."
+        ),
+    )
 )
 
 
@@ -360,7 +363,7 @@ def format_typed_param(
     if name == PHYLETIC_EXPRESSION_PARAM:
         help_text = _PHYLETIC_EXPRESSION_HELP
     if phyletic_options is not None:
-        help_text = "\n".join(filter(None, (help_text, _PHYLETIC_LIST_HELP)))
+        help_text = "\n".join(filter(None, (help_text, PHYLETIC_LISTS_FORM)))
 
     if is_upload_sentinel_vocabulary(param.vocabulary):
         vocab = _VocabFields(allowed_values_note=UPLOAD_SENTINEL_NOTE)
