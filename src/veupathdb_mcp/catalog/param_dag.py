@@ -8,12 +8,16 @@ from pydantic import Field, JsonValue
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     PHYLETIC_LIST_PARAMS,
+    FilterFacets,
+    FilterProposals,
+    ParamGraph,
     ParamValue,
     PhyleticBinding,
-    StringValue,
+    Stated,
     UnboundParameter,
     read_stated_values,
     to_wire,
+    wire_map,
 )
 from veupathdb.errors import ValidationError
 from veupathdb.model import CamelModel
@@ -99,20 +103,20 @@ def _refuse_hidden_overrides(
 def _with_derived_phyletic(
     infos: list[ParameterInfo],
     overrides: OverrideMap,
-    definition: Sequence[WDKParameter],
+    declarations: Sequence[WDKParameter],
 ) -> OverrideMap:
     if not is_phyletic_sheet(infos):
         return overrides
     if not PHYLETIC_LIST_PARAMS & overrides.keys():
         raise PhyleticListError(PhyleticNoSelection())
     lists = {
-        name: value.value
+        name: to_wire(value)
         for name, value in overrides.items()
-        if name in PHYLETIC_LIST_PARAMS and isinstance(value, StringValue)
+        if name in PHYLETIC_LIST_PARAMS
     }
-    match derive_phyletic_overrides(list(definition), lists):
+    match derive_phyletic_overrides(list(declarations), lists):
         case PhyleticBinding() as binding:
-            return {**overrides, **read_stated_values(definition, binding.model_dump())}
+            return {**overrides, **_read(declarations, binding.model_dump())}
         case refused:
             raise PhyleticListError(refused)
 
@@ -127,23 +131,107 @@ def _visible_slot(
     return None
 
 
-def _read_overrides(
-    infos: list[ParameterInfo],
+def _bound(declaration: WDKParameter, read: Stated) -> ParamValue:
+    match read:
+        case FilterProposals():
+            return FilterFacets.of(declaration).bind(read)
+        case _:
+            return read
+
+
+def _read(
+    declarations: Sequence[WDKParameter], stated: Mapping[str, JsonValue]
+) -> dict[str, ParamValue]:
+    declared = {d.name: d for d in declarations}
+    return {
+        name: _bound(declared[name], read)
+        for name, read in read_stated_values(declarations, stated).items()
+    }
+
+
+def _waiting(
+    declarations: Sequence[WDKParameter],
     stated: Mapping[str, JsonValue],
-    definition: Sequence[WDKParameter],
+    context: dict[str, str],
+) -> set[str]:
+    """The names whose stated or site-set wire parents are not in the context yet."""
+    parents = ParamGraph.of(declarations).wire_parents
+    waited = stated.keys() | {d.name for d in declarations if d.site_set}
+    return {
+        d.name
+        for d in declarations
+        if set(parents.get(d.name, ())) & (waited - context.keys())
+    }
+
+
+def _read_ready(
+    declarations: Sequence[WDKParameter],
+    stated: Mapping[str, JsonValue],
+    context: dict[str, str],
+    read: Mapping[str, ParamValue],
+) -> dict[str, ParamValue]:
+    """Reads each stated name not yet read whose parents are in the context, under
+    the declarations fetched at that context."""
+    waiting = _waiting(declarations, stated, context)
+    ready = [
+        d
+        for d in declarations
+        if d.name in stated and d.name not in read and d.name not in waiting
+    ]
+    return _read(ready, stated)
+
+
+def _read_pass(
+    infos: list[ParameterInfo],
+    declarations: Sequence[WDKParameter],
+    stated: Mapping[str, JsonValue],
+    context: dict[str, str],
+    overrides: OverrideMap,
+    *,
+    first: bool,
 ) -> OverrideMap:
-    _refuse_unknown_overrides(infos, stated)
-    read = read_stated_values(definition, stated)
-    return _with_derived_phyletic(infos, read, definition)
+    if first:
+        _refuse_unknown_overrides(infos, stated)
+    read = {**overrides, **_read_ready(declarations, stated, context, overrides)}
+    return _with_derived_phyletic(infos, read, declarations) if first else read
 
 
-ParamFetcher = Callable[[dict[str, str]], Awaitable[list[ParameterInfo]]]
+ParamFetcher = Callable[[dict[str, str]], Awaitable[list[WDKParameter]]]
+
+
+async def read_under_parents(
+    fetch_at: ParamFetcher, stated: Mapping[str, JsonValue]
+) -> dict[str, ParamValue]:
+    """Reads each stated value under the declarations its stated and site-set parents
+    give. A name of no parameter is refused before any value is read."""
+    context: dict[str, str] = {}
+    read: dict[str, ParamValue] = {}
+    declarations = await fetch_at(context)
+    _refuse_unknown_overrides(format_param_info_typed(declarations), stated)
+    while missing := stated.keys() - read.keys():
+        waiting = _waiting(declarations, stated, context)
+        sited = {
+            d.name: d.initial_display_value
+            for d in declarations
+            if d.site_set
+            and d.initial_display_value is not None
+            and d.name not in context
+            and d.name not in waiting
+        }
+        new = _read_ready(declarations, stated, context, read)
+        if not new and not sited:
+            new = _read([d for d in declarations if d.name in missing], stated)
+        read |= new
+        context |= sited | wire_map(new)
+        if stated.keys() - read.keys():
+            declarations = await fetch_at(context)
+    return read
 
 
 def wdk_fetch_at(site_id: str, record_type: str, search_name: str) -> ParamFetcher:
     ctx = SearchContext(site_id, record_type, search_name)
 
-    async def fetch_at(context: dict[str, str]) -> list[ParameterInfo]:
+    async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
         # The catalog holds the published view for the process, so every pass of
         # the walk sends the same parameter shape at the cost of one HTTP read.
         published = await get_discovery_service().get_search_details(
@@ -156,8 +244,7 @@ def wdk_fetch_at(site_id: str, record_type: str, search_name: str) -> ParamFetch
             context,
             published=published,
         )
-        params = resp.search_data.parameters or []
-        return format_param_info_typed(params)
+        return resp.search_data.parameters or []
 
     return fetch_at
 
@@ -280,14 +367,13 @@ async def resolve_params_with_intent(
     intent: ParamIntent,
     search_name: str,
     stated: Mapping[str, JsonValue],
-    definition: Sequence[WDKParameter],
 ) -> ResolvedParams:
     """Walks the dependency DAG and resolves each param from a stated value, an
     automatic value, the scalar default, or an open slot. Re-fetches after each pick
     so dependent params surface.
 
-    ``stated`` is read once through ``definition``. A name that is no parameter of
-    the search raises ``UnknownParameterError``.
+    Each stated value is read under the declarations fetched once its parents are
+    bound. A name that is no parameter of the search raises ``UnknownParameterError``.
     """
     overrides: OverrideMap = {}
     context: dict[str, str] = {}
@@ -299,10 +385,12 @@ async def resolve_params_with_intent(
     provenance: dict[str, Provenance] = {}
     ledger = _VocabLedger()
     for pass_index in range(_MAX_RESOLVE_DEPTH):
-        infos = await fetch_at(context)
+        declarations = await fetch_at(context)
+        infos = format_param_info_typed(declarations)
         _refuse_hidden_overrides(infos, stated, search_name)
-        if pass_index == 0:
-            overrides = _read_overrides(infos, stated, definition)
+        overrides = _read_pass(
+            infos, declarations, stated, context, overrides, first=pass_index == 0
+        )
         # Siblings decide whether one numeric param owns a stated quantity.
         resolution = _Resolution(
             intent=intent, overrides=overrides, siblings=tuple(infos)

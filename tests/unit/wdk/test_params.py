@@ -69,25 +69,25 @@ class TestTheFormDefaultsAreCarriedBack:
 class TestTheWireFormIsTheStatedRead:
     """A single pick is the bare term, and a multi pick a JSON array."""
 
-    def test_a_single_pick_value_is_the_bare_term(self) -> None:
+    async def test_a_single_pick_value_is_the_bare_term(self) -> None:
         param = WDKEnumParam(
             name="goAssociationsOntologies",
             display_name="Ontology",
             type="single-pick-vocabulary",
         )
 
-        assert encode_named_param_value(
+        assert await encode_named_param_value(
             [param], "goAssociationsOntologies", "Molecular Function"
         ) == ("Molecular Function")
 
-    def test_a_multi_pick_value_is_a_json_array(self) -> None:
+    async def test_a_multi_pick_value_is_a_json_array(self) -> None:
         param = WDKEnumParam(
             name="goEvidenceCodes",
             display_name="Evidence",
             type="multi-pick-vocabulary",
         )
 
-        assert encode_named_param_value(
+        assert await encode_named_param_value(
             [param], "goEvidenceCodes", ["Computed", "Curated"]
         ) == ('["Computed", "Curated"]')
 
@@ -171,30 +171,30 @@ class TestTheVocabularyAParamOffers:
 class TestANamedValueTakesTheKindItsFormDeclares:
     """An analysis request puts each supplied value on the wire through the form."""
 
-    def test_a_number_takes_its_shortest_decimal(self) -> None:
-        assert encode_named_param_value(_form(), "pValueCutoff", 1.0) == "1"
+    async def test_a_number_takes_its_shortest_decimal(self) -> None:
+        assert await encode_named_param_value(_form(), "pValueCutoff", 1.0) == "1"
 
-    def test_a_number_written_as_text_is_refused(self) -> None:
+    async def test_a_number_written_as_text_is_refused(self) -> None:
         with pytest.raises(StatedValuesError, match="pValueCutoff"):
-            encode_named_param_value(_form(), "pValueCutoff", "1.0")
+            await encode_named_param_value(_form(), "pValueCutoff", "1.0")
 
-    def test_a_range_is_read_from_its_object(self) -> None:
+    async def test_a_range_is_read_from_its_object(self) -> None:
         span = TypeAdapter(WDKParameter).validate_python(
             {"name": "span", "type": "number-range", "displayName": "Span"}
         )
 
-        assert encode_named_param_value([span], "span", {"min": 2, "max": 4}) == (
+        assert await encode_named_param_value([span], "span", {"min": 2, "max": 4}) == (
             '{"min": 2.0, "max": 4.0}'
         )
 
     @pytest.mark.parametrize("stated", ["2-4", '{"min": "2", "max": "4"}'])
-    def test_a_range_written_as_text_is_refused(self, stated: str) -> None:
+    async def test_a_range_written_as_text_is_refused(self, stated: str) -> None:
         span = TypeAdapter(WDKParameter).validate_python(
             {"name": "span", "type": "number-range", "displayName": "Span"}
         )
 
         with pytest.raises(StatedValuesError, match="span"):
-            encode_named_param_value([span], "span", stated)
+            await encode_named_param_value([span], "span", stated)
 
-    def test_a_name_the_form_does_not_carry_stands_as_written(self) -> None:
-        assert encode_named_param_value(_form(), "goSubset", "No") == "No"
+    async def test_a_name_the_form_does_not_carry_stands_as_written(self) -> None:
+        assert await encode_named_param_value(_form(), "goSubset", "No") == "No"

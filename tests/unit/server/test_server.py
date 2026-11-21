@@ -24,7 +24,6 @@ from veupathdb.wdk import (
     AiExpressionReport,
     NewStepSpec,
     WDKIdentifier,
-    WDKParameter,
     WDKSearch,
     WDKSearchResponse,
     WDKStepTree,
@@ -649,15 +648,23 @@ async def test_a_validation_call_answers_from_the_validation_service(
         seen.append(parameters)
         return ValidatedParams(params=parameters, record_class="transcript")
 
-    async def definition(site_id: str, rt: str, search_name: str) -> WDKSearch:
-        del site_id, rt, search_name
-        return WDKSearch(
-            url_segment="GenesByText",
-            parameters=[WDKStringParam(name="text_expression")],
+    async def under_context(*args: object) -> WDKSearchResponse:
+        del args
+        return WDKSearchResponse(
+            search_data=WDKSearch(
+                url_segment="GenesByText",
+                parameters=[WDKStringParam(name="text_expression")],
+            ),
+            validation=StepValidation.model_validate(
+                {"level": "NONE", "isValid": True}
+            ),
         )
 
     monkeypatch.setattr(catalog_tools, "validate_parameters", validate)
-    monkeypatch.setattr(search_inspection, "read_search_definition", definition)
+    monkeypatch.setattr(search_inspection, "get_wdk_client", lambda site_id: None)
+    monkeypatch.setattr(
+        search_inspection, "get_search_params_under_context", under_context
+    )
 
     async with _served(_service_credential()) as client:
         result = await client.call_tool(
@@ -1075,29 +1082,10 @@ async def test_two_bearers_with_the_same_genes_get_two_gene_set_steps(
     assert bob.structured_content == {"result": 602}
 
 
-def _publish_taxon_search(monkeypatch: pytest.MonkeyPatch) -> None:
-    class _Catalog:
-        async def get_search_details(
-            self, ctx: SearchContext, *, expand_params: bool = True
-        ) -> WDKSearchResponse:
-            del expand_params
-            return WDKSearchResponse(
-                search_data=WDKSearch(
-                    url_segment=ctx.search_name,
-                    parameters=[WDKStringParam(name="organism")],
-                ),
-                validation=StepValidation.model_validate(
-                    {"level": "NONE", "isValid": True}
-                ),
-            )
-
-    monkeypatch.setattr(catalog_tools, "get_discovery_service", _Catalog)
-
-
 async def test_a_binding_call_answers_from_the_parameter_walk(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    seen: list[tuple[str, str, dict[str, JsonValue], list[str]]] = []
+    seen: list[tuple[str, str, dict[str, JsonValue]]] = []
 
     async def resolve(
         *,
@@ -1105,14 +1093,12 @@ async def test_a_binding_call_answers_from_the_parameter_walk(
         intent: ParamIntent,
         search_name: str,
         stated: dict[str, JsonValue],
-        definition: list[WDKParameter],
     ) -> ResolvedParams:
         del fetch_at
-        seen.append((search_name, intent.text, stated, [p.name for p in definition]))
+        seen.append((search_name, intent.text, stated))
         return ResolvedParams(params={"organism": StringValue(value="P. falciparum")})
 
     monkeypatch.setattr(catalog_tools, "resolve_params_with_intent", resolve)
-    _publish_taxon_search(monkeypatch)
 
     async with _served(_service_credential()) as client:
         result = await client.call_tool(
@@ -1125,14 +1111,7 @@ async def test_a_binding_call_answers_from_the_parameter_walk(
             },
         )
 
-    assert seen == [
-        (
-            "GenesByTaxon",
-            "falciparum genes",
-            {"organism": "P. falciparum"},
-            ["organism"],
-        )
-    ]
+    assert seen == [("GenesByTaxon", "falciparum genes", {"organism": "P. falciparum"})]
     assert result.structured_content is not None
     assert result.structured_content["openSlots"] == []
 
@@ -1146,13 +1125,11 @@ async def test_an_override_that_names_no_parameter_is_a_tool_error(
         intent: ParamIntent,
         search_name: str,
         stated: dict[str, JsonValue],
-        definition: list[WDKParameter],
     ) -> ResolvedParams:
-        del fetch_at, intent, search_name, stated, definition
+        del fetch_at, intent, search_name, stated
         raise UnknownParameterError(["orgnism"], ["organism"])
 
     monkeypatch.setattr(catalog_tools, "resolve_params_with_intent", refuse)
-    _publish_taxon_search(monkeypatch)
 
     async with _served(_service_credential()) as client:
         result = await client.call_tool(

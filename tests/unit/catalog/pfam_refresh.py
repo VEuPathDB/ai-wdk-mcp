@@ -17,6 +17,12 @@ FOWLERI = "amoebadb_nfowleri_pfam_refresh"
 SEARCH = "GenesByInterproDomain"
 PARAMETER = "domain_typeahead"
 CONTEXT = {"domain_database": "Pfam"}
+_DATABASE = {
+    "name": "domain_database",
+    "type": "single-pick-vocabulary",
+    "displayType": "select",
+    "vocabulary": [["Pfam", "Pfam", None], ["INTERPRO", "InterPro", None]],
+}
 
 
 def refresh_parameters(name: str) -> list[dict[str, object]]:
@@ -32,7 +38,7 @@ def serve(monkeypatch: pytest.MonkeyPatch, name: str) -> None:
         {
             "searchData": {
                 "urlSegment": SEARCH,
-                "parameters": refresh_parameters(name),
+                "parameters": [_DATABASE, *refresh_parameters(name)],
             },
             "validation": {"level": "DISPLAYABLE", "isValid": True},
         }

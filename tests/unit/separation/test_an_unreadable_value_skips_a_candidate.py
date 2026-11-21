@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import pytest
-from veupathdb.wdk import WDKSearch
+from veupathdb.wdk import WDKParameter, WDKSearch
 
-from veupathdb_mcp.catalog import ParameterInfo, format_param_info_typed
 from veupathdb_mcp.separation import CandidateSource
 from veupathdb_mcp.separation.enumerate import CandidateSkippedError, Proposal, bind
 
@@ -32,9 +31,9 @@ _SEARCH = WDKSearch.model_validate(
 )
 
 
-async def _infos(context: dict[str, str]) -> list[ParameterInfo]:
+async def _infos(context: dict[str, str]) -> list[WDKParameter]:
     del context
-    return format_param_info_typed(_SEARCH.parameters or [])
+    return _SEARCH.parameters or []
 
 
 async def test_a_proposal_whose_value_the_kind_cannot_read_is_skipped() -> None:

@@ -26,7 +26,7 @@ from veupathdb_mcp.catalog.param_formatting import (
 from veupathdb_mcp.catalog.param_sheet import build_sheet
 from veupathdb_mcp.tools import catalog_tools
 
-from .conftest import fetcher
+from .conftest import serving
 
 SNPS = "GenesByNgsSnps"
 HIDDEN = {"eda_sample_table_suffix", "WebServicesPath"}
@@ -193,11 +193,10 @@ def test_a_visible_read_only_parameter_is_off_the_sheet() -> None:
 async def test_an_override_of_a_visible_read_only_parameter_is_refused() -> None:
     with pytest.raises(SiteSetParameterError, match="fixed"):
         await resolve_params_with_intent(
-            fetch_at=fetcher(*_read_only_search()),
+            fetch_at=serving(*_read_only_definition()),
             search_name="GenesByReadOnly",
             intent=ParamIntent(),
             stated={"fixed": "gene", "text": "kinase"},
-            definition=_read_only_definition(),
         )
 
 
@@ -222,11 +221,10 @@ async def test_the_served_specs_list_visible_parameters_with_their_read_only_mar
 async def test_an_unknown_override_lists_no_read_only_name() -> None:
     with pytest.raises(UnknownParameterError) as refused:
         await resolve_params_with_intent(
-            fetch_at=fetcher(*_read_only_search()),
+            fetch_at=serving(*_read_only_definition()),
             search_name="GenesByReadOnly",
             intent=ParamIntent(),
             stated={"txt": "kinase"},
-            definition=_read_only_definition(),
         )
 
     assert refused.value.valid == ["text"]

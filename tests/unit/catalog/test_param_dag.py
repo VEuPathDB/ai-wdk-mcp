@@ -3,8 +3,6 @@ the fetcher that reads WDK."""
 
 from __future__ import annotations
 
-from collections.abc import Sequence
-
 import pytest
 from pydantic import JsonValue
 from veupathdb.domain import SearchContext
@@ -33,7 +31,7 @@ from veupathdb_mcp.catalog.param_intent import ParamIntent
 
 from .conftest import (
     bound,
-    declared,
+    declaring,
     facet,
     fetcher,
     param_info,
@@ -48,7 +46,6 @@ async def _walk(
     *,
     fetch_at: ParamFetcher,
     stated: dict[str, JsonValue] | None = None,
-    published: Sequence[ParameterInfo] | None = None,
     intent: ParamIntent | None = None,
 ) -> ResolvedParams:
     return await resolve_params_with_intent(
@@ -56,7 +53,6 @@ async def _walk(
         search_name="GenesByRNASeqEvidence",
         intent=intent or ParamIntent(),
         stated=stated or {},
-        definition=declared(*(published or await fetch_at({}))),
     )
 
 
@@ -209,7 +205,7 @@ class TestTheDependentChain:
             return params
 
         resolved = await _walk(
-            fetch_at=fetch_at,
+            fetch_at=declaring(fetch_at),
             stated={"organism": ["Plasmodium falciparum 3D7"]},
         )
 
@@ -341,7 +337,7 @@ class TestAnUnknownOverrideIsRefused:
             ]
 
         resolved = await _walk(
-            fetch_at=fetch_at,
+            fetch_at=declaring(fetch_at),
             intent=ParamIntent(text="anything"),
             stated={"stage": "gametocyte"},
         )

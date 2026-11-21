@@ -19,7 +19,7 @@ from veupathdb_mcp.catalog.param_dag import (
 )
 from veupathdb_mcp.catalog.param_intent import ParamIntent
 
-from .conftest import bound, declared, fetcher, param_info, vocab
+from .conftest import bound, declaring, fetcher, param_info, vocab
 
 MALE = VocabOption(value="male", display="male")
 FEMALE = VocabOption(value="female", display="female")
@@ -47,7 +47,6 @@ async def _resolve(
         search_name="GenesByPairs",
         intent=ParamIntent(),
         stated=stated or {},
-        definition=declared(*await fetch_at({})),
     )
 
 
@@ -186,7 +185,7 @@ def _vectorbase_microarray_fetch() -> ParamFetcher:
             ),
         ]
 
-    return fetch_at
+    return declaring(fetch_at)
 
 
 class TestADeferredSelector:
@@ -262,7 +261,7 @@ class TestEviction:
                 ),
             ]
 
-        resolved = await _resolve(fetch_at, {"stage_b": "female"})
+        resolved = await _resolve(declaring(fetch_at), {"stage_b": "female"})
 
         assert bound(resolved.params["stage_b"]) == ["female"]
         assert bound(resolved.params["stage_a"]) == ["male"], (

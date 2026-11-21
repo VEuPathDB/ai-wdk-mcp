@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 from typing import Final, Literal, TypedDict, Unpack, cast
 
 from pydantic import JsonValue, TypeAdapter
@@ -114,14 +115,32 @@ def vocab_terms(*pairs: tuple[str, str]) -> list[WDKVocabTerm]:
     return [WDKVocabTerm((term, display, None)) for term, display in pairs]
 
 
-def fetcher(*infos: ParameterInfo) -> ParamFetcher:
-    """A fetcher that answers the same parameters at every context."""
+def serving(*declarations: WDKParameter) -> ParamFetcher:
+    """A fetcher that answers the same declarations at every context."""
 
-    async def fetch_at(context: dict[str, str]) -> list[ParameterInfo]:
+    async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
         del context
-        return list(infos)
+        return list(declarations)
 
     return fetch_at
+
+
+def declaring(
+    read: Callable[[dict[str, str]], Awaitable[list[ParameterInfo]]],
+) -> ParamFetcher:
+    """A fetcher that answers the declarations of the parameters ``read`` gives
+    at each context."""
+
+    async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
+        return declared(*await read(context))
+
+    return fetch_at
+
+
+def fetcher(*infos: ParameterInfo) -> ParamFetcher:
+    """A fetcher that answers the declarations of the same parameters at every
+    context."""
+    return serving(*declared(*infos))
 
 
 _DECLARATION: TypeAdapter[WDKParameter] = TypeAdapter(WDKParameter)
@@ -137,6 +156,13 @@ def declared(*infos: ParameterInfo) -> list[WDKParameter]:
                 "type": info.param_kind,
                 "isNumber": info.is_number,
                 "isVisible": info.is_visible,
+                "isReadOnly": info.site_set and info.is_visible,
+                "allowEmptyValue": not info.required,
+                "initialDisplayValue": info.default_value,
+                "help": info.help,
+                "dependentParams": [
+                    c.name for c in infos if info.name in c.wire_parents
+                ],
                 "min": info.min,
                 "max": info.max,
                 "vocabulary": [[o.value, o.display, None] for o in info.vocabulary()]

@@ -7,11 +7,9 @@ from dataclasses import dataclass
 
 from pydantic import Field
 from veupathdb.domain.parameters import (
-    FilterProposals,
     MultiPickValue,
     ParamValue,
     SinglePickValue,
-    Stated,
     UnboundParameter,
     from_wire,
     match_exact_option,
@@ -40,7 +38,7 @@ _SCALAR_DEFAULTABLE: frozenset[str] = frozenset(
 # A vocabulary needs two or more options before a shared value is a real choice.
 _MIN_VOCAB_SIZE_FOR_DEGENERACY = 2
 
-OverrideMap = dict[str, Stated]
+OverrideMap = dict[str, ParamValue]
 
 
 def _vocab_signature(info: ParameterInfo) -> str | None:
@@ -106,17 +104,14 @@ def _term_value(info: ParameterInfo, term: str | None) -> ParamValue | None:
     return SinglePickValue(value=term)
 
 
-def _apply_override(info: ParameterInfo, value: Stated) -> ParamValue:
-    """Matches a read value to the param's vocabulary entries, and binds a filter
-    statement to the param's facets.
+def _apply_override(info: ParameterInfo, value: ParamValue) -> ParamValue:
+    """Matches a read value to the param's vocabulary entries.
 
     The match is exact on the term, on the label, or on a leading accession
     exactly one entry carries. Any other substring names a different entry.
     """
     options = info.vocabulary()
     match value:
-        case FilterProposals():
-            return info.facets().bind(value)
         case SinglePickValue(value=term):
             return SinglePickValue(value=match_exact_option(options, term) or term)
         case MultiPickValue(values=terms):

@@ -15,7 +15,6 @@ from veupathdb_mcp.catalog import (
     searches,
     sites,
 )
-from veupathdb_mcp.catalog.discovery_service import get_discovery_service
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.experiments import ExperimentMatch, UnknownExperimentError
 from veupathdb_mcp.catalog.models import ParamSpecResponse, RecordTypeInfo, SearchMatch
@@ -476,23 +475,11 @@ async def resolve_search_parameters(
             from them.
     """
     try:
-        definition = (
-            (
-                await get_discovery_service().get_search_details(
-                    SearchContext(site_id, record_type, search_name),
-                    expand_params=True,
-                )
-            ).search_data.parameters
-            or []
-            if overrides
-            else []
-        )
         resolved = await resolve_params_with_intent(
             fetch_at=wdk_fetch_at(site_id, record_type, search_name),
             intent=ParamIntent(text=criterion),
             search_name=search_name,
             stated=overrides or {},
-            definition=definition,
         )
     except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc

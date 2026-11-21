@@ -4,7 +4,12 @@ import pytest
 from pydantic import TypeAdapter
 from tests._support.recorded_searches import recorded_search
 from veupathdb.domain import SearchContext
-from veupathdb.domain.parameters import MultiPickValue, to_wire
+from veupathdb.domain.parameters import (
+    FilterStatementError,
+    FilterValue,
+    MultiPickValue,
+    to_wire,
+)
 from veupathdb.errors import WDKError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
@@ -16,8 +21,11 @@ from veupathdb.wdk import (
 )
 
 from veupathdb_mcp.catalog import (
+    ParamIntent,
+    Provenance,
     format_param_info_typed,
     param_validation,
+    resolve_params_with_intent,
     validate_parameters,
 )
 from veupathdb_mcp.catalog.param_dag import _defer_to_next_pass
@@ -152,3 +160,41 @@ def test_a_dependent_waits_for_every_wire_parent(
         )
         is deferred
     )
+
+
+async def _by_organism(context: dict[str, str]) -> list[WDKParameter]:
+    read = _under_vivax() if VIVAX in context.get("organismSinglePick", "") else None
+    return (read or _published()).search_data.parameters or []
+
+
+def _samples(organism: str) -> dict[str, object]:
+    return {
+        "organismSinglePick": [organism],
+        "variation_sample_meta": [{"field": "VAR_c4c428f1", "value": ["mosquitoes"]}],
+    }
+
+
+async def test_a_facet_statement_binds_under_its_stated_organism() -> None:
+    resolved = await resolve_params_with_intent(
+        fetch_at=_by_organism,
+        intent=ParamIntent(),
+        search_name=CTX.search_name,
+        stated=_samples(VIVAX),
+    )
+
+    value = resolved.params["variation_sample_meta"]
+    assert isinstance(value, FilterValue)
+    assert [(c.field, c.value) for c in value.filters] == [
+        ("VAR_c4c428f1", ["mosquitoes"])
+    ]
+    assert resolved.provenance["variation_sample_meta"] is Provenance.STATED
+
+
+async def test_the_same_statement_under_another_organism_is_refused() -> None:
+    with pytest.raises(FilterStatementError, match="VAR_c4c428f1"):
+        await resolve_params_with_intent(
+            fetch_at=_by_organism,
+            intent=ParamIntent(),
+            search_name=CTX.search_name,
+            stated=_samples("Plasmodium falciparum 3D7"),
+        )

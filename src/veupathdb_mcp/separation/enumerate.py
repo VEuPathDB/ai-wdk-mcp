@@ -9,10 +9,9 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 
 from pydantic import JsonValue
-from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import ParamValue, StatedValuesError
 from veupathdb.errors import VEuPathDBError
-from veupathdb.wdk import WDKSearch, encode_params
+from veupathdb.wdk import WDKParameter, WDKSearch, encode_params
 
 from veupathdb_mcp.catalog import (
     RADIO_OFF,
@@ -21,6 +20,7 @@ from veupathdb_mcp.catalog import (
     ParamIntent,
     UnknownParameterError,
     VagueSearchQueryError,
+    format_param_info_typed,
     get_discovery_service,
     radio_pairs,
     resolve_params_with_intent,
@@ -199,7 +199,7 @@ async def bind(
     reason = search_skip(search)
     if reason is not None:
         raise CandidateSkippedError(reason)
-    infos = await fetch_at({})
+    infos = format_param_info_typed(await fetch_at({}))
     reason = params_skip(infos)
     if reason is not None:
         raise CandidateSkippedError(reason)
@@ -211,7 +211,6 @@ async def bind(
             intent=ParamIntent(text=proposal.intent),
             search_name=search.url_segment,
             stated=_overrides(search, infos, proposal, organisms),
-            definition=search.parameters or [],
         )
     except (UnknownParameterError, StatedValuesError) as exc:
         raise CandidateSkippedError(reason="unbound_required", detail=str(exc)) from exc
@@ -229,7 +228,7 @@ def _charged(
     An empty context reads the catalog's copy of the definition, fetched once.
     """
 
-    async def fetch(context: dict[str, str]) -> list[ParameterInfo]:
+    async def fetch(context: dict[str, str]) -> list[WDKParameter]:
         if context or search_name not in read:
             budget.charge(SEARCH_READ_REQUESTS)
             read.add(search_name)
@@ -276,10 +275,6 @@ class _Collector:
         if search is None:
             detail = "the site lists no gene search by this name"
             raise CandidateSkippedError(reason="not_a_gene_search", detail=detail)
-        if search_skip(search) is None:
-            ctx = SearchContext(self.site_id, GENE_RECORD_CLASS, proposal.search_name)
-            published = await get_discovery_service().get_search_details(ctx)
-            search = published.search_data
         fetch = _charged(
             wdk_fetch_at(self.site_id, GENE_RECORD_CLASS, proposal.search_name),
             self.budget,

@@ -28,7 +28,7 @@ from veupathdb_mcp.catalog.param_dag import (
 )
 from veupathdb_mcp.catalog.param_intent import ParamIntent, Provenance
 
-from .conftest import declared, fetcher, param_info, vocab
+from .conftest import declaring, fetcher, param_info, vocab
 
 _PCT = "min_expression_percentile"
 _STAGES = vocab("ring", "trophozoite")
@@ -66,7 +66,6 @@ async def _resolve(
         search_name="GenesByDefaults",
         intent=ParamIntent(text=text),
         stated=stated or {},
-        definition=declared(*infos),
     )
 
 
@@ -262,7 +261,6 @@ async def _resolve_text(stated: dict[str, JsonValue] | None = None) -> ResolvedP
         search_name="GenesByDefaults",
         intent=ParamIntent(),
         stated=stated or {},
-        definition=declared(*await _genes_by_text()({})),
     )
 
 
@@ -416,11 +414,10 @@ async def _under_organism(
         return [_organism_param(), _profileset(_PF_PROFILESETS, "DeRisi 3D7 Smoothed")]
 
     resolved = await resolve_params_with_intent(
-        fetch_at=fetch_at,
+        fetch_at=declaring(fetch_at),
         search_name="GenesByDefaults",
         intent=ParamIntent(text="expression profile of the protease genes"),
         stated={"organism": [chosen]},
-        definition=declared(*await fetch_at({})),
     )
     return (
         {name: to_wire(value) for name, value in resolved.params.items()},

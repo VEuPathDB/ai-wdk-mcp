@@ -8,7 +8,7 @@ from tests._support.recorded_searches import (
 )
 from veupathdb.domain.parameters import MultiPickValue
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
-from veupathdb.wdk import WDKSearch
+from veupathdb.wdk import WDKParameter, WDKSearch
 
 from veupathdb_mcp.catalog import ParameterInfo, format_param_info_typed
 from veupathdb_mcp.separation import CandidateSource
@@ -31,9 +31,9 @@ def _infos(search: WDKSearch) -> list[ParameterInfo]:
 
 
 def _recorded_fetch(search: WDKSearch):
-    async def fetch_at(context: dict[str, str]) -> list[ParameterInfo]:
+    async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
         del context
-        return _infos(search)
+        return search.parameters or []
 
     return fetch_at
 

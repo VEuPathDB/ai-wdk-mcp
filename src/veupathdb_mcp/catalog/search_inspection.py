@@ -12,13 +12,10 @@ from difflib import get_close_matches
 
 from pydantic import JsonValue
 from veupathdb.domain.parameters import (
-    FilterFacets,
-    FilterProposals,
     ParamGraph,
     ParamValue,
     VocabOption,
     WDKTreeBoxVocabNode,
-    read_stated_values,
     wire_map,
 )
 from veupathdb.errors import WDKError
@@ -28,6 +25,7 @@ from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
 )
+from veupathdb_mcp.catalog.param_dag import read_under_parents
 from veupathdb_mcp.catalog.param_formatting import (
     GetParameterOptionsResult,
     ParameterNotOnSearch,
@@ -278,19 +276,6 @@ async def inspect_search(
     return SearchInspection(record_type=rt, definition=search, overview=overview)
 
 
-def read_param_values(
-    params: Sequence[WDKParameter], stated: Mapping[str, JsonValue]
-) -> dict[str, ParamValue]:
-    """The typed value of each stated name, read by the kind its form declares."""
-    declared = {p.name: p for p in params}
-    return {
-        name: FilterFacets.of(declared[name]).bind(read)
-        if isinstance(read, FilterProposals)
-        else read
-        for name, read in read_stated_values(params, stated).items()
-    }
-
-
 async def read_stated_parameters(
     site_id: str,
     search_name: str,
@@ -298,14 +283,19 @@ async def read_stated_parameters(
     *,
     record_type: str | None = None,
 ) -> dict[str, ParamValue]:
-    """The values a caller states for one search, read through its definition."""
+    """The values a caller states for one search, each read under its parents."""
     if not stated:
         return {}
     rt = await resolve_search_record_type(
         site_id, search_name, _auto_resolved_record_type(record_type)
     )
-    search = await read_search_definition(site_id, rt, search_name)
-    return read_param_values(search.parameters or [], stated)
+    client = get_wdk_client(site_id)
+
+    async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
+        read = await get_search_params_under_context(client, rt, search_name, context)
+        return read.search_data.parameters or []
+
+    return await read_under_parents(fetch_at, stated)
 
 
 async def read_radio_readings(

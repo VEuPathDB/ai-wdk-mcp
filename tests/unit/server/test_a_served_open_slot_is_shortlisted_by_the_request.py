@@ -4,10 +4,11 @@ limit, and the request's shortlist of a longer one."""
 from __future__ import annotations
 
 import pytest
+from tests.unit.catalog.conftest import declared
 from veupathdb.domain.parameters import UnboundParameter
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
-from veupathdb.wdk import WDKSearchResponse
+from veupathdb.wdk import WDKParameter, WDKSearchResponse
 
 from veupathdb_mcp.catalog import ParameterInfo, ParamFetcher, shortlist_slot
 from veupathdb_mcp.catalog.param_formatting import format_param_info_typed
@@ -45,9 +46,9 @@ def _serve(monkeypatch: pytest.MonkeyPatch, infos: list[ParameterInfo]) -> None:
     def fetch(site_id: str, record_type: str, search_name: str) -> ParamFetcher:
         del site_id, record_type, search_name
 
-        async def fetch_at(context: dict[str, str]) -> list[ParameterInfo]:
+        async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
             del context
-            return infos
+            return declared(*infos)
 
         return fetch_at
 

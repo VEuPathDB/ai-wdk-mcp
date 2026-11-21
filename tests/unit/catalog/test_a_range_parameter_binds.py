@@ -11,7 +11,7 @@ from veupathdb_mcp.catalog.param_dag import (
 )
 from veupathdb_mcp.catalog.param_intent import ParamIntent, Provenance
 
-from .conftest import declared, fetcher, param_info
+from .conftest import fetcher, param_info
 
 _RANGE = "period_range"
 
@@ -28,7 +28,6 @@ async def _resolve(
         search_name="GenesByRhythm",
         intent=ParamIntent(text="genes with a rhythm"),
         stated=stated or {},
-        definition=declared(*infos),
     )
 
 

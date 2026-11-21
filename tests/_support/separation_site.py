@@ -5,10 +5,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 import pytest
-from veupathdb.domain import SearchContext
-from veupathdb.wdk import WDKSearch, WDKSearchResponse
+from veupathdb.wdk import WDKParameter, WDKSearch, WDKSearchResponse
 
-from veupathdb_mcp.catalog import ParameterInfo, format_param_info_typed
 from veupathdb_mcp.catalog.models import SearchMatch
 from veupathdb_mcp.separation import enumerate as enumeration
 from veupathdb_mcp.wdk.enrichment import GeneIdEnrichment
@@ -20,14 +18,10 @@ class RecordedCatalog:
     """The catalog listing and the parameter reads, from recorded definitions."""
 
     def __init__(self, responses: Sequence[WDKSearchResponse]) -> None:
-        self.responses = {r.search_data.url_segment: r for r in responses}
         self.by_name: dict[str, WDKSearch] = {
-            name: r.search_data for name, r in self.responses.items()
+            r.search_data.url_segment: r.search_data for r in responses
         }
         self.reads: list[tuple[str, dict[str, str]]] = []
-
-    async def get_search_details(self, ctx: SearchContext) -> WDKSearchResponse:
-        return self.responses[ctx.search_name]
 
     async def get_searches(self, site_id: str, record_type: str) -> list[WDKSearch]:
         del site_id, record_type
@@ -37,9 +31,9 @@ class RecordedCatalog:
         del site_id, record_type
         search = self.by_name[search_name]
 
-        async def fetch(context: dict[str, str]) -> list[ParameterInfo]:
+        async def fetch(context: dict[str, str]) -> list[WDKParameter]:
             self.reads.append((search_name, dict(context)))
-            return format_param_info_typed(search.parameters or [])
+            return search.parameters or []
 
         return fetch
 

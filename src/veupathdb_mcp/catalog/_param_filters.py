@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from veupathdb.domain.parameters import FilterValue, ParamValue, UnboundParameter
 
-from veupathdb_mcp.catalog._param_binding import OverrideMap, _apply_override
+from veupathdb_mcp.catalog._param_binding import OverrideMap
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 
 _CONTRAST_PREFIXES: tuple[tuple[str, str], ...] = (("ref", "comp"), ("comp", "ref"))
@@ -46,7 +46,7 @@ def _resolve_filter_param(
     unspecified half of a contrast pair."""
     stated = overrides.get(info.name)
     if stated is not None:
-        return _apply_override(info, stated)
+        return stated
     if has_contrast_sibling(info, infos):
         return _contrast_open_slot(info)
     return FilterValue()

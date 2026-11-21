@@ -21,7 +21,7 @@ from veupathdb_mcp.catalog import (
 from veupathdb_mcp.catalog.overview_formatting import format_search_overview
 from veupathdb_mcp.tools import catalog_tools
 
-from .conftest import fetcher, vocab_terms, wdk_search_response
+from .conftest import serving, vocab_terms
 
 pytestmark = pytest.mark.skipif(
     needs_qa_recording("wdk/search_genes_by_ngs_snps.json"), reason=NEEDS_QA_RECORDING
@@ -126,11 +126,10 @@ async def test_the_resolve_walk_binds_a_hidden_parameter_at_its_default() -> Non
     definition = [*(_snps().search_data.parameters or []), stated]
 
     resolved = await resolve_params_with_intent(
-        fetch_at=fetcher(*format_param_info_typed(definition)),
+        fetch_at=serving(*definition),
         search_name=SEARCH,
         intent=ParamIntent(),
         stated={},
-        definition=definition,
     )
 
     assert {name: resolved.params[name].to_wire() for name in HIDDEN} == {
@@ -147,11 +146,10 @@ async def test_a_hidden_required_parameter_with_no_default_refuses_the_search() 
 
     with pytest.raises(SiteSetParameterError) as refused:
         await resolve_params_with_intent(
-            fetch_at=fetcher(*format_param_info_typed(definition)),
+            fetch_at=serving(*definition),
             intent=ParamIntent(),
             search_name=SEARCH,
             stated={},
-            definition=definition,
         )
 
     assert refused.value.detail == (
@@ -165,14 +163,12 @@ async def test_a_hidden_required_parameter_with_no_default_refuses_the_search() 
 )
 async def test_a_hidden_input_step_is_left_to_the_step_tree() -> None:
     definition = recorded_search("search_genes_by_orthologs").search_data.parameters
-    infos = format_param_info_typed(definition or [])
 
     resolved = await resolve_params_with_intent(
-        fetch_at=fetcher(*infos),
+        fetch_at=serving(*(definition or [])),
         search_name=SEARCH,
         intent=ParamIntent(),
         stated={},
-        definition=definition or [],
     )
 
     assert "gene_result" not in resolved.unresolved_required
@@ -184,11 +180,10 @@ async def test_the_resolve_walk_refuses_a_hidden_override_by_name() -> None:
 
     with pytest.raises(SiteSetParameterError) as refused:
         await resolve_params_with_intent(
-            fetch_at=fetcher(*format_param_info_typed(definition)),
+            fetch_at=serving(*definition),
             intent=ParamIntent(),
             stated={"WebServicesPath": "dflt"},
             search_name=SEARCH,
-            definition=definition,
         )
 
     assert refused.value.detail == (
@@ -235,11 +230,10 @@ async def test_the_walk_derives_profile_pattern_from_the_two_lists() -> None:
     definition = _profile_search()
 
     resolved = await resolve_params_with_intent(
-        fetch_at=fetcher(*format_param_info_typed(definition)),
+        fetch_at=serving(*definition),
         search_name=SEARCH,
         intent=ParamIntent(),
         stated={"included_species": "pfal", "excluded_species": "hsap"},
-        definition=definition,
     )
 
     assert resolved.params["profile_pattern"] == StringValue(value="%hsap:N%pfal:Y%")
@@ -254,11 +248,10 @@ async def test_a_stated_phyletic_value_is_refused_by_name(name: str) -> None:
 
     with pytest.raises(ValidationError, match=name):
         await resolve_params_with_intent(
-            fetch_at=fetcher(*format_param_info_typed(definition)),
+            fetch_at=serving(*definition),
             search_name=SEARCH,
             intent=ParamIntent(),
             stated={"included_species": "pfal", name: "%pfal:Y%"},
-            definition=definition,
         )
 
 
@@ -267,29 +260,20 @@ async def test_lists_that_name_no_entry_are_refused_with_the_nearest() -> None:
 
     with pytest.raises(PhyleticListError, match="included_species names no entry"):
         await resolve_params_with_intent(
-            fetch_at=fetcher(*format_param_info_typed(definition)),
+            fetch_at=serving(*definition),
             search_name=SEARCH,
             intent=ParamIntent(),
             stated={"included_species": "Plasmodium vivax"},
-            definition=definition,
         )
 
 
 def _serve_profile_search(monkeypatch: pytest.MonkeyPatch) -> None:
     definition = _profile_search()
 
-    class _Catalog:
-        async def get_search_details(
-            self, ctx: object, *, expand_params: bool = True
-        ) -> WDKSearchResponse:
-            del ctx, expand_params
-            return wdk_search_response("GenesByOrthologPattern", definition)
-
-    monkeypatch.setattr(catalog_tools, "get_discovery_service", _Catalog)
     monkeypatch.setattr(
         catalog_tools,
         "wdk_fetch_at",
-        lambda *args: fetcher(*format_param_info_typed(definition)),
+        lambda *args: serving(*definition),
     )
 
 
@@ -327,11 +311,10 @@ async def test_a_phyletic_search_with_neither_list_is_refused() -> None:
 
     with pytest.raises(PhyleticListError, match="select no species"):
         await resolve_params_with_intent(
-            fetch_at=fetcher(*format_param_info_typed(definition)),
+            fetch_at=serving(*definition),
             search_name=SEARCH,
             intent=ParamIntent(),
             stated={},
-            definition=definition,
         )
 
 
@@ -340,11 +323,10 @@ async def test_an_unknown_name_lists_only_the_visible_names() -> None:
 
     with pytest.raises(UnknownParameterError) as refused:
         await resolve_params_with_intent(
-            fetch_at=fetcher(*format_param_info_typed(definition)),
+            fetch_at=serving(*definition),
             search_name=SEARCH,
             intent=ParamIntent(),
             stated={"included_species": "pfal", "speciess": "x"},
-            definition=definition,
         )
 
     assert refused.value.valid == ["excluded_species", "included_species"]
