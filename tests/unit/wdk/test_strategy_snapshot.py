@@ -11,7 +11,7 @@ import json
 import pytest
 import structlog.testing
 from veupathdb.domain.parameters import MultiPickValue, StringValue
-from veupathdb.domain.strategy import CombineOp, walk
+from veupathdb.domain.strategy import CombineOp, StepValidation, walk
 from veupathdb.errors import DataParsingError, WDKError
 from veupathdb.wdk import (
     WDKSearchConfig,
@@ -127,6 +127,28 @@ class TestTheAstBuiltFromWdk:
 
         assert ast.wdk_step_ids == {"10": 10, "20": 20, "30": 30, "40": 40}
         assert ast.step_counts == {"10": 5, "20": 7, "30": 3, "40": 2}
+
+    def test_each_steps_wdk_validation_is_carried(self) -> None:
+        refused = {
+            "level": "RUNNABLE",
+            "isValid": False,
+            "errors": {"general": [], "byKey": {"organism": ["Not allowed"]}},
+        }
+        details = _details().model_copy(
+            update={
+                "steps": {
+                    **_details().steps,
+                    "20": _step(20, "GenesByTaxon", validation=refused),
+                }
+            }
+        )
+
+        ast, _ = build_snapshot_from_wdk(details)
+
+        assert ast.step_validations is not None
+        assert ast.step_validations["20"] == StepValidation.model_validate(refused)
+        assert ast.step_validations["20"].rejects()
+        assert "10" not in ast.step_validations
 
     def test_a_strategy_without_a_record_class_is_refused(self) -> None:
         details = _details().model_copy(update={"record_class_name": " "})
@@ -325,3 +347,4 @@ async def test_a_retired_leaf_keeps_its_wire_values_and_the_root_still_decodes(
         for event in logs
         if event["event"] == "A WDK step names no record class"
     ] == [("50", "SnpsByLocation")]
+

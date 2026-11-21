@@ -6,7 +6,13 @@ search's parameter specs from WDK.
 
 from pydantic import BaseModel, ConfigDict
 from veupathdb import get_logger
-from veupathdb.domain.strategy import StrategyAst, StrategyStepNode, parse_op, walk
+from veupathdb.domain.strategy import (
+    StepValidation,
+    StrategyAst,
+    StrategyStepNode,
+    parse_op,
+    walk,
+)
 from veupathdb.errors import DataParsingError
 from veupathdb.wdk import (
     StrategyAPI,
@@ -137,10 +143,11 @@ def _node_of(
 def _extract_wdk_metadata(
     root: StrategyStepNode,
     wdk_steps: dict[str, WDKStep],
-) -> tuple[dict[str, int], dict[str, int]]:
-    """Extract step counts and WDK step ids from the tree."""
+) -> tuple[dict[str, int], dict[str, int], dict[str, StepValidation]]:
+    """Extract step counts, WDK step ids and WDK's own validation from the tree."""
     step_counts: dict[str, int] = {}
     wdk_step_ids: dict[str, int] = {}
+    validations: dict[str, StepValidation] = {}
     for step in walk(root):
         if not step.id.isdigit():
             continue
@@ -149,7 +156,9 @@ def _extract_wdk_metadata(
         wdk_step = wdk_steps.get(str(wdk_id))
         if wdk_step is not None and wdk_step.estimated_size is not None:
             step_counts[step.id] = wdk_step.estimated_size
-    return step_counts, wdk_step_ids
+        if wdk_step is not None and wdk_step.validation is not None:
+            validations[step.id] = wdk_step.validation
+    return step_counts, wdk_step_ids, validations
 
 
 def build_snapshot_from_wdk(
@@ -169,7 +178,9 @@ def build_snapshot_from_wdk(
     wire_by_step_id: dict[str, WireStep] = {}
     root = _build_node(wdk_strategy.step_tree, wdk_strategy.steps, wire_by_step_id)
 
-    step_counts, wdk_step_ids = _extract_wdk_metadata(root, wdk_strategy.steps)
+    step_counts, wdk_step_ids, validations = _extract_wdk_metadata(
+        root, wdk_strategy.steps
+    )
     payload = StrategyAst(
         record_type=record_type,
         root=root,
@@ -177,6 +188,7 @@ def build_snapshot_from_wdk(
         description=wdk_strategy.description or None,
         step_counts=step_counts or None,
         wdk_step_ids=wdk_step_ids or None,
+        step_validations=validations or None,
     )
     return payload, wire_by_step_id
 
