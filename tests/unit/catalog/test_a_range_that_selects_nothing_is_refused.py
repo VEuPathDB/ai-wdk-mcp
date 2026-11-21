@@ -266,9 +266,9 @@ async def test_a_range_is_read_under_its_sibling_clauses() -> None:
     assert "spans 2 to 4,823 variants over 3,207 records" in caught.value.detail
 
 
-async def test_a_queried_options_read_carries_the_ranges_it_names(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+async def _options_read(
+    monkeypatch: pytest.MonkeyPatch, query: str | None
+) -> tuple[ParameterInfo, FilterReadsDouble]:
     exchange = WDKExchange.model_validate_json(
         (
             Path(__file__).parent
@@ -294,10 +294,26 @@ async def test_a_queried_options_read_carries_the_ranges_it_names(
         "gene_variant_stats",
         record_type="transcript",
         context_values={"organism_select_none": MultiPickValue(values=_PF)},
-        narrowing=VocabNarrowing(query="variants per kb"),
+        narrowing=VocabNarrowing(query=query),
     )
-
     assert isinstance(read, ParameterInfo)
+    return read, reads
+
+
+async def test_an_unnarrowed_options_read_reads_no_range(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    read, reads = await _options_read(monkeypatch, None)
+
+    assert reads.ranges_read == []
+    assert [f.term for f in read.filter_fields if f.range is not None] == []
+
+
+async def test_a_queried_options_read_carries_the_ranges_it_names(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    read, reads = await _options_read(monkeypatch, "variants per kb")
+
     terms = [term for _, term, _, _ in reads.ranges_read]
     assert terms == ["variants_per_kb", "total_variants", "n_missense"]
     assert [f.term for f in read.filter_fields[:3]] == terms

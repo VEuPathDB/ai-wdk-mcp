@@ -318,6 +318,9 @@ async def get_parameter_options(
             `vocab_pick` when the deployment runs the Decisions choice: the
             entry it picks, or none when no entry fits, and whether its
             confidence settles the pick. Ask the researcher when it does not.
+            On a filter parameter, the query also reads the range of up to
+            three range facets it names; a facet it does not name shows no
+            range.
     """
     try:
         return await search_inspection.read_parameter_options(
