@@ -16,6 +16,10 @@
   so every served read refuses the same values. `read_declared` reads values against a
   fixed form with no site read; `encode_named_param_value` reads an analysis form
   through it and is synchronous again. `ParamFetcher` returns the declarations.
+- `read_under_parents` and `read_stated_parameters` take `bound`, the values a step already
+  holds. Their wire form is the context of the first read, so a dependent value stated
+  alone is read under the parent the step holds. A stated value replaces a bound one of
+  the same name. A bound value is not read again and is not returned.
   `resolve_params_with_intent` takes `stated: Mapping[str, JsonValue]` and a
   `filter_reads: FilterReads`.
   `UnreadableValueError`, `param_value_from_raw`, `coerce_context_values` and

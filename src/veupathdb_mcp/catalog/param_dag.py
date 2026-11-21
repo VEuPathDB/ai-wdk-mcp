@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable, Mapping, Sequence
 from functools import partial
+from types import MappingProxyType
 
 from pydantic import Field, JsonValue
 from veupathdb.domain import SearchContext
@@ -249,13 +250,20 @@ async def _refuse_misses(
 ParamFetcher = Callable[[dict[str, str]], Awaitable[list[WDKParameter]]]
 
 
+NOTHING_BOUND: Mapping[str, ParamValue] = MappingProxyType({})
+
+
 async def read_under_parents(
-    fetch_at: ParamFetcher, stated: Mapping[str, JsonValue], reads: FilterReads
+    fetch_at: ParamFetcher,
+    stated: Mapping[str, JsonValue],
+    reads: FilterReads,
+    *,
+    bound: Mapping[str, ParamValue] = NOTHING_BOUND,
 ) -> dict[str, ParamValue]:
-    """Reads each stated value under the declarations its stated and site-set parents
-    give, and refuses a filter that selects nothing. A name of no parameter is
-    refused before any value is read."""
-    context: dict[str, str] = {}
+    """Reads each stated value under the declarations its stated, bound and site-set
+    parents give, and refuses a filter that selects nothing. A name of no parameter
+    is refused before any value is read."""
+    context = wire_map({n: v for n, v in bound.items() if n not in stated})
     read: dict[str, ParamValue] = {}
     declarations = await fetch_at(context)
     _refuse_unknown_overrides(format_param_info_typed(declarations), stated)

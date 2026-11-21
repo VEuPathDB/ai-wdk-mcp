@@ -3,11 +3,19 @@ from __future__ import annotations
 import pytest
 from pydantic import JsonValue, TypeAdapter
 from tests._support.filter_reads import FilterReadsDouble
-from veupathdb.domain.parameters import FAKE_ALL_SENTINEL, MultiPickValue
+from veupathdb.domain.parameters import (
+    FAKE_ALL_SENTINEL,
+    FilterStatementError,
+    FilterValue,
+    MultiPickValue,
+)
+from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKParameter
 
 from veupathdb_mcp.catalog import read_under_parents
 from veupathdb_mcp.catalog.param_dag import ParamFetcher, UnreadStatementError
+
+from .test_a_stated_value_is_read_once import by_organism
 
 _DECLARATION: TypeAdapter[WDKParameter] = TypeAdapter(WDKParameter)
 _VIVAX = "Plasmodium vivax P01"
@@ -94,3 +102,45 @@ async def test_a_name_no_later_fetch_declares_is_refused_by_name() -> None:
         )
 
     assert len(seen) <= 6
+
+
+_RECORDED = pytest.mark.skipif(
+    needs_qa_recording(
+        "wdk/search_genes_by_ngs_snps.json",
+        "wdk/search_genes_by_ngs_snps_under_another_organism.json",
+    ),
+    reason=NEEDS_QA_RECORDING,
+)
+_PERU = [{"field": "Dataset", "value": ["WGS of Patient Isolates from Peru"]}]
+
+
+@_RECORDED
+async def test_a_dependent_stated_alone_reads_under_its_bound_parent() -> None:
+    read = await read_under_parents(
+        by_organism,
+        {"variation_sample_meta": _PERU},
+        FilterReadsDouble(),
+        bound={"organismSinglePick": MultiPickValue(values=[_VIVAX])},
+    )
+
+    assert list(read) == ["variation_sample_meta"]
+    value = read["variation_sample_meta"]
+    assert isinstance(value, FilterValue)
+    assert [clause.value for clause in value.filters] == [
+        ["WGS of Patient Isolates from Peru"]
+    ]
+
+
+@_RECORDED
+async def test_a_dependent_under_another_bound_parent_is_refused() -> None:
+    with pytest.raises(FilterStatementError, match="WGS of Patient Isolates from Peru"):
+        await read_under_parents(
+            by_organism,
+            {"variation_sample_meta": _PERU},
+            FilterReadsDouble(),
+            bound={
+                "organismSinglePick": MultiPickValue(
+                    values=["Plasmodium falciparum 3D7"]
+                )
+            },
+        )

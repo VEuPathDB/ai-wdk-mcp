@@ -26,7 +26,11 @@ from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
 )
-from veupathdb_mcp.catalog.param_dag import read_under_parents, wdk_fetch_at
+from veupathdb_mcp.catalog.param_dag import (
+    NOTHING_BOUND,
+    read_under_parents,
+    wdk_fetch_at,
+)
 from veupathdb_mcp.catalog.param_formatting import (
     GetParameterOptionsResult,
     ParameterNotOnSearch,
@@ -283,6 +287,7 @@ async def read_stated_parameters(
     stated: Mapping[str, JsonValue] | None,
     *,
     record_type: str | None = None,
+    bound: Mapping[str, ParamValue] = NOTHING_BOUND,
 ) -> dict[str, ParamValue]:
     """The values a caller states for one search, each read under its parents."""
     if not stated:
@@ -294,6 +299,7 @@ async def read_stated_parameters(
         wdk_fetch_at(site_id, rt, search_name),
         stated,
         WDKFilterReads(site_id, rt, search_name),
+        bound=bound,
     )
 
 
