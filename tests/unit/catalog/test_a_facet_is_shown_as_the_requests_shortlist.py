@@ -6,6 +6,7 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from tests._support.wdk_reads import serve_reads
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKSearchResponse
@@ -82,6 +83,7 @@ async def test_a_read_with_a_query_shows_the_facet_values_it_names(
     client.get_search_details_with_params = AsyncMock(return_value=response)
     monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
     monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
+    serve_reads(monkeypatch, response, client)
 
     read = await read_parameter_options(
         "plasmodb",

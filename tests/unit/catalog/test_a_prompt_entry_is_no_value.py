@@ -6,6 +6,7 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from tests._support.wdk_reads import serve_reads
 from veupathdb.domain.parameters import ParamGraph
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
@@ -98,6 +99,7 @@ async def test_a_narrowed_read_matches_no_prompt(
     client.get_search_details_with_params = AsyncMock(return_value=response)
     monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
     monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
+    serve_reads(monkeypatch, response, client)
 
     info = await read_parameter_options(
         "plasmodb",

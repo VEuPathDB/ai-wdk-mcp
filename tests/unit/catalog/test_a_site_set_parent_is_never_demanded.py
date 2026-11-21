@@ -6,6 +6,7 @@ from collections.abc import Callable
 import pytest
 from tests._support.recorded_searches import recorded_search
 from tests._support.recordings import TEST_ROOT
+from tests._support.wdk_reads import serve_reads
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKParameter, WDKSearchResponse, WDKStringParam
 
@@ -68,6 +69,7 @@ def serve(monkeypatch: pytest.MonkeyPatch) -> Callable[[WDKSearchResponse], None
         )
         monkeypatch.setattr(search_inspection, "read_search_definition", definition)
         monkeypatch.setattr(search_inspection, "get_wdk_client", lambda site_id: None)
+        serve_reads(monkeypatch, response)
 
     return install
 

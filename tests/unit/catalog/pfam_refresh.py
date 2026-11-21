@@ -7,6 +7,7 @@ from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from tests._support.wdk_reads import serve_reads
 from veupathdb.wdk import WDKSearchResponse
 
 from veupathdb_mcp.catalog import search_inspection, searches
@@ -17,12 +18,19 @@ FOWLERI = "amoebadb_nfowleri_pfam_refresh"
 SEARCH = "GenesByInterproDomain"
 PARAMETER = "domain_typeahead"
 CONTEXT = {"domain_database": "Pfam"}
-_DATABASE = {
-    "name": "domain_database",
-    "type": "single-pick-vocabulary",
-    "displayType": "select",
-    "vocabulary": [["Pfam", "Pfam", None], ["INTERPRO", "InterPro", None]],
-}
+
+
+def _domain_database() -> dict[str, object]:
+    """The database parameter ``GenesByInterproDomain`` publishes, as recorded."""
+    body = json.loads(
+        (FIXTURES / "plasmodb_3d7_interpro_vocabulary_half_off.json").read_text()
+    )
+    [declared] = [
+        p
+        for p in body["response_json"]["searchData"]["parameters"]
+        if p["name"] == "domain_database"
+    ]
+    return declared
 
 
 def refresh_parameters(name: str) -> list[dict[str, object]]:
@@ -38,7 +46,7 @@ def serve(monkeypatch: pytest.MonkeyPatch, name: str) -> None:
         {
             "searchData": {
                 "urlSegment": SEARCH,
-                "parameters": [_DATABASE, *refresh_parameters(name)],
+                "parameters": [_domain_database(), *refresh_parameters(name)],
             },
             "validation": {"level": "DISPLAYABLE", "isValid": True},
         }
@@ -48,3 +56,4 @@ def serve(monkeypatch: pytest.MonkeyPatch, name: str) -> None:
     client.get_search_details_with_params = AsyncMock(return_value=response)
     monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
     monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
+    serve_reads(monkeypatch, response, client)

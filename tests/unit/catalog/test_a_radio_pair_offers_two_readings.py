@@ -7,6 +7,7 @@ from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from tests._support.wdk_reads import serve_reads
 from veupathdb.domain.parameters import MultiPickValue, SinglePickValue, StringValue
 from veupathdb.wdk import WDKParameter, WDKSearchResponse
 
@@ -64,6 +65,7 @@ def _serve(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     client.get_search_details_with_params = AsyncMock(return_value=_recorded())
     monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
     monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
+    serve_reads(monkeypatch, _recorded(), client)
     return client
 
 

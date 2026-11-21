@@ -13,6 +13,7 @@ from mcp.server.auth.middleware.auth_context import auth_context_var
 from mcp.server.auth.middleware.bearer_auth import AuthenticatedUser
 from mcp.types import TextContent, Tool
 from pydantic import JsonValue
+from tests._support.wdk_reads import serve_reads
 from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import ParamValue, StringValue
@@ -648,9 +649,9 @@ async def test_a_validation_call_answers_from_the_validation_service(
         seen.append(parameters)
         return ValidatedParams(params=parameters, record_class="transcript")
 
-    async def under_context(*args: object) -> WDKSearchResponse:
-        del args
-        return WDKSearchResponse(
+    serve_reads(
+        monkeypatch,
+        WDKSearchResponse(
             search_data=WDKSearch(
                 url_segment="GenesByText",
                 parameters=[WDKStringParam(name="text_expression")],
@@ -658,13 +659,9 @@ async def test_a_validation_call_answers_from_the_validation_service(
             validation=StepValidation.model_validate(
                 {"level": "NONE", "isValid": True}
             ),
-        )
-
-    monkeypatch.setattr(catalog_tools, "validate_parameters", validate)
-    monkeypatch.setattr(search_inspection, "get_wdk_client", lambda site_id: None)
-    monkeypatch.setattr(
-        search_inspection, "get_search_params_under_context", under_context
+        ),
     )
+    monkeypatch.setattr(catalog_tools, "validate_parameters", validate)
 
     async with _served(_service_credential()) as client:
         result = await client.call_tool(

@@ -10,11 +10,15 @@ from veupathdb.domain.parameters import (
     PHYLETIC_LIST_PARAMS,
     FilterFacets,
     FilterProposals,
+    MultiPickValue,
     ParamGraph,
     ParamValue,
     PhyleticBinding,
+    SinglePickValue,
     Stated,
     UnboundParameter,
+    flatten_vocab,
+    match_exact_option,
     read_stated_values,
     to_wire,
     wire_map,
@@ -27,7 +31,6 @@ from veupathdb_mcp.catalog._param_binding import (
     OverrideMap,
     ResolvedParam,
     Unread,
-    _apply_override,
     _Resolution,
     _resolve_nonfilter,
     _sole_claim,
@@ -131,10 +134,34 @@ def _visible_slot(
     return None
 
 
+class UnreadStatementError(ValidationError):
+    """A stated name that no fetch under its parents declares."""
+
+    def __init__(self, unread: list[str]) -> None:
+        self.unread = unread
+        super().__init__(
+            title="Unread parameter value",
+            detail=(
+                f"No read under the stated parents declares {unread}, so their "
+                "values cannot be read."
+            ),
+            errors=[{"param": name} for name in unread],
+        )
+
+
 def _bound(declaration: WDKParameter, read: Stated) -> ParamValue:
+    """Binds a filter statement to its facets, and each pick to the term its
+    entry carries."""
+    options = flatten_vocab(declaration.vocabulary)
     match read:
         case FilterProposals():
             return FilterFacets.of(declaration).bind(read)
+        case SinglePickValue(value=term):
+            return SinglePickValue(value=match_exact_option(options, term) or term)
+        case MultiPickValue(values=terms):
+            return MultiPickValue(
+                values=[match_exact_option(options, t) or t for t in terms]
+            )
         case _:
             return read
 
@@ -208,7 +235,10 @@ async def read_under_parents(
     read: dict[str, ParamValue] = {}
     declarations = await fetch_at(context)
     _refuse_unknown_overrides(format_param_info_typed(declarations), stated)
-    while missing := stated.keys() - read.keys():
+    for _ in range(_MAX_RESOLVE_DEPTH):
+        missing = stated.keys() - read.keys()
+        if not missing:
+            return read
         waiting = _waiting(declarations, stated, context)
         sited = {
             d.name: d.initial_display_value
@@ -221,10 +251,15 @@ async def read_under_parents(
         new = _read_ready(declarations, stated, context, read)
         if not new and not sited:
             new = _read([d for d in declarations if d.name in missing], stated)
+        if not new and not sited:
+            break
         read |= new
         context |= sited | wire_map(new)
         if stated.keys() - read.keys():
             declarations = await fetch_at(context)
+    unread = sorted(stated.keys() - read.keys())
+    if unread:
+        raise UnreadStatementError(unread)
     return read
 
 
@@ -302,7 +337,7 @@ def _evict_for_override(
     re-resolves against the claimed vocabulary."""
     if info.name not in overrides:
         return
-    wanted = _sole_claim(_apply_override(info, overrides[info.name]))
+    wanted = _sole_claim(overrides[info.name])
     if wanted is None:
         return
     evicted = ledger.release_default_holding(info, wanted, overrides)

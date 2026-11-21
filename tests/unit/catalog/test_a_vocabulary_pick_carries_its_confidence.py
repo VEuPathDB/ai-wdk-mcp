@@ -11,6 +11,7 @@ import httpx
 import pytest
 import respx
 from scripts.record_decisions import VOCAB_TERM
+from tests._support.wdk_reads import serve_reads
 from veupathdb.domain.parameters import VocabOption
 from veupathdb.wdk import WDKSearchResponse
 
@@ -48,6 +49,7 @@ def _serve_the_site(monkeypatch: pytest.MonkeyPatch) -> None:
     client.get_search_details_with_params = AsyncMock(return_value=recorded)
     monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
     monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
+    serve_reads(monkeypatch, recorded, client)
 
 
 def _reach_the_service(monkeypatch: pytest.MonkeyPatch) -> None:

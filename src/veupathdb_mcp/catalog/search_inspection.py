@@ -25,7 +25,7 @@ from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
 )
-from veupathdb_mcp.catalog.param_dag import read_under_parents
+from veupathdb_mcp.catalog.param_dag import read_under_parents, wdk_fetch_at
 from veupathdb_mcp.catalog.param_formatting import (
     GetParameterOptionsResult,
     ParameterNotOnSearch,
@@ -289,13 +289,7 @@ async def read_stated_parameters(
     rt = await resolve_search_record_type(
         site_id, search_name, _auto_resolved_record_type(record_type)
     )
-    client = get_wdk_client(site_id)
-
-    async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
-        read = await get_search_params_under_context(client, rt, search_name, context)
-        return read.search_data.parameters or []
-
-    return await read_under_parents(fetch_at, stated)
+    return await read_under_parents(wdk_fetch_at(site_id, rt, search_name), stated)
 
 
 async def read_radio_readings(
@@ -341,10 +335,7 @@ async def read_parameter_options(
     context = await read_stated_parameters(
         site_id, search_name, context_values, record_type=rt
     )
-    result = await get_search_params_under_context(
-        get_wdk_client(site_id), rt, search_name, wire_map(context)
-    )
-    all_params = result.search_data.parameters or []
+    all_params = await wdk_fetch_at(site_id, rt, search_name)(wire_map(context))
     if any(p.name == parameter_id and p.site_set for p in all_params):
         raise SiteSetParameterError(parameter_id, search_name)
 

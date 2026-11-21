@@ -6,6 +6,7 @@ from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from tests._support.wdk_reads import serve_reads
 from veupathdb.domain.parameters import (
     FAKE_ALL_SENTINEL,
     WDKTreeBoxVocabNode,
@@ -38,6 +39,7 @@ def _stub_client(monkeypatch: pytest.MonkeyPatch, fixture: str) -> MagicMock:
     client.get_search_details_with_params = AsyncMock(return_value=response)
     monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
     monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
+    serve_reads(monkeypatch, response, client)
     return client
 
 

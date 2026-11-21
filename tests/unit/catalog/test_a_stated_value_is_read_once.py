@@ -8,9 +8,10 @@ from pydantic import JsonValue
 from tests._support.recorded_searches import recorded_search
 from veupathdb.domain.parameters import ParamValue, StatedValuesError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
-from veupathdb.wdk import WDKParameter, WDKSearch, WDKSearchResponse
+from veupathdb.wdk import WDKParameter
 
 from veupathdb_mcp.catalog import (
+    ParameterInfo,
     ParamIntent,
     Provenance,
     SiteSetParameterError,
@@ -92,22 +93,7 @@ async def test_a_site_set_name_is_refused_before_its_value_is_read() -> None:
 @pytest.fixture
 def served(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(catalog_tools, "wdk_fetch_at", lambda *args: by_organism)
-
-    async def under_context(
-        client: object, rt: str, search_name: str, context: dict[str, str]
-    ) -> WDKSearchResponse:
-        del client, rt, search_name
-        return WDKSearchResponse(
-            search_data=WDKSearch(
-                url_segment=SEARCH, parameters=await by_organism(context)
-            ),
-            validation=recorded_search("search_genes_by_ngs_snps").validation,
-        )
-
-    monkeypatch.setattr(search_inspection, "get_wdk_client", lambda site_id: None)
-    monkeypatch.setattr(
-        search_inspection, "get_search_params_under_context", under_context
-    )
+    monkeypatch.setattr(search_inspection, "wdk_fetch_at", lambda *args: by_organism)
 
 
 @pytest.fixture
@@ -172,6 +158,23 @@ async def test_the_served_validation_binds_a_facet_under_its_stated_parent(
     [values] = validated
     assert '"field": "VAR_c4c428f1"' in values["variation_sample_meta"]
     assert '"value": ["mosquitoes"]' in values["variation_sample_meta"]
+
+
+@pytest.mark.usefixtures("served")
+async def test_the_served_options_read_shows_the_facets_under_its_parent() -> None:
+    read = await catalog_tools.get_parameter_options(
+        "plasmodb",
+        SEARCH,
+        "variation_sample_meta",
+        record_type="transcript",
+        context_values={
+            "organismSinglePick": [VIVAX],
+            "eda_sample_table_suffix": "sba1cd4a562_sample",
+        },
+    )
+
+    assert isinstance(read, ParameterInfo)
+    assert "VAR_c4c428f1" in {facet.term for facet in read.facets().root}
 
 
 @pytest.mark.usefixtures("served")

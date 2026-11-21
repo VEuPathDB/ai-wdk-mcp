@@ -12,7 +12,6 @@ from veupathdb.domain.parameters import (
     SinglePickValue,
     UnboundParameter,
     from_wire,
-    match_exact_option,
 )
 from veupathdb.model import CamelModel
 
@@ -102,24 +101,6 @@ def _term_value(info: ParameterInfo, term: str | None) -> ParamValue | None:
     if info.param_kind == "multi-pick-vocabulary":
         return MultiPickValue(values=[term])
     return SinglePickValue(value=term)
-
-
-def _apply_override(info: ParameterInfo, value: ParamValue) -> ParamValue:
-    """Matches a read value to the param's vocabulary entries.
-
-    The match is exact on the term, on the label, or on a leading accession
-    exactly one entry carries. Any other substring names a different entry.
-    """
-    options = info.vocabulary()
-    match value:
-        case SinglePickValue(value=term):
-            return SinglePickValue(value=match_exact_option(options, term) or term)
-        case MultiPickValue(values=terms):
-            return MultiPickValue(
-                values=[match_exact_option(options, t) or t for t in terms]
-            )
-        case _:
-            return value
 
 
 def _is_free_text_query(info: ParameterInfo) -> bool:
@@ -336,9 +317,9 @@ def _resolve_nonfilter(
         curated = _curated_multi_default(info)
         if curated is not None:
             return ResolvedParam(value=curated, provenance=Provenance.DEFAULTED)
-        read = _term_value(info, _single_valid_value(info))
-    else:
-        read = _apply_override(info, stated)
+    read = (
+        stated if stated is not None else _term_value(info, _single_valid_value(info))
+    )
     provenance = Provenance.STATED if is_user_choice else Provenance.DEFAULTED
     held_back = read is None and _states_a_quantity(info, res.intent.text, res.siblings)
     value = _settle_value(

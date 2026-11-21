@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 from fastmcp.exceptions import ToolError
 from tests._support.recorded_searches import recorded_search
+from tests._support.wdk_reads import serve_reads
 from veupathdb.domain.parameters import StringValue
 from veupathdb.errors import ValidationError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
@@ -55,6 +56,7 @@ def served(monkeypatch: pytest.MonkeyPatch) -> None:
     )
     monkeypatch.setattr(search_inspection, "read_search_definition", definition)
     monkeypatch.setattr(search_inspection, "get_wdk_client", lambda site_id: None)
+    serve_reads(monkeypatch, _snps())
 
 
 @pytest.mark.usefixtures("served")

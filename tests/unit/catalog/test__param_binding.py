@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from veupathdb.domain.parameters import (
     FAKE_ALL_SENTINEL,
-    MultiPickValue,
-    SinglePickValue,
     StringValue,
     VocabOption,
     WDKTreeBoxVocabNode,
@@ -14,7 +12,6 @@ from veupathdb.domain.parameters import (
 )
 
 from veupathdb_mcp.catalog._param_binding import (
-    _apply_override,
     _open_slot,
     _scalar_default,
     _single_valid_value,
@@ -23,10 +20,7 @@ from veupathdb_mcp.catalog._param_binding import (
 )
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 
-from .conftest import param_info, vocab
-
-_HOURS = [f"{h} Hour" for h in range(1, 49)]
-_TROPHOZOITE = [f"{h} Hour" for h in range(20, 33)]
+from .conftest import param_info
 
 
 def _many(n: int) -> list[VocabOption]:
@@ -45,87 +39,12 @@ def _go_param(
     )
 
 
-def _tree_box_organism() -> ParameterInfo:
-    return param_info(
-        "organism",
-        "multi-pick-vocabulary",
-        leaves=[
-            VocabOption(value="Plasmodium vivax P01", display="P. vivax P01"),
-            VocabOption(
-                value="Plasmodium falciparum 3D7", display="Plasmodium falciparum 3D7"
-            ),
-        ],
-    )
-
-
-def _samples_param() -> ParameterInfo:
-    return param_info(
-        "samples_percentile_generic",
-        "multi-pick-vocabulary",
-        display_name="Samples",
-        leaves=vocab(*_HOURS),
-    )
-
-
 def _numeric(name: str, default: str) -> ParameterInfo:
     return param_info(name, "string", is_number=True, default=default)
 
 
 def _free_text(name: str, default: str) -> ParameterInfo:
     return param_info(name, "string", default=default)
-
-
-def _picks(*terms: str) -> MultiPickValue:
-    return MultiPickValue(values=list(terms))
-
-
-class TestApplyOverride:
-    def test_a_tree_box_leaf_matches_by_term_or_by_label(self) -> None:
-        info = _tree_box_organism()
-
-        assert _apply_override(info, _picks("plasmodium vivax p01")) == _picks(
-            "Plasmodium vivax P01"
-        )
-        assert _apply_override(info, _picks("P. vivax P01")) == _picks(
-            "Plasmodium vivax P01"
-        )
-
-    def test_a_substring_does_not_snap_to_a_leaf(self) -> None:
-        assert _apply_override(
-            _tree_box_organism(), _picks("Plasmodium vivax")
-        ) == _picks("Plasmodium vivax")
-
-    def test_it_matches_beyond_the_wire_cap(self) -> None:
-        full = _many(300)
-
-        assert _apply_override(
-            _go_param(allowed=full[:50], leaves=full), _picks("term 299")
-        ) == _picks("GO:0000299")
-
-    def test_it_matches_every_element_of_a_list(self) -> None:
-        assert _apply_override(_samples_param(), _picks(*_TROPHOZOITE)) == _picks(
-            *_TROPHOZOITE
-        )
-
-    def test_it_snaps_each_element_to_its_vocabulary_entry(self) -> None:
-        assert _apply_override(
-            _samples_param(), _picks("20 hour", "21 HOUR")
-        ) == _picks("20 Hour", "21 Hour")
-
-    def test_it_keeps_an_unmatched_element_for_wdk_to_reject(self) -> None:
-        assert _apply_override(
-            _samples_param(), _picks("20 Hour", "99 Hour")
-        ) == _picks("20 Hour", "99 Hour")
-
-    def test_a_single_pick_snaps_to_its_entry(self) -> None:
-        info = param_info("stage", leaves=vocab(*_HOURS))
-
-        assert _apply_override(info, SinglePickValue(value="20 hour")) == (
-            SinglePickValue(value="20 Hour")
-        )
-
-    def test_an_empty_list_stays_empty(self) -> None:
-        assert _apply_override(_samples_param(), _picks()) == _picks()
 
 
 class TestVocabularyIsTheWholeList:
