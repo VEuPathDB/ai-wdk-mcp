@@ -1,5 +1,9 @@
 # Knowledge log
 
+## 2026-11-21 - 0.9.0b10
+
+- Takes veupathdb-py v0.9.0b6, which counts a step's column by its `histogram` reporter.
+
 ## 2026-11-13 - 0.9.0b9
 
 - Takes veupathdb-py v0.9.0b5, which still recognises a helper strategy under a prefix the deployment wrote before.
