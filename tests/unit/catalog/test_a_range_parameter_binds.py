@@ -26,6 +26,7 @@ async def _resolve(
 ) -> ResolvedParams:
     return await resolve_params_with_intent(
         fetch_at=fetcher(*infos),
+        search_name="GenesByRhythm",
         intent=ParamIntent(text="genes with a rhythm"),
         overrides=overrides,
     )

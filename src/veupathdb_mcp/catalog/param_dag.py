@@ -89,11 +89,11 @@ def _refuse_unknown_overrides(
 
 
 def _refuse_hidden_overrides(
-    infos: list[ParameterInfo], overrides: OverrideMap
+    infos: list[ParameterInfo], overrides: OverrideMap, search_name: str
 ) -> None:
     for info in infos:
         if info.name in overrides and info.site_set:
-            raise SiteSetParameterError(info.name)
+            raise SiteSetParameterError(info.name, search_name)
 
 
 def _with_derived_phyletic(
@@ -116,12 +116,12 @@ def _with_derived_phyletic(
 
 
 def _visible_slot(
-    info: ParameterInfo, slot: UnboundParameter
+    info: ParameterInfo, slot: UnboundParameter, search_name: str
 ) -> UnboundParameter | None:
     if info.bindable:
         return slot
     if info.param_kind != "input-step":
-        raise SiteSetParameterError(info.name, unset=True)
+        raise SiteSetParameterError(info.name, search_name, unset=True)
     return None
 
 
@@ -131,9 +131,10 @@ def _checked_overrides(
     definition: Sequence[WDKParameter],
     *,
     first_pass: bool,
+    search_name: str,
 ) -> OverrideMap | None:
     _refuse_unknown_overrides(infos, stated, first_pass=first_pass)
-    _refuse_hidden_overrides(infos, stated)
+    _refuse_hidden_overrides(infos, stated, search_name)
     return _with_derived_phyletic(infos, stated, definition) if first_pass else None
 
 
@@ -278,6 +279,7 @@ async def resolve_params_with_intent(
     *,
     fetch_at: ParamFetcher,
     intent: ParamIntent,
+    search_name: str,
     overrides: OverrideMap | None = None,
     definition: Sequence[WDKParameter] = (),
 ) -> ResolvedParams:
@@ -301,7 +303,13 @@ async def resolve_params_with_intent(
     for pass_index in range(_MAX_RESOLVE_DEPTH):
         infos = await fetch_at(context)
         overrides = (
-            _checked_overrides(infos, stated, definition, first_pass=pass_index == 0)
+            _checked_overrides(
+                infos,
+                stated,
+                definition,
+                first_pass=pass_index == 0,
+                search_name=search_name,
+            )
             or overrides
         )
         # Siblings decide whether one numeric param owns a stated quantity.
@@ -333,7 +341,7 @@ async def resolve_params_with_intent(
                 unread.append(outcome.param_name)
                 unresolved.append(outcome.param_name)
             elif isinstance(outcome, UnboundParameter):
-                slot = _visible_slot(info, outcome)
+                slot = _visible_slot(info, outcome, search_name)
                 if slot is not None:
                     open_slots.append(slot)
                     unresolved.append(info.name)

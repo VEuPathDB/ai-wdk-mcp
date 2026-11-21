@@ -206,6 +206,7 @@ async def bind(
         resolved = await resolve_params_with_intent(
             fetch_at=fetch_at,
             intent=ParamIntent(text=proposal.intent),
+            search_name=search.url_segment,
             overrides=_overrides(search, infos, proposal, organisms),
         )
     except (UnknownParameterError, UnreadableValueError) as exc:

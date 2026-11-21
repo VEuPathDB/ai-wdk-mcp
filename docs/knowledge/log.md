@@ -1,5 +1,13 @@
 # Knowledge log
 
+## 2026-11-21 - 0.9.0b12: a site-set refusal names the search
+
+- `resolve_params_with_intent` takes a required `search_name`. Every
+  `SiteSetParameterError` the walk raises names the parameter and the search.
+- `SiteSetParameterError` takes a required `search_name: str`.
+- What a host does to take this release: pass `search_name` to
+  `resolve_params_with_intent`. The refusal detail already names the search.
+
 ## 2026-11-21 - 0.9.0b11: a parameter states who sets it
 
 - This entry amends [No hidden parameter reaches the model](#no-hidden-parameter-reaches-the-model).

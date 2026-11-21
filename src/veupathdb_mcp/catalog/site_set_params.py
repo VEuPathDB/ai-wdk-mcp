@@ -4,11 +4,9 @@ from veupathdb.errors import ValidationError, param_message_rows
 
 
 class SiteSetParameterError(ValidationError):
-    def __init__(
-        self, name: str, search_name: str | None = None, *, unset: bool = False
-    ) -> None:
+    def __init__(self, name: str, search_name: str, *, unset: bool = False) -> None:
         self.name = name
-        where = f"{name} on {search_name}" if search_name else name
+        where = f"{name} on {search_name}"
         fault = (
             f"{where} is set by the site, and the site gives it no value, so the "
             "search cannot run from the values given."

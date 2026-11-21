@@ -192,6 +192,7 @@ async def test_an_override_of_a_visible_read_only_parameter_is_refused() -> None
     with pytest.raises(SiteSetParameterError, match="fixed"):
         await resolve_params_with_intent(
             fetch_at=fetcher(*_read_only_search()),
+            search_name="GenesByReadOnly",
             intent=ParamIntent(),
             overrides={"fixed": "gene", "text": "kinase"},
         )
@@ -219,6 +220,7 @@ async def test_an_unknown_override_lists_no_read_only_name() -> None:
     with pytest.raises(UnknownParameterError) as refused:
         await resolve_params_with_intent(
             fetch_at=fetcher(*_read_only_search()),
+            search_name="GenesByReadOnly",
             intent=ParamIntent(),
             overrides={"txt": "kinase"},
         )

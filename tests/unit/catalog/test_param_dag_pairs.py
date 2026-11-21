@@ -43,7 +43,10 @@ async def _resolve(
     fetch_at: ParamFetcher, overrides: OverrideMap | None = None
 ) -> ResolvedParams:
     return await resolve_params_with_intent(
-        fetch_at=fetch_at, intent=ParamIntent(), overrides=overrides
+        fetch_at=fetch_at,
+        search_name="GenesByPairs",
+        intent=ParamIntent(),
+        overrides=overrides,
     )
 
 

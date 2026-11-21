@@ -126,7 +126,7 @@ async def test_the_resolve_walk_binds_a_hidden_parameter_at_its_default() -> Non
     infos = format_param_info_typed([*(_snps().search_data.parameters or []), stated])
 
     resolved = await resolve_params_with_intent(
-        fetch_at=fetcher(*infos), intent=ParamIntent()
+        fetch_at=fetcher(*infos), search_name=SEARCH, intent=ParamIntent()
     )
 
     assert {name: resolved.params[name].to_wire() for name in HIDDEN} == {
@@ -142,11 +142,13 @@ async def test_a_hidden_required_parameter_with_no_default_refuses_the_search() 
     infos = format_param_info_typed([*(_snps().search_data.parameters or []), unset])
 
     with pytest.raises(SiteSetParameterError) as refused:
-        await resolve_params_with_intent(fetch_at=fetcher(*infos), intent=ParamIntent())
+        await resolve_params_with_intent(
+            fetch_at=fetcher(*infos), intent=ParamIntent(), search_name=SEARCH
+        )
 
     assert refused.value.detail == (
-        "site_only is set by the site, and the site gives it no value, so the search "
-        "cannot run from the values given."
+        "site_only on GenesByNgsSnps is set by the site, and the site gives it no "
+        "value, so the search cannot run from the values given."
     )
 
 
@@ -158,7 +160,7 @@ async def test_a_hidden_input_step_is_left_to_the_step_tree() -> None:
     infos = format_param_info_typed(search.parameters or [])
 
     resolved = await resolve_params_with_intent(
-        fetch_at=fetcher(*infos), intent=ParamIntent()
+        fetch_at=fetcher(*infos), search_name=SEARCH, intent=ParamIntent()
     )
 
     assert "gene_result" not in resolved.unresolved_required
@@ -168,12 +170,19 @@ async def test_a_hidden_input_step_is_left_to_the_step_tree() -> None:
 async def test_the_resolve_walk_refuses_a_hidden_override_by_name() -> None:
     infos = format_param_info_typed(_snps().search_data.parameters or [])
 
-    with pytest.raises(SiteSetParameterError, match="WebServicesPath"):
+    with pytest.raises(SiteSetParameterError) as refused:
         await resolve_params_with_intent(
             fetch_at=fetcher(*infos),
             intent=ParamIntent(),
             overrides={"WebServicesPath": "dflt"},
+            search_name=SEARCH,
         )
+
+    assert refused.value.detail == (
+        "WebServicesPath on GenesByNgsSnps is set by the site: the website does not "
+        "offer it, and it is sent at the value the site gives it under the other "
+        "values. Leave it out."
+    )
 
 
 def _profile_search() -> list[WDKParameter]:
@@ -214,6 +223,7 @@ async def test_the_walk_derives_profile_pattern_from_the_two_lists() -> None:
 
     resolved = await resolve_params_with_intent(
         fetch_at=fetcher(*format_param_info_typed(definition)),
+        search_name=SEARCH,
         intent=ParamIntent(),
         overrides={"included_species": "pfal", "excluded_species": "hsap"},
         definition=definition,
@@ -232,6 +242,7 @@ async def test_a_stated_phyletic_value_is_refused_by_name(name: str) -> None:
     with pytest.raises(ValidationError, match=name):
         await resolve_params_with_intent(
             fetch_at=fetcher(*format_param_info_typed(definition)),
+            search_name=SEARCH,
             intent=ParamIntent(),
             overrides={"included_species": "pfal", name: "%pfal:Y%"},
             definition=definition,
@@ -244,6 +255,7 @@ async def test_lists_that_name_no_entry_are_refused_with_the_nearest() -> None:
     with pytest.raises(PhyleticListError, match="included_species names no entry"):
         await resolve_params_with_intent(
             fetch_at=fetcher(*format_param_info_typed(definition)),
+            search_name=SEARCH,
             intent=ParamIntent(),
             overrides={"included_species": "Plasmodium vivax"},
             definition=definition,
@@ -256,6 +268,7 @@ async def test_lists_without_the_definition_derive_nothing() -> None:
     with pytest.raises(PhyleticListError, match="the call passed none"):
         await resolve_params_with_intent(
             fetch_at=fetcher(*format_param_info_typed(definition)),
+            search_name=SEARCH,
             intent=ParamIntent(),
             overrides={"included_species": "pfal"},
         )
@@ -299,7 +312,9 @@ async def test_the_served_resolve_refuses_a_stated_profile_pattern(
         lambda *args: fetcher(*format_param_info_typed(definition)),
     )
 
-    with pytest.raises(ToolError, match="profile_pattern is set by the site"):
+    with pytest.raises(
+        ToolError, match="profile_pattern on GenesByOrthologPattern is set by the site"
+    ):
         await catalog_tools.resolve_search_parameters(
             "plasmodb",
             "GenesByOrthologPattern",
@@ -313,6 +328,7 @@ async def test_a_phyletic_search_with_neither_list_is_refused() -> None:
     with pytest.raises(PhyleticListError, match="select no species"):
         await resolve_params_with_intent(
             fetch_at=fetcher(*format_param_info_typed(definition)),
+            search_name=SEARCH,
             intent=ParamIntent(),
             overrides={},
             definition=definition,
@@ -325,6 +341,7 @@ async def test_an_unknown_name_lists_only_the_visible_names() -> None:
     with pytest.raises(UnknownParameterError) as refused:
         await resolve_params_with_intent(
             fetch_at=fetcher(*format_param_info_typed(definition)),
+            search_name=SEARCH,
             intent=ParamIntent(),
             overrides={"included_species": "pfal", "speciess": "x"},
             definition=definition,

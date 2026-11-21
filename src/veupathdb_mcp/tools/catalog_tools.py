@@ -487,6 +487,7 @@ async def resolve_search_parameters(
         resolved = await resolve_params_with_intent(
             fetch_at=wdk_fetch_at(site_id, record_type, search_name),
             intent=ParamIntent(text=criterion),
+            search_name=search_name,
             overrides=overrides,
             definition=definition,
         )

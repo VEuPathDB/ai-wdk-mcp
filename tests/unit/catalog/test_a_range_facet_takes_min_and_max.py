@@ -54,6 +54,7 @@ def _collection_dates() -> ParameterInfo:
 async def _wire(info: ParameterInfo, override: str) -> list[dict[str, object]]:
     resolved = await resolve_params_with_intent(
         fetch_at=fetcher(info),
+        search_name="GenesByFacet",
         intent=ParamIntent(),
         overrides={info.name: override},
     )
@@ -209,6 +210,7 @@ async def test_a_bare_list_is_refused_naming_both_facet_forms() -> None:
     with pytest.raises(ValidationError) as caught:
         await resolve_params_with_intent(
             fetch_at=fetcher(info),
+            search_name="GenesByFacet",
             intent=ParamIntent(),
             overrides={info.name: ["0", "1"]},
         )

@@ -61,7 +61,10 @@ async def _resolve(
     text: str, *infos: ParameterInfo, overrides: OverrideMap | None = None
 ) -> ResolvedParams:
     return await resolve_params_with_intent(
-        fetch_at=fetcher(*infos), intent=ParamIntent(text=text), overrides=overrides
+        fetch_at=fetcher(*infos),
+        search_name="GenesByDefaults",
+        intent=ParamIntent(text=text),
+        overrides=overrides,
     )
 
 
@@ -253,7 +256,10 @@ def _genes_by_text() -> ParamFetcher:
 
 async def _resolve_text(overrides: OverrideMap | None = None) -> ResolvedParams:
     return await resolve_params_with_intent(
-        fetch_at=_genes_by_text(), intent=ParamIntent(), overrides=overrides
+        fetch_at=_genes_by_text(),
+        search_name="GenesByDefaults",
+        intent=ParamIntent(),
+        overrides=overrides,
     )
 
 
@@ -331,6 +337,7 @@ class TestAListOverrideStaysAList:
                     leaves=vocab(*_HOURS),
                 )
             ),
+            search_name="GenesByDefaults",
             intent=ParamIntent(),
             overrides={"samples_percentile_generic": override},
         )
@@ -358,6 +365,7 @@ class TestAListOverrideStaysAList:
                     leaves=vocab(*_HOURS),
                 )
             ),
+            search_name="GenesByDefaults",
             intent=ParamIntent(),
             overrides={"samples_percentile_generic": _TROPHOZOITE},
         )
@@ -410,6 +418,7 @@ async def _under_organism(
 
     resolved = await resolve_params_with_intent(
         fetch_at=fetch_at,
+        search_name="GenesByDefaults",
         intent=ParamIntent(text="expression profile of the protease genes"),
         overrides={"organism": [chosen]},
     )

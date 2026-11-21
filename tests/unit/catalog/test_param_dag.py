@@ -61,7 +61,9 @@ class TestFilterParams:
         """The WDK default for a filter param is the empty filter set, and it
         resolves rather than opening a slot."""
         resolved = await resolve_params_with_intent(
-            fetch_at=_strain_meta(), intent=ParamIntent()
+            fetch_at=_strain_meta(),
+            search_name="GenesByRNASeqEvidence",
+            intent=ParamIntent(),
         )
 
         value = resolved.params["ngsSnp_strain_meta"]
@@ -96,6 +98,7 @@ class TestFilterParams:
     ) -> None:
         resolved = await resolve_params_with_intent(
             fetch_at=_strain_meta(),
+            search_name="GenesByRNASeqEvidence",
             intent=ParamIntent(),
             overrides={"ngsSnp_strain_meta": override},
         )
@@ -109,6 +112,7 @@ class TestFilterParams:
     async def test_an_override_without_a_facet_means_include_all(self) -> None:
         resolved = await resolve_params_with_intent(
             fetch_at=_strain_meta(),
+            search_name="GenesByRNASeqEvidence",
             intent=ParamIntent(),
             overrides={"ngsSnp_strain_meta": "All field isolates"},
         )
@@ -149,7 +153,9 @@ class TestFilterPairs:
         # A reference and comparison filter pair must not both take the empty
         # filter, because that compares a set against itself.
         resolved = await resolve_params_with_intent(
-            fetch_at=_loffler(), intent=ParamIntent()
+            fetch_at=_loffler(),
+            search_name="GenesByRNASeqEvidence",
+            intent=ParamIntent(),
         )
 
         assert "ref_samples_filter_metadata_loffler" not in resolved.params
@@ -164,6 +170,7 @@ class TestFilterPairs:
     ) -> None:
         resolved = await resolve_params_with_intent(
             fetch_at=_loffler(),
+            search_name="GenesByRNASeqEvidence",
             intent=ParamIntent(),
             overrides={
                 "ref_samples_filter_metadata_loffler": "PCR result=Negative",
@@ -202,6 +209,7 @@ class TestTheDependentChain:
 
         resolved = await resolve_params_with_intent(
             fetch_at=fetch_at,
+            search_name="GenesByRNASeqEvidence",
             intent=ParamIntent(),
             overrides={"organism": "Plasmodium falciparum 3D7"},
         )
@@ -230,11 +238,14 @@ class TestTheDependentChain:
             )
         )
 
-        without = await resolve_params_with_intent(fetch_at=stage, intent=ParamIntent())
+        without = await resolve_params_with_intent(
+            fetch_at=stage, search_name="GenesByRNASeqEvidence", intent=ParamIntent()
+        )
         assert any(s.param_name == "samples_de_comp" for s in without.open_slots)
 
         filled = await resolve_params_with_intent(
             fetch_at=stage,
+            search_name="GenesByRNASeqEvidence",
             intent=ParamIntent(),
             overrides={"samples_de_comp": "Gametocyte"},
         )
@@ -270,6 +281,7 @@ class TestAnUnknownOverrideIsRefused:
         with pytest.raises(UnknownParameterError) as info:
             await resolve_params_with_intent(
                 fetch_at=fetcher(_pct()),
+                search_name="GenesByRNASeqEvidence",
                 intent=ParamIntent(text="top 10 percent"),
                 overrides={"min_percentile": "90"},
             )
@@ -281,6 +293,7 @@ class TestAnUnknownOverrideIsRefused:
         with pytest.raises(UnknownParameterError) as info:
             await resolve_params_with_intent(
                 fetch_at=fetcher(_pct(), _stage()),
+                search_name="GenesByRNASeqEvidence",
                 intent=ParamIntent(text="top 10 percent"),
                 overrides={"percentile": "90", "life_stage": "gametocyte"},
             )
@@ -297,6 +310,7 @@ class TestAnUnknownOverrideIsRefused:
     async def test_a_known_override_still_resolves(self) -> None:
         resolved = await resolve_params_with_intent(
             fetch_at=fetcher(_stage()),
+            search_name="GenesByRNASeqEvidence",
             intent=ParamIntent(text="anything"),
             overrides={"stage": "Gametocyte"},
         )
@@ -305,7 +319,9 @@ class TestAnUnknownOverrideIsRefused:
 
     async def test_no_overrides_never_raises(self) -> None:
         resolved = await resolve_params_with_intent(
-            fetch_at=fetcher(_pct()), intent=ParamIntent(text="anything")
+            fetch_at=fetcher(_pct()),
+            search_name="GenesByRNASeqEvidence",
+            intent=ParamIntent(text="anything"),
         )
 
         assert "min_expression_percentile" in resolved.params
@@ -335,6 +351,7 @@ class TestAnUnknownOverrideIsRefused:
 
         resolved = await resolve_params_with_intent(
             fetch_at=fetch_at,
+            search_name="GenesByRNASeqEvidence",
             intent=ParamIntent(text="anything"),
             overrides={"stage": "gametocyte"},
         )
