@@ -68,7 +68,6 @@ from veupathdb_mcp.catalog.param_dag import (
 from veupathdb_mcp.catalog.param_discovery import fetch_search_details
 from veupathdb_mcp.catalog.param_formatting import (
     RADIO_OFF,
-    FilterFieldInfo,
     GetParameterOptionsResult,
     ParameterInfo,
     ParameterNotOnSearch,
@@ -238,7 +237,6 @@ __all__ = [
     "EdaStepRequest",
     "ExperimentCard",
     "ExperimentMatch",
-    "FilterFieldInfo",
     "GetParameterOptionsResult",
     "LabelReading",
     "NoGeneRecordsError",

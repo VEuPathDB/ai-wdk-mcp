@@ -83,7 +83,6 @@ def test_a_vocabulary_term_is_never_a_placeholder() -> None:
             "is_visible": True,
             "site_set": False,
             "help": "",
-            "value_format": "",
             "allowed_values": [{"value": RADIO_OFF, "display": "not applicable"}],
         }
     )

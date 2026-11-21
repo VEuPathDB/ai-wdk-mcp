@@ -6,6 +6,7 @@ from __future__ import annotations
 import pytest
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
+    FilterFacet,
     FilterValue,
     MultiPickValue,
     NumberValue,
@@ -23,21 +24,22 @@ from veupathdb_mcp.catalog.param_dag import (
     UnknownParameterError,
     resolve_params_with_intent,
 )
-from veupathdb_mcp.catalog.param_formatting import FilterFieldInfo
 from veupathdb_mcp.catalog.param_intent import ParamIntent
 
-from .conftest import bound, fetcher, param_info, vocab, wdk_search_response
+from .conftest import (
+    bound,
+    facet,
+    fetcher,
+    param_info,
+    vocab,
+    wdk_search_response,
+)
 
 Clauses = list[tuple[str, str, bool, list[str]]]
 
 _SAMPLE_FACETS = [
-    FilterFieldInfo(
-        term="Sample type",
-        display="Sample type",
-        type="string",
-        values=["specimen from organism", "culture", "blood"],
-    ),
-    FilterFieldInfo(term="Country", display="Country", type="string", values=["India"]),
+    facet("Sample type", members=("specimen from organism", "culture", "blood")),
+    facet("Country", members=("India",)),
 ]
 _FULL_FILTER_JSON = (
     '{"filters": [{"field": "Sample type", "type": "string", "isRange": false, '
@@ -48,7 +50,7 @@ _PARTIAL_FILTER_JSON = (
 )
 
 
-def _filter(name: str, fields: list[FilterFieldInfo]) -> ParameterInfo:
+def _filter(name: str, fields: list[FilterFacet]) -> ParameterInfo:
     return param_info(name, "filter", filter_fields=fields)
 
 
@@ -125,14 +127,7 @@ class TestFilterParams:
         )
 
 
-_LOFFLER_FACETS = [
-    FilterFieldInfo(
-        term="PCR result",
-        display="PCR result",
-        type="string",
-        values=["Negative", "Positive"],
-    )
-]
+_LOFFLER_FACETS = [facet("PCR result", members=("Negative", "Positive"))]
 
 
 def _loffler() -> ParamFetcher:

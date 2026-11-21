@@ -24,7 +24,6 @@ def _vocab(name: str, values: list[str], default: str) -> ParameterInfo:
         is_visible=True,
         site_set=False,
         help="",
-        value_format="",
         default_value=default,
         vocab_leaves=[VocabOption(value=v, display=v) for v in values],
     )
@@ -39,7 +38,6 @@ def _free_text(name: str, default: str) -> ParameterInfo:
         is_visible=True,
         site_set=False,
         help="",
-        value_format="",
         default_value=default,
     )
 

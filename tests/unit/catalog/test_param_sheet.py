@@ -35,7 +35,6 @@ def _param(
         is_visible=True,
         site_set=False,
         help="h",
-        value_format="",
         vocab_leaves=leaves,
         stated_parents=list(depends),
         allowed_values_tree=tree,
@@ -245,7 +244,6 @@ def test_a_hidden_param_without_a_vocabulary_is_not_on_the_sheet() -> None:
         is_visible=False,
         site_set=True,
         help="",
-        value_format="",
         default_value="dflt",
     )
 

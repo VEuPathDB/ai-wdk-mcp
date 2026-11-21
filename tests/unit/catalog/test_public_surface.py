@@ -16,7 +16,6 @@ def _filter_param(name: str) -> ParameterInfo:
         is_visible=True,
         site_set=False,
         help="",
-        value_format="",
     )
 
 

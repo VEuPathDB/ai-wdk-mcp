@@ -109,12 +109,12 @@ def test_filter_param_exposes_selectable_leaf_facets() -> None:
     assert set(fields) == {"Sample type", "Country"}  # category node excluded
     assert fields["Sample type"].type == "string"
     assert fields["Sample type"].is_range is False
-    assert fields["Sample type"].values == [
+    assert fields["Sample type"].members == [
         "specimen from organism",
         "culture",
         "blood",
     ]
-    assert fields["Country"].values == ["India", "Thailand"]
+    assert fields["Country"].members == ["India", "Thailand"]
 
 
 class TestDependentParamNote:

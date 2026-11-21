@@ -7,6 +7,7 @@ from typing import Self
 from pydantic import BaseModel, ConfigDict, Field, JsonValue, RootModel, model_validator
 from pydantic import ValidationError as PydanticValidationError
 from veupathdb.domain.parameters import (
+    FilterFacet,
     FilterTermClause,
     FilterValue,
     UnboundParameter,
@@ -16,39 +17,34 @@ from veupathdb.errors import ValidationError
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.catalog._param_binding import OverrideMap
-from veupathdb_mcp.catalog.param_formatting import (
-    FilterFieldInfo,
-    ParameterInfo,
-)
+from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 from veupathdb_mcp.catalog.param_intent import match_option
 
 
-def _match_filter_field(info: ParameterInfo, hint: str) -> FilterFieldInfo | None:
+def _match_filter_field(info: ParameterInfo, hint: str) -> FilterFacet | None:
     """Resolves a facet by name. An exact term or display match wins over a substring."""
     hint_l = hint.strip().lower()
-    for field in info.facets():
+    for field in info.facets().root:
         if hint_l in (field.term.lower(), field.display.lower()):
             return field
     return next(
         (
             field
-            for field in info.facets()
+            for field in info.facets().root
             if hint_l in field.term.lower() or hint_l in field.display.lower()
         ),
         None,
     )
 
 
-def _match_filter_values(
-    field: FilterFieldInfo, raw_values: list[str]
-) -> list[JsonValue]:
+def _match_filter_values(field: FilterFacet, raw_values: list[str]) -> list[JsonValue]:
     """Matches each requested member against the facet's values. An unknown member
     passes through for WDK to validate."""
-    options = [VocabOption(value=v, display=v) for v in field.values]
+    options = [VocabOption(value=v, display=v) for v in field.members]
     return [match_option(options, v) or v for v in raw_values]
 
 
-def _is_range(field: FilterFieldInfo) -> bool:
+def _is_range(field: FilterFacet) -> bool:
     """WDK parses a date clause as a range whatever its isRange flag says."""
     return field.is_range or field.type == "date"
 
@@ -101,7 +97,7 @@ def _member_forms(term: str) -> str:
 
 
 def _refused(
-    info: ParameterInfo, field: FilterFieldInfo, value: JsonValue
+    info: ParameterInfo, field: FilterFacet, value: JsonValue
 ) -> ValidationError:
     kind, forms = (
         ("range", _range_forms(field.term))
@@ -116,7 +112,7 @@ def _refused(
 
 
 def _clause(
-    info: ParameterInfo, field: FilterFieldInfo, value: JsonValue
+    info: ParameterInfo, field: FilterFacet, value: JsonValue
 ) -> FilterTermClause:
     """Writes a clause's value in the shape WDK parses for its facet."""
     try:
@@ -209,7 +205,9 @@ def _contrast_open_slot(info: ParameterInfo) -> UnboundParameter:
             f"side, not all samples on both."
         ),
         options=[
-            f"{field.term}={value}" for field in info.facets() for value in field.values
+            f"{field.term}={value}"
+            for field in info.facets().root
+            for value in field.members
         ],
     )
 
@@ -237,7 +235,7 @@ def _resolve_filter_param(
 
 
 def _shorthand_value(
-    info: ParameterInfo, field: FilterFieldInfo, bound: str, raw: str
+    info: ParameterInfo, field: FilterFacet, bound: str, raw: str
 ) -> JsonValue:
     """Reads the value of the shorthand: members for a member facet, and
     <=x, >=x or =lo..hi for a range facet."""

@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Final, TypedDict, Unpack, cast
+from typing import Final, Literal, TypedDict, Unpack, cast
 
 from pydantic import JsonValue
 from veupathdb import JSONObject
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
+    FilterFacet,
     MultiPickValue,
     ParamValue,
     SinglePickValue,
@@ -24,7 +25,7 @@ from veupathdb.wdk import (
 )
 
 from veupathdb_mcp.catalog.param_dag import ParamFetcher
-from veupathdb_mcp.catalog.param_formatting import FilterFieldInfo, ParameterInfo
+from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 from veupathdb_mcp.catalog.param_validation import ValidationCallbacks
 
 PHYLETIC_STRAIN = "Plasmodium falciparum 3D7"
@@ -43,7 +44,7 @@ class ParamFields(TypedDict, total=False):
     site_set: bool
     is_number: bool
     depends_on: list[str]
-    filter_fields: list[FilterFieldInfo]
+    filter_fields: list[FilterFacet]
     tree: str | None
     help_text: str
 
@@ -79,10 +80,29 @@ def param_info(
         "site_set": False,
         "is_number": False,
         "help": "",
-        "value_format": "",
     }
     payload.update((_INFO_FIELD_NAMES[key], value) for key, value in fields.items())
     return ParameterInfo.model_validate(payload)
+
+
+def facet(
+    term: str,
+    facet_type: Literal["string", "number", "date"] = "string",
+    *,
+    display: str | None = None,
+    is_range: bool = False,
+    members: tuple[str, ...] = (),
+) -> FilterFacet:
+    return FilterFacet(
+        term=term,
+        display=display or term,
+        parent=None,
+        type=facet_type,
+        is_range=is_range,
+        units=None,
+        precision=0,
+        members=list(members),
+    )
 
 
 def vocab(*values: str) -> list[VocabOption]:

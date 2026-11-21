@@ -1,7 +1,7 @@
 """Formats WDK search parameters into a required/optional overview."""
 
-from pydantic import Field
-from veupathdb.domain.parameters import VocabOption
+from pydantic import Field, JsonValue
+from veupathdb.domain.parameters import FilterFacet, VocabOption
 from veupathdb.model import CamelModel
 from veupathdb.wdk import WDKSearch
 
@@ -9,10 +9,7 @@ from veupathdb_mcp.catalog.eda_backed import (
     eda_backed_guidance,
     eda_backed_search,
 )
-from veupathdb_mcp.catalog.param_formatting import (
-    FilterFieldInfo,
-    ParameterInfo,
-)
+from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 from veupathdb_mcp.catalog.param_sheet import build_sheet
 
 
@@ -23,7 +20,7 @@ class ParamOverviewEntry(CamelModel):
     display_name: str
     type: str
     description: str
-    value_format: str
+    stated_schema: dict[str, JsonValue]
     organism_param: bool = False
     default: str | None = None
     min: float | None = None
@@ -32,7 +29,7 @@ class ParamOverviewEntry(CamelModel):
     vocabulary_total: int = 0
     vocabulary_note: str | None = None
     controls_vocab_of: list[str] | None = None
-    filter_facets: list[FilterFieldInfo] = Field(default_factory=list)
+    filter_facets: list[FilterFacet] = Field(default_factory=list)
 
 
 class DependencyEntry(CamelModel):
@@ -97,7 +94,7 @@ def format_search_overview(
             display_name=sheet.display_name or sheet.name,
             type=sheet.type,
             description=sheet.help,
-            value_format=info.value_format,
+            stated_schema=info.stated_schema,
             organism_param=sheet.organism_param,
             default=sheet.default,
             min=sheet.min,

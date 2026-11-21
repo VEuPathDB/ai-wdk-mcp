@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 from pydantic import Field
-from veupathdb.domain.parameters import VocabOption
+from veupathdb.domain.parameters import FilterFacet, VocabOption
 from veupathdb.model import CamelModel
 
 from veupathdb_mcp.catalog.param_formatting import (
-    FilterFieldInfo,
     ParameterInfo,
+    cut_facets_note,
     shown_facets,
 )
 from veupathdb_mcp.catalog.shortlist import shortlist
@@ -32,11 +32,11 @@ class SheetEntry(CamelModel):
     vocabulary: list[VocabOption] = Field(default_factory=list)
     vocabulary_total: int = 0
     vocabulary_note: str | None = None
-    filter_facets: list[FilterFieldInfo] = Field(default_factory=list)
+    filter_facets: list[FilterFacet] = Field(default_factory=list)
 
 
 def _note(
-    info: ParameterInfo, shown: int, total: int, facets: list[FilterFieldInfo]
+    info: ParameterInfo, shown: int, total: int, facets: list[FilterFacet]
 ) -> str | None:
     parts: list[str] = []
     # An empty vocabulary offers nothing, so its note is the reason it is empty.
@@ -48,13 +48,9 @@ def _note(
             f"shown. If the value you need is absent, call get_parameter_options("
             f"search_name, '{info.name}', query='<keyword>') before deciding it does not exist."
         )
-    cut = [f.display for f in facets if f.values_total is not None]
+    cut = cut_facets_note(info.name, info.facets(), facets)
     if cut:
-        parts.append(
-            f"Facets {', '.join(cut)} show part of their values; call "
-            f"get_parameter_options(search_name, '{info.name}', query='<keyword>') "
-            f"to read the rest."
-        )
+        parts.append(cut)
     if info.allowed_values_tree is not None:
         parts.append("A parent term selects all of its children.")
     if info.stated_parents:

@@ -99,7 +99,7 @@ class UnreadableValueError(ValidationError):
             title="Unreadable parameter value",
             detail=(
                 f"{info.name} is a {info.type} parameter and cannot read {value!r}. "
-                f"Pass it as {info.value_format}."
+                f"Pass it in the shape {json.dumps(info.stated_schema)}."
             ),
             errors=[{"param": info.name}],
         )

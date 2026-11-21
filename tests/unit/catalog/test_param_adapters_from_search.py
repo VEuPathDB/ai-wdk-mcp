@@ -12,10 +12,10 @@ import json
 
 import pytest
 from veupathdb.domain.parameters import (
-    FilterTermClause,
     FilterValue,
     ParamGraph,
     ParamSpecNormalized,
+    StringMembers,
     fill_site_set_defaults,
     filled_site_set_defaults,
 )
@@ -163,7 +163,14 @@ class TestWdkFilter001ThreeMechanismsInThreePlaces:
     def test_wdk_filter_001_a_filter_parameter_lives_among_the_parameters(self) -> None:
         # It is a parameter, so it validates like one and is part of the
         # step's identity.
-        value = FilterValue(filters=[FilterTermClause(field="organism")])
+        clause = StringMembers(
+            field="organism",
+            type="string",
+            is_range=False,
+            include_unknown=False,
+            value=["Plasmodium falciparum 3D7"],
+        )
+        value = FilterValue(filters=[clause])
         config = WDKSearchConfig(parameters={"organism_filter": value.to_wire()})
 
         assert (

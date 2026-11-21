@@ -378,7 +378,6 @@
     "EdaStepRequest",
     "ExperimentCard",
     "ExperimentMatch",
-    "FilterFieldInfo",
     "GENE_RECORD_TYPE",
     "GetParameterOptionsResult",
     "LabelReading",

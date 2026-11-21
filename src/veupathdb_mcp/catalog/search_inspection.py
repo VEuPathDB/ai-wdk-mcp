@@ -36,7 +36,6 @@ from veupathdb_mcp.catalog.param_formatting import (
     format_param_info_typed,
     format_typed_param,
     phyletic_options_for,
-    shown_facets,
 )
 from veupathdb_mcp.catalog.radio_pairs import radio_pairs
 from veupathdb_mcp.catalog.radio_readings import RadioReadings, radio_readings
@@ -376,12 +375,7 @@ async def read_parameter_options(
                         )
                     }
                 )
-            query = " ".join((*narrow.terms, *narrow.request_terms))
-            if not query or not read.facets():
-                return read
-            return read.model_copy(
-                update={"filter_fields": shown_facets(read.facets(), query)}
-            )
+            return read.shown_for(" ".join((*narrow.terms, *narrow.request_terms)))
 
     valid = [p.name for p in all_params if p.bindable]
     return ParameterNotOnSearch(

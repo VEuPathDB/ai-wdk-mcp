@@ -4,11 +4,19 @@ import re
 from dataclasses import dataclass
 from typing import Annotated, Literal, Self
 
-from pydantic import Field, TypeAdapter, ValidationError, model_validator
+from pydantic import (
+    Field,
+    JsonValue,
+    TypeAdapter,
+    ValidationError,
+    model_validator,
+)
 from veupathdb.domain.parameters import (
     PHYLETIC_EXPRESSION_PARAM,
     PHYLETIC_LIST_PARAMS,
     PHYLETIC_MAP_PARAMS,
+    FilterFacet,
+    FilterFacets,
     ParamGraph,
     ParamKind,
     ParamValue,
@@ -69,34 +77,6 @@ _PHYLETIC_EXPRESSION_HELP = (
 )
 
 
-_VALUE_FORMAT_TEMPLATES: dict[str, str] = {
-    "string": '{"type": "string", "value": "<your value>"}',
-    "number": '{"type": "number", "value": <number>}',
-    "number-range": '{"type": "number-range", "min": <number>, "max": <number>}',
-    "date": '{"type": "date", "value": "<YYYY-MM-DD>"}',
-    "date-range": '{"type": "date-range", "min": "<YYYY-MM-DD>", "max": "<YYYY-MM-DD>"}',
-    "timestamp": '{"type": "timestamp", "value": "<ISO-8601>"}',
-    "single-pick-vocabulary": '{"type": "single-pick-vocabulary", "value": "<one of allowed_values>"}',
-    "multi-pick-vocabulary": '{"type": "multi-pick-vocabulary", "values": ["<from allowed_values>", "..."]}',
-    "filter": (
-        '{"type": "filter", "filters": [{"field": "<member facet>", "value": '
-        '["<member>", "..."]}, {"field": "<range facet>", "value": {"min": <n>, '
-        '"max": <n>}}]}; a range leaves out the bound it does not state. '
-        'Shorthand: "<member facet>=<m1>,<m2>", "<range facet><=<n>", '
-        '"<range facet>>=<n>" or "<range facet>=<lo>..<hi>"'
-    ),
-    "input-dataset": '{"type": "input-dataset", "datasetId": "<id>"}',
-    "input-step": '{"type": "input-step", "stepId": "<id>"}',
-}
-
-
-def _value_format(param_type: str) -> str:
-    return _VALUE_FORMAT_TEMPLATES.get(
-        param_type,
-        '{"type": "string", "value": "<your value>"}',
-    )
-
-
 _PARAM_KIND_ADAPTER: TypeAdapter[ParamKind] = TypeAdapter(ParamKind)
 
 
@@ -119,17 +99,6 @@ _PROFILE_PATTERN_HELP = (
 )
 
 
-class FilterFieldInfo(CamelModel):
-    """A selectable facet of a WDK filter param: one leaf ontology term with its values."""
-
-    term: str
-    display: str
-    type: str
-    is_range: bool = False
-    values: list[str] = Field(default_factory=list)
-    values_total: int | None = None
-
-
 class ParameterInfo(CamelModel):
     """Formatted WDK parameter info for AI tool consumption."""
 
@@ -146,7 +115,7 @@ class ParameterInfo(CamelModel):
     # WDK marks the search's organism parameter with ``properties.organismProperties``.
     organism_param: bool = False
     help: str
-    value_format: str
+    stated_schema: dict[str, JsonValue] = Field(default_factory=dict)
     default_value: str | None = None
     min: float | None = None
     max: float | None = None
@@ -169,8 +138,9 @@ class ParameterInfo(CamelModel):
     wire_children: list[str] = Field(default_factory=list, exclude=True)
     site_set: bool = Field(exclude=True)
     note: str | None = None
-    filter_fields: list[FilterFieldInfo] = Field(default_factory=list)
-    filter_leaves: list[FilterFieldInfo] = Field(default_factory=list, exclude=True)
+    filter_fields: list[FilterFacet] = Field(default_factory=list)
+    filter_fields_note: str | None = None
+    filter_leaves: list[FilterFacet] = Field(default_factory=list, exclude=True)
     # Flattened vocabulary leaves for internal matching. Never sent to the model.
     vocab_leaves: list[VocabOption] = Field(default_factory=list, exclude=True)
     # `type` is the WDK ParamKind; `kind` is the model discriminator.
@@ -193,9 +163,17 @@ class ParameterInfo(CamelModel):
         """The whole option list when it was flattened, else the capped view."""
         return dedupe_options(self.vocab_leaves or self.allowed_values or [])
 
-    def facets(self) -> list[FilterFieldInfo]:
-        """Every facet with every value the site sent, else the shown view."""
-        return self.filter_leaves or self.filter_fields
+    def facets(self) -> FilterFacets:
+        """Every facet with every member the site sent, else the shown view."""
+        return FilterFacets(self.filter_leaves or self.filter_fields)
+
+    def shown_for(self, query: str) -> Self:
+        facets = self.facets()
+        shown = shown_facets(facets, query)
+        note = cut_facets_note(self.name, facets, shown)
+        return self.model_copy(
+            update={"filter_fields": shown, "filter_fields_note": note}
+        )
 
     def is_placeholder(self, value: str) -> bool:
         """Whether a value is the site's prompt text, a prompt entry of the
@@ -427,7 +405,7 @@ def format_typed_param(
                 f"concluding that any value does or does not exist."
             )
 
-    facets = filter_fields_for(param)
+    facets = FilterFacets.of(param)
     return ParameterInfo(
         name=name,
         display_name=param.display_name or name,
@@ -436,7 +414,7 @@ def format_typed_param(
         is_visible=param.is_visible,
         is_read_only=param.is_read_only,
         help=help_text,
-        value_format=_value_format(param.type),
+        stated_schema=param.stated_schema(),
         default_value=param.initial_display_value,
         is_number=param.is_number,
         organism_param=param.is_organism,
@@ -455,44 +433,36 @@ def format_typed_param(
         wire_children=list(graph.wire_children.get(name, ())),
         site_set=param.site_set,
         note=note,
-        filter_fields=shown_facets(facets, ""),
-        filter_leaves=facets,
+        filter_leaves=facets.root,
         # Always flattened, because ``allowed_values`` is capped and can omit a value.
         vocab_leaves=leaves,
-    )
+    ).shown_for("")
 
 
-def shown_facets(facets: list[FilterFieldInfo], query: str) -> list[FilterFieldInfo]:
-    """Each facet with the values a model reads of it, ranked by ``query``.
-
-    A cut facet names how many values the site sent."""
-    shown: list[FilterFieldInfo] = []
-    for facet in facets:
-        values = shortlist_values(facet.values, query)
-        total = len(facet.values) if len(values) < len(facet.values) else None
-        shown.append(facet.model_copy(update={"values": values, "values_total": total}))
-    return shown
-
-
-def filter_fields_for(param: WDKParameter) -> list[FilterFieldInfo]:
-    """Return the leaf ontology terms of a filter param with their valid values.
-
-    Category nodes carry no ``type`` and are not selectable, so they are skipped.
-    """
-    if param.type != "filter":
-        return []
-    values = param.values or {}
+def shown_facets(facets: FilterFacets, query: str) -> list[FilterFacet]:
+    """Each facet with the members a model reads of it, ranked by ``query``."""
     return [
-        FilterFieldInfo(
-            term=term.term,
-            display=term.display or term.term,
-            type=term.type,
-            is_range=term.is_range,
-            values=values.get(term.term) or [],
-        )
-        for term in param.ontology
-        if term.type is not None
+        facet.model_copy(update={"members": shortlist_values(facet.members, query)})
+        for facet in facets.root
     ]
+
+
+def cut_facets_note(
+    name: str, whole: FilterFacets, shown: list[FilterFacet]
+) -> str | None:
+    sent = {facet.term: len(facet.members) for facet in whole.root}
+    cut = [
+        f"{facet.display} ({len(facet.members)} of {sent[facet.term]})"
+        for facet in shown
+        if len(facet.members) < sent[facet.term]
+    ]
+    if not cut:
+        return None
+    return (
+        f"Facets {', '.join(cut)} show part of their members; call "
+        f"get_parameter_options(search_name, '{name}', query='<keyword>') "
+        "to read the rest."
+    )
 
 
 def phyletic_options_for(

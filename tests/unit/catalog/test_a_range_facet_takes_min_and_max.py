@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any, cast
 
 import pytest
 from tests._support.recordings import TEST_ROOT
@@ -15,13 +16,10 @@ from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKSearchResponse
 
 from veupathdb_mcp.catalog.param_dag import ParameterInfo, resolve_params_with_intent
-from veupathdb_mcp.catalog.param_formatting import (
-    FilterFieldInfo,
-    format_typed_param,
-)
+from veupathdb_mcp.catalog.param_formatting import format_typed_param
 from veupathdb_mcp.catalog.param_intent import ParamIntent
 
-from .conftest import fetcher, param_info
+from .conftest import facet, fetcher, param_info
 
 _RECORDED = (
     Path(__file__).parent / "fixtures" / "plasmodb_variant_characteristics_refresh.json"
@@ -41,12 +39,7 @@ def _collection_dates() -> ParameterInfo:
         "sample_meta",
         "filter",
         filter_fields=[
-            FilterFieldInfo(
-                term="collection_date",
-                display="Collection date",
-                type="date",
-                is_range=True,
-            )
+            facet("collection_date", "date", display="Collection date", is_range=True)
         ],
     )
 
@@ -227,11 +220,11 @@ async def test_a_bare_list_is_refused_naming_both_facet_forms() -> None:
     ),
     reason=NEEDS_QA_RECORDING,
 )
-def test_the_sheet_states_the_member_and_the_range_form() -> None:
-    value_format = _variant_stats().value_format
+def test_the_schema_states_a_member_list_or_a_range_per_facet() -> None:
+    schema = _variant_stats().stated_schema
 
-    assert '"value": ["<member>", "..."]' in value_format
-    assert '"value": {"min": <n>, "max": <n>}' in value_format
-    assert "<range facet><=<n>" in value_format
-    assert "<range facet>=<lo>..<hi>" in value_format
-    assert "<member facet>=<m1>,<m2>" in value_format
+    assert schema["type"] == "array"
+    clause = cast("dict[str, Any]", schema["items"])["properties"]
+    assert "total_variants" in clause["field"]["enum"]
+    assert [form["type"] for form in clause["value"]["anyOf"]] == ["array", "object"]
+    assert "valueFormat" not in _variant_stats().model_dump(by_alias=True)

@@ -28,7 +28,6 @@ def _pi(name: str, display_name: str = "") -> ParameterInfo:
         is_visible=True,
         site_set=False,
         help="",
-        value_format="",
     )
 
 
