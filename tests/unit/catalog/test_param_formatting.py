@@ -34,9 +34,9 @@ _PHYLETIC_INDENTS = vocab_terms(
     ("EUKA", "1"), ("MAMM", "2"), ("hsap", "3"), ("pfal", "2")
 )
 _PHYLETIC_HELP_SENTENCE = (
-    "Species or clade codes from the phyletic tree, comma-separated or a list; "
-    "a clade selects all of its species; profile_pattern is derived from these "
-    "two lists."
+    "Species or clade codes or labels from the phyletic tree, written as one "
+    "string separated by commas; a clade selects all of its species; "
+    "profile_pattern is derived from included_species and excluded_species."
 )
 
 

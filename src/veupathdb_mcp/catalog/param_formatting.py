@@ -53,9 +53,9 @@ RADIO_OFF = "N/A"
 _EXAMPLE_PROMPT = re.compile(r"\(example:.*\)", re.IGNORECASE | re.DOTALL)
 
 _PHYLETIC_LIST_HELP = (
-    "Species or clade codes from the phyletic tree, comma-separated or a list; "
-    "a clade selects all of its species; profile_pattern is derived from these "
-    "two lists."
+    "Species or clade codes or labels from the phyletic tree, written as one "
+    "string separated by commas; a clade selects all of its species; "
+    "profile_pattern is derived from included_species and excluded_species."
 )
 
 
