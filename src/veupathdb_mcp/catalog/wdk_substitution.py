@@ -34,8 +34,10 @@ def _selection(wire: str) -> frozenset[str]:
 
 def _clauses(wire: str) -> frozenset[ClauseKey] | str:
     """The clauses a filter wire form states, order and key order aside."""
+    if not wire:
+        return wire
     try:
-        return FilterValue.model_validate_json(wire or '{"filters": []}').clause_set
+        return FilterValue.model_validate_json(wire).clause_set
     except ValidationError:
         return wire
 

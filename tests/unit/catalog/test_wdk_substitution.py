@@ -15,7 +15,7 @@ from veupathdb.domain.parameters import (
     from_wire,
 )
 
-from veupathdb_mcp.catalog.wdk_substitution import substituted_params
+from veupathdb_mcp.catalog.wdk_substitution import _comparable, substituted_params
 
 
 def _spec(name: str, param_type: str = "string") -> ParamSpecNormalized:
@@ -358,3 +358,10 @@ def test_a_filter_that_does_not_parse_compares_as_written(wire: str) -> None:
     assert _filter_substituted(wire, _NO_CLAUSES) == ["filter_param"]
     assert _filter_substituted(wire, wire) == []
     assert _filter_substituted(wire, wire + " ") == ["filter_param"]
+
+
+def test_an_empty_filter_is_not_a_filter_with_no_clauses() -> None:
+    spec = ParamSpecNormalized(name="variation_sample_meta", param_type="filter")
+
+    assert _comparable(spec, "") != _comparable(spec, '{"filters": []}')
+    assert _comparable(spec, '{"filters":[]}') == _comparable(spec, '{"filters": []}')
