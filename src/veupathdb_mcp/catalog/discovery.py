@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from veupathdb import get_logger
+from veupathdb.domain.parameters import FacetRange
 from veupathdb.errors import VEuPathDBError
 from veupathdb.wdk import VEuPathDBClient, WDKRecordType, WDKSearch, WDKSearchResponse
 
@@ -84,6 +85,7 @@ class SearchCatalog:
         self._available_categories: set[str] = set()
         self._offered_searches: frozenset[str] = frozenset()
         self._payload_bytes = 0
+        self.facet_ranges: dict[tuple[object, ...], FacetRange | None] = {}
 
     @property
     def memory_bytes(self) -> int:

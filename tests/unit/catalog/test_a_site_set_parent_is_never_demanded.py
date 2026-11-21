@@ -4,6 +4,7 @@ import json
 from collections.abc import Callable
 
 import pytest
+from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recorded_searches import recorded_search
 from tests._support.recordings import TEST_ROOT
 from tests._support.wdk_reads import serve_reads
@@ -195,6 +196,7 @@ def test_a_visible_read_only_parameter_is_off_the_sheet() -> None:
 async def test_an_override_of_a_visible_read_only_parameter_is_refused() -> None:
     with pytest.raises(SiteSetParameterError, match="fixed"):
         await resolve_params_with_intent(
+            filter_reads=FilterReadsDouble(),
             fetch_at=serving(*_read_only_definition()),
             search_name="GenesByReadOnly",
             intent=ParamIntent(),
@@ -223,6 +225,7 @@ async def test_the_served_specs_list_visible_parameters_with_their_read_only_mar
 async def test_an_unknown_override_lists_no_read_only_name() -> None:
     with pytest.raises(UnknownParameterError) as refused:
         await resolve_params_with_intent(
+            filter_reads=FilterReadsDouble(),
             fetch_at=serving(*_read_only_definition()),
             search_name="GenesByReadOnly",
             intent=ParamIntent(),

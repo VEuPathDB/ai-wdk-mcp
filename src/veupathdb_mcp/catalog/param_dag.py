@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable, Mapping, Sequence
+from functools import partial
 
 from pydantic import Field, JsonValue
 from veupathdb.domain import SearchContext
@@ -40,6 +41,7 @@ from veupathdb_mcp.catalog._param_filters import _resolve_filter_param
 from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,
 )
+from veupathdb_mcp.catalog.facet_ranges import FilterReads, refuse_filter_misses
 from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,
     format_param_info_typed,
@@ -374,11 +376,12 @@ def _defer_to_next_pass(
     return bool(depends_on & resolved_this_pass)
 
 
-def _outcome_for(
+async def _outcome_for(
     info: ParameterInfo,
     infos: list[ParameterInfo],
     resolution: _Resolution,
     ledger: _VocabLedger,
+    read_filter: Callable[[ParamValue], Awaitable[None]],
 ) -> ResolvedParam | UnboundParameter | Unread | None:
     """Decides one param, dispatching on whether it is a filter."""
     if info.param_kind != "filter":
@@ -386,19 +389,16 @@ def _outcome_for(
     filtered = _resolve_filter_param(info, infos, resolution.overrides)
     if isinstance(filtered, UnboundParameter):
         return filtered
-    return ResolvedParam(
-        value=filtered,
-        provenance=(
-            Provenance.STATED
-            if info.name in resolution.overrides
-            else Provenance.DEFAULTED
-        ),
-    )
+    if info.name not in resolution.overrides:
+        return ResolvedParam(value=filtered, provenance=Provenance.DEFAULTED)
+    await read_filter(filtered)
+    return ResolvedParam(value=filtered, provenance=Provenance.STATED)
 
 
 async def resolve_params_with_intent(
     *,
     fetch_at: ParamFetcher,
+    filter_reads: FilterReads,
     intent: ParamIntent,
     search_name: str,
     stated: Mapping[str, JsonValue],
@@ -422,6 +422,7 @@ async def resolve_params_with_intent(
     for pass_index in range(_MAX_RESOLVE_DEPTH):
         declarations = await fetch_at(context)
         infos = format_param_info_typed(declarations)
+        declared = {d.name: d for d in declarations}
         _refuse_hidden_overrides(infos, stated, search_name)
         overrides = _read_pass(
             infos, declarations, stated, context, overrides, first=pass_index == 0
@@ -452,7 +453,18 @@ async def resolve_params_with_intent(
                 or _awaits_comparator(info, infos, set(params) | set(unresolved))
             ):
                 continue
-            outcome = _outcome_for(info, infos, resolution, ledger)
+            outcome = await _outcome_for(
+                info,
+                infos,
+                resolution,
+                ledger,
+                partial(
+                    refuse_filter_misses,
+                    declared[info.name],
+                    context={p: context[p] for p in info.wire_parents},
+                    reads=filter_reads,
+                ),
+            )
             if isinstance(outcome, Unread):
                 unread.append(outcome.param_name)
                 unresolved.append(outcome.param_name)

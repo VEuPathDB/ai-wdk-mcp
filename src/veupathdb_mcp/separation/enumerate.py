@@ -9,15 +9,22 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 
 from pydantic import JsonValue
-from veupathdb.domain.parameters import ParamValue, StatedValuesError
+from veupathdb.domain.parameters import (
+    FilterStatementError,
+    ParamValue,
+    StatedValuesError,
+)
 from veupathdb.errors import VEuPathDBError
 from veupathdb.wdk import WDKParameter, WDKSearch, encode_params
 
 from veupathdb_mcp.catalog import (
     RADIO_OFF,
+    EmptyRangeError,
+    FilterReads,
     ParameterInfo,
     ParamFetcher,
     ParamIntent,
+    TooFewSelectedError,
     UnknownParameterError,
     VagueSearchQueryError,
     format_param_info_typed,
@@ -26,6 +33,7 @@ from veupathdb_mcp.catalog import (
     resolve_params_with_intent,
     search_for_searches,
     wdk_fetch_at,
+    wdk_filter_reads,
 )
 from veupathdb_mcp.separation.budget import (
     ENRICHMENT_REQUESTS,
@@ -188,6 +196,7 @@ def _overrides(
 async def bind(
     search: WDKSearch,
     fetch_at: ParamFetcher,
+    filter_reads: FilterReads,
     proposal: Proposal,
     organisms: list[str],
 ) -> dict[str, ParamValue]:
@@ -208,11 +217,18 @@ async def bind(
     try:
         resolved = await resolve_params_with_intent(
             fetch_at=fetch_at,
+            filter_reads=filter_reads,
             intent=ParamIntent(text=proposal.intent),
             search_name=search.url_segment,
             stated=_overrides(search, infos, proposal, organisms),
         )
-    except (UnknownParameterError, StatedValuesError) as exc:
+    except (
+        UnknownParameterError,
+        StatedValuesError,
+        FilterStatementError,
+        EmptyRangeError,
+        TooFewSelectedError,
+    ) as exc:
         raise CandidateSkippedError(reason="unbound_required", detail=str(exc)) from exc
     gap = binding_gap(resolved)
     if gap:
@@ -281,7 +297,13 @@ class _Collector:
             proposal.search_name,
             self.read,
         )
-        parameters = await bind(search, fetch, proposal, self.organisms)
+        parameters = await bind(
+            search,
+            fetch,
+            wdk_filter_reads(self.site_id, GENE_RECORD_CLASS, proposal.search_name),
+            proposal,
+            self.organisms,
+        )
         if _wire_key(proposal.search_name, parameters) in self.seen:
             raise CandidateSkippedError(reason="duplicate")
         return search.display_name or search.url_segment, parameters

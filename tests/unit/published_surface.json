@@ -376,8 +376,10 @@
     "EachSpeciesOf",
     "EdaBackedSearch",
     "EdaStepRequest",
+    "EmptyRangeError",
     "ExperimentCard",
     "ExperimentMatch",
+    "FilterReads",
     "GENE_RECORD_TYPE",
     "GetParameterOptionsResult",
     "LabelReading",
@@ -420,6 +422,7 @@
     "SheetEntry",
     "SideCounts",
     "SiteSetParameterError",
+    "TooFewSelectedError",
     "UnknownExperimentError",
     "UnknownParameterError",
     "UnknownSearchError",
@@ -506,6 +509,7 @@
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at",
+    "wdk_filter_reads",
     "write_phyletic_expression"
   ],
   "veupathdb_mcp.controls": [

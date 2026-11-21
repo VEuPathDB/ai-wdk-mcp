@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 from pydantic import TypeAdapter
+from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recorded_searches import recorded_search
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
@@ -176,6 +177,7 @@ def _samples(organism: str) -> dict[str, object]:
 
 async def test_a_facet_statement_binds_under_its_stated_organism() -> None:
     resolved = await resolve_params_with_intent(
+        filter_reads=FilterReadsDouble(),
         fetch_at=_by_organism,
         intent=ParamIntent(),
         search_name=CTX.search_name,
@@ -193,6 +195,7 @@ async def test_a_facet_statement_binds_under_its_stated_organism() -> None:
 async def test_the_same_statement_under_another_organism_is_refused() -> None:
     with pytest.raises(FilterStatementError, match="VAR_c4c428f1"):
         await resolve_params_with_intent(
+            filter_reads=FilterReadsDouble(),
             fetch_at=_by_organism,
             intent=ParamIntent(),
             search_name=CTX.search_name,

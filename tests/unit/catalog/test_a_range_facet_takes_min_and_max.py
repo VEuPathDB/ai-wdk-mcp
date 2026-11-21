@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Any, cast
 
 import pytest
+from pydantic import JsonValue
+from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recordings import TEST_ROOT
 from veupathdb.devtools import WDKExchange
 from veupathdb.domain.parameters import FilterValue, ParamGraph
@@ -44,12 +46,13 @@ def _collection_dates() -> ParameterInfo:
     )
 
 
-async def _wire(info: ParameterInfo, override: str) -> list[dict[str, object]]:
+async def _wire(info: ParameterInfo, statement: object) -> list[dict[str, object]]:
     resolved = await resolve_params_with_intent(
+        filter_reads=FilterReadsDouble(),
         fetch_at=fetcher(info),
         search_name="GenesByFacet",
         intent=ParamIntent(),
-        overrides={info.name: override},
+        stated={info.name: cast("JsonValue", statement)},
     )
     value = resolved.params[info.name]
     assert isinstance(value, FilterValue)
@@ -59,64 +62,49 @@ async def _wire(info: ParameterInfo, override: str) -> list[dict[str, object]]:
     return clauses
 
 
-@pytest.mark.skipif(
+_NEEDS_REFRESH = pytest.mark.skipif(
     needs_qa_recording(
         TEST_ROOT
         / "unit/catalog/fixtures/plasmodb_variant_characteristics_refresh.json"
     ),
     reason=NEEDS_QA_RECORDING,
 )
+
+
+@_NEEDS_REFRESH
 @pytest.mark.parametrize(
-    ("override", "bounds"),
+    ("statement", "bounds"),
     [
-        ("max_minor_allele_frequency<=0.05", {"max": 0.05}),
-        ("max_minor_allele_frequency>=0.01", {"min": 0.01}),
-        ("variants_per_kb=0..0", {"min": 0.0, "max": 0.0}),
-        ("Variants per kb=..2.5", {"max": 2.5}),
         (
-            (
-                '{"filters": [{"field": "max_minor_allele_frequency", '
-                '"value": {"max": 0.05}}]}'
-            ),
+            [{"field": "max_minor_allele_frequency", "value": {"max": 0.05}}],
             {"max": 0.05},
         ),
         (
-            (
-                '{"filters": [{"field": "variants_per_kb", "type": "number", '
-                '"isRange": true, "includeUnknown": false, '
-                '"value": {"min": 0, "max": 0}}]}'
-            ),
+            [{"field": "max_minor_allele_frequency", "value": {"min": 0.01}}],
+            {"min": 0.01},
+        ),
+        (
+            [{"field": "variants_per_kb", "value": {"min": 0, "max": 0}}],
             {"min": 0.0, "max": 0.0},
         ),
+        ([{"field": "Variants per kb", "value": {"max": 2.5}}], {"max": 2.5}),
     ],
 )
 async def test_a_range_facet_is_written_as_min_and_max(
-    override: str, bounds: dict[str, float]
+    statement: object, bounds: dict[str, float]
 ) -> None:
-    [clause] = await _wire(_variant_stats(), override)
+    [clause] = await _wire(_variant_stats(), statement)
 
     assert clause["type"] == "number"
     assert clause["isRange"] is True
     assert clause["value"] == bounds
 
 
-@pytest.mark.skipif(
-    needs_qa_recording(
-        TEST_ROOT
-        / "unit/catalog/fixtures/plasmodb_variant_characteristics_refresh.json"
-    ),
-    reason=NEEDS_QA_RECORDING,
-)
-@pytest.mark.parametrize(
-    "override",
-    [
-        "most_severe_impact=HIGH",
-        '{"filters": [{"field": "most_severe_impact", "value": ["HIGH"]}]}',
-        '{"filters": [{"field": "most_severe_impact", "value": "HIGH"}]}',
-    ],
-)
-async def test_a_member_facet_is_written_as_a_member_list(override: str) -> None:
-    [clause] = await _wire(_variant_stats(), override)
+@_NEEDS_REFRESH
+async def test_a_member_facet_is_written_as_a_member_list() -> None:
+    [clause] = await _wire(
+        _variant_stats(), [{"field": "most_severe_impact", "value": ["HIGH"]}]
+    )
 
     assert clause["field"] == "most_severe_impact"
     assert clause["isRange"] is False
@@ -125,92 +113,61 @@ async def test_a_member_facet_is_written_as_a_member_list(override: str) -> None
 
 async def test_a_date_facet_is_written_as_min_and_max() -> None:
     [clause] = await _wire(
-        _collection_dates(), "collection_date=2019-01-01..2020-12-31"
+        _collection_dates(),
+        [
+            {
+                "field": "collection_date",
+                "value": {"min": "2019-01-01", "max": "2020-12-31"},
+            }
+        ],
     )
 
     assert clause["type"] == "date"
     assert clause["value"] == {"min": "2019-01-01", "max": "2020-12-31"}
 
 
-@pytest.mark.skipif(
-    needs_qa_recording(
-        TEST_ROOT
-        / "unit/catalog/fixtures/plasmodb_variant_characteristics_refresh.json"
-    ),
-    reason=NEEDS_QA_RECORDING,
-)
+@_NEEDS_REFRESH
 @pytest.mark.parametrize(
-    "override",
-    [
-        "variants_per_kb=0",
-        "variants_per_kb<=a lot",
-        "variants_per_kb=..",
-        '{"filters": [{"field": "variants_per_kb", "value": ["0"]}]}',
-        '{"filters": [{"field": "variants_per_kb", "value": {"max": 1, "gt": 0}}]}',
-    ],
+    "value",
+    [["0"], {"max": 1, "gt": 0}, {}],
 )
-async def test_a_range_facet_refuses_a_member_value_naming_both_forms(
-    override: str,
+async def test_a_range_facet_refuses_a_value_that_is_not_its_bounds(
+    value: object,
 ) -> None:
     with pytest.raises(ValidationError) as caught:
-        await _wire(_variant_stats(), override)
+        await _wire(_variant_stats(), [{"field": "variants_per_kb", "value": value}])
 
-    detail = caught.value.detail
-    assert "variants_per_kb<=<n>" in detail
-    assert '{"min": <n>, "max": <n>}' in detail
+    assert '"value": {"min": <n>, "max": <n>}' in caught.value.detail
 
 
-@pytest.mark.skipif(
-    needs_qa_recording(
-        TEST_ROOT
-        / "unit/catalog/fixtures/plasmodb_variant_characteristics_refresh.json"
-    ),
-    reason=NEEDS_QA_RECORDING,
-)
-async def test_a_member_facet_refuses_bounds_naming_both_forms() -> None:
-    override = '{"filters": [{"field": "most_severe_impact", "value": {"max": 1}}]}'
-
+@_NEEDS_REFRESH
+async def test_a_member_facet_refuses_bounds_naming_its_member_form() -> None:
     with pytest.raises(ValidationError) as caught:
-        await _wire(_variant_stats(), override)
-
-    detail = caught.value.detail
-    assert "most_severe_impact=<m1>,<m2>" in detail
-    assert '["<m1>", "<m2>"]' in detail
-
-
-@pytest.mark.skipif(
-    needs_qa_recording(
-        TEST_ROOT
-        / "unit/catalog/fixtures/plasmodb_variant_characteristics_refresh.json"
-    ),
-    reason=NEEDS_QA_RECORDING,
-)
-async def test_filter_json_without_a_clause_list_is_refused() -> None:
-    with pytest.raises(ValidationError, match="filters"):
-        await _wire(_variant_stats(), '{"max_minor_allele_frequency": {"max": 0.05}}')
-
-
-@pytest.mark.skipif(
-    needs_qa_recording(
-        TEST_ROOT
-        / "unit/catalog/fixtures/plasmodb_variant_characteristics_refresh.json"
-    ),
-    reason=NEEDS_QA_RECORDING,
-)
-async def test_a_bare_list_is_refused_naming_both_facet_forms() -> None:
-    info = _variant_stats()
-
-    with pytest.raises(ValidationError) as caught:
-        await resolve_params_with_intent(
-            fetch_at=fetcher(info),
-            search_name="GenesByFacet",
-            intent=ParamIntent(),
-            overrides={info.name: ["0", "1"]},
+        await _wire(
+            _variant_stats(), [{"field": "most_severe_impact", "value": {"max": 1}}]
         )
 
-    detail = caught.value.detail
-    assert "'<facet>=<m1>,<m2>'" in detail
-    assert "'<facet>=<lo>..<hi>'" in detail
+    assert '"value": ["<member>", ...]' in caught.value.detail
+
+
+@_NEEDS_REFRESH
+@pytest.mark.parametrize(
+    "statement",
+    [
+        {"max_minor_allele_frequency": {"max": 0.05}},
+        ["0", "1"],
+        "most_severe_impact=HIGH",
+        [{"field": "most_severe_impact", "value": "HIGH"}],
+        [],
+    ],
+)
+async def test_a_statement_that_is_not_a_clause_list_is_refused(
+    statement: object,
+) -> None:
+    with pytest.raises(ValidationError) as caught:
+        await _wire(_variant_stats(), statement)
+
+    assert "gene_variant_stats" in caught.value.detail
 
 
 @pytest.mark.skipif(

@@ -21,6 +21,7 @@ from veupathdb.domain.parameters import (
 from veupathdb.errors import WDKError
 from veupathdb.wdk import WDKParameter, WDKSearch, get_wdk_client
 
+from veupathdb_mcp.catalog.facet_ranges import wdk_filter_reads, with_ranges
 from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
@@ -383,7 +384,21 @@ async def read_parameter_options(
                         )
                     }
                 )
-            return read.shown_for(" ".join((*narrow.terms, *narrow.request_terms)))
+            query = " ".join((*narrow.terms, *narrow.request_terms))
+            shown = read.shown_for(query)
+            parents = graph.wire_parents.get(parameter_id, ())
+            ranged = await with_ranges(
+                parameter_id,
+                shown.filter_fields,
+                query,
+                {
+                    d.name: d.initial_display_value
+                    for d in all_params
+                    if d.name in parents and d.initial_display_value is not None
+                },
+                wdk_filter_reads(site_id, rt, search_name),
+            )
+            return shown.model_copy(update={"filter_fields": ranged})
 
     valid = [p.name for p in all_params if p.bindable]
     return ParameterNotOnSearch(

@@ -1,6 +1,7 @@
 """Which searches a separation can intersect with a gene list, on recorded bodies."""
 
 import pytest
+from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recorded_searches import (
     analysis_backed_search,
     gene_list_search,
@@ -110,7 +111,11 @@ async def test_a_search_that_binds_from_the_organism_alone_is_bound() -> None:
     search = _search("search_genes_by_molecular_weight")
 
     parameters = await bind(
-        search, _recorded_fetch(search), _catalog_proposal(search), [FALCIPARUM]
+        search,
+        _recorded_fetch(search),
+        FilterReadsDouble(),
+        _catalog_proposal(search),
+        [FALCIPARUM],
     )
 
     assert parameters["organism"] == MultiPickValue(values=[FALCIPARUM])
@@ -133,6 +138,7 @@ async def test_a_binding_that_leaves_an_open_slot_is_unbound_required() -> None:
         await bind(
             search,
             _recorded_fetch(search),
+            FilterReadsDouble(),
             _catalog_proposal(search),
             ["Toxoplasma gondii ME49"],
         )

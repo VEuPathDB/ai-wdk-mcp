@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pytest
+from tests._support.filter_reads import FilterReadsDouble
 from veupathdb.wdk import WDKParameter, WDKSearch
 
 from veupathdb_mcp.separation import CandidateSource
@@ -45,7 +46,7 @@ async def test_a_proposal_whose_value_the_kind_cannot_read_is_skipped() -> None:
     )
 
     with pytest.raises(CandidateSkippedError) as skipped:
-        await bind(_SEARCH, _infos, proposal, [])
+        await bind(_SEARCH, _infos, FilterReadsDouble(), proposal, [])
 
     assert skipped.value.reason == "unbound_required"
     assert "period_range" in str(skipped.value.detail)
@@ -58,6 +59,6 @@ async def test_a_proposal_that_states_no_range_binds_the_site_default() -> None:
         basis="the site's catalog",
     )
 
-    bound = await bind(_SEARCH, _infos, proposal, [])
+    bound = await bind(_SEARCH, _infos, FilterReadsDouble(), proposal, [])
 
     assert bound["period_range"].to_wire() == '{"min": 20.0, "max": 28.0}'

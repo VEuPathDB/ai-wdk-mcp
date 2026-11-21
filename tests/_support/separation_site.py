@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 import pytest
+from tests._support.filter_reads import FilterReadsDouble
 from veupathdb.wdk import WDKParameter, WDKSearch, WDKSearchResponse
 
 from veupathdb_mcp.catalog.models import SearchMatch
@@ -49,6 +50,7 @@ def patch_site(
     catalog = RecordedCatalog(responses)
     monkeypatch.setattr(enumeration, "get_discovery_service", lambda: catalog)
     monkeypatch.setattr(enumeration, "wdk_fetch_at", catalog.wdk_fetch_at)
+    monkeypatch.setattr(enumeration, "wdk_filter_reads", lambda *_: FilterReadsDouble())
 
     async def ranked(
         site_id: str, record_type: str, query: str, **kwargs: object

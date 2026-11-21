@@ -1,6 +1,7 @@
 """The five sources propose searches, and the site's own definitions bind them."""
 
 import pytest
+from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recorded_searches import (
     gene_list_search,
     recorded_search,
@@ -115,7 +116,11 @@ async def test_a_pick_binds_the_entry_its_term_names() -> None:
     )
 
     parameters = await bind(
-        search, catalog.wdk_fetch_at("plasmodb", "transcript", WEIGHT), proposal, []
+        search,
+        catalog.wdk_fetch_at("plasmodb", "transcript", WEIGHT),
+        FilterReadsDouble(),
+        proposal,
+        [],
     )
 
     assert parameters["organism"] == MultiPickValue(values=["Plasmodium vivax P01"])
@@ -140,7 +145,11 @@ async def test_a_term_the_vocabulary_lacks_is_a_vocabulary_miss() -> None:
 
     with pytest.raises(CandidateSkippedError) as skipped:
         await bind(
-            search, catalog.wdk_fetch_at("plasmodb", "transcript", WEIGHT), proposal, []
+            search,
+            catalog.wdk_fetch_at("plasmodb", "transcript", WEIGHT),
+            FilterReadsDouble(),
+            proposal,
+            [],
         )
 
     assert skipped.value.reason == "vocabulary_miss"

@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
-from veupathdb.domain.parameters import FilterValue, ParamValue, UnboundParameter
+from veupathdb.domain.parameters import (
+    FilterProposal,
+    FilterValue,
+    ParamValue,
+    UnboundParameter,
+)
 
 from veupathdb_mcp.catalog._param_binding import OverrideMap
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
@@ -32,9 +37,12 @@ def _contrast_open_slot(info: ParameterInfo) -> UnboundParameter:
             f"side, not all samples on both."
         ),
         options=[
-            f"{field.term}={value}"
-            for field in info.facets().root
-            for value in field.members
+            FilterValue(
+                filters=[facet.clause(FilterProposal(field=facet.term, value=[member]))]
+            ).to_wire()
+            for facet in info.facets().root
+            if not facet.ranged
+            for member in facet.members
         ],
     )
 

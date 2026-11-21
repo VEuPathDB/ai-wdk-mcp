@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import pytest
 from pydantic import JsonValue
+from tests._support.filter_reads import FilterReadsDouble
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     FilterFacet,
@@ -49,6 +50,7 @@ async def _walk(
     intent: ParamIntent | None = None,
 ) -> ResolvedParams:
     return await resolve_params_with_intent(
+        filter_reads=FilterReadsDouble(),
         fetch_at=fetch_at,
         search_name="GenesByRNASeqEvidence",
         intent=intent or ParamIntent(),

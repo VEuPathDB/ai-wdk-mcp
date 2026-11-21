@@ -92,25 +92,41 @@ def _rarity_score(label: frozenset[str], weights: dict[str, float]) -> float:
     return sum(weight for word, weight in weights.items() if word in label)
 
 
-def shortlist(options: list[VocabOption], query: str) -> list[VocabOption]:
-    """The options a model reads: all of them up to ``DIRECT_MAX``, else the
-    ``TOP_K`` whose labels hold the rarest words of the request."""
-    if len(options) <= DIRECT_MAX:
-        return options
+def _ranked(
+    options: list[VocabOption], query: str
+) -> list[tuple[tuple[bool, float, int], VocabOption]]:
     low = query.casefold()
     words = _query_words(low)
     tokens = _query_tokens(low)
     labels = [_label_words(option) for option in options]
     weights = _word_weights(labels, words)
-    ranked = sorted(
-        enumerate(options),
-        key=lambda pair: (
-            not _is_named(pair[1], low, tokens),
-            -_rarity_score(labels[pair[0]], weights),
-            pair[0],
-        ),
+    return sorted(
+        (
+            (
+                not _is_named(option, low, tokens),
+                -_rarity_score(labels[index], weights),
+                index,
+            ),
+            option,
+        )
+        for index, option in enumerate(options)
     )
-    return [option for _, option in ranked[:TOP_K]]
+
+
+def shortlist(options: list[VocabOption], query: str) -> list[VocabOption]:
+    """The options a model reads: all of them up to ``DIRECT_MAX``, else the
+    ``TOP_K`` whose labels hold the rarest words of the request."""
+    if len(options) <= DIRECT_MAX:
+        return options
+    return [option for _, option in _ranked(options, query)[:TOP_K]]
+
+
+def matched(options: list[VocabOption], query: str) -> list[VocabOption]:
+    return [
+        option
+        for (unnamed, score, _), option in _ranked(options, query)
+        if not unnamed or score
+    ]
 
 
 def shortlist_values(values: list[str], query: str) -> list[str]:

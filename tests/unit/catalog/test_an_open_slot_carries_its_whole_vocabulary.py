@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+from veupathdb.domain.parameters import FilterValue, StringMembers
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKSearchResponse
@@ -59,6 +60,21 @@ def test_a_contrast_slot_holds_every_value_the_site_sent() -> None:
 
     slot = _contrast_open_slot(reference)
 
-    assert len(slot.options) == 1521
-    assert "VAR_8e68b3e5=Gambia" in slot.options
-    assert "VAR_41eb2167=UGK_661.1" in slot.options
+    options = [FilterValue.model_validate_json(option) for option in slot.options]
+    assert len(options) == 1521
+    assert _member("VAR_8e68b3e5", "Gambia") in options
+    assert _member("VAR_41eb2167", "UGK_661.1") in options
+
+
+def _member(field: str, value: str) -> FilterValue:
+    return FilterValue(
+        filters=[
+            StringMembers(
+                field=field,
+                type="string",
+                is_range=False,
+                include_unknown=False,
+                value=[value],
+            )
+        ]
+    )

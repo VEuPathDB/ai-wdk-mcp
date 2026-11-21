@@ -17,6 +17,7 @@ from veupathdb_mcp.catalog import (
 )
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.experiments import ExperimentMatch, UnknownExperimentError
+from veupathdb_mcp.catalog.facet_ranges import wdk_filter_reads
 from veupathdb_mcp.catalog.models import ParamSpecResponse, RecordTypeInfo, SearchMatch
 from veupathdb_mcp.catalog.overview_formatting import SearchOverviewResult
 from veupathdb_mcp.catalog.param_dag import (
@@ -477,6 +478,7 @@ async def resolve_search_parameters(
     try:
         resolved = await resolve_params_with_intent(
             fetch_at=wdk_fetch_at(site_id, record_type, search_name),
+            filter_reads=wdk_filter_reads(site_id, record_type, search_name),
             intent=ParamIntent(text=criterion),
             search_name=search_name,
             stated=overrides or {},

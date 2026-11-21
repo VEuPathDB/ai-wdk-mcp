@@ -42,6 +42,12 @@ from veupathdb_mcp.catalog.experiments import (
     sites_holding_organism,
     sites_publishing,
 )
+from veupathdb_mcp.catalog.facet_ranges import (
+    EmptyRangeError,
+    FilterReads,
+    TooFewSelectedError,
+    wdk_filter_reads,
+)
 from veupathdb_mcp.catalog.gene_records import (
     GENE_RECORD_TYPE,
     NoGeneRecordsError,
@@ -237,8 +243,10 @@ __all__ = [
     "EachSpeciesOf",
     "EdaBackedSearch",
     "EdaStepRequest",
+    "EmptyRangeError",
     "ExperimentCard",
     "ExperimentMatch",
+    "FilterReads",
     "GetParameterOptionsResult",
     "LabelReading",
     "NoGeneRecordsError",
@@ -276,6 +284,7 @@ __all__ = [
     "SheetEntry",
     "SideCounts",
     "SiteSetParameterError",
+    "TooFewSelectedError",
     "UnknownExperimentError",
     "UnknownParameterError",
     "UnknownSearchError",
@@ -362,5 +371,6 @@ __all__ = [
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at",
+    "wdk_filter_reads",
     "write_phyletic_expression",
 ]

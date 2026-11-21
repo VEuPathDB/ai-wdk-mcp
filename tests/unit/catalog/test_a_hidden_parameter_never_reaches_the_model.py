@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 from fastmcp.exceptions import ToolError
+from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recorded_searches import recorded_search
 from tests._support.wdk_reads import serve_reads
 from veupathdb.domain.parameters import StringValue
@@ -128,6 +129,7 @@ async def test_the_resolve_walk_binds_a_hidden_parameter_at_its_default() -> Non
     definition = [*(_snps().search_data.parameters or []), stated]
 
     resolved = await resolve_params_with_intent(
+        filter_reads=FilterReadsDouble(),
         fetch_at=serving(*definition),
         search_name=SEARCH,
         intent=ParamIntent(),
@@ -148,6 +150,7 @@ async def test_a_hidden_required_parameter_with_no_default_refuses_the_search() 
 
     with pytest.raises(SiteSetParameterError) as refused:
         await resolve_params_with_intent(
+            filter_reads=FilterReadsDouble(),
             fetch_at=serving(*definition),
             intent=ParamIntent(),
             search_name=SEARCH,
@@ -167,6 +170,7 @@ async def test_a_hidden_input_step_is_left_to_the_step_tree() -> None:
     definition = recorded_search("search_genes_by_orthologs").search_data.parameters
 
     resolved = await resolve_params_with_intent(
+        filter_reads=FilterReadsDouble(),
         fetch_at=serving(*(definition or [])),
         search_name=SEARCH,
         intent=ParamIntent(),
@@ -182,6 +186,7 @@ async def test_the_resolve_walk_refuses_a_hidden_override_by_name() -> None:
 
     with pytest.raises(SiteSetParameterError) as refused:
         await resolve_params_with_intent(
+            filter_reads=FilterReadsDouble(),
             fetch_at=serving(*definition),
             intent=ParamIntent(),
             stated={"WebServicesPath": "dflt"},
@@ -232,6 +237,7 @@ async def test_the_walk_derives_profile_pattern_from_the_two_lists() -> None:
     definition = _profile_search()
 
     resolved = await resolve_params_with_intent(
+        filter_reads=FilterReadsDouble(),
         fetch_at=serving(*definition),
         search_name=SEARCH,
         intent=ParamIntent(),
@@ -250,6 +256,7 @@ async def test_a_stated_phyletic_value_is_refused_by_name(name: str) -> None:
 
     with pytest.raises(ValidationError, match=name):
         await resolve_params_with_intent(
+            filter_reads=FilterReadsDouble(),
             fetch_at=serving(*definition),
             search_name=SEARCH,
             intent=ParamIntent(),
@@ -262,6 +269,7 @@ async def test_lists_that_name_no_entry_are_refused_with_the_nearest() -> None:
 
     with pytest.raises(PhyleticListError, match="included_species names no entry"):
         await resolve_params_with_intent(
+            filter_reads=FilterReadsDouble(),
             fetch_at=serving(*definition),
             search_name=SEARCH,
             intent=ParamIntent(),
@@ -313,6 +321,7 @@ async def test_a_phyletic_search_with_neither_list_is_refused() -> None:
 
     with pytest.raises(PhyleticListError, match="select no species"):
         await resolve_params_with_intent(
+            filter_reads=FilterReadsDouble(),
             fetch_at=serving(*definition),
             search_name=SEARCH,
             intent=ParamIntent(),
@@ -325,6 +334,7 @@ async def test_an_unknown_name_lists_only_the_visible_names() -> None:
 
     with pytest.raises(UnknownParameterError) as refused:
         await resolve_params_with_intent(
+            filter_reads=FilterReadsDouble(),
             fetch_at=serving(*definition),
             search_name=SEARCH,
             intent=ParamIntent(),

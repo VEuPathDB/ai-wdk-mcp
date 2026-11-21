@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import pytest
 from veupathdb.domain.parameters import (
-    FilterTermClause,
     FilterValue,
     InputStepValue,
     MultiPickValue,
     NumberValue,
     ParamSpecNormalized,
     SinglePickValue,
+    StringMembers,
     StringValue,
     from_wire,
 )
@@ -186,6 +186,12 @@ class TestADefinitionBuiltWithoutOurValues:
         assert filled == ["min_weight"]
 
 
+def _members(field: str, value: list[str]) -> StringMembers:
+    return StringMembers(
+        field=field, type="string", is_range=False, include_unknown=False, value=value
+    )
+
+
 _FILTER_SPECS = {
     "variation_sample_meta": _spec("variation_sample_meta", "filter"),
     "transcript_result": _spec("transcript_result", "input-step"),
@@ -219,13 +225,15 @@ class TestAFilterIsComparedAsItsClauses:
     def test_reordered_clauses_are_not_substituted(self) -> None:
         ours = FilterValue(
             filters=[
-                FilterTermClause(field="VAR_country", value=["Thailand"]),
-                FilterTermClause(field="VAR_year", value=["2014"]),
+                _members("VAR_country", ["Thailand"]),
+                _members("VAR_year", ["2014"]),
             ]
         )
         echoed = (
-            '{"filters":[{"field":"VAR_year","value":["2014"]},'
-            '{"field":"VAR_country","value":["Thailand"]}]}'
+            '{"filters":[{"field":"VAR_year",'
+            '"type":"string","isRange":false,"includeUnknown":false,"value":["2014"]},'
+            '{"field":"VAR_country",'
+            '"type":"string","isRange":false,"includeUnknown":false,"value":["Thailand"]}]}'
         )
 
         filled = substituted_params(
@@ -238,10 +246,11 @@ class TestAFilterIsComparedAsItsClauses:
         assert filled == []
 
     def test_a_reordered_value_set_is_not_substituted(self) -> None:
-        ours = FilterValue(
-            filters=[FilterTermClause(field="VAR_country", value=["Thailand", "Mali"])]
+        ours = FilterValue(filters=[_members("VAR_country", ["Thailand", "Mali"])])
+        echoed = (
+            '{"filters":[{"field":"VAR_country",'
+            '"type":"string","isRange":false,"includeUnknown":false,"value":["Mali","Thailand"]}]}'
         )
-        echoed = '{"filters":[{"field":"VAR_country","value":["Mali","Thailand"]}]}'
 
         filled = substituted_params(
             sent={"variation_sample_meta": ours},
@@ -255,11 +264,14 @@ class TestAFilterIsComparedAsItsClauses:
     def test_a_dropped_clause_is_substituted(self) -> None:
         ours = FilterValue(
             filters=[
-                FilterTermClause(field="VAR_country", value=["Thailand"]),
-                FilterTermClause(field="VAR_year", value=["2014"]),
+                _members("VAR_country", ["Thailand"]),
+                _members("VAR_year", ["2014"]),
             ]
         )
-        echoed = '{"filters":[{"field":"VAR_country","value":["Thailand"]}]}'
+        echoed = (
+            '{"filters":[{"field":"VAR_country",'
+            '"type":"string","isRange":false,"includeUnknown":false,"value":["Thailand"]}]}'
+        )
 
         filled = substituted_params(
             sent={"variation_sample_meta": ours},
@@ -271,10 +283,11 @@ class TestAFilterIsComparedAsItsClauses:
         assert filled == ["variation_sample_meta"]
 
     def test_a_narrowed_value_set_is_substituted(self) -> None:
-        ours = FilterValue(
-            filters=[FilterTermClause(field="VAR_country", value=["Thailand", "Mali"])]
+        ours = FilterValue(filters=[_members("VAR_country", ["Thailand", "Mali"])])
+        echoed = (
+            '{"filters":[{"field":"VAR_country",'
+            '"type":"string","isRange":false,"includeUnknown":false,"value":["Mali"]}]}'
         )
-        echoed = '{"filters":[{"field":"VAR_country","value":["Mali"]}]}'
 
         filled = substituted_params(
             sent={"variation_sample_meta": ours},
@@ -286,12 +299,10 @@ class TestAFilterIsComparedAsItsClauses:
         assert filled == ["variation_sample_meta"]
 
     def test_a_flipped_include_unknown_is_substituted(self) -> None:
-        ours = FilterValue(
-            filters=[FilterTermClause(field="VAR_country", value=["Thailand"])]
-        )
+        ours = FilterValue(filters=[_members("VAR_country", ["Thailand"])])
         echoed = (
             '{"filters":[{"field":"VAR_country","includeUnknown":true,'
-            '"value":["Thailand"]}]}'
+            '"type":"string","isRange":false,"value":["Thailand"]}]}'
         )
 
         filled = substituted_params(

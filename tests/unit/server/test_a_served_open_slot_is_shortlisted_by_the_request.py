@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import pytest
 from tests.unit.catalog.conftest import declared
-from veupathdb.domain.parameters import UnboundParameter
+from veupathdb.domain.parameters import FilterValue, UnboundParameter
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKParameter, WDKSearchResponse
@@ -131,7 +131,10 @@ async def test_a_contrast_slot_is_served_as_the_requests_shortlist(
         s for s in resolved.open_slots if s.param_name.endswith("_samples")
     ]
     assert len(reference.options) == TOP_K
-    assert {"VAR_8e68b3e5=Gambia", "VAR_8e68b3e5=Kenya"} <= set(reference.options[:2])
+    first = [FilterValue.model_validate_json(o) for o in reference.options[:2]]
+    assert sorted(
+        (clause.field, clause.value) for value in first for clause in value.filters
+    ) == [("VAR_8e68b3e5", ["Gambia"]), ("VAR_8e68b3e5", ["Kenya"])]
     assert "1521 values" in comparison.question
 
 

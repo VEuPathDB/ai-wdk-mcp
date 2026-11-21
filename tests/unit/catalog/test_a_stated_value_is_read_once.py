@@ -5,6 +5,7 @@ from collections.abc import Awaitable, Callable
 import pytest
 from fastmcp.exceptions import ToolError
 from pydantic import JsonValue
+from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recorded_searches import recorded_search
 from veupathdb.domain.parameters import ParamValue, StatedValuesError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
@@ -52,7 +53,11 @@ async def by_organism(context: dict[str, str]) -> list[WDKParameter]:
 
 async def _resolve(stated: dict[str, JsonValue]) -> ResolvedParams:
     return await resolve_params_with_intent(
-        fetch_at=by_organism, intent=ParamIntent(), search_name=SEARCH, stated=stated
+        filter_reads=FilterReadsDouble(),
+        fetch_at=by_organism,
+        intent=ParamIntent(),
+        search_name=SEARCH,
+        stated=stated,
     )
 
 

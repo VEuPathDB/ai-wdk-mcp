@@ -9,6 +9,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 
 from pydantic import JsonValue
+from tests._support.filter_reads import FilterReadsDouble
 from veupathdb.domain.parameters import ParamValue, VocabOption
 
 from veupathdb_mcp.catalog.param_dag import (
@@ -43,6 +44,7 @@ async def _resolve(
     fetch_at: ParamFetcher, stated: dict[str, JsonValue] | None = None
 ) -> ResolvedParams:
     return await resolve_params_with_intent(
+        filter_reads=FilterReadsDouble(),
         fetch_at=fetch_at,
         search_name="GenesByPairs",
         intent=ParamIntent(),
