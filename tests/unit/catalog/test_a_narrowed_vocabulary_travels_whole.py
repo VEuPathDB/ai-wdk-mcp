@@ -4,14 +4,13 @@ from __future__ import annotations
 
 import pytest
 from tests._support.recordings import TEST_ROOT
-from veupathdb.domain.parameters import VocabOption
+from veupathdb.domain.parameters import ParamGraph, VocabOption
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKEnumParam
 
 from veupathdb_mcp.catalog.param_formatting import (
     _MAX_NARROWED_ENTRIES,
     _MAX_VOCAB_ENTRIES,
-    ParamDependencies,
     ParameterInfo,
     format_typed_param,
 )
@@ -99,7 +98,7 @@ def test_a_narrowed_list_over_the_bound_says_n_of_m() -> None:
 
     info = format_typed_param(
         param,
-        ParamDependencies(),
+        ParamGraph.of([]),
         lookup=VocabLookup(terms=["peptidase"]),
     )
 

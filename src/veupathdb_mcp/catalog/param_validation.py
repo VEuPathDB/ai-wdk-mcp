@@ -10,6 +10,7 @@ from veupathdb.domain.parameters import (
     PHYLETIC_EXPRESSION_PARAM,
     PHYLETIC_PARAM_NAMES,
     ParameterCanonicalizer,
+    ParamGraph,
     ParamSpecNormalized,
     ParamValue,
     PhyleticExpression,
@@ -19,7 +20,6 @@ from veupathdb.domain.parameters import (
     fill_hidden_required_defaults,
     filled_hidden_defaults,
     to_decoded_map,
-    topological_fill_order,
     validate_phyletic_codes,
 )
 from veupathdb.domain.strategy import StepValidation
@@ -415,7 +415,7 @@ async def _refresh_dependent_vocabularies(
     refresh also keeps the static vocabulary.
     """
     next_specs = dict(param_spec_map)
-    fill_order = topological_fill_order(next_specs)
+    fill_order = ParamGraph.of(list(next_specs.values())).fill_order
     decoded_values = to_decoded_map(canonical_values)
     for parent_name in fill_order:
         parent = next_specs.get(parent_name)

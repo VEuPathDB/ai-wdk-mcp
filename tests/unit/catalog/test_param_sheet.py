@@ -24,7 +24,7 @@ def _param(
     name: str,
     leaves: list[VocabOption],
     *,
-    depends: list[str] | None = None,
+    depends: tuple[str, ...] = (),
     tree: str | None = None,
 ) -> ParameterInfo:
     return ParameterInfo(
@@ -36,7 +36,7 @@ def _param(
         help="h",
         value_format="",
         vocab_leaves=leaves,
-        vocab_depends_on=depends,
+        wire_parents=list(depends),
         allowed_values_tree=tree,
     )
 
@@ -210,7 +210,7 @@ def test_short_query_words_do_not_rank() -> None:
 def test_a_dependent_vocabulary_names_its_parents() -> None:
     leaves = [VocabOption(value="a", display="a")]
 
-    [entry] = build_sheet([_param("child", leaves, depends=["parent"])], query="")
+    [entry] = build_sheet([_param("child", leaves, depends=("parent",))], query="")
 
     assert entry.depends_on == ["parent"]
     assert "parent" in (entry.vocabulary_note or "")

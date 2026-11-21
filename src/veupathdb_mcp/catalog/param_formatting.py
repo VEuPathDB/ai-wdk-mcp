@@ -1,8 +1,7 @@
 """Pure formatting of WDK parameter specs into AI-facing info objects."""
 
 import re
-from collections.abc import Mapping, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Annotated, Literal, Self
 
 from pydantic import Field, TypeAdapter, ValidationError, model_validator
@@ -10,6 +9,7 @@ from veupathdb.domain.parameters import (
     PHYLETIC_EXPRESSION_PARAM,
     PHYLETIC_LIST_PARAMS,
     PHYLETIC_MAP_PARAMS,
+    ParamGraph,
     ParamKind,
     ParamValue,
     VocabOption,
@@ -17,7 +17,7 @@ from veupathdb.domain.parameters import (
     dedupe_options,
 )
 from veupathdb.model import CamelModel
-from veupathdb.wdk import WDKBaseParameter, WDKParameter, phyletic_tree_of
+from veupathdb.wdk import WDKParameter, phyletic_tree_of
 
 from veupathdb_mcp.catalog.eda_backed import (
     UPLOAD_SENTINEL_NOTE,
@@ -163,8 +163,10 @@ class ParameterInfo(CamelModel):
     vocab_lookup: VocabLookup | None = None
     # The entry a Decisions choice picked among the narrowed entries.
     vocab_pick: VocabPick | None = None
-    controls_vocab_of: list[str] | None = None
-    vocab_depends_on: list[str] | None = None
+    stated_parents: list[str] = Field(default_factory=list)
+    stated_children: list[str] = Field(default_factory=list)
+    wire_parents: list[str] = Field(default_factory=list, exclude=True)
+    wire_children: list[str] = Field(default_factory=list, exclude=True)
     note: str | None = None
     filter_fields: list[FilterFieldInfo] = Field(default_factory=list)
     filter_leaves: list[FilterFieldInfo] = Field(default_factory=list, exclude=True)
@@ -177,6 +179,18 @@ class ParameterInfo(CamelModel):
     def _derive_param_kind(self) -> Self:
         self.param_kind = _to_param_kind(self.type)
         return self
+
+    @property
+    def site_set(self) -> bool:
+        return not self.is_visible or self.is_read_only
+
+    @property
+    def bindable(self) -> bool:
+        return not self.site_set
+
+    @property
+    def site_value(self) -> str | None:
+        return self.default_value if self.site_set else None
 
     def vocabulary(self) -> list[VocabOption]:
         """The whole option list when it was flattened, else the capped view."""
@@ -239,28 +253,6 @@ GetParameterOptionsResult = Annotated[
 # ---------------------------------------------------------------------------
 # Typed API (accepts list[WDKParameter])
 # ---------------------------------------------------------------------------
-
-
-@dataclass(frozen=True, slots=True)
-class ParamDependencies:
-    """Which parameters' vocabularies each parameter controls, both ways."""
-
-    # Each child parameter, with the parents that determine its vocabulary.
-    depends_on: Mapping[str, list[str]] = field(default_factory=dict)
-    # Each parent parameter, with the children whose vocabulary it controls.
-    controls: Mapping[str, list[str]] = field(default_factory=dict)
-
-
-def param_dependencies(params: Sequence[WDKBaseParameter]) -> ParamDependencies:
-    """The dependency links the parameters of one search declare."""
-    depends_on: dict[str, list[str]] = {}
-    controls: dict[str, list[str]] = {}
-    for param in params:
-        if param.dependent_params:
-            controls[param.name] = list(param.dependent_params)
-            for dep in param.dependent_params:
-                depends_on.setdefault(dep, []).append(param.name)
-    return ParamDependencies(depends_on=depends_on, controls=controls)
 
 
 @dataclass(frozen=True)
@@ -374,7 +366,7 @@ def _format_vocabulary(param: WDKParameter, lookup: VocabLookup | None) -> _Voca
 
 def format_typed_param(
     param: WDKParameter,
-    dependencies: ParamDependencies,
+    graph: ParamGraph,
     applied_context: dict[str, ParamValue] | None = None,
     parent_defaults: dict[str, str] | None = None,
     phyletic_options: list[VocabOption] | None = None,
@@ -408,10 +400,8 @@ def format_typed_param(
         leaves = entries_of(param.vocabulary)
 
     note: str | None = None
-    vocab_depends_on: list[str] | None = None
-    if name in dependencies.depends_on:
-        parents = dependencies.depends_on[name]
-        vocab_depends_on = parents
+    parents = list(graph.stated_parents.get(name, ()))
+    if parents:
         context = applied_context or {}
         applied = {p: context[p] for p in parents if p in context}
         if applied:
@@ -445,7 +435,7 @@ def format_typed_param(
         name=name,
         display_name=param.display_name or name,
         type=param.type,
-        required=not param.allow_empty_value or param.min_selected_count >= 1,
+        required=param.required,
         is_visible=param.is_visible,
         is_read_only=param.is_read_only,
         help=help_text,
@@ -462,8 +452,10 @@ def format_typed_param(
         allowed_values_from_request=vocab.allowed_values_from_request,
         prompt_values=prompts_of(param.vocabulary),
         vocab_lookup=lookup,
-        controls_vocab_of=dependencies.controls.get(name),
-        vocab_depends_on=vocab_depends_on,
+        stated_parents=parents,
+        stated_children=list(graph.stated_children.get(name, ())),
+        wire_parents=list(graph.wire_parents.get(name, ())),
+        wire_children=list(graph.wire_children.get(name, ())),
         note=note,
         filter_fields=shown_facets(facets, ""),
         filter_leaves=facets,
@@ -521,13 +513,13 @@ def phyletic_options_for(
 
 def format_param_info_typed(params: list[WDKParameter]) -> list[ParameterInfo]:
     """Format typed WDK parameters for the model. Phyletic structural params are dropped."""
-    dependencies = param_dependencies(params)
+    graph = ParamGraph.of(params)
     tree = phyletic_tree_of(params)
     labels = tree.labels() if tree is not None else None
     return [
         format_typed_param(
             p,
-            dependencies,
+            graph,
             phyletic_options=labels if p.name in PHYLETIC_LIST_PARAMS else None,
         )
         for p in params

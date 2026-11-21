@@ -172,7 +172,7 @@ class TestReadParameterOptions:
 
         assert result.kind == "parameter_info"
         assert result.name == "organismSinglePick"
-        assert result.controls_vocab_of == ["chromosomeOptional"]
+        assert result.stated_children == ["chromosomeOptional"]
         assert result.allowed_values
 
     @pytest.mark.skipif(

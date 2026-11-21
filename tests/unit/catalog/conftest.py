@@ -41,7 +41,7 @@ class ParamFields(TypedDict, total=False):
     required: bool
     visible: bool
     is_number: bool
-    depends_on: list[str] | None
+    depends_on: list[str]
     filter_fields: list[FilterFieldInfo]
     tree: str | None
     help_text: str
@@ -55,7 +55,7 @@ _INFO_FIELD_NAMES: Final[dict[str, str]] = {
     "required": "required",
     "visible": "is_visible",
     "is_number": "is_number",
-    "depends_on": "vocab_depends_on",
+    "depends_on": "wire_parents",
     "filter_fields": "filter_fields",
     "tree": "allowed_values_tree",
     "help_text": "help",

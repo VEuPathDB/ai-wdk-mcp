@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import ClassVar
 
 from veupathdb.domain.parameters import (
+    ParamGraph,
     ParamValue,
     SinglePickValue,
     WDKFilterOntologyTerm,
@@ -15,7 +16,6 @@ from veupathdb.wdk import WDKEnumParam, WDKFilterParam, WDKParameter, WDKStringP
 
 from veupathdb_mcp.catalog.param_formatting import (
     _MAX_VOCAB_ENTRIES,
-    ParamDependencies,
     ParameterInfo,
     format_param_info_typed,
     format_typed_param,
@@ -53,6 +53,12 @@ def _samples(name: str) -> WDKEnumParam:
         display_name="Samples",
         type="multi-pick-vocabulary",
         vocabulary=_one_leaf_tree("20 Hour"),
+    )
+
+
+def _depends(child: str, parent: str) -> ParamGraph:
+    return ParamGraph.of(
+        [WDKStringParam(name=parent, dependent_params=[child]), _samples(child)]
     )
 
 
@@ -96,7 +102,7 @@ def test_filter_param_exposes_selectable_leaf_facets() -> None:
         },
     )
 
-    info = format_typed_param(param, ParamDependencies())
+    info = format_typed_param(param, ParamGraph.of([param]))
 
     assert info.param_kind == "filter"
     fields = {f.term: f for f in info.filter_fields}
@@ -118,9 +124,9 @@ class TestDependentParamNote:
     about provenance, and the model sees a plausible list either way.
     """
 
-    _DEPENDS: ClassVar[dict[str, list[str]]] = {
-        "samples_percentile_generic": ["profileset_generic"]
-    }
+    _DEPENDS: ClassVar[ParamGraph] = _depends(
+        "samples_percentile_generic", "profileset_generic"
+    )
     _APPLIED: ClassVar[dict[str, ParamValue]] = {
         "profileset_generic": SinglePickValue(value="DeRisi 3D7 Smoothed")
     }
@@ -128,7 +134,7 @@ class TestDependentParamNote:
     def _applied_note(self) -> str:
         info = format_typed_param(
             _samples("samples_percentile_generic"),
-            ParamDependencies(depends_on=self._DEPENDS),
+            self._DEPENDS,
             applied_context=self._APPLIED,
         )
         assert info.note is not None
@@ -146,7 +152,7 @@ class TestDependentParamNote:
     def test_falls_back_to_the_default_context_wording(self) -> None:
         info = format_typed_param(
             _samples("samples_percentile_generic"),
-            ParamDependencies(depends_on=self._DEPENDS),
+            self._DEPENDS,
         )
 
         assert info.note is not None
@@ -155,7 +161,7 @@ class TestDependentParamNote:
     def test_ignores_context_for_parents_this_param_does_not_have(self) -> None:
         info = format_typed_param(
             _samples("samples_percentile_generic"),
-            ParamDependencies(depends_on=self._DEPENDS),
+            self._DEPENDS,
             applied_context={"organism": SinglePickValue(value="P. falciparum")},
         )
 
@@ -166,12 +172,12 @@ class TestDependentParamNote:
 class TestAnUnqualifiedRead:
     """A vocabulary read without parents names the defaults it was read under."""
 
-    _DEPENDS: ClassVar[dict[str, list[str]]] = {"samples": ["profileset"]}
+    _DEPENDS: ClassVar[ParamGraph] = _depends("samples", "profileset")
 
     def _default_note(self) -> str:
         info = format_typed_param(
             _samples("samples"),
-            ParamDependencies(depends_on=self._DEPENDS),
+            self._DEPENDS,
             parent_defaults={"profileset": "DeRisi HB3 Smoothed"},
         )
         assert info.note is not None
@@ -184,9 +190,7 @@ class TestAnUnqualifiedRead:
         assert "DIFFERENT" in self._default_note()
 
     def test_without_a_known_default_it_still_says_it_is_a_default(self) -> None:
-        info = format_typed_param(
-            _samples("samples"), ParamDependencies(depends_on=self._DEPENDS)
-        )
+        info = format_typed_param(_samples("samples"), self._DEPENDS)
 
         assert info.note is not None
         assert "default" in info.note.lower()
@@ -194,7 +198,7 @@ class TestAnUnqualifiedRead:
     def test_an_applied_context_still_names_what_was_applied(self) -> None:
         info = format_typed_param(
             _samples("samples"),
-            ParamDependencies(depends_on=self._DEPENDS),
+            self._DEPENDS,
             applied_context={
                 "profileset": SinglePickValue(value="DeRisi 3D7 Smoothed")
             },
@@ -219,7 +223,7 @@ class TestRequiredFollowsBothWdkSignals:
                 "minSelectedCount": min_selected,
             }
         )
-        return format_typed_param(param, ParamDependencies()).required
+        return format_typed_param(param, ParamGraph.of([param])).required
 
     def test_a_minimum_selection_makes_a_param_required(self) -> None:
         assert self._required(allow_empty=True, min_selected=1) is True
@@ -417,9 +421,9 @@ class TestTheDependencyLinks:
 
         by_name = {p.name: p for p in format_param_info_typed([organism, taxon])}
 
-        assert by_name["organism"].controls_vocab_of == ["taxon"]
-        assert by_name["organism"].vocab_depends_on is None
-        assert by_name["taxon"].vocab_depends_on == ["organism"]
+        assert by_name["organism"].stated_children == ["taxon"]
+        assert by_name["organism"].stated_parents == []
+        assert by_name["taxon"].stated_parents == ["organism"]
         assert by_name["taxon"].allowed_values is not None
         assert sorted(v.value for v in by_name["taxon"].allowed_values) == [
             "PfTaxonA",
@@ -434,7 +438,7 @@ class TestTheExpressionSheetStatesTheGrammarAndNamesTheBuilder:
             WDKStringParam(
                 name="phyletic_expression", help="Phyletic Pattern Expression"
             ),
-            ParamDependencies(),
+            ParamGraph.of([]),
         ).help
 
     def test_a_count_with_t_counts_genomes_and_a_bare_count_counts_proteins(

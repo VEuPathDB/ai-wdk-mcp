@@ -57,8 +57,8 @@ def _note(
         )
     if info.allowed_values_tree is not None:
         parts.append("A parent term selects all of its children.")
-    if info.vocab_depends_on:
-        parents = ", ".join(info.vocab_depends_on)
+    if info.wire_parents:
+        parents = ", ".join(info.wire_parents)
         parts.append(
             f"This vocabulary depends on {parents} and is shown under the search defaults; "
             f"it is re-read under the values you propose."
@@ -90,7 +90,7 @@ def build_sheet(infos: list[ParameterInfo], *, query: str) -> list[SheetEntry]:
                 default=info.default_value,
                 min=info.min,
                 max=info.max,
-                depends_on=list(info.vocab_depends_on or []),
+                depends_on=list(info.wire_parents),
                 vocabulary=shown,
                 vocabulary_total=len(options),
                 vocabulary_note=_note(info, len(shown), len(options), facets),

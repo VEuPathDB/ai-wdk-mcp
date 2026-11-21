@@ -246,7 +246,7 @@ def _defer_to_next_pass(
     A param whose vocabulary parent is unresolved, or resolved during this pass, has a
     stale option set. The next pass fetches the real vocabulary.
     """
-    depends_on = set(info.vocab_depends_on or [])
+    depends_on = set(info.wire_parents)
     if depends_on - context.keys():
         return True
     return bool(depends_on & resolved_this_pass)

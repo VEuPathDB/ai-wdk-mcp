@@ -28,6 +28,7 @@ def adapt_param_from_wdk(param: WDKParameter) -> ParamSpecNormalized:
         max_length=param.length if param.length > 0 else None,
         display_type=param.display_type,
         is_visible=param.is_visible,
+        is_read_only=param.is_read_only,
         group=param.group,
         dependent_params=tuple(param.dependent_params),
         help=param.help,

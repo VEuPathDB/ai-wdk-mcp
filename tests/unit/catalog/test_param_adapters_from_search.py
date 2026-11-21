@@ -14,10 +14,10 @@ import pytest
 from veupathdb.domain.parameters import (
     FilterTermClause,
     FilterValue,
+    ParamGraph,
     ParamSpecNormalized,
     fill_hidden_required_defaults,
     filled_hidden_defaults,
-    topological_fill_order,
 )
 from veupathdb.domain.strategy import StepValidation
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
@@ -50,6 +50,10 @@ def _specs_with_dependents(
         "b": ParamSpecNormalized(name="b", param_type="string"),
         "c": ParamSpecNormalized(name="c", param_type="string"),
     }
+
+
+def _fill_order(specs: dict[str, ParamSpecNormalized]) -> tuple[str, ...]:
+    return ParamGraph.of(list(specs.values())).fill_order
 
 
 @pytest.mark.skipif(
@@ -134,8 +138,8 @@ class TestWdkVocab003DependentParamsPointsAtChildren:
     def test_wdk_vocab_003_the_order_of_the_list_changes_nothing(self) -> None:
         # The backing collection is a HashSet, so the same dependency set
         # arrives in a different order on the next search. Compare as sets.
-        forwards = topological_fill_order(_specs_with_dependents(("b", "c")))
-        backwards = topological_fill_order(_specs_with_dependents(("c", "b")))
+        forwards = _fill_order(_specs_with_dependents(("b", "c")))
+        backwards = _fill_order(_specs_with_dependents(("c", "b")))
 
         assert set(forwards) == set(backwards)
         for order in (forwards, backwards):

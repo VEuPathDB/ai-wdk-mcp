@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from difflib import get_close_matches
 
 from veupathdb.domain.parameters import (
+    ParamGraph,
     ParamValue,
     VocabOption,
     WDKTreeBoxVocabNode,
@@ -35,7 +36,6 @@ from veupathdb_mcp.catalog.param_formatting import (
     ParentContextRequired,
     format_param_info_typed,
     format_typed_param,
-    param_dependencies,
     phyletic_options_for,
     shown_facets,
 )
@@ -359,7 +359,7 @@ async def read_parameter_options(
             )
             read = format_typed_param(
                 _prioritize_organisms(filtered, narrow.organism_hints),
-                dependencies=param_dependencies(all_params),
+                graph=ParamGraph.of(all_params),
                 applied_context=context or None,
                 parent_defaults={
                     other.name: other.initial_display_value
@@ -371,10 +371,9 @@ async def read_parameter_options(
             )
             read = read.model_copy(
                 update={
-                    "controls_vocab_of": [
-                        name for name in read.controls_vocab_of or [] if name in shown
+                    "wire_children": [
+                        name for name in read.wire_children if name in shown
                     ]
-                    or None
                 }
             )
             if lookup or phyletic_lookup:

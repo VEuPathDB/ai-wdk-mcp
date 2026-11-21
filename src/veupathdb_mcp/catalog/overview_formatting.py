@@ -66,14 +66,14 @@ def _build_dependency_section(
     """
     return {
         info.name: DependencyEntry(
-            depends_on=info.vocab_depends_on,
+            depends_on=info.wire_parents,
             instruction=(
-                f"Set {', '.join(info.vocab_depends_on)} first, then call "
+                f"Set {', '.join(info.wire_parents)} first, then call "
                 "get_parameter_options(...)"
             ),
         )
         for info in infos
-        if info.vocab_depends_on and info.is_visible
+        if info.wire_parents and info.is_visible
     }
 
 
@@ -111,7 +111,7 @@ def format_search_overview(
             vocabulary_note=sheet.vocabulary_note,
             controls_vocab_of=[
                 name
-                for name in info.controls_vocab_of or []
+                for name in info.wire_children
                 if name in by_name and by_name[name].is_visible
             ]
             or None,

@@ -83,7 +83,7 @@ async def test_a_visible_parameters_options_name_no_hidden_parameter() -> None:
     )
 
     assert read.name == "organismSinglePick"
-    assert read.controls_vocab_of == ["variation_sample_meta"]
+    assert read.stated_children == ["variation_sample_meta"]
 
 
 @pytest.mark.usefixtures("served")

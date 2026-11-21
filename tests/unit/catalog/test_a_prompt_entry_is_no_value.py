@@ -6,13 +6,13 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from veupathdb.domain.parameters import ParamGraph
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKEnumParam, WDKSearchResponse
 
 from veupathdb_mcp.catalog import search_inspection, searches
 from veupathdb_mcp.catalog.param_formatting import (
-    ParamDependencies,
     ParameterInfo,
     format_param_info_typed,
     format_typed_param,
@@ -79,7 +79,7 @@ def test_a_prompt_whose_term_is_an_id_is_read_by_its_label() -> None:
         ),
     )
 
-    info = format_typed_param(param, ParamDependencies())
+    info = format_typed_param(param, ParamGraph.of([param]))
 
     assert _values(info) == ["123456"]
     assert info.prompt_values == ["bla", "1_choose_module", "0"]
