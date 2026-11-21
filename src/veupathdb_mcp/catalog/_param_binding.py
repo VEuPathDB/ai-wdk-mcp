@@ -151,12 +151,12 @@ def _is_free_text_query(info: ParameterInfo) -> bool:
     """Reports whether the param is the search's own text query.
 
     WDK puts an example in the default value of these params, so the default must not
-    be inherited. Hidden params and numeric bounds carry real defaults and are excluded.
+    be inherited. Site-set params and numeric bounds carry real defaults and are excluded.
     """
     return (
         info.param_kind == "string"
         and not info.is_number
-        and info.is_visible
+        and info.bindable
         and info.required
         and not info.vocabulary()
     )

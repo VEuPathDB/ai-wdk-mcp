@@ -38,6 +38,7 @@ def _param(
     name: str,
     *,
     visible: bool = True,
+    read_only: bool = False,
     allow_empty: bool = False,
     default: str | None = None,
 ) -> WDKParameter:
@@ -45,6 +46,7 @@ def _param(
         name=name,
         display_name=name,
         is_visible=visible,
+        is_read_only=read_only,
         allow_empty_value=allow_empty,
         initial_display_value=default,
     )
@@ -188,6 +190,16 @@ class TestHiddenParamsJoinTheRead:
         """
         published = [
             _param("document_type", visible=False, allow_empty=False, default="gene")
+        ]
+
+        assert context_for_metadata_read({"text_expression": "kinase"}, published) == {
+            "text_expression": "kinase",
+            "document_type": "gene",
+        }
+
+    def test_a_visible_read_only_param_is_added(self) -> None:
+        published = [
+            _param("document_type", read_only=True, allow_empty=False, default="gene")
         ]
 
         assert context_for_metadata_read({"text_expression": "kinase"}, published) == {

@@ -283,6 +283,11 @@ class TestScalarDefaults:
 
         assert [_scalar_default(info), info.default_value] == [None, "*reductase"]
 
+    def test_a_read_only_text_default_is_the_sites_value(self) -> None:
+        info = param_info("document_type", "string", site_set=True, default="gene")
+
+        assert _scalar_default(info) == "gene"
+
     def test_a_number_flagged_search_text_is_still_suppressed(self) -> None:
         info = _free_text("text_expression", "odorant")
 

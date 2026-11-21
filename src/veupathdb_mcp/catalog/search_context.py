@@ -15,15 +15,14 @@ def context_for_metadata_read(
     context: dict[str, str],
     published: Sequence[WDKParameter] | None,
 ) -> dict[str, str]:
-    """Adds the published default of every unset hidden parameter.
+    """Adds the published default of every unset site-set parameter.
 
-    WDK builds a contextual definition from a whole parameter shape and judges
-    it, so a hidden parameter the caller cannot state must travel at its
-    published default or WDK reports it as missing.
+    WDK fills an omitted site-set value under the given parents and replaces a
+    stale one, but it judges an omitted one as missing.
     """
     filled = dict(context)
     for spec in published or []:
-        if spec.name in filled or spec.is_visible or spec.initial_display_value is None:
+        if spec.name in filled or spec.bindable or spec.initial_display_value is None:
             continue
         filled[spec.name] = spec.initial_display_value
     return filled

@@ -366,7 +366,7 @@ async def validate_parameters(
         record_type=resolved_record_type,
         search_name=ctx.search_name,
     )
-    # The refresh below skips a parent whose value is empty, so hidden required
+    # The refresh below skips a parent whose value is empty, so site-set required
     # parents must get their defaults first.
     canonical = fill_hidden_required_defaults(param_spec_map, canonical)
     param_spec_map = await _refresh_dependent_vocabularies(
@@ -382,7 +382,7 @@ async def validate_parameters(
         for spec in response.search_data.parameters or []
         if spec.initial_display_value is not None
     }
-    # A hidden parameter the host filled is a value nobody chose, so it is
+    # A site-set parameter the host filled is a value nobody chose, so it is
     # reported alongside the ones WDK substituted. Both are read against the
     # caller's own canonical values, which is what WDK was asked to judge.
     substituted = sorted(
