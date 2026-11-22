@@ -1,5 +1,13 @@
 # Knowledge log
 
+## 2026-11-22 - 0.9.0b18: values compare by ==, and the reader returns a reading
+
+- Takes veupathdb-py 0.9.0b13, whose value kinds define `==` by what WDK reads.
+- The reader returns `BoundValues`, built only by `read_under_parents` and read-only;
+  `held_default`, `validate_parameters` and `read_under_parents` compare with `==`;
+  `pyright src scripts` and the parameter-comparison gate run in pre-commit and CI.
+- `veupathdb-mcp` is 0.9.0b18.
+
 ## 2026-11-22 - A reading is built by the reader and cannot change
 
 - `BoundValues` refuses any sentinel but the reader's own and holds its values in a
