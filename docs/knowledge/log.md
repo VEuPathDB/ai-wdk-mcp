@@ -1,5 +1,11 @@
 # Knowledge log
 
+## 2026-11-22 - pyright is a gate
+
+- `pyright src scripts` runs in pre-commit, in CI and in the README gate list, beside mypy.
+- `OrthologRow` is the ortholog table's row, not a `GroupMember`; `row.member` gives the
+  group member, whose `syntenic` and `reference_strain` a gene row leaves unknown.
+
 ## 2026-11-22 - One equality for every parameter comparison
 
 - `substituted_params` reads what was sent and what WDK echoed with

@@ -13,6 +13,12 @@ repos:
         language: system
         pass_filenames: false
         types: [python]
+      - id: pyright
+        name: pyright
+        entry: bash -c "uv run pyright src scripts"
+        language: system
+        pass_filenames: false
+        types: [python]
       - id: pytest
         name: pytest (hermetic)
         entry: bash -c "uv run pytest tests/unit"

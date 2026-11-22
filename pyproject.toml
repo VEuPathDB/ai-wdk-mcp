@@ -42,6 +42,7 @@ packages = ["src/veupathdb_mcp"]
 [dependency-groups]
 dev = [
     "mypy>=2.3.1",
+    "pyright>=1.1.408",
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
     "respx>=0.22.0",

@@ -18,7 +18,7 @@ from veupathdb_mcp.audit import (
     record_reads,
     track_reads,
 )
-from veupathdb_mcp.audit.genes import GeneRow, OrthologGroup, OrthologRow
+from veupathdb_mcp.audit.genes import GeneRow, GroupMember, OrthologGroup, OrthologRow
 
 type Region = tuple[str, str, int, int]
 type Span = tuple[int, int]
@@ -80,8 +80,8 @@ def model_rows(
 
 def ortholog_row(
     gene: str, organism: str, length: int | None, reference: str = "no"
-) -> OrthologRow:
-    return OrthologRow.model_validate(
+) -> GroupMember:
+    row = OrthologRow.model_validate(
         {
             "ortho_gene_source_id": gene,
             "organism": organism,
@@ -92,6 +92,7 @@ def ortholog_row(
             "has_comment": "no",
         }
     )
+    return row.member
 
 
 class JBrowse:
@@ -231,7 +232,7 @@ class Site:
             ortholog_row("PVX_9", "Plasmodium vivax Sal-1", None),
             ortholog_row("PVX_1", "Plasmodium vivax Sal-1", 150),
         ]
-        named: dict[str, OrthologRow] = {}
+        named: dict[str, GroupMember] = {}
         for row in table:
             if row.gene != gene:
                 named.setdefault(row.gene, row)

@@ -64,7 +64,9 @@ def _words(words: tuple[str, ...]) -> re.Pattern[str]:
 
 
 _UNREAD_PATTERN = _words(UNREAD_STRAND_WORDS)
-_STRAND_PATTERNS = {strand: _words(words) for strand, words in STRAND_WORDS.items()}
+_STRAND_PATTERNS: dict[Strand, re.Pattern[str]] = {
+    strand: _words(words) for strand, words in STRAND_WORDS.items()
+}
 
 
 def strand_of(subtrack: SubTrack) -> SubTrackStrand:

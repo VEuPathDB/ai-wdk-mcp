@@ -382,6 +382,7 @@ lane belongs where a WDK account exists.
 uv sync --frozen
 uv run ruff check . && uv run ruff format --check .
 uv run mypy --strict src scripts
+uv run pyright src scripts
 uv run pytest tests/unit                      # hermetic
 uv run pytest tests/integration               # pgvector testcontainer
 uv run pytest tests/live -m live_wdk --override-ini addopts=''   # one QA site

@@ -131,7 +131,9 @@ async def record(target: IntronTarget, into: Path) -> None:
         ]
         named = list(
             ortholog_choice(
-                OrthologGroup(gene=gene, members=[r for r in table if r.gene != gene]),
+                OrthologGroup(
+                    gene=gene, members=[r.member for r in table if r.gene != gene]
+                ),
                 row,
             )
         )

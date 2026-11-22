@@ -173,7 +173,7 @@ def read_spans(gene: str, rows: list[ModelRow]) -> ModelSpans | str:
     transcript = parts.transcript
     if not parts.exons:
         return no_exon_row(gene, transcript)
-    placed = {
+    placed: set[tuple[str, Strand]] = {
         (row.sequence_id, row.strand)
         for row in rows
         if transcript in row.transcript_ids and row.type in {"CDS", "Exon"}

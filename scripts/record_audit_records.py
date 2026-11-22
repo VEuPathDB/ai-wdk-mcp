@@ -401,7 +401,7 @@ async def record_case(case: Case, key: list[str], into: Path) -> None:
             group = OrthologGroup(
                 gene=case.gene,
                 members=[
-                    member
+                    member.member
                     for member in _Table.model_validate(
                         WDKRecordInstance.model_validate(table).tables
                     ).rows

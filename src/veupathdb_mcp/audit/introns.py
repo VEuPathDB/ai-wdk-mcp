@@ -56,7 +56,8 @@ CORRECTABLE: frozenset[IntronVerdict] = frozenset(
         "UNSUPPORTED_RETAINED",
     }
 )
-_FLAGGED: frozenset[IntronVerdict] = CORRECTABLE | {"UNSUPPORTED_UNEXPLAINED"}
+_UNEXPLAINED: frozenset[IntronVerdict] = frozenset({"UNSUPPORTED_UNEXPLAINED"})
+_FLAGGED: frozenset[IntronVerdict] = CORRECTABLE | _UNEXPLAINED
 _RANKED: tuple[tuple[UnreadOutcome, IntronVerdict], ...] = (
     ("UNEXPLAINED", "UNSUPPORTED_UNEXPLAINED"),
     ("NONCANONICAL", "UNSUPPORTED_NONCANONICAL"),

@@ -138,14 +138,27 @@ class GroupMember(BaseModel):
         )
 
 
-class OrthologRow(GroupMember):
+class OrthologRow(BaseModel):
     model_config = ConfigDict(frozen=True, extra="ignore")
 
     gene: str = Field(validation_alias="ortho_gene_source_id")
-    syntenic: bool = Field(validation_alias="is_syntenic")
+    organism: str = Field(min_length=1)
+    protein_length: int | None
     product: str = Field(validation_alias="gene_product")
+    syntenic: bool = Field(validation_alias="is_syntenic")
     reference_strain: bool = Field(validation_alias="is_reference_strain")
     has_comment: bool
+
+    @property
+    def member(self) -> GroupMember:
+        return GroupMember(
+            gene=self.gene,
+            organism=self.organism,
+            protein_length=self.protein_length,
+            product=self.product,
+            syntenic=self.syntenic,
+            reference_strain=self.reference_strain,
+        )
 
     @field_validator("syntenic", "reference_strain", "has_comment", mode="before")
     @classmethod
@@ -268,7 +281,7 @@ async def orthologs_of(site_id: str, gene: str) -> OrthologGroup:
     named: dict[str, GroupMember] = {}
     for row in table:
         if row.gene != gene:
-            named.setdefault(row.gene, row)
+            named.setdefault(row.gene, row.member)
     return OrthologGroup(gene=gene, members=list(named.values()))
 
 
