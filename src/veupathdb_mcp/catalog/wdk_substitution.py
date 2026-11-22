@@ -10,6 +10,7 @@ from veupathdb.domain.parameters import (
     ParameterCanonicalizer,
     ParamSpecNormalized,
     ParamValue,
+    as_param_kind,
     same_param_value,
     to_wire,
 )
@@ -35,9 +36,8 @@ def substituted_params(
 ) -> list[str]:
     """Params whose echoed value is WDK's rather than the caller's.
 
-    Each value is read as its kind and compared with ``same_param_value``. A
-    definition WDK
-    built without reading the caller's values describes no caller at all, so
+    Each value is read in its declared kind and compared with ``same_param_value``.
+    A definition WDK built without reading the caller's values describes no caller at all, so
     only the params left unset are read from it.
     """
     reader = ParameterCanonicalizer(dict(specs))
@@ -54,6 +54,7 @@ def substituted_params(
             continue
         if not values_were_read:
             continue
-        if not same_param_value(name, ours[name], theirs[name]):
+        kind = None if spec is None else as_param_kind(spec.param_type)
+        if not same_param_value(name, kind, ours[name], theirs[name]):
             supplied.append(name)
     return sorted(supplied)

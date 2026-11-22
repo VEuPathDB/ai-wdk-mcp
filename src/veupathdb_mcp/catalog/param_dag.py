@@ -20,6 +20,7 @@ from veupathdb.domain.parameters import (
     MultiPickValue,
     NumberMembers,
     ParamGraph,
+    ParamKind,
     ParamSpecNormalized,
     ParamValue,
     PhyleticBinding,
@@ -482,10 +483,12 @@ async def _read_held(
         about=about,
         bound={n: v for n, v in bound.items() if n not in standing},
     )
+    kinds: dict[str, ParamKind] = {d.name: d.type for d in declarations}
     moved = {
         name
         for name, value in read.items()
-        if name not in bound or not same_param_value(name, bound[name], value)
+        if name not in bound
+        or not same_param_value(name, kinds.get(name), bound[name], value)
     }
     site_set = {d.name for d in declarations if d.site_set}
     followers = {

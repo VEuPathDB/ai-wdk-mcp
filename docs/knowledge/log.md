@@ -1,5 +1,11 @@
 # Knowledge log
 
+## 2026-11-22 - A value is compared in its declared kind
+
+- `substituted_params` and `read_under_parents` pass the parameter's declared kind to
+  `same_param_value`, so a number echoed as `2.0` is the number sent, and a string echoed in
+  another spelling is another value.
+
 ## 2026-11-22 - pyright is a gate
 
 - `pyright src scripts` runs in pre-commit, in CI and in the README gate list, beside mypy.

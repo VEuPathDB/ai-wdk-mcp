@@ -88,6 +88,26 @@ class TestWhatWDKFilledIn:
 
         assert filled == []
 
+    def test_a_number_echoed_in_another_spelling_is_not_substituted(self) -> None:
+        filled = substituted_params(
+            sent={"fold_change": StringValue(value="2")},
+            echoed={"fold_change": "2.0"},
+            specs=_SPECS,
+            values_were_read=True,
+        )
+
+        assert filled == []
+
+    def test_a_string_echoed_in_another_spelling_is_substituted(self) -> None:
+        filled = substituted_params(
+            sent={"a": StringValue(value="5")},
+            echoed={"a": "5.0"},
+            specs=_SPECS,
+            values_were_read=True,
+        )
+
+        assert filled == ["a"]
+
     def test_a_number_text_held_as_written_is_not_substituted(self) -> None:
         filled = substituted_params(
             sent={"a": StringValue(value="5.0")},
