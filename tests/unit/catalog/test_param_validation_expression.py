@@ -93,6 +93,7 @@ async def _validate(expression: str) -> param_validation.ValidatedParams:
         _CTX,
         stated={"phyletic_expression": StringValue(value=expression)},
         callbacks=validation_callbacks(),
+        about=None,
     )
 
 

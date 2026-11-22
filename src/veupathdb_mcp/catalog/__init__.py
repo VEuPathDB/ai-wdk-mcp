@@ -97,6 +97,7 @@ from veupathdb_mcp.catalog.param_phyletic import (
     derive_phyletic_overrides,
     genome_names,
     is_phyletic_sheet,
+    ordered_phyletic_refusal,
 )
 from veupathdb_mcp.catalog.param_resolution import SearchParametersResult
 from veupathdb_mcp.catalog.param_sheet import SheetEntry, build_sheet
@@ -211,6 +212,7 @@ from veupathdb_mcp.catalog.vocab_resolve import (
     NamedVocabulary,
     ResolveContext,
     ordered_by_vocabulary,
+    ordered_entries,
     ordered_refusal,
     resolve_request,
 )
@@ -349,6 +351,8 @@ __all__ = [
     "make_record_type_resolver",
     "make_validation_callbacks",
     "ordered_by_vocabulary",
+    "ordered_entries",
+    "ordered_phyletic_refusal",
     "ordered_refusal",
     "organism_parameter",
     "ortho_taxonomy",

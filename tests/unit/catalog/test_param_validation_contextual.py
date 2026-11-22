@@ -60,7 +60,7 @@ def _rejecting_definition() -> WDKSearchResponse:
 
 async def _validate() -> param_validation.ValidatedParams:
     return await param_validation.validate_parameters(
-        _CTX, stated=dict(_STATED), callbacks=validation_callbacks()
+        _CTX, stated=dict(_STATED), callbacks=validation_callbacks(), about=None
     )
 
 
@@ -321,7 +321,11 @@ class TestAVerdictOnAHeldValueNeverRefuses:
         stated = {"included_species": StringValue(value="pfal")}
 
         result = await param_validation.validate_parameters(
-            _CTX, stated=stated, context=organism, callbacks=validation_callbacks()
+            _CTX,
+            stated=stated,
+            context=organism,
+            callbacks=validation_callbacks(),
+            about=None,
         )
 
         assert "organism" not in result.params
@@ -332,7 +336,7 @@ class TestAVerdictOnAHeldValueNeverRefuses:
 
         with pytest.raises(ValidationError, match="organism: Cannot be empty"):
             await param_validation.validate_parameters(
-                _CTX, stated=organism, callbacks=validation_callbacks()
+                _CTX, stated=organism, callbacks=validation_callbacks(), about=None
             )
 
 
@@ -382,7 +386,11 @@ class TestAGeneralVerdictRefusesOnlyWhatAStatementAdds:
         answers.append("The organism is retired")
 
         result = await param_validation.validate_parameters(
-            _CTX, stated={}, context=dict(_STATED), callbacks=validation_callbacks()
+            _CTX,
+            stated={},
+            context=dict(_STATED),
+            callbacks=validation_callbacks(),
+            about=None,
         )
 
         assert result.params == {}
@@ -399,6 +407,7 @@ class TestAGeneralVerdictRefusesOnlyWhatAStatementAdds:
             context=dict(_STATED),
             held_validation=_STORED,
             callbacks=validation_callbacks(),
+            about=None,
         )
 
         assert result.params == stated
@@ -415,4 +424,5 @@ class TestAGeneralVerdictRefusesOnlyWhatAStatementAdds:
                 context=dict(_STATED),
                 held_validation=_STORED,
                 callbacks=validation_callbacks(),
+                about=None,
             )

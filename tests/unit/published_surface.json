@@ -482,6 +482,8 @@
     "make_record_type_resolver",
     "make_validation_callbacks",
     "ordered_by_vocabulary",
+    "ordered_entries",
+    "ordered_phyletic_refusal",
     "ordered_refusal",
     "organism_parameter",
     "ortho_taxonomy",

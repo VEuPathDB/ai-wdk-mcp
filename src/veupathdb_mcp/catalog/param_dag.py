@@ -59,6 +59,7 @@ from veupathdb_mcp.catalog.param_phyletic import (
     PhyleticNoSelection,
     derive_phyletic_overrides,
     is_phyletic_sheet,
+    ordered_phyletic_refusal,
 )
 from veupathdb_mcp.catalog.search_context import (
     get_search_params_under_context,
@@ -226,14 +227,19 @@ async def _named_or_ordered[T](
     declarations: Sequence[WDKParameter],
     about: ResolveContext | None,
 ) -> T:
-    """The read, or its vocabulary refusal with the candidates ``ordered_refusal``
-    orders under ``about``. None leaves the ranking."""
+    """The read, or its refusal with the candidates ordered under ``about``: a
+    vocabulary refusal by ``ordered_refusal``, a phyletic one by
+    ``ordered_phyletic_refusal``. None leaves the ranking."""
     try:
         return read()
     except VocabularyEntryError as refusal:
         if about is None:
             raise
         raise await ordered_refusal(refusal, declarations, about) from refusal
+    except PhyleticListError as refusal:
+        if about is None:
+            raise
+        raise await ordered_phyletic_refusal(refusal, declarations, about) from refusal
 
 
 async def _refuse_misses(

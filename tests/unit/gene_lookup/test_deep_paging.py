@@ -96,7 +96,9 @@ def streamed(monkeypatch: pytest.MonkeyPatch) -> _Recorder:
 
 @pytest.mark.asyncio
 async def test_the_first_page_reads_no_stream(streamed: _Recorder) -> None:
-    result = await lookup_genes_by_text("plasmodb", "kinase", offset=0, limit=30)
+    result = await lookup_genes_by_text(
+        "plasmodb", "kinase", offset=0, limit=30, about=None
+    )
 
     assert streamed.calls == []
     assert [r.gene_id for r in result.records] == _ALL_IDS[:30]
@@ -108,7 +110,9 @@ async def test_the_count_is_what_site_search_matched_not_what_a_page_held(
 ) -> None:
     """A caller cannot page to what the count does not admit."""
     del streamed
-    result = await lookup_genes_by_text("plasmodb", "kinase", offset=0, limit=30)
+    result = await lookup_genes_by_text(
+        "plasmodb", "kinase", offset=0, limit=30, about=None
+    )
 
     assert result.total_count == MATCHED_GENES
 
@@ -117,7 +121,9 @@ async def test_the_count_is_what_site_search_matched_not_what_a_page_held(
 async def test_a_page_past_the_paged_ceiling_is_served_from_the_stream(
     streamed: _Recorder,
 ) -> None:
-    result = await lookup_genes_by_text("plasmodb", "kinase", offset=90, limit=30)
+    result = await lookup_genes_by_text(
+        "plasmodb", "kinase", offset=90, limit=30, about=None
+    )
 
     assert streamed.calls == [120]
     assert [r.gene_id for r in result.records] == _ALL_IDS[90:120]
@@ -130,7 +136,9 @@ async def test_a_streamed_record_reaches_the_caller_described(
 ) -> None:
     """The stream carries an identifier only, so the window is hydrated."""
     del streamed
-    result = await lookup_genes_by_text("plasmodb", "kinase", offset=90, limit=2)
+    result = await lookup_genes_by_text(
+        "plasmodb", "kinase", offset=90, limit=2, about=None
+    )
 
     assert [(r.gene_id, r.product) for r in result.records] == [
         ("PF3D7_000090", "protein kinase"),
@@ -143,7 +151,9 @@ async def test_the_paged_records_keep_their_rank_ahead_of_the_stream(
     streamed: _Recorder,
 ) -> None:
     del streamed
-    result = await lookup_genes_by_text("plasmodb", "kinase", offset=0, limit=60)
+    result = await lookup_genes_by_text(
+        "plasmodb", "kinase", offset=0, limit=60, about=None
+    )
 
     assert [r.gene_id for r in result.records[:SITE_SEARCH_PAGE_LIMIT]] == [
         r.gene_id for r in _PAGE
@@ -209,6 +219,7 @@ async def test_a_named_organism_restricts_the_stream_as_well_as_the_count(
         organism="Plasmodium falciparum 3D7",
         offset=60,
         limit=10,
+        about=None,
     )
 
     assert streamed.organisms == [["Plasmodium falciparum 3D7"]]

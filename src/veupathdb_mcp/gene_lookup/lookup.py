@@ -284,7 +284,9 @@ def _append_streamed_tail(
     ]
 
 
-async def _stated_organism(site_id: str, organism: str | None) -> str | None:
+async def _stated_organism(
+    site_id: str, organism: str | None, about: ResolveContext | None
+) -> str | None:
     """The site entry a stated organism names, or a refusal with candidates."""
     if not organism or not organism.strip():
         return None
@@ -292,9 +294,11 @@ async def _stated_organism(site_id: str, organism: str | None) -> str | None:
     try:
         [entry] = entries_or_refusal(ORGANISM_PARAM, declared, [organism.strip()])
     except VocabularyEntryError as refusal:
+        if about is None:
+            raise
         named = NamedVocabulary(display="Organism", options=declared)
         raise await ordered_by_vocabulary(
-            refusal, {ORGANISM_PARAM: named}, ResolveContext(site_id=site_id)
+            refusal, {ORGANISM_PARAM: named}, about
         ) from refusal
     return entry
 
@@ -341,9 +345,14 @@ async def lookup_genes_by_text(
     organism: str | None = None,
     offset: int = 0,
     limit: int = 20,
+    about: ResolveContext | None,
 ) -> GeneSearchResult:
-    """Search for gene records with several concurrent strategies."""
-    explicit_organism = await _stated_organism(site_id, organism)
+    """Search for gene records with several concurrent strategies.
+
+    A stated organism the site does not list is refused with its candidates
+    ordered under ``about``; None leaves the ranking.
+    """
+    explicit_organism = await _stated_organism(site_id, organism, about)
     needed = offset + limit
     is_multi_word = len(query.strip().split()) >= _MIN_WORDS_FOR_MULTI_WORD
 

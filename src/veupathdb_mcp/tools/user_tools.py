@@ -11,7 +11,11 @@ from veupathdb.errors import ValidationError, VEuPathDBError
 from veupathdb.wdk import WDKAnswer, get_strategy_api
 
 from veupathdb_mcp.audit import RECORD_READS_PER_CALL
-from veupathdb_mcp.catalog import NoGeneRecordsError, read_stated_parameters
+from veupathdb_mcp.catalog import (
+    NoGeneRecordsError,
+    ResolveContext,
+    read_stated_parameters,
+)
 from veupathdb_mcp.controls.control_tests import (
     run_positive_negative_controls,
     run_step_control_tests,
@@ -110,7 +114,13 @@ async def lookup_gene_records(
             `implied_organism`.
         limit: Largest number of records to return.
     """
-    return await lookup_genes_by_text(site_id, query, organism=organism, limit=limit)
+    return await lookup_genes_by_text(
+        site_id,
+        query,
+        organism=organism,
+        limit=limit,
+        about=ResolveContext(site_id=site_id, message=""),
+    )
 
 
 async def resolve_gene_ids_to_records(

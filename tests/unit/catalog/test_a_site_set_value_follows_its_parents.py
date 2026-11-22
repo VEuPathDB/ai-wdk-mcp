@@ -125,6 +125,7 @@ async def test_a_site_set_dependent_is_sent_at_the_value_read_under_its_parent(
         CTX,
         stated={"organismSinglePick": MultiPickValue(values=[VIVAX])},
         callbacks=validation_callbacks(),
+        about=None,
     )
 
     assert to_wire(validated.params["eda_sample_table_suffix"]) == "sba1cd4a562_sample"

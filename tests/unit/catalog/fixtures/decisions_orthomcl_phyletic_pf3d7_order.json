@@ -1,0 +1,2087 @@
+{
+ "provenance": {
+  "row": "r248",
+  "arm": "choice",
+  "vocabulary": "orthomcl_phyletic_tree",
+  "phrase": "Pf3D7",
+  "model": "gpt-6-luna",
+  "request_builder": "veupathdb_mcp.catalog.vocab_resolve.resolve_request",
+  "mcp": "b14b810",
+  "client": "veupathdb-py 0.9.0b10",
+  "recorded_for": "the offline vocabulary A/B, labelled set row r248; replayed to order a phyletic refusal's candidates"
+ },
+ "exchanges": [
+  {
+   "request": {
+    "model": "gpt-6-luna",
+    "input": "VEuPathDB site: orthomcl. Parameter: Included Species.\nThe researcher's words: \"Pf3D7\"",
+    "questions": [
+     {
+      "type": "choice",
+      "name": "value",
+      "instructions": "Which entry of the parameter do the researcher's words name? Read each label. Choose none_fits when the words name a group, several entries without choosing one, or nothing listed.",
+      "choices": [
+       {
+        "value": "e0",
+        "description": "delta-Proteobacteria"
+       },
+       {
+        "value": "e1",
+        "description": "Plasmodium falciparum 3D7"
+       },
+       {
+        "value": "e2",
+        "description": "Theileria orientalis Fish Creek"
+       },
+       {
+        "value": "e3",
+        "description": "Toxoplasma gondii FOU"
+       },
+       {
+        "value": "e4",
+        "description": "Tritrichomonas foetus strain K"
+       },
+       {
+        "value": "e5",
+        "description": "Taphrina deformans PYCC 5710"
+       },
+       {
+        "value": "e6",
+        "description": "Trichomonascus ciferrii CBS 4856"
+       },
+       {
+        "value": "e7",
+        "description": "Shigella flexneri"
+       },
+       {
+        "value": "e8",
+        "description": "Phytophthora infestans T30-4"
+       },
+       {
+        "value": "e9",
+        "description": "Pyrolobus fumarii 1A"
+       },
+       {
+        "value": "e10",
+        "description": "Plasmodium falciparum TG01"
+       },
+       {
+        "value": "e11",
+        "description": "Plasmodium falciparum SN01"
+       },
+       {
+        "value": "e12",
+        "description": "Plasmodium falciparum 7G8 2019"
+       },
+       {
+        "value": "e13",
+        "description": "Plasmodium falciparum SD01"
+       },
+       {
+        "value": "e14",
+        "description": "Plasmodium fragile strain nilgiri"
+       },
+       {
+        "value": "e15",
+        "description": "Plasmodium falciparum NF166"
+       },
+       {
+        "value": "e16",
+        "description": "Plasmodium falciparum NF54"
+       },
+       {
+        "value": "e17",
+        "description": "Plasmodium falciparum NF135.C10"
+       },
+       {
+        "value": "e18",
+        "description": "Plasmodium falciparum ML01"
+       },
+       {
+        "value": "e19",
+        "description": "Plasmodium falciparum KH02"
+       },
+       {
+        "value": "e20",
+        "description": "Plasmodium falciparum KH01"
+       },
+       {
+        "value": "e21",
+        "description": "Plasmodium falciparum KE01"
+       },
+       {
+        "value": "e22",
+        "description": "Pseudocercospora fijiensis CIRAD86"
+       },
+       {
+        "value": "e23",
+        "description": "Plasmodium falciparum HB3"
+       },
+       {
+        "value": "e24",
+        "description": "Plasmodium falciparum GN01"
+       },
+       {
+        "value": "e25",
+        "description": "Plasmodium falciparum GB4"
+       },
+       {
+        "value": "e26",
+        "description": "Plasmodium falciparum GA01"
+       },
+       {
+        "value": "e27",
+        "description": "Plasmodium falciparum IT"
+       },
+       {
+        "value": "e28",
+        "description": "Plasmodium falciparum 7G8"
+       },
+       {
+        "value": "e29",
+        "description": "Plasmodium falciparum Dd2"
+       },
+       {
+        "value": "e30",
+        "description": "Plasmodium falciparum CD01"
+       },
+       {
+        "value": "e31",
+        "description": "Peronospora effusa R13"
+       },
+       {
+        "value": "e32",
+        "description": "Ordospora colligata FI-SK-17-1"
+       },
+       {
+        "value": "e33",
+        "description": "Naegleria fowleri strain Ty"
+       },
+       {
+        "value": "e34",
+        "description": "Naegleria fowleri ATCC 30863"
+       },
+       {
+        "value": "e35",
+        "description": "Naegleria fowleri strain ATCC 30894"
+       },
+       {
+        "value": "e36",
+        "description": "Ordospora pajunii FI-F-10"
+       },
+       {
+        "value": "e37",
+        "description": "Monilinia fructicola CPMC6"
+       },
+       {
+        "value": "e38",
+        "description": "Macaca fascicularis REF"
+       },
+       {
+        "value": "e39",
+        "description": "Leishmania major Friedlin 2021"
+       },
+       {
+        "value": "e40",
+        "description": "Leishmania infantum JPCM5"
+       },
+       {
+        "value": "e41",
+        "description": "Loxodonta africana"
+       },
+       {
+        "value": "e42",
+        "description": "Hamiltosporidium tvaerminnensis FI-OER-3-3"
+       },
+       {
+        "value": "e43",
+        "description": "Glossina fuscipes IAEA"
+       },
+       {
+        "value": "e44",
+        "description": "Glossina fuscipes IAEA 2018"
+       },
+       {
+        "value": "e45",
+        "description": "Glossina fuscipes UG"
+       },
+       {
+        "value": "e46",
+        "description": "Glossina fuscipes IAEA 2023"
+       },
+       {
+        "value": "e47",
+        "description": "Fusarium verticillioides 7600"
+       },
+       {
+        "value": "e48",
+        "description": "Fusarium vanettenii 77-13-4"
+       },
+       {
+        "value": "e49",
+        "description": "Francisella tularensis subsp. tularensis SCHU S4"
+       },
+       {
+        "value": "e50",
+        "description": "Fusarium solani FSSC 5 MPI-SDFR-AT-0091"
+       },
+       {
+        "value": "e51",
+        "description": "Fusarium proliferatum ET1"
+       },
+       {
+        "value": "e52",
+        "description": "Fusarium proliferatum strain NRRL62905"
+       },
+       {
+        "value": "e53",
+        "description": "Fonsecaea pedrosoi CBS 271.37"
+       },
+       {
+        "value": "e54",
+        "description": "Fusarium oxysporum f. sp. lycopersici 4287"
+       },
+       {
+        "value": "e55",
+        "description": "Fusarium odoratissimum strain race 4"
+       },
+       {
+        "value": "e56",
+        "description": "Fusarium oxysporum f. sp. cubense race 1"
+       },
+       {
+        "value": "e57",
+        "description": "Fusarium oxysporum f. sp. melonis 26406"
+       },
+       {
+        "value": "e58",
+        "description": "Fusarium oxysporum Fo47"
+       },
+       {
+        "value": "e59",
+        "description": "Fusarium odoratissimum NRRL 54006"
+       },
+       {
+        "value": "e60",
+        "description": "Fusarium oxysporum NRRL 32931"
+       },
+       {
+        "value": "e61",
+        "description": "Fusarium oxysporum Strain Fo47 2020"
+       },
+       {
+        "value": "e62",
+        "description": "Fusarium oxysporum f. sp. conglutinans Fo5176"
+       },
+       {
+        "value": "e63",
+        "description": "Fusobacterium nucleatum subsp. nucleatum ATCC 25586"
+       },
+       {
+        "value": "e64",
+        "description": "Fusarium napiforme NRRL 25196"
+       },
+       {
+        "value": "e65",
+        "description": "Fonsecaea multimorphosa CBS 102226"
+       },
+       {
+        "value": "e66",
+        "description": "Fusarium mangiferae MRC7560"
+       },
+       {
+        "value": "e67",
+        "description": "Fusarium graminearum PH-1"
+       },
+       {
+        "value": "e68",
+        "description": "Fulvia fulva Race5_Kim"
+       },
+       {
+        "value": "e69",
+        "description": "Fusarium fujikuroi IMI 58289"
+       },
+       {
+        "value": "e70",
+        "description": "Fusarium circinatum NRRL 25331"
+       },
+       {
+        "value": "e71",
+        "description": "Fonticula alba"
+       },
+       {
+        "value": "e72",
+        "description": "Eptesicus fuscus TK198812"
+       },
+       {
+        "value": "e73",
+        "description": "Eimeria flavescens A23"
+       },
+       {
+        "value": "e74",
+        "description": "Eimeria falciformis Bayer Haberkorn 1970"
+       },
+       {
+        "value": "e75",
+        "description": "Emergomyces africanus CBS 136260"
+       },
+       {
+        "value": "e76",
+        "description": "Debaryomyces fabryi CBS 789"
+       },
+       {
+        "value": "e77",
+        "description": "Cytauxzoon felis strain Winnie"
+       },
+       {
+        "value": "e78",
+        "description": "Ctenocephalides felis EL2017-DRISC"
+       },
+       {
+        "value": "e79",
+        "description": "Crithidia fasciculata strain Cf-Cl"
+       },
+       {
+        "value": "e80",
+        "description": "Cyberlindnera fabianii 65"
+       },
+       {
+        "value": "e81",
+        "description": "Cyclospora cayetanensis isolate NF1_C8"
+       },
+       {
+        "value": "e82",
+        "description": "Cryptococcus cf. gattii MF34"
+       },
+       {
+        "value": "e83",
+        "description": "Biomphalaria pfeifferi KasaAsao"
+       },
+       {
+        "value": "e84",
+        "description": "Botrytis cinerea B05.10"
+       },
+       {
+        "value": "e85",
+        "description": "Branchiostoma floridae"
+       },
+       {
+        "value": "e86",
+        "description": "Anopheles funestus FUMOZ"
+       },
+       {
+        "value": "e87",
+        "description": "Aspergillus fumigatus Af293"
+       },
+       {
+        "value": "e88",
+        "description": "Archaeoglobus fulgidus DSM 4304"
+       },
+       {
+        "value": "e89",
+        "description": "Aspergillus fumigatus A1163"
+       },
+       {
+        "value": "e90",
+        "description": "Aspergillus fumigatus A1160"
+       },
+       {
+        "value": "e91",
+        "description": "Aspergillus flavus NRRL3357 2020"
+       },
+       {
+        "value": "e92",
+        "description": "Aspergillus flavus NRRL3357"
+       },
+       {
+        "value": "e93",
+        "description": "Aspergillus fischeri NRRL 181"
+       },
+       {
+        "value": "e94",
+        "description": "Aspergillus fijiensis CBS 313.89"
+       },
+       {
+        "value": "e95",
+        "description": "Anopheles funestus AfunGA1"
+       },
+       {
+        "value": "e96",
+        "description": "Arthrobotrys flagrans CBS H-5679"
+       },
+       {
+        "value": "e97",
+        "description": "Anopheles farauti FAR1"
+       },
+       {
+        "value": "e98",
+        "description": "Aedes albopictus Foshan"
+       },
+       {
+        "value": "e99",
+        "description": "Aedes albopictus Foshan FPA2023"
+       },
+       {
+        "value": "e100",
+        "description": "Rhodophyta"
+       },
+       {
+        "value": "e101",
+        "description": "Proteobacteria"
+       },
+       {
+        "value": "e102",
+        "description": "gamma-Proteobacteria"
+       },
+       {
+        "value": "e103",
+        "description": "epsilon-Proteobacteria"
+       },
+       {
+        "value": "e104",
+        "description": "beta-Proteobacteria"
+       },
+       {
+        "value": "e105",
+        "description": "alpha-Proteobacteria"
+       },
+       {
+        "value": "e106",
+        "description": "Piroplasmida"
+       },
+       {
+        "value": "e107",
+        "description": "Cryptophyta"
+       },
+       {
+        "value": "e108",
+        "description": "Apicomplexa"
+       },
+       {
+        "value": "e109",
+        "description": "Puccinia striiformis 93TX-2"
+       },
+       {
+        "value": "e110",
+        "description": "Anopheles culicifacies A-37"
+       },
+       {
+        "value": "e111",
+        "description": "Picrophilus oshimae DSM 9789"
+       },
+       {
+        "value": "e112",
+        "description": "Podosphaera aphanis DRCT72020"
+       },
+       {
+        "value": "e113",
+        "description": "Paratrypanosoma confusum CUL13"
+       },
+       {
+        "value": "e114",
+        "description": "Lomentospora prolificans JHH-5317"
+       },
+       {
+        "value": "e115",
+        "description": "Puccinia striiformis strain 93-210"
+       },
+       {
+        "value": "e116",
+        "description": "Plenodomus lingam JN3"
+       },
+       {
+        "value": "e117",
+        "description": "Pediculus humanus USDA"
+       },
+       {
+        "value": "e118",
+        "description": "Pyricularia oryzae BR32"
+       },
+       {
+        "value": "e119",
+        "description": "Chromera velia CCMP2878"
+       },
+       {
+        "value": "e120",
+        "description": "Pyricularia oryzae 70-15"
+       },
+       {
+        "value": "e121",
+        "description": "Porospora cf. gigantea B"
+       },
+       {
+        "value": "e122",
+        "description": "Porospora cf. gigantea A"
+       },
+       {
+        "value": "e123",
+        "description": "Pneumocystis murina B123"
+       },
+       {
+        "value": "e124",
+        "description": "Anncaliia algerae PRA339"
+       },
+       {
+        "value": "e125",
+        "description": "Canis lupus familiaris isolate SID07034"
+       },
+       {
+        "value": "e126",
+        "description": "Plasmodium reichenowi CDC"
+       },
+       {
+        "value": "e127",
+        "description": "Guillardia theta CCMP2712"
+       },
+       {
+        "value": "e128",
+        "description": "Candida metapsilosis BP57"
+       },
+       {
+        "value": "e129",
+        "description": "Pneumocystis jirovecii RU7"
+       },
+       {
+        "value": "e130",
+        "description": "Phytophthora ramorum 14567"
+       },
+       {
+        "value": "e131",
+        "description": "Blechomonas ayalai B08-376"
+       },
+       {
+        "value": "e132",
+        "description": "Thermodesulfovibrio yellowstonii DSM 11347"
+       },
+       {
+        "value": "e133",
+        "description": "Zymoseptoria tritici IPO323"
+       },
+       {
+        "value": "e134",
+        "description": "Puccinia striiformis f. sp. tritici PST-130"
+       },
+       {
+        "value": "e135",
+        "description": "Phytophthora capsici LT1534"
+       },
+       {
+        "value": "e136",
+        "description": "Phytophthora cactorum 10300"
+       },
+       {
+        "value": "e137",
+        "description": "Mitosporidium daphniae UGP3"
+       },
+       {
+        "value": "e138",
+        "description": "Danio rerio"
+       },
+       {
+        "value": "e139",
+        "description": "Catenaria anguillulae PL171"
+       },
+       {
+        "value": "e140",
+        "description": "Candida parapsilosis CDC317"
+       },
+       {
+        "value": "e141",
+        "description": "Trypanosoma cruzi Dm28c 2017"
+       },
+       {
+        "value": "e142",
+        "description": "Pneumocystis wakefieldiae 2A"
+       },
+       {
+        "value": "e143",
+        "description": "Plasmodium yoelii yoelii 17X"
+       },
+       {
+        "value": "e144",
+        "description": "Plasmodium vinckei lentum DE"
+       },
+       {
+        "value": "e145",
+        "description": "Debaryomyces hansenii CBS767"
+       },
+       {
+        "value": "e146",
+        "description": "Plasmodium gaboni strain SY75"
+       },
+       {
+        "value": "e147",
+        "description": "Mycoplasmoides genitalium G37"
+       },
+       {
+        "value": "e148",
+        "description": "Culicoides sonorensis PIR-s-3"
+       },
+       {
+        "value": "e149",
+        "description": "Pyronema omphalodes CBS 100304"
+       },
+       {
+        "value": "e150",
+        "description": "Pyricularia pennisetigena Br36"
+       },
+       {
+        "value": "e151",
+        "description": "Plasmodium yoelii yoelii 17XNL"
+       },
+       {
+        "value": "e152",
+        "description": "Phytopythium vexans DAOM BR484"
+       },
+       {
+        "value": "e153",
+        "description": "Monocercomonoides exilis PA203"
+       },
+       {
+        "value": "e154",
+        "description": "Gloeobacter violaceus PCC 7421"
+       },
+       {
+        "value": "e155",
+        "description": "Dictyoglomus turgidum DSM 6724"
+       },
+       {
+        "value": "e156",
+        "description": "Aphanomyces astaci strain APO3"
+       },
+       {
+        "value": "e157",
+        "description": "Puccinia graminis f. sp. tritici CRL 75-36-700-3"
+       },
+       {
+        "value": "e158",
+        "description": "Zymoseptoria tritici ST99CH_3D1"
+       },
+       {
+        "value": "e159",
+        "description": "Wolinella succinogenes DSM 1740"
+       },
+       {
+        "value": "e160",
+        "description": "Saccharomycodes ludwigii UTAD17"
+       },
+       {
+        "value": "e161",
+        "description": "Pythium arrhenomanes ATCC 12531"
+       },
+       {
+        "value": "e162",
+        "description": "Phytophthora sojae strain P6497"
+       },
+       {
+        "value": "e163",
+        "description": "Leishmania major strain SD 75.1"
+       },
+       {
+        "value": "e164",
+        "description": "Haloquadratum walsbyi DSM 16790"
+       },
+       {
+        "value": "e165",
+        "description": "Cryptococcus tetragattii IND107"
+       },
+       {
+        "value": "e166",
+        "description": "Clostridium perfringens str. 13"
+       },
+       {
+        "value": "e167",
+        "description": "Allomyces macrogynus ATCC 38327"
+       },
+       {
+        "value": "e168",
+        "description": "Vitrella brassicaformis CCMP3155"
+       },
+       {
+        "value": "e169",
+        "description": "Phytophthora nicotianae INRA-310"
+       },
+       {
+        "value": "e170",
+        "description": "Phialophora attinorum CBS 131958"
+       },
+       {
+        "value": "e171",
+        "description": "Paecilomyces variotii CBS 101075"
+       },
+       {
+        "value": "e172",
+        "description": "Mycobacterium tuberculosis H37Rv"
+       },
+       {
+        "value": "e173",
+        "description": "Sulfolobus acidocaldarius DSM 639"
+       },
+       {
+        "value": "e174",
+        "description": "Pythium aphanidermatum DAOM BR444"
+       },
+       {
+        "value": "e175",
+        "description": "Puccinia sorghi strain RO10H11247"
+       },
+       {
+        "value": "e176",
+        "description": "Pichia kudriavzevii strain CBS573"
+       },
+       {
+        "value": "e177",
+        "description": "Phanerochaete chrysosporium RP-78"
+       },
+       {
+        "value": "e178",
+        "description": "Cryptococcus deneoformans B-3501A"
+       },
+       {
+        "value": "e179",
+        "description": "Apis mellifera"
+       },
+       {
+        "value": "e180",
+        "description": "Spizellomyces punctatus DAOM BR117"
+       },
+       {
+        "value": "e181",
+        "description": "Spironucleus salmonicida ATCC50377"
+       },
+       {
+        "value": "e182",
+        "description": "Puccinia triticina 1-1 BBBD Race 1"
+       },
+       {
+        "value": "e183",
+        "description": "Plasmodium vinckei brucechwatti DA"
+       },
+       {
+        "value": "e184",
+        "description": "Paracoccidioides brasiliensis Pb03"
+       },
+       {
+        "value": "e185",
+        "description": "Trypanosoma brucei gambiense DAL972"
+       },
+       {
+        "value": "e186",
+        "description": "Plasmodium yoelii yoelii 17XNL 2023"
+       },
+       {
+        "value": "e187",
+        "description": "Papilio machaon"
+       },
+       {
+        "value": "e188",
+        "description": "Pan troglodytes"
+       },
+       {
+        "value": "e189",
+        "description": "Plasmodium praefalciparum strain G01"
+       },
+       {
+        "value": "e190",
+        "description": "Verruconis gallopava strain CBS 43764"
+       },
+       {
+        "value": "e191",
+        "description": "Pseudogymnoascus destructans 20631-21"
+       },
+       {
+        "value": "e192",
+        "description": "Myotis lucifugus"
+       },
+       {
+        "value": "e193",
+        "description": "Cryptosporidium hominis isolate 30976"
+       },
+       {
+        "value": "e194",
+        "description": "Bradyrhizobium diazoefficiens USDA 110"
+       },
+       {
+        "value": "e195",
+        "description": "Takifugu rubripes"
+       },
+       {
+        "value": "e196",
+        "description": "Cryptosporidium ubiquitum isolate 39726"
+       },
+       {
+        "value": "e197",
+        "description": "Cryptosporidium andersoni isolate 30847"
+       },
+       {
+        "value": "e198",
+        "description": "Calditerrivibrio nitroreducens DSM 19672"
+       },
+       {
+        "value": "e199",
+        "description": "Synechocystis sp. PCC 6803 substr. Kazusa"
+       },
+       {
+        "value": "e200",
+        "description": "Pyrodictium occultum"
+       },
+       {
+        "value": "e201",
+        "description": "Plasmodium vivax PAM"
+       },
+       {
+        "value": "e202",
+        "description": "Plasmodium vivax P01"
+       },
+       {
+        "value": "e203",
+        "description": "Physcomitrium patens"
+       },
+       {
+        "value": "e204",
+        "description": "Mus musculus C57BL6J"
+       },
+       {
+        "value": "e205",
+        "description": "Leishmania sp. Namibia MPRO/NA/1975/252/LV425"
+       },
+       {
+        "value": "e206",
+        "description": "Ixodes pacificus REF"
+       },
+       {
+        "value": "e207",
+        "description": "Aquifex aeolicus VF5"
+       },
+       {
+        "value": "e208",
+        "description": "Wyeomyia smithii HCP4"
+       },
+       {
+        "value": "e209",
+        "description": "Rhodnius prolixus CDC"
+       },
+       {
+        "value": "e210",
+        "description": "Rhizophagus irregularis DAOM 181602=DAOM 197198"
+       },
+       {
+        "value": "e211",
+        "description": "Plasmodium vivax PvW1"
+       },
+       {
+        "value": "e212",
+        "description": "Plasmodium adleri G01"
+       },
+       {
+        "value": "e213",
+        "description": "Lucilia sericata MDLA"
+       },
+       {
+        "value": "e214",
+        "description": "Toxoplasma gondii VAND"
+       },
+       {
+        "value": "e215",
+        "description": "Plenodomus lingam CAN1"
+       },
+       {
+        "value": "e216",
+        "description": "Plasmodium vivax Sal-1"
+       },
+       {
+        "value": "e217",
+        "description": "Physeter macrocephalus"
+       },
+       {
+        "value": "e218",
+        "description": "Paramecium tetraurelia"
+       },
+       {
+        "value": "e219",
+        "description": "Lucilia cuprina Lc7/37"
+       },
+       {
+        "value": "e220",
+        "description": "Entamoeba nuttalli P19"
+       },
+       {
+        "value": "e221",
+        "description": "Entamoeba invadens IP1"
+       },
+       {
+        "value": "e222",
+        "description": "Eimeria media PL19_A22"
+       },
+       {
+        "value": "e223",
+        "description": "Diutina rugosa CBS 613"
+       },
+       {
+        "value": "e224",
+        "description": "Anopheles gambiae PEST"
+       },
+       {
+        "value": "e225",
+        "description": "Aedes aegypti LVP_AGWG"
+       },
+       {
+        "value": "e226",
+        "description": "Sarcocystis neurona SN3"
+       },
+       {
+        "value": "e227",
+        "description": "Raffaelea lauricola RL4"
+       },
+       {
+        "value": "e228",
+        "description": "Pythium insidiosum Pi-s"
+       },
+       {
+        "value": "e229",
+        "description": "Pneumocystis canis CanA"
+       },
+       {
+        "value": "e230",
+        "description": "Pleurotus ostreatus PC9"
+       },
+       {
+        "value": "e231",
+        "description": "Plasmodium berghei ANKA"
+       },
+       {
+        "value": "e232",
+        "description": "Phlebotomus papatasi M1"
+       },
+       {
+        "value": "e233",
+        "description": "Penicillium expansum d1"
+       },
+       {
+        "value": "e234",
+        "description": "Neurospora crassa OR74A"
+       },
+       {
+        "value": "e235",
+        "description": "Leishmania donovani HU3"
+       },
+       {
+        "value": "e236",
+        "description": "Haloferula sargassicola"
+       },
+       {
+        "value": "e237",
+        "description": "Entamoeba dispar SAW760"
+       },
+       {
+        "value": "e238",
+        "description": "Candida albicans SC5314"
+       },
+       {
+        "value": "e239",
+        "description": "Cryptosporidium sp. chipmunk genotype I strain 37763"
+       },
+       {
+        "value": "e240",
+        "description": "Uncinocarpus reesii 1704"
+       },
+       {
+        "value": "e241",
+        "description": "Trichomonas vaginalis G3"
+       },
+       {
+        "value": "e242",
+        "description": "Stomoxys calcitrans USDA"
+       },
+       {
+        "value": "e243",
+        "description": "Sabethes cyaneus ScyaPA1"
+       },
+       {
+        "value": "e244",
+        "description": "Pneumocystis carinii B80"
+       },
+       {
+        "value": "e245",
+        "description": "Pleurotus ostreatus PC15"
+       },
+       {
+        "value": "e246",
+        "description": "Plasmodium malariae UG01"
+       },
+       {
+        "value": "e247",
+        "description": "Nematocida parisii ERTm3"
+       },
+       {
+        "value": "e248",
+        "description": "Nematocida major JUm2507"
+       },
+       {
+        "value": "e249",
+        "description": "Coprinopsis cinerea #326"
+       },
+       {
+        "value": "e250",
+        "description": "Anopheles coluzzii MOPTI"
+       },
+       {
+        "value": "e251",
+        "description": "Anncaliia algerae PRA109"
+       },
+       {
+        "value": "e252",
+        "description": "Thermofilum pendens Hrk 5"
+       },
+       {
+        "value": "e253",
+        "description": "Podospora anserina S mat+"
+       },
+       {
+        "value": "none_fits",
+        "description": "The words name no one of these entries: they name a group, several entries without choosing one, or nothing listed; or each entry is obsolete, broader, narrower or about something else."
+       }
+      ]
+     }
+    ]
+   },
+   "response": {
+    "answers": [
+     {
+      "type": "choice",
+      "name": "value",
+      "choice": "e1",
+      "probabilities": [
+       {
+        "value": "e0",
+        "probability": 0.0
+       },
+       {
+        "value": "e1",
+        "probability": 0.99
+       },
+       {
+        "value": "e2",
+        "probability": 0.0
+       },
+       {
+        "value": "e3",
+        "probability": 0.0
+       },
+       {
+        "value": "e4",
+        "probability": 0.0
+       },
+       {
+        "value": "e5",
+        "probability": 0.0
+       },
+       {
+        "value": "e6",
+        "probability": 0.0
+       },
+       {
+        "value": "e7",
+        "probability": 0.0
+       },
+       {
+        "value": "e8",
+        "probability": 0.0
+       },
+       {
+        "value": "e9",
+        "probability": 0.0
+       },
+       {
+        "value": "e10",
+        "probability": 0.0
+       },
+       {
+        "value": "e11",
+        "probability": 0.0
+       },
+       {
+        "value": "e12",
+        "probability": 0.0
+       },
+       {
+        "value": "e13",
+        "probability": 0.0
+       },
+       {
+        "value": "e14",
+        "probability": 0.0
+       },
+       {
+        "value": "e15",
+        "probability": 0.0
+       },
+       {
+        "value": "e16",
+        "probability": 0.0
+       },
+       {
+        "value": "e17",
+        "probability": 0.0
+       },
+       {
+        "value": "e18",
+        "probability": 0.0
+       },
+       {
+        "value": "e19",
+        "probability": 0.0
+       },
+       {
+        "value": "e20",
+        "probability": 0.0
+       },
+       {
+        "value": "e21",
+        "probability": 0.0
+       },
+       {
+        "value": "e22",
+        "probability": 0.0
+       },
+       {
+        "value": "e23",
+        "probability": 0.0
+       },
+       {
+        "value": "e24",
+        "probability": 0.0
+       },
+       {
+        "value": "e25",
+        "probability": 0.0
+       },
+       {
+        "value": "e26",
+        "probability": 0.0
+       },
+       {
+        "value": "e27",
+        "probability": 0.0
+       },
+       {
+        "value": "e28",
+        "probability": 0.0
+       },
+       {
+        "value": "e29",
+        "probability": 0.0
+       },
+       {
+        "value": "e30",
+        "probability": 0.0
+       },
+       {
+        "value": "e31",
+        "probability": 0.0
+       },
+       {
+        "value": "e32",
+        "probability": 0.0
+       },
+       {
+        "value": "e33",
+        "probability": 0.0
+       },
+       {
+        "value": "e34",
+        "probability": 0.0
+       },
+       {
+        "value": "e35",
+        "probability": 0.0
+       },
+       {
+        "value": "e36",
+        "probability": 0.0
+       },
+       {
+        "value": "e37",
+        "probability": 0.0
+       },
+       {
+        "value": "e38",
+        "probability": 0.0
+       },
+       {
+        "value": "e39",
+        "probability": 0.0
+       },
+       {
+        "value": "e40",
+        "probability": 0.0
+       },
+       {
+        "value": "e41",
+        "probability": 0.0
+       },
+       {
+        "value": "e42",
+        "probability": 0.0
+       },
+       {
+        "value": "e43",
+        "probability": 0.0
+       },
+       {
+        "value": "e44",
+        "probability": 0.0
+       },
+       {
+        "value": "e45",
+        "probability": 0.0
+       },
+       {
+        "value": "e46",
+        "probability": 0.0
+       },
+       {
+        "value": "e47",
+        "probability": 0.0
+       },
+       {
+        "value": "e48",
+        "probability": 0.0
+       },
+       {
+        "value": "e49",
+        "probability": 0.0
+       },
+       {
+        "value": "e50",
+        "probability": 0.0
+       },
+       {
+        "value": "e51",
+        "probability": 0.0
+       },
+       {
+        "value": "e52",
+        "probability": 0.0
+       },
+       {
+        "value": "e53",
+        "probability": 0.0
+       },
+       {
+        "value": "e54",
+        "probability": 0.0
+       },
+       {
+        "value": "e55",
+        "probability": 0.0
+       },
+       {
+        "value": "e56",
+        "probability": 0.0
+       },
+       {
+        "value": "e57",
+        "probability": 0.0
+       },
+       {
+        "value": "e58",
+        "probability": 0.0
+       },
+       {
+        "value": "e59",
+        "probability": 0.0
+       },
+       {
+        "value": "e60",
+        "probability": 0.0
+       },
+       {
+        "value": "e61",
+        "probability": 0.0
+       },
+       {
+        "value": "e62",
+        "probability": 0.0
+       },
+       {
+        "value": "e63",
+        "probability": 0.0
+       },
+       {
+        "value": "e64",
+        "probability": 0.0
+       },
+       {
+        "value": "e65",
+        "probability": 0.0
+       },
+       {
+        "value": "e66",
+        "probability": 0.0
+       },
+       {
+        "value": "e67",
+        "probability": 0.0
+       },
+       {
+        "value": "e68",
+        "probability": 0.0
+       },
+       {
+        "value": "e69",
+        "probability": 0.0
+       },
+       {
+        "value": "e70",
+        "probability": 0.0
+       },
+       {
+        "value": "e71",
+        "probability": 0.0
+       },
+       {
+        "value": "e72",
+        "probability": 0.0
+       },
+       {
+        "value": "e73",
+        "probability": 0.0
+       },
+       {
+        "value": "e74",
+        "probability": 0.0
+       },
+       {
+        "value": "e75",
+        "probability": 0.0
+       },
+       {
+        "value": "e76",
+        "probability": 0.0
+       },
+       {
+        "value": "e77",
+        "probability": 0.0
+       },
+       {
+        "value": "e78",
+        "probability": 0.0
+       },
+       {
+        "value": "e79",
+        "probability": 0.0
+       },
+       {
+        "value": "e80",
+        "probability": 0.0
+       },
+       {
+        "value": "e81",
+        "probability": 0.0
+       },
+       {
+        "value": "e82",
+        "probability": 0.0
+       },
+       {
+        "value": "e83",
+        "probability": 0.0
+       },
+       {
+        "value": "e84",
+        "probability": 0.0
+       },
+       {
+        "value": "e85",
+        "probability": 0.0
+       },
+       {
+        "value": "e86",
+        "probability": 0.0
+       },
+       {
+        "value": "e87",
+        "probability": 0.0
+       },
+       {
+        "value": "e88",
+        "probability": 0.0
+       },
+       {
+        "value": "e89",
+        "probability": 0.0
+       },
+       {
+        "value": "e90",
+        "probability": 0.0
+       },
+       {
+        "value": "e91",
+        "probability": 0.0
+       },
+       {
+        "value": "e92",
+        "probability": 0.0
+       },
+       {
+        "value": "e93",
+        "probability": 0.0
+       },
+       {
+        "value": "e94",
+        "probability": 0.0
+       },
+       {
+        "value": "e95",
+        "probability": 0.0
+       },
+       {
+        "value": "e96",
+        "probability": 0.0
+       },
+       {
+        "value": "e97",
+        "probability": 0.0
+       },
+       {
+        "value": "e98",
+        "probability": 0.0
+       },
+       {
+        "value": "e99",
+        "probability": 0.0
+       },
+       {
+        "value": "e100",
+        "probability": 0.0
+       },
+       {
+        "value": "e101",
+        "probability": 0.0
+       },
+       {
+        "value": "e102",
+        "probability": 0.0
+       },
+       {
+        "value": "e103",
+        "probability": 0.0
+       },
+       {
+        "value": "e104",
+        "probability": 0.0
+       },
+       {
+        "value": "e105",
+        "probability": 0.0
+       },
+       {
+        "value": "e106",
+        "probability": 0.0
+       },
+       {
+        "value": "e107",
+        "probability": 0.0
+       },
+       {
+        "value": "e108",
+        "probability": 0.0
+       },
+       {
+        "value": "e109",
+        "probability": 0.0
+       },
+       {
+        "value": "e110",
+        "probability": 0.0
+       },
+       {
+        "value": "e111",
+        "probability": 0.0
+       },
+       {
+        "value": "e112",
+        "probability": 0.0
+       },
+       {
+        "value": "e113",
+        "probability": 0.0
+       },
+       {
+        "value": "e114",
+        "probability": 0.0
+       },
+       {
+        "value": "e115",
+        "probability": 0.0
+       },
+       {
+        "value": "e116",
+        "probability": 0.0
+       },
+       {
+        "value": "e117",
+        "probability": 0.0
+       },
+       {
+        "value": "e118",
+        "probability": 0.0
+       },
+       {
+        "value": "e119",
+        "probability": 0.0
+       },
+       {
+        "value": "e120",
+        "probability": 0.0
+       },
+       {
+        "value": "e121",
+        "probability": 0.0
+       },
+       {
+        "value": "e122",
+        "probability": 0.0
+       },
+       {
+        "value": "e123",
+        "probability": 0.0
+       },
+       {
+        "value": "e124",
+        "probability": 0.0
+       },
+       {
+        "value": "e125",
+        "probability": 0.0
+       },
+       {
+        "value": "e126",
+        "probability": 0.0
+       },
+       {
+        "value": "e127",
+        "probability": 0.0
+       },
+       {
+        "value": "e128",
+        "probability": 0.0
+       },
+       {
+        "value": "e129",
+        "probability": 0.0
+       },
+       {
+        "value": "e130",
+        "probability": 0.0
+       },
+       {
+        "value": "e131",
+        "probability": 0.0
+       },
+       {
+        "value": "e132",
+        "probability": 0.0
+       },
+       {
+        "value": "e133",
+        "probability": 0.0
+       },
+       {
+        "value": "e134",
+        "probability": 0.0
+       },
+       {
+        "value": "e135",
+        "probability": 0.0
+       },
+       {
+        "value": "e136",
+        "probability": 0.0
+       },
+       {
+        "value": "e137",
+        "probability": 0.0
+       },
+       {
+        "value": "e138",
+        "probability": 0.0
+       },
+       {
+        "value": "e139",
+        "probability": 0.0
+       },
+       {
+        "value": "e140",
+        "probability": 0.0
+       },
+       {
+        "value": "e141",
+        "probability": 0.0
+       },
+       {
+        "value": "e142",
+        "probability": 0.0
+       },
+       {
+        "value": "e143",
+        "probability": 0.0
+       },
+       {
+        "value": "e144",
+        "probability": 0.0
+       },
+       {
+        "value": "e145",
+        "probability": 0.0
+       },
+       {
+        "value": "e146",
+        "probability": 0.0
+       },
+       {
+        "value": "e147",
+        "probability": 0.0
+       },
+       {
+        "value": "e148",
+        "probability": 0.0
+       },
+       {
+        "value": "e149",
+        "probability": 0.0
+       },
+       {
+        "value": "e150",
+        "probability": 0.0
+       },
+       {
+        "value": "e151",
+        "probability": 0.0
+       },
+       {
+        "value": "e152",
+        "probability": 0.0
+       },
+       {
+        "value": "e153",
+        "probability": 0.0
+       },
+       {
+        "value": "e154",
+        "probability": 0.0
+       },
+       {
+        "value": "e155",
+        "probability": 0.0
+       },
+       {
+        "value": "e156",
+        "probability": 0.0
+       },
+       {
+        "value": "e157",
+        "probability": 0.0
+       },
+       {
+        "value": "e158",
+        "probability": 0.0
+       },
+       {
+        "value": "e159",
+        "probability": 0.0
+       },
+       {
+        "value": "e160",
+        "probability": 0.0
+       },
+       {
+        "value": "e161",
+        "probability": 0.0
+       },
+       {
+        "value": "e162",
+        "probability": 0.0
+       },
+       {
+        "value": "e163",
+        "probability": 0.0
+       },
+       {
+        "value": "e164",
+        "probability": 0.0
+       },
+       {
+        "value": "e165",
+        "probability": 0.0
+       },
+       {
+        "value": "e166",
+        "probability": 0.0
+       },
+       {
+        "value": "e167",
+        "probability": 0.0
+       },
+       {
+        "value": "e168",
+        "probability": 0.0
+       },
+       {
+        "value": "e169",
+        "probability": 0.0
+       },
+       {
+        "value": "e170",
+        "probability": 0.0
+       },
+       {
+        "value": "e171",
+        "probability": 0.0
+       },
+       {
+        "value": "e172",
+        "probability": 0.0
+       },
+       {
+        "value": "e173",
+        "probability": 0.0
+       },
+       {
+        "value": "e174",
+        "probability": 0.0
+       },
+       {
+        "value": "e175",
+        "probability": 0.0
+       },
+       {
+        "value": "e176",
+        "probability": 0.0
+       },
+       {
+        "value": "e177",
+        "probability": 0.0
+       },
+       {
+        "value": "e178",
+        "probability": 0.0
+       },
+       {
+        "value": "e179",
+        "probability": 0.0
+       },
+       {
+        "value": "e180",
+        "probability": 0.0
+       },
+       {
+        "value": "e181",
+        "probability": 0.0
+       },
+       {
+        "value": "e182",
+        "probability": 0.0
+       },
+       {
+        "value": "e183",
+        "probability": 0.0
+       },
+       {
+        "value": "e184",
+        "probability": 0.0
+       },
+       {
+        "value": "e185",
+        "probability": 0.0
+       },
+       {
+        "value": "e186",
+        "probability": 0.0
+       },
+       {
+        "value": "e187",
+        "probability": 0.0
+       },
+       {
+        "value": "e188",
+        "probability": 0.0
+       },
+       {
+        "value": "e189",
+        "probability": 0.0
+       },
+       {
+        "value": "e190",
+        "probability": 0.0
+       },
+       {
+        "value": "e191",
+        "probability": 0.0
+       },
+       {
+        "value": "e192",
+        "probability": 0.0
+       },
+       {
+        "value": "e193",
+        "probability": 0.0
+       },
+       {
+        "value": "e194",
+        "probability": 0.0
+       },
+       {
+        "value": "e195",
+        "probability": 0.0
+       },
+       {
+        "value": "e196",
+        "probability": 0.0
+       },
+       {
+        "value": "e197",
+        "probability": 0.0
+       },
+       {
+        "value": "e198",
+        "probability": 0.0
+       },
+       {
+        "value": "e199",
+        "probability": 0.0
+       },
+       {
+        "value": "e200",
+        "probability": 0.0
+       },
+       {
+        "value": "e201",
+        "probability": 0.0
+       },
+       {
+        "value": "e202",
+        "probability": 0.0
+       },
+       {
+        "value": "e203",
+        "probability": 0.0
+       },
+       {
+        "value": "e204",
+        "probability": 0.0
+       },
+       {
+        "value": "e205",
+        "probability": 0.0
+       },
+       {
+        "value": "e206",
+        "probability": 0.0
+       },
+       {
+        "value": "e207",
+        "probability": 0.0
+       },
+       {
+        "value": "e208",
+        "probability": 0.0
+       },
+       {
+        "value": "e209",
+        "probability": 0.0
+       },
+       {
+        "value": "e210",
+        "probability": 0.0
+       },
+       {
+        "value": "e211",
+        "probability": 0.0
+       },
+       {
+        "value": "e212",
+        "probability": 0.0
+       },
+       {
+        "value": "e213",
+        "probability": 0.0
+       },
+       {
+        "value": "e214",
+        "probability": 0.0
+       },
+       {
+        "value": "e215",
+        "probability": 0.0
+       },
+       {
+        "value": "e216",
+        "probability": 0.0
+       },
+       {
+        "value": "e217",
+        "probability": 0.0
+       },
+       {
+        "value": "e218",
+        "probability": 0.0
+       },
+       {
+        "value": "e219",
+        "probability": 0.0
+       },
+       {
+        "value": "e220",
+        "probability": 0.0
+       },
+       {
+        "value": "e221",
+        "probability": 0.0
+       },
+       {
+        "value": "e222",
+        "probability": 0.0
+       },
+       {
+        "value": "e223",
+        "probability": 0.0
+       },
+       {
+        "value": "e224",
+        "probability": 0.0
+       },
+       {
+        "value": "e225",
+        "probability": 0.0
+       },
+       {
+        "value": "e226",
+        "probability": 0.0
+       },
+       {
+        "value": "e227",
+        "probability": 0.0
+       },
+       {
+        "value": "e228",
+        "probability": 0.0
+       },
+       {
+        "value": "e229",
+        "probability": 0.0
+       },
+       {
+        "value": "e230",
+        "probability": 0.0
+       },
+       {
+        "value": "e231",
+        "probability": 0.0
+       },
+       {
+        "value": "e232",
+        "probability": 0.0
+       },
+       {
+        "value": "e233",
+        "probability": 0.0
+       },
+       {
+        "value": "e234",
+        "probability": 0.0
+       },
+       {
+        "value": "e235",
+        "probability": 0.0
+       },
+       {
+        "value": "e236",
+        "probability": 0.0
+       },
+       {
+        "value": "e237",
+        "probability": 0.0
+       },
+       {
+        "value": "e238",
+        "probability": 0.0
+       },
+       {
+        "value": "e239",
+        "probability": 0.0
+       },
+       {
+        "value": "e240",
+        "probability": 0.0
+       },
+       {
+        "value": "e241",
+        "probability": 0.0
+       },
+       {
+        "value": "e242",
+        "probability": 0.0
+       },
+       {
+        "value": "e243",
+        "probability": 0.0
+       },
+       {
+        "value": "e244",
+        "probability": 0.0
+       },
+       {
+        "value": "e245",
+        "probability": 0.0
+       },
+       {
+        "value": "e246",
+        "probability": 0.0
+       },
+       {
+        "value": "e247",
+        "probability": 0.0
+       },
+       {
+        "value": "e248",
+        "probability": 0.0
+       },
+       {
+        "value": "e249",
+        "probability": 0.0
+       },
+       {
+        "value": "e250",
+        "probability": 0.0
+       },
+       {
+        "value": "e251",
+        "probability": 0.0
+       },
+       {
+        "value": "e252",
+        "probability": 0.0
+       },
+       {
+        "value": "e253",
+        "probability": 0.0
+       },
+       {
+        "value": "none_fits",
+        "probability": 0.01
+       }
+      ],
+      "confidence": 0.99
+     }
+    ],
+    "usage": {
+     "input_tokens": 4165,
+     "cached_tokens": 0,
+     "cache_write_tokens": 0
+    }
+   }
+  }
+ ]
+}

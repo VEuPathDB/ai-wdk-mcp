@@ -1,5 +1,6 @@
 """Phyletic code lookup, and the binding the two species parameters derive."""
 
+import asyncio
 import re
 from collections.abc import Mapping, Sequence
 from typing import cast
@@ -41,6 +42,11 @@ from veupathdb_mcp.catalog.discovery_service import (
 from veupathdb_mcp.catalog.param_discovery import fetch_search_details
 from veupathdb_mcp.catalog.param_formatting import PHYLETIC_LISTS_FORM, ParameterInfo
 from veupathdb_mcp.catalog.taxonomy import ortho_taxonomy
+from veupathdb_mcp.catalog.vocab_resolve import (
+    NamedVocabulary,
+    ResolveContext,
+    ordered_entries,
+)
 from veupathdb_mcp.embeddings.embedder import (
     EmbeddingUnavailableError,
     get_embedder,
@@ -148,6 +154,41 @@ def _ranked_entries(tree: PhyleticTree, unknown: Sequence[str]) -> list[VocabOpt
         for match in rank_entries(options, term, SHOWN_CANDIDATES):
             found.setdefault(match.value, match)
     return list(found.values())[:SHOWN_CANDIDATES]
+
+
+async def ordered_phyletic_refusal(
+    refusal: PhyleticListError,
+    declarations: Sequence[WDKParameter],
+    about: ResolveContext,
+) -> PhyleticListError:
+    """The same refusal, its nearest entries led, for each term that named
+    nothing, by the entry a Decisions choice picks."""
+    tree = phyletic_tree_of(list(declarations))
+    match refusal.refused:
+        case PhyleticUnresolvedProposal(unresolved=unresolved) if tree is not None:
+            displays = {d.name: d.display_name or d.name for d in declarations}
+            labels = tree.labels()
+            asked = [
+                (NamedVocabulary(display=displays.get(name, name), options=labels), t)
+                for name, terms in (
+                    ("included_species", unresolved.included_unknown),
+                    ("excluded_species", unresolved.excluded_unknown),
+                )
+                for t in terms
+            ]
+            led = await asyncio.gather(
+                *(ordered_entries(about, vocabulary, t) for vocabulary, t in asked)
+            )
+            found: dict[str, VocabOption] = {}
+            for entries in led:
+                for entry in entries:
+                    found.setdefault(entry.value, entry)
+            nearest = list(found.values())[:SHOWN_CANDIDATES]
+            return PhyleticListError(
+                PhyleticUnresolvedProposal(unresolved=unresolved, nearest=nearest)
+            )
+        case _:
+            return refusal
 
 
 def derive_phyletic_overrides(

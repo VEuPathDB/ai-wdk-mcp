@@ -118,6 +118,7 @@ class TestTheErrorCarriesThePostRefreshVocabulary:
                     "taxon": SinglePickValue(value="TaxonB"),
                 },
                 callbacks=validation_callbacks(),
+                about=None,
             )
 
         assert excinfo.value.errors is not None
@@ -143,6 +144,7 @@ class TestNothingLooksAtTheValuesWhenNobodyJudgedThem:
             _CTX,
             stated={"organism": SinglePickValue(value="Pf3D7")},
             callbacks=validation_callbacks(),
+            about=None,
         )
 
         assert set(result.params) == {"organism"}
@@ -174,6 +176,7 @@ async def _validate_organism() -> param_validation.ValidatedParams:
         SearchContext("plasmodb", "transcript", "GenesByEcNumber"),
         stated={"organism": SinglePickValue(value="Pf3D7")},
         callbacks=validation_callbacks(),
+        about=None,
     )
 
 
@@ -275,6 +278,7 @@ class TestAHiddenParentIsFilledBeforeRefresh:
             SearchContext("plasmodb", "transcript", "GenesByMicroarray"),
             stated={"samples": MultiPickValue(values=["TaxonA"])},
             callbacks=validation_callbacks(),
+            about=None,
         )
 
     async def test_the_hidden_parent_triggers_a_refresh(

@@ -9,6 +9,7 @@ from veupathdb_mcp.catalog import (
     ChoiceQuestion,
     DecisionRequest,
     DecisionResponse,
+    ResolveContext,
     use_decisions_transport,
 )
 from veupathdb_mcp.gene_lookup import lookup
@@ -74,7 +75,7 @@ def site(monkeypatch: pytest.MonkeyPatch) -> _Site:
 async def test_an_organism_the_query_implies_never_removes_a_record(
     site: _Site,
 ) -> None:
-    result = await lookup_genes_by_text("plasmodb", _VIVAX, limit=20)
+    result = await lookup_genes_by_text("plasmodb", _VIVAX, limit=20, about=None)
 
     assert {r.gene_id for r in result.records} == {r.gene_id for r in _PAGE}
     assert result.implied_organism == _VIVAX
@@ -84,7 +85,11 @@ async def test_a_stated_organism_in_another_case_restricts_to_its_entry(
     site: _Site,
 ) -> None:
     result = await lookup_genes_by_text(
-        "plasmodb", "kinase", organism="plasmodium  falciparum 3d7", limit=20
+        "plasmodb",
+        "kinase",
+        organism="plasmodium  falciparum 3d7",
+        limit=20,
+        about=None,
     )
 
     assert {r.organism for r in result.records} == {_FALCIPARUM}
@@ -96,7 +101,9 @@ async def test_a_stated_organism_that_names_no_entry_is_refused_with_candidates(
     site: _Site,
 ) -> None:
     with pytest.raises(VocabularyEntryError) as refused:
-        await lookup_genes_by_text("plasmodb", "kinase", organism="Pf3D7", limit=20)
+        await lookup_genes_by_text(
+            "plasmodb", "kinase", organism="Pf3D7", limit=20, about=None
+        )
 
     [(param, resolution)] = refused.value.faults
     assert (param, resolution.phrase) == ("organism", "Pf3D7")
@@ -108,12 +115,14 @@ async def test_a_refused_organism_leads_with_the_entry_a_choice_picks(
     site: _Site,
 ) -> None:
     picked: list[str] = []
+    seen: list[DecisionRequest] = []
 
     async def picks_the_last(request: DecisionRequest) -> DecisionResponse:
         [question] = request.questions
         assert isinstance(question, ChoiceQuestion)
         last = question.choices[-2].value
         picked.append(question.choices[-2].description)
+        seen.append(request)
         return DecisionResponse.model_validate(
             {
                 "answers": [
@@ -130,8 +139,15 @@ async def test_a_refused_organism_leads_with_the_entry_a_choice_picks(
 
     use_decisions_transport(picks_the_last)
     with pytest.raises(VocabularyEntryError) as refused:
-        await lookup_genes_by_text("plasmodb", "kinase", organism="Pb", limit=20)
+        await lookup_genes_by_text(
+            "plasmodb",
+            "kinase",
+            organism="Pb",
+            limit=20,
+            about=ResolveContext(site_id="plasmodb", message="Pb kinases"),
+        )
 
+    assert "The researcher's message: Pb kinases" in seen[0].input
     [(_, resolution)] = refused.value.faults
     assert resolution.how == "unsettled"
     assert resolution.candidates[0].value == picked[0]

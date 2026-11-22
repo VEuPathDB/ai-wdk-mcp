@@ -27,9 +27,15 @@ from veupathdb_mcp.catalog import (
     ResolveContext,
     ordered_refusal,
     read_under_parents,
+    resolve_params_with_intent,
     use_decisions_transport,
 )
 from veupathdb_mcp.catalog.param_dag import ParamFetcher
+from veupathdb_mcp.catalog.param_intent import ParamIntent
+from veupathdb_mcp.catalog.param_phyletic import (
+    PhyleticListError,
+    PhyleticUnresolvedProposal,
+)
 
 FIXTURES = Path(__file__).parent / "fixtures"
 _HAGAI = "search_genes_by_metabolic_pathway_hagai"
@@ -202,3 +208,43 @@ async def test_none_fits_keeps_the_ranking_of_the_interpro_refusal() -> None:
         "IPR051681",
         "IPR030616",
     ]
+
+
+_ORTHOLOGS = "search_genes_by_ortholog_pattern"
+
+
+@pytest.mark.skipif(
+    needs_qa_recording(f"wdk/{_ORTHOLOGS}.json"), reason=NEEDS_QA_RECORDING
+)
+class TestAPhyleticRefusal:
+    async def _nearest(self, about: ResolveContext | None) -> list[str]:
+        with pytest.raises(PhyleticListError) as refused:
+            await resolve_params_with_intent(
+                fetch_at=_serving(_ORTHOLOGS),
+                filter_reads=FilterReadsDouble(),
+                intent=ParamIntent(),
+                search_name="GenesByOrthologPattern",
+                stated={"included_species": "Pf3D7"},
+                about=about,
+            )
+        match refused.value.refused:
+            case PhyleticUnresolvedProposal(nearest=nearest):
+                return [entry.display for entry in nearest]
+            case other:
+                raise AssertionError(other)
+
+    async def test_the_picked_species_leads_the_nearest_entries(self) -> None:
+        replay = _replaying("decisions_orthomcl_phyletic_pf3d7_order.json")
+
+        nearest = await self._nearest(ResolveContext(site_id="orthomcl"))
+
+        assert replay.sent == [replay.request]
+        assert nearest[0] == "Plasmodium falciparum 3D7"
+        assert len(nearest) == SHOWN_CANDIDATES
+
+    async def test_with_no_reader_the_ranking_stands(self) -> None:
+        _replaying("decisions_orthomcl_phyletic_pf3d7_order.json")
+
+        nearest = await self._nearest(None)
+
+        assert nearest[0] == "delta-Proteobacteria"

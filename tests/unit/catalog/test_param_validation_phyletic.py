@@ -121,6 +121,7 @@ async def _validate(pattern: str) -> param_validation.ValidatedParams:
             "organism": MultiPickValue(values=[PHYLETIC_STRAIN]),
         },
         callbacks=validation_callbacks(),
+        about=None,
     )
 
 
@@ -251,6 +252,7 @@ class TestOnlyAPhyleticSearchIsJudged:
                 "organism": MultiPickValue(values=[PHYLETIC_STRAIN]),
             },
             callbacks=validation_callbacks(),
+            about=None,
         )
 
         assert result.params["profile_pattern"] == StringValue(value=_PROSE)
@@ -279,6 +281,7 @@ class TestAStatedPatternIsCanonical:
                 "organism": MultiPickValue(values=[PHYLETIC_STRAIN]),
             },
             callbacks=validation_callbacks(),
+            about=None,
         )
 
         assert validated.params["profile_pattern"] == held
@@ -296,6 +299,7 @@ class TestAReadPatternIsNeverJudged:
             stated={"organism": MultiPickValue(values=[PHYLETIC_STRAIN])},
             context=read,
             callbacks=validation_callbacks(),
+            about=None,
         )
 
         assert "profile_pattern" not in validated.params

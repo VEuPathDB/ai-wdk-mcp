@@ -27,10 +27,19 @@ carries no picked entry.
 
 Every async read that can refuse a term passes the `VocabularyEntryError` through
 `ordered_refusal` / `ordered_by_vocabulary` (`catalog/vocab_resolve.py`): the two walks
-in `catalog/param_dag.py` (`read_under_parents` and `resolve_params_with_intent`, each
-taking `about: ResolveContext`, the site and the researcher's message when there is one),
-the canonicalizer calls of `validate_parameters` and `validate_search_params`, and the
-gene lookup's stated organism. The naming step itself is the client's synchronous stated
+in `catalog/param_dag.py` (`read_under_parents` and `resolve_params_with_intent`), the
+canonicalizer calls of `validate_parameters` and `validate_search_params`, and the gene
+lookup's stated organism (`lookup_genes_by_text`). Each takes a required keyword
+`about: ResolveContext | None`: the site and the researcher's message, which a served
+tool states as `""`, or None for a caller that shows the refusal to no one, which sends no
+choice. The phyletic refusal (`PhyleticListError` for a species list term that names no
+node) is ordered the same way over the clade labels (`ordered_phyletic_refusal`), each
+unknown term asking its own choice under the list's display name.
+
+A radio pair's `nearest` (`check_radio_pairs`) is not ordered. It is not a refusal of a
+term the vocabulary was asked to name: the free text is a valid wildcard criterion, and
+the issue says that both halves are stated, offering the vocabulary entries as the other
+reading beside it. The naming step itself is the client's synchronous stated
 reader, so the ordering wraps the readers rather than living in `_bound`.
 For each fault it asks one Decisions Choice (`resolve_request`: the site, the parameter's
 display name, the words, the message) over the first 254 entries `rank_entries` ranks,
@@ -40,8 +49,8 @@ whatever its confidence, and no floor or fit predicate is read. With no answer (
 timeout, a mock deployment, a parse failure), `none_fits` or a choice that names no
 offered entry, the fault keeps the ranking. The call runs through `decide`, on whatever
 transport the host installs (the turn's keyed provider) and the Decisions timeout.
-`resolve_params_with_intent` takes `about=None` from the separation enumerator, which
-skips a candidate a refusal names and shows the refusal to no one. The web editor's
+The separation enumerator passes `about=None` to `resolve_params_with_intent`: it skips a
+candidate a refusal names and shows the refusal to no one. The web editor's
 context read (`param_resolution`) drops a value it cannot name and refuses nothing.
 
 # The gene lookup's organism

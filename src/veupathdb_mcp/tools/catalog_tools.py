@@ -395,6 +395,7 @@ async def validate_search_parameters(
                 record_type=record_type,
             ),
             callbacks=make_validation_callbacks(site_id),
+            about=ResolveContext(site_id=site_id, message=""),
         )
     except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc
@@ -494,7 +495,7 @@ async def resolve_search_parameters(
             intent=ParamIntent(text=criterion),
             search_name=search_name,
             stated=overrides or {},
-            about=ResolveContext(site_id=site_id),
+            about=ResolveContext(site_id=site_id, message=""),
         )
     except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc

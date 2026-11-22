@@ -647,8 +647,10 @@ async def test_a_validation_call_answers_from_the_validation_service(
         *,
         stated: dict[str, ParamValue],
         callbacks: object,
+        about: ResolveContext | None,
     ) -> ValidatedParams:
         del callbacks
+        assert about == ResolveContext(site_id=SITE, message="")
         assert ctx.site_id == SITE
         assert ctx.search_name == "GenesByText"
         seen.append(stated)
@@ -692,8 +694,9 @@ async def test_a_validation_refusal_is_a_tool_error_that_names_its_cause(
         *,
         stated: dict[str, ParamValue],
         callbacks: object,
+        about: ResolveContext | None,
     ) -> ValidatedParams:
-        del ctx, stated, callbacks
+        del ctx, stated, callbacks, about
         raise ValidationError(title="Invalid", detail="organism is required")
 
     monkeypatch.setattr(catalog_tools, "validate_parameters", refuse)
@@ -1099,7 +1102,7 @@ async def test_a_binding_call_answers_from_the_parameter_walk(
         about: ResolveContext | None,
     ) -> ResolvedParams:
         del fetch_at, filter_reads
-        assert about == ResolveContext(site_id=SITE)
+        assert about == ResolveContext(site_id=SITE, message="")
         seen.append((search_name, intent.text, stated))
         return ResolvedParams(params={"organism": StringValue(value="P. falciparum")})
 

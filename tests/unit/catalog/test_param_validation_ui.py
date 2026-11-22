@@ -25,6 +25,7 @@ from veupathdb.wdk import WDKEnumParam, WDKParameter, WDKSearchResponse, WDKStri
 from veupathdb_mcp.catalog import (
     DecisionRequest,
     DecisionResponse,
+    ResolveContext,
     param_validation,
     use_decisions_transport,
 )
@@ -101,6 +102,7 @@ async def _validate(
             if values is None
             else values
         ),
+        about=None,
     )
 
 
@@ -280,8 +282,33 @@ class TestARefusedTermIsOrderedByTheChoice:
             return None
 
         use_decisions_transport(send)
-        result = await _validate({"organism": MultiPickValue(values=["Pf3D7"])})
+        result = await param_validation.validate_search_params(
+            _CTX,
+            context_values={"organism": MultiPickValue(values=["Pf3D7"])},
+            about=ResolveContext(site_id="plasmodb", message="Pf3D7 genes up in sex"),
+        )
 
         assert result.validation.is_valid is False
         [request] = asked
         assert 'The researcher\'s words: "Pf3D7"' in request.input
+        assert "The researcher's message: Pf3D7 genes up in sex" in request.input
+
+    async def test_no_reader_sends_no_choice(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _serve(monkeypatch, _response())
+        asked: list[DecisionRequest] = []
+
+        async def send(request: DecisionRequest) -> DecisionResponse | None:
+            asked.append(request)
+            return None
+
+        use_decisions_transport(send)
+        result = await param_validation.validate_search_params(
+            _CTX,
+            context_values={"organism": MultiPickValue(values=["Pf3D7"])},
+            about=None,
+        )
+
+        assert result.validation.is_valid is False
+        assert asked == []

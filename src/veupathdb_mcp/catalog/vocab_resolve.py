@@ -94,24 +94,31 @@ def _picked(choice: str, ranked: Sequence[VocabOption]) -> VocabOption | None:
     return ranked[int(index)]
 
 
-async def _ordered(
-    about: ResolveContext, vocabulary: NamedVocabulary, resolution: Resolution
-) -> Resolution:
-    ranked = rank_entries(vocabulary.options, resolution.phrase, DECIDED_CANDIDATES)
+async def ordered_entries(
+    about: ResolveContext, vocabulary: NamedVocabulary, phrase: str
+) -> list[VocabOption]:
+    """The first entries ``rank_entries`` ranks for the phrase, led by the entry a
+    Decisions choice picks among them when it picks one."""
+    ranked = rank_entries(vocabulary.options, phrase, DECIDED_CANDIDATES)
     if not ranked:
-        return resolution
-    request = resolve_request(about, vocabulary.display, resolution.phrase, ranked)
+        return []
+    request = resolve_request(about, vocabulary.display, phrase, ranked)
     response = await decide(request, purpose="vocabulary order")
     answer = None if response is None else response.choice(_ENTRY)
     pick = None if answer is None else _picked(answer.choice, ranked)
     if pick is None:
-        return resolution
+        return ranked[:SHOWN_CANDIDATES]
     shown = [pick, *(c for c in ranked if c.value != pick.value)]
-    return Resolution(
-        phrase=resolution.phrase,
-        how="unsettled",
-        candidates=shown[:SHOWN_CANDIDATES],
-    )
+    return shown[:SHOWN_CANDIDATES]
+
+
+async def _ordered(
+    about: ResolveContext, vocabulary: NamedVocabulary, resolution: Resolution
+) -> Resolution:
+    shown = await ordered_entries(about, vocabulary, resolution.phrase)
+    if not shown:
+        return resolution
+    return Resolution(phrase=resolution.phrase, how="unsettled", candidates=shown)
 
 
 async def ordered_by_vocabulary(

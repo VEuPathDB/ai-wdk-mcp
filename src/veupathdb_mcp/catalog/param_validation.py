@@ -221,6 +221,7 @@ async def validate_search_params(
     ctx: SearchContext,
     *,
     context_values: dict[str, ParamValue] | None,
+    about: ResolveContext | None,
 ) -> ValidationResponse:
     """Validate and canonicalize search parameters for the UI.
 
@@ -251,7 +252,7 @@ async def validate_search_params(
             ParameterCanonicalizer(spec_map),
             _filter_context_values(raw_context, allowed),
             response.search_data.parameters or [],
-            ctx.site_id,
+            about,
         )
     except ValidationError as exc:
         return ValidationResponse(
@@ -355,13 +356,15 @@ async def _canonical(
     canonicalizer: ParameterCanonicalizer,
     values: dict[str, ParamValue],
     declarations: Sequence[WDKParameter],
-    site_id: str,
+    about: ResolveContext | None,
 ) -> dict[str, ParamValue]:
-    """The canonical values, or a vocabulary refusal with its candidates ordered."""
+    """The canonical values, or a vocabulary refusal with its candidates ordered
+    under ``about``. None leaves the ranking."""
     try:
         return canonicalizer.canonicalize(values)
     except VocabularyEntryError as refusal:
-        about = ResolveContext(site_id=site_id)
+        if about is None:
+            raise
         raise await ordered_refusal(refusal, declarations, about) from refusal
 
 
@@ -372,6 +375,7 @@ async def validate_parameters(
     context: Mapping[str, ParamValue] = NOTHING_HELD,
     held_validation: StepValidation | None = None,
     callbacks: ValidationCallbacks,
+    about: ResolveContext | None,
 ) -> ValidatedParams:
     """The stated values in the catalog's form, judged under the values the step
     already holds. Only a stated value is canonicalized or refused; a context
@@ -410,7 +414,7 @@ async def validate_parameters(
         ParameterCanonicalizer(param_spec_map),
         stated,
         response.search_data.parameters or [],
-        ctx.site_id,
+        about,
     )
 
     # A tree param counts only its leaves, so a branch selection scores zero
@@ -450,7 +454,7 @@ async def validate_parameters(
         ParameterCanonicalizer(param_spec_map),
         stated,
         response.search_data.parameters or [],
-        ctx.site_id,
+        about,
     )
     filled = fill_site_set_defaults(param_spec_map, {**held, **caller_canonical})
     echoed = {

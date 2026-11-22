@@ -117,9 +117,13 @@ def validated(monkeypatch: pytest.MonkeyPatch) -> list[dict[str, str]]:
     seen: list[dict[str, str]] = []
 
     async def validate(
-        ctx: object, *, stated: dict[str, ParamValue], callbacks: object
+        ctx: object,
+        *,
+        stated: dict[str, ParamValue],
+        callbacks: object,
+        about: object,
     ) -> ValidatedParams:
-        del ctx, callbacks
+        del ctx, callbacks, about
         seen.append({name: value.to_wire() for name, value in stated.items()})
         return ValidatedParams(params={}, record_class="transcript")
 

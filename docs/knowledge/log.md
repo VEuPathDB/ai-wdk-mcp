@@ -27,9 +27,11 @@
 - A vocabulary refusal leads its five shown candidates with the entry one Decisions
   Choice picks among the 254 ranked (`ordered_refusal`, `ordered_by_vocabulary`,
   `resolve_request`, `ResolveContext`); the pick never binds, and with no pick the ranking
-  stands. `read_under_parents` and `resolve_params_with_intent` take
-  `about: ResolveContext` (None for a caller that shows the refusal to no one), and
-  `read_stated_parameters` takes `message`. Held-out A/B: 95.6% against refuse's 86.0%.
+  stands. `read_under_parents`, `resolve_params_with_intent`, `validate_parameters`,
+  `validate_search_params` and `lookup_genes_by_text` take a required
+  `about: ResolveContext | None` (None for a caller that shows the refusal to no one,
+  which sends no choice), and `read_stated_parameters` takes `message`. The phyletic
+  refusal is ordered over the clade labels (`ordered_phyletic_refusal`). Held-out A/B: 95.6% against refuse's 86.0%.
 - A separation candidate whose stated term names no entry is skipped, as one whose value
   its kind cannot read is.
 - Every value the catalog shows a model is its stated form, which the stated reader reads
