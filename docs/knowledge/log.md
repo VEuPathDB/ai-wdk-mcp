@@ -8,7 +8,8 @@
   phyletic list is derived only from lists that read. A held child refused under a moved
   parent is noted too.
 - The rows are ordered by the position of their parameter in the call, then by the order they
-  were found (`vocab_resolve.gathered`). `UnknownParameterError` and `UnreadStatementError`
+  were found (`vocab_resolve.gathered`). A derived row (`profile_pattern`) follows its last
+  stated species list; a row with no stated source comes last. `UnknownParameterError` and `UnreadStatementError`
   rows hold one `detail` per name.
 - `vocab_resolve.ordered` gives one result whatever `about` is: the refusal as it is when no
   row is an entry row, a `VocabularyEntryError` when every row is, else a `ValidationError`

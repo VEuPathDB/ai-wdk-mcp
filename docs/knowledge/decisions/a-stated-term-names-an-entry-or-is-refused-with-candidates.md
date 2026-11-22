@@ -42,7 +42,9 @@ parameter, a site-set name, a site-set parameter with no value, a value that doe
 a phyletic list that derives no pattern and a filter that selects nothing are each noted, the
 walk skips only the parameters under a refused one, and it raises one refusal at the end. Its
 rows are in call order, by the position of their parameter in the call, then in the order
-they were found; a row of a parameter the call does not name comes last. Every row holds
+they were found. A row of a parameter derived from stated ones (`profile_pattern` from the
+species lists) follows the rows of its last stated source; a row with no stated source (an
+unset site parameter) comes last. Every row holds
 `param` and a one-line `detail`.
 
 The refusal's class depends on its rows only, never on `about`: a refusal with no entry row

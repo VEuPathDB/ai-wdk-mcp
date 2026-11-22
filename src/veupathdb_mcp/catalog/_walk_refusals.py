@@ -28,16 +28,20 @@ class Refusals:
     problems: list[ValidationError] = field(default_factory=list)
     names: set[str] = field(default_factory=set)
     declared: dict[str, WDKParameter] = field(default_factory=dict)
+    sources: dict[str, tuple[str, ...]] = field(default_factory=dict)
 
     def note(
         self,
         refusal: ValidationError,
         names: set[str],
         declarations: Sequence[WDKParameter] = (),
+        *,
+        derived_from: tuple[str, ...] = (),
     ) -> None:
         self.problems.append(refusal)
         self.names |= names
         self.declared |= {d.name: d for d in declarations if d.name in names}
+        self.sources |= dict.fromkeys(names, derived_from) if derived_from else {}
 
     def note_miss(self, miss: ValidationError) -> None:
         self.problems.append(miss)
@@ -54,7 +58,9 @@ class Refusals:
         if not self.problems:
             return None
         return await ordered(
-            gathered(self.problems, order), list(self.declared.values()), about
+            gathered(self.problems, order, self.sources),
+            list(self.declared.values()),
+            about,
         )
 
     async def raise_once(

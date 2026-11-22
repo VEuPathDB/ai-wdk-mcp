@@ -168,7 +168,11 @@ async def _derived_phyletic(
             refusal = PhyleticListError(unresolved)
     if about is not None:
         refusal = await ordered_phyletic_refusal(refusal, declarations, about)
-    refused.note(refusal, refused_names(refusal))
+    refused.note(
+        refusal,
+        refused_names(refusal),
+        derived_from=tuple(sorted(PHYLETIC_LIST_PARAMS)),
+    )
     return overrides
 
 

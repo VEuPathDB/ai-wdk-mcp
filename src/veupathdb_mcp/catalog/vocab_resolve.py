@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Callable, Mapping, Sequence
+from types import MappingProxyType
 from typing import NoReturn
 
 from pydantic import (
@@ -239,15 +240,25 @@ def _from_rows(title: str, rows: JSONArray) -> ValidationError:
 
 
 def gathered(
-    refusals: Sequence[ValidationError], order: Sequence[str]
+    refusals: Sequence[ValidationError],
+    order: Sequence[str],
+    sources: Mapping[str, Sequence[str]] = MappingProxyType({}),
 ) -> ValidationError:
     position = {name: index for index, name in enumerate(order)}
+
+    def place(name: str | None) -> tuple[int, int]:
+        if name in position:
+            return position[name], 0
+        stated = [
+            position[source]
+            for source in sources.get(name or "", ())
+            if source in position
+        ]
+        return (max(stated), 1) if stated else (len(position), 0)
+
     rows: JSONArray = [row for refusal in refusals for row in refusal.errors or []]
     parsed = _ROWS.validate_python(rows)
-    ranked = sorted(
-        range(len(rows)),
-        key=lambda index: position.get(parsed[index].param or "", len(position)),
-    )
+    ranked = sorted(range(len(rows)), key=lambda index: place(parsed[index].param))
     in_order = [rows[index] for index in ranked]
     if len(refusals) == 1 and in_order == rows:
         return refusals[0]

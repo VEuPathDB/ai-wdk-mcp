@@ -84,6 +84,16 @@ async def test_a_phyletic_refusal_and_an_organism_fault_are_one_refusal() -> Non
     assert [row.param for row in _rows(refusal)] == ["organism", "profile_pattern"]
 
 
+async def test_a_derived_row_follows_the_list_it_is_derived_from() -> None:
+    refusal = await _walked(
+        _orthologs(),
+        {"included_species": "no such species", "organism": ["Pf3D8"]},
+        search_name="GenesByOrthologPattern",
+    )
+
+    assert [row.param for row in _rows(refusal)] == ["profile_pattern", "organism"]
+
+
 async def test_an_unknown_name_and_an_unnamed_entry_are_one_read_refusal() -> None:
     refusal = await _read(
         {"organismSinglePick": _PF, "no_such": "x", "snp_class": "non-synonymous"}
