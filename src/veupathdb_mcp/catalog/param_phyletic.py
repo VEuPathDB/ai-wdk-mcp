@@ -206,13 +206,32 @@ def _value(entry: VocabOption) -> str:
     return entry.value
 
 
-async def ordered_phyletic_refusal(
+async def phyletic_refusal(
+    refused: PhyleticUnresolvedProposal | PhyleticNoSelection | None,
+    declarations: Sequence[WDKParameter],
+    site_id: str,
+    about: ResolveContext | None,
+) -> PhyleticListError:
+    """The refusal of a derivation that binds no pattern, its nearest entries
+    led by a Decisions choice when ``about`` is given."""
+    match refused:
+        case None:
+            elsewhere = not await serves_ortho_taxonomy(site_id)
+            refusal = PhyleticListError(
+                PhyleticTreeUnread(orthomcl_elsewhere=elsewhere)
+            )
+        case _:
+            refusal = PhyleticListError(refused)
+    if about is None:
+        return refusal
+    return await _ordered(refusal, declarations, about)
+
+
+async def _ordered(
     refusal: PhyleticListError,
     declarations: Sequence[WDKParameter],
     about: ResolveContext,
 ) -> PhyleticListError:
-    """The same refusal, its nearest entries led, for each term that named
-    nothing, by the entry a Decisions choice picks."""
     tree = phyletic_tree_of(list(declarations))
     match refusal.refused:
         case PhyleticUnresolvedProposal() as proposal if tree is not None:

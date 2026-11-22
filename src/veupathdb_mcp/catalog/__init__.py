@@ -106,7 +106,7 @@ from veupathdb_mcp.catalog.param_phyletic import (
     derive_phyletic_overrides,
     genome_names,
     is_phyletic_sheet,
-    ordered_phyletic_refusal,
+    phyletic_refusal,
 )
 from veupathdb_mcp.catalog.param_resolution import SearchParametersResult
 from veupathdb_mcp.catalog.param_sheet import SheetEntry, build_sheet
@@ -370,12 +370,12 @@ __all__ = [
     "make_record_type_resolver",
     "make_validation_callbacks",
     "ordered_by_vocabulary",
-    "ordered_phyletic_refusal",
     "ordered_refusal",
     "ordered_terms",
     "organism_parameter",
     "organism_parameter_of",
     "ortho_taxonomy",
+    "phyletic_refusal",
     "phyletic_tree_for_search",
     "post_decision",
     "radio_pairs",

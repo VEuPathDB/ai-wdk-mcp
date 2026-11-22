@@ -60,7 +60,7 @@ rows, not classes. One
 refusal asks a choice for at most its first `SHOWN_CANDIDATES` (5) terms, all at once
 (`ordered_terms`, the one function every path goes through); every later term keeps the
 ranking. The phyletic refusal (`PhyleticListError` for a species list term that names no
-node) is ordered the same way over the clade labels (`ordered_phyletic_refusal`), each
+node) is ordered the same way over the clade labels (`phyletic_refusal`), each
 unknown term asking its own choice under the list's display name.
 
 A radio pair's `nearest` (`check_radio_pairs`) is not ordered. It is not a refusal of a

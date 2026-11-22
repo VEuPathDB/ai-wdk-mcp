@@ -75,18 +75,15 @@ from veupathdb_mcp.catalog.param_intent import (
     contrast_role,
 )
 from veupathdb_mcp.catalog.param_phyletic import (
-    PhyleticListError,
     PhyleticNoSelection,
-    PhyleticTreeUnread,
     derive_phyletic_overrides,
     is_phyletic_sheet,
-    ordered_phyletic_refusal,
+    phyletic_refusal,
 )
 from veupathdb_mcp.catalog.search_context import (
     get_search_params_under_context,
 )
 from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
-from veupathdb_mcp.catalog.taxonomy import serves_ortho_taxonomy
 from veupathdb_mcp.catalog.vocab_resolve import (
     NamedVocabulary,
     ResolveContext,
@@ -170,16 +167,10 @@ async def _derived_phyletic(
     match derived:
         case PhyleticBinding() as binding:
             return {**overrides, **read_declared(declarations, binding.model_dump())}
-        case None:
-            refusal = PhyleticListError(
-                PhyleticTreeUnread(
-                    orthomcl_elsewhere=not await serves_ortho_taxonomy(site_id)
-                )
-            )
         case refused_lists:
-            refusal = PhyleticListError(refused_lists)
-    if about is not None:
-        refusal = await ordered_phyletic_refusal(refusal, declarations, about)
+            refusal = await phyletic_refusal(
+                refused_lists, declarations, site_id, about
+            )
     refused.note(refusal, refused_names(refusal))
     return overrides
 

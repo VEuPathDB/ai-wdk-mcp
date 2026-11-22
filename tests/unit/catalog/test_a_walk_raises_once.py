@@ -19,6 +19,7 @@ from veupathdb.wdk import WDKParameter, WDKStringParam, phyletic_tree_of
 
 from veupathdb_mcp.catalog import (
     ParamIntent,
+    phyletic_refusal,
     read_under_parents,
     resolve_params_with_intent,
 )
@@ -339,6 +340,16 @@ async def test_a_component_site_whose_tree_does_not_read_names_orthomcl() -> Non
 
 async def test_orthomcl_whose_tree_does_not_read_names_no_route() -> None:
     assert await _no_tree_on("orthomcl") == _NO_TREE
+
+
+@pytest.mark.parametrize("about", [None, _ABOUT])
+async def test_a_tree_that_does_not_read_is_refused_without_the_walk(
+    about: ResolveContext | None,
+) -> None:
+    refusal = await phyletic_refusal(None, _without_the_tree(), "plasmodb", about)
+
+    [pattern] = _rows(refusal)
+    assert pattern.detail == await _no_tree_on("plasmodb")
 
 
 async def test_a_code_both_lists_name_is_refused_on_each_list() -> None:
