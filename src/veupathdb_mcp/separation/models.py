@@ -9,9 +9,8 @@ from typing import Literal, Self
 from pydantic import ConfigDict, Field, JsonValue, PrivateAttr, model_validator
 from veupathdb.domain.parameters import ParamValue
 from veupathdb.domain.strategy import CombineOp
-from veupathdb.model import CamelModel
+from veupathdb.model import CamelModel, computed
 
-from veupathdb_mcp.computed import computed
 from veupathdb_mcp.controls import NegativeControls, PositiveControls
 from veupathdb_mcp.gene_lookup import normalize_gene_ids
 from veupathdb_mcp.separation.budget import CONFIRM_RESERVATION

@@ -9,11 +9,10 @@ from itertools import pairwise
 from typing import Self
 
 from pydantic import ConfigDict, model_validator
-from veupathdb.model import CamelModel
+from veupathdb.model import CamelModel, computed
 
 from veupathdb_mcp.audit.gene_ids import GeneId, check_resolved
 from veupathdb_mcp.audit.pseudogene import PseudogeneCheck
-from veupathdb_mcp.computed import computed
 
 RUN_REACH = 5
 N_REACH = 100

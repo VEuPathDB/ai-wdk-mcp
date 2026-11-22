@@ -16,10 +16,9 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from veupathdb.model import CamelModel
+from veupathdb.model import CamelModel, computed
 from veupathdb.wdk import WDKRecordInstance
 
-from veupathdb_mcp.computed import computed
 from veupathdb_mcp.parse_failures import WrittenParseError
 
 BUSCO_ATTRIBUTES = (

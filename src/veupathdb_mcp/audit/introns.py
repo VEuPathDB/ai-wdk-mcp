@@ -9,13 +9,12 @@ from typing import Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from veupathdb.jbrowse import GffFeature
-from veupathdb.model import CamelModel
+from veupathdb.model import CamelModel, computed
 
 from veupathdb_mcp.audit.codes import GeneticCode
 from veupathdb_mcp.audit.gene_ids import GeneId, check_resolved
 from veupathdb_mcp.audit.gene_models import ModelSpans, check_models
 from veupathdb_mcp.audit.introns_orthologs import OrthologSupport
-from veupathdb_mcp.computed import computed
 from veupathdb_mcp.tool_meta import Sentence, Share
 
 STRONG_MIN_READS = 20

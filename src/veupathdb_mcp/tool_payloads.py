@@ -7,7 +7,7 @@ from typing import Self
 from pydantic import ConfigDict, Field, model_validator
 from veupathdb import JSONObject, get_logger
 from veupathdb.domain.parameters import ParamValue
-from veupathdb.model import CamelModel
+from veupathdb.model import CamelModel, computed
 from veupathdb.wdk import get_strategy_api
 
 from veupathdb_mcp.catalog import searches
@@ -15,7 +15,6 @@ from veupathdb_mcp.catalog.public_strategy_search import (
     rank_public_strategies,
     rank_public_strategies_semantic,
 )
-from veupathdb_mcp.computed import computed
 from veupathdb_mcp.controls.control_types import (
     ControlTestResult,
     NegativeControls,

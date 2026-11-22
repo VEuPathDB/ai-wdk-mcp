@@ -4,7 +4,7 @@ from itertools import groupby, pairwise
 from typing import Literal, Self
 
 from pydantic import BaseModel, ConfigDict, model_validator
-from veupathdb.model import CamelModel
+from veupathdb.model import CamelModel, computed
 
 from veupathdb_mcp.audit.codes import GeneticCode, translate
 from veupathdb_mcp.audit.introns import CANONICAL_MOTIFS, MIN_INTRON
@@ -18,7 +18,6 @@ from veupathdb_mcp.audit.windows import (
     Strand,
     WindowHit,
 )
-from veupathdb_mcp.computed import computed
 
 MIN_BLOCK_WINDOWS = 2
 MAX_GAP_WINDOWS = 3

@@ -11,14 +11,13 @@ import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
 from numpy.typing import NDArray
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-from veupathdb.model import CamelModel
+from veupathdb.model import CamelModel, computed
 
 from veupathdb_mcp.audit.codes import Frame, GeneticCode, six_frames
 from veupathdb_mcp.audit.gene_ids import GeneId, check_resolved
 from veupathdb_mcp.audit.genes import GeneRow, contig_sides
 from veupathdb_mcp.audit.lengths import is_orthology_group
 from veupathdb_mcp.audit.windows import FOUND, MISSING, STEP, WINDOW
-from veupathdb_mcp.computed import computed
 from veupathdb_mcp.tool_meta import Share
 
 type MissingVerdict = Literal[

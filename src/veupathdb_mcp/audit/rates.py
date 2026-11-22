@@ -7,9 +7,8 @@ import math
 from typing import Self
 
 from pydantic import ConfigDict, Field, model_validator
-from veupathdb.model import CamelModel
+from veupathdb.model import CamelModel, computed
 
-from veupathdb_mcp.computed import computed
 from veupathdb_mcp.tool_meta import Share
 
 WILSON_Z = 1.959963984540054

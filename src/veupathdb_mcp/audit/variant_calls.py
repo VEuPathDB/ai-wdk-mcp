@@ -3,9 +3,7 @@ from __future__ import annotations
 import re
 
 from pydantic import BaseModel, ConfigDict, Field
-from veupathdb.model import CamelModel
-
-from veupathdb_mcp.computed import computed
+from veupathdb.model import CamelModel, computed
 
 VARIANT_RECORD_TYPE = "variation"
 VARIANT_SEARCH = "VariantsByLocation"

@@ -8,7 +8,7 @@ from collections import Counter
 from typing import Literal, Self
 
 from pydantic import ConfigDict, field_validator, model_validator
-from veupathdb.model import CamelModel
+from veupathdb.model import CamelModel, computed
 
 from veupathdb_mcp.audit.codes import GeneticCode
 from veupathdb_mcp.audit.gene_ids import GeneId, check_resolved
@@ -17,7 +17,6 @@ from veupathdb_mcp.audit.genes import GeneRow, GroupMember
 from veupathdb_mcp.audit.length import LengthCheck, LengthVerdict
 from veupathdb_mcp.audit.lengths import GroupProfile, RelativeTier, relatives_of
 from veupathdb_mcp.audit.windows import FOUND, MISSING, STEP, WINDOW, best_identity
-from veupathdb_mcp.computed import computed
 
 type SideVerdict = Literal[
     "STRAIN_SHORT", "REFERENCE_LONG", "UNCLEAR", "NO_RELATIVES", "NOT_JUDGED"

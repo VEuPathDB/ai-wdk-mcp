@@ -7,10 +7,8 @@ from typing import Literal, Self
 
 from pydantic import ConfigDict, Field, model_validator
 from veupathdb.domain.parameters import ParamValue
-from veupathdb.model import CamelModel
+from veupathdb.model import CamelModel, computed
 from veupathdb.wdk import WDKStepTree
-
-from veupathdb_mcp.computed import computed
 
 ControlValueFormat = Literal["newline", "json_list", "comma"]
 

@@ -8,7 +8,7 @@ from typing import Literal, Self
 
 from pydantic import ConfigDict, Field, field_validator, model_validator
 from veupathdb.errors import DataParsingError
-from veupathdb.model import CamelModel
+from veupathdb.model import CamelModel, computed
 
 from veupathdb_mcp.audit.gene_models import GeneSpan, ReadModels, check_models
 from veupathdb_mcp.audit.genes import GeneRow, contig_sides
@@ -16,7 +16,6 @@ from veupathdb_mcp.audit.lengths import is_orthology_group
 from veupathdb_mcp.audit.served import LengthScreen
 from veupathdb_mcp.audit.strain import Run, missing_runs
 from veupathdb_mcp.audit.windows import FOUND, STEP, WINDOW, best_identity
-from veupathdb_mcp.computed import computed
 
 type FusionVerdict = Literal["EXTRA_MATCHES_NEIGHBOUR", "EXTRA_UNEXPLAINED", "NO_EXTRA"]
 
