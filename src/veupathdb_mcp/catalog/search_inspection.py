@@ -24,7 +24,7 @@ from veupathdb.domain.parameters import (
 from veupathdb.errors import WDKError
 from veupathdb.wdk import WDKParameter, WDKSearch, get_wdk_client
 
-from veupathdb_mcp.catalog.facet_ranges import WDKFilterReads, with_ranges
+from veupathdb_mcp.catalog.facet_ranges import FilterReads, WDKFilterReads, with_ranges
 from veupathdb_mcp.catalog.organisms import organism_parameter_of
 from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
@@ -33,8 +33,8 @@ from veupathdb_mcp.catalog.overview_formatting import (
 from veupathdb_mcp.catalog.param_adapters import held_default
 from veupathdb_mcp.catalog.param_dag import (
     NOTHING_BOUND,
-    ContextRead,
-    read_context_under_parents,
+    MovedParentError,
+    ParamFetcher,
     read_under_parents,
     wdk_fetch_at,
 )
@@ -291,6 +291,18 @@ async def inspect_search(
     return SearchInspection(record_type=rt, definition=search, overview=overview)
 
 
+async def _site_reader(
+    site_id: str, search_name: str, record_type: str | None
+) -> tuple[ParamFetcher, FilterReads]:
+    rt = await resolve_search_record_type(
+        site_id, search_name, _auto_resolved_record_type(record_type)
+    )
+    return (
+        wdk_fetch_at(site_id, rt, search_name),
+        WDKFilterReads(site_id, rt, search_name),
+    )
+
+
 async def read_stated_parameters(
     site_id: str,
     search_name: str,
@@ -306,16 +318,8 @@ async def read_stated_parameters(
     """
     if not stated:
         return {}
-    rt = await resolve_search_record_type(
-        site_id, search_name, _auto_resolved_record_type(record_type)
-    )
-    return await read_under_parents(
-        wdk_fetch_at(site_id, rt, search_name),
-        stated,
-        WDKFilterReads(site_id, rt, search_name),
-        about=about,
-        bound=bound,
-    )
+    fetch_at, reads = await _site_reader(site_id, search_name, record_type)
+    return await read_under_parents(fetch_at, stated, reads, about=about, bound=bound)
 
 
 async def read_stated_context(
@@ -326,19 +330,15 @@ async def read_stated_context(
     about: ResolveContext | None,
     record_type: str | None = None,
     bound: Mapping[str, ParamValue] = NOTHING_BOUND,
-) -> ContextRead:
+) -> tuple[dict[str, ParamValue], list[MovedParentError]]:
+    stale: list[MovedParentError] = []
     if not stated:
-        return ContextRead(values={}, stale=[])
-    rt = await resolve_search_record_type(
-        site_id, search_name, _auto_resolved_record_type(record_type)
+        return {}, stale
+    fetch_at, reads = await _site_reader(site_id, search_name, record_type)
+    values = await read_under_parents(
+        fetch_at, stated, reads, about=about, bound=bound, stale=stale
     )
-    return await read_context_under_parents(
-        wdk_fetch_at(site_id, rt, search_name),
-        stated,
-        WDKFilterReads(site_id, rt, search_name),
-        about=about,
-        bound=bound,
-    )
+    return values, stale
 
 
 async def read_radio_readings(

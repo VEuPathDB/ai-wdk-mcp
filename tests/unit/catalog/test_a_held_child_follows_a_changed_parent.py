@@ -4,6 +4,7 @@ import pytest
 from pydantic import JsonValue
 from tests._support.filter_reads import FilterReadsDouble
 from veupathdb.domain.parameters import (
+    SHOWN_CANDIDATES,
     FilterValue,
     HeldValue,
     MultiPickValue,
@@ -12,11 +13,11 @@ from veupathdb.domain.parameters import (
 )
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 
-from veupathdb_mcp.catalog import read_under_parents
-from veupathdb_mcp.catalog.param_dag import (
+from veupathdb_mcp.catalog import (
     MovedParentError,
-    read_context_under_parents,
+    read_under_parents,
 )
+from veupathdb_mcp.catalog.facet_ranges import EmptyRangeError
 
 from .conftest import serving
 from .test_a_filter_statement_binds_by_its_facet import (
@@ -131,26 +132,81 @@ async def test_a_kept_child_under_a_new_parent_is_offered_the_new_members() -> N
         )
 
     detail = refused.value.detail
+    offered = detail.split(" offers: ", 1)[1].split(". State ", 1)[0]
+    assert len(offered.split("; ")) <= SHOWN_CANDIDATES
+    assert len(detail) < 2000
     assert detail.startswith(
         f'organismSinglePick moved from ["{_PF}"] to ["{_PREI}"], so '
         f"variation_sample_meta, which held '{held.wire}' (kept as the site holds "
         "it), was read again under it and refused: variation_sample_meta takes "
     )
     assert "Under the new organismSinglePick, variation_sample_meta offers: " in detail
-    assert "Geographically dispersed P. falciparum isolates" in detail
 
 
 async def test_a_context_read_notes_a_stale_child_and_binds_nothing_for_it() -> None:
-    read = await read_context_under_parents(
+    noted: list[MovedParentError] = []
+    read = await read_under_parents(
         serving(*variant_characteristics()),
         {"organism_select_none": [_PCHA]},
         FilterReadsDouble({"total_variants": "ontology_term_summary_total_variants"}),
         about=None,
         bound=_HELD,
+        stale=noted,
     )
 
-    assert read.values == {"organism_select_none": MultiPickValue(values=[_PCHA])}
-    [stale] = read.stale
+    assert read == {"organism_select_none": MultiPickValue(values=[_PCHA])}
+    [stale] = noted
     assert stale.child == "gene_variant_stats"
     assert stale.detail.startswith(_MOVED)
     assert stale.detail.endswith(_ASK)
+
+
+_KEPT = HeldValue(wire='{"filters":[{"field":"unknown"}]}')
+_NGS_HELD: dict[str, ParamValue] = {
+    "organismSinglePick": MultiPickValue(values=[_PF]),
+    "variation_sample_meta": _KEPT,
+}
+
+
+@pytest.mark.parametrize(
+    "stated",
+    [
+        {"organismSinglePick": [_PF.lower()]},
+        {"organismSinglePick": [_PF.lower()], "variation_sample_meta": _KEPT.wire},
+    ],
+)
+async def test_a_parent_restated_in_another_form_moves_no_child(
+    stated: dict[str, JsonValue],
+) -> None:
+    read = await read_under_parents(
+        serving(*ngs_snps()), stated, FilterReadsDouble(), about=None, bound=_NGS_HELD
+    )
+
+    assert read["organismSinglePick"] == MultiPickValue(values=[_PF])
+    assert read.get("variation_sample_meta", _KEPT) == _KEPT
+
+
+_OUT_OF_REACH: JsonValue = [{"field": "total_variants", "value": {"min": 99999999}}]
+
+
+async def test_a_child_stated_anew_under_a_moved_parent_is_refused_as_stated() -> None:
+    with pytest.raises(EmptyRangeError) as refused:
+        await _read(
+            {"organism_select_none": [_PCHA], "gene_variant_stats": _OUT_OF_REACH}
+        )
+
+    assert '{"min": 99999999} selects none of it' in refused.value.detail
+
+
+async def test_a_context_read_refuses_a_child_it_states_anew() -> None:
+    with pytest.raises(EmptyRangeError):
+        await read_under_parents(
+            serving(*variant_characteristics()),
+            {"organism_select_none": [_PCHA], "gene_variant_stats": _OUT_OF_REACH},
+            FilterReadsDouble(
+                {"total_variants": "ontology_term_summary_total_variants"}
+            ),
+            about=None,
+            bound=_HELD,
+            stale=[],
+        )

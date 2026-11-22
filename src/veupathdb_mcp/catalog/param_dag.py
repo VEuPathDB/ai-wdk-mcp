@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable, Collection, Mapping, Sequence
-from dataclasses import dataclass
+from collections.abc import Awaitable, Callable, Mapping, Sequence
 from enum import StrEnum
 from functools import partial
 from types import MappingProxyType
@@ -13,17 +12,22 @@ from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     PHYLETIC_LIST_PARAMS,
     SHOWN_CANDIDATES,
+    FilterClause,
+    FilterFacet,
     FilterFacets,
     FilterProposals,
     FilterValue,
     MultiPickValue,
+    NumberMembers,
     ParamGraph,
     ParamSpecNormalized,
     ParamValue,
     PhyleticBinding,
     SinglePickValue,
     Stated,
+    StringMembers,
     UnboundParameter,
+    VocabOption,
     VocabularyEntryError,
     entry_name,
     flatten_vocab,
@@ -76,7 +80,12 @@ from veupathdb_mcp.catalog.search_context import (
     get_search_params_under_context,
 )
 from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
-from veupathdb_mcp.catalog.vocab_resolve import ResolveContext, ordered_refusal
+from veupathdb_mcp.catalog.vocab_resolve import (
+    NamedVocabulary,
+    ResolveContext,
+    ordered_refusal,
+    ordered_terms,
+)
 
 _MAX_RESOLVE_DEPTH = 6
 
@@ -312,40 +321,6 @@ def _ancestors(parents: Mapping[str, tuple[str, ...]], name: str) -> set[str]:
     return found
 
 
-def _given_back(
-    declarations: Sequence[WDKParameter],
-    stated: Mapping[str, JsonValue],
-    bound: Mapping[str, ParamValue],
-) -> dict[str, ParamValue]:
-    parents = ParamGraph.of(declarations).wire_parents
-    kept = {
-        n for n, given in stated.items() if n in bound and restates(bound[n], given)
-    }
-    while True:
-        changed = stated.keys() - kept
-        standing = {n for n in kept if not _ancestors(parents, n) & changed}
-        if standing == kept:
-            return {name: bound[name] for name in kept}
-        kept = standing
-
-
-def _followers(
-    declarations: Sequence[WDKParameter],
-    changed: Collection[str],
-    stated: Mapping[str, JsonValue],
-    bound: Mapping[str, ParamValue],
-) -> dict[str, JsonValue]:
-    parents = ParamGraph.of(declarations).wire_parents
-    site_set = {d.name for d in declarations if d.site_set}
-    return {
-        name: shown_stated(value)
-        for name, value in bound.items()
-        if name not in stated
-        and name not in site_set
-        and _ancestors(parents, name) & set(changed)
-    }
-
-
 class MovedParentError(ValidationError):
     def __init__(
         self,
@@ -385,33 +360,71 @@ def _shown(value: ParamValue | None) -> str:
     return "unset" if value is None else shown_stated_text(value)
 
 
-def _candidates(declaration: WDKParameter, held: ParamValue) -> list[str]:
+def _asked(
+    declaration: WDKParameter, held: ParamValue
+) -> list[tuple[NamedVocabulary, str, str]]:
     match held:
         case SinglePickValue(value=term):
-            return _ranked(declaration, [term])
+            return _picked(declaration, [term])
         case MultiPickValue(values=terms):
-            return _ranked(declaration, terms)
+            return _picked(declaration, terms)
         case FilterValue(filters=clauses) if clauses:
-            return _members(declaration, {clause.field for clause in clauses})
+            facets = FilterFacets.of(declaration)
+            return [
+                (_facet_vocabulary(facet), _clause_phrase(clause), f"{facet.display}: ")
+                for clause in clauses
+                if (facet := facets.find(clause.field)) is not None and facet.members
+            ]
         case _:
-            return _members(declaration, None)
+            return [
+                (_facet_vocabulary(facet), to_wire(held), f"{facet.display}: ")
+                for facet in FilterFacets.of(declaration).root
+                if facet.members
+            ]
 
 
-def _members(declaration: WDKParameter, fields: set[str] | None) -> list[str]:
-    return [
-        f"{facet.display}: {', '.join(facet.members)}"
-        for facet in FilterFacets.of(declaration).root
-        if facet.members and (fields is None or facet.term in fields)
-    ]
+def _picked(
+    declaration: WDKParameter, terms: Sequence[str]
+) -> list[tuple[NamedVocabulary, str, str]]:
+    vocabulary = NamedVocabulary(
+        display=declaration.display_name or declaration.name,
+        options=flatten_vocab(declaration.vocabulary),
+    )
+    return [(vocabulary, term, "") for term in terms]
 
 
-def _ranked(declaration: WDKParameter, terms: Sequence[str]) -> list[str]:
-    options = flatten_vocab(declaration.vocabulary)
-    ranked: dict[str, str] = {}
-    for term in terms:
-        for option in rank_entries(options, term, SHOWN_CANDIDATES):
-            ranked.setdefault(option.value, entry_name(option))
-    return list(ranked.values())[:SHOWN_CANDIDATES]
+def _facet_vocabulary(facet: FilterFacet) -> NamedVocabulary:
+    return NamedVocabulary(
+        display=facet.display,
+        options=[VocabOption(value=member, display=member) for member in facet.members],
+    )
+
+
+def _clause_phrase(clause: FilterClause) -> str:
+    match clause:
+        case StringMembers(value=members):
+            return " ".join(members)
+        case NumberMembers(value=members):
+            return " ".join(map(str, members))
+        case _:
+            return clause.field
+
+
+async def _candidates(
+    declaration: WDKParameter, held: ParamValue, about: ResolveContext | None
+) -> list[str]:
+    asked = _asked(declaration, held)
+    pairs = [(vocabulary, phrase) for vocabulary, phrase, _ in asked]
+    led = (
+        await ordered_terms(about, pairs)
+        if about is not None
+        else [rank_entries(v.options, p, SHOWN_CANDIDATES) for v, p in pairs]
+    )
+    named: dict[str, str] = {}
+    for (_, _, prefix), entries in zip(asked, led, strict=True):
+        for entry in entries:
+            named.setdefault(f"{prefix}{entry.value}", f"{prefix}{entry_name(entry)}")
+    return list(named.values())[:SHOWN_CANDIDATES]
 
 
 async def read_under_parents(
@@ -421,38 +434,19 @@ async def read_under_parents(
     *,
     about: ResolveContext | None,
     bound: Mapping[str, ParamValue] = NOTHING_BOUND,
+    stale: list[MovedParentError] | None = None,
 ) -> dict[str, ParamValue]:
     """Reads each stated value under the declarations its stated, bound and site-set
     parents give, and refuses a filter that selects nothing. A name of no parameter
     is refused before any value is read. A term no entry names is refused with its
     candidates ordered under ``about``; None sends no choice. A value given back
     as the bound value shows it is the bound value, and is not read, while no
-    parent of it is stated anew. A bound value given back or left out whose parent
-    is stated anew is read again under the new parent, and refused as such."""
+    parent of it reads to a new value. A bound value given back or left out whose
+    parent reads to a new value is read again under it, and refused as such; with ``stale`` given, it is
+    noted there and bound to nothing instead."""
     return await _read_held(
-        fetch_at, stated, reads, about=about, bound=bound, noted=None
+        fetch_at, stated, reads, about=about, bound=bound, noted=stale
     )
-
-
-@dataclass(frozen=True)
-class ContextRead:
-    values: dict[str, ParamValue]
-    stale: list[MovedParentError]
-
-
-async def read_context_under_parents(
-    fetch_at: ParamFetcher,
-    stated: Mapping[str, JsonValue],
-    reads: FilterReads,
-    *,
-    about: ResolveContext | None,
-    bound: Mapping[str, ParamValue] = NOTHING_BOUND,
-) -> ContextRead:
-    noted: list[MovedParentError] = []
-    values = await _read_held(
-        fetch_at, stated, reads, about=about, bound=bound, noted=noted
-    )
-    return ContextRead(values=values, stale=noted)
 
 
 async def _read_held(
@@ -467,47 +461,54 @@ async def _read_held(
     first_context = wire_map({n: v for n, v in bound.items() if n not in stated})
     declarations = await fetch_at(first_context)
     fetched = _Fetched(fetch_at, first_context, declarations)
-    parents = ParamGraph.of(declarations).wire_parents
-    kept = _given_back(declarations, stated, bound)
-    changed = stated.keys() - kept.keys()
-    followers = _followers(declarations, changed, stated, bound)
-    moved = {
-        name: given
-        for name, given in {**stated, **followers}.items()
-        if name in bound and name not in kept and _ancestors(parents, name) & changed
-    }
-    standing = {
+    graph = ParamGraph.of(declarations)
+    given_back = {
         name: given
         for name, given in stated.items()
-        if name not in kept and name not in moved
+        if name in bound and restates(bound[name], given)
     }
-    unmoved = {n: v for n, v in bound.items() if n not in moved}
-    read = {
-        **await _read_standing(fetched, standing, reads, about=about, bound=unmoved),
-        **kept,
+    standing = {n: g for n, g in stated.items() if n not in given_back}
+    read = await _read_standing(
+        fetched,
+        standing,
+        reads,
+        about=about,
+        bound={n: v for n, v in bound.items() if n not in standing},
+    )
+    moved = {name for name, value in read.items() if bound.get(name) != value}
+    site_set = {d.name for d in declarations if d.site_set}
+    followers = {
+        name: given_back.get(name, shown_stated(value))
+        for name, value in bound.items()
+        if name not in standing
+        and name not in site_set
+        and _ancestors(graph.wire_parents, name) & moved
     }
-    order = ParamGraph.of(declarations).fill_order
+    read |= {n: bound[n] for n in given_back if n not in followers}
+    unmoved = {n: v for n, v in bound.items() if n not in followers}
+    order = graph.fill_order
     for child in sorted(
-        moved, key=lambda name: order.index(name) if name in order else 0
+        followers, key=lambda name: order.index(name) if name in order else 0
     ):
         under = {**unmoved, **read}
         try:
             read |= await _read_standing(
-                fetched, {child: moved[child]}, reads, about=about, bound=under
+                fetched, {child: followers[child]}, reads, about=about, bound=under
             )
         except VEuPathDBError as refusal:
             fresh = {d.name: d for d in await fetch_at(wire_map(under))}
             new_parents = {
                 parent: (bound.get(parent), read[parent])
-                for parent in sorted(_ancestors(parents, child) & changed)
-                if parent in read
+                for parent in sorted(_ancestors(graph.wire_parents, child) & moved)
             }
             stale = MovedParentError(
                 child,
                 bound[child],
                 new_parents,
                 refusal,
-                _candidates(fresh[child], bound[child]) if child in fresh else [],
+                await _candidates(fresh[child], bound[child], about)
+                if child in fresh
+                else [],
             )
             if noted is None:
                 raise stale from refusal

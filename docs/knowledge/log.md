@@ -1,12 +1,23 @@
 # Knowledge log
 
+## 2026-11-22 - A parent moves only when its read value moves
+
+- `read_under_parents` reads the stated values first and counts a parent as moved only when
+  its read value differs from its bound value, so a parent stated in another case or by its
+  label moves no held child. Only held children (given back or left out) are read again
+  under a moved parent; a child the call states anew is read and refused in the normal walk,
+  in the reader's own words.
+- A moved-parent refusal ranks the child's entries, or the members of the facets its clauses
+  name, with `rank_entries` from what it held, led by a Decisions choice when `about` is
+  given, and shows at most `SHOWN_CANDIDATES`.
+- `read_stated_parameters` and `read_stated_context` share one site reader.
+
 ## 2026-11-22 - A context read notes a stale child instead of refusing
 
-- `read_context_under_parents` and `read_stated_context` read a context the way
-  `read_under_parents` does, but a held child that no longer reads under a moved parent is
-  returned as a `MovedParentError` in `ContextRead.stale` and bound to nothing, so an options
-  read still answers and names the child to fix. A write reads through
-  `read_under_parents`, which still refuses it.
+- `read_under_parents(..., stale=[...])` and `read_stated_context` read a context the way a
+  write does, but a held child that no longer reads under a moved parent is noted as a
+  `MovedParentError` and bound to nothing, so an options read still answers and names the
+  child to fix. A value the call states itself is refused as on a write.
 
 ## 2026-11-22 - A child refused under a moved parent is told so
 
