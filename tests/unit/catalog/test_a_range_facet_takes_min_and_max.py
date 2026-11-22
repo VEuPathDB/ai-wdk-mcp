@@ -142,6 +142,11 @@ async def test_a_range_facet_refuses_a_value_that_is_not_its_bounds(
 
 
 @_NEEDS_REFRESH
+async def test_no_clause_states_the_filter_wdk_defaults_to() -> None:
+    assert await _wire(_variant_stats(), []) == []
+
+
+@_NEEDS_REFRESH
 async def test_a_member_facet_refuses_bounds_naming_its_member_form() -> None:
     with pytest.raises(ValidationError) as caught:
         await _wire(
@@ -159,7 +164,6 @@ async def test_a_member_facet_refuses_bounds_naming_its_member_form() -> None:
         ["0", "1"],
         "most_severe_impact=HIGH",
         [{"field": "most_severe_impact", "value": "HIGH"}],
-        [],
     ],
 )
 async def test_a_statement_that_is_not_a_clause_list_is_refused(

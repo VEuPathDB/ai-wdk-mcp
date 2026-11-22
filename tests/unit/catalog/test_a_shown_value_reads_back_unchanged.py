@@ -56,12 +56,10 @@ def _held(param: WDKParameter) -> ParamValue:
 
 @pytest.mark.skipif(_RECORDED, reason=NEEDS_QA_RECORDING)
 class TestTheSheetDefault:
-    def test_a_filter_with_no_clause_shows_as_kept(self) -> None:
+    def test_a_filter_with_no_clause_shows_as_no_clause(self) -> None:
         sheet = {e.name: e for e in build_sheet(param_infos(_params(_SNPS)), query="")}
 
-        assert sheet["variation_sample_meta"].default == (
-            "'{\"filters\": []}' (kept as the site holds it)"
-        )
+        assert sheet["variation_sample_meta"].default == []
         assert sheet["organismSinglePick"].default == ["Plasmodium falciparum 3D7"]
 
     def test_an_empty_default_a_parameter_refuses_is_no_default(self) -> None:
@@ -129,9 +127,7 @@ class TestTheParamSpecs:
         organism = specs["organismSinglePick"].model_dump(by_alias=True)
         assert organism["default"] == ["Plasmodium falciparum 3D7"]
         assert "initialDisplayValue" not in organism
-        assert specs["variation_sample_meta"].default == (
-            "'{\"filters\": []}' (kept as the site holds it)"
-        )
+        assert specs["variation_sample_meta"].default == []
         assert set(specs) == {p.name for p in params}
 
 

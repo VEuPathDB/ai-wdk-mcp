@@ -1,5 +1,10 @@
 # Knowledge log
 
+## 2026-11-22 - A filter with no clauses defaults to []
+
+- A filter parameter's sheet default and served spec default with no clauses is `[]`, the
+  stated form the reader takes back (veupathdb-py `stated_form`), not the kept wire.
+
 ## 2026-11-22 - Only a site that lists the helper record type has an OrthoMCL taxonomy
 
 - `ortho_taxonomy` reads OrthoMCL's taxonomy only on a site whose record types list

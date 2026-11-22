@@ -88,6 +88,15 @@ class TestFilterParams:
         assert resolved.unresolved_required == []
         assert resolved.open_slots == []
 
+    async def test_no_statement_binds_the_value_wdk_defaults_to(self) -> None:
+        resolved = await _walk(
+            fetch_at=_strain_meta(), stated={"ngsSnp_strain_meta": []}
+        )
+
+        value = resolved.params["ngsSnp_strain_meta"]
+        assert isinstance(value, FilterValue)
+        assert value.to_wire() == '{"filters": []}'
+
     async def test_a_statement_builds_the_clause_the_ontology_types(self) -> None:
         resolved = await _walk(
             fetch_at=_strain_meta(),
@@ -110,7 +119,6 @@ class TestFilterParams:
             "Sample type=culture,blood",
             '{"filters": []}',
             "All field isolates",
-            [],
             {"filters": [{"field": "Sample type", "value": ["culture"]}]},
         ],
     )
