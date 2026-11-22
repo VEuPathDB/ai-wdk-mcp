@@ -35,7 +35,7 @@ from veupathdb.domain.parameters import (
     rank_entries,
     read_stated_values,
     restates,
-    same_value,
+    same_param_value,
     shown_stated,
     shown_stated_text,
     to_wire,
@@ -485,7 +485,7 @@ async def _read_held(
     moved = {
         name
         for name, value in read.items()
-        if name not in bound or not same_value(bound[name], value)
+        if name not in bound or not same_param_value(name, bound[name], value)
     }
     site_set = {d.name for d in declarations if d.site_set}
     followers = {

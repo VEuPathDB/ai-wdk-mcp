@@ -6,7 +6,8 @@
   `ParameterCanonicalizer.held` and compares them with `same_param_value`; the per-kind wire
   comparators are gone. A single pick WDK echoes as a one-term array reads as its term
   (veupathdb-py `from_wire`).
-- `held_default` compares the default with the empty value through `same_value`.
+- `held_default` compares the default with the empty value through `same_value`, and
+  `read_under_parents` decides a moved parent with `same_param_value`.
 
 ## 2026-11-22 - A parent moves by the value WDK reads
 
