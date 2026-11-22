@@ -295,13 +295,13 @@ async def read_under_parents(
     stated: Mapping[str, JsonValue],
     reads: FilterReads,
     *,
-    about: ResolveContext,
+    about: ResolveContext | None,
     bound: Mapping[str, ParamValue] = NOTHING_BOUND,
 ) -> dict[str, ParamValue]:
     """Reads each stated value under the declarations its stated, bound and site-set
     parents give, and refuses a filter that selects nothing. A name of no parameter
     is refused before any value is read. A term no entry names is refused with its
-    candidates in the order ``ordered_refusal`` gives."""
+    candidates ordered under ``about``; None sends no choice."""
     context = wire_map({n: v for n, v in bound.items() if n not in stated})
     read: dict[str, ParamValue] = {}
     declarations = await fetch_at(context)

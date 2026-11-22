@@ -9,7 +9,6 @@ from veupathdb.domain import SearchContext
 from veupathdb.errors import VEuPathDBError
 
 from veupathdb_mcp.catalog import (
-    ResolveContext,
     experiments,
     parameters,
     search_inspection,
@@ -329,7 +328,7 @@ async def get_parameter_options(
                 site_id,
                 search_name,
                 context_values,
-                message="",
+                about=None,
                 record_type=record_type,
             ),
             narrowing=search_inspection.VocabNarrowing(query=query),
@@ -391,11 +390,11 @@ async def validate_search_parameters(
                 site_id,
                 search_name,
                 parameter_values,
-                message="",
+                about=None,
                 record_type=record_type,
             ),
             callbacks=make_validation_callbacks(site_id),
-            about=ResolveContext(site_id=site_id, message=""),
+            about=None,
         )
     except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc
@@ -495,7 +494,7 @@ async def resolve_search_parameters(
             intent=ParamIntent(text=criterion),
             search_name=search_name,
             stated=overrides or {},
-            about=ResolveContext(site_id=site_id, message=""),
+            about=None,
         )
     except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc

@@ -1,5 +1,17 @@
 # Knowledge log
 
+## 2026-11-22 - 0.9.0b16: a refusal asks a bounded number of choices
+
+- One refusal asks a Decisions choice for at most its first `SHOWN_CANDIDATES` (5)
+  terms, all at once; every later term keeps the `rank_entries` order. The bound lives in
+  `ordered_terms`, the one function the vocabulary, phyletic and gene-lookup orderings go
+  through; `ordered_entries` is no longer public.
+- A served tool sends no choice for a refusal (`about=None`): the server's Decisions
+  calls run on the deployment's key, which an outside client must not spend. A host's
+  in-process read passes `about` and orders on its own keyed provider.
+  `read_stated_parameters` and `read_radio_readings` take `about: ResolveContext | None`
+  in place of `message`, and `read_under_parents` takes None as the other readers do.
+
 ## 2026-11-22 - 0.9.0b15: a stated term names an entry or is refused
 
 - `read_options` and its lookup types are the client's (`veupathdb.domain.parameters`).

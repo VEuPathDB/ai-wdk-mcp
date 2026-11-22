@@ -13,7 +13,6 @@ from veupathdb.wdk import WDKAnswer, get_strategy_api
 from veupathdb_mcp.audit import RECORD_READS_PER_CALL
 from veupathdb_mcp.catalog import (
     NoGeneRecordsError,
-    ResolveContext,
     read_stated_parameters,
 )
 from veupathdb_mcp.controls.control_tests import (
@@ -119,7 +118,7 @@ async def lookup_gene_records(
         query,
         organism=organism,
         limit=limit,
-        about=ResolveContext(site_id=site_id, message=""),
+        about=None,
     )
 
 
@@ -268,7 +267,7 @@ async def run_control_tests_on_search(
             site_id,
             target_search_name,
             target_parameters,
-            message="",
+            about=None,
             record_type=record_type,
         )
     except VEuPathDBError as exc:

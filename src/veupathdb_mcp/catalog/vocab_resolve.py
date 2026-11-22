@@ -94,11 +94,9 @@ def _picked(choice: str, ranked: Sequence[VocabOption]) -> VocabOption | None:
     return ranked[int(index)]
 
 
-async def ordered_entries(
+async def _ordered_entries(
     about: ResolveContext, vocabulary: NamedVocabulary, phrase: str
 ) -> list[VocabOption]:
-    """The first entries ``rank_entries`` ranks for the phrase, led by the entry a
-    Decisions choice picks among them when it picks one."""
     ranked = rank_entries(vocabulary.options, phrase, DECIDED_CANDIDATES)
     if not ranked:
         return []
@@ -112,13 +110,22 @@ async def ordered_entries(
     return shown[:SHOWN_CANDIDATES]
 
 
-async def _ordered(
-    about: ResolveContext, vocabulary: NamedVocabulary, resolution: Resolution
-) -> Resolution:
-    shown = await ordered_entries(about, vocabulary, resolution.phrase)
-    if not shown:
-        return resolution
-    return Resolution(phrase=resolution.phrase, how="unsettled", candidates=shown)
+async def ordered_terms(
+    about: ResolveContext, asked: Sequence[tuple[NamedVocabulary, str]]
+) -> list[list[VocabOption]]:
+    """For each (vocabulary, phrase), the first entries ``rank_entries`` ranks, led
+    by the entry a Decisions choice picks among them when it picks one.
+
+    Only the first ``SHOWN_CANDIDATES`` phrases ask a choice, all at once; every
+    later phrase keeps the ranking, so one refusal sends a bounded number of calls.
+    """
+    asking = asked[:SHOWN_CANDIDATES]
+    led = await asyncio.gather(*(_ordered_entries(about, v, p) for v, p in asking))
+    kept = [
+        rank_entries(v.options, p, SHOWN_CANDIDATES)
+        for v, p in asked[SHOWN_CANDIDATES:]
+    ]
+    return [*led, *kept]
 
 
 async def ordered_by_vocabulary(
@@ -126,17 +133,25 @@ async def ordered_by_vocabulary(
     vocabularies: dict[str, NamedVocabulary],
     about: ResolveContext,
 ) -> VocabularyEntryError:
-    """The same refusal, each fault's candidates led by the entry a Decisions
-    choice picks. With no pick, a fault keeps the ranking it holds."""
-
-    async def fault(name: str, resolution: Resolution) -> tuple[str, Resolution]:
-        vocabulary = vocabularies.get(name)
-        if vocabulary is None or resolution.how != "unsettled":
-            return name, resolution
-        return name, await _ordered(about, vocabulary, resolution)
-
-    faults = await asyncio.gather(*(fault(n, r) for n, r in refusal.faults))
-    return VocabularyEntryError(list(faults))
+    """The same refusal, the candidates of its first faults led by the entry a
+    Decisions choice picks (``ordered_terms``). With no pick, a fault keeps the
+    ranking it holds."""
+    open_faults = [
+        (index, vocabularies[name], resolution)
+        for index, (name, resolution) in enumerate(refusal.faults)
+        if name in vocabularies and resolution.how == "unsettled"
+    ]
+    shown = await ordered_terms(about, [(v, r.phrase) for _, v, r in open_faults])
+    faults = list(refusal.faults)
+    for (index, _, resolution), entries in zip(open_faults, shown, strict=True):
+        if entries:
+            faults[index] = (
+                faults[index][0],
+                Resolution(
+                    phrase=resolution.phrase, how="unsettled", candidates=entries
+                ),
+            )
+    return VocabularyEntryError(faults)
 
 
 async def ordered_refusal(

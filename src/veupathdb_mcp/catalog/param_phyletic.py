@@ -1,6 +1,5 @@
 """Phyletic code lookup, and the binding the two species parameters derive."""
 
-import asyncio
 import re
 from collections.abc import Mapping, Sequence
 from typing import cast
@@ -45,7 +44,7 @@ from veupathdb_mcp.catalog.taxonomy import ortho_taxonomy
 from veupathdb_mcp.catalog.vocab_resolve import (
     NamedVocabulary,
     ResolveContext,
-    ordered_entries,
+    ordered_terms,
 )
 from veupathdb_mcp.embeddings.embedder import (
     EmbeddingUnavailableError,
@@ -176,9 +175,7 @@ async def ordered_phyletic_refusal(
                 )
                 for t in terms
             ]
-            led = await asyncio.gather(
-                *(ordered_entries(about, vocabulary, t) for vocabulary, t in asked)
-            )
+            led = await ordered_terms(about, asked)
             found: dict[str, VocabOption] = {}
             for entries in led:
                 for entry in entries:

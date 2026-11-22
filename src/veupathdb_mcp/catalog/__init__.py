@@ -212,8 +212,8 @@ from veupathdb_mcp.catalog.vocab_resolve import (
     NamedVocabulary,
     ResolveContext,
     ordered_by_vocabulary,
-    ordered_entries,
     ordered_refusal,
+    ordered_terms,
     resolve_request,
 )
 
@@ -351,9 +351,9 @@ __all__ = [
     "make_record_type_resolver",
     "make_validation_callbacks",
     "ordered_by_vocabulary",
-    "ordered_entries",
     "ordered_phyletic_refusal",
     "ordered_refusal",
+    "ordered_terms",
     "organism_parameter",
     "ortho_taxonomy",
     "phyletic_tree_for_search",

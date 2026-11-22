@@ -76,7 +76,12 @@ def _serve(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
 async def _read(monkeypatch: pytest.MonkeyPatch, term: str) -> list[RadioReadings]:
     _serve(monkeypatch)
     return await read_radio_readings(
-        "plasmodb", SEARCH, term, record_type="transcript", context_values=CONTEXT
+        "plasmodb",
+        SEARCH,
+        term,
+        about=None,
+        record_type="transcript",
+        context_values=CONTEXT,
     )
 
 

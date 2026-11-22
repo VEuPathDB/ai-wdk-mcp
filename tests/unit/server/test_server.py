@@ -68,7 +68,7 @@ from veupathdb_mcp.catalog.search_inspection import (
 from veupathdb_mcp.controls.control_types import ControlTestResult
 from veupathdb_mcp.embeddings.errors import SemanticIndexUnavailableError
 from veupathdb_mcp.embeddings.record_manager import IndexHit
-from veupathdb_mcp.gene_lookup import GeneResolveResult
+from veupathdb_mcp.gene_lookup import GeneResolveResult, GeneSearchResult
 from veupathdb_mcp.tool_meta import (
     MAX_CALL_SECONDS_META_KEY,
     STREAM_PART_META_KEY,
@@ -650,7 +650,7 @@ async def test_a_validation_call_answers_from_the_validation_service(
         about: ResolveContext | None,
     ) -> ValidatedParams:
         del callbacks
-        assert about == ResolveContext(site_id=SITE, message="")
+        assert about is None
         assert ctx.site_id == SITE
         assert ctx.search_name == "GenesByText"
         seen.append(stated)
@@ -1102,7 +1102,7 @@ async def test_a_binding_call_answers_from_the_parameter_walk(
         about: ResolveContext | None,
     ) -> ResolvedParams:
         del fetch_at, filter_reads
-        assert about == ResolveContext(site_id=SITE, message="")
+        assert about is None
         seen.append((search_name, intent.text, stated))
         return ResolvedParams(params={"organism": StringValue(value="P. falciparum")})
 
@@ -1512,3 +1512,66 @@ async def test_a_resolve_states_its_bound_in_the_schema_and_the_description() ->
     assert f"at most {RECORD_READS_PER_CALL} identifiers" in text
     assert "answers an error and no records" in text
     assert f"more than {MAX_MATCHES} transcripts" in text
+
+
+async def test_a_served_gene_lookup_asks_no_choice_on_the_deployments_key(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seen: list[ResolveContext | None] = []
+
+    async def lookup(
+        site_id: str,
+        query: str,
+        *,
+        organism: str | None = None,
+        limit: int = 20,
+        about: ResolveContext | None,
+    ) -> GeneSearchResult:
+        del site_id, query, organism, limit
+        seen.append(about)
+        return GeneSearchResult(records=[], total_count=0)
+
+    monkeypatch.setattr(user_tools, "lookup_genes_by_text", lookup)
+
+    async with _served(_user_credential("user-bearer")) as client:
+        await client.call_tool(
+            "lookup_gene_records",
+            {"site_id": SITE, "query": "kinase", "organism": "Pf3D7"},
+        )
+
+    assert seen == [None]
+
+
+async def test_a_served_options_read_asks_no_choice_on_the_deployments_key(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seen: list[ResolveContext | None] = []
+
+    async def read(
+        site_id: str,
+        search_name: str,
+        stated: object,
+        *,
+        about: ResolveContext | None,
+        record_type: str | None = None,
+    ) -> dict[str, ParamValue]:
+        del site_id, search_name, stated, record_type
+        seen.append(about)
+        raise ValidationError(title="Invalid", detail="organism has no entry")
+
+    monkeypatch.setattr(search_inspection, "read_stated_parameters", read)
+
+    async with _served(_service_credential()) as client:
+        result = await client.call_tool(
+            "get_parameter_options",
+            {
+                "site_id": SITE,
+                "search_name": "GenesByTaxon",
+                "parameter_id": "organism",
+                "context_values": {"organism": ["Pf3D7"]},
+            },
+            raise_on_error=False,
+        )
+
+    assert result.is_error
+    assert seen == [None]

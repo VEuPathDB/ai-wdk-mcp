@@ -289,13 +289,13 @@ async def read_stated_parameters(
     search_name: str,
     stated: Mapping[str, JsonValue] | None,
     *,
-    message: str,
+    about: ResolveContext | None,
     record_type: str | None = None,
     bound: Mapping[str, ParamValue] = NOTHING_BOUND,
 ) -> dict[str, ParamValue]:
     """The values a caller states for one search, each read under its parents.
 
-    ``message`` is the researcher's message, or "" when the caller has none.
+    A refusal's candidates are ordered under ``about``; None sends no choice.
     """
     if not stated:
         return {}
@@ -306,7 +306,7 @@ async def read_stated_parameters(
         wdk_fetch_at(site_id, rt, search_name),
         stated,
         WDKFilterReads(site_id, rt, search_name),
-        about=ResolveContext(site_id=site_id, message=message),
+        about=about,
         bound=bound,
     )
 
@@ -316,6 +316,7 @@ async def read_radio_readings(
     search_name: str,
     term: str,
     *,
+    about: ResolveContext | None,
     record_type: str | None = None,
     context_values: Mapping[str, JsonValue] | None = None,
 ) -> list[RadioReadings]:
@@ -323,7 +324,7 @@ async def read_radio_readings(
         site_id, search_name, _auto_resolved_record_type(record_type)
     )
     context = await read_stated_parameters(
-        site_id, search_name, context_values, message="", record_type=rt
+        site_id, search_name, context_values, about=about, record_type=rt
     )
     result = await get_search_params_under_context(
         get_wdk_client(site_id), rt, search_name, wire_map(context)

@@ -22,6 +22,7 @@ from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKParameter, WDKSearchResponse
 
 from veupathdb_mcp.catalog import (
+    ChoiceQuestion,
     DecisionRequest,
     DecisionResponse,
     ResolveContext,
@@ -248,3 +249,72 @@ class TestAPhyleticRefusal:
         nearest = await self._nearest(None)
 
         assert nearest[0] == "delta-Proteobacteria"
+
+
+_TWELVE = [f"Plasmodium strain {i}" for i in range(12)]
+
+
+def _counting() -> list[DecisionRequest]:
+    sent: list[DecisionRequest] = []
+
+    async def send(request: DecisionRequest) -> DecisionResponse:
+        sent.append(request)
+        [question] = request.questions
+        assert isinstance(question, ChoiceQuestion)
+        last = question.choices[-2].value
+        return DecisionResponse.model_validate(
+            {
+                "answers": [
+                    {
+                        "type": "choice",
+                        "name": question.name,
+                        "choice": last,
+                        "probabilities": [{"value": last, "probability": 1.0}],
+                        "confidence": 1.0,
+                    }
+                ]
+            }
+        )
+
+    use_decisions_transport(send)
+    return sent
+
+
+@pytest.mark.skipif(_RECORDED, reason=NEEDS_QA_RECORDING)
+async def test_only_the_first_shown_count_of_terms_ask_the_choice() -> None:
+    sent = _counting()
+    [param] = [p for p in _params(_TAXON) if p.name == "organism"]
+    options = flatten_vocab(param.vocabulary)
+    with pytest.raises(VocabularyEntryError) as refused:
+        entries_or_refusal(param.name, options, _TWELVE)
+
+    ordered = await ordered_refusal(refused.value, [param], _SITE)
+
+    assert len(sent) == SHOWN_CANDIDATES
+    asked = [r.input for r in sent]
+    for phrase in _TWELVE[:SHOWN_CANDIDATES]:
+        assert any(f'"{phrase}"' in text for text in asked)
+    for (_, resolution), phrase in zip(
+        ordered.faults[SHOWN_CANDIDATES:], _TWELVE[SHOWN_CANDIDATES:], strict=True
+    ):
+        plain = rank_entries(options, phrase, SHOWN_CANDIDATES)
+        assert resolution.candidates == plain
+
+
+@pytest.mark.skipif(
+    needs_qa_recording(f"wdk/{_ORTHOLOGS}.json"), reason=NEEDS_QA_RECORDING
+)
+async def test_a_phyletic_refusal_asks_for_at_most_the_shown_count_of_terms() -> None:
+    sent = _counting()
+
+    with pytest.raises(PhyleticListError):
+        await resolve_params_with_intent(
+            fetch_at=_serving(_ORTHOLOGS),
+            filter_reads=FilterReadsDouble(),
+            intent=ParamIntent(),
+            search_name="GenesByOrthologPattern",
+            stated={"included_species": ", ".join(_TWELVE)},
+            about=ResolveContext(site_id="orthomcl"),
+        )
+
+    assert len(sent) == SHOWN_CANDIDATES
