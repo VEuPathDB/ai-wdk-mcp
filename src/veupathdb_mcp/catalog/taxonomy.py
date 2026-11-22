@@ -13,7 +13,16 @@ from veupathdb.wdk import (
     phyletic_tree_of,
 )
 
+from veupathdb_mcp.catalog.site_record_types import declared_record_types
+
+PHYLETIC_PROFILE_SEARCH = "GenesByOrthologPattern"
+
 _HELD: dict[str, PhyleticTree] = {}
+
+
+async def serves_ortho_taxonomy(site_id: str) -> bool:
+    """Whether the site's declared record types list OrthoMCL's helper record."""
+    return ORTHO_TAXONOMY_RECORD_TYPE in await declared_record_types(site_id)
 
 
 async def ortho_taxonomy(site_id: str) -> PhyleticTree | None:
@@ -21,11 +30,9 @@ async def ortho_taxonomy(site_id: str) -> PhyleticTree | None:
     held = _HELD.get(site_id)
     if held is not None:
         return held
-    client = get_wdk_client(site_id)
-    record_types = await client.get_record_types()
-    if all(rt.url_segment != ORTHO_TAXONOMY_RECORD_TYPE for rt in record_types):
+    if not await serves_ortho_taxonomy(site_id):
         return None
-    answer = await client.run_search_report(
+    answer = await get_wdk_client(site_id).run_search_report(
         ORTHO_TAXONOMY_RECORD_TYPE,
         ORTHO_TAXONOMY_SEARCH,
         WDKSearchConfig(),

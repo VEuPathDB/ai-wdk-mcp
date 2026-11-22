@@ -1,5 +1,16 @@
 # Knowledge log
 
+## 2026-11-22 - One rule says whether a site holds OrthoMCL's taxonomy
+
+- `site_record_types.declared_record_types` is the record types a site declares: its
+  loaded catalog's, or one `GET /record-types` held for the process, the negative answer
+  included. `require_gene_records` and `serves_ortho_taxonomy` (the `helper` record type)
+  read it; `_takes_an_expression` and the fresh read in `ortho_taxonomy` are gone, and
+  `genome_names` and `lookup_phyletic_codes` ask `serves_ortho_taxonomy`.
+- `site_taxonomy` refuses a site with no taxonomy by naming `PHYLETIC_PROFILE_SEARCH` and
+  the two species lists from their constants, and an OrthoMCL taxonomy report with no
+  tables with its own words.
+
 ## 2026-11-22 - A catalog build asks for datasets only where the site lists them
 
 - `load_dataset_metadata` takes the record types the catalog build already read and asks

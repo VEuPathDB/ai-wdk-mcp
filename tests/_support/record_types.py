@@ -6,7 +6,7 @@ from scripts.record_orthomcl_gene_class import FILE, FIXTURES, GeneClassWire
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKRecordType, get_site
 
-from veupathdb_mcp.catalog import gene_records
+from veupathdb_mcp.catalog import site_record_types
 
 ORTHOMCL_RECORDING = FIXTURES / FILE
 
@@ -71,9 +71,9 @@ def serve_record_types(
     monkeypatch: pytest.MonkeyPatch, held: list[str] | None = None
 ) -> RecordedRecordTypes:
     served = RecordedRecordTypes(held or [])
-    monkeypatch.setattr(gene_records, "_LISTED", {})
-    monkeypatch.setattr(gene_records, "get_discovery_service", lambda: served)
-    monkeypatch.setattr(gene_records, "get_wdk_client", served.client)
+    monkeypatch.setattr(site_record_types, "_LISTED", {})
+    monkeypatch.setattr(site_record_types, "get_discovery_service", lambda: served)
+    monkeypatch.setattr(site_record_types, "get_wdk_client", served.client)
     return served
 
 

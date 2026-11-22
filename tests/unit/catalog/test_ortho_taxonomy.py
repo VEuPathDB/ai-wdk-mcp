@@ -5,11 +5,12 @@ from __future__ import annotations
 from typing import Any
 
 import pytest
+from tests._support.record_types import RecordedRecordTypes
 from veupathdb.domain.parameters import PhyleticNode, PhyleticTree, TaxonEntry
 from veupathdb.errors import ValidationError
-from veupathdb.wdk import WDKAnswer, WDKRecordType, WDKSearch, WDKStringParam
+from veupathdb.wdk import WDKAnswer, WDKSearch, WDKStringParam
 
-from veupathdb_mcp.catalog import param_phyletic, taxonomy
+from veupathdb_mcp.catalog import group_counts, param_phyletic, taxonomy
 from veupathdb_mcp.catalog.group_counts import site_taxonomy
 from veupathdb_mcp.catalog.param_phyletic import EXPRESSION_LOOKUP_HINT, LOOKUP_HINT
 
@@ -40,12 +41,8 @@ _TABLES = {
 
 
 class _Client:
-    def __init__(self, record_types: list[str]) -> None:
-        self.record_types = record_types
+    def __init__(self) -> None:
         self.reports: list[tuple[str, str]] = []
-
-    async def get_record_types(self) -> list[WDKRecordType]:
-        return [WDKRecordType(url_segment=name) for name in self.record_types]
 
     async def run_search_report(
         self, record_type: str, search_name: str, *_: Any, **__: Any
@@ -56,8 +53,8 @@ class _Client:
         )
 
 
-def _serve(monkeypatch: pytest.MonkeyPatch, record_types: list[str]) -> _Client:
-    served = _Client(record_types)
+def _serve(monkeypatch: pytest.MonkeyPatch) -> _Client:
+    served = _Client()
     monkeypatch.setattr(taxonomy, "get_wdk_client", lambda _site: served)
     monkeypatch.setattr(taxonomy, "_HELD", {})
     return served
@@ -65,13 +62,13 @@ def _serve(monkeypatch: pytest.MonkeyPatch, record_types: list[str]) -> _Client:
 
 @pytest.fixture
 def client(monkeypatch: pytest.MonkeyPatch) -> _Client:
-    return _serve(monkeypatch, ["group", "sequence", "helper"])
+    return _serve(monkeypatch)
 
 
 async def test_a_site_with_no_helper_record_type_has_no_taxonomy(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    served = _serve(monkeypatch, ["transcript", "gene", "organism"])
+    served = _serve(monkeypatch)
 
     assert await taxonomy.ortho_taxonomy("plasmodb") is None
     assert served.reports == []
@@ -80,7 +77,7 @@ async def test_a_site_with_no_helper_record_type_has_no_taxonomy(
 async def test_a_site_with_no_taxonomy_refuses_an_expression_with_its_own_search(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _serve(monkeypatch, ["transcript", "gene", "organism"])
+    _serve(monkeypatch)
 
     with pytest.raises(ValidationError) as refusal:
         await site_taxonomy("plasmodb")
@@ -101,27 +98,41 @@ async def test_the_taxonomy_is_the_helper_records_tables(client: _Client) -> Non
     assert client.reports == [("helper", "ByDefault")]
 
 
+@pytest.mark.parametrize(
+    ("site_id", "serves"), [("orthomcl", True), ("plasmodb", False)]
+)
+async def test_a_site_serves_the_taxonomy_when_it_lists_the_helper_record_type(
+    site_id: str, serves: bool, listed_record_types: RecordedRecordTypes
+) -> None:
+    assert await taxonomy.serves_ortho_taxonomy(site_id) is serves
+    assert await taxonomy.serves_ortho_taxonomy(site_id) is serves
+    assert listed_record_types.asked == [site_id]
+
+
+async def test_a_site_that_lists_the_helper_and_holds_no_tables_says_so(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _serve(monkeypatch)
+
+    async def _no_tree(site_id: str) -> None:
+        del site_id
+
+    monkeypatch.setattr(group_counts, "ortho_taxonomy", _no_tree)
+
+    with pytest.raises(ValidationError) as refusal:
+        await site_taxonomy("orthomcl")
+
+    assert refusal.value.detail == (
+        "orthomcl lists the helper record type, but its taxonomy report holds "
+        "no clade or genome tables."
+    )
+
+
 async def test_the_taxonomy_is_read_once_per_site(client: _Client) -> None:
     await taxonomy.ortho_taxonomy("orthomcl")
     await taxonomy.ortho_taxonomy("orthomcl")
 
     assert len(client.reports) == 1
-
-
-class _Discovery:
-    def __init__(self, searches: dict[str, list[str]]) -> None:
-        self._searches = searches
-
-    async def get_record_types(self, site_id: str) -> list[WDKRecordType]:
-        del site_id
-        return [WDKRecordType(url_segment=name) for name in self._searches]
-
-    async def get_searches(self, site_id: str, record_type: str) -> list[WDKSearch]:
-        del site_id
-        return [
-            WDKSearch(url_segment=name, full_name=name, display_name=name)
-            for name in self._searches[record_type]
-        ]
 
 
 def _tree() -> PhyleticTree:
@@ -152,8 +163,7 @@ async def test_a_site_with_the_expression_search_looks_codes_up_in_its_taxonomy(
     monkeypatch: pytest.MonkeyPatch, unranked: None
 ) -> None:
     del unranked
-    discovery = _Discovery({"group": ["GroupsByPhyleticPattern"], "sequence": []})
-    monkeypatch.setattr(param_phyletic, "get_discovery_service", lambda: discovery)
+    _serve(monkeypatch)
 
     async def _taxonomy(site_id: str) -> PhyleticTree:
         assert site_id == "orthomcl"

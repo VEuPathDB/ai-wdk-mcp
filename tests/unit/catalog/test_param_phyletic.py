@@ -28,7 +28,7 @@ from veupathdb.wdk import (
     phyletic_tree_of,
 )
 
-from veupathdb_mcp.catalog import param_phyletic
+from veupathdb_mcp.catalog import param_phyletic, taxonomy
 from veupathdb_mcp.catalog.param_formatting import (
     _PROFILE_PATTERN_HELP,
     PHYLETIC_LISTS_FORM,
@@ -404,11 +404,12 @@ def _serve(
     read: list[str] = []
     tree = _recorded_tree()
 
-    async def _taxonomy(site_id: str) -> PhyleticTree:
+    async def _taxonomy(site_id: str) -> PhyleticTree | None:
         read.append(site_id)
-        return tree
+        return await taxonomy.ortho_taxonomy(site_id)
 
     discovery = _Discovery(searches)
+    monkeypatch.setattr(taxonomy, "_HELD", {"orthomcl": tree})
     monkeypatch.setattr(param_phyletic, "get_discovery_service", lambda: discovery)
     monkeypatch.setattr(param_phyletic, "ortho_taxonomy", _taxonomy)
     monkeypatch.setattr(param_phyletic, "get_embedder", _RefusingEmbedder)
@@ -494,7 +495,7 @@ async def test_genome_names_are_the_genomes_of_the_taxonomy(
 
 async def test_genome_names_are_empty_off_orthomcl(plasmodb: list[str]) -> None:
     assert await genome_names("plasmodb") == {}
-    assert plasmodb == []
+    assert plasmodb == ["plasmodb"]
 
 
 async def test_a_genomics_site_names_genome_counts_and_species(

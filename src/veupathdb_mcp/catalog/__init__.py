@@ -209,8 +209,10 @@ from veupathdb_mcp.catalog.sites import (
     list_sites,
 )
 from veupathdb_mcp.catalog.taxonomy import (
+    PHYLETIC_PROFILE_SEARCH,
     ortho_taxonomy,
     phyletic_tree_for_search,
+    serves_ortho_taxonomy,
 )
 from veupathdb_mcp.catalog.universal import universal_searches
 from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
@@ -232,6 +234,7 @@ __all__ = [
     "GENE_RECORD_TYPE",
     "MAX_EXPRESSION_TERMS",
     "MAX_EXPRESSION_WORK",
+    "PHYLETIC_PROFILE_SEARCH",
     "RADIO_OFF",
     "SUBSET_QUERY",
     "TAXON_SEARCH",
@@ -385,6 +388,7 @@ __all__ = [
     "resolve_search_record_type",
     "search_for_searches",
     "search_similarity",
+    "serves_ortho_taxonomy",
     "shortlist",
     "shortlist_slot",
     "sites_holding_organism",

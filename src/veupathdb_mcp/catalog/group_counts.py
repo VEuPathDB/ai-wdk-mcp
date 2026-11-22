@@ -2,13 +2,19 @@ from veupathdb import JSONObject
 from veupathdb.domain.parameters import (
     PHYLETIC_EXPRESSION_PARAM,
     PHYLETIC_EXPRESSION_SEARCH,
+    PHYLETIC_LIST_PARAMS,
+    PhyleticBinding,
     PhyleticTree,
 )
 from veupathdb.errors import ValidationError
-from veupathdb.wdk import WDKSearchConfig, get_wdk_client
+from veupathdb.wdk import ORTHO_TAXONOMY_RECORD_TYPE, WDKSearchConfig, get_wdk_client
 
 from veupathdb_mcp.catalog.phyletic_logic import CALL_SECONDS, refuse
-from veupathdb_mcp.catalog.taxonomy import ortho_taxonomy
+from veupathdb_mcp.catalog.taxonomy import (
+    PHYLETIC_PROFILE_SEARCH,
+    ortho_taxonomy,
+    serves_ortho_taxonomy,
+)
 
 GROUP_RECORD_TYPE = "group"
 
@@ -42,17 +48,29 @@ class GroupCountReports:
 
 
 async def site_taxonomy(site_id: str) -> PhyleticTree:
-    tree = await ortho_taxonomy(site_id)
-    if tree is None:
+    if not await serves_ortho_taxonomy(site_id):
+        lists = " and ".join(
+            name
+            for name in PhyleticBinding.model_fields
+            if name in PHYLETIC_LIST_PARAMS
+        )
         raise ValidationError(
             title="The site serves no OrthoMCL taxonomy",
             detail=(
                 f"{site_id} serves no OrthoMCL taxonomy and no search that takes "
                 f"{PHYLETIC_EXPRESSION_PARAM}; only OrthoMCL's "
                 f"{PHYLETIC_EXPRESSION_SEARCH} does. On {site_id}, "
-                "GenesByOrthologPattern states a phyletic profile: put the codes "
-                "lookup_phyletic_codes returns in included_species and "
-                "excluded_species."
+                f"{PHYLETIC_PROFILE_SEARCH} states a phyletic profile: put the codes "
+                f"lookup_phyletic_codes returns in {lists}."
+            ),
+        )
+    tree = await ortho_taxonomy(site_id)
+    if tree is None:
+        raise ValidationError(
+            title="The site's taxonomy report holds no tree",
+            detail=(
+                f"{site_id} lists the {ORTHO_TAXONOMY_RECORD_TYPE} record type, but its "
+                "taxonomy report holds no clade or genome tables."
             ),
         )
     return tree

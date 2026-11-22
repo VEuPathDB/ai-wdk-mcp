@@ -10,7 +10,6 @@ from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     NO_CONSTRAINT_PATTERN,
     PHYLETIC_EXPRESSION_PARAM,
-    PHYLETIC_EXPRESSION_SEARCH,
     PHYLETIC_LIST_PARAMS,
     SHOWN_CANDIDATES,
     PhyleticBinding,
@@ -30,7 +29,6 @@ from veupathdb.errors import (
 )
 from veupathdb.wdk import (
     WDKParameter,
-    WDKRecordType,
     phyletic_tree_of,
     resolve_record_type,
 )
@@ -40,7 +38,11 @@ from veupathdb_mcp.catalog.discovery_service import (
 )
 from veupathdb_mcp.catalog.param_discovery import fetch_search_details
 from veupathdb_mcp.catalog.param_formatting import PHYLETIC_LISTS_FORM, ParameterInfo
-from veupathdb_mcp.catalog.taxonomy import ortho_taxonomy
+from veupathdb_mcp.catalog.taxonomy import (
+    PHYLETIC_PROFILE_SEARCH,
+    ortho_taxonomy,
+    serves_ortho_taxonomy,
+)
 from veupathdb_mcp.catalog.vocab_resolve import (
     NamedVocabulary,
     ResolveContext,
@@ -303,24 +305,7 @@ def _dot(left: list[float], right: list[float]) -> float:
     return sum(a * b for a, b in zip(left, right, strict=True))
 
 
-async def _takes_an_expression(
-    site_id: str, record_types: Sequence[WDKRecordType]
-) -> bool:
-    """Whether the site's phyletic search is OrthoMCL's expression search."""
-    discovery = get_discovery_service()
-    for listed in record_types:
-        searches = await discovery.get_searches(site_id, listed.url_segment)
-        if any(search.url_segment == PHYLETIC_EXPRESSION_SEARCH for search in searches):
-            return True
-    return False
-
-
 async def genome_names(site_id: str) -> dict[str, str]:
-    discovery = get_discovery_service()
-    if not await _takes_an_expression(
-        site_id, await discovery.get_record_types(site_id)
-    ):
-        return {}
     tree = await ortho_taxonomy(site_id)
     if tree is None:
         return {}
@@ -333,17 +318,16 @@ async def lookup_phyletic_codes(
     query: str,
 ) -> JSONObject | ToolErrorPayload:
     """Searches the phyletic species and clade codes by name: OrthoMCL's taxonomy on
-    a site with the expression search, and the profile search's tree elsewhere."""
+    a site that serves it, and the profile search's tree elsewhere."""
     try:
-        discovery = get_discovery_service()
-        record_types = await discovery.get_record_types(site_id)
-        if await _takes_an_expression(site_id, record_types):
+        if await serves_ortho_taxonomy(site_id):
             tree = await ortho_taxonomy(site_id)
             hint = EXPRESSION_LOOKUP_HINT
         else:
+            record_types = await get_discovery_service().get_record_types(site_id)
             resolved = resolve_record_type(record_types, record_type) or record_type
             response, _ = await fetch_search_details(
-                SearchContext(site_id, resolved, "GenesByOrthologPattern"),
+                SearchContext(site_id, resolved, PHYLETIC_PROFILE_SEARCH),
                 record_types=record_types,
             )
             tree = phyletic_tree_of(response.search_data.parameters or [])
