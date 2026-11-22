@@ -12,6 +12,7 @@ from pydantic import JsonValue
 from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recordings import TEST_ROOT
 from veupathdb.devtools import WDKExchange
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import FilterValue, ParamGraph
 from veupathdb.errors import ValidationError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
@@ -50,7 +51,7 @@ async def _wire(info: ParameterInfo, statement: object) -> list[dict[str, object
     resolved = await resolve_params_with_intent(
         filter_reads=FilterReadsDouble(),
         fetch_at=fetcher(info),
-        search_name="GenesByFacet",
+        search=SearchContext("plasmodb", "transcript", "GenesByFacet"),
         intent=ParamIntent(),
         stated={info.name: cast("JsonValue", statement)},
         about=None,

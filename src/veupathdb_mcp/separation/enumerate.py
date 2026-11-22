@@ -9,6 +9,7 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 
 from pydantic import JsonValue
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     FacetRange,
     FilterClause,
@@ -226,7 +227,9 @@ async def bind(
             fetch_at=fetch_at,
             filter_reads=filter_reads,
             intent=ParamIntent(text=proposal.intent),
-            search_name=search.url_segment,
+            search=SearchContext(
+                site_id, search.output_record_class_name, search.url_segment
+            ),
             stated=_overrides(search, infos, proposal, organisms),
             about=None,
         )

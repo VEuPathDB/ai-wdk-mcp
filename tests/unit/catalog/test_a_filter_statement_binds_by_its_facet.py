@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 from tests._support.filter_reads import FilterReadsDouble
 from veupathdb.devtools import WDKExchange
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     FilterStatementError,
     FilterValue,
@@ -52,7 +53,7 @@ async def test_a_range_statement_binds_its_facet_and_reads_its_range_once() -> N
         fetch_at=serving(*variant_characteristics()),
         filter_reads=reads,
         intent=ParamIntent(),
-        search_name="GenesByVariantCharacteristics",
+        search=SearchContext("plasmodb", "transcript", "GenesByVariantCharacteristics"),
         stated={
             "organism_select_none": _PF,
             "gene_variant_stats": [{"field": "total_variants", "value": {"min": 6}}],
@@ -81,7 +82,9 @@ async def test_a_facet_named_by_a_part_of_its_name_is_refused() -> None:
             fetch_at=serving(*variant_characteristics()),
             filter_reads=reads,
             intent=ParamIntent(),
-            search_name="GenesByVariantCharacteristics",
+            search=SearchContext(
+                "plasmodb", "transcript", "GenesByVariantCharacteristics"
+            ),
             stated={
                 "organism_select_none": _PF,
                 "gene_variant_stats": [{"field": "variants", "value": {"min": 6}}],
@@ -101,7 +104,7 @@ async def test_a_member_statement_reads_no_range_and_counts_what_it_selects() ->
         fetch_at=serving(*ngs_snps()),
         filter_reads=reads,
         intent=ParamIntent(),
-        search_name="GenesByNgsSnps",
+        search=SearchContext("plasmodb", "transcript", "GenesByNgsSnps"),
         stated={
             "organismSinglePick": _PF,
             "variation_sample_meta": [{"field": "sex", "value": ["female"]}],

@@ -491,7 +491,7 @@ async def resolve_search_parameters(
             fetch_at=wdk_fetch_at(site_id, record_type, search_name),
             filter_reads=WDKFilterReads(site_id, record_type, search_name),
             intent=ParamIntent(text=criterion),
-            search_name=search_name,
+            search=SearchContext(site_id, record_type, search_name),
             stated=overrides or {},
             about=None,
         )

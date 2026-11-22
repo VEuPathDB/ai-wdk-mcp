@@ -10,6 +10,7 @@ import pytest
 from tests._support.filter_reads import FilterReadsDouble
 from tests._support.wdk_reads import serve_reads
 from veupathdb.devtools import WDKExchange
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     NO_FILTERS_WIRE,
     FilterFacet,
@@ -67,7 +68,7 @@ async def _variant_stats(statement: list[object], reads: FilterReadsDouble) -> N
         fetch_at=serving(*variant_characteristics()),
         filter_reads=reads,
         intent=ParamIntent(),
-        search_name="GenesByVariantCharacteristics",
+        search=SearchContext("plasmodb", "transcript", "GenesByVariantCharacteristics"),
         stated={"organism_select_none": _PF, "gene_variant_stats": statement},
         about=None,
     )
@@ -78,7 +79,7 @@ async def _samples(statement: list[object], reads: FilterReadsDouble) -> None:
         fetch_at=serving(*ngs_snps()),
         filter_reads=reads,
         intent=ParamIntent(),
-        search_name="GenesByNgsSnps",
+        search=SearchContext("plasmodb", "transcript", "GenesByNgsSnps"),
         stated={"organismSinglePick": _PF, "variation_sample_meta": statement},
         about=None,
     )

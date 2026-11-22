@@ -1099,13 +1099,13 @@ async def test_a_binding_call_answers_from_the_parameter_walk(
         fetch_at: object,
         filter_reads: object,
         intent: ParamIntent,
-        search_name: str,
+        search: SearchContext,
         stated: dict[str, JsonValue],
         about: ResolveContext | None,
     ) -> ResolvedParams:
         del fetch_at, filter_reads
         assert about is None
-        seen.append((search_name, intent.text, stated))
+        seen.append((search.search_name, intent.text, stated))
         return ResolvedParams(params={"organism": StringValue(value="P. falciparum")})
 
     monkeypatch.setattr(catalog_tools, "resolve_params_with_intent", resolve)
@@ -1134,11 +1134,11 @@ async def test_an_override_that_names_no_parameter_is_a_tool_error(
         fetch_at: object,
         filter_reads: object,
         intent: ParamIntent,
-        search_name: str,
+        search: SearchContext,
         stated: dict[str, JsonValue],
         about: ResolveContext | None,
     ) -> ResolvedParams:
-        del fetch_at, filter_reads, intent, search_name, stated, about
+        del fetch_at, filter_reads, intent, search, stated, about
         raise UnknownParameterError(["orgnism"], ["organism"])
 
     monkeypatch.setattr(catalog_tools, "resolve_params_with_intent", refuse)

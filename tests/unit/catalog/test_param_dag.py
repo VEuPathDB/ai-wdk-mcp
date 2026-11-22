@@ -53,7 +53,7 @@ async def _walk(
     return await resolve_params_with_intent(
         filter_reads=FilterReadsDouble(),
         fetch_at=fetch_at,
-        search_name="GenesByRNASeqEvidence",
+        search=SearchContext("plasmodb", "transcript", "GenesByRNASeqEvidence"),
         intent=intent or ParamIntent(),
         stated=stated or {},
         about=None,

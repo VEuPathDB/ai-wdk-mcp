@@ -9,6 +9,7 @@ from tests._support.param_infos import param_infos
 from tests._support.recorded_searches import recorded_search
 from tests._support.recordings import TEST_ROOT
 from tests._support.wdk_reads import serve_reads
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import MultiPickValue
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKParameter, WDKSearchResponse, WDKStringParam
@@ -201,7 +202,7 @@ async def test_an_override_of_a_visible_read_only_parameter_is_refused() -> None
         await resolve_params_with_intent(
             filter_reads=FilterReadsDouble(),
             fetch_at=serving(*_read_only_definition()),
-            search_name="GenesByReadOnly",
+            search=SearchContext("plasmodb", "transcript", "GenesByReadOnly"),
             intent=ParamIntent(),
             stated={"fixed": "gene", "text": "kinase"},
             about=None,
@@ -231,7 +232,7 @@ async def test_an_unknown_override_lists_no_read_only_name() -> None:
         await resolve_params_with_intent(
             filter_reads=FilterReadsDouble(),
             fetch_at=serving(*_read_only_definition()),
-            search_name="GenesByReadOnly",
+            search=SearchContext("plasmodb", "transcript", "GenesByReadOnly"),
             intent=ParamIntent(),
             stated={"txt": "kinase"},
             about=None,

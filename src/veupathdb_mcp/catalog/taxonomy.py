@@ -16,6 +16,7 @@ from veupathdb.wdk import (
 from veupathdb_mcp.catalog.site_record_types import declared_record_types
 
 PHYLETIC_PROFILE_SEARCH = "GenesByOrthologPattern"
+ORTHOMCL_PHYLETIC_SEARCH = "GroupsByPhyleticPattern"
 
 _HELD: dict[str, PhyleticTree] = {}
 

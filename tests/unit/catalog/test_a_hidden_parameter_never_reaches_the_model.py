@@ -6,6 +6,7 @@ from tests._support.filter_reads import FilterReadsDouble
 from tests._support.param_infos import param_infos
 from tests._support.recorded_searches import recorded_search
 from tests._support.wdk_reads import serve_reads
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import StringValue
 from veupathdb.errors import ValidationError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
@@ -131,7 +132,7 @@ async def test_the_resolve_walk_binds_a_hidden_parameter_at_its_default() -> Non
     resolved = await resolve_params_with_intent(
         filter_reads=FilterReadsDouble(),
         fetch_at=serving(*definition),
-        search_name=SEARCH,
+        search=SearchContext("plasmodb", "transcript", SEARCH),
         intent=ParamIntent(),
         stated={},
         about=None,
@@ -154,7 +155,7 @@ async def test_a_hidden_required_parameter_with_no_default_refuses_the_search() 
             filter_reads=FilterReadsDouble(),
             fetch_at=serving(*definition),
             intent=ParamIntent(),
-            search_name=SEARCH,
+            search=SearchContext("plasmodb", "transcript", SEARCH),
             stated={},
             about=None,
         )
@@ -174,7 +175,7 @@ async def test_a_hidden_input_step_is_left_to_the_step_tree() -> None:
     resolved = await resolve_params_with_intent(
         filter_reads=FilterReadsDouble(),
         fetch_at=serving(*(definition or [])),
-        search_name=SEARCH,
+        search=SearchContext("plasmodb", "transcript", SEARCH),
         intent=ParamIntent(),
         stated={},
         about=None,
@@ -193,7 +194,7 @@ async def test_the_resolve_walk_refuses_a_hidden_override_by_name() -> None:
             fetch_at=serving(*definition),
             intent=ParamIntent(),
             stated={"WebServicesPath": "dflt"},
-            search_name=SEARCH,
+            search=SearchContext("plasmodb", "transcript", SEARCH),
             about=None,
         )
 
@@ -243,7 +244,7 @@ async def test_the_walk_derives_profile_pattern_from_the_two_lists() -> None:
     resolved = await resolve_params_with_intent(
         filter_reads=FilterReadsDouble(),
         fetch_at=serving(*definition),
-        search_name=SEARCH,
+        search=SearchContext("plasmodb", "transcript", SEARCH),
         intent=ParamIntent(),
         stated={"included_species": "pfal", "excluded_species": "hsap"},
         about=None,
@@ -263,7 +264,7 @@ async def test_a_stated_phyletic_value_is_refused_by_name(name: str) -> None:
         await resolve_params_with_intent(
             filter_reads=FilterReadsDouble(),
             fetch_at=serving(*definition),
-            search_name=SEARCH,
+            search=SearchContext("plasmodb", "transcript", SEARCH),
             intent=ParamIntent(),
             stated={"included_species": "pfal", name: "%pfal:Y%"},
             about=None,
@@ -277,7 +278,7 @@ async def test_lists_that_name_no_entry_are_refused_with_the_nearest() -> None:
         await resolve_params_with_intent(
             filter_reads=FilterReadsDouble(),
             fetch_at=serving(*definition),
-            search_name=SEARCH,
+            search=SearchContext("plasmodb", "transcript", SEARCH),
             intent=ParamIntent(),
             stated={"included_species": "Plasmodium vivax"},
             about=None,
@@ -330,7 +331,7 @@ async def test_a_phyletic_search_with_neither_list_is_refused() -> None:
         await resolve_params_with_intent(
             filter_reads=FilterReadsDouble(),
             fetch_at=serving(*definition),
-            search_name=SEARCH,
+            search=SearchContext("plasmodb", "transcript", SEARCH),
             intent=ParamIntent(),
             stated={},
             about=None,
@@ -344,7 +345,7 @@ async def test_an_unknown_name_lists_only_the_visible_names() -> None:
         await resolve_params_with_intent(
             filter_reads=FilterReadsDouble(),
             fetch_at=serving(*definition),
-            search_name=SEARCH,
+            search=SearchContext("plasmodb", "transcript", SEARCH),
             intent=ParamIntent(),
             stated={"included_species": "pfal", "speciess": "x"},
             about=None,

@@ -179,7 +179,7 @@ async def test_a_facet_statement_binds_under_its_stated_organism() -> None:
         filter_reads=FilterReadsDouble(),
         fetch_at=_by_organism,
         intent=ParamIntent(),
-        search_name=CTX.search_name,
+        search=SearchContext("plasmodb", "transcript", CTX.search_name),
         stated=_samples(VIVAX),
         about=None,
     )
@@ -198,7 +198,7 @@ async def test_the_same_statement_under_another_organism_is_refused() -> None:
             filter_reads=FilterReadsDouble(),
             fetch_at=_by_organism,
             intent=ParamIntent(),
-            search_name=CTX.search_name,
+            search=SearchContext("plasmodb", "transcript", CTX.search_name),
             stated=_samples("Plasmodium falciparum 3D7"),
             about=None,
         )

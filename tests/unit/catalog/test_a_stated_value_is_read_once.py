@@ -7,6 +7,7 @@ from fastmcp.exceptions import ToolError
 from pydantic import BaseModel, ConfigDict, JsonValue, TypeAdapter
 from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recorded_searches import recorded_search
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import ParamValue, StatedValuesError
 from veupathdb.errors import ValidationError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
@@ -57,7 +58,7 @@ async def _resolve(stated: dict[str, JsonValue]) -> ResolvedParams:
         filter_reads=FilterReadsDouble(),
         fetch_at=by_organism,
         intent=ParamIntent(),
-        search_name=SEARCH,
+        search=SearchContext("plasmodb", "transcript", SEARCH),
         stated=stated,
         about=None,
     )

@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 from pydantic import JsonValue
 from tests._support.filter_reads import FilterReadsDouble
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import StatedValuesError
 
 from veupathdb_mcp.catalog.param_dag import (
@@ -27,7 +28,7 @@ async def _resolve(
     return await resolve_params_with_intent(
         filter_reads=FilterReadsDouble(),
         fetch_at=fetcher(*infos),
-        search_name="GenesByRhythm",
+        search=SearchContext("plasmodb", "transcript", "GenesByRhythm"),
         intent=ParamIntent(text="genes with a rhythm"),
         stated=stated or {},
         about=None,

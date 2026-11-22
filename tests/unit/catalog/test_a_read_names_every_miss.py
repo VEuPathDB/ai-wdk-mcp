@@ -165,7 +165,7 @@ async def test_the_walk_names_two_filter_misses_at_once() -> None:
             fetch_at=serving(*ngs_snps(), *variant_characteristics()),
             filter_reads=_reads(),
             intent=ParamIntent(),
-            search_name="GenesByNgsSnps",
+            search=SearchContext("plasmodb", "transcript", "GenesByNgsSnps"),
             stated=_TWO_MISSES,
             about=None,
         )

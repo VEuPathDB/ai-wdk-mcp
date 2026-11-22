@@ -6,6 +6,7 @@ import pytest
 from pydantic import JsonValue
 from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recorded_searches import recorded_search
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     SHOWN_CANDIDATES,
     VocabularyEntryError,
@@ -22,7 +23,7 @@ from veupathdb_mcp.catalog import (
     resolve_params_with_intent,
 )
 from veupathdb_mcp.catalog.param_dag import ParamFetcher
-from veupathdb_mcp.catalog.taxonomy import PHYLETIC_PROFILE_SEARCH
+from veupathdb_mcp.catalog.taxonomy import ORTHOMCL_PHYLETIC_SEARCH
 from veupathdb_mcp.catalog.vocab_resolve import ResolveContext
 
 from .conftest import PHYLETIC_MAPS, serving
@@ -52,13 +53,14 @@ async def _walked(
     stated: dict[str, JsonValue],
     about: ResolveContext | None = None,
     search_name: str = "GenesByNgsSnps",
+    site_id: str = "plasmodb",
 ) -> ValidationError:
     with pytest.raises(ValidationError) as refused:
         await resolve_params_with_intent(
             fetch_at=serving(*declarations),
             filter_reads=FilterReadsDouble(),
             intent=ParamIntent(),
-            search_name=search_name,
+            search=SearchContext(site_id, "transcript", search_name),
             stated=stated,
             about=about,
         )
@@ -308,18 +310,32 @@ async def test_each_species_list_is_offered_its_own_nearest_entries(
     assert _nearest_to("Plasmodium falciparum") != _nearest_to("Homo sapienz")
 
 
-async def test_a_tree_that_does_not_read_sends_the_agent_another_way() -> None:
+_NO_TREE = (
+    "The site's species tree does not read: its phyletic_indent_map and "
+    "phyletic_term_map give no tree, so included_species and excluded_species "
+    "derive no profile_pattern, and restating them cannot fix it."
+)
+
+
+async def _no_tree_on(site_id: str) -> str:
     refusal = await _walked(
         _without_the_tree(),
         {"included_species": "pfal"},
         search_name="GenesByOrthologPattern",
+        site_id=site_id,
     )
-
     [pattern] = _rows(refusal)
-    assert pattern.detail == (
-        "The site's species tree does not read: its phyletic_indent_map and "
-        "phyletic_term_map give no tree, so included_species and excluded_species "
-        "derive no profile_pattern, and restating them cannot fix it. Take another "
-        "route: the ortholog phyletic-pattern search on OrthoMCL "
-        f"({PHYLETIC_PROFILE_SEARCH}) reads the same lists against its own tree."
+    return pattern.detail
+
+
+async def test_a_component_site_whose_tree_does_not_read_names_orthomcl() -> None:
+    assert await _no_tree_on("plasmodb") == (
+        f"{_NO_TREE} Take another route: OrthoMCL's Phyletic Pattern search "
+        f"({ORTHOMCL_PHYLETIC_SEARCH}) states the pattern as a phyletic_expression "
+        "against OrthoMCL's own tree."
     )
+    assert ORTHOMCL_PHYLETIC_SEARCH == "GroupsByPhyleticPattern"
+
+
+async def test_orthomcl_whose_tree_does_not_read_names_no_route() -> None:
+    assert await _no_tree_on("orthomcl") == _NO_TREE

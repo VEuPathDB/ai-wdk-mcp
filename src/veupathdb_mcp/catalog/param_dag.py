@@ -77,6 +77,7 @@ from veupathdb_mcp.catalog.param_intent import (
 from veupathdb_mcp.catalog.param_phyletic import (
     PhyleticListError,
     PhyleticNoSelection,
+    PhyleticTreeUnread,
     derive_phyletic_overrides,
     is_phyletic_sheet,
     ordered_phyletic_refusal,
@@ -85,6 +86,7 @@ from veupathdb_mcp.catalog.search_context import (
     get_search_params_under_context,
 )
 from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
+from veupathdb_mcp.catalog.taxonomy import serves_ortho_taxonomy
 from veupathdb_mcp.catalog.vocab_resolve import (
     NamedVocabulary,
     ResolveContext,
@@ -151,6 +153,7 @@ async def _derived_phyletic(
     declarations: Sequence[WDKParameter],
     refused: Refusals,
     about: ResolveContext | None,
+    site_id: str,
 ) -> OverrideMap:
     if not is_phyletic_sheet(infos) or PHYLETIC_LIST_PARAMS & refused.names:
         return overrides
@@ -167,6 +170,12 @@ async def _derived_phyletic(
     match derived:
         case PhyleticBinding() as binding:
             return {**overrides, **read_declared(declarations, binding.model_dump())}
+        case None:
+            refusal = PhyleticListError(
+                PhyleticTreeUnread(
+                    orthomcl_elsewhere=not await serves_ortho_taxonomy(site_id)
+                )
+            )
         case refused_lists:
             refusal = PhyleticListError(refused_lists)
     if about is not None:
@@ -818,7 +827,7 @@ async def resolve_params_with_intent(
     fetch_at: ParamFetcher,
     filter_reads: FilterReads,
     intent: ParamIntent,
-    search_name: str,
+    search: SearchContext,
     stated: Mapping[str, JsonValue],
     about: ResolveContext | None,
 ) -> ResolvedParams:
@@ -846,7 +855,7 @@ async def resolve_params_with_intent(
         declarations = await fetch_at(context)
         infos = format_param_info_typed(declarations, organism=None)
         declared = {d.name: d for d in declarations}
-        _note_hidden(infos, stated, search_name, refused)
+        _note_hidden(infos, stated, search.search_name, refused)
         overrides = _read_pass(
             declarations,
             stated,
@@ -857,7 +866,7 @@ async def resolve_params_with_intent(
         )
         if pass_index == 0:
             overrides = await _derived_phyletic(
-                infos, overrides, declarations, refused, about
+                infos, overrides, declarations, refused, about, search.site_id
             )
         # Siblings decide whether one numeric param owns a stated quantity.
         resolution = _Resolution(
@@ -903,7 +912,7 @@ async def resolve_params_with_intent(
                 unread.append(outcome.param_name)
                 unresolved.append(outcome.param_name)
             elif isinstance(outcome, UnboundParameter):
-                slot = _visible_slot(info, outcome, search_name, refused)
+                slot = _visible_slot(info, outcome, search.search_name, refused)
                 if slot is not None:
                     open_slots.append(slot)
                     unresolved.append(info.name)

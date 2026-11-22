@@ -38,6 +38,7 @@ from veupathdb_mcp.catalog.discovery_service import (
 from veupathdb_mcp.catalog.param_discovery import fetch_search_details
 from veupathdb_mcp.catalog.param_formatting import PHYLETIC_LISTS_FORM, ParameterInfo
 from veupathdb_mcp.catalog.taxonomy import (
+    ORTHOMCL_PHYLETIC_SEARCH,
     PHYLETIC_PROFILE_SEARCH,
     ortho_taxonomy,
     serves_ortho_taxonomy,
@@ -95,6 +96,12 @@ class PhyleticUnresolvedProposal(BaseModel):
         ]
 
 
+class PhyleticTreeUnread(BaseModel):
+    """The search's species maps give no tree, so no list can be read."""
+
+    orthomcl_elsewhere: bool
+
+
 class PhyleticNoSelection(BaseModel):
     """Neither list selects a species, so the criterion constrains nothing.
 
@@ -108,7 +115,8 @@ PhyleticDerivation = PhyleticBinding | PhyleticUnresolvedProposal | PhyleticNoSe
 
 class PhyleticListError(ValidationError):
     def __init__(
-        self, refused: PhyleticUnresolvedProposal | PhyleticNoSelection | None
+        self,
+        refused: PhyleticUnresolvedProposal | PhyleticNoSelection | PhyleticTreeUnread,
     ) -> None:
         self.refused = refused
         match refused:
@@ -120,20 +128,28 @@ class PhyleticListError(ValidationError):
                     "profile_pattern states no criterion. Name what must have an "
                     "ortholog and what must not."
                 )
-            case None:
-                rows = _pattern_rows(
-                    "The site's species tree does not read: its phyletic_indent_map "
-                    "and phyletic_term_map give no tree, so included_species and "
-                    "excluded_species derive no profile_pattern, and restating them "
-                    "cannot fix it. Take another route: the ortholog phyletic-pattern "
-                    f"search on OrthoMCL ({PHYLETIC_PROFILE_SEARCH}) reads the same "
-                    "lists against its own tree."
-                )
+            case PhyleticTreeUnread(orthomcl_elsewhere=elsewhere):
+                rows = _pattern_rows(_tree_unread(elsewhere=elsewhere))
         super().__init__(
             title="The species parameters derive no profile_pattern",
             detail="\n".join(str(row["detail"]) for row in rows),
             errors=list(rows),
         )
+
+
+def _tree_unread(*, elsewhere: bool) -> str:
+    unread = (
+        "The site's species tree does not read: its phyletic_indent_map and "
+        "phyletic_term_map give no tree, so included_species and excluded_species "
+        "derive no profile_pattern, and restating them cannot fix it."
+    )
+    if not elsewhere:
+        return unread
+    return (
+        f"{unread} Take another route: OrthoMCL's Phyletic Pattern search "
+        f"({ORTHOMCL_PHYLETIC_SEARCH}) states the pattern as a phyletic_expression "
+        "against OrthoMCL's own tree."
+    )
 
 
 def _pattern_rows(detail: str) -> list[JSONObject]:

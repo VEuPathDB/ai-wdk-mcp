@@ -9,6 +9,7 @@ from typing import Any
 import pytest
 from pydantic import JsonValue
 from tests._support.filter_reads import FilterReadsDouble
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     DECIDED_CANDIDATES,
     SHOWN_CANDIDATES,
@@ -224,7 +225,9 @@ class TestAPhyleticRefusal:
                 fetch_at=_serving(_ORTHOLOGS),
                 filter_reads=FilterReadsDouble(),
                 intent=ParamIntent(),
-                search_name="GenesByOrthologPattern",
+                search=SearchContext(
+                    "plasmodb", "transcript", "GenesByOrthologPattern"
+                ),
                 stated={"included_species": "Pf3D7"},
                 about=about,
             )
@@ -312,7 +315,7 @@ async def test_a_phyletic_refusal_asks_for_at_most_the_shown_count_of_terms() ->
             fetch_at=_serving(_ORTHOLOGS),
             filter_reads=FilterReadsDouble(),
             intent=ParamIntent(),
-            search_name="GenesByOrthologPattern",
+            search=SearchContext("plasmodb", "transcript", "GenesByOrthologPattern"),
             stated={"included_species": ", ".join(_TWELVE)},
             about=ResolveContext(site_id="orthomcl"),
         )

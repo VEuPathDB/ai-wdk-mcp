@@ -48,7 +48,9 @@ species is refused on itself: one row per list, `included_species` or `excluded_
 the stated text as `value` and its own unknown terms and the entries nearest to them
 (`rank_entries`, `SHOWN_CANDIDATES`, led by a Decisions pick when `about` is given) in
 `detail`. A search whose species tree does not read is a `profile_pattern` row that says
-restating the lists cannot fix it and names the OrthoMCL ortholog phyletic-pattern search. Every row holds
+restating the lists cannot fix it. On a site that does not serve the OrthoMCL taxonomy
+(`serves_ortho_taxonomy`) it names OrthoMCL's Phyletic Pattern search,
+`GroupsByPhyleticPattern`; on OrthoMCL it names no other route. Every row holds
 `param` and a one-line `detail`.
 
 The refusal's class depends on its rows only, never on `about`: a refusal with no entry row

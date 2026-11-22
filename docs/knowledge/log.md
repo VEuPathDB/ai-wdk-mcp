@@ -8,8 +8,10 @@
 - Each list's row offers the entries nearest its own unknown terms
   (`PhyleticUnresolvedProposal.nearest` is keyed by list).
 - A search whose `phyletic_indent_map` and `phyletic_term_map` do not read as a tree is refused
-  in its own words, not as an empty selection: restating the lists cannot fix it, and the
-  OrthoMCL ortholog phyletic-pattern search is the other route.
+  in its own words, not as an empty selection: restating the lists cannot fix it. On a site
+  that does not serve the OrthoMCL taxonomy (`serves_ortho_taxonomy`) it names OrthoMCL's
+  `GroupsByPhyleticPattern` (`taxonomy.ORTHOMCL_PHYLETIC_SEARCH`); on OrthoMCL it names none.
+- `resolve_params_with_intent` takes `search: SearchContext` in place of `search_name`.
 - A refusal row is read by its `detail` alone (`_RefusalRow`).
 
 ## 2026-11-22 - A walk raises once, in call order

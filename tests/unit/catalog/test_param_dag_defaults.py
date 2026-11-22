@@ -12,6 +12,7 @@ import json
 import pytest
 from pydantic import JsonValue
 from tests._support.filter_reads import FilterReadsDouble
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     MultiPickValue,
     SinglePickValue,
@@ -65,7 +66,7 @@ async def _resolve(
     return await resolve_params_with_intent(
         filter_reads=FilterReadsDouble(),
         fetch_at=fetcher(*infos),
-        search_name="GenesByDefaults",
+        search=SearchContext("plasmodb", "transcript", "GenesByDefaults"),
         intent=ParamIntent(text=text),
         stated=stated or {},
         about=None,
@@ -262,7 +263,7 @@ async def _resolve_text(stated: dict[str, JsonValue] | None = None) -> ResolvedP
     return await resolve_params_with_intent(
         filter_reads=FilterReadsDouble(),
         fetch_at=_genes_by_text(),
-        search_name="GenesByDefaults",
+        search=SearchContext("plasmodb", "transcript", "GenesByDefaults"),
         intent=ParamIntent(),
         stated=stated or {},
         about=None,
@@ -421,7 +422,7 @@ async def _under_organism(
     resolved = await resolve_params_with_intent(
         filter_reads=FilterReadsDouble(),
         fetch_at=declaring(fetch_at),
-        search_name="GenesByDefaults",
+        search=SearchContext("plasmodb", "transcript", "GenesByDefaults"),
         intent=ParamIntent(text="expression profile of the protease genes"),
         stated={"organism": [chosen]},
         about=None,

@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 from pydantic import JsonValue
+from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import VocabularyEntryError, flatten_vocab
 from veupathdb.errors import ValidationError
 from veupathdb.testing import NEEDS_QA_RECORDING
@@ -109,7 +110,7 @@ async def test_the_walk_names_an_early_miss_and_a_later_entry_at_once() -> None:
             fetch_at=serving(*_both()),
             filter_reads=_reads(),
             intent=ParamIntent(),
-            search_name="GenesByInterproDomain",
+            search=SearchContext("plasmodb", "transcript", "GenesByInterproDomain"),
             stated=_A_MISS_THEN_AN_ENTRY,
             about=None,
         )
