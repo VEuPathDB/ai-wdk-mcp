@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
 from pydantic import ConfigDict
 from veupathdb.domain.parameters import (
@@ -108,6 +108,17 @@ async def _ordered_entries(
         return ranked[:SHOWN_CANDIDATES]
     shown = [pick, *(c for c in ranked if c.value != pick.value)]
     return shown[:SHOWN_CANDIDATES]
+
+
+def interleaved[T](
+    groups: Sequence[Sequence[T]], key: Callable[[T], str], limit: int
+) -> list[T]:
+    found: dict[str, T] = {}
+    for rank in range(max((len(group) for group in groups), default=0)):
+        for group in groups:
+            if rank < len(group):
+                found.setdefault(key(group[rank]), group[rank])
+    return list(found.values())[:limit]
 
 
 async def ordered_terms(

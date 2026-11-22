@@ -35,6 +35,7 @@ from veupathdb.domain.parameters import (
     rank_entries,
     read_stated_values,
     restates,
+    same_value,
     shown_stated,
     shown_stated_text,
     to_wire,
@@ -83,6 +84,7 @@ from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
 from veupathdb_mcp.catalog.vocab_resolve import (
     NamedVocabulary,
     ResolveContext,
+    interleaved,
     ordered_refusal,
     ordered_terms,
 )
@@ -337,10 +339,9 @@ class MovedParentError(ValidationError):
         )
         names = " and ".join(moved)
         refused = refusal.detail or refusal.title
-        unsaid = [c for c in candidates if c.split(": ", 1)[-1] not in refused]
         offered = (
-            f" Under the new {names}, {child} offers: {'; '.join(unsaid)}."
-            if unsaid
+            f" Under the new {names}, {child} offers: {'; '.join(candidates)}."
+            if candidates
             else ""
         )
         detail = (
@@ -362,7 +363,7 @@ def _shown(value: ParamValue | None) -> str:
 
 def _asked(
     declaration: WDKParameter, held: ParamValue
-) -> list[tuple[NamedVocabulary, str, str]]:
+) -> list[tuple[NamedVocabulary, str, str]] | None:
     match held:
         case SinglePickValue(value=term):
             return _picked(declaration, [term])
@@ -376,11 +377,7 @@ def _asked(
                 if (facet := facets.find(clause.field)) is not None and facet.members
             ]
         case _:
-            return [
-                (_facet_vocabulary(facet), to_wire(held), f"{facet.display}: ")
-                for facet in FilterFacets.of(declaration).root
-                if facet.members
-            ]
+            return None
 
 
 def _picked(
@@ -411,20 +408,34 @@ def _clause_phrase(clause: FilterClause) -> str:
 
 
 async def _candidates(
-    declaration: WDKParameter, held: ParamValue, about: ResolveContext | None
+    declaration: WDKParameter,
+    held: ParamValue,
+    about: ResolveContext | None,
+    refused: str,
 ) -> list[str]:
     asked = _asked(declaration, held)
+    if asked is None:
+        named = [
+            facet.display
+            for facet in FilterFacets.of(declaration).root
+            if facet.members
+        ]
+        return interleaved([named], str, SHOWN_CANDIDATES)
     pairs = [(vocabulary, phrase) for vocabulary, phrase, _ in asked]
     led = (
         await ordered_terms(about, pairs)
         if about is not None
         else [rank_entries(v.options, p, SHOWN_CANDIDATES) for v, p in pairs]
     )
-    named: dict[str, str] = {}
-    for (_, _, prefix), entries in zip(asked, led, strict=True):
-        for entry in entries:
-            named.setdefault(f"{prefix}{entry.value}", f"{prefix}{entry_name(entry)}")
-    return list(named.values())[:SHOWN_CANDIDATES]
+    groups = [
+        [
+            f"{prefix}{entry_name(entry)}"
+            for entry in entries
+            if entry.value not in refused
+        ]
+        for (_, _, prefix), entries in zip(asked, led, strict=True)
+    ]
+    return interleaved(groups, str, SHOWN_CANDIDATES)
 
 
 async def read_under_parents(
@@ -439,11 +450,7 @@ async def read_under_parents(
     """Reads each stated value under the declarations its stated, bound and site-set
     parents give, and refuses a filter that selects nothing. A name of no parameter
     is refused before any value is read. A term no entry names is refused with its
-    candidates ordered under ``about``; None sends no choice. A value given back
-    as the bound value shows it is the bound value, and is not read, while no
-    parent of it reads to a new value. A bound value given back or left out whose
-    parent reads to a new value is read again under it, and refused as such; with ``stale`` given, it is
-    noted there and bound to nothing instead."""
+    candidates ordered under ``about``; None sends no choice."""
     return await _read_held(
         fetch_at, stated, reads, about=about, bound=bound, noted=stale
     )
@@ -475,7 +482,11 @@ async def _read_held(
         about=about,
         bound={n: v for n, v in bound.items() if n not in standing},
     )
-    moved = {name for name, value in read.items() if bound.get(name) != value}
+    moved = {
+        name
+        for name, value in read.items()
+        if name not in bound or not same_value(bound[name], value)
+    }
     site_set = {d.name for d in declarations if d.site_set}
     followers = {
         name: given_back.get(name, shown_stated(value))
@@ -501,12 +512,13 @@ async def _read_held(
                 parent: (bound.get(parent), read[parent])
                 for parent in sorted(_ancestors(graph.wire_parents, child) & moved)
             }
+            refused = refusal.detail or refusal.title
             stale = MovedParentError(
                 child,
                 bound[child],
                 new_parents,
                 refusal,
-                await _candidates(fresh[child], bound[child], about)
+                await _candidates(fresh[child], bound[child], about, refused)
                 if child in fresh
                 else [],
             )

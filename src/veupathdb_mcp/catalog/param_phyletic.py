@@ -46,6 +46,7 @@ from veupathdb_mcp.catalog.taxonomy import (
 from veupathdb_mcp.catalog.vocab_resolve import (
     NamedVocabulary,
     ResolveContext,
+    interleaved,
     ordered_terms,
 )
 from veupathdb_mcp.embeddings.embedder import (
@@ -150,11 +151,15 @@ def is_phyletic_sheet(infos: list[ParameterInfo]) -> bool:
 def _ranked_entries(tree: PhyleticTree, unknown: Sequence[str]) -> list[VocabOption]:
     """The entries ranked closest to the terms that named nothing."""
     options = tree.labels()
-    found: dict[str, VocabOption] = {}
-    for term in unknown:
-        for match in rank_entries(options, term, SHOWN_CANDIDATES):
-            found.setdefault(match.value, match)
-    return list(found.values())[:SHOWN_CANDIDATES]
+    return interleaved(
+        [rank_entries(options, term, SHOWN_CANDIDATES) for term in unknown],
+        _value,
+        SHOWN_CANDIDATES,
+    )
+
+
+def _value(entry: VocabOption) -> str:
+    return entry.value
 
 
 async def ordered_phyletic_refusal(
@@ -177,12 +182,9 @@ async def ordered_phyletic_refusal(
                 )
                 for t in terms
             ]
-            led = await ordered_terms(about, asked)
-            found: dict[str, VocabOption] = {}
-            for entries in led:
-                for entry in entries:
-                    found.setdefault(entry.value, entry)
-            nearest = list(found.values())[:SHOWN_CANDIDATES]
+            nearest = interleaved(
+                await ordered_terms(about, asked), _value, SHOWN_CANDIDATES
+            )
             return PhyleticListError(
                 PhyleticUnresolvedProposal(unresolved=unresolved, nearest=nearest)
             )

@@ -1,5 +1,15 @@
 # Knowledge log
 
+## 2026-11-22 - A parent moves by the value WDK reads
+
+- `read_under_parents` counts a parent as moved only when its read value is not
+  `same_value` (veupathdb-py) as the held one, so a multi-pick restated in another order
+  moves nothing.
+- A moved-parent refusal offers, for a held pick or filter, the entries ranked from each
+  term or clause in turn (`vocab_resolve.interleaved`, at most `SHOWN_CANDIDATES`), leaving
+  out what the reader's refusal already lists; for a kept value it names the facets that hold
+  members. `interleaved` is also the one merge the phyletic refusals use.
+
 ## 2026-11-22 - A parent moves only when its read value moves
 
 - `read_under_parents` reads the stated values first and counts a parent as moved only when

@@ -4,7 +4,6 @@ import pytest
 from pydantic import JsonValue
 from tests._support.filter_reads import FilterReadsDouble
 from veupathdb.domain.parameters import (
-    SHOWN_CANDIDATES,
     FilterValue,
     HeldValue,
     MultiPickValue,
@@ -133,7 +132,13 @@ async def test_a_kept_child_under_a_new_parent_is_offered_the_new_members() -> N
 
     detail = refused.value.detail
     offered = detail.split(" offers: ", 1)[1].split(". State ", 1)[0]
-    assert len(offered.split("; ")) <= SHOWN_CANDIDATES
+    assert offered.split("; ") == [
+        "Dataset",
+        "Sample name",
+        "age",
+        "Collection date as provided",
+        "Collection site",
+    ]
     assert len(detail) < 2000
     assert detail.startswith(
         f'organismSinglePick moved from ["{_PF}"] to ["{_PREI}"], so '
@@ -168,22 +173,44 @@ _NGS_HELD: dict[str, ParamValue] = {
 }
 
 
+_ORGANISM = {"organismSinglePick": MultiPickValue(values=[_PF])}
+
+
 @pytest.mark.parametrize(
-    "stated",
+    ("stated", "expected"),
     [
-        {"organismSinglePick": [_PF.lower()]},
-        {"organismSinglePick": [_PF.lower()], "variation_sample_meta": _KEPT.wire},
+        ({"organismSinglePick": [_PF.lower()]}, _ORGANISM),
+        (
+            {"organismSinglePick": [_PF.lower()], "variation_sample_meta": _KEPT.wire},
+            {**_ORGANISM, "variation_sample_meta": _KEPT},
+        ),
     ],
 )
 async def test_a_parent_restated_in_another_form_moves_no_child(
-    stated: dict[str, JsonValue],
+    stated: dict[str, JsonValue], expected: dict[str, ParamValue]
 ) -> None:
     read = await read_under_parents(
         serving(*ngs_snps()), stated, FilterReadsDouble(), about=None, bound=_NGS_HELD
     )
 
-    assert read["organismSinglePick"] == MultiPickValue(values=[_PF])
-    assert read.get("variation_sample_meta", _KEPT) == _KEPT
+    assert read == expected
+
+
+async def test_a_multi_pick_parent_restated_in_another_order_moves_no_child() -> None:
+    held: dict[str, ParamValue] = {
+        "organism_select_none": MultiPickValue(values=[_PF, _PCHA]),
+        "gene_variant_stats": _KEPT,
+    }
+
+    read = await read_under_parents(
+        serving(*variant_characteristics()),
+        {"organism_select_none": [_PCHA, _PF]},
+        FilterReadsDouble(),
+        about=None,
+        bound=held,
+    )
+
+    assert read == {"organism_select_none": MultiPickValue(values=[_PCHA, _PF])}
 
 
 _OUT_OF_REACH: JsonValue = [{"field": "total_variants", "value": {"min": 99999999}}]
@@ -210,3 +237,38 @@ async def test_a_context_read_refuses_a_child_it_states_anew() -> None:
             bound=_HELD,
             stale=[],
         )
+
+
+async def test_each_clause_of_a_held_filter_is_offered_its_own_members() -> None:
+    held = FilterValue.model_validate(
+        {
+            "filters": [
+                {
+                    "field": "VAR_8e68b3e5",
+                    "type": "string",
+                    "isRange": False,
+                    "includeUnknown": False,
+                    "value": ["Peru"],
+                },
+                {
+                    "field": "VAR_68bb04bd",
+                    "type": "string",
+                    "isRange": False,
+                    "includeUnknown": False,
+                    "value": ["female"],
+                },
+            ]
+        }
+    )
+
+    with pytest.raises(MovedParentError) as refused:
+        await read_under_parents(
+            serving(*ngs_snps()),
+            {"organismSinglePick": [_PREI]},
+            FilterReadsDouble(),
+            about=None,
+            bound={**_ORGANISM, "variation_sample_meta": held},
+        )
+
+    offered = refused.value.detail.split(" offers: ", 1)[1].split(". State ", 1)[0]
+    assert offered.split("; ") == ["sex: female", "sex: male"]
