@@ -20,6 +20,7 @@ from veupathdb.domain.parameters import (
     ParamGraph,
     ParamKind,
     ParamValue,
+    VocabLookup,
     VocabOption,
     WDKTreeBoxVocabNode,
     dedupe_options,
@@ -37,7 +38,6 @@ from veupathdb_mcp.catalog.phyletic_logic import (
 )
 from veupathdb_mcp.catalog.shortlist import shortlist_values
 from veupathdb_mcp.catalog.site_cost import CHARACTERS_WITHIN_READ_TIMEOUT
-from veupathdb_mcp.catalog.vocab_lookup import VocabLookup
 from veupathdb_mcp.catalog.vocab_pick import VocabPick
 from veupathdb_mcp.catalog.vocab_rendering import (
     entries_of,

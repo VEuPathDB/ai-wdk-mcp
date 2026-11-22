@@ -49,9 +49,11 @@ async def test_the_recorder_reads_records_alone_and_writes_its_wire_back(
     ]
 
 
-async def test_every_upload_is_refused_while_the_recorder_runs() -> None:
+async def test_every_upload_is_refused_while_the_recorder_runs(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     record_gene_lookups.tape_the_reads(
-        record_gene_lookups.RecordTape(_signed_in, [], 0)
+        monkeypatch, record_gene_lookups.RecordTape(_signed_in, [], 0)
     )
 
     with pytest.raises(record_gene_lookups.RecordingStoppedError):

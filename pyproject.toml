@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-veupathdb-py = { git = "https://github.com/VEuPathDB/ai-veupathdb-client", tag = "v0.9.0b9" }
+veupathdb-py = { git = "https://github.com/VEuPathDB/ai-veupathdb-client", tag = "v0.9.0b10" }
 
 [build-system]
 requires = ["hatchling"]
@@ -117,6 +117,8 @@ known-first-party = ["veupathdb_mcp"]
 [tool.mypy]
 python_version = "3.14"
 strict = true
+mypy_path = "src"
+explicit_package_bases = true
 plugins = ["pydantic.mypy"]
 warn_return_any = true
 warn_unused_ignores = true

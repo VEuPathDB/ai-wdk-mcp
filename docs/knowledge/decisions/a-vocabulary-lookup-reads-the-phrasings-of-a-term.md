@@ -8,7 +8,7 @@ status: stable
 
 # The choice
 
-`read_options` in `src/veupathdb_mcp/catalog/vocab_lookup.py` is the one rule a query
+`read_options` in `veupathdb-py: src/veupathdb/domain/parameters/vocab_lookup.py` is the one rule a query
 narrows a vocabulary by, for a list, a tree and the phyletic clade labels. A label and a
 term are compared folded: lower case, every run of other characters one space, so
 "RNA-binding" and "RNA binding" read alike and "peptidase" still matches
@@ -56,6 +56,7 @@ that hold "RNA binding". With the request's words "RNA-binding", all 30 rank fir
 - The request's words keeping entries of their own. A word alone of a request matches
   entries that name another concept, and those would rank ahead of every phrasing.
 
-Falsified by `tests/unit/catalog/test_a_lookup_reads_several_phrasings.py`,
-`tests/unit/catalog/test_a_lookup_ranks_the_requests_own_words_first.py` and
+Falsified by `veupathdb-py: tests/unit/domain/parameters/test_a_lookup_reads_several_phrasings.py`,
+`veupathdb-py: tests/unit/domain/parameters/test_a_lookup_ranks_the_requests_own_words_first.py`,
+`tests/unit/catalog/test_a_cut_list_holds_the_request_entries_first.py` and
 `tests/unit/catalog/test_a_narrowed_vocabulary_travels_whole.py`.

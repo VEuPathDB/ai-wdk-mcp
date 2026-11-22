@@ -6,7 +6,7 @@ from pathlib import Path
 
 import httpx
 from pydantic import BaseModel, ConfigDict, JsonValue
-from veupathdb.domain.parameters import VocabOption
+from veupathdb.domain.parameters import VocabOption, read_options
 from veupathdb.wdk import WDKSearch, WDKSearchResponse
 
 from veupathdb_mcp.catalog.decisions import (
@@ -15,7 +15,6 @@ from veupathdb_mcp.catalog.decisions import (
     DecisionResponse,
 )
 from veupathdb_mcp.catalog.search_picks import catalog_choice_request
-from veupathdb_mcp.catalog.vocab_lookup import read_options
 from veupathdb_mcp.catalog.vocab_pick import NONE_FITS, choice_request, fit_request
 from veupathdb_mcp.catalog.vocab_rendering import entries_of
 

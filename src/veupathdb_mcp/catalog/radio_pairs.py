@@ -3,7 +3,7 @@
 from collections.abc import Mapping, Sequence
 
 from pydantic import BaseModel, ConfigDict, Field
-from veupathdb.domain.parameters import MAX_NEAREST_ENTRIES, nearest_entries
+from veupathdb.domain.parameters import SHOWN_CANDIDATES, VocabOption, rank_entries
 
 from veupathdb_mcp.catalog.param_formatting import RADIO_OFF, ParameterInfo
 
@@ -30,7 +30,7 @@ class RadioPairIssue(BaseModel):
 
     pair: RadioPair
     free_value: str
-    nearest: list[str] = Field(default_factory=list)
+    nearest: list[VocabOption] = Field(default_factory=list)
 
 
 def radio_pairs(properties: Mapping[str, list[str]]) -> list[RadioPair]:
@@ -103,10 +103,10 @@ def check_radio_pairs(
             issue = RadioPairIssue(
                 pair=pair,
                 free_value=value,
-                nearest=nearest_entries(
+                nearest=rank_entries(
                     by_name[pair.vocabulary].vocabulary(),
                     value.strip(_WILDCARD_CHARS),
-                    MAX_NEAREST_ENTRIES,
+                    SHOWN_CANDIDATES,
                 ),
             )
     return overrides, issue

@@ -8,17 +8,19 @@ from pydantic import BaseModel, Field, JsonValue
 from veupathdb import JSONObject, get_logger
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
-    MAX_NEAREST_ENTRIES,
     NO_CONSTRAINT_PATTERN,
     PHYLETIC_EXPRESSION_PARAM,
     PHYLETIC_EXPRESSION_SEARCH,
     PHYLETIC_LIST_PARAMS,
+    SHOWN_CANDIDATES,
     PhyleticBinding,
     PhyleticNode,
     PhyleticTree,
     PhyleticUnresolved,
+    VocabOption,
     derive_binding,
-    nearest_entries,
+    entry_name,
+    rank_entries,
 )
 from veupathdb.errors import (
     ValidationError,
@@ -72,7 +74,7 @@ class PhyleticUnresolvedProposal(BaseModel):
     """Why a pair of species lists binds nothing, and the entries nearest to them."""
 
     unresolved: PhyleticUnresolved
-    nearest: list[str] = Field(default_factory=list)
+    nearest: list[VocabOption] = Field(default_factory=list)
 
 
 class PhyleticNoSelection(BaseModel):
@@ -106,7 +108,8 @@ class PhyleticListError(ValidationError):
                         f"included_species and excluded_species both name "
                         f"{unresolved.conflicts}"
                     )
-                detail = f"{'; '.join(named)}. Nearest entries: {nearest}."
+                near = ", ".join(entry_name(entry) for entry in nearest)
+                detail = f"{'; '.join(named)}. Nearest entries: {near}."
             case PhyleticNoSelection():
                 detail = (
                     "included_species and excluded_species select no species, so "
@@ -137,15 +140,14 @@ def is_phyletic_sheet(infos: list[ParameterInfo]) -> bool:
     return frozenset(PhyleticBinding.model_fields) <= names
 
 
-def _nearest_entries(tree: PhyleticTree, unknown: Sequence[str]) -> list[str]:
-    """The codes and labels closest to the terms that named nothing."""
+def _nearest_entries(tree: PhyleticTree, unknown: Sequence[str]) -> list[VocabOption]:
+    """The entries ranked closest to the terms that named nothing."""
     options = tree.labels()
-    found: list[str] = []
+    found: dict[str, VocabOption] = {}
     for term in unknown:
-        for match in nearest_entries(options, term, MAX_NEAREST_ENTRIES):
-            if match not in found:
-                found.append(match)
-    return found[:MAX_NEAREST_ENTRIES]
+        for match in rank_entries(options, term, SHOWN_CANDIDATES):
+            found.setdefault(match.value, match)
+    return list(found.values())[:SHOWN_CANDIDATES]
 
 
 def derive_phyletic_overrides(

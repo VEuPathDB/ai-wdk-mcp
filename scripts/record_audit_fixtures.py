@@ -31,6 +31,7 @@ from veupathdb_mcp.audit import (
     ORGANISM_ATTRIBUTE,
     ORTHOLOG_TABLE,
     GeneModel,
+    GroupMember,
     OrthologRow,
     call_length,
     gene_record,
@@ -304,7 +305,7 @@ async def _length(site: str, reader: GenomeReader, target: LengthTarget) -> Leng
     )
     rows = [r for answer in row_answers for r in rows_of(answer, "GeneByLocusTag")]
     row = next(r for r in rows if r.gene == target.gene)
-    reference = call_length([row], rows).reference
+    reference = call_length([row], [GroupMember.of_row(r) for r in rows]).reference
     genes = [target.gene, *([reference.gene] if reference else []), *target.proteins]
     protein_answers = await locus_tag_answers(site, genes, ["protein_sequence"])
     model_record = await gene_record(

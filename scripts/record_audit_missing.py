@@ -16,6 +16,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated, Literal
 
+import pytest
 from pydantic import BaseModel, ConfigDict, Discriminator, JsonValue
 from scripts.record_audit_fixtures import FIXTURES, act_as_the_test_account
 from veupathdb import JSONObject
@@ -34,6 +35,8 @@ from veupathdb.wdk import (
     WDKRecordInstance,
     WDKSearchConfig,
     close_all_clients,
+    get_strategy_api,
+    get_wdk_client,
 )
 
 from veupathdb_mcp.audit import gene_models, genes, missing_inputs
@@ -41,6 +44,7 @@ from veupathdb_mcp.audit.genes import GeneRow
 from veupathdb_mcp.audit.lengths import is_orthology_group
 from veupathdb_mcp.audit.missing import ANCHOR_REACH
 from veupathdb_mcp.tools.audit_missing_tools import audit_missing_gene
+from veupathdb_mcp.wdk import dataset_client
 
 
 class DatasetCall(BaseModel):
@@ -220,21 +224,27 @@ class TapedReader:
         return window
 
 
-def tape_the_reads(tape: Tape) -> None:
-    shared = genes.get_wdk_client
-    private = genes.dataset_client
-    records = gene_models.get_strategy_api
-
+def tape_the_reads(patch: pytest.MonkeyPatch, tape: Tape) -> None:
     @asynccontextmanager
     async def taped_private(site_id: str) -> AsyncIterator[TapedClient]:
-        async with private(site_id) as client:
+        async with dataset_client(site_id) as client:
             yield TapedClient(client, tape)
 
-    genes.get_wdk_client = lambda site_id: TapedClient(shared(site_id), tape)
-    genes.dataset_client = taped_private
-    genes.StrategyAPI = TapedDatasets
-    gene_models.get_strategy_api = lambda site_id: TapedRecords(records(site_id), tape)
-    missing_inputs.GenomeReader = lambda client: TapedReader(client, tape)
+    patch.setattr(
+        genes,
+        "get_wdk_client",
+        lambda site_id: TapedClient(get_wdk_client(site_id), tape),
+    )
+    patch.setattr(genes, "dataset_client", taped_private)
+    patch.setattr(genes, "StrategyAPI", TapedDatasets)
+    patch.setattr(
+        gene_models,
+        "get_strategy_api",
+        lambda site_id: TapedRecords(get_strategy_api(site_id), tape),
+    )
+    patch.setattr(
+        missing_inputs, "GenomeReader", lambda client: TapedReader(client, tape)
+    )
 
 
 TAXON = "GenesByTaxon"
@@ -343,12 +353,13 @@ async def record(name: str, into: Path) -> None:
     await act_as_the_test_account()
     case = CASES[name]
     tape = Tape()
-    tape_the_reads(tape)
-    try:
-        await audit_missing_gene(case.site, case.example_gene, case.absent_organism)
-    finally:
-        await close_all_jbrowse_clients()
-        await close_all_clients()
+    with pytest.MonkeyPatch.context() as patch:
+        tape_the_reads(patch, tape)
+        try:
+            await audit_missing_gene(case.site, case.example_gene, case.absent_organism)
+        finally:
+            await close_all_jbrowse_clients()
+            await close_all_clients()
     write_recording(into, MissingRecording(case=case, calls=trim(case, tape.calls)))
 
 

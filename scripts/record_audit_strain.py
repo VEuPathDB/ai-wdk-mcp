@@ -108,13 +108,11 @@ async def record_models(into: Path) -> None:
             read = await gene_record(
                 SITE, wire.reference, [ORGANISM_ATTRIBUTE], [MODEL_TABLE]
             )
-            print("model", wire.reference, "200")
             wires[name] = wire.model_copy(
                 update={"records": [*wire.records, served_body(read)]}
             )
     finally:
         await close_all_clients()
-        print("model reads sent", sent)
     write_lengths(into, wires)
 
 

@@ -1,5 +1,31 @@
 # Knowledge log
 
+## 2026-11-22 - one resolver names a vocabulary entry
+
+- `read_options` and its lookup types are the client's (`veupathdb.domain.parameters`).
+  `catalog/vocab_lookup.py` is deleted, and `AccessionNames`, `PhrasingMatch` and
+  `VocabLookup` leave this distribution's surface. A host reads them from
+  `veupathdb.domain.parameters`.
+- `catalog.resolve_entry` names the entry a phrase states: the client's exact step
+  first, then the ranked candidates (`exact_or_candidates`, up to 254). Its `arm` is
+  `refuse` (the candidates, unsettled), `choice` (one Decisions choice over the
+  candidates plus `none_fits`, settled at `floor`) or `choice_fit` (the choice and the
+  fit predicate, settled when the lower of the two reaches `floor`). `none_fits`, no
+  answer and a confidence under the floor leave it unsettled with the candidates.
+  `resolve_request` builds the choice from the site, the parameter, the words and the
+  researcher's message when there is one.
+- A phyletic refusal and a radio pair issue carry the `SHOWN_CANDIDATES` (5) entries the
+  client's `rank_entries` ranks first (`nearest: list[VocabOption]`); `nearest_entries`
+  is gone from the client. The phyletic refusal names each as the client's `entry_name`
+  does, `display (value)`, once when the two are equal.
+- `ruff check .` and `ruff format --check .` cover the whole repository, the recorder
+  scripts included; a recorder writes its recording and prints nothing.
+- `mypy --strict src scripts` is the type gate (`mypy_path = "src"`,
+  `explicit_package_bases`). A recorder installs its tapes through a
+  `pytest.MonkeyPatch` it is handed, inside `MonkeyPatch.context()` when it records, so
+  every stand-in is undone when the recording ends, and it wraps the client reads it
+  imports itself (`get_strategy_api`, `get_wdk_client`, `dataset_client`).
+
 ## 2026-11-22 - 0.9.0b14: an options read names how a range is read
 
 - `get_parameter_options` says that its `query` reads the range of up to three range

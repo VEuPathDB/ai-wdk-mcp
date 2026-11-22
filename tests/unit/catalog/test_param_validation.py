@@ -124,7 +124,7 @@ class TestTheErrorCarriesThePostRefreshVocabulary:
         entry = cast("dict[str, Any]", excinfo.value.errors[0])
         assert entry["param"] == "taxon"
         assert entry["value"] == "TaxonB"
-        assert entry["validOptions"] == ["TaxonA"]
+        assert entry["candidates"] == [{"value": "TaxonA", "display": "Taxon A"}]
 
 
 class TestNothingLooksAtTheValuesWhenNobodyJudgedThem:

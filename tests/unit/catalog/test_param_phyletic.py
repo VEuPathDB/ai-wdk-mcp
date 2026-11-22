@@ -13,6 +13,7 @@ from veupathdb.domain.parameters import (
     PhyleticNode,
     PhyleticTree,
     PhyleticUnresolved,
+    entry_name,
 )
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import (
@@ -174,7 +175,10 @@ class TestAnUnresolvedProposal:
 
         assert isinstance(got, PhyleticUnresolvedProposal)
         assert got.unresolved.included_unknown == ["Plasmodium falciparum"]
-        assert "Plasmodium falciparum 3D7" in got.nearest
+        assert entry_name(got.nearest[0]) == "Plasmodium falciparum 3D7 (pfal)"
+        detail = str(PhyleticListError(got).detail)
+        assert "Nearest entries: Plasmodium falciparum 3D7 (pfal), " in detail
+        assert "[" not in detail.split("Nearest entries:")[1]
 
     def test_the_nearest_list_is_short_enough_to_read(self) -> None:
         got = derive_phyletic_overrides(

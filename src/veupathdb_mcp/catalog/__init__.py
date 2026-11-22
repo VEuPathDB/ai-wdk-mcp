@@ -205,12 +205,13 @@ from veupathdb_mcp.catalog.taxonomy import (
 )
 from veupathdb_mcp.catalog.universal import universal_searches
 from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
-from veupathdb_mcp.catalog.vocab_lookup import (
-    AccessionNames,
-    PhrasingMatch,
-    VocabLookup,
-)
 from veupathdb_mcp.catalog.vocab_pick import VocabPick
+from veupathdb_mcp.catalog.vocab_resolve import (
+    ResolveArm,
+    ResolveContext,
+    resolve_entry,
+    resolve_request,
+)
 
 __all__ = [
     "CHARACTERS_WITHIN_READ_TIMEOUT",
@@ -224,7 +225,6 @@ __all__ = [
     "RADIO_OFF",
     "SUBSET_QUERY",
     "AbsentGroupsCompareError",
-    "AccessionNames",
     "AllExcept",
     "AllOf",
     "AnyOf",
@@ -260,7 +260,6 @@ __all__ = [
     "ParameterInfo",
     "ParameterNotOnSearch",
     "ParentContextRequired",
-    "PhrasingMatch",
     "PhyleticExpressionResult",
     "PhyleticExpressionTooLargeError",
     "PhyleticExpressionTooSlowError",
@@ -276,6 +275,8 @@ __all__ = [
     "RadioReadings",
     "RecordTypeInfo",
     "RefusalAnswer",
+    "ResolveArm",
+    "ResolveContext",
     "ResolvedParams",
     "ResolvedSearch",
     "SearchInspection",
@@ -295,7 +296,6 @@ __all__ = [
     "ValidatedParams",
     "ValidationCallbacks",
     "ValidationResponse",
-    "VocabLookup",
     "VocabNarrowing",
     "VocabPick",
     "WDKFilterReads",
@@ -360,7 +360,9 @@ __all__ = [
     "read_stated_parameters",
     "read_under_parents",
     "require_gene_records",
+    "resolve_entry",
     "resolve_params_with_intent",
+    "resolve_request",
     "resolve_search_details",
     "resolve_search_record_type",
     "search_for_searches",

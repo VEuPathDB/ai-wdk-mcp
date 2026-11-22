@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain.parameters import VocabOption
+from veupathdb.domain.parameters import VocabOption, entry_name
 
 from veupathdb_mcp.catalog.param_formatting import RADIO_OFF, ParameterInfo
 from veupathdb_mcp.catalog.radio_pairs import (
@@ -170,7 +170,30 @@ class TestAFilledFreeTextHalfIsAnIssue:
         assert issue is not None
         assert issue.pair.vocabulary == "ec_number_pattern"
         assert issue.free_value == "2.7.*"
-        assert issue.nearest[:2] == ["2.7.-.-", "2.7.11.1"]
+        assert [e.value for e in issue.nearest[:2]] == ["2.7.-.-", "2.7.11.1"]
+
+    def test_the_nearest_entries_carry_their_names(self) -> None:
+        kinases = _vocab("ec_number_pattern", [], "2.7.11.1").model_copy(
+            update={
+                "vocab_leaves": [
+                    VocabOption(value="3.4.21.-", display="Serine endopeptidases"),
+                    VocabOption(
+                        value="2.7.11.1",
+                        display="Non-specific serine/threonine protein kinase",
+                    ),
+                ]
+            }
+        )
+        _, issue = check_radio_pairs(
+            radio_pairs(_EC_PROPERTIES),
+            [kinases, _free_text("ec_wildcard", RADIO_OFF)],
+            {"ec_wildcard": "2.7.11.*"},
+        )
+
+        assert issue is not None
+        assert entry_name(issue.nearest[0]) == (
+            "Non-specific serine/threonine protein kinase (2.7.11.1)"
+        )
 
     def test_a_word_wildcard_is_an_issue_too(self) -> None:
         _, issue = check_radio_pairs(

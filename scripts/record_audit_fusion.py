@@ -12,6 +12,7 @@ import asyncio
 from pathlib import Path
 from typing import NoReturn
 
+import pytest
 from pydantic import BaseModel, ConfigDict
 from scripts.record_audit_fixtures import FIXTURES, act_as_the_test_account
 from scripts.record_audit_missing import (
@@ -22,8 +23,8 @@ from scripts.record_audit_missing import (
     TapedRecords,
     WireCall,
 )
-from scripts.record_audit_records import RecordingStoppedError, Tally
-from veupathdb import JSONObject, set_observer
+from scripts.record_audit_records import RecordingStoppedError
+from veupathdb import JSONObject
 from veupathdb.devtools import use_qa_sites
 from veupathdb.jbrowse import close_all_jbrowse_clients
 from veupathdb.wdk import (
@@ -32,6 +33,8 @@ from veupathdb.wdk import (
     WDKRecordInstance,
     WDKSearchConfig,
     close_all_clients,
+    get_strategy_api,
+    get_wdk_client,
 )
 
 from veupathdb_mcp.audit import gene_ids, gene_models, genes, record_reads
@@ -78,12 +81,11 @@ class Budget:
         self.limit = limit
         self.sent = 0
 
-    def spend(self, what: str) -> None:
+    def spend(self) -> None:
         if self.sent >= self.limit:
             msg = f"the recording spent its {self.limit} WDK reads"
             raise RecordingStoppedError(msg)
         self.sent += 1
-        print("read", self.sent, what)
 
 
 class BudgetRecords:
@@ -99,7 +101,7 @@ class BudgetRecords:
         attributes: list[str],
         tables: list[str],
     ) -> WDKRecordInstance:
-        self._budget.spend(f"{record_type} {primary_key[0]['value']} {tables}")
+        self._budget.spend()
         return await self._records.get_single_record(
             record_type, primary_key, attributes=attributes, tables=tables
         )
@@ -117,7 +119,7 @@ class BudgetSearches:
         search_config: WDKSearchConfig,
         report_config: JSONObject | None = None,
     ) -> WDKAnswer:
-        self._budget.spend(f"{search_name} {search_config.parameters}")
+        self._budget.spend()
         return await self._client.run_search_report(
             record_type, search_name, search_config, report_config
         )
@@ -128,22 +130,24 @@ def _uploaded(*_: object, **__: object) -> NoReturn:
     raise RecordingStoppedError(msg)
 
 
-def tape_the_record_reads(tape: Tape, budget: Budget) -> None:
-    api = gene_models.get_strategy_api
-    transcripts = record_reads.get_strategy_api
-    client = genes.get_wdk_client
-    gene_models.get_strategy_api = lambda site_id: BudgetRecords(
-        TapedRecords(api(site_id), tape), budget
+def tape_the_record_reads(
+    patch: pytest.MonkeyPatch, tape: Tape, budget: Budget
+) -> None:
+    def budgeted(site_id: str) -> BudgetRecords:
+        return BudgetRecords(TapedRecords(get_strategy_api(site_id), tape), budget)
+
+    patch.setattr(gene_models, "get_strategy_api", budgeted)
+    patch.setattr(record_reads, "get_strategy_api", budgeted)
+    patch.setattr(
+        genes,
+        "get_wdk_client",
+        lambda site_id: BudgetSearches(
+            TapedClient(get_wdk_client(site_id), tape), budget
+        ),
     )
-    record_reads.get_strategy_api = lambda site_id: BudgetRecords(
-        TapedRecords(transcripts(site_id), tape), budget
-    )
-    genes.get_wdk_client = lambda site_id: BudgetSearches(
-        TapedClient(client(site_id), tape), budget
-    )
-    StrategyAPI.create_dataset = _uploaded
-    genes.dataset_client = _uploaded
-    gene_ids.genes_by_text = _uploaded
+    patch.setattr(StrategyAPI, "create_dataset", _uploaded)
+    patch.setattr(genes, "dataset_client", _uploaded)
+    patch.setattr(gene_ids, "genes_by_text", _uploaded)
 
 
 def _near(centre: GeneRow, genome: list[GeneRow]) -> set[str]:
@@ -228,15 +232,17 @@ async def record_models(name: str, into: Path) -> None:
     use_qa_sites()
     await act_as_the_test_account()
     tape = Tape()
-    api = gene_models.get_strategy_api
-    gene_models.get_strategy_api = lambda site_id: TapedRecords(api(site_id), tape)
-    try:
-        for gene in unread:
-            await model_record(case.site, gene)
-            print("model", gene, "200")
-    finally:
-        await close_all_clients()
-        print("model reads sent", len(tape.calls))
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(
+            gene_models,
+            "get_strategy_api",
+            lambda site_id: TapedRecords(get_strategy_api(site_id), tape),
+        )
+        try:
+            for gene in unread:
+                await model_record(case.site, gene)
+        finally:
+            await close_all_clients()
     write_recording(
         into, recording.model_copy(update={"calls": [*recording.calls, *tape.calls]})
     )
@@ -245,18 +251,16 @@ async def record_models(name: str, into: Path) -> None:
 async def record(name: str, into: Path) -> None:
     use_qa_sites()
     await act_as_the_test_account()
-    tally = Tally()
-    set_observer(tally)
     case = CASES[name]
     tape = Tape()
     budget = Budget(WDK_BUDGET)
-    tape_the_record_reads(tape, budget)
-    try:
-        result = await audit_gene_fusion(case.site, case.gene)
-    finally:
-        await close_all_jbrowse_clients()
-        await close_all_clients()
-        print("reads sent", budget.sent, "wdk observed", len(tally.wdk))
+    with pytest.MonkeyPatch.context() as patch:
+        tape_the_record_reads(patch, tape, budget)
+        try:
+            result = await audit_gene_fusion(case.site, case.gene)
+        finally:
+            await close_all_jbrowse_clients()
+            await close_all_clients()
     centres = {case.gene, *([result.reference_gene] if result.reference_gene else [])}
     write_recording(into, FusionRecording(case=case, calls=trim(tape.calls, centres)))
 

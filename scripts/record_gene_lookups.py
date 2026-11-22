@@ -3,6 +3,7 @@ import asyncio
 from pathlib import Path
 from typing import NoReturn
 
+import pytest
 from pydantic import BaseModel, ConfigDict
 from scripts.record_audit_fixtures import act_as_the_test_account
 from scripts.record_audit_records import RecordExchange, RecordingStoppedError, Tally
@@ -38,13 +39,13 @@ def _refused(*_: object, **__: object) -> NoReturn:
     raise RecordingStoppedError(msg)
 
 
-def tape_the_reads(records: RecordTape) -> None:
-    gene_models.get_strategy_api = lambda site_id: records
-    record_reads.get_strategy_api = lambda site_id: records
-    gene_ids.genes_by_text = _refused
-    StrategyAPI.create_dataset = _refused
-    genes.dataset_client = _refused
-    wdk.dataset_client = _refused
+def tape_the_reads(patch: pytest.MonkeyPatch, records: RecordTape) -> None:
+    patch.setattr(gene_models, "get_strategy_api", lambda site_id: records)
+    patch.setattr(record_reads, "get_strategy_api", lambda site_id: records)
+    patch.setattr(gene_ids, "genes_by_text", _refused)
+    patch.setattr(StrategyAPI, "create_dataset", _refused)
+    patch.setattr(genes, "dataset_client", _refused)
+    patch.setattr(wdk, "dataset_client", _refused)
 
 
 def write_wire(into: Path, wire: LookupWire) -> None:
@@ -58,20 +59,18 @@ async def record(into: Path) -> None:
     tally = Tally()
     set_observer(tally)
     records = RecordTape(get_strategy_api(SITE).get_single_record, [], RECORD_BUDGET)
-    tape_the_reads(records)
-    try:
-        resolved = await resolve_gene_ids_to_records(SITE, RESOLVED)
-        filled = await hydrate.hydrate_sparse_gene_results(
-            SITE, [GeneResult(gene_id=gene) for gene in HYDRATED]
-        )
-    finally:
-        await close_all_clients()
-        print("record reads sent", records.sent, "wdk observed", len(tally.wdk))
+    with pytest.MonkeyPatch.context() as patch:
+        tape_the_reads(patch, records)
+        try:
+            await resolve_gene_ids_to_records(SITE, RESOLVED)
+            await hydrate.hydrate_sparse_gene_results(
+                SITE, [GeneResult(gene_id=gene) for gene in HYDRATED]
+            )
+        finally:
+            await close_all_clients()
     if len(tally.wdk) > WDK_BUDGET:
         msg = f"the recording sent {len(tally.wdk)} WDK requests"
         raise RecordingStoppedError(msg)
-    print("resolved", [r.gene_id for r in resolved.records], resolved.error)
-    print("hydrated", [(r.gene_id, r.organism, r.product) for r in filled])
     write_wire(
         into,
         LookupWire(

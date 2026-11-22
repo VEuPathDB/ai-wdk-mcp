@@ -3,13 +3,13 @@ repos:
     hooks:
       - id: ruff
         name: ruff
-        entry: bash -c "uv run ruff check src tests && uv run ruff format --check src tests"
+        entry: bash -c "uv run ruff check . && uv run ruff format --check ."
         language: system
         pass_filenames: false
         types: [python]
       - id: mypy
         name: mypy --strict
-        entry: bash -c "uv run mypy --strict src"
+        entry: bash -c "uv run mypy --strict src scripts"
         language: system
         pass_filenames: false
         types: [python]

@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import NoReturn
 
 import httpx
+import pytest
+from pydantic import JsonValue
 from scripts.record_audit_fixtures import FIXTURES, act_as_the_test_account
 from scripts.record_audit_records import (
     REFUSED,
@@ -13,11 +15,9 @@ from scripts.record_audit_records import (
     RecordingStoppedError,
     RecordWire,
     StoreExchange,
-    Tally,
     read_wire,
     write,
 )
-from veupathdb import set_observer
 from veupathdb.devtools import use_qa_sites
 from veupathdb.errors import VEuPathDBError
 from veupathdb.jbrowse import JBrowseClient
@@ -73,6 +73,7 @@ class RecordTape:
             raise RecordingStoppedError(msg)
         self.sent += 1
         key = {part["name"]: part["value"] for part in primary_key}
+        body: JsonValue
         try:
             record = await self._send(
                 record_type, primary_key, attributes=attributes, tables=tables
@@ -80,7 +81,6 @@ class RecordTape:
             status, body = 200, record.model_dump(mode="json", by_alias=True)
         except VEuPathDBError as exc:
             status, body = exc.status, exc.detail
-        print("record", record_type, key, attributes, tables, status)
         return RecordExchange(
             record_type=record_type,
             primary_key=key,
@@ -132,9 +132,6 @@ class StoreTape(httpx.AsyncBaseTransport):
         self.sent += 1
         response = await self._inner.handle_async_request(request)
         body = await response.aread()
-        print(
-            "store", request.url, request.headers.get("Range", ""), response.status_code
-        )
         return StoreExchange(
             url=str(request.url),
             byte_range=request.headers.get("Range", ""),
@@ -164,21 +161,21 @@ def _refused(*_: object) -> NoReturn:
     raise RecordingStoppedError(msg)
 
 
-def tape_the_reads(records: RecordTape, store: StoreTape) -> JBrowseClient:
+def tape_the_reads(
+    patch: pytest.MonkeyPatch, records: RecordTape, store: StoreTape
+) -> JBrowseClient:
     client = JBrowseClient(base_url=get_site(SITE).web_base_url, transport=store)
-    gene_models.get_strategy_api = lambda site_id: records
-    record_reads.get_strategy_api = lambda site_id: records
-    served.get_jbrowse_client = lambda site_id: client
-    gene_ids.genes_by_text = _refused
-    genes.dataset_client = _refused
+    patch.setattr(gene_models, "get_strategy_api", lambda site_id: records)
+    patch.setattr(record_reads, "get_strategy_api", lambda site_id: records)
+    patch.setattr(served, "get_jbrowse_client", lambda site_id: client)
+    patch.setattr(gene_ids, "genes_by_text", _refused)
+    patch.setattr(genes, "dataset_client", _refused)
     return client
 
 
 async def record(into: Path) -> None:
     use_qa_sites()
     await act_as_the_test_account()
-    tally = Tally()
-    set_observer(tally)
     held = read_wire(into / FILE) if (into / FILE).exists() else None
     records = RecordTape(
         get_strategy_api(SITE).get_single_record,
@@ -188,16 +185,13 @@ async def record(into: Path) -> None:
     store = StoreTape(
         httpx.AsyncHTTPTransport(), held.store if held else [], STORE_BUDGET
     )
-    client = tape_the_reads(records, store)
-    try:
-        result = await audit_selenoprotein_end(SITE, GENE, REFERENCE)
-        print("verdict", result.verdict)
-    finally:
-        await client.close()
-        await close_all_clients()
-        print("record reads sent", records.sent, "store reads sent", store.sent)
-        print("wdk observed", len(tally.wdk), tally.wdk)
-        print("store observed", len(tally.store), tally.store)
+    with pytest.MonkeyPatch.context() as patch:
+        client = tape_the_reads(patch, records, store)
+        try:
+            await audit_selenoprotein_end(SITE, GENE, REFERENCE)
+        finally:
+            await client.close()
+            await close_all_clients()
     write(
         into,
         FILE,

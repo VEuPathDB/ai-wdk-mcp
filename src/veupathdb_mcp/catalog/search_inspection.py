@@ -14,8 +14,11 @@ from pydantic import JsonValue
 from veupathdb.domain.parameters import (
     ParamGraph,
     ParamValue,
+    VocabLookup,
     VocabOption,
+    VocabRead,
     WDKTreeBoxVocabNode,
+    read_options,
     wire_map,
 )
 from veupathdb.errors import WDKError
@@ -52,7 +55,6 @@ from veupathdb_mcp.catalog.searches import (
     resolve_search_record_type,
 )
 from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
-from veupathdb_mcp.catalog.vocab_lookup import VocabLookup, VocabRead, read_options
 from veupathdb_mcp.catalog.vocab_pick import pick_vocab_entry
 from veupathdb_mcp.catalog.vocab_rendering import entries_of
 

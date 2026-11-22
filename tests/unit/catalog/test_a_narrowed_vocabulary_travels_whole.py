@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 from tests._support.recordings import TEST_ROOT
-from veupathdb.domain.parameters import ParamGraph, VocabOption
+from veupathdb.domain.parameters import ParamGraph, VocabLookup, VocabOption
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKEnumParam
 
@@ -18,7 +18,6 @@ from veupathdb_mcp.catalog.search_inspection import (
     VocabNarrowing,
     read_parameter_options,
 )
-from veupathdb_mcp.catalog.vocab_lookup import VocabLookup
 
 from .conftest import vocab_terms
 from .pfam_refresh import CONTEXT, FOWLERI, PARAMETER, SEARCH, serve

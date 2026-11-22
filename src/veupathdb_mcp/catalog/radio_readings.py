@@ -2,17 +2,18 @@ from collections.abc import Sequence
 from typing import Literal
 
 from veupathdb.domain.parameters import (
+    AccessionNames,
     MultiPickValue,
     ParamValue,
     SinglePickValue,
     StringValue,
+    read_options,
 )
 from veupathdb.model import CamelModel
 from veupathdb.wdk import WDKParameter
 
 from veupathdb_mcp.catalog.param_formatting import RADIO_OFF
 from veupathdb_mcp.catalog.radio_pairs import RadioPair
-from veupathdb_mcp.catalog.vocab_lookup import AccessionNames, read_options
 from veupathdb_mcp.catalog.vocab_rendering import entries_of
 
 _LABEL_REACH = frozenset({"phrase", "every_word"})

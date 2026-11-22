@@ -9,14 +9,14 @@ WDK_TEST_EMAIL and WDK_TEST_PASSWORD):
 import argparse
 import asyncio
 import base64
+import contextlib
 import lzma
-import statistics
 from pathlib import Path
 
 import httpx
 from pydantic import Base64Bytes, BaseModel, ConfigDict, Field, JsonValue
 from scripts.record_audit_fixtures import FIXTURES, act_as_the_test_account
-from veupathdb import MetricAttrs, NoObserver, set_observer
+from veupathdb import MetricAttrs, NoObserver
 from veupathdb.devtools import use_qa_sites
 from veupathdb.errors import VEuPathDBError
 from veupathdb.jbrowse import (
@@ -356,21 +356,16 @@ async def store_reads(
             await tabix.lines(
                 track, seqid, start - INTRON_JUNCTION_PAD, end + INTRON_JUNCTION_PAD
             )
-        except TrackReadError as exc:
-            print("junctions unread", track.data_path, exc.detail)
-    track = await peptide_track(client, abbrev)
-    if track is not None:
-        try:
-            await tabix.lines(track, seqid, start, end)
-        except TrackReadError as exc:
-            print("peptides unread", exc.detail)
+        except TrackReadError:
+            continue
+    peptides = await peptide_track(client, abbrev)
+    if peptides is not None:
+        with contextlib.suppress(TrackReadError):
+            await tabix.lines(peptides, seqid, start, end)
     await GenomeReader(client).window(abbrev, seqid, *intron_window)
     for sub in (await coverage_choice(client, abbrev)).candidates:
-        try:
-            depth = await BigWigReader(client, sub.data_path).depth(seqid, start, end)
-            print("coverage", sub.name, statistics.median(depth))
-        except TrackReadError as exc:
-            print("coverage unread", sub.name, exc.detail)
+        with contextlib.suppress(TrackReadError):
+            await BigWigReader(client, sub.data_path).depth(seqid, start, end)
 
 
 async def record_case(case: Case, key: list[str], into: Path) -> None:
@@ -413,9 +408,7 @@ async def record_case(case: Case, key: list[str], into: Path) -> None:
                     if member.gene != case.gene
                 ],
             )
-            named = list(ortholog_choice(group, row))
-            print(case.gene, "orthologs named", named)
-            for gene in named:
+            for gene in ortholog_choice(group, row):
                 await protein_reads(reader, gene)
     finally:
         await client.close()
@@ -434,7 +427,6 @@ def write(into: Path, name: str, wire: RecordWire) -> None:
     (into / name).write_bytes(
         lzma.compress(text, preset=XZ_PRESET) if name.endswith(XZ_SUFFIX) else text
     )
-    print("wrote", name, len(wire.records), "records", len(wire.store), "store reads")
 
 
 def read_wire(path: Path) -> RecordWire:
@@ -483,7 +475,6 @@ async def record_piga(key: list[str], into: Path) -> None:
             _Alias.model_validate(row)
             for row in _Body.model_validate(aliases).tables["Alias"]
         ]
-        print("aliases", [(r.alias, r.id_type) for r in rows])
         old = next(r.alias for r in rows if r.id_type == PREVIOUS_ID)
         alias = next(r.alias for r in rows if r.id_type == ALTERNATE_ID)
         for given in (old, alias, f"{PIGA}.1"):
@@ -500,13 +491,10 @@ async def record_piga(key: list[str], into: Path) -> None:
 async def record(into: Path, *, piga_only: bool = False) -> None:
     use_qa_sites()
     await act_as_the_test_account()
-    tally = Tally()
-    set_observer(tally)
     try:
         TOTALS.wdk_sent += 1
         served = await get_wdk_client(PIGA_SITE).get(TRANSCRIPT_TYPE_PATH)
         key = _TypeKey.model_validate(served).primary_key_column_refs
-        print("transcript key", key)
         if not piga_only:
             for case in CASES:
                 await record_case(case, key, into)
@@ -515,15 +503,11 @@ async def record(into: Path, *, piga_only: bool = False) -> None:
         await record_piga(key, into)
     finally:
         await close_all_clients()
-        print("wdk sent", TOTALS.wdk_sent, "observed", len(tally.wdk), tally.wdk)
-        print("store sent", len(TOTALS.store_sent), "observed", tally.store)
 
 
 async def record_coverage(case: Case, into: Path) -> None:
     use_qa_sites()
     await act_as_the_test_account()
-    tally = Tally()
-    set_observer(tally)
     TOTALS.store_budget = COVERAGE_BUDGET
     wire = read_wire(into / case.file)
     located = next(
@@ -551,14 +535,10 @@ async def record_coverage(case: Case, into: Path) -> None:
             window=(where.start_min, where.end_max),
         )
         span = (where.start_min, where.end_max)
-        found = await read_depth(client, gene, [span], [span])
-        print("coverage", found)
+        await read_depth(client, gene, [span], [span])
     finally:
         await client.close()
         write(into, case.file, wire.model_copy(update={"store": [*wire.store, *kept]}))
-        print(
-            "wdk observed", len(tally.wdk), "store", len(TOTALS.store_sent), tally.store
-        )
 
 
 if __name__ == "__main__":

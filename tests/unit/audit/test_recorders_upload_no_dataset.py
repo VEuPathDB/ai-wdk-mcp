@@ -141,7 +141,7 @@ async def test_the_fusion_recorder_reads_models_and_uploads_no_dataset(
         recorded.model_copy(update={"calls": held}).model_dump_json(indent=1) + "\n"
     )
     api = RecordedApi(bodies)
-    monkeypatch.setattr(gene_models, "get_strategy_api", lambda site_id: api)
+    monkeypatch.setattr(record_audit_fusion, "get_strategy_api", lambda site_id: api)
 
     await record_audit_fusion.record_models("pfraNilgiri_rpt6", tmp_path)
 
@@ -160,7 +160,8 @@ async def test_the_fusion_recorder_reruns_the_tool_and_uploads_no_dataset(
     case = CASES["pfraNilgiri_rpt6"]
     recorded = FusionRecording.model_validate_json((FIXTURES / case.file).read_text())
     wire = replay_record_reads(monkeypatch, recorded.calls)
-    monkeypatch.setattr(genes, "get_wdk_client", lambda site_id: wire)
+    monkeypatch.setattr(record_audit_fusion, "get_strategy_api", lambda site_id: wire)
+    monkeypatch.setattr(record_audit_fusion, "get_wdk_client", lambda site_id: wire)
 
     await record_audit_fusion.record("pfraNilgiri_rpt6", tmp_path)
 

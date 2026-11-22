@@ -8,7 +8,12 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from tests._support.wdk_reads import serve_reads
-from veupathdb.domain.parameters import MultiPickValue, SinglePickValue, StringValue
+from veupathdb.domain.parameters import (
+    AccessionNames,
+    MultiPickValue,
+    SinglePickValue,
+    StringValue,
+)
 from veupathdb.wdk import WDKParameter, WDKSearchResponse
 
 from veupathdb_mcp.catalog import search_inspection, searches
@@ -16,7 +21,6 @@ from veupathdb_mcp.catalog.param_formatting import RADIO_OFF
 from veupathdb_mcp.catalog.radio_pairs import RadioPair
 from veupathdb_mcp.catalog.radio_readings import RadioReadings, radio_readings
 from veupathdb_mcp.catalog.search_inspection import read_radio_readings
-from veupathdb_mcp.catalog.vocab_lookup import AccessionNames
 from veupathdb_mcp.wdk import plan_counts
 
 FIXTURE = (
