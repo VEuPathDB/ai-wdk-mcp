@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from pydantic import Field
+from pydantic import Field, JsonValue
 from veupathdb.domain.parameters import (
     WDKDatasetParser,
     WDKFilterOntologyTerm,
@@ -24,6 +24,8 @@ class ParamSpecResponse(CamelModel):
     max_selected_count: int | None = Field(default=None)
     count_only_leaves: bool = Field(default=False)
     initial_display_value: str | None = Field(default=None)
+    # The default in the form a caller states it back. None when WDK holds none.
+    default: JsonValue = None
     vocabulary: WDKVocabulary | None = None
     min: float | None = None
     max: float | None = None

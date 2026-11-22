@@ -24,6 +24,8 @@ from veupathdb.domain.parameters import (
     VocabOption,
     WDKTreeBoxVocabNode,
     dedupe_options,
+    shown_stated,
+    shown_stated_text,
 )
 from veupathdb.model import CamelModel
 from veupathdb.wdk import WDKParameter, phyletic_tree_of
@@ -32,6 +34,7 @@ from veupathdb_mcp.catalog.eda_backed import (
     UPLOAD_SENTINEL_NOTE,
     is_upload_sentinel_vocabulary,
 )
+from veupathdb_mcp.catalog.param_adapters import held_default
 from veupathdb_mcp.catalog.phyletic_logic import (
     MAX_EXPRESSION_TERMS,
     MAX_EXPRESSION_WORK,
@@ -118,7 +121,10 @@ class ParameterInfo(CamelModel):
     organism_param: bool = False
     help: str
     stated_schema: dict[str, JsonValue] = Field(default_factory=dict)
-    default_value: str | None = None
+    # The default in the form a caller states it back. None when WDK holds none.
+    default: JsonValue = None
+    # The default as WDK holds it on the wire.
+    default_value: str | None = Field(default=None, exclude=True)
     min: float | None = None
     max: float | None = None
     allowed_values: list[VocabOption] | None = None
@@ -343,7 +349,7 @@ def format_typed_param(
     param: WDKParameter,
     graph: ParamGraph,
     applied_context: dict[str, ParamValue] | None = None,
-    parent_defaults: dict[str, str] | None = None,
+    parent_defaults: dict[str, ParamValue] | None = None,
     phyletic_options: list[VocabOption] | None = None,
     lookup: VocabLookup | None = None,
 ) -> ParameterInfo:
@@ -380,7 +386,9 @@ def format_typed_param(
         context = applied_context or {}
         applied = {p: context[p] for p in parents if p in context}
         if applied:
-            shown = ", ".join(f"{p}={v.to_wire()}" for p, v in sorted(applied.items()))
+            shown = ", ".join(
+                f"{p}={shown_stated_text(v)}" for p, v in sorted(applied.items())
+            )
             note = (
                 f"The allowed values for this param change based on the value of "
                 f"{', '.join(parents)}. The values below are the vocabulary under "
@@ -390,9 +398,11 @@ def format_typed_param(
             )
         else:
             defaults = parent_defaults or {}
-            used = {p: defaults[p] for p in parents if defaults.get(p)}
+            used = {p: defaults[p] for p in parents if p in defaults}
             under = (
-                ", ".join(f"{p}={v}" for p, v in sorted(used.items()))
+                ", ".join(
+                    f"{p}={shown_stated_text(v)}" for p, v in sorted(used.items())
+                )
                 if used
                 else "the search defaults"
             )
@@ -406,6 +416,7 @@ def format_typed_param(
             )
 
     facets = FilterFacets.of(param)
+    held = held_default(param)
     return ParameterInfo(
         name=name,
         display_name=param.display_name or name,
@@ -415,6 +426,7 @@ def format_typed_param(
         is_read_only=param.is_read_only,
         help=help_text,
         stated_schema=param.stated_schema(),
+        default=None if held is None else shown_stated(held),
         default_value=param.initial_display_value,
         is_number=param.is_number,
         organism_param=param.is_organism,

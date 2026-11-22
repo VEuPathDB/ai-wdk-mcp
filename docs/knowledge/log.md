@@ -1,6 +1,6 @@
 # Knowledge log
 
-## 2026-11-22 - a stated term names an entry or is refused
+## 2026-11-22 - 0.9.0b15: a stated term names an entry or is refused
 
 - `read_options` and its lookup types are the client's (`veupathdb.domain.parameters`).
   `catalog/vocab_lookup.py` is deleted, and `AccessionNames`, `PhrasingMatch` and
@@ -24,9 +24,18 @@
   organism the query implies never removes a record; `GeneSearchResult.implied_organism`
   names it, and `suggested_organisms` and `suggest_organisms` are gone.
 - The client is taken at `v0.9.0b11`.
+- Every value the catalog shows a model is its stated form, which the stated reader reads
+  back to the same wire: the sheet's and the overview's `default` (`JsonValue`), the new
+  `ParameterInfo.default` and `ParamSpecResponse.default` beside the wire the site holds,
+  the dependent-vocabulary note (`shown_stated_text`) and `normalized_context_values`. A
+  default is read as WDK holds it (`param_adapters.held_default`, the canonicalizer's
+  `held`), so a value no kind reads shows as the marked kept text. A default WDK holds as
+  the empty value of a parameter that refuses it is no default. `ParameterInfo.default_value`
+  stays the wire and leaves the serialized payload.
+- `computed` comes from `veupathdb.model`; `veupathdb_mcp/computed.py` is deleted.
 - A phyletic refusal and a radio pair issue carry the `SHOWN_CANDIDATES` (5) entries the
-  client's `rank_entries` ranks first (`nearest: list[VocabOption]`); `nearest_entries`
-  is gone from the client. The phyletic refusal names each as the client's `entry_name`
+  client's `rank_entries` ranks first (`nearest: list[VocabOption]`), where the
+  client's older nearest-entry ranking stood. The phyletic refusal names each as the client's `entry_name`
   does, `display (value)`, once when the two are equal.
 - `ruff check .` and `ruff format --check .` cover the whole repository, the recorder
   scripts included; a recorder writes its recording and prints nothing.

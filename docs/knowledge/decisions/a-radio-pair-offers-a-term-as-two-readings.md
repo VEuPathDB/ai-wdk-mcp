@@ -27,7 +27,8 @@ reading's `params` goes to `count_search_answer` beside the caller's other value
 
 `check_radio_pairs` accepts a free-text value beside a vocabulary half bound to `N/A`
 when that vocabulary holds `N/A`. A free-text value beside any other vocabulary value is
-an issue, as before.
+an issue, as before. The issue carries the `SHOWN_CANDIDATES` (5) vocabulary entries the
+client's `rank_entries` ranks first for the free text, wildcards stripped.
 
 `read_parameter_options` adds one sentence to `allowed_values_note` for an accession
 vocabulary whose names include one token or none: how many there are, and that an entry

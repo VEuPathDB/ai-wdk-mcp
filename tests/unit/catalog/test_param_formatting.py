@@ -174,13 +174,15 @@ class TestAnUnqualifiedRead:
         info = format_typed_param(
             _samples("samples"),
             self._DEPENDS,
-            parent_defaults={"profileset": "DeRisi HB3 Smoothed"},
+            parent_defaults={
+                "profileset": SinglePickValue(value="DeRisi HB3 Smoothed")
+            },
         )
         assert info.note is not None
         return info.note
 
-    def test_the_note_names_the_parent_value_wdk_used(self) -> None:
-        assert "DeRisi HB3 Smoothed" in self._default_note()
+    def test_the_note_names_the_parent_value_wdk_used_in_its_stated_form(self) -> None:
+        assert 'profileset="DeRisi HB3 Smoothed"' in self._default_note()
 
     def test_it_warns_that_another_parent_gives_another_list(self) -> None:
         assert "DIFFERENT" in self._default_note()
@@ -198,7 +200,9 @@ class TestAnUnqualifiedRead:
             applied_context={
                 "profileset": SinglePickValue(value="DeRisi 3D7 Smoothed")
             },
-            parent_defaults={"profileset": "DeRisi HB3 Smoothed"},
+            parent_defaults={
+                "profileset": SinglePickValue(value="DeRisi HB3 Smoothed")
+            },
         )
 
         assert info.note is not None

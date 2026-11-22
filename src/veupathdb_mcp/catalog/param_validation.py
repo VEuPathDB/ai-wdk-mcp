@@ -20,6 +20,7 @@ from veupathdb.domain.parameters import (
     check_expression,
     fill_site_set_defaults,
     filled_site_set_defaults,
+    shown_stated,
     to_decoded_map,
 )
 from veupathdb.domain.strategy import StepValidation
@@ -256,7 +257,9 @@ async def validate_search_params(
     return ValidationResponse(
         validation=ValidationResult(
             is_valid=not judged,
-            normalized_context_values=to_decoded_map(normalized),
+            normalized_context_values={
+                name: shown_stated(value) for name, value in normalized.items()
+            },
             errors=_bundle_errors(response.validation)
             if judged
             else ValidationErrors(),

@@ -5,7 +5,12 @@ and return domain types (ParamSpecNormalized). They live in the service
 layer because they bridge integration and domain.
 """
 
-from veupathdb.domain.parameters import ParamSpecNormalized
+from veupathdb.domain.parameters import (
+    ParameterCanonicalizer,
+    ParamSpecNormalized,
+    ParamValue,
+    empty_value,
+)
 from veupathdb.wdk import WDKParameter, WDKSearch
 
 
@@ -41,3 +46,19 @@ def adapt_param_specs_from_search(search: WDKSearch) -> dict[str, ParamSpecNorma
     if not search.parameters:
         return {}
     return {p.name: adapt_param_from_wdk(p) for p in search.parameters}
+
+
+def held_default(param: WDKParameter) -> ParamValue | None:
+    """The default WDK holds, read as its kind. None when it holds none, when it
+    holds the empty value of a parameter that refuses it, and for the step input
+    WDK wires itself."""
+    wire = param.initial_display_value
+    if wire is None:
+        return None
+    specs = {param.name: adapt_param_from_wdk(param)}
+    held = ParameterCanonicalizer(specs).held({param.name: wire}).get(param.name)
+    if held is None or (
+        not param.allow_empty_value and held == empty_value(param.type)
+    ):
+        return None
+    return held

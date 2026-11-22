@@ -22,7 +22,7 @@ class ParamOverviewEntry(CamelModel):
     description: str
     stated_schema: dict[str, JsonValue]
     organism_param: bool = False
-    default: str | None = None
+    default: JsonValue = None
     min: float | None = None
     max: float | None = None
     vocabulary: list[VocabOption] = Field(default_factory=list)

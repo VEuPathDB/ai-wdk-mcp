@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pydantic import Field
+from pydantic import Field, JsonValue
 from veupathdb.domain.parameters import FilterFacet, VocabOption
 from veupathdb.model import CamelModel
 
@@ -25,7 +25,7 @@ class SheetEntry(CamelModel):
     organism_param: bool = False
     is_tree: bool = False
     help: str = ""
-    default: str | None = None
+    default: JsonValue = None
     min: float | None = None
     max: float | None = None
     depends_on: list[str] = Field(default_factory=list)
@@ -82,7 +82,7 @@ def build_sheet(infos: list[ParameterInfo], *, query: str) -> list[SheetEntry]:
                 organism_param=info.organism_param,
                 is_tree=info.allowed_values_tree is not None,
                 help=info.help,
-                default=info.default_value,
+                default=info.default,
                 min=info.min,
                 max=info.max,
                 depends_on=list(info.stated_parents),

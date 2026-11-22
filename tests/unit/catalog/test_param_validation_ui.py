@@ -13,7 +13,12 @@ import pytest
 from pydantic import JsonValue
 from veupathdb import JSONObject
 from veupathdb.domain import SearchContext
-from veupathdb.domain.parameters import MultiPickValue, ParamValue, StringValue
+from veupathdb.domain.parameters import (
+    HeldValue,
+    MultiPickValue,
+    ParamValue,
+    StringValue,
+)
 from veupathdb.errors import ValidationError, WDKError, param_message_rows
 from veupathdb.wdk import WDKEnumParam, WDKParameter, WDKSearchResponse, WDKStringParam
 
@@ -237,3 +242,22 @@ class TestAValidRead:
 
         assert result.validation.is_valid is True
         assert result.validation.errors.by_key == {}
+
+
+class TestTheCanonicalValuesAreShownInTheirStatedForm:
+    async def test_a_value_held_as_the_site_holds_it_is_shown_as_kept(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _serve(monkeypatch, _response())
+
+        result = await _validate(
+            {
+                "organism": MultiPickValue(values=[_ORGANISM]),
+                "ec_wildcard": HeldValue(wire="2.7.*"),
+            }
+        )
+
+        assert result.validation.normalized_context_values == {
+            "organism": [_ORGANISM],
+            "ec_wildcard": "'2.7.*' (kept as the site holds it)",
+        }

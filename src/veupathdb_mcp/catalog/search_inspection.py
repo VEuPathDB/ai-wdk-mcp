@@ -29,6 +29,7 @@ from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
 )
+from veupathdb_mcp.catalog.param_adapters import held_default
 from veupathdb_mcp.catalog.param_dag import (
     NOTHING_BOUND,
     read_under_parents,
@@ -375,9 +376,10 @@ async def read_parameter_options(
                 graph=graph,
                 applied_context=context or None,
                 parent_defaults={
-                    other.name: other.initial_display_value
+                    other.name: held
                     for other in all_params
                     if other.initial_display_value
+                    and (held := held_default(other)) is not None
                 },
                 phyletic_options=phyletic,
                 lookup=lookup or phyletic_lookup,

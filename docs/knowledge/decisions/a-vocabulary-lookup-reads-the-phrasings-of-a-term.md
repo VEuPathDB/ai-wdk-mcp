@@ -19,6 +19,10 @@ Entries rank by reach (phrase, every word, word) and then by vocabulary order, a
 `ParameterInfo.vocab_lookup` names each phrasing that matched with the entries it matched
 first, so the counts add up to the list.
 
+`rank_entries` (the same module) ranks the candidates a refusal names: the entries
+`read_options` keeps for the phrase, then the spelling neighbours of every value and
+label, unique by value and cut to the limit the caller asks for.
+
 `VocabNarrowing.request` is the concept in the request's own words, and `read_options`
 takes it as `request_terms`. Those words are read as a term is, and the kept entries
 they match rank first, phrase before word; the phrasings alone decide which entries are

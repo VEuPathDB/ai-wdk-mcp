@@ -87,6 +87,16 @@ class TestWhatWDKFilledIn:
 
         assert filled == []
 
+    def test_a_number_text_held_as_written_is_not_substituted(self) -> None:
+        filled = substituted_params(
+            sent={"a": StringValue(value="5.0")},
+            echoed={"a": "5.0"},
+            specs=_SPECS,
+            values_were_read=True,
+        )
+
+        assert filled == []
+
 
 class TestItIsOrderIndependent:
     def test_results_are_sorted(self) -> None:

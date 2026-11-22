@@ -6,9 +6,11 @@ service-layer ``ParamSpecResponse`` shape that transport returns.
 
 from collections.abc import Sequence
 
+from veupathdb.domain.parameters import shown_stated
 from veupathdb.wdk import WDKParameter, WDKSearch
 
 from veupathdb_mcp.catalog.models import ParamSpecResponse
+from veupathdb_mcp.catalog.param_adapters import held_default
 
 
 def build_param_specs_from_list(
@@ -23,6 +25,7 @@ def build_param_specs_from_list(
     results: list[ParamSpecResponse] = []
     for param in params:
         is_multi = param.type == "multi-pick-vocabulary"
+        held = held_default(param)
 
         results.append(
             ParamSpecResponse(
@@ -36,6 +39,7 @@ def build_param_specs_from_list(
                 max_selected_count=param.max_selected_count,
                 count_only_leaves=param.count_only_leaves,
                 initial_display_value=param.initial_display_value,
+                default=None if held is None else shown_stated(held),
                 vocabulary=param.vocabulary,
                 min=param.min,
                 max=param.max,
