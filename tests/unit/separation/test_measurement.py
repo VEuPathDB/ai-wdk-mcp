@@ -3,6 +3,7 @@
 from tests._support.control_run_wdk import RunFakeAPI
 from tests._support.separation_sets import NEGATIVES, POSITIVES
 from tests._support.wdk_refusals import OWN_VALUE_REFUSAL
+from veupathdb.domain.parameters import HeldValue
 from veupathdb.domain.strategy import CombineOp
 from veupathdb.errors import WDKError
 from veupathdb.wdk import NewStepSpec, WDKIdentifier, WDKStepTree
@@ -85,6 +86,20 @@ async def test_a_refused_step_is_skipped_with_wdk_s_words() -> None:
     assert (skipped[0].search_name, skipped[0].reason) == ("GenesByBad", "wdk_refused")
     assert "Plasmodium berghei ANKA" in skipped[0].detail
     assert sorted(row.candidate_id or "" for row in rows) == ["Bad", "Good"]
+
+
+async def test_a_held_value_of_a_candidate_goes_out_as_held() -> None:
+    async def ignore(update: SeparationUpdate) -> None:
+        del update
+
+    api = RunFakeAPI()
+    held = _candidate("Held").model_copy(
+        update={"parameters": {"retired": HeldValue(wire="a, b")}}
+    )
+
+    await measure_candidates(api, [held], _controls(), WdkCallBudget(limit=100), ignore)
+
+    assert api.steps[0].search_config.parameters == {"retired": "a, b"}
 
 
 async def test_a_step_without_a_count_is_skipped() -> None:

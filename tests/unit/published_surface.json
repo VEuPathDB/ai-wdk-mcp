@@ -436,6 +436,7 @@
     "VocabPick",
     "WDKFilterReads",
     "adapt_param_specs_from_search",
+    "as_tree_leaves",
     "assign_step_record_classes",
     "browse_search_categories",
     "build_param_specs",

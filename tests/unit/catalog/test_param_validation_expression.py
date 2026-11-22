@@ -91,7 +91,7 @@ def _served(monkeypatch: pytest.MonkeyPatch) -> None:
 async def _validate(expression: str) -> param_validation.ValidatedParams:
     return await param_validation.validate_parameters(
         _CTX,
-        parameters={"phyletic_expression": StringValue(value=expression)},
+        stated={"phyletic_expression": StringValue(value=expression)},
         callbacks=validation_callbacks(),
     )
 

@@ -384,7 +384,7 @@ async def validate_search_parameters(
     try:
         return await validate_parameters(
             SearchContext(site_id, record_type or "", search_name),
-            parameters=await search_inspection.read_stated_parameters(
+            stated=await search_inspection.read_stated_parameters(
                 site_id, search_name, parameter_values, record_type=record_type
             ),
             callbacks=make_validation_callbacks(site_id),

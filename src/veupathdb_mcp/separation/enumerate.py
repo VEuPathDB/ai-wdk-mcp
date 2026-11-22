@@ -32,6 +32,7 @@ from veupathdb_mcp.catalog import (
     UnknownParameterError,
     VagueSearchQueryError,
     WDKFilterReads,
+    as_tree_leaves,
     format_param_info_typed,
     get_discovery_service,
     radio_pairs,
@@ -237,7 +238,7 @@ async def bind(
     gap = binding_gap(resolved)
     if gap:
         raise CandidateSkippedError(reason="unbound_required", detail=gap)
-    return resolved.params
+    return as_tree_leaves(search.parameters or [], resolved.params)
 
 
 def _charged(

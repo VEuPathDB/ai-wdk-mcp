@@ -109,10 +109,10 @@ def validated(monkeypatch: pytest.MonkeyPatch) -> list[dict[str, str]]:
     seen: list[dict[str, str]] = []
 
     async def validate(
-        ctx: object, *, parameters: dict[str, ParamValue], callbacks: object
+        ctx: object, *, stated: dict[str, ParamValue], callbacks: object
     ) -> ValidatedParams:
         del ctx, callbacks
-        seen.append({name: value.to_wire() for name, value in parameters.items()})
+        seen.append({name: value.to_wire() for name, value in stated.items()})
         return ValidatedParams(params={}, record_class="transcript")
 
     monkeypatch.setattr(catalog_tools, "validate_parameters", validate)

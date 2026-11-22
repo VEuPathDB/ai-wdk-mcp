@@ -206,8 +206,8 @@ class TestAnUnqualifiedRead:
         assert "DeRisi HB3 Smoothed" not in info.note
 
 
-class TestRequiredFollowsBothWdkSignals:
-    """WDK marks a parameter mandatory with allowEmptyValue or minSelectedCount."""
+class TestRequiredFollowsAllowEmptyValue:
+    """WDK accepts an empty value exactly where allowEmptyValue is true."""
 
     @staticmethod
     def _required(*, allow_empty: bool, min_selected: int) -> bool:
@@ -221,8 +221,8 @@ class TestRequiredFollowsBothWdkSignals:
         )
         return format_typed_param(param, ParamGraph.of([param])).required
 
-    def test_a_minimum_selection_makes_a_param_required(self) -> None:
-        assert self._required(allow_empty=True, min_selected=1) is True
+    def test_a_minimum_selection_leaves_the_empty_value_allowed(self) -> None:
+        assert self._required(allow_empty=True, min_selected=1) is False
 
     def test_an_empty_value_is_allowed_when_nothing_must_be_selected(self) -> None:
         assert self._required(allow_empty=True, min_selected=0) is False

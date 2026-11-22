@@ -640,14 +640,14 @@ async def test_a_validation_call_answers_from_the_validation_service(
     async def validate(
         ctx: SearchContext,
         *,
-        parameters: dict[str, ParamValue],
+        stated: dict[str, ParamValue],
         callbacks: object,
     ) -> ValidatedParams:
         del callbacks
         assert ctx.site_id == SITE
         assert ctx.search_name == "GenesByText"
-        seen.append(parameters)
-        return ValidatedParams(params=parameters, record_class="transcript")
+        seen.append(stated)
+        return ValidatedParams(params=stated, record_class="transcript")
 
     serve_reads(
         monkeypatch,
@@ -685,10 +685,10 @@ async def test_a_validation_refusal_is_a_tool_error_that_names_its_cause(
     async def refuse(
         ctx: SearchContext,
         *,
-        parameters: dict[str, ParamValue],
+        stated: dict[str, ParamValue],
         callbacks: object,
     ) -> ValidatedParams:
-        del ctx, parameters, callbacks
+        del ctx, stated, callbacks
         raise ValidationError(title="Invalid", detail="organism is required")
 
     monkeypatch.setattr(catalog_tools, "validate_parameters", refuse)

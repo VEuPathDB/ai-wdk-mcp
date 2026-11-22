@@ -198,9 +198,11 @@ async def canonicalize_synced_parameters(
     api: StrategyAPI,
     wire_by_step_id: dict[str, WireStep],
 ) -> None:
-    """Decode and canonicalize wire parameters against their WDK search specs.
+    """Read each step's wire parameters against its WDK search spec, in place.
 
-    Mutates the step nodes in place.
+    A value no kind reads, and every value of a step whose spec cannot be
+    read, is held as WDK holds it. Only a declared input-step value is left
+    out: it is the wiring WDK's step tree carries.
     """
     spec_cache: dict[tuple[str, str], WDKSearch | None] = {}
 
@@ -212,29 +214,11 @@ async def canonicalize_synced_parameters(
         if not search_name or wire is None or not wire.parameters:
             continue
         record_type = wire.record_class
-        if record_type is None:
-            logger.warning(
-                "A WDK step names no record class",
-                step_id=step.id,
-                search_name=search_name,
-            )
-            continue
-        wire_params = wire.parameters
-
-        cache_key = (record_type, search_name)
-        if cache_key not in spec_cache:
+        cache_key = (record_type or "", search_name)
+        if record_type is not None and cache_key not in spec_cache:
             spec_cache[cache_key] = await load_search_spec(
-                api,
-                record_type,
-                search_name,
-                wire_params,
+                api, record_type, search_name, wire.parameters
             )
-
-        cached_search = spec_cache[cache_key]
-        if cached_search is None:
-            continue
-        canonical = decode_wire_parameters(cached_search, wire_params)
-        if canonical is None:
-            continue
-
-        step.parameters = canonical
+        step.parameters = decode_wire_parameters(
+            spec_cache.get(cache_key), wire.parameters
+        )

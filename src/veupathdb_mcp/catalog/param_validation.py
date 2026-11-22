@@ -2,6 +2,7 @@
 
 from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import dataclass
+from types import MappingProxyType
 
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
 from veupathdb import JSONObject, get_logger
@@ -15,12 +16,11 @@ from veupathdb.domain.parameters import (
     ParamValue,
     PhyleticExpression,
     StringValue,
-    census_states,
+    canonical_census_pattern,
     check_expression,
     fill_site_set_defaults,
     filled_site_set_defaults,
     to_decoded_map,
-    validate_phyletic_codes,
 )
 from veupathdb.domain.strategy import StepValidation
 from veupathdb.errors import ValidationError, VEuPathDBError
@@ -33,7 +33,10 @@ from veupathdb.wdk import (
 )
 
 from veupathdb_mcp.catalog.discovery_service import get_discovery_service
-from veupathdb_mcp.catalog.eda_backed import check_eda_parameters
+from veupathdb_mcp.catalog.eda_backed import (
+    EDA_ANALYSIS_SPEC_PARAM,
+    check_eda_parameters,
+)
 from veupathdb_mcp.catalog.param_adapters import (
     adapt_param_from_wdk,
     adapt_param_specs_from_search,
@@ -58,6 +61,8 @@ from .param_resolution import (
 )
 
 logger = get_logger(__name__)
+
+NOTHING_HELD: Mapping[str, ParamValue] = MappingProxyType({})
 
 
 class _ValidationErrorEntry(BaseModel):
@@ -268,26 +273,25 @@ class ValidatedParams(CamelModel):
     substituted: list[str] = Field(default_factory=list)
 
 
-def _refuse_bad_census_pattern(
-    response: WDKSearchResponse, canonical: dict[str, ParamValue]
-) -> None:
-    """Judge a stated ``profile_pattern`` against the census grammar.
+def _canonical_census_pattern(
+    response: WDKSearchResponse, stated: dict[str, ParamValue]
+) -> dict[str, ParamValue]:
+    """A stated ``profile_pattern`` in the form WDK's census matches.
 
-    WDK answers a pattern in prose with a step id and a valid verdict, so this
-    is the only place the fault can be reported. The published default is not a
-    census pattern, so only a value the caller stated is judged, and only on a
-    search that carries the whole phyletic parameter set.
+    WDK answers a pattern in prose with a step id and a valid verdict, so the
+    fault is reported here. Only a value stated as text is read: the published
+    default is not a census pattern, and a held value is WDK's own. Only a search
+    that carries the whole phyletic parameter set is judged.
     """
     specs = response.search_data.parameters or []
     if not {spec.name for spec in specs} >= PHYLETIC_PARAM_NAMES:
-        return
-    pattern = encode_wdk_params(canonical).get("profile_pattern")
-    if pattern is None:
-        return
-    states = census_states(pattern)
-    tree = phyletic_tree_of(specs)
-    if states and tree is not None:
-        validate_phyletic_codes(list(states), tree.codes())
+        return stated
+    match stated.get("profile_pattern"):
+        case StringValue(value=pattern):
+            canonical = canonical_census_pattern(pattern, phyletic_tree_of(specs))
+            return {**stated, "profile_pattern": StringValue(value=canonical)}
+        case _:
+            return stated
 
 
 async def _checked_phyletic_expression(
@@ -311,12 +315,47 @@ async def _checked_phyletic_expression(
     return {**stated, PHYLETIC_EXPRESSION_PARAM: StringValue(value=rendered)}
 
 
+def _refuses_a_statement(
+    validation: StepValidation,
+    *,
+    stated: Mapping[str, ParamValue],
+    context: Mapping[str, ParamValue],
+    held_validation: StepValidation | None,
+) -> bool:
+    """WDK's negative verdict names something a statement introduced.
+
+    Nothing stated introduces nothing. A verdict on a context value, or a
+    general error the step's own stored verdict already carried, is WDK's
+    judgement of what the step held before, so it never refuses.
+    """
+    if not stated or not validation.rejects():
+        return False
+    errors = validation.errors
+    if errors is None:
+        return True
+    if any(key not in context for key in errors.by_key):
+        return True
+    known = (
+        set(held_validation.errors.general)
+        if held_validation is not None and held_validation.errors is not None
+        else set()
+    )
+    return any(text not in known for text in errors.general)
+
+
 async def validate_parameters(
     ctx: SearchContext,
     *,
-    parameters: dict[str, ParamValue],
+    stated: dict[str, ParamValue],
+    context: Mapping[str, ParamValue] = NOTHING_HELD,
+    held_validation: StepValidation | None = None,
     callbacks: ValidationCallbacks,
 ) -> ValidatedParams:
+    """The stated values in the catalog's form, judged under the values the step
+    already holds. Only a stated value is canonicalized or refused; a context
+    value goes to WDK as it is, and ``held_validation`` is the verdict WDK
+    stored for the step. The result holds the stated values and each site-set
+    value neither map holds."""
     resolved_record_type = await callbacks.resolve_record_type_for_search(
         ctx.record_type, ctx.search_name
     )
@@ -329,36 +368,44 @@ async def validate_parameters(
             record_type=ctx.record_type,
             record_type_hint=record_type_hint,
         )
+    held = {name: value for name, value in context.items() if name not in stated}
 
     resolved = await resolve_search_details(
         ctx,
         resolved_record_type=resolved_record_type,
-        parameters=parameters,
+        parameters={**held, **stated},
     )
     response = resolved.response
-    check_eda_parameters(response.search_data, encode_wdk_params(parameters))
+    if stated and EDA_ANALYSIS_SPEC_PARAM not in held:
+        check_eda_parameters(
+            response.search_data, encode_wdk_params({**held, **stated})
+        )
 
     param_spec_map = adapt_param_specs_from_search(response.search_data)
-    parameters = await _checked_phyletic_expression(ctx.site_id, response, parameters)
+    stated = await _checked_phyletic_expression(ctx.site_id, response, stated)
+    stated = _canonical_census_pattern(response, stated)
     canonicalizer = ParameterCanonicalizer(param_spec_map)
-    canonical: dict[str, ParamValue] = canonicalizer.canonicalize(parameters)
-    _refuse_bad_census_pattern(response, canonical)
+    canonical: dict[str, ParamValue] = canonicalizer.canonicalize(stated)
 
     # A tree param counts only its leaves, so a branch selection scores zero
     # until it is expanded. WDK must judge what will be sent, not what arrived.
-    if encode_wdk_params(canonical) != encode_wdk_params(parameters):
+    if encode_wdk_params(canonical) != encode_wdk_params(stated):
         resolved = await resolve_search_details(
             ctx,
             resolved_record_type=resolved_record_type,
-            parameters=canonical,
+            parameters={**held, **canonical},
         )
         response = resolved.response
         param_spec_map = adapt_param_specs_from_search(response.search_data)
 
-    # WDK validated these values while answering, and its verdict is the
-    # refusal. A definition built without the caller's values judged a
-    # different shape, so it casts no verdict either way.
-    if resolved.values_were_read and response.validation.rejects():
+    # A definition built without the caller's values judged a different shape,
+    # so it casts no verdict either way.
+    if resolved.values_were_read and _refuses_a_statement(
+        response.validation,
+        stated=stated,
+        context=held,
+        held_validation=held_validation,
+    ):
         raise wdk_rejection_error(response.validation)
 
     refreshed_ctx = SearchContext(
@@ -368,15 +415,13 @@ async def validate_parameters(
     )
     # The refresh below skips a parent whose value is empty, so site-set required
     # parents must get their defaults first.
-    canonical = fill_site_set_defaults(param_spec_map, canonical)
     param_spec_map = await _refresh_dependent_vocabularies(
         ctx=refreshed_ctx,
         param_spec_map=param_spec_map,
-        canonical_values=canonical,
+        canonical_values=fill_site_set_defaults(param_spec_map, {**held, **canonical}),
     )
-    canonicalizer = ParameterCanonicalizer(param_spec_map)
-    caller_canonical = canonicalizer.canonicalize(parameters)
-    canonical = fill_site_set_defaults(param_spec_map, caller_canonical)
+    caller_canonical = ParameterCanonicalizer(param_spec_map).canonicalize(stated)
+    filled = fill_site_set_defaults(param_spec_map, {**held, **caller_canonical})
     echoed = {
         spec.name: spec.initial_display_value
         for spec in response.search_data.parameters or []
@@ -394,10 +439,10 @@ async def validate_parameters(
                 values_were_read=resolved.values_were_read,
             )
         )
-        | set(filled_site_set_defaults(param_spec_map, caller_canonical))
+        | set(filled_site_set_defaults(param_spec_map, {**held, **caller_canonical}))
     )
     return ValidatedParams(
-        params=canonical,
+        params={name: value for name, value in filled.items() if name not in held},
         record_class=resolved_record_type,
         substituted=substituted,
     )

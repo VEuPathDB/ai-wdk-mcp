@@ -123,7 +123,7 @@ async def test_a_site_set_dependent_is_sent_at_the_value_read_under_its_parent(
 
     validated = await validate_parameters(
         CTX,
-        parameters={"organismSinglePick": MultiPickValue(values=[VIVAX])},
+        stated={"organismSinglePick": MultiPickValue(values=[VIVAX])},
         callbacks=validation_callbacks(),
     )
 

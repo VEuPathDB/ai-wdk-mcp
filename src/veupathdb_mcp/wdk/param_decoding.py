@@ -1,14 +1,9 @@
 """The wire parameters of one WDK step, decoded against its own search spec."""
 
 from veupathdb import get_logger
-from veupathdb.domain.parameters import (
-    ParameterCanonicalizer,
-    ParamKind,
-    ParamValue,
-    as_param_kind,
-)
+from veupathdb.domain.parameters import ParameterCanonicalizer, ParamValue
 from veupathdb.errors import VEuPathDBError
-from veupathdb.wdk import StrategyAPI, WDKSearch, decode_params
+from veupathdb.wdk import StrategyAPI, WDKSearch
 
 from veupathdb_mcp.catalog.param_adapters import adapt_param_specs_from_search
 from veupathdb_mcp.catalog.search_context import get_search_params_under_context
@@ -41,26 +36,11 @@ async def load_search_spec(
 
 
 def decode_wire_parameters(
-    search: WDKSearch,
-    wire: dict[str, str],
-) -> dict[str, ParamValue] | None:
-    """Canonical typed values for ``wire``, or None when the spec cannot decode it.
+    search: WDKSearch | None, wire: dict[str, str]
+) -> dict[str, ParamValue]:
+    """The values ``wire`` holds, each read as its parameter's kind, never refused.
 
-    An empty mapping states that the search declares parameters and the step
-    sets none of them.
+    With no search spec, every value is held as WDK holds it.
     """
-    specs = adapt_param_specs_from_search(search)
-    if not specs:
-        return None
-    kinds: dict[str, ParamKind] = {
-        name: as_param_kind(spec.param_type) for name, spec in specs.items()
-    }
-    try:
-        return ParameterCanonicalizer(specs).canonicalize(decode_params(wire, kinds))
-    except VEuPathDBError as exc:
-        logger.warning(
-            "Failed to canonicalize wire parameters",
-            search_name=search.url_segment,
-            error=str(exc),
-        )
-        return None
+    specs = adapt_param_specs_from_search(search) if search is not None else {}
+    return ParameterCanonicalizer(specs).held(wire)

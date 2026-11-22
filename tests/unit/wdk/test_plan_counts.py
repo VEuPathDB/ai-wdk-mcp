@@ -5,7 +5,7 @@ from typing import Any
 import pytest
 from tests._support.listed_searches import list_searches
 from veupathdb import JSONObject
-from veupathdb.domain.parameters import StringValue
+from veupathdb.domain.parameters import HeldValue, StringValue
 from veupathdb.domain.strategy import CombineOp, StrategyAst, StrategyStepNode
 from veupathdb.errors import (
     SiteNotFoundError,
@@ -118,6 +118,7 @@ class _FakeStrategyAPI:
         self.created_strategy_names: list[str] = []
         self.deleted_strategies: list[int] = []
         self.created_step_trees: list[WDKStepTree] = []
+        self.sent: list[dict[str, str]] = []
 
     def _mint(self) -> WDKIdentifier:
         self._next_id += 1
@@ -126,6 +127,7 @@ class _FakeStrategyAPI:
     async def create_step(
         self, spec: NewStepSpec, record_type: str, user_id: str | None = None
     ) -> WDKIdentifier:
+        self.sent.append(dict(spec.search_config.parameters))
         if spec.search_name == self._refuse_step:
             raise REFUSAL
         return self._mint()
@@ -277,6 +279,15 @@ class TestALeafOnlyPlanNeedsNoStrategy:
 
 
 class TestAPlanWithACombineUsesATemporaryStrategy:
+    async def test_a_held_value_goes_out_as_held(self, api: _FakeStrategyAPI) -> None:
+        plan = _combine_plan()
+        assert plan.root.primary_input is not None
+        plan.root.primary_input.parameters = {"retired": HeldValue(wire="a, b")}
+
+        await compute_plan_step_counts(plan, "plasmodb")
+
+        assert api.sent == [{"retired": "a, b"}, {"min_molecular_weight": "10000"}]
+
     async def test_every_step_reports_its_estimated_size(
         self, api: _FakeStrategyAPI
     ) -> None:

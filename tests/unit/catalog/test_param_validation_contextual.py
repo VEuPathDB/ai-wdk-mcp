@@ -11,6 +11,7 @@ from __future__ import annotations
 import pytest
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import MultiPickValue, ParamValue, StringValue
+from veupathdb.domain.strategy import StepValidation
 from veupathdb.errors import ValidationError, WDKError
 from veupathdb.wdk import WDKSearchResponse
 
@@ -59,7 +60,7 @@ def _rejecting_definition() -> WDKSearchResponse:
 
 async def _validate() -> param_validation.ValidatedParams:
     return await param_validation.validate_parameters(
-        _CTX, parameters=dict(_STATED), callbacks=validation_callbacks()
+        _CTX, stated=dict(_STATED), callbacks=validation_callbacks()
     )
 
 
@@ -294,3 +295,124 @@ class TestAFallbackDefinitionCastsNoVerdict:
 
         with pytest.raises(ValidationError, match="Invalid parameter value"):
             await _validate()
+
+
+class TestAVerdictOnAHeldValueNeverRefuses:
+    @pytest.fixture(autouse=True)
+    def _rejects_the_organism(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        async def _reject(
+            ctx: SearchContext,
+            *,
+            resolved_record_type: str,
+            parameters: dict[str, ParamValue],
+        ) -> param_validation.ResolvedSearch:
+            del ctx, resolved_record_type, parameters
+            return param_validation.ResolvedSearch(
+                response=_rejecting_definition(), values_were_read=True
+            )
+
+        monkeypatch.setattr(param_validation, "resolve_search_details", _reject)
+        monkeypatch.setattr(
+            param_validation, "get_refreshed_dependent_params", no_dependent_refresh
+        )
+
+    async def test_a_verdict_on_a_context_value_passes_the_statement(self) -> None:
+        organism = {"organism": MultiPickValue(values=["Gone organism"])}
+        stated = {"included_species": StringValue(value="pfal")}
+
+        result = await param_validation.validate_parameters(
+            _CTX, stated=stated, context=organism, callbacks=validation_callbacks()
+        )
+
+        assert "organism" not in result.params
+        assert result.params["included_species"] == StringValue(value="pfal")
+
+    async def test_a_verdict_on_a_stated_value_still_refuses(self) -> None:
+        organism = {"organism": MultiPickValue(values=[PHYLETIC_STRAIN])}
+
+        with pytest.raises(ValidationError, match="organism: Cannot be empty"):
+            await param_validation.validate_parameters(
+                _CTX, stated=organism, callbacks=validation_callbacks()
+            )
+
+
+def _flagged(general: str) -> param_validation.ResolvedSearch:
+    return param_validation.ResolvedSearch(
+        response=wdk_search_response(
+            _CTX.search_name,
+            phyletic_search_params(),
+            level="DISPLAYABLE",
+            is_valid=False,
+            errors={"general": [general], "byKey": {}},
+        ),
+        values_were_read=True,
+    )
+
+
+_STORED = StepValidation.model_validate(
+    {
+        "level": "DISPLAYABLE",
+        "isValid": False,
+        "errors": {"general": ["The organism is retired"], "byKey": {}},
+    }
+)
+
+
+class TestAGeneralVerdictRefusesOnlyWhatAStatementAdds:
+    @pytest.fixture
+    def answers(self, monkeypatch: pytest.MonkeyPatch) -> list[str]:
+        general: list[str] = []
+
+        async def _answer(
+            ctx: SearchContext,
+            *,
+            resolved_record_type: str,
+            parameters: dict[str, ParamValue],
+        ) -> param_validation.ResolvedSearch:
+            del ctx, resolved_record_type, parameters
+            return _flagged(general[0])
+
+        monkeypatch.setattr(param_validation, "resolve_search_details", _answer)
+        monkeypatch.setattr(
+            param_validation, "get_refreshed_dependent_params", no_dependent_refresh
+        )
+        return general
+
+    async def test_nothing_stated_never_refuses(self, answers: list[str]) -> None:
+        answers.append("The organism is retired")
+
+        result = await param_validation.validate_parameters(
+            _CTX, stated={}, context=dict(_STATED), callbacks=validation_callbacks()
+        )
+
+        assert result.params == {}
+
+    async def test_a_statement_that_adds_no_general_error_goes_through(
+        self, answers: list[str]
+    ) -> None:
+        answers.append("The organism is retired")
+        stated = {"included_species": StringValue(value="pfal")}
+
+        result = await param_validation.validate_parameters(
+            _CTX,
+            stated=stated,
+            context=dict(_STATED),
+            held_validation=_STORED,
+            callbacks=validation_callbacks(),
+        )
+
+        assert result.params == stated
+
+    async def test_a_statement_that_adds_a_general_error_is_refused(
+        self, answers: list[str]
+    ) -> None:
+        answers.append("The species list selects nothing")
+
+        with pytest.raises(ValidationError, match="selects nothing"):
+            await param_validation.validate_parameters(
+                _CTX,
+                stated={"included_species": StringValue(value="pfal")},
+                context=dict(_STATED),
+                held_validation=_STORED,
+                callbacks=validation_callbacks(),
+            )

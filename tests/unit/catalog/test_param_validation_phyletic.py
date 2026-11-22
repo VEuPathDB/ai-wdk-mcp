@@ -15,7 +15,12 @@ import pytest
 from pydantic import JsonValue
 from veupathdb import JSONObject
 from veupathdb.domain import SearchContext
-from veupathdb.domain.parameters import MultiPickValue, ParamValue, StringValue
+from veupathdb.domain.parameters import (
+    HeldValue,
+    MultiPickValue,
+    ParamValue,
+    StringValue,
+)
 from veupathdb.errors import ValidationError
 from veupathdb.wdk import WDKEnumParam, WDKParameter, WDKStringParam
 
@@ -111,7 +116,7 @@ def _serve(monkeypatch: pytest.MonkeyPatch, *, readable_tree: bool) -> None:
 async def _validate(pattern: str) -> param_validation.ValidatedParams:
     return await param_validation.validate_parameters(
         _CTX,
-        parameters={
+        stated={
             "profile_pattern": StringValue(value=pattern),
             "organism": MultiPickValue(values=[PHYLETIC_STRAIN]),
         },
@@ -241,7 +246,7 @@ class TestOnlyAPhyleticSearchIsJudged:
 
         result = await param_validation.validate_parameters(
             SearchContext("plasmodb", "transcript", "GenesByProfilePattern"),
-            parameters={
+            stated={
                 "profile_pattern": StringValue(value=_PROSE),
                 "organism": MultiPickValue(values=[PHYLETIC_STRAIN]),
             },
@@ -249,3 +254,49 @@ class TestOnlyAPhyleticSearchIsJudged:
         )
 
         assert result.params["profile_pattern"] == StringValue(value=_PROSE)
+
+
+class TestAStatedPatternIsCanonical:
+    async def test_its_codes_are_sorted_into_census_order(
+        self, readable_tree: None
+    ) -> None:
+        del readable_tree
+
+        assert (await _validate("%pfal:Y%hsap:N%")).params[
+            "profile_pattern"
+        ] == StringValue(value=_CENSUS)
+
+    async def test_a_held_pattern_is_neither_read_nor_refused(
+        self, readable_tree: None
+    ) -> None:
+        del readable_tree
+        held = HeldValue(wire=_PROSE)
+
+        validated = await param_validation.validate_parameters(
+            _CTX,
+            stated={
+                "profile_pattern": held,
+                "organism": MultiPickValue(values=[PHYLETIC_STRAIN]),
+            },
+            callbacks=validation_callbacks(),
+        )
+
+        assert validated.params["profile_pattern"] == held
+
+
+class TestAReadPatternIsNeverJudged:
+    async def test_a_retired_code_in_a_read_pattern_passes_a_sibling_statement(
+        self, readable_tree: None
+    ) -> None:
+        del readable_tree
+        read = {"profile_pattern": StringValue(value="%zzzz:Y%")}
+
+        validated = await param_validation.validate_parameters(
+            _CTX,
+            stated={"organism": MultiPickValue(values=[PHYLETIC_STRAIN])},
+            context=read,
+            callbacks=validation_callbacks(),
+        )
+
+        assert "profile_pattern" not in validated.params
+        assert validated.params["organism"] == MultiPickValue(values=[PHYLETIC_STRAIN])

@@ -113,7 +113,7 @@ class TestTheErrorCarriesThePostRefreshVocabulary:
         with pytest.raises(ValidationError) as excinfo:
             await param_validation.validate_parameters(
                 _CTX,
-                parameters={
+                stated={
                     "organism": SinglePickValue(value="Pf3D7"),
                     "taxon": SinglePickValue(value="TaxonB"),
                 },
@@ -141,7 +141,7 @@ class TestNothingLooksAtTheValuesWhenNobodyJudgedThem:
 
         result = await param_validation.validate_parameters(
             _CTX,
-            parameters={"organism": SinglePickValue(value="Pf3D7")},
+            stated={"organism": SinglePickValue(value="Pf3D7")},
             callbacks=validation_callbacks(),
         )
 
@@ -172,7 +172,7 @@ def _rejecting(monkeypatch: pytest.MonkeyPatch, by_key: dict[str, list[str]]) ->
 async def _validate_organism() -> param_validation.ValidatedParams:
     return await param_validation.validate_parameters(
         SearchContext("plasmodb", "transcript", "GenesByEcNumber"),
-        parameters={"organism": SinglePickValue(value="Pf3D7")},
+        stated={"organism": SinglePickValue(value="Pf3D7")},
         callbacks=validation_callbacks(),
     )
 
@@ -273,7 +273,7 @@ class TestAHiddenParentIsFilledBeforeRefresh:
         # The caller never mentions `channel`, exactly what the model sends.
         return await param_validation.validate_parameters(
             SearchContext("plasmodb", "transcript", "GenesByMicroarray"),
-            parameters={"samples": MultiPickValue(values=["TaxonA"])},
+            stated={"samples": MultiPickValue(values=["TaxonA"])},
             callbacks=validation_callbacks(),
         )
 

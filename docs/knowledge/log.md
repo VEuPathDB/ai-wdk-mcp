@@ -8,6 +8,21 @@
   `excluded_species` each take one string of codes or labels separated by commas; the
   help of both, the `profile_pattern` help and `LOOKUP_HINT` read it, and the refusals
   no longer call them lists. `PhyleticProposals` holds strings only.
+- `required` follows `allowEmptyValue` alone, as `Param.validate` does.
+- A synced step keeps every value it reads (`ParameterCanonicalizer.held`) in its one
+  parameter map: a value no kind reads, a value of a name with no spec, and every value
+  of a step whose search spec cannot be read is a `HeldValue`, as WDK holds it. Only a
+  declared input-step value is left out; WDK's step tree carries the wiring.
+- A value is canonical when it is stated, because a step write sends its parameters as
+  given: `read_under_parents` and a separation candidate's binding read a stated branch of
+  a countOnlyLeaves tree as its leaves (`as_tree_leaves`), and `validate_parameters` puts
+  a stated `profile_pattern` in census form (`canonical_census_pattern`). A held pattern
+  is neither read nor refused.
+- `validate_parameters` takes `stated` and `context`: only a stated value is canonicalized
+  or refused, a context value goes to WDK as it is, and WDK's verdict on a context value
+  never refuses. `as_tree_leaves` expands through the client's one `leaf_terms`.
+- Nothing stated is never refused; after a statement a general WDK error refuses only
+  when the step's stored verdict (`held_validation`) did not already carry it.
 
 ## 2026-11-21 - 0.9.0b13: a value is read by its parameter
 

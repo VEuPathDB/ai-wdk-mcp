@@ -14,12 +14,14 @@ from veupathdb.domain.parameters import (
     FilterProposals,
     MultiPickValue,
     ParamGraph,
+    ParamSpecNormalized,
     ParamValue,
     PhyleticBinding,
     SinglePickValue,
     Stated,
     UnboundParameter,
     flatten_vocab,
+    leaf_terms,
     match_exact_option,
     read_stated_values,
     to_wire,
@@ -43,6 +45,7 @@ from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,
 )
 from veupathdb_mcp.catalog.facet_ranges import FilterReads, refuse_filter_misses
+from veupathdb_mcp.catalog.param_adapters import adapt_param_from_wdk
 from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,
     format_param_info_typed,
@@ -253,6 +256,27 @@ ParamFetcher = Callable[[dict[str, str]], Awaitable[list[WDKParameter]]]
 NOTHING_BOUND: Mapping[str, ParamValue] = MappingProxyType({})
 
 
+def as_tree_leaves(
+    declarations: Sequence[WDKParameter], values: Mapping[str, ParamValue]
+) -> dict[str, ParamValue]:
+    """The stated values with each parent term of a countOnlyLeaves tree as its
+    leaves, the form WDK counts. A term that names no node is left for the
+    canonicalizer to refuse."""
+    counted = {
+        d.name: adapt_param_from_wdk(d) for d in declarations if d.count_only_leaves
+    }
+    return {name: _leaves(counted.get(name), value) for name, value in values.items()}
+
+
+def _leaves(spec: ParamSpecNormalized | None, value: ParamValue) -> ParamValue:
+    match value:
+        case MultiPickValue(values=terms) if spec is not None:
+            leaves = leaf_terms(spec.vocabulary, terms)
+            return value if leaves is None else MultiPickValue(values=leaves)
+        case _:
+            return value
+
+
 async def read_under_parents(
     fetch_at: ParamFetcher,
     stated: Mapping[str, JsonValue],
@@ -270,7 +294,7 @@ async def read_under_parents(
     for _ in range(_MAX_RESOLVE_DEPTH):
         missing = stated.keys() - read.keys()
         if not missing:
-            return read
+            return as_tree_leaves(declarations, read)
         waiting = _waiting(declarations, stated, context)
         sited = {
             d.name: d.initial_display_value
@@ -293,7 +317,7 @@ async def read_under_parents(
     unread = sorted(stated.keys() - read.keys())
     if unread:
         raise UnreadStatementError(unread)
-    return read
+    return as_tree_leaves(declarations, read)
 
 
 def wdk_fetch_at(site_id: str, record_type: str, search_name: str) -> ParamFetcher:

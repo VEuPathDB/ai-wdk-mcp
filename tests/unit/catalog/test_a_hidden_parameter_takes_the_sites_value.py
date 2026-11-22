@@ -69,7 +69,7 @@ async def test_the_values_sent_for_a_search_carry_each_hidden_default(
     )
 
     validated = await validate_parameters(
-        CTX, parameters={}, callbacks=validation_callbacks()
+        CTX, stated={}, callbacks=validation_callbacks()
     )
 
     assert {name: to_wire(validated.params[name]) for name in DEFAULTS} == DEFAULTS

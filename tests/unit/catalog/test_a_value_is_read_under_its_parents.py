@@ -144,3 +144,36 @@ async def test_a_dependent_under_another_bound_parent_is_refused() -> None:
                 )
             },
         )
+
+
+async def test_a_stated_branch_of_a_leaf_counted_tree_is_read_as_its_leaves() -> None:
+    organism = _DECLARATION.validate_python(
+        {
+            "name": "organism",
+            "type": "multi-pick-vocabulary",
+            "displayType": "treeBox",
+            "countOnlyLeaves": True,
+            "vocabulary": _node(
+                FAKE_ALL_SENTINEL,
+                "All",
+                _node(
+                    "Plasmodium",
+                    "Plasmodium",
+                    _node(_VIVAX, _VIVAX),
+                    _node("Plasmodium falciparum 3D7", "P. falciparum 3D7"),
+                ),
+            ),
+        }
+    )
+
+    async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
+        del context
+        return [organism]
+
+    read = await read_under_parents(
+        fetch_at, {"organism": ["Plasmodium"]}, FilterReadsDouble()
+    )
+
+    assert read == {
+        "organism": MultiPickValue(values=[_VIVAX, "Plasmodium falciparum 3D7"])
+    }
