@@ -118,9 +118,10 @@ def test_a_genus_the_species_lists_lack_names_its_genomes_first() -> None:
     )
 
     assert isinstance(got, PhyleticUnresolvedProposal)
-    nearest = [entry.value for entry in got.nearest]
+    [nearest_entries] = got.nearest.values()
+    nearest = [entry.value for entry in nearest_entries]
     assert nearest[:3] == ["padl", "pbbi", "pber"]
-    assert "Plasmodium vivax PAM" not in [entry.display for entry in got.nearest]
+    assert "Plasmodium vivax PAM" not in [entry.display for entry in nearest_entries]
 
 
 def test_no_reader_matches_a_vocabulary_value_of_its_own() -> None:

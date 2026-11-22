@@ -81,8 +81,18 @@ class PhyleticUnresolvedProposal(BaseModel):
     """Why a pair of species lists binds nothing, and the entries nearest to them."""
 
     unresolved: PhyleticUnresolved
-    nearest: list[VocabOption] = Field(default_factory=list)
+    nearest: dict[str, list[VocabOption]] = Field(default_factory=dict)
     stated: dict[str, str] = Field(default_factory=dict)
+
+    def unknown_by_list(self) -> list[tuple[str, list[str]]]:
+        return [
+            (name, terms)
+            for name, terms in (
+                ("included_species", self.unresolved.included_unknown),
+                ("excluded_species", self.unresolved.excluded_unknown),
+            )
+            if terms
+        ]
 
 
 class PhyleticNoSelection(BaseModel):
@@ -112,9 +122,12 @@ class PhyleticListError(ValidationError):
                 )
             case None:
                 rows = _pattern_rows(
-                    "The search's phyletic_indent_map and phyletic_term_map do not "
-                    "read as a species tree, so included_species and excluded_species "
-                    "derive no profile_pattern."
+                    "The site's species tree does not read: its phyletic_indent_map "
+                    "and phyletic_term_map give no tree, so included_species and "
+                    "excluded_species derive no profile_pattern, and restating them "
+                    "cannot fix it. Take another route: the ortholog phyletic-pattern "
+                    f"search on OrthoMCL ({PHYLETIC_PROFILE_SEARCH}) reads the same "
+                    "lists against its own tree."
                 )
         super().__init__(
             title="The species parameters derive no profile_pattern",
@@ -129,7 +142,6 @@ def _pattern_rows(detail: str) -> list[JSONObject]:
 
 def _list_rows(refused: PhyleticUnresolvedProposal) -> list[JSONObject]:
     unresolved = refused.unresolved
-    near = ", ".join(entry_name(entry) for entry in refused.nearest)
     rows: list[JSONObject] = []
     for name, unknown in (
         ("included_species", unresolved.included_unknown),
@@ -141,12 +153,15 @@ def _list_rows(refused: PhyleticUnresolvedProposal) -> list[JSONObject]:
                 "excluded_species" if name == "included_species" else "included_species"
             )
             faults.append(f"{name} and {other} both name {unresolved.conflicts}")
+        near = ", ".join(entry_name(entry) for entry in refused.nearest.get(name, []))
+        if near:
+            faults.append(f"Nearest entries: {near}")
         if faults:
             rows.append(
                 {
                     "param": name,
                     "value": refused.stated.get(name),
-                    "detail": f"{'; '.join(faults)}. Nearest entries: {near}.",
+                    "detail": f"{'. '.join(faults)}.",
                 }
             )
     return rows
@@ -186,22 +201,20 @@ async def ordered_phyletic_refusal(
     nothing, by the entry a Decisions choice picks."""
     tree = phyletic_tree_of(list(declarations))
     match refusal.refused:
-        case PhyleticUnresolvedProposal(unresolved=unresolved) as proposal if (
-            tree is not None
-        ):
+        case PhyleticUnresolvedProposal() as proposal if tree is not None:
             displays = {d.name: d.display_name or d.name for d in declarations}
             labels = tree.labels()
+            lists = proposal.unknown_by_list()
             asked = [
                 (NamedVocabulary(display=displays.get(name, name), options=labels), t)
-                for name, terms in (
-                    ("included_species", unresolved.included_unknown),
-                    ("excluded_species", unresolved.excluded_unknown),
-                )
+                for name, terms in lists
                 for t in terms
             ]
-            nearest = interleaved(
-                await ordered_terms(about, asked), _value, SHOWN_CANDIDATES
-            )
+            led = iter(await ordered_terms(about, asked))
+            nearest = {
+                name: interleaved([next(led) for _ in terms], _value, SHOWN_CANDIDATES)
+                for name, terms in lists
+            }
             return PhyleticListError(proposal.model_copy(update={"nearest": nearest}))
         case _:
             return refusal
@@ -227,12 +240,17 @@ def derive_phyletic_overrides(
         proposals.get("excluded_species") or "",
     )
     if isinstance(binding, PhyleticUnresolved):
-        return PhyleticUnresolvedProposal(
+        proposal = PhyleticUnresolvedProposal(
             stated={name: text for name, text in proposals.items() if text is not None},
             unresolved=binding,
-            nearest=_ranked_entries(
-                tree, [*binding.included_unknown, *binding.excluded_unknown]
-            ),
+        )
+        return proposal.model_copy(
+            update={
+                "nearest": {
+                    name: _ranked_entries(tree, terms)
+                    for name, terms in proposal.unknown_by_list()
+                }
+            }
         )
     if binding.profile_pattern == NO_CONSTRAINT_PATTERN:
         return PhyleticNoSelection()

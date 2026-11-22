@@ -6,10 +6,15 @@ import pytest
 from pydantic import JsonValue
 from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recorded_searches import recorded_search
-from veupathdb.domain.parameters import VocabularyEntryError
+from veupathdb.domain.parameters import (
+    SHOWN_CANDIDATES,
+    VocabularyEntryError,
+    entry_name,
+    rank_entries,
+)
 from veupathdb.errors import ValidationError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
-from veupathdb.wdk import WDKParameter, WDKStringParam
+from veupathdb.wdk import WDKParameter, WDKStringParam, phyletic_tree_of
 
 from veupathdb_mcp.catalog import (
     ParamIntent,
@@ -17,6 +22,7 @@ from veupathdb_mcp.catalog import (
     resolve_params_with_intent,
 )
 from veupathdb_mcp.catalog.param_dag import ParamFetcher
+from veupathdb_mcp.catalog.taxonomy import PHYLETIC_PROFILE_SEARCH
 from veupathdb_mcp.catalog.vocab_resolve import ResolveContext
 
 from .conftest import PHYLETIC_MAPS, serving
@@ -271,3 +277,49 @@ def _first_then(first: list[WDKParameter], later: list[WDKParameter]) -> ParamFe
         return first if len(seen) == 1 else later
 
     return fetch_at
+
+
+def _nearest_to(term: str) -> str:
+    tree = phyletic_tree_of(_orthologs())
+    assert tree is not None
+    ranked = rank_entries(tree.labels(), term, SHOWN_CANDIDATES)
+    return ", ".join(entry_name(entry) for entry in ranked)
+
+
+@pytest.mark.parametrize("about", [None, _ABOUT])
+async def test_each_species_list_is_offered_its_own_nearest_entries(
+    about: ResolveContext | None,
+) -> None:
+    refusal = await _walked(
+        _orthologs(),
+        {
+            "included_species": "Plasmodium falciparum",
+            "excluded_species": "Homo sapienz",
+        },
+        about=about,
+        search_name="GenesByOrthologPattern",
+    )
+
+    [included, excluded] = _rows(refusal)
+    assert included.detail.endswith(
+        f"Nearest entries: {_nearest_to('Plasmodium falciparum')}."
+    )
+    assert excluded.detail.endswith(f"Nearest entries: {_nearest_to('Homo sapienz')}.")
+    assert _nearest_to("Plasmodium falciparum") != _nearest_to("Homo sapienz")
+
+
+async def test_a_tree_that_does_not_read_sends_the_agent_another_way() -> None:
+    refusal = await _walked(
+        _without_the_tree(),
+        {"included_species": "pfal"},
+        search_name="GenesByOrthologPattern",
+    )
+
+    [pattern] = _rows(refusal)
+    assert pattern.detail == (
+        "The site's species tree does not read: its phyletic_indent_map and "
+        "phyletic_term_map give no tree, so included_species and excluded_species "
+        "derive no profile_pattern, and restating them cannot fix it. Take another "
+        "route: the ortholog phyletic-pattern search on OrthoMCL "
+        f"({PHYLETIC_PROFILE_SEARCH}) reads the same lists against its own tree."
+    )

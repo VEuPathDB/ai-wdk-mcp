@@ -5,8 +5,11 @@
 - `PhyleticListError` writes one row per species list that names no entry or claims a code
   the other list claims, keyed `included_species` or `excluded_species`, with the stated text
   as `value`. Only naming no list (`PhyleticNoSelection`) is a `profile_pattern` row.
+- Each list's row offers the entries nearest its own unknown terms
+  (`PhyleticUnresolvedProposal.nearest` is keyed by list).
 - A search whose `phyletic_indent_map` and `phyletic_term_map` do not read as a tree is refused
-  in its own words, not as an empty selection.
+  in its own words, not as an empty selection: restating the lists cannot fix it, and the
+  OrthoMCL ortholog phyletic-pattern search is the other route.
 - A refusal row is read by its `detail` alone (`_RefusalRow`).
 
 ## 2026-11-22 - A walk raises once, in call order

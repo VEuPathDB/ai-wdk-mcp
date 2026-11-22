@@ -230,7 +230,7 @@ class TestAPhyleticRefusal:
             )
         match refused.value.refused:
             case PhyleticUnresolvedProposal(nearest=nearest):
-                return [entry.display for entry in nearest]
+                return [entry.display for entry in nearest["included_species"]]
             case other:
                 raise AssertionError(other)
 

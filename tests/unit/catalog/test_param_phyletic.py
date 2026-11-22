@@ -175,7 +175,9 @@ class TestAnUnresolvedProposal:
 
         assert isinstance(got, PhyleticUnresolvedProposal)
         assert got.unresolved.included_unknown == ["Plasmodium falciparum"]
-        assert entry_name(got.nearest[0]) == "Plasmodium falciparum 3D7 (pfal)"
+        assert entry_name(got.nearest["included_species"][0]) == (
+            "Plasmodium falciparum 3D7 (pfal)"
+        )
         detail = str(PhyleticListError(got).detail)
         assert "Nearest entries: Plasmodium falciparum 3D7 (pfal), " in detail
         assert "[" not in detail.split("Nearest entries:")[1]
@@ -187,7 +189,7 @@ class TestAnUnresolvedProposal:
 
         assert isinstance(got, PhyleticUnresolvedProposal)
         assert got.unresolved.excluded_unknown == ["Nosema"]
-        assert 0 < len(got.nearest) <= 5
+        assert 0 < len(got.nearest["excluded_species"]) <= 5
 
     def test_a_code_in_both_lists_is_a_conflict(self) -> None:
         got = derive_phyletic_overrides(

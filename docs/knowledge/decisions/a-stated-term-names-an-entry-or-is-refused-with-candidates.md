@@ -45,7 +45,10 @@ rows are in call order, by the position of their parameter in the call, then in 
 they were found; a row of a parameter the call does not name (an unset site parameter,
 `profile_pattern` when no species list is stated) comes last. A species list that names no
 species is refused on itself: one row per list, `included_species` or `excluded_species`, with
-the stated text as `value` and the unknown terms and nearest entries in `detail`. Every row holds
+the stated text as `value` and its own unknown terms and the entries nearest to them
+(`rank_entries`, `SHOWN_CANDIDATES`, led by a Decisions pick when `about` is given) in
+`detail`. A search whose species tree does not read is a `profile_pattern` row that says
+restating the lists cannot fix it and names the OrthoMCL ortholog phyletic-pattern search. Every row holds
 `param` and a one-line `detail`.
 
 The refusal's class depends on its rows only, never on `about`: a refusal with no entry row
