@@ -291,6 +291,34 @@ def _leaves(spec: ParamSpecNormalized | None, value: ParamValue) -> ParamValue:
             return value
 
 
+def _ancestors(parents: Mapping[str, tuple[str, ...]], name: str) -> set[str]:
+    found: set[str] = set()
+    waiting = list(parents.get(name, ()))
+    while waiting:
+        parent = waiting.pop()
+        if parent not in found:
+            found.add(parent)
+            waiting.extend(parents.get(parent, ()))
+    return found
+
+
+def _given_back(
+    declarations: Sequence[WDKParameter],
+    stated: Mapping[str, JsonValue],
+    bound: Mapping[str, ParamValue],
+) -> dict[str, ParamValue]:
+    parents = ParamGraph.of(declarations).wire_parents
+    kept = {
+        n for n, given in stated.items() if n in bound and restates(bound[n], given)
+    }
+    while True:
+        changed = stated.keys() - kept
+        standing = {n for n in kept if not _ancestors(parents, n) & changed}
+        if standing == kept:
+            return {name: bound[name] for name in kept}
+        kept = standing
+
+
 async def read_under_parents(
     fetch_at: ParamFetcher,
     stated: Mapping[str, JsonValue],
@@ -303,16 +331,17 @@ async def read_under_parents(
     parents give, and refuses a filter that selects nothing. A name of no parameter
     is refused before any value is read. A term no entry names is refused with its
     candidates ordered under ``about``; None sends no choice. A value given back
-    as the bound value shows it is the bound value, and is not read."""
-    kept = {
-        name: bound[name]
-        for name, given in stated.items()
-        if name in bound and restates(bound[name], given)
-    }
-    stated = {name: given for name, given in stated.items() if name not in kept}
+    as the bound value shows it is the bound value, and is not read, while no
+    parent of it is stated anew."""
     context = wire_map({n: v for n, v in bound.items() if n not in stated})
-    read: dict[str, ParamValue] = {}
     declarations = await fetch_at(context)
+    kept = _given_back(declarations, stated, bound)
+    stated = {name: given for name, given in stated.items() if name not in kept}
+    held_context = wire_map({n: v for n, v in bound.items() if n not in stated})
+    if held_context != context:
+        context = held_context
+        declarations = await fetch_at(context)
+    read: dict[str, ParamValue] = {}
     _refuse_unknown_overrides(
         format_param_info_typed(declarations, organism=None),
         stated,

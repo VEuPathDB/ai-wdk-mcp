@@ -36,7 +36,10 @@ async def _read(given: JsonValue) -> dict[str, object]:
             {"organismSinglePick": [_PF], "variation_sample_meta": given},
             FilterReadsDouble(),
             about=None,
-            bound={"variation_sample_meta": _HELD},
+            bound={
+                "organismSinglePick": MultiPickValue(values=[_PF]),
+                "variation_sample_meta": _HELD,
+            },
         )
     )
 

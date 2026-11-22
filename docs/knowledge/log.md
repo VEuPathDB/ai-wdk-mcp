@@ -1,5 +1,12 @@
 # Knowledge log
 
+## 2026-11-22 - A value given back stands only while its parents stand
+
+- `read_under_parents` takes a value given back as its bound value only while no wire
+  ancestor of it is stated with a new value; otherwise it is read again under the new
+  parents, so a filter given back under a new organism meets the empty-range and member
+  refusals again.
+
 ## 2026-11-22 - A value given back is the held value
 
 - `read_under_parents` takes a stated value that `restates` its bound value (its stated
