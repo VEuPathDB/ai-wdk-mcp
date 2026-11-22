@@ -22,6 +22,7 @@ from veupathdb.domain.parameters import (
     VocabularyEntryError,
     leaf_terms,
     read_stated_values,
+    restates,
     to_wire,
     wire_map,
 )
@@ -301,7 +302,14 @@ async def read_under_parents(
     """Reads each stated value under the declarations its stated, bound and site-set
     parents give, and refuses a filter that selects nothing. A name of no parameter
     is refused before any value is read. A term no entry names is refused with its
-    candidates ordered under ``about``; None sends no choice."""
+    candidates ordered under ``about``; None sends no choice. A value given back
+    as the bound value shows it is the bound value, and is not read."""
+    kept = {
+        name: bound[name]
+        for name, given in stated.items()
+        if name in bound and restates(bound[name], given)
+    }
+    stated = {name: given for name, given in stated.items() if name not in kept}
     context = wire_map({n: v for n, v in bound.items() if n not in stated})
     read: dict[str, ParamValue] = {}
     declarations = await fetch_at(context)
@@ -312,7 +320,7 @@ async def read_under_parents(
     for _ in range(_MAX_RESOLVE_DEPTH):
         missing = stated.keys() - read.keys()
         if not missing:
-            return as_tree_leaves(declarations, read)
+            return {**as_tree_leaves(declarations, read), **kept}
         waiting = _waiting(declarations, stated, context)
         sited = {
             d.name: d.initial_display_value
@@ -342,7 +350,7 @@ async def read_under_parents(
     unread = sorted(stated.keys() - read.keys())
     if unread:
         raise UnreadStatementError(unread)
-    return as_tree_leaves(declarations, read)
+    return {**as_tree_leaves(declarations, read), **kept}
 
 
 def wdk_fetch_at(site_id: str, record_type: str, search_name: str) -> ParamFetcher:

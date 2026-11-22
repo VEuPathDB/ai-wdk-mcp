@@ -8,6 +8,7 @@ from pydantic import JsonValue
 from tests._support.filter_reads import FilterReadsDouble
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
+    NO_FILTERS_WIRE,
     FilterFacet,
     FilterStatementError,
     FilterValue,
@@ -84,7 +85,7 @@ class TestFilterParams:
         value = resolved.params["ngsSnp_strain_meta"]
         assert isinstance(value, FilterValue)
         assert value.filters == []
-        assert value.to_wire() == '{"filters": []}'
+        assert value.to_wire() == NO_FILTERS_WIRE
         assert resolved.unresolved_required == []
         assert resolved.open_slots == []
 
@@ -93,9 +94,8 @@ class TestFilterParams:
             fetch_at=_strain_meta(), stated={"ngsSnp_strain_meta": []}
         )
 
-        value = resolved.params["ngsSnp_strain_meta"]
-        assert isinstance(value, FilterValue)
-        assert value.to_wire() == '{"filters": []}'
+        assert resolved.params["ngsSnp_strain_meta"] == FilterValue()
+        assert resolved.params["ngsSnp_strain_meta"].to_wire() == NO_FILTERS_WIRE
 
     async def test_a_statement_builds_the_clause_the_ontology_types(self) -> None:
         resolved = await _walk(

@@ -1,5 +1,12 @@
 # Knowledge log
 
+## 2026-11-22 - A value given back is the held value
+
+- `read_under_parents` takes a stated value that `restates` its bound value (its stated
+  form, or a kept value's marked text or wire) as the bound value and does not read it,
+  so FRAME, variants, edits and typed operations keep what is held by one rule.
+- A filter with no clauses goes out as `{"filters":[]}`, veupathdb-py's `NO_FILTERS_WIRE`.
+
 ## 2026-11-22 - One rule says whether a site holds OrthoMCL's taxonomy
 
 - `site_record_types.declared_record_types` is the record types a site declares: its

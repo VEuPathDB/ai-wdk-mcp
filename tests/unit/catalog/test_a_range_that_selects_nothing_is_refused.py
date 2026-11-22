@@ -11,6 +11,7 @@ from tests._support.filter_reads import FilterReadsDouble
 from tests._support.wdk_reads import serve_reads
 from veupathdb.devtools import WDKExchange
 from veupathdb.domain.parameters import (
+    NO_FILTERS_WIRE,
     FilterFacet,
     FilterFacets,
     FilterValue,
@@ -214,7 +215,7 @@ async def test_the_wdk_reads_cache_one_range_and_read_the_native_count(
         "transcript",
         "GenesByNgsSnps",
         "variation_sample_meta",
-        {**_SAMPLE_CONTEXT, "variation_sample_meta": '{"filters": []}'},
+        {**_SAMPLE_CONTEXT, "variation_sample_meta": NO_FILTERS_WIRE},
         filters=[],
     )
 
