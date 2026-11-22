@@ -21,7 +21,7 @@ from veupathdb.domain.parameters import WDKTreeBoxVocabNode, WDKVocabNodeData
 from veupathdb.domain.strategy import StepValidation
 from veupathdb.wdk import WDKEnumParam, WDKRecordType, WDKSearch, WDKSearchResponse
 
-from veupathdb_mcp.catalog import discovery_service
+from veupathdb_mcp.catalog import discovery_service, organisms
 from veupathdb_mcp.catalog.discovery import CatalogPolicy
 from veupathdb_mcp.catalog.discovery_service import DiscoveryService
 from veupathdb_mcp.catalog.disk_cache import (
@@ -29,13 +29,8 @@ from veupathdb_mcp.catalog.disk_cache import (
     CatalogSnapshot,
     save_catalog_cache,
 )
+from veupathdb_mcp.catalog.organisms import TAXON_SEARCH, list_organisms
 from veupathdb_mcp.embeddings import record_manager
-from veupathdb_mcp.gene_lookup import organisms
-from veupathdb_mcp.gene_lookup.organisms import (
-    ORGANISM_PARAM,
-    TAXON_SEARCH,
-    list_organisms,
-)
 
 SITE = "plasmodb"
 RECORD_TYPE = "transcript"
@@ -69,8 +64,9 @@ def _taxon_details() -> WDKSearchResponse:
             display_name="Sequences by taxon",
             parameters=[
                 WDKEnumParam(
-                    name=ORGANISM_PARAM,
+                    name="organism",
                     display_name="Organism",
+                    properties={"organismProperties": ["highlightReferenceOrganisms"]},
                     type="multi-pick-vocabulary",
                     display_type="treeBox",
                     vocabulary=tree,

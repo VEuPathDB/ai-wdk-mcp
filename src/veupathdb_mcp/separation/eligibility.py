@@ -49,16 +49,13 @@ def binding_gap(resolved: ResolvedParams) -> str:
 def organism_overrides(
     infos: list[ParameterInfo], organisms: list[str]
 ) -> dict[str, JsonValue]:
-    """Bind the organisms into every pick parameter whose vocabulary holds them all.
-
-    The organism parameter has no one name across searches, so its vocabulary
-    finds it. A single pick takes one organism only.
-    """
+    """Bind the organisms into the organism parameter when its vocabulary holds
+    them all. A single pick takes one organism only."""
     overrides: dict[str, JsonValue] = {}
     if not organisms:
         return overrides
     for info in infos:
-        if info.param_kind not in _PICKS:
+        if not info.organism_param or info.param_kind not in _PICKS:
             continue
         options = info.vocabulary()
         entries = [exact_entry(options, organism) for organism in organisms]

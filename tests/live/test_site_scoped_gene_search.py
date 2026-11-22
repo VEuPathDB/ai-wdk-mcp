@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from veupathdb_mcp.gene_lookup.organisms import list_organisms
+from veupathdb_mcp.catalog.organisms import list_organisms
 from veupathdb_mcp.gene_lookup.site_search import (
     fetch_site_search_genes,
     stream_site_search_gene_ids,

@@ -6,6 +6,7 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from tests._support.param_infos import param_infos
 from tests._support.wdk_reads import serve_reads
 from veupathdb.domain.parameters import MultiPickValue, SinglePickValue
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
@@ -16,7 +17,6 @@ from veupathdb_mcp.catalog import (
     ParameterInfo,
     VocabNarrowing,
     build_sheet,
-    format_param_info_typed,
     read_parameter_options,
     search_inspection,
     searches,
@@ -33,7 +33,7 @@ _SAMPLE_NAME = "VAR_41eb2167"
 
 def _samples() -> ParameterInfo:
     body = load_recorded("search_genes_by_ngs_snps").json_body()
-    infos = format_param_info_typed(
+    infos = param_infos(
         WDKSearchResponse.model_validate(body).search_data.parameters or []
     )
     return next(info for info in infos if info.name == "variation_sample_meta")

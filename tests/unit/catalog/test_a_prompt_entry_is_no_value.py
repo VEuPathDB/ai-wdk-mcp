@@ -6,6 +6,7 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from tests._support.param_infos import param_infos
 from tests._support.wdk_reads import serve_reads
 from veupathdb.domain.parameters import MultiPickValue, ParamGraph
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
@@ -15,7 +16,6 @@ from veupathdb.wdk import WDKEnumParam, WDKSearchResponse
 from veupathdb_mcp.catalog import search_inspection, searches
 from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,
-    format_param_info_typed,
     format_typed_param,
 )
 from veupathdb_mcp.catalog.search_inspection import (
@@ -35,7 +35,7 @@ def _location() -> WDKSearchResponse:
 
 
 def _chromosome() -> ParameterInfo:
-    infos = format_param_info_typed(_location().search_data.parameters or [])
+    infos = param_infos(_location().search_data.parameters or [])
     return next(info for info in infos if info.name == "chromosomeOptional")
 
 
@@ -80,7 +80,7 @@ def test_a_prompt_whose_term_is_an_id_is_read_by_its_label() -> None:
         ),
     )
 
-    info = format_typed_param(param, ParamGraph.of([param]))
+    info = format_typed_param(param, ParamGraph.of([param]), organism=False)
 
     assert _values(info) == ["123456"]
     assert info.prompt_values == ["bla", "1_choose_module", "0"]

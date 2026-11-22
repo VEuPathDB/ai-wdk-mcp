@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 from fastmcp.exceptions import ToolError
 from tests._support.filter_reads import FilterReadsDouble
+from tests._support.param_infos import param_infos
 from tests._support.recorded_searches import recorded_search
 from tests._support.wdk_reads import serve_reads
 from veupathdb.domain.parameters import StringValue
@@ -16,7 +17,6 @@ from veupathdb_mcp.catalog import (
     SiteSetParameterError,
     UnknownParameterError,
     build_param_specs,
-    format_param_info_typed,
     resolve_params_with_intent,
     search_inspection,
 )
@@ -112,7 +112,7 @@ def test_the_overview_names_no_hidden_parameter_as_controlled() -> None:
     overview = format_search_overview(
         definition=_snps().search_data,
         record_type="transcript",
-        infos=format_param_info_typed(_snps().search_data.parameters or []),
+        infos=param_infos(_snps().search_data.parameters or []),
         query="snps",
     )
 

@@ -33,7 +33,7 @@ def _variant_stats() -> ParameterInfo:
     exchange = WDKExchange.model_validate_json(_RECORDED.read_text())
     search = WDKSearchResponse.model_validate(exchange.response_json).search_data
     param = next(p for p in search.parameters or [] if p.name == _PARAM)
-    return format_typed_param(param, ParamGraph.of([param]))
+    return format_typed_param(param, ParamGraph.of([param]), organism=False)
 
 
 def _collection_dates() -> ParameterInfo:

@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 from pydantic import TypeAdapter
 from tests._support.filter_reads import FilterReadsDouble
+from tests._support.param_infos import param_infos
 from tests._support.recorded_searches import recorded_search
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
@@ -24,7 +25,6 @@ from veupathdb.wdk import (
 from veupathdb_mcp.catalog import (
     ParamIntent,
     Provenance,
-    format_param_info_typed,
     param_validation,
     resolve_params_with_intent,
     validate_parameters,
@@ -134,9 +134,7 @@ async def test_a_site_set_dependent_is_sent_at_the_value_read_under_its_parent(
 def _sample_meta() -> ParameterInfo:
     params = _published().search_data.parameters or []
     (info,) = [
-        info
-        for info in format_param_info_typed(params)
-        if info.name == "variation_sample_meta"
+        info for info in param_infos(params) if info.name == "variation_sample_meta"
     ]
     return info
 

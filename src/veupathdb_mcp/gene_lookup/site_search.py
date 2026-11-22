@@ -3,8 +3,9 @@
 from veupathdb import strip_html_tags
 from veupathdb.wdk import DocumentTypeFilter, SiteSearchDocument, get_site_router
 
+from veupathdb_mcp.catalog.organisms import list_organisms
+
 from .organism import normalize_organism
-from .organisms import list_organisms
 from .result import GeneResult
 from .wdk import normalize_gene_ids
 

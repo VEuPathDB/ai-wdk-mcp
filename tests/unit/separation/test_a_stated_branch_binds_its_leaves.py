@@ -58,7 +58,9 @@ async def test_a_stated_branch_is_bound_as_its_leaves() -> None:
         stated={"organism": ["Plasmodiidae"]},
     )
 
-    bound = await bind(_SEARCH, _infos, FilterReadsDouble(), proposal, [])
+    bound = await bind(
+        _SEARCH, _infos, FilterReadsDouble(), proposal, [], site_id="plasmodb"
+    )
 
     assert bound["organism"] == MultiPickValue(
         values=["P. falciparum 3D7", "P. vivax P01"]

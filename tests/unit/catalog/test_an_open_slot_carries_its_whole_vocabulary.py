@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 
 import pytest
+from tests._support.param_infos import param_infos
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKSearchResponse
@@ -13,13 +14,12 @@ from veupathdb_mcp.catalog._param_binding import _open_slot
 from veupathdb_mcp.catalog._param_filters import _contrast_open_slot
 from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,
-    format_param_info_typed,
 )
 
 
 def _recorded(name: str, param: str) -> ParameterInfo:
     body = load_recorded(name).json_body()
-    infos = format_param_info_typed(
+    infos = param_infos(
         WDKSearchResponse.model_validate(body).search_data.parameters or []
     )
     return next(info for info in infos if info.name == param)

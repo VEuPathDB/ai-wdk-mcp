@@ -25,6 +25,7 @@ from veupathdb.errors import WDKError
 from veupathdb.wdk import WDKParameter, WDKSearch, get_wdk_client
 
 from veupathdb_mcp.catalog.facet_ranges import WDKFilterReads, with_ranges
+from veupathdb_mcp.catalog.organisms import organism_parameter_of
 from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
@@ -39,6 +40,7 @@ from veupathdb_mcp.catalog.param_formatting import (
     GetParameterOptionsResult,
     ParameterNotOnSearch,
     ParentContextRequired,
+    ParentValues,
     format_param_info_typed,
     format_typed_param,
     phyletic_options_for,
@@ -278,7 +280,10 @@ async def inspect_search(
     overview = format_search_overview(
         definition=search,
         record_type=rt,
-        infos=format_param_info_typed(search.parameters or []),
+        infos=format_param_info_typed(
+            search.parameters or [],
+            organism=await organism_parameter_of(site_id, search.parameters or []),
+        ),
         query=query or "",
     )
     return SearchInspection(record_type=rt, definition=search, overview=overview)
@@ -381,15 +386,19 @@ async def read_parameter_options(
             read = format_typed_param(
                 _prioritize_organisms(filtered, narrow.organism_hints),
                 graph=graph,
-                applied_context=context or None,
-                parent_defaults={
-                    other.name: held
-                    for other in all_params
-                    if other.initial_display_value
-                    and (held := held_default(other)) is not None
-                },
+                parent_values=ParentValues(
+                    applied=context,
+                    defaults={
+                        other.name: held
+                        for other in all_params
+                        if other.initial_display_value
+                        and (held := held_default(other)) is not None
+                    },
+                ),
                 phyletic_options=phyletic,
                 lookup=lookup or phyletic_lookup,
+                organism=parameter_id
+                == await organism_parameter_of(site_id, all_params),
             )
             query = " ".join((*narrow.terms, *narrow.request_terms))
             shown = read.shown_for(query)

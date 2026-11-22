@@ -28,6 +28,7 @@ from veupathdb.wdk import (
 from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,
 )
+from veupathdb_mcp.catalog.organisms import organism_parameter_of
 from veupathdb_mcp.catalog.param_adapters import adapt_param_specs_from_search
 from veupathdb_mcp.catalog.param_discovery import fetch_search_details
 from veupathdb_mcp.catalog.param_formatting import (
@@ -79,7 +80,10 @@ async def get_search_parameters(ctx: SearchContext) -> SearchParametersResult:
         record_types=record_types,
     )
 
-    param_info = format_param_info_typed(response.search_data.parameters or [])
+    parameters = response.search_data.parameters or []
+    param_info = format_param_info_typed(
+        parameters, organism=await organism_parameter_of(ctx.site_id, parameters)
+    )
 
     return SearchParametersResult(
         search_name=ctx.search_name,

@@ -121,6 +121,7 @@ async def test_a_pick_binds_the_entry_its_term_names() -> None:
         FilterReadsDouble(),
         proposal,
         [],
+        site_id="plasmodb",
     )
 
     assert parameters["organism"] == MultiPickValue(values=["Plasmodium vivax P01"])
@@ -150,6 +151,7 @@ async def test_a_term_the_vocabulary_lacks_is_a_vocabulary_miss() -> None:
             FilterReadsDouble(),
             proposal,
             [],
+            site_id="plasmodb",
         )
 
     assert skipped.value.reason == "vocabulary_miss"

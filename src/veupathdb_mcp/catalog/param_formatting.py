@@ -1,7 +1,8 @@
 """Pure formatting of WDK parameter specs into AI-facing info objects."""
 
 import re
-from dataclasses import dataclass
+from collections.abc import Mapping
+from dataclasses import dataclass, field
 from typing import Annotated, Literal, Self
 
 from pydantic import (
@@ -117,7 +118,8 @@ class ParameterInfo(CamelModel):
     is_read_only: bool = False
     # WDK reports numeric bounds as ``type: "string"`` with ``isNumber: true``.
     is_number: bool = False
-    # WDK marks the search's organism parameter with ``properties.organismProperties``.
+    # `catalog.organism_parameter_of` names it: the `highlightReferenceOrganisms`
+    # mark in `organismProperties`, or an organism list of the site's organisms.
     organism_param: bool = False
     help: str
     stated_schema: dict[str, JsonValue] = Field(default_factory=dict)
@@ -345,13 +347,22 @@ def _format_vocabulary(param: WDKParameter, lookup: VocabLookup | None) -> _Voca
     return _VocabFields()
 
 
+@dataclass(frozen=True)
+class ParentValues:
+    """The parent values a read was fetched under, and the parents' defaults."""
+
+    applied: Mapping[str, ParamValue] = field(default_factory=dict)
+    defaults: Mapping[str, ParamValue] = field(default_factory=dict)
+
+
 def format_typed_param(
     param: WDKParameter,
     graph: ParamGraph,
-    applied_context: dict[str, ParamValue] | None = None,
-    parent_defaults: dict[str, ParamValue] | None = None,
+    parent_values: ParentValues | None = None,
     phyletic_options: list[VocabOption] | None = None,
     lookup: VocabLookup | None = None,
+    *,
+    organism: bool,
 ) -> ParameterInfo:
     """Format one typed WDK parameter for the model.
 
@@ -383,7 +394,7 @@ def format_typed_param(
     note: str | None = None
     parents = list(graph.stated_parents.get(name, ()))
     if parents:
-        context = applied_context or {}
+        context = (parent_values or ParentValues()).applied
         applied = {p: context[p] for p in parents if p in context}
         if applied:
             shown = ", ".join(
@@ -397,7 +408,7 @@ def format_typed_param(
                 f"does not exist without re-reading under the parent you mean."
             )
         else:
-            defaults = parent_defaults or {}
+            defaults = (parent_values or ParentValues()).defaults
             used = {p: defaults[p] for p in parents if p in defaults}
             under = (
                 ", ".join(
@@ -429,7 +440,7 @@ def format_typed_param(
         default=None if held is None else shown_stated(held),
         default_value=param.initial_display_value,
         is_number=param.is_number,
-        organism_param=param.is_organism,
+        organism_param=organism,
         min=param.min,
         max=param.max,
         allowed_values=vocab.allowed_values,
@@ -491,7 +502,9 @@ def phyletic_options_for(
     return None if tree is None else tree.labels()
 
 
-def format_param_info_typed(params: list[WDKParameter]) -> list[ParameterInfo]:
+def format_param_info_typed(
+    params: list[WDKParameter], *, organism: str | None
+) -> list[ParameterInfo]:
     """Format typed WDK parameters for the model. Phyletic structural params are dropped."""
     graph = ParamGraph.of(params)
     tree = phyletic_tree_of(params)
@@ -501,6 +514,7 @@ def format_param_info_typed(params: list[WDKParameter]) -> list[ParameterInfo]:
             p,
             graph,
             phyletic_options=labels if p.name in PHYLETIC_LIST_PARAMS else None,
+            organism=p.name == organism,
         )
         for p in params
         if p.name not in PHYLETIC_MAP_PARAMS

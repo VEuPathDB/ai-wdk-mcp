@@ -60,6 +60,12 @@ from veupathdb_mcp.catalog.models import (
     SearchMatch,
     StatedParamSpec,
 )
+from veupathdb_mcp.catalog.organisms import (
+    TAXON_SEARCH,
+    list_organisms,
+    organism_parameter,
+    organism_parameter_of,
+)
 from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
@@ -188,7 +194,6 @@ from veupathdb_mcp.catalog.searches import (
     listed_record_type,
     listed_search_names,
     make_record_type_resolver,
-    organism_parameter,
     read_search_definition,
     resolve_search_record_type,
     search_for_searches,
@@ -229,6 +234,7 @@ __all__ = [
     "MAX_EXPRESSION_WORK",
     "RADIO_OFF",
     "SUBSET_QUERY",
+    "TAXON_SEARCH",
     "AbsentGroupsCompareError",
     "AllExcept",
     "AllOf",
@@ -344,6 +350,7 @@ __all__ = [
     "is_residual",
     "is_upload_sentinel_vocabulary",
     "list_eda_backed",
+    "list_organisms",
     "list_searches",
     "list_sites",
     "list_transforms",
@@ -357,6 +364,7 @@ __all__ = [
     "ordered_refusal",
     "ordered_terms",
     "organism_parameter",
+    "organism_parameter_of",
     "ortho_taxonomy",
     "phyletic_tree_for_search",
     "post_decision",

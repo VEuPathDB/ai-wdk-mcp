@@ -4,7 +4,6 @@
 """
 
 from veupathdb_mcp.gene_lookup.lookup import GeneSearchResult, lookup_genes_by_text
-from veupathdb_mcp.gene_lookup.organisms import list_organisms
 from veupathdb_mcp.gene_lookup.records import (
     GeneIdFound,
     GeneIdReading,
@@ -35,7 +34,6 @@ __all__ = [
     "GeneResult",
     "GeneSearchResult",
     "fetch_site_search_genes",
-    "list_organisms",
     "lookup_genes_by_text",
     "normalize_gene_ids",
     "read_each_gene_id",

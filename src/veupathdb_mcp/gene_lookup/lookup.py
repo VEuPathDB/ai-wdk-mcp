@@ -11,6 +11,7 @@ from veupathdb.domain.parameters import (
 )
 from veupathdb.errors import VEuPathDBError
 
+from veupathdb_mcp.catalog.organisms import list_organisms
 from veupathdb_mcp.catalog.vocab_resolve import (
     NamedVocabulary,
     ResolveContext,
@@ -25,7 +26,6 @@ from veupathdb_mcp.gene_lookup.rerank import (
 
 from .hydrate import hydrate_sparse_gene_results
 from .organism import score_organism_match
-from .organisms import ORGANISM_PARAM, list_organisms
 from .result import GeneResult
 from .scoring import score_gene_relevance
 from .site_search import (
@@ -45,6 +45,7 @@ from .wdk import (
 logger = get_logger(__name__)
 
 _MIN_WORDS_FOR_MULTI_WORD = 2
+_ORGANISM_ARGUMENT = "organism"
 
 _EMPTY_WDK = WdkTextResult(records=[], total_count=0)
 
@@ -292,13 +293,13 @@ async def _stated_organism(
         return None
     declared = [VocabOption(value=o, display=o) for o in await list_organisms(site_id)]
     try:
-        [entry] = entries_or_refusal(ORGANISM_PARAM, declared, [organism.strip()])
+        [entry] = entries_or_refusal(_ORGANISM_ARGUMENT, declared, [organism.strip()])
     except VocabularyEntryError as refusal:
         if about is None:
             raise
         named = NamedVocabulary(display="Organism", options=declared)
         raise await ordered_by_vocabulary(
-            refusal, {ORGANISM_PARAM: named}, about
+            refusal, {_ORGANISM_ARGUMENT: named}, about
         ) from refusal
     return entry
 

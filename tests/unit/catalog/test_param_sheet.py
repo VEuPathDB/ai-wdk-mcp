@@ -7,12 +7,12 @@ call the model waits on.
 
 from __future__ import annotations
 
+from tests._support.param_infos import param_infos
 from veupathdb.domain.parameters import VocabOption
 from veupathdb.wdk import WDKEnumParam
 
 from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,
-    format_param_info_typed,
 )
 from veupathdb_mcp.catalog.param_sheet import SheetEntry, build_sheet
 from veupathdb_mcp.catalog.shortlist import DIRECT_MAX, TOP_K
@@ -257,7 +257,7 @@ def _dataset_entry(*pairs: tuple[str, str]) -> SheetEntry:
         type="single-pick-vocabulary",
         vocabulary=vocab_terms(*pairs),
     )
-    entries = build_sheet(format_param_info_typed([param]), query="my phenotype data")
+    entries = build_sheet(param_infos([param]), query="my phenotype data")
     assert len(entries) == 1
     return entries[0]
 

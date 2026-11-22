@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from tests._support.param_infos import param_infos
 from veupathdb.wdk import (
     WDKEnumParam,
     WDKNumberParam,
@@ -14,7 +15,6 @@ from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
     format_search_overview,
 )
-from veupathdb_mcp.catalog.param_formatting import format_param_info_typed
 
 
 def _vocab(*terms: str) -> list[tuple[str, str, None]]:
@@ -30,7 +30,7 @@ def _overview(params: list[WDKParameter]) -> SearchOverviewResult:
             param_names=[p.name for p in params],
         ),
         record_type="transcript",
-        infos=format_param_info_typed(params),
+        infos=param_infos(params),
         query="kinase genes",
     )
 

@@ -58,6 +58,7 @@ async def _spent(clause: JsonValue) -> tuple[int, FilterReadsDouble]:
             stated={"gene_variant_stats": [clause]},
         ),
         ["Plasmodium falciparum 3D7"],
+        site_id="plasmodb",
     )
     return budget.spent, reads
 

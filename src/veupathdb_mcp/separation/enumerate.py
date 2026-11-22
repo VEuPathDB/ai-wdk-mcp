@@ -37,6 +37,7 @@ from veupathdb_mcp.catalog import (
     as_tree_leaves,
     format_param_info_typed,
     get_discovery_service,
+    organism_parameter_of,
     radio_pairs,
     resolve_params_with_intent,
     search_for_searches,
@@ -206,6 +207,8 @@ async def bind(
     filter_reads: FilterReads,
     proposal: Proposal,
     organisms: list[str],
+    *,
+    site_id: str,
 ) -> dict[str, ParamValue]:
     """Every parameter of a search, bound from the organism and the proposal.
 
@@ -215,7 +218,10 @@ async def bind(
     reason = search_skip(search)
     if reason is not None:
         raise CandidateSkippedError(reason)
-    infos = format_param_info_typed(await fetch_at({}))
+    declarations = await fetch_at({})
+    infos = format_param_info_typed(
+        declarations, organism=await organism_parameter_of(site_id, declarations)
+    )
     reason = params_skip(infos)
     if reason is not None:
         raise CandidateSkippedError(reason)
@@ -337,6 +343,7 @@ class _Collector:
             ),
             proposal,
             self.organisms,
+            site_id=self.site_id,
         )
         if _wire_key(proposal.search_name, parameters) in self.seen:
             raise CandidateSkippedError(reason="duplicate")

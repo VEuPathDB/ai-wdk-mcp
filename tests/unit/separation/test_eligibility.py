@@ -2,6 +2,7 @@
 
 import pytest
 from tests._support.filter_reads import FilterReadsDouble
+from tests._support.param_infos import param_infos
 from tests._support.recorded_searches import (
     analysis_backed_search,
     gene_list_search,
@@ -11,7 +12,7 @@ from veupathdb.domain.parameters import MultiPickValue
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKParameter, WDKSearch
 
-from veupathdb_mcp.catalog import ParameterInfo, format_param_info_typed
+from veupathdb_mcp.catalog import ParameterInfo
 from veupathdb_mcp.separation import CandidateSource
 from veupathdb_mcp.separation.eligibility import (
     organism_overrides,
@@ -28,7 +29,7 @@ def _search(name: str) -> WDKSearch:
 
 
 def _infos(search: WDKSearch) -> list[ParameterInfo]:
-    return format_param_info_typed(search.parameters or [])
+    return param_infos(search.parameters or [])
 
 
 def _recorded_fetch(search: WDKSearch):
@@ -107,6 +108,20 @@ def test_the_organism_binds_by_vocabulary() -> None:
     needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
     reason=NEEDS_QA_RECORDING,
 )
+def test_only_the_organism_parameter_takes_the_organism() -> None:
+    """A pick whose vocabulary holds the organism is not the organism parameter."""
+    infos = [
+        info.model_copy(update={"organism_param": False})
+        for info in _infos(_search("search_genes_by_molecular_weight"))
+    ]
+
+    assert organism_overrides(infos, [FALCIPARUM]) == {}
+
+
+@pytest.mark.skipif(
+    needs_qa_recording("wdk/search_genes_by_molecular_weight.json"),
+    reason=NEEDS_QA_RECORDING,
+)
 async def test_a_search_that_binds_from_the_organism_alone_is_bound() -> None:
     search = _search("search_genes_by_molecular_weight")
 
@@ -116,6 +131,7 @@ async def test_a_search_that_binds_from_the_organism_alone_is_bound() -> None:
         FilterReadsDouble(),
         _catalog_proposal(search),
         [FALCIPARUM],
+        site_id="plasmodb",
     )
 
     assert parameters["organism"] == MultiPickValue(values=[FALCIPARUM])
@@ -141,6 +157,7 @@ async def test_a_binding_that_leaves_an_open_slot_is_unbound_required() -> None:
             FilterReadsDouble(),
             _catalog_proposal(search),
             ["Toxoplasma gondii ME49"],
+            site_id="plasmodb",
         )
 
     assert skipped.value.reason == "unbound_required"

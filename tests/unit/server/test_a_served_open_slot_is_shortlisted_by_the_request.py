@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 
 import pytest
+from tests._support.param_infos import param_infos
 from tests.unit.catalog.conftest import declared
 from veupathdb.domain.parameters import UnboundParameter
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
@@ -13,7 +14,6 @@ from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKParameter, WDKSearchResponse
 
 from veupathdb_mcp.catalog import ParameterInfo, ParamFetcher, shortlist_slot
-from veupathdb_mcp.catalog.param_formatting import format_param_info_typed
 from veupathdb_mcp.catalog.shortlist import DIRECT_MAX, TOP_K
 from veupathdb_mcp.tools import catalog_tools
 
@@ -22,7 +22,7 @@ _PF3D7 = "Plasmodium falciparum 3D7"
 
 def _sheet(name: str) -> list[ParameterInfo]:
     body = load_recorded(name).json_body()
-    return format_param_info_typed(
+    return param_infos(
         WDKSearchResponse.model_validate(body).search_data.parameters or []
     )
 

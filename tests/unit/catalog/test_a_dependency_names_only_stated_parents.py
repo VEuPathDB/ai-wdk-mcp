@@ -3,25 +3,26 @@ from __future__ import annotations
 import json
 
 import pytest
+from tests._support.param_infos import param_infos
 from tests._support.recorded_searches import recorded_search
 from tests._support.recordings import TEST_ROOT
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKSearchResponse
 
-from veupathdb_mcp.catalog import adapt_param_specs_from_search, format_param_info_typed
+from veupathdb_mcp.catalog import adapt_param_specs_from_search
 from veupathdb_mcp.catalog.param_formatting import ParameterInfo
 
 
 def _snps() -> dict[str, ParameterInfo]:
     params = recorded_search("search_genes_by_ngs_snps").search_data.parameters or []
-    return {info.name: info for info in format_param_info_typed(params)}
+    return {info.name: info for info in param_infos(params)}
 
 
 def _text() -> dict[str, ParameterInfo]:
     path = TEST_ROOT / "unit/audit/fixtures/gene_ids_pfalNF54_piga.json"
     raw = json.loads(path.read_text())["search"]
     params = WDKSearchResponse.model_validate(raw).search_data.parameters or []
-    return {info.name: info for info in format_param_info_typed(params)}
+    return {info.name: info for info in param_infos(params)}
 
 
 snps_recorded = pytest.mark.skipif(

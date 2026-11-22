@@ -4,19 +4,17 @@ on the sheet, because the site's form never lets a person set one."""
 from __future__ import annotations
 
 import pytest
+from tests._support.param_infos import param_infos
 from tests._support.recorded_searches import recorded_search
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 
 from veupathdb_mcp import catalog
 from veupathdb_mcp.catalog.overview_formatting import format_search_overview
-from veupathdb_mcp.catalog.param_formatting import format_param_info_typed
 from veupathdb_mcp.catalog.param_sheet import build_sheet
 
 
 def _infos(fixture: str) -> list[catalog.ParameterInfo]:
-    return format_param_info_typed(
-        recorded_search(fixture).search_data.parameters or []
-    )
+    return param_infos(recorded_search(fixture).search_data.parameters or [])
 
 
 @pytest.mark.skipif(

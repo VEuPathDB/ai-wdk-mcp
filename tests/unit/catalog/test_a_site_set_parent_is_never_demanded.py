@@ -5,6 +5,7 @@ from collections.abc import Callable
 
 import pytest
 from tests._support.filter_reads import FilterReadsDouble
+from tests._support.param_infos import param_infos
 from tests._support.recorded_searches import recorded_search
 from tests._support.recordings import TEST_ROOT
 from tests._support.wdk_reads import serve_reads
@@ -16,7 +17,6 @@ from veupathdb_mcp.catalog import (
     ParamIntent,
     SiteSetParameterError,
     UnknownParameterError,
-    format_param_info_typed,
     resolve_params_with_intent,
     search_inspection,
 )
@@ -124,7 +124,7 @@ async def test_a_child_of_a_read_only_parent_reads_without_context(
 
 @snps_recorded
 def test_the_overview_and_the_sheet_name_only_the_stated_parent() -> None:
-    infos = format_param_info_typed(_snps().search_data.parameters or [])
+    infos = param_infos(_snps().search_data.parameters or [])
 
     overview = format_search_overview(
         definition=_snps().search_data,
@@ -187,7 +187,7 @@ def _read_only_definition() -> list[WDKParameter]:
 
 
 def _read_only_search() -> list[ParameterInfo]:
-    return format_param_info_typed(_read_only_definition())
+    return param_infos(_read_only_definition())
 
 
 def test_a_visible_read_only_parameter_is_off_the_sheet() -> None:

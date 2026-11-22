@@ -9,25 +9,14 @@ the caller chose, which is what VEuPathDB's own client sends.
 from __future__ import annotations
 
 import pytest
-from veupathdb.domain import SearchContext
-from veupathdb.domain.parameters import WDKTreeBoxVocabNode, WDKVocabNodeData
 from veupathdb.domain.strategy import StepValidation
 from veupathdb.wdk import (
     DocumentTypeFilter,
     SiteSearchResponse,
     SiteSearchStreamRecord,
-    WDKEnumParam,
-    WDKSearch,
-    WDKSearchResponse,
-    WDKStringParam,
 )
 
 from veupathdb_mcp import gene_lookup
-from veupathdb_mcp.gene_lookup.organisms import (
-    ORGANISM_PARAM,
-    TAXON_SEARCH,
-    list_organisms,
-)
 from veupathdb_mcp.gene_lookup.site_search import (
     fetch_site_search_genes,
     stream_site_search_gene_ids,
@@ -143,122 +132,3 @@ async def test_a_site_that_declares_no_organisms_sends_no_restriction(
 
     assert recorder.searched == [None]
     assert recorder.streamed == [None]
-
-
-def _taxon_response(vocabulary: WDKTreeBoxVocabNode) -> WDKSearchResponse:
-    return WDKSearchResponse(
-        search_data=WDKSearch(
-            url_segment=TAXON_SEARCH,
-            display_name=TAXON_SEARCH,
-            parameters=[
-                WDKEnumParam(
-                    name=ORGANISM_PARAM,
-                    display_name="Organism",
-                    type="multi-pick-vocabulary",
-                    display_type="treeBox",
-                    vocabulary=vocabulary,
-                ),
-            ],
-        ),
-        validation=_VALID,
-    )
-
-
-def _tree() -> WDKTreeBoxVocabNode:
-    return WDKTreeBoxVocabNode(
-        data=WDKVocabNodeData(term="root", display="root"),
-        children=[
-            WDKTreeBoxVocabNode(
-                data=WDKVocabNodeData(term="Plasmodium", display="Plasmodium"),
-                children=[
-                    WDKTreeBoxVocabNode(data=WDKVocabNodeData(term=name, display=name))
-                    for name in SITE_ORGANISMS
-                ],
-            ),
-        ],
-    )
-
-
-class _Catalog:
-    def __init__(self, record_type: str | None) -> None:
-        self._record_type = record_type
-
-    def find_record_type_for_search(self, search_name: str) -> str | None:
-        assert search_name == TAXON_SEARCH
-        return self._record_type
-
-
-class _Discovery:
-    def __init__(self, record_type: str | None, response: WDKSearchResponse) -> None:
-        self._catalog = _Catalog(record_type)
-        self._response = response
-        self.asked: list[str] = []
-
-    async def get_catalog(self, site_id: str) -> _Catalog:
-        del site_id
-        return self._catalog
-
-    async def get_search_details(
-        self, ctx: object, *, expand_params: bool = True
-    ) -> WDKSearchResponse:
-        del expand_params
-        self.asked.append(str(ctx))
-        return self._response
-
-
-def _install(monkeypatch: pytest.MonkeyPatch, discovery: _Discovery) -> None:
-    monkeypatch.setattr(
-        gene_lookup.organisms, "get_discovery_service", lambda: discovery
-    )
-
-
-async def test_the_site_organisms_are_the_taxon_trees_leaves(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _install(monkeypatch, _Discovery("genomic-sequence", _taxon_response(_tree())))
-
-    assert await list_organisms(SITE) == SITE_ORGANISMS
-
-
-async def test_a_site_without_the_taxon_search_declares_no_organisms(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _install(monkeypatch, _Discovery(None, _taxon_response(_tree())))
-
-    assert await list_organisms(SITE) == []
-
-
-async def test_a_taxon_search_without_the_organism_parameter_declares_none(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    response = WDKSearchResponse(
-        search_data=WDKSearch(
-            url_segment=TAXON_SEARCH,
-            display_name=TAXON_SEARCH,
-            parameters=[
-                WDKStringParam(name="text", display_name="Text"),
-            ],
-        ),
-        validation=_VALID,
-    )
-    _install(monkeypatch, _Discovery("genomic-sequence", response))
-
-    assert await list_organisms(SITE) == []
-
-
-async def test_the_search_details_are_read_from_the_site_catalog(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """The catalog caches the response, so the vocabulary is fetched once."""
-    discovery = _Discovery("genomic-sequence", _taxon_response(_tree()))
-    _install(monkeypatch, discovery)
-
-    await list_organisms(SITE)
-
-    assert discovery.asked == [
-        str(
-            SearchContext(
-                site_id=SITE, record_type="genomic-sequence", search_name=TAXON_SEARCH
-            )
-        )
-    ]

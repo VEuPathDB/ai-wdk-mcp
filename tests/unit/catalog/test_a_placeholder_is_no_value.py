@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 import pytest
+from tests._support.param_infos import param_infos
 from tests._support.recordings import TEST_ROOT
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
@@ -15,14 +16,13 @@ from veupathdb.wdk import WDKSearchResponse
 from veupathdb_mcp.catalog.param_formatting import (
     RADIO_OFF,
     ParameterInfo,
-    format_param_info_typed,
 )
 
 _SEPARATION_FIXTURES = Path(__file__).parents[1] / "separation" / "fixtures"
 
 
 def _sheet_of(response: WDKSearchResponse) -> dict[str, ParameterInfo]:
-    infos = format_param_info_typed(response.search_data.parameters or [])
+    infos = param_infos(response.search_data.parameters or [])
     return {info.name: info for info in infos}
 
 

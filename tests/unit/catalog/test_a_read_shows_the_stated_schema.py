@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import pytest
+from tests._support.param_infos import param_infos
 from veupathdb.domain.parameters import FilterFacet
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKSearchResponse
 
-from veupathdb_mcp.catalog import ParameterInfo, build_sheet, format_param_info_typed
+from veupathdb_mcp.catalog import ParameterInfo, build_sheet
 
 pytestmark = pytest.mark.skipif(
     needs_qa_recording("wdk/search_genes_by_ngs_snps.json")
@@ -20,7 +21,7 @@ pytestmark = pytest.mark.skipif(
 def _infos(fixture: str) -> dict[str, ParameterInfo]:
     body = load_recorded(fixture).json_body()
     params = WDKSearchResponse.model_validate(body).search_data.parameters or []
-    return {info.name: info for info in format_param_info_typed(params)}
+    return {info.name: info for info in param_infos(params)}
 
 
 def test_a_small_vocabulary_is_stated_as_an_enum() -> None:

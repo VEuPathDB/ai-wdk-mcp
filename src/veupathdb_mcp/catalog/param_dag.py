@@ -305,7 +305,10 @@ async def read_under_parents(
     context = wire_map({n: v for n, v in bound.items() if n not in stated})
     read: dict[str, ParamValue] = {}
     declarations = await fetch_at(context)
-    _refuse_unknown_overrides(format_param_info_typed(declarations), stated)
+    _refuse_unknown_overrides(
+        format_param_info_typed(declarations, organism=None),
+        stated,
+    )
     for _ in range(_MAX_RESOLVE_DEPTH):
         missing = stated.keys() - read.keys()
         if not missing:
@@ -502,7 +505,7 @@ async def resolve_params_with_intent(
     ledger = _VocabLedger()
     for pass_index in range(_MAX_RESOLVE_DEPTH):
         declarations = await fetch_at(context)
-        infos = format_param_info_typed(declarations)
+        infos = format_param_info_typed(declarations, organism=None)
         declared = {d.name: d for d in declarations}
         _refuse_hidden_overrides(infos, stated, search_name)
         overrides = await _named_or_ordered(

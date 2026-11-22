@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import ClassVar
 
+from tests._support.param_infos import param_infos
 from veupathdb.domain.parameters import (
     ParamGraph,
     ParamValue,
@@ -18,7 +19,7 @@ from veupathdb_mcp.catalog.param_formatting import (
     _MAX_VOCAB_ENTRIES,
     PHYLETIC_LISTS_FORM,
     ParameterInfo,
-    format_param_info_typed,
+    ParentValues,
     format_typed_param,
 )
 
@@ -98,7 +99,7 @@ def test_filter_param_exposes_selectable_leaf_facets() -> None:
         },
     )
 
-    info = format_typed_param(param, ParamGraph.of([param]))
+    info = format_typed_param(param, ParamGraph.of([param]), organism=False)
 
     assert info.param_kind == "filter"
     fields = {f.term: f for f in info.filter_fields}
@@ -131,7 +132,8 @@ class TestDependentParamNote:
         info = format_typed_param(
             _samples("samples_percentile_generic"),
             self._DEPENDS,
-            applied_context=self._APPLIED,
+            parent_values=ParentValues(applied=self._APPLIED),
+            organism=False,
         )
         assert info.note is not None
         return info.note
@@ -149,6 +151,7 @@ class TestDependentParamNote:
         info = format_typed_param(
             _samples("samples_percentile_generic"),
             self._DEPENDS,
+            organism=False,
         )
 
         assert info.note is not None
@@ -158,7 +161,10 @@ class TestDependentParamNote:
         info = format_typed_param(
             _samples("samples_percentile_generic"),
             self._DEPENDS,
-            applied_context={"organism": SinglePickValue(value="P. falciparum")},
+            parent_values=ParentValues(
+                applied={"organism": SinglePickValue(value="P. falciparum")}
+            ),
+            organism=False,
         )
 
         assert info.note is not None
@@ -174,9 +180,10 @@ class TestAnUnqualifiedRead:
         info = format_typed_param(
             _samples("samples"),
             self._DEPENDS,
-            parent_defaults={
-                "profileset": SinglePickValue(value="DeRisi HB3 Smoothed")
-            },
+            parent_values=ParentValues(
+                defaults={"profileset": SinglePickValue(value="DeRisi HB3 Smoothed")}
+            ),
+            organism=False,
         )
         assert info.note is not None
         return info.note
@@ -188,7 +195,7 @@ class TestAnUnqualifiedRead:
         assert "DIFFERENT" in self._default_note()
 
     def test_without_a_known_default_it_still_says_it_is_a_default(self) -> None:
-        info = format_typed_param(_samples("samples"), self._DEPENDS)
+        info = format_typed_param(_samples("samples"), self._DEPENDS, organism=False)
 
         assert info.note is not None
         assert "default" in info.note.lower()
@@ -197,12 +204,11 @@ class TestAnUnqualifiedRead:
         info = format_typed_param(
             _samples("samples"),
             self._DEPENDS,
-            applied_context={
-                "profileset": SinglePickValue(value="DeRisi 3D7 Smoothed")
-            },
-            parent_defaults={
-                "profileset": SinglePickValue(value="DeRisi HB3 Smoothed")
-            },
+            parent_values=ParentValues(
+                applied={"profileset": SinglePickValue(value="DeRisi 3D7 Smoothed")},
+                defaults={"profileset": SinglePickValue(value="DeRisi HB3 Smoothed")},
+            ),
+            organism=False,
         )
 
         assert info.note is not None
@@ -223,7 +229,9 @@ class TestRequiredFollowsAllowEmptyValue:
                 "minSelectedCount": min_selected,
             }
         )
-        return format_typed_param(param, ParamGraph.of([param])).required
+        return format_typed_param(
+            param, ParamGraph.of([param]), organism=False
+        ).required
 
     def test_a_minimum_selection_leaves_the_empty_value_allowed(self) -> None:
         assert self._required(allow_empty=True, min_selected=1) is False
@@ -289,7 +297,7 @@ class TestThePhyleticListsCarryTheTree:
 
     @classmethod
     def _sheet(cls, *, with_term_map: bool = True) -> dict[str, ParameterInfo]:
-        infos = format_param_info_typed(cls._params(with_term_map=with_term_map))
+        infos = param_infos(cls._params(with_term_map=with_term_map))
         return {info.name: info for info in infos}
 
     def test_both_lists_take_the_species_and_clade_codes(self) -> None:
@@ -379,7 +387,7 @@ class TestTheFullTreeSurvivesTheWireCap:
                 vocabulary=indents,
             ),
         ]
-        infos = {info.name: info for info in format_param_info_typed(params)}
+        infos = {info.name: info for info in param_infos(params)}
         return infos["included_species"]
 
     def test_the_wire_view_is_capped(self) -> None:
@@ -419,7 +427,7 @@ class TestTheDependencyLinks:
             ),
         )
 
-        by_name = {p.name: p for p in format_param_info_typed([organism, taxon])}
+        by_name = {p.name: p for p in param_infos([organism, taxon])}
 
         assert by_name["organism"].stated_children == ["taxon"]
         assert by_name["organism"].stated_parents == []
@@ -439,6 +447,7 @@ class TestTheExpressionSheetStatesTheGrammarAndNamesTheBuilder:
                 name="phyletic_expression", help="Phyletic Pattern Expression"
             ),
             ParamGraph.of([]),
+            organism=False,
         ).help
 
     def test_a_count_with_t_counts_genomes_and_a_bare_count_counts_proteins(

@@ -46,7 +46,9 @@ async def test_a_proposal_whose_value_the_kind_cannot_read_is_skipped() -> None:
     )
 
     with pytest.raises(CandidateSkippedError) as skipped:
-        await bind(_SEARCH, _infos, FilterReadsDouble(), proposal, [])
+        await bind(
+            _SEARCH, _infos, FilterReadsDouble(), proposal, [], site_id="plasmodb"
+        )
 
     assert skipped.value.reason == "unbound_required"
     assert "period_range" in str(skipped.value.detail)
@@ -59,7 +61,9 @@ async def test_a_proposal_that_states_no_range_binds_the_site_default() -> None:
         basis="the site's catalog",
     )
 
-    bound = await bind(_SEARCH, _infos, FilterReadsDouble(), proposal, [])
+    bound = await bind(
+        _SEARCH, _infos, FilterReadsDouble(), proposal, [], site_id="plasmodb"
+    )
 
     assert bound["period_range"].to_wire() == '{"min": 20.0, "max": 28.0}'
 
@@ -104,7 +108,7 @@ async def test_a_proposal_whose_term_names_no_entry_is_skipped() -> None:
     )
 
     with pytest.raises(CandidateSkippedError) as skipped:
-        await bind(_PICK, picks, FilterReadsDouble(), proposal, [])
+        await bind(_PICK, picks, FilterReadsDouble(), proposal, [], site_id="plasmodb")
 
     assert skipped.value.reason == "unbound_required"
     assert "non-synonymous" in str(skipped.value.detail)

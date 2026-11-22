@@ -99,6 +99,7 @@ def test_a_narrowed_list_over_the_bound_says_n_of_m() -> None:
         param,
         ParamGraph.of([]),
         lookup=VocabLookup(terms=["peptidase"]),
+        organism=False,
     )
 
     assert info.allowed_values is not None
