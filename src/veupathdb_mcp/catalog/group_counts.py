@@ -46,6 +46,13 @@ async def site_taxonomy(site_id: str) -> PhyleticTree:
     if tree is None:
         raise ValidationError(
             title="The site serves no OrthoMCL taxonomy",
-            detail=f"{site_id} serves no OrthoMCL taxonomy, so it has no genome codes.",
+            detail=(
+                f"{site_id} serves no OrthoMCL taxonomy and no search that takes "
+                f"{PHYLETIC_EXPRESSION_PARAM}; only OrthoMCL's "
+                f"{PHYLETIC_EXPRESSION_SEARCH} does. On {site_id}, "
+                "GenesByOrthologPattern states a phyletic profile: put the codes "
+                "lookup_phyletic_codes returns in included_species and "
+                "excluded_species."
+            ),
         )
     return tree

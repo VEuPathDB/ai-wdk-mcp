@@ -6,9 +6,11 @@ from typing import Any
 
 import pytest
 from veupathdb.domain.parameters import PhyleticNode, PhyleticTree, TaxonEntry
+from veupathdb.errors import ValidationError
 from veupathdb.wdk import WDKAnswer, WDKRecordType, WDKSearch, WDKStringParam
 
 from veupathdb_mcp.catalog import param_phyletic, taxonomy
+from veupathdb_mcp.catalog.group_counts import site_taxonomy
 from veupathdb_mcp.catalog.param_phyletic import EXPRESSION_LOOKUP_HINT, LOOKUP_HINT
 
 _TABLES = {
@@ -38,8 +40,12 @@ _TABLES = {
 
 
 class _Client:
-    def __init__(self) -> None:
+    def __init__(self, record_types: list[str]) -> None:
+        self.record_types = record_types
         self.reports: list[tuple[str, str]] = []
+
+    async def get_record_types(self) -> list[WDKRecordType]:
+        return [WDKRecordType(url_segment=name) for name in self.record_types]
 
     async def run_search_report(
         self, record_type: str, search_name: str, *_: Any, **__: Any
@@ -50,12 +56,41 @@ class _Client:
         )
 
 
-@pytest.fixture
-def client(monkeypatch: pytest.MonkeyPatch) -> _Client:
-    served = _Client()
+def _serve(monkeypatch: pytest.MonkeyPatch, record_types: list[str]) -> _Client:
+    served = _Client(record_types)
     monkeypatch.setattr(taxonomy, "get_wdk_client", lambda _site: served)
     monkeypatch.setattr(taxonomy, "_HELD", {})
     return served
+
+
+@pytest.fixture
+def client(monkeypatch: pytest.MonkeyPatch) -> _Client:
+    return _serve(monkeypatch, ["group", "sequence", "helper"])
+
+
+async def test_a_site_with_no_helper_record_type_has_no_taxonomy(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    served = _serve(monkeypatch, ["transcript", "gene", "organism"])
+
+    assert await taxonomy.ortho_taxonomy("plasmodb") is None
+    assert served.reports == []
+
+
+async def test_a_site_with_no_taxonomy_refuses_an_expression_with_its_own_search(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _serve(monkeypatch, ["transcript", "gene", "organism"])
+
+    with pytest.raises(ValidationError) as refusal:
+        await site_taxonomy("plasmodb")
+
+    assert refusal.value.detail == (
+        "plasmodb serves no OrthoMCL taxonomy and no search that takes "
+        "phyletic_expression; only OrthoMCL's GroupsByPhyleticPattern does. On "
+        "plasmodb, GenesByOrthologPattern states a phyletic profile: put the codes "
+        "lookup_phyletic_codes returns in included_species and excluded_species."
+    )
 
 
 async def test_the_taxonomy_is_the_helper_records_tables(client: _Client) -> None:

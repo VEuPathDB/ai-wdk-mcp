@@ -1,5 +1,13 @@
 # Knowledge log
 
+## 2026-11-22 - Only a site that lists the helper record type has an OrthoMCL taxonomy
+
+- `ortho_taxonomy` reads OrthoMCL's taxonomy only on a site whose record types list
+  `helper`, and is `None` elsewhere. A component site lists no `helper` and no `group`
+  record type and no `GroupsByPhyleticPattern`, so `build_phyletic_expression` on one is
+  refused before any read, naming `GenesByOrthologPattern` and its two species lists,
+  instead of failing on a 404 for the record type.
+
 ## 2026-11-22 - 0.9.0b17: the declaration alone names the organism parameter
 
 - `catalog/organisms.py` holds the one rule. `organism_parameter_of(site_id, parameters)`
