@@ -151,14 +151,7 @@ class OrthologRow(BaseModel):
 
     @property
     def member(self) -> GroupMember:
-        return GroupMember(
-            gene=self.gene,
-            organism=self.organism,
-            protein_length=self.protein_length,
-            product=self.product,
-            syntenic=self.syntenic,
-            reference_strain=self.reference_strain,
-        )
+        return GroupMember.model_validate(self, from_attributes=True)
 
     @field_validator("syntenic", "reference_strain", "has_comment", mode="before")
     @classmethod
