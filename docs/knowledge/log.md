@@ -2,9 +2,9 @@
 
 ## 2026-11-22 - One function refuses a phyletic derivation
 
-- `phyletic_refusal(refused, declarations, site_id, about)` turns a derivation that binds no
-  pattern into `PhyleticListError`, a tree that does not read included, and leads the nearest
-  entries when `about` is given. The walk and a host's variant both call it, so a host never
+- `phyletic_refusal(refused, declarations, site)` turns a derivation that binds no pattern
+  into `PhyleticListError`, a tree that does not read included. `site` is the one source of
+  the site: a site id, or a `ResolveContext`, which also leads the nearest entries. The walk and a host's variant both call it, so a host never
   builds the refusal from a `None` derivation. It replaces `ordered_phyletic_refusal`.
 
 ## 2026-11-22 - A follower that cannot be read is noted on an options read

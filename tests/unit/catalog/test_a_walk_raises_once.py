@@ -342,11 +342,11 @@ async def test_orthomcl_whose_tree_does_not_read_names_no_route() -> None:
     assert await _no_tree_on("orthomcl") == _NO_TREE
 
 
-@pytest.mark.parametrize("about", [None, _ABOUT])
+@pytest.mark.parametrize("site", ["plasmodb", _ABOUT])
 async def test_a_tree_that_does_not_read_is_refused_without_the_walk(
-    about: ResolveContext | None,
+    site: ResolveContext | str,
 ) -> None:
-    refusal = await phyletic_refusal(None, _without_the_tree(), "plasmodb", about)
+    refusal = await phyletic_refusal(None, _without_the_tree(), site)
 
     [pattern] = _rows(refusal)
     assert pattern.detail == await _no_tree_on("plasmodb")

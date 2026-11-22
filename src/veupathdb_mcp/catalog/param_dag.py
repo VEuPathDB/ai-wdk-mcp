@@ -169,7 +169,7 @@ async def _derived_phyletic(
             return {**overrides, **read_declared(declarations, binding.model_dump())}
         case refused_lists:
             refusal = await phyletic_refusal(
-                refused_lists, declarations, site_id, about
+                refused_lists, declarations, site_id if about is None else about
             )
     refused.note(refusal, refused_names(refusal))
     return overrides

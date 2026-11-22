@@ -209,22 +209,26 @@ def _value(entry: VocabOption) -> str:
 async def phyletic_refusal(
     refused: PhyleticUnresolvedProposal | PhyleticNoSelection | None,
     declarations: Sequence[WDKParameter],
-    site_id: str,
-    about: ResolveContext | None,
+    site: ResolveContext | str,
 ) -> PhyleticListError:
-    """The refusal of a derivation that binds no pattern, its nearest entries
-    led by a Decisions choice when ``about`` is given."""
+    """The refusal of a derivation that binds no pattern on ``site``; a
+    ``ResolveContext`` also leads the nearest entries by a Decisions choice."""
+    match site:
+        case ResolveContext(site_id=site_id) as about:
+            return await _ordered(await _refusal(refused, site_id), declarations, about)
+        case str():
+            return await _refusal(refused, site)
+
+
+async def _refusal(
+    refused: PhyleticUnresolvedProposal | PhyleticNoSelection | None, site_id: str
+) -> PhyleticListError:
     match refused:
         case None:
             elsewhere = not await serves_ortho_taxonomy(site_id)
-            refusal = PhyleticListError(
-                PhyleticTreeUnread(orthomcl_elsewhere=elsewhere)
-            )
+            return PhyleticListError(PhyleticTreeUnread(orthomcl_elsewhere=elsewhere))
         case _:
-            refusal = PhyleticListError(refused)
-    if about is None:
-        return refusal
-    return await _ordered(refusal, declarations, about)
+            return PhyleticListError(refused)
 
 
 async def _ordered(
