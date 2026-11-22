@@ -25,13 +25,15 @@ from veupathdb_mcp.catalog.searches import VagueSearchQueryError
 class TestSearchQueryGuard:
     async def test_an_empty_query_is_refused(self) -> None:
         with pytest.raises(VagueSearchQueryError) as excinfo:
-            await searches.search_for_searches("plasmodb", "transcript", "")
+            await searches.search_for_searches("plasmodb", "transcript", "", about=None)
 
         assert excinfo.value.rejection.error == "query_required"
 
     async def test_a_one_word_query_is_refused(self) -> None:
         with pytest.raises(VagueSearchQueryError) as excinfo:
-            await searches.search_for_searches("plasmodb", "transcript", "gene")
+            await searches.search_for_searches(
+                "plasmodb", "transcript", "gene", about=None
+            )
 
         rejection = excinfo.value.rejection
         assert rejection.error == "query_too_vague"
@@ -61,7 +63,11 @@ class TestSearchQueryGuard:
         monkeypatch.setattr(searches, "apply_semantic_bonus", _no_bonus)
 
         result = await searches.search_for_searches(
-            "plasmodb", "transcript", "gene", keywords=["Su_strand_specific"]
+            "plasmodb",
+            "transcript",
+            "gene",
+            narrowing=searches.SearchNarrowing(keywords=["Su_strand_specific"]),
+            about=None,
         )
 
         assert result == []
@@ -125,7 +131,10 @@ class TestWhatTheRankingReturns:
         _rank_over(monkeypatch)
 
         result = await searches.search_for_searches(
-            "plasmodb", "transcript", "glycosylphosphatidylinositol anchored"
+            "plasmodb",
+            "transcript",
+            "glycosylphosphatidylinositol anchored",
+            about=None,
         )
 
         assert result == []
@@ -136,7 +145,7 @@ class TestWhatTheRankingReturns:
         _rank_over(monkeypatch)
 
         result = await searches.search_for_searches(
-            "plasmodb", "transcript", "molecular weight"
+            "plasmodb", "transcript", "molecular weight", about=None
         )
 
         assert [match.name for match in result] == ["GenesByMolecularWeight"]
@@ -151,7 +160,10 @@ class TestWhatTheRankingReturns:
         )
 
         result = await searches.search_for_searches(
-            "plasmodb", "transcript", "glycosylphosphatidylinositol anchored"
+            "plasmodb",
+            "transcript",
+            "glycosylphosphatidylinositol anchored",
+            about=None,
         )
 
         assert [match.name for match in result] == [
@@ -167,7 +179,7 @@ class TestWhatTheRankingReturns:
         _rank_over(monkeypatch, {"GenesByExportPrediction": 0.2})
 
         result = await searches.search_for_searches(
-            "plasmodb", "transcript", "exported protein weight"
+            "plasmodb", "transcript", "exported protein weight", about=None
         )
 
         by_name = {match.name: match for match in result}

@@ -173,6 +173,7 @@ from veupathdb_mcp.catalog.search_inspection import (
     read_stated_parameters,
 )
 from veupathdb_mcp.catalog.searches import (
+    SearchNarrowing,
     SearchQueryRejection,
     UnlistedSearchError,
     VagueSearchQueryError,
@@ -285,6 +286,7 @@ __all__ = [
     "ResolvedSearch",
     "SearchInspection",
     "SearchMatch",
+    "SearchNarrowing",
     "SearchOverviewResult",
     "SearchParametersResult",
     "SearchQueryRejection",

@@ -9,8 +9,13 @@ status: stable
 # The choice
 
 `search_for_searches` asks the OpenAI Decisions API (`POST /v1/decisions`, model
-`gpt-6-luna`) through `decide` in `src/veupathdb_mcp/catalog/decisions.py`, on every read. The server
-does not start without `OPENAI_API_KEY`. `decide` answers None when the service fails, times out
+`gpt-6-luna`) through `decide` in `src/veupathdb_mcp/catalog/decisions.py`, on every read
+whose caller passes `about: ResolveContext`. With `about` None it asks nothing
+(`search_picks.decision_picks`). The served `search_for_searches` tool passes None: the
+server's calls run on the deployment's key, and an outside client could repeat a large
+choice on it with every call, so only a host's in-process read, on the transport the host
+installs (its turn's keyed provider), asks the choice. The server does not start without
+`OPENAI_API_KEY`. `decide` answers None when the service fails, times out
 (`DECISIONS_TIMEOUT_SECONDS`) or answers a body that does not parse. A failure logs a
 warning. When `decide` answers None, the read returns what it returned before.
 
@@ -20,7 +25,9 @@ warning. When `decide` answers None, the read returns what it returned before.
   a chunk with probability at least `MIN_PICK_PROBABILITY` (0.01). The lexical, site
   and semantic ranking stays as it was. A pick inside the ranking gets
   `decision_probability`. The picks the ranking does not hold come after it, by
-  probability, with no `relevance`.
+  probability, with no `relevance`. `keywords` and `category` travel as one
+  `SearchNarrowing`.
+
 The read holds no rule for a term, a search or a site. A vocabulary refusal asks the
 service only to order the candidates it shows, never to bind:
 [a stated term names an entry or is refused with candidates](a-stated-term-names-an-entry-or-is-refused-with-candidates.md).

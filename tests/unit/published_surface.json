@@ -416,6 +416,7 @@
     "SUBSET_QUERY",
     "SearchInspection",
     "SearchMatch",
+    "SearchNarrowing",
     "SearchOverviewResult",
     "SearchParametersResult",
     "SearchQueryRejection",

@@ -29,6 +29,7 @@ from veupathdb_mcp.catalog import (
     ParameterInfo,
     ParamFetcher,
     ParamIntent,
+    ResolveContext,
     TooFewSelectedError,
     UnknownParameterError,
     VagueSearchQueryError,
@@ -373,7 +374,11 @@ async def _literature(c: _Collector, proposals: list[CandidateProposal]) -> None
     for proposal in proposals:
         try:
             hits = await search_for_searches(
-                c.site_id, GENE_RECORD_CLASS, proposal.query, limit=LITERATURE_HITS
+                c.site_id,
+                GENE_RECORD_CLASS,
+                proposal.query,
+                limit=LITERATURE_HITS,
+                about=ResolveContext(site_id=c.site_id),
             )
         except VagueSearchQueryError as vague:
             c.skip(
@@ -492,7 +497,11 @@ async def _catalog_order(c: _Collector, phrases: list[str]) -> list[str]:
     if phrases:
         try:
             hits = await search_for_searches(
-                c.site_id, GENE_RECORD_CLASS, " ".join(phrases), limit=CATALOG_RANKED
+                c.site_id,
+                GENE_RECORD_CLASS,
+                " ".join(phrases),
+                limit=CATALOG_RANKED,
+                about=ResolveContext(site_id=c.site_id),
             )
             ranked = [hit.name for hit in hits]
         except VagueSearchQueryError:

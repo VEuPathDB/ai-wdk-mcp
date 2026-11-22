@@ -75,10 +75,7 @@ async def search_for_searches(
     A query nothing matches returns an empty list. `relevance` is the score
     divided by the best hit's score, so the top hit reads 1.0 however weak it
     is. `semantic_similarity` is the cosine of the query against the search's
-    indexed text, or null when the index did not score that search. When the
-    deployment runs the Decisions choice over every offered search, the searches
-    it picks carry `decision_probability`, and the picks the ranking missed
-    follow it with no `relevance`.
+    indexed text, or null when the index did not score that search.
 
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
@@ -93,8 +90,10 @@ async def search_for_searches(
             site_id,
             record_type=record_type,
             query=query,
-            keywords=keywords or [],
-            category=category,
+            about=None,
+            narrowing=searches.SearchNarrowing(
+                keywords=keywords or [], category=category
+            ),
             limit=limit,
         )
     except VagueSearchQueryError as exc:

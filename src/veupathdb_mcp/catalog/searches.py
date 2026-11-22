@@ -7,6 +7,7 @@ from collections.abc import Awaitable, Callable
 from dataclasses import replace
 from typing import Literal
 
+from pydantic import ConfigDict, Field
 from veupathdb import get_logger
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import vocab_keys
@@ -35,6 +36,7 @@ from veupathdb_mcp.catalog.search_offer import (
 )
 from veupathdb_mcp.catalog.search_picks import decision_picks, with_decision_picks
 from veupathdb_mcp.catalog.semantic_matching import apply_semantic_bonus
+from veupathdb_mcp.catalog.vocab_resolve import ResolveContext
 
 logger = get_logger(__name__)
 
@@ -184,13 +186,26 @@ async def list_transforms(site_id: str, record_type: str) -> list[dict[str, str]
     return result
 
 
+class SearchNarrowing(CamelModel):
+    """Exact identifiers to match against search names, and one category of the
+    site ontology to restrict the candidates to."""
+
+    model_config = ConfigDict(frozen=True)
+
+    keywords: list[str] = Field(default_factory=list)
+    category: str | None = None
+
+
+_NO_NARROWING = SearchNarrowing()
+
+
 async def search_for_searches(
     site_id: str,
     record_type: str | list[str] | None,
     query: str,
     *,
-    keywords: list[str] | None = None,
-    category: str | None = None,
+    about: ResolveContext | None,
+    narrowing: SearchNarrowing = _NO_NARROWING,
     limit: int = 20,
 ) -> list[SearchMatch]:
     """Find searches that match a query or keywords.
@@ -198,9 +213,10 @@ async def search_for_searches(
     A category restricts the candidates to that category plus the universal
     searches. A query nothing matches returns an empty list. A query too vague
     to rank raises ``VagueSearchQueryError``. The searches a Decisions choice
-    picks follow the ranking, which they do not reorder.
+    picks follow the ranking, which they do not reorder; with ``about`` None no
+    choice is asked.
     """
-    kw_list = keywords or []
+    kw_list = narrowing.keywords
     rejection = _query_rejection(query, has_keywords=bool(kw_list))
     if rejection is not None:
         raise VagueSearchQueryError(rejection)
@@ -212,14 +228,14 @@ async def search_for_searches(
     terms = [t.lower() for t in raw_terms if t]
 
     candidates = await collect_search_candidates(
-        discovery, site_id, record_types, category=category
+        discovery, site_id, record_types, category=narrowing.category
     )
     scored = score_candidates(candidates, terms, kw_list)
 
     await apply_site_search_bonus(scored, site_id, query, limit)
 
     picks, _ = await asyncio.gather(
-        decision_picks(site_id, record_types, query, [s for s, _ in candidates]),
+        decision_picks(about, record_types, query, [s for s, _ in candidates]),
         apply_semantic_bonus(scored, discovery, site_id, query, record_types),
     )
 

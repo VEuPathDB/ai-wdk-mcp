@@ -21,6 +21,7 @@ from veupathdb_mcp.catalog.decisions import (
     decide,
 )
 from veupathdb_mcp.catalog.models import SearchMatch
+from veupathdb_mcp.catalog.vocab_resolve import ResolveContext
 
 PICKS_PER_CHUNK = 3
 # A pick below this probability added no recall on the measured set.
@@ -68,13 +69,16 @@ def catalog_choice_request(
 
 
 async def decision_picks(
-    site_id: str,
+    about: ResolveContext | None,
     record_types: Sequence[str],
     query: str,
     offered: Sequence[WDKSearch],
 ) -> dict[str, float]:
-    """Each picked search name with its probability, or none when the service is off."""
-    request = catalog_choice_request(site_id, record_types, query, offered)
+    """Each picked search name with its probability, or none when the service is off
+    or ``about`` is None, which asks no choice."""
+    if about is None:
+        return {}
+    request = catalog_choice_request(about.site_id, record_types, query, offered)
     if request is None or not query.strip():
         return {}
     response = await decide(request, purpose="search candidates")

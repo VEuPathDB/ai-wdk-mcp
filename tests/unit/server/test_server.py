@@ -48,13 +48,15 @@ from veupathdb_mcp.audit.gene_ids import MAX_MATCHES
 from veupathdb_mcp.auth import CredentialMode, McpCredential
 from veupathdb_mcp.catalog import (
     ResolveContext,
+    SearchNarrowing,
     experiments,
     search_inspection,
+    searches,
     sites,
 )
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.experiments import ExperimentMatch, UnknownExperimentError
-from veupathdb_mcp.catalog.models import RecordTypeInfo
+from veupathdb_mcp.catalog.models import RecordTypeInfo, SearchMatch
 from veupathdb_mcp.catalog.overview_formatting import SearchOverviewResult
 from veupathdb_mcp.catalog.param_dag import ResolvedParams, UnknownParameterError
 from veupathdb_mcp.catalog.param_intent import ParamIntent
@@ -1574,4 +1576,33 @@ async def test_a_served_options_read_asks_no_choice_on_the_deployments_key(
         )
 
     assert result.is_error
+    assert seen == [None]
+
+
+async def test_a_served_search_ranking_asks_no_choice_on_the_deployments_key(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seen: list[ResolveContext | None] = []
+
+    async def rank(
+        site_id: str,
+        record_type: str | list[str] | None,
+        query: str,
+        *,
+        about: ResolveContext | None,
+        narrowing: SearchNarrowing,
+        limit: int = 20,
+    ) -> list[SearchMatch]:
+        del site_id, record_type, query, limit
+        assert narrowing == SearchNarrowing()
+        seen.append(about)
+        return []
+
+    monkeypatch.setattr(searches, "search_for_searches", rank)
+
+    async with _served(_service_credential()) as client:
+        await client.call_tool(
+            "search_for_searches", {"site_id": SITE, "query": "protein kinase genes"}
+        )
+
     assert seen == [None]

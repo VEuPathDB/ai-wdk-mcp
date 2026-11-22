@@ -13,7 +13,12 @@ import respx
 from scripts.record_decisions import CATALOG_QUERY, OFFERED
 from veupathdb.wdk import WDKSearch
 
-from veupathdb_mcp.catalog import post_decision, searches, use_decisions_transport
+from veupathdb_mcp.catalog import (
+    ResolveContext,
+    post_decision,
+    searches,
+    use_decisions_transport,
+)
 from veupathdb_mcp.catalog.decisions import DECISIONS_URL, MAX_CHOICES
 from veupathdb_mcp.catalog.models import SearchMatch
 from veupathdb_mcp.catalog.search_picks import catalog_choice_request
@@ -56,8 +61,13 @@ def _reach_the_service(monkeypatch: pytest.MonkeyPatch) -> None:
     use_decisions_transport(post_decision)
 
 
+_ABOUT = ResolveContext(site_id="plasmodb")
+
+
 async def _rank() -> list[str]:
-    result = await searches.search_for_searches("plasmodb", "transcript", CATALOG_QUERY)
+    result = await searches.search_for_searches(
+        "plasmodb", "transcript", CATALOG_QUERY, about=_ABOUT
+    )
     return [m.name for m in result]
 
 
@@ -100,7 +110,7 @@ class TestWhatTheRankingReturns:
         with respx.mock() as router:
             router.post(DECISIONS_URL).respond(json=_recorded()["response"])
             result = await searches.search_for_searches(
-                "plasmodb", "transcript", CATALOG_QUERY
+                "plasmodb", "transcript", CATALOG_QUERY, about=_ABOUT
             )
 
         assert [m.name for m in result] == [
@@ -124,3 +134,17 @@ class TestWhatTheRankingReturns:
             names = await _rank()
 
         assert names == ["GenesByText", "GenesByGoTerm"]
+
+    async def test_no_reader_sends_no_choice(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _rank_text_first(monkeypatch)
+        _reach_the_service(monkeypatch)
+        with respx.mock(assert_all_called=False) as router:
+            route = router.post(DECISIONS_URL).respond(json=_recorded()["response"])
+            result = await searches.search_for_searches(
+                "plasmodb", "transcript", CATALOG_QUERY, about=None
+            )
+
+        assert not route.called
+        assert [m.name for m in result] == ["GenesByText", "GenesByGoTerm"]

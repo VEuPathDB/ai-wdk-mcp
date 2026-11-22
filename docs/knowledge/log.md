@@ -11,6 +11,9 @@
   in-process read passes `about` and orders on its own keyed provider.
   `read_stated_parameters` and `read_radio_readings` take `about: ResolveContext | None`
   in place of `message`, and `read_under_parents` takes None as the other readers do.
+- `search_for_searches` takes `about: ResolveContext | None` and asks its Decisions choice
+  only with one (`decision_picks`); the served tool passes None. `keywords` and
+  `category` travel as one `SearchNarrowing`.
 
 ## 2026-11-22 - 0.9.0b15: a stated term names an entry or is refused
 

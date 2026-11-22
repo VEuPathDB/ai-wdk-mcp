@@ -97,10 +97,14 @@ async def test_the_own_site_answer_is_the_same_with_other_sites_indexed(
     monkeypatch.setattr(searches, "get_discovery_service", lambda: service)
     monkeypatch.setattr(searches, "apply_site_search_bonus", no_site_search)
 
-    before = await searches.search_for_searches("plasmodb", "transcript", _QUERY)
+    before = await searches.search_for_searches(
+        "plasmodb", "transcript", _QUERY, about=None
+    )
     await sync_experiments("plasmodb", [_card("plasmodb", "DS_p1").index_entry()])
     await sync_experiments("cryptodb", [_card("cryptodb", "DS_c1").index_entry()])
-    after = await searches.search_for_searches("plasmodb", "transcript", _QUERY)
+    after = await searches.search_for_searches(
+        "plasmodb", "transcript", _QUERY, about=None
+    )
 
     assert [name for name, _, _ in _answer(before)] == [
         "GenesByRNASeqpfal3D7_Excystation",
