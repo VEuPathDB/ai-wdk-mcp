@@ -112,3 +112,54 @@ async def test_a_proposal_whose_term_names_no_entry_is_skipped() -> None:
 
     assert skipped.value.reason == "unbound_required"
     assert "non-synonymous" in str(skipped.value.detail)
+
+
+def _pick(name: str, terms: list[str], dependents: list[str]) -> dict[str, object]:
+    return {
+        "name": name,
+        "displayName": name,
+        "type": "single-pick-vocabulary",
+        "displayType": "select",
+        "isVisible": True,
+        "isReadOnly": False,
+        "allowEmptyValue": False,
+        "vocabulary": [[term, term, None] for term in terms],
+        "dependentParams": dependents,
+    }
+
+
+_TWO_PASSES = WDKSearch.model_validate(
+    {
+        "urlSegment": "GenesByRhythmStage",
+        "fullName": "GeneQuestions.GenesByRhythmStage",
+        "displayName": "Genes by rhythm and stage",
+        "outputRecordClassName": "transcript",
+        "parameters": [
+            *(_SEARCH.model_dump(by_alias=True)["parameters"]),
+            _pick("lineage", ["blood", "liver"], ["stage"]),
+            _pick("stage", ["ring", "schizont"], []),
+        ],
+    }
+)
+
+
+async def test_problems_of_two_passes_skip_the_candidate() -> None:
+    async def declared(context: dict[str, str]) -> list[WDKParameter]:
+        del context
+        return _TWO_PASSES.parameters or []
+
+    proposal = Proposal(
+        search_name=_TWO_PASSES.url_segment,
+        source=CandidateSource.CATALOG,
+        basis="the site's catalog",
+        stated={"period_range": "22-26", "lineage": "blood", "stage": "gametocyte"},
+    )
+
+    with pytest.raises(CandidateSkippedError) as skipped:
+        await bind(
+            _TWO_PASSES, declared, FilterReadsDouble(), proposal, [], site_id="plasmodb"
+        )
+
+    assert skipped.value.reason == "unbound_required"
+    assert "period_range" in str(skipped.value.detail)
+    assert "gametocyte" in str(skipped.value.detail)

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable, Iterator, Mapping, Sequence
+from dataclasses import dataclass, field
 from enum import StrEnum
 from functools import partial
 from types import MappingProxyType
@@ -29,7 +30,6 @@ from veupathdb.domain.parameters import (
     StringMembers,
     UnboundParameter,
     VocabOption,
-    VocabularyEntryError,
     entry_name,
     flatten_vocab,
     leaf_terms,
@@ -44,7 +44,6 @@ from veupathdb.domain.parameters import (
 from veupathdb.errors import (
     ValidationError,
     VEuPathDBError,
-    joined_refusal,
     param_message_rows,
 )
 from veupathdb.model import CamelModel
@@ -89,9 +88,11 @@ from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
 from veupathdb_mcp.catalog.vocab_resolve import (
     NamedVocabulary,
     ResolveContext,
+    gathered,
     interleaved,
-    ordered_refusal,
     ordered_terms,
+    refuse_ordered,
+    refused_names,
 )
 
 _MAX_RESOLVE_DEPTH = 6
@@ -217,36 +218,91 @@ def _waiting(
     }
 
 
+@dataclass
+class _Refusals:
+    read: list[ValidationError] = field(default_factory=list)
+    names: set[str] = field(default_factory=set)
+    declared: dict[str, WDKParameter] = field(default_factory=dict)
+
+    def note(
+        self,
+        refusal: ValidationError,
+        names: set[str],
+        declarations: Sequence[WDKParameter],
+    ) -> None:
+        self.read.append(refusal)
+        self.names |= names
+        self.declared |= {d.name: d for d in declarations if d.name in names}
+
+    def blocked(self, declarations: Sequence[WDKParameter]) -> set[str]:
+        parents = ParamGraph.of(declarations).wire_parents
+        return self.names | {
+            d.name for d in declarations if _ancestors(parents, d.name) & self.names
+        }
+
+
+def _read_each(
+    declarations: Sequence[WDKParameter],
+    stated: Mapping[str, JsonValue],
+    refused: _Refusals,
+) -> dict[str, ParamValue]:
+    unread = [d for d in declarations if d.name in stated]
+    while True:
+        try:
+            shapes = read_stated_values(unread, stated)
+            break
+        except ValidationError as refusal:
+            named = refused_names(refusal) & {d.name for d in unread}
+            if not named:
+                raise
+            refused.note(refusal, named, declarations)
+            unread = [d for d in unread if d.name not in named]
+    declared = {d.name: d for d in declarations}
+    read: dict[str, ParamValue] = {}
+    for name, shape in shapes.items():
+        try:
+            read[name] = _bound(declared[name], shape)
+        except ValidationError as refusal:
+            refused.note(refusal, {name}, declarations)
+    return read
+
+
 def _read_ready(
     declarations: Sequence[WDKParameter],
     stated: Mapping[str, JsonValue],
     context: dict[str, str],
     read: Mapping[str, ParamValue],
+    refused: _Refusals,
 ) -> dict[str, ParamValue]:
-    """Reads each stated name not yet read whose parents are in the context, under
-    the declarations fetched at that context."""
-    waiting = _waiting(declarations, stated, context)
+    """Reads each stated name not yet read or refused whose parents are in the
+    context, under the declarations fetched at that context."""
+    waiting = _waiting(declarations, stated, context) | refused.blocked(declarations)
     ready = [
         d
         for d in declarations
         if d.name in stated and d.name not in read and d.name not in waiting
     ]
-    return read_declared(ready, stated)
+    return _read_each(ready, stated, refused)
 
 
 def _read_pass(
-    infos: list[ParameterInfo],
     declarations: Sequence[WDKParameter],
     stated: Mapping[str, JsonValue],
     context: dict[str, str],
     overrides: OverrideMap,
+    refused: _Refusals,
     *,
-    first: bool,
+    first_pass: list[ParameterInfo] | None,
 ) -> OverrideMap:
-    if first:
-        _refuse_unknown_overrides(infos, stated)
-    read = {**overrides, **_read_ready(declarations, stated, context, overrides)}
-    return _with_derived_phyletic(infos, read, declarations) if first else read
+    if first_pass is not None:
+        _refuse_unknown_overrides(first_pass, stated)
+    read = {
+        **overrides,
+        **_read_ready(declarations, stated, context, overrides, refused),
+    }
+    if first_pass is None:
+        return read
+    return _with_derived_phyletic(first_pass, read, declarations)
 
 
 async def _named_or_ordered[T](
@@ -255,18 +311,25 @@ async def _named_or_ordered[T](
     about: ResolveContext | None,
 ) -> T:
     """The read, or its refusal with the candidates ordered under ``about``: a
-    vocabulary refusal by ``ordered_refusal``, a phyletic one by
-    ``ordered_phyletic_refusal``. None leaves the ranking."""
+    phyletic one by ``ordered_phyletic_refusal``, any other by ``refuse_ordered``.
+    None leaves the ranking."""
     try:
         return read()
-    except VocabularyEntryError as refusal:
-        if about is None:
-            raise
-        raise await ordered_refusal(refusal, declarations, about) from refusal
     except PhyleticListError as refusal:
         if about is None:
             raise
         raise await ordered_phyletic_refusal(refusal, declarations, about) from refusal
+    except ValidationError as refusal:
+        await refuse_ordered(refusal, declarations, about)
+
+
+async def _refuse_all(
+    refusals: Sequence[ValidationError],
+    declared: Mapping[str, WDKParameter],
+    about: ResolveContext | None,
+) -> None:
+    if refusals:
+        await refuse_ordered(gathered(refusals), list(declared.values()), about)
 
 
 async def _note_miss(
@@ -612,13 +675,14 @@ async def _read_standing(
     context = wire_map({n: v for n, v in bound.items() if n not in stated})
     read: dict[str, ParamValue] = {}
     misses: list[ValidationError] = []
+    refused = _Refusals()
     declarations = await fetch_at(context)
     _refuse_unknown_overrides(
         format_param_info_typed(declarations, organism=None),
         stated,
     )
     for _ in range(_MAX_RESOLVE_DEPTH):
-        missing = stated.keys() - read.keys()
+        missing = stated.keys() - read.keys() - refused.blocked(declarations)
         if not missing:
             break
         waiting = _waiting(declarations, stated, context)
@@ -630,16 +694,11 @@ async def _read_standing(
             and d.name not in context
             and d.name not in waiting
         }
-        new = await _named_or_ordered(
-            partial(_read_ready, declarations, stated, context, read),
-            declarations,
-            about,
-        )
+        new = _read_ready(declarations, stated, context, read, refused)
         if not new and not sited:
-            pending = [d for d in declarations if d.name in missing]
-            new = await _named_or_ordered(
-                partial(read_declared, pending, stated), declarations, about
-            )
+            open_names = missing - refused.blocked(declarations)
+            pending = [d for d in declarations if d.name in open_names]
+            new = _read_each(pending, stated, refused)
         if not new and not sited:
             break
         await _note_misses(misses, declarations, new, context, reads)
@@ -647,11 +706,12 @@ async def _read_standing(
         context |= sited | wire_map(new)
         if stated.keys() - read.keys():
             declarations = await fetch_at(context)
-    unread = sorted(stated.keys() - read.keys())
-    if unread:
-        raise UnreadStatementError(unread)
-    if misses:
-        raise joined_refusal(misses)
+    unread = sorted(stated.keys() - read.keys() - refused.blocked(declarations))
+    await _refuse_all(
+        [*refused.read, *([UnreadStatementError(unread)] if unread else []), *misses],
+        refused.declared,
+        about,
+    )
     return as_tree_leaves(declarations, read)
 
 
@@ -813,6 +873,7 @@ async def resolve_params_with_intent(
     seen: set[str] = set()
     provenance: dict[str, Provenance] = {}
     misses: list[ValidationError] = []
+    refused = _Refusals()
     ledger = _VocabLedger()
     for pass_index in range(_MAX_RESOLVE_DEPTH):
         declarations = await fetch_at(context)
@@ -822,12 +883,12 @@ async def resolve_params_with_intent(
         overrides = await _named_or_ordered(
             partial(
                 _read_pass,
-                infos,
                 declarations,
                 stated,
                 context,
                 overrides,
-                first=pass_index == 0,
+                refused,
+                first_pass=infos if pass_index == 0 else None,
             ),
             declarations,
             about,
@@ -841,6 +902,7 @@ async def resolve_params_with_intent(
         # vocabulary slot before a sibling defaults onto it. Eviction covers dependent
         # params, which a later pass resolves after a default is already bound.
         resolved_this_pass: set[str] = set()
+        seen |= refused.names
         for info in sorted(infos, key=lambda i: _resolution_rank(i, overrides)):
             _evict_for_override(
                 info,
@@ -888,8 +950,7 @@ async def resolve_params_with_intent(
             progressed = True
         if not progressed:
             break
-    if misses:
-        raise joined_refusal(misses)
+    await _refuse_all([*refused.read, *misses], refused.declared, about)
     return ResolvedParams(
         params=params,
         provenance=provenance,

@@ -25,17 +25,20 @@ carries no picked entry.
 
 # The order of the shown candidates
 
-Every async read that can refuse a term passes the `VocabularyEntryError` through
+Every async read that can refuse a term orders its refusal through
 `ordered_refusal` / `ordered_by_vocabulary` (`catalog/vocab_resolve.py`): the two walks
-in `catalog/param_dag.py` (`read_under_parents` and `resolve_params_with_intent`), the
-canonicalizer calls of `validate_parameters` and `validate_search_params`, and the gene
-lookup's stated organism (`lookup_genes_by_text`). Each takes a required keyword
+in `catalog/param_dag.py` (`read_under_parents` and `resolve_params_with_intent`) and the
+canonicalizer calls of `validate_parameters` and `validate_search_params` through
+`refuse_ordered`, which reads the entry rows of any refusal, and the gene lookup's stated
+organism (`lookup_genes_by_text`). Each takes a required keyword
 `about: ResolveContext | None`: the site and the researcher's message, or None, which
 sends no choice. A served tool passes None: the server's Decisions calls run on the
 deployment's key, and an outside client could otherwise spend it on every refusal, so
 only a host's in-process read, on the turn's keyed provider, orders a refusal. A
-canonicalizer refusal that joins entry rows with other rows (an unknown name, a wrong
-kind) orders the candidates of every entry row and keeps each other row in its place. One
+refusal that joins entry rows with other rows (a wrong shape, an unknown name, a wrong
+kind, a filter that selects nothing) orders the candidates of every entry row and keeps
+each other row in its place. A walk reads every pass before it refuses: it skips only the
+parameters under a refused one and raises one refusal for every pass at the end. One
 refusal asks a choice for at most its first `SHOWN_CANDIDATES` (5) terms, all at once
 (`ordered_terms`, the one function every path goes through); every later term keeps the
 ranking. The phyletic refusal (`PhyleticListError` for a species list term that names no

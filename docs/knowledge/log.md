@@ -1,5 +1,16 @@
 # Knowledge log
 
+## 2026-11-22 - A walk names the problems of every pass once
+
+- `read_under_parents` and `resolve_params_with_intent` keep reading after a refusal: a
+  refused parameter and the parameters under it are skipped, every other one is read, and
+  the read refusals, the unread names and the filter misses of every pass are raised once at
+  the end (`vocab_resolve.gathered`; entry rows alone stay one `VocabularyEntryError`).
+- `vocab_resolve.refuse_ordered` is the one ordering path of the walks and the canonicalizer:
+  it orders every entry row of any refusal by `ordered_refusal`, a mixed `StatedValuesError`
+  included (veupathdb-py writes its entry rows with `candidates`).
+- The separation enumerator skips a candidate on any refusal of its values.
+
 ## 2026-11-22 - A read names every miss once
 
 - `read_under_parents` and `resolve_params_with_intent` read every stated filter before they

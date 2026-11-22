@@ -13,25 +13,19 @@ from veupathdb.domain.parameters import (
     FacetRange,
     FilterClause,
     FilterFacet,
-    FilterStatementError,
     FilterValue,
     ParamValue,
-    StatedValuesError,
-    VocabularyEntryError,
 )
-from veupathdb.errors import VEuPathDBError
+from veupathdb.errors import ValidationError, VEuPathDBError
 from veupathdb.wdk import WDKParameter, WDKSearch, encode_params
 
 from veupathdb_mcp.catalog import (
     RADIO_OFF,
-    EmptyRangeError,
     FilterReads,
     ParameterInfo,
     ParamFetcher,
     ParamIntent,
     ResolveContext,
-    TooFewSelectedError,
-    UnknownParameterError,
     VagueSearchQueryError,
     WDKFilterReads,
     as_tree_leaves,
@@ -236,14 +230,7 @@ async def bind(
             stated=_overrides(search, infos, proposal, organisms),
             about=None,
         )
-    except (
-        UnknownParameterError,
-        StatedValuesError,
-        VocabularyEntryError,
-        FilterStatementError,
-        EmptyRangeError,
-        TooFewSelectedError,
-    ) as exc:
+    except ValidationError as exc:
         raise CandidateSkippedError(reason="unbound_required", detail=str(exc)) from exc
     gap = binding_gap(resolved)
     if gap:
