@@ -29,7 +29,6 @@ def test_the_server_settings_keep_the_environment_variable_names() -> None:
         "catalog_cache_dir",
         "catalog_refresh_enabled",
         "decisions_timeout_seconds",
-        "decisions_vocab_min_confidence",
         "embedding_index_sync_enabled",
         "openai_api_key",
         "wdk_mcp_base_url",

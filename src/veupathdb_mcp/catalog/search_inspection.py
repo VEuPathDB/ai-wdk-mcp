@@ -55,7 +55,6 @@ from veupathdb_mcp.catalog.searches import (
     resolve_search_record_type,
 )
 from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
-from veupathdb_mcp.catalog.vocab_pick import pick_vocab_entry
 from veupathdb_mcp.catalog.vocab_rendering import entries_of
 
 _SEARCH_NOT_FOUND_STATUS = 404
@@ -383,17 +382,6 @@ async def read_parameter_options(
                 phyletic_options=phyletic,
                 lookup=lookup or phyletic_lookup,
             )
-            if lookup or phyletic_lookup:
-                read = read.model_copy(
-                    update={
-                        "vocab_pick": await pick_vocab_entry(
-                            site_id,
-                            read.display_name,
-                            "; ".join(narrow.request_terms or narrow.terms),
-                            read.vocabulary(),
-                        )
-                    }
-                )
             query = " ".join((*narrow.terms, *narrow.request_terms))
             shown = read.shown_for(query)
             parents = graph.wire_parents.get(parameter_id, ())

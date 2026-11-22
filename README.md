@@ -264,8 +264,7 @@ because a document naming the wrong host sends a client to the wrong authority.
 | `SEARCH_LINE_POOL_TIMEOUT_SECONDS` | how long a search waits for a line connection; empty waits without a limit, as the line does (the default) |
 | `STRATEGY_LINE_POOL_SIZE`, `STRATEGY_LINE_MAX_OVERFLOW` | the connections the strategy line keeps, and the ones it opens past them (defaults 1 and 0, so each process adds one connection), apart from the index pool; each request on a strategy holds one for that request |
 | `STRATEGY_LINE_POOL_TIMEOUT_SECONDS` | how long a strategy request waits for a line connection; empty waits without a limit (the default) |
-| `DECISIONS_TIMEOUT_SECONDS` | how long one Decisions request from `search_for_searches` or a narrowed `get_parameter_options` may take before the read keeps its own result (default 15) |
-| `DECISIONS_VOCAB_MIN_CONFIDENCE` | the confidence at or above which a vocabulary pick is settled (default 0.5) |
+| `DECISIONS_TIMEOUT_SECONDS` | how long one Decisions request from `search_for_searches` may take before the read keeps its own result (default 15) |
 
 Every setting answers to that one name. A host extends `McpSettings` and
 `EmbeddingSettings` with its own model, so a field neither declares is the

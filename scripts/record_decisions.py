@@ -1,28 +1,18 @@
 import argparse
 import asyncio
-import json
 import os
 from pathlib import Path
 
 import httpx
 from pydantic import BaseModel, ConfigDict, JsonValue
-from veupathdb.domain.parameters import VocabOption, read_options
-from veupathdb.wdk import WDKSearch, WDKSearchResponse
+from veupathdb.wdk import WDKSearch
 
-from veupathdb_mcp.catalog.decisions import (
-    DECISIONS_URL,
-    DecisionRequest,
-    DecisionResponse,
-)
+from veupathdb_mcp.catalog.decisions import DECISIONS_URL, DecisionRequest
 from veupathdb_mcp.catalog.search_picks import catalog_choice_request
-from veupathdb_mcp.catalog.vocab_pick import NONE_FITS, choice_request, fit_request
-from veupathdb_mcp.catalog.vocab_rendering import entries_of
 
 FIXTURES = Path(__file__).resolve().parent.parent / "tests/unit/catalog/fixtures"
 SITE = "plasmodb"
 CATALOG_QUERY = "Plasmodium falciparum 3D7 genes with a protein kinase domain"
-VOCAB_TERM = "protein kinase"
-VOCAB_PARAM = "domain_typeahead"
 OFFERED = [
     WDKSearch(url_segment=name, display_name=display, description=description)
     for name, display, description in (
@@ -70,7 +60,6 @@ OFFERED = [
         ),
     )
 ]
-INTERPRO = "plasmodb_3d7_interpro_vocabulary_half_off.json"
 
 
 class Exchange(BaseModel):
@@ -86,14 +75,6 @@ class DecisionsWire(BaseModel):
     site: str
     query: str
     exchanges: list[Exchange]
-
-
-def interpro_parameter() -> tuple[str, list[VocabOption]]:
-    recorded = json.loads((FIXTURES / INTERPRO).read_text())["response_json"]
-    params = WDKSearchResponse.model_validate(recorded).search_data.parameters or []
-    param = next(p for p in params if p.name == VOCAB_PARAM)
-    kept = read_options(entries_of(param.vocabulary), [VOCAB_TERM], request_terms=[])
-    return param.display_name or param.name, kept.options
 
 
 async def _ask(client: httpx.AsyncClient, request: DecisionRequest) -> Exchange:
@@ -118,21 +99,6 @@ async def record(into: Path) -> None:
         )
         (into / "decisions_plasmodb_catalog_choice.json").write_text(
             wire.model_dump_json(indent=1) + "\n"
-        )
-        display, entries = interpro_parameter()
-        chosen = await _ask(client, choice_request(SITE, display, VOCAB_TERM, entries))
-        exchanges = [chosen]
-        answer = DecisionResponse.model_validate(chosen.response).choice("value")
-        if answer is not None and answer.choice != NONE_FITS:
-            entry = entries[int(answer.choice.removeprefix("e"))]
-            exchanges.append(
-                await _ask(client, fit_request(SITE, display, VOCAB_TERM, entry))
-            )
-        (into / "decisions_plasmodb_interpro_pick.json").write_text(
-            DecisionsWire(
-                site=SITE, query=VOCAB_TERM, exchanges=exchanges
-            ).model_dump_json(indent=1)
-            + "\n"
         )
 
 

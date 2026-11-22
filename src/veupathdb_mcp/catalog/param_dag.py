@@ -10,6 +10,7 @@ from pydantic import Field, JsonValue
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     PHYLETIC_LIST_PARAMS,
+    SHOWN_CANDIDATES,
     FilterFacets,
     FilterProposals,
     MultiPickValue,
@@ -20,9 +21,10 @@ from veupathdb.domain.parameters import (
     SinglePickValue,
     Stated,
     UnboundParameter,
+    VocabularyEntryError,
+    exact_or_candidates,
     flatten_vocab,
     leaf_terms,
-    match_exact_option,
     read_stated_values,
     to_wire,
     wire_map,
@@ -155,19 +157,28 @@ class UnreadStatementError(ValidationError):
         )
 
 
-def _bound(declaration: WDKParameter, read: Stated) -> ParamValue:
-    """Binds a filter statement to its facets, and each pick to the term its
-    entry carries."""
+def _entries(declaration: WDKParameter, terms: list[str]) -> list[str]:
     options = flatten_vocab(declaration.vocabulary)
+    if not options:
+        return terms
+    read = [exact_or_candidates(options, t, SHOWN_CANDIDATES) for t in terms]
+    faults = [(declaration.name, r) for r in read if r.value is None]
+    if faults:
+        raise VocabularyEntryError(faults)
+    return [r.value for r in read if r.value is not None]
+
+
+def _bound(declaration: WDKParameter, read: Stated) -> ParamValue:
+    """Binds a filter statement to its facets, and each pick to the entry it
+    names, or refuses every pick that names none."""
     match read:
         case FilterProposals():
             return FilterFacets.of(declaration).bind(read)
         case SinglePickValue(value=term):
-            return SinglePickValue(value=match_exact_option(options, term) or term)
+            [entry] = _entries(declaration, [term])
+            return SinglePickValue(value=entry)
         case MultiPickValue(values=terms):
-            return MultiPickValue(
-                values=[match_exact_option(options, t) or t for t in terms]
-            )
+            return MultiPickValue(values=_entries(declaration, terms))
         case _:
             return read
 

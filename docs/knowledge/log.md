@@ -1,19 +1,22 @@
 # Knowledge log
 
-## 2026-11-22 - one resolver names a vocabulary entry
+## 2026-11-22 - a stated term names an entry or is refused
 
 - `read_options` and its lookup types are the client's (`veupathdb.domain.parameters`).
   `catalog/vocab_lookup.py` is deleted, and `AccessionNames`, `PhrasingMatch` and
   `VocabLookup` leave this distribution's surface. A host reads them from
   `veupathdb.domain.parameters`.
-- `catalog.resolve_entry` names the entry a phrase states: the client's exact step
-  first, then the ranked candidates (`exact_or_candidates`, up to 254). Its `arm` is
-  `refuse` (the candidates, unsettled), `choice` (one Decisions choice over the
-  candidates plus `none_fits`, settled at `floor`) or `choice_fit` (the choice and the
-  fit predicate, settled when the lower of the two reaches `floor`). `none_fits`, no
-  answer and a confidence under the floor leave it unsettled with the candidates.
-  `resolve_request` builds the choice from the site, the parameter, the words and the
-  researcher's message when there is one.
+- Vocabulary matching is exact or refuse with candidates
+  ([the decision](decisions/a-stated-term-names-an-entry-or-is-refused-with-candidates.md)).
+  `_bound` binds a stated pick only to the entry `exact_or_candidates` names, and
+  gathers every other term of the parameter into one `VocabularyEntryError` with the
+  first five ranked candidates; a term no entry names no longer passes through as
+  stated. The offline A/B held out 229 rows: refuse 86.0% right with 0 confidently
+  wrong, a Decisions choice with a fit predicate 90.8% with 1, the choice alone out on
+  dev. `ParameterInfo.vocab_pick`, `VocabPick`, `catalog/vocab_pick.py`, the read's pick
+  in `read_parameter_options` and `DECISIONS_VOCAB_MIN_CONFIDENCE` are deleted; the
+  Decisions client stays for the search candidates. `separation/eligibility.py` takes an
+  organism through the same exact step.
 - A phyletic refusal and a radio pair issue carry the `SHOWN_CANDIDATES` (5) entries the
   client's `rank_entries` ranks first (`nearest: list[VocabOption]`); `nearest_entries`
   is gone from the client. The phyletic refusal names each as the client's `entry_name`
@@ -245,14 +248,14 @@
 - `use_decisions_transport(send)` and `post_decision` (`veupathdb_mcp.catalog`) name
   what `decide` sends through; `offline_decisions` (`veupathdb_mcp.testing`) answers
   None with no network, for a test tier. See
-  [the decision](decisions/a-decisions-choice-widens-the-candidates-and-doubts-a-vocabulary-pick.md).
+  [the decision](decisions/a-decisions-choice-widens-the-search-candidates.md).
 
 ## 2026-10-28 - 0.2.0b55
 
 - `universal_searches(site_id, record_type) -> tuple[SearchMatch, ...]`
   (`veupathdb_mcp.catalog`) replaces `UNIVERSAL_SEARCHES`. It answers the site's text
   search and every search the held listing marks with a `radio-params` pair. See
-  [the decision](decisions/a-decisions-choice-widens-the-candidates-and-doubts-a-vocabulary-pick.md).
+  [the decision](decisions/a-decisions-choice-widens-the-search-candidates.md).
 
 ## 2026-10-27 - 0.2.0b54
 
@@ -266,7 +269,7 @@
   the entry a choice picks among the entries a query kept. It carries
   `choice_confidence`, `fit_probability`, `confidence` and `settled`. Off or failing,
   both reads are what they were. See
-  [the decision](decisions/a-decisions-choice-widens-the-candidates-and-doubts-a-vocabulary-pick.md).
+  [the decision](decisions/a-decisions-choice-widens-the-search-candidates.md).
 
 ## 2026-10-27 - 0.2.0b53
 

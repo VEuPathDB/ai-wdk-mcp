@@ -16,7 +16,7 @@ from veupathdb_mcp.catalog import (
     use_decisions_transport,
 )
 
-FIXTURE = Path(__file__).parent / "fixtures" / "decisions_plasmodb_interpro_pick.json"
+FIXTURE = Path(__file__).parent / "fixtures" / "decisions_plasmodb_catalog_choice.json"
 
 
 def _recorded() -> dict[str, dict[str, object]]:
@@ -51,7 +51,7 @@ async def test_a_host_transport_sees_each_request_and_its_usage() -> None:
     assert seen == [
         (
             request.questions[0].name,
-            DecisionUsage(input_tokens=711, cached_tokens=0, cache_write_tokens=0),
+            DecisionUsage(input_tokens=380, cached_tokens=0, cache_write_tokens=0),
         )
     ]
     assert DECISIONS_URL == "https://api.openai.com/v1/decisions"

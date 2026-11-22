@@ -314,11 +314,7 @@ async def get_parameter_options(
             shape its statedSchema gives.
         query: One phrase, or several phrasings of one concept, that narrow the
             vocabulary. Hyphen and space match alike, and a phrase also
-            matches its words in any order. A narrowed read carries
-            `vocab_pick` when the deployment runs the Decisions choice: the
-            entry it picks, or none when no entry fits, and whether its
-            confidence settles the pick. Ask the researcher when it does not.
-            On a filter parameter, the query also reads the range of up to
+            matches its words in any order. On a filter parameter, the query also reads the range of up to
             three range facets it names; a facet it does not name shows no
             range.
     """

@@ -6,7 +6,7 @@ takes a dataset scores the controls against themselves (WDK-PARAM-009).
 """
 
 from pydantic import JsonValue
-from veupathdb.domain.parameters import match_exact_option
+from veupathdb.domain.parameters import SHOWN_CANDIDATES, exact_or_candidates
 from veupathdb.wdk import WDKSearch
 
 from veupathdb_mcp.catalog import (
@@ -61,7 +61,10 @@ def organism_overrides(
         if info.param_kind not in _PICKS:
             continue
         options = info.vocabulary()
-        terms = [match_exact_option(options, organism) for organism in organisms]
+        terms = [
+            exact_or_candidates(options, organism, SHOWN_CANDIDATES).value
+            for organism in organisms
+        ]
         held: list[JsonValue] = [term for term in terms if term is not None]
         if len(held) != len(organisms):
             continue

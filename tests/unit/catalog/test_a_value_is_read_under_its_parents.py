@@ -8,6 +8,7 @@ from veupathdb.domain.parameters import (
     FilterStatementError,
     FilterValue,
     MultiPickValue,
+    VocabularyEntryError,
 )
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKParameter
@@ -74,7 +75,7 @@ async def test_a_parent_stated_by_its_label_reaches_the_fetch_as_its_term() -> N
     assert seen[1] == {"organism": f'["{_VIVAX}"]'}
 
 
-async def test_a_label_matches_its_leaf_and_a_genus_stays_as_stated() -> None:
+async def test_a_label_matches_its_leaf_and_a_species_with_no_node_is_refused() -> None:
     organism = _organism(
         (_VIVAX, "P. vivax P01"),
         ("Plasmodium falciparum 3D7", "P. falciparum 3D7"),
@@ -83,11 +84,20 @@ async def test_a_label_matches_its_leaf_and_a_genus_stays_as_stated() -> None:
 
     read = await read_under_parents(
         _recording(seen, [organism], [organism]),
-        {"organism": ["plasmodium vivax p01", "Plasmodium vivax"]},
+        {"organism": ["plasmodium vivax p01"]},
         FilterReadsDouble(),
     )
+    with pytest.raises(VocabularyEntryError) as refused:
+        await read_under_parents(
+            _recording(seen, [organism], [organism]),
+            {"organism": ["plasmodium vivax p01", "Plasmodium vivax"]},
+            FilterReadsDouble(),
+        )
 
-    assert read["organism"] == MultiPickValue(values=[_VIVAX, "Plasmodium vivax"])
+    assert read["organism"] == MultiPickValue(values=[_VIVAX])
+    [(param, resolution)] = refused.value.faults
+    assert (param, resolution.phrase) == ("organism", "Plasmodium vivax")
+    assert resolution.candidates[0].value == _VIVAX
 
 
 async def test_a_name_no_later_fetch_declares_is_refused_by_name() -> None:

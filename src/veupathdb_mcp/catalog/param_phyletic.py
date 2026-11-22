@@ -140,7 +140,7 @@ def is_phyletic_sheet(infos: list[ParameterInfo]) -> bool:
     return frozenset(PhyleticBinding.model_fields) <= names
 
 
-def _nearest_entries(tree: PhyleticTree, unknown: Sequence[str]) -> list[VocabOption]:
+def _ranked_entries(tree: PhyleticTree, unknown: Sequence[str]) -> list[VocabOption]:
     """The entries ranked closest to the terms that named nothing."""
     options = tree.labels()
     found: dict[str, VocabOption] = {}
@@ -172,7 +172,7 @@ def derive_phyletic_overrides(
     if isinstance(binding, PhyleticUnresolved):
         return PhyleticUnresolvedProposal(
             unresolved=binding,
-            nearest=_nearest_entries(
+            nearest=_ranked_entries(
                 tree, [*binding.included_unknown, *binding.excluded_unknown]
             ),
         )

@@ -65,8 +65,6 @@ class McpSettings(BaseSettings):
     # not start without it.
     openai_api_key: str = Field(default="", repr=False)
     decisions_timeout_seconds: float = Field(default=15.0, gt=0)
-    # A vocabulary pick whose confidence is below this is not settled.
-    decisions_vocab_min_confidence: float = Field(default=0.5, ge=0, le=1)
 
     @model_validator(mode="after")
     def _decisions_need_a_key(self) -> Self:

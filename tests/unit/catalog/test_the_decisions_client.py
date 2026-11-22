@@ -24,7 +24,7 @@ from veupathdb_mcp.catalog.decisions import (
 )
 from veupathdb_mcp.settings import McpSettings
 
-FIXTURE = Path(__file__).parent / "fixtures" / "decisions_plasmodb_interpro_pick.json"
+FIXTURE = Path(__file__).parent / "fixtures" / "decisions_plasmodb_catalog_choice.json"
 
 
 def _exchange(index: int) -> tuple[DecisionRequest, dict[str, object]]:
@@ -90,10 +90,10 @@ class TestTheWireShape:
         _, body = _exchange(0)
         response = DecisionResponse.model_validate(body)
 
-        answer = response.choice("value")
+        answer = response.choice("chunk0")
         assert isinstance(answer, ChoiceAnswer)
-        assert answer.ranked()[0].value == answer.choice == "e0"
-        assert response.predicate("value") is None
+        assert answer.ranked()[0].value == answer.choice == "GenesByInterproDomain"
+        assert response.predicate("chunk0") is None
         assert response.usage.input_tokens > 0
 
 
