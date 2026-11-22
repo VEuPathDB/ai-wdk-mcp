@@ -1,0 +1,2087 @@
+{
+ "provenance": {
+  "row": "r009",
+  "arm": "choice",
+  "vocabulary": "plasmodb_pathway_hagai",
+  "phrase": "citric acid cycle",
+  "model": "gpt-6-luna",
+  "request_builder": "veupathdb_mcp.catalog.vocab_resolve.resolve_request",
+  "mcp": "b14b810",
+  "client": "veupathdb-py 0.9.0b10",
+  "recorded_for": "the offline vocabulary A/B, labelled set row r009; replayed to order a refusal's candidates"
+ },
+ "exchanges": [
+  {
+   "request": {
+    "model": "gpt-6-luna",
+    "input": "VEuPathDB site: plasmodb. Parameter: Metabolic Pathway.\nThe researcher's words: \"citric acid cycle\"\nThe researcher's message: Genes in the citric acid cycle.",
+    "questions": [
+     {
+      "type": "choice",
+      "name": "value",
+      "instructions": "Which entry of the parameter do the researcher's words name? Read each label. Choose none_fits when the words name a group, several entries without choosing one, or nothing listed.",
+      "choices": [
+       {
+        "value": "e0",
+        "description": "a-Linolenic acid (ALA) pathway"
+       },
+       {
+        "value": "e1",
+        "description": "Fatty acids elongation in the endoplasmic reticulum"
+       },
+       {
+        "value": "e2",
+        "description": "Fatty acid synthesis in the apicoplast"
+       },
+       {
+        "value": "e3",
+        "description": "Involvement of GTP-binding proteins and ribosomes in amino acid shortage"
+       },
+       {
+        "value": "e4",
+        "description": "Lipoic acid metabolism"
+       },
+       {
+        "value": "e5",
+        "description": "The acidocalcisome"
+       },
+       {
+        "value": "e6",
+        "description": "Cell cycle compartment assocation between P. falciparum cell cycle perturbed transcriptomes"
+       },
+       {
+        "value": "e7",
+        "description": "Functional orthologs of known cell cycle proteins in E. coli"
+       },
+       {
+        "value": "e8",
+        "description": "Mitochondrial TCA cycle"
+       },
+       {
+        "value": "e9",
+        "description": "Model of the Ube2w/CHIP/Ataxin-3 Ubiquitination Cycle"
+       },
+       {
+        "value": "e10",
+        "description": "Pentose Phosphate Cycle"
+       },
+       {
+        "value": "e11",
+        "description": "Proteins predicted to be involved in cell cycle regulatory network"
+       },
+       {
+        "value": "e12",
+        "description": "Rab cycle"
+       },
+       {
+        "value": "e13",
+        "description": "The chaperone cycle of Hsp90"
+       },
+       {
+        "value": "e14",
+        "description": "The HSP70 chaperone cycle"
+       },
+       {
+        "value": "e15",
+        "description": "Actin and filaments"
+       },
+       {
+        "value": "e16",
+        "description": "Mitochondrial antioxidant system"
+       },
+       {
+        "value": "e17",
+        "description": "Tubulin and microtubules"
+       },
+       {
+        "value": "e18",
+        "description": "Activation of eiF5A"
+       },
+       {
+        "value": "e19",
+        "description": "Histone modification cross-talk"
+       },
+       {
+        "value": "e20",
+        "description": "Transcriptional mediator complex"
+       },
+       {
+        "value": "e21",
+        "description": "Mitochondrial electron flow"
+       },
+       {
+        "value": "e22",
+        "description": "Merozoite protein complexes"
+       },
+       {
+        "value": "e23",
+        "description": "Protein acetylation and lysine aminoacylation"
+       },
+       {
+        "value": "e24",
+        "description": "Lipolytic enzymes"
+       },
+       {
+        "value": "e25",
+        "description": "Schematic depiction of pseudouridylation"
+       },
+       {
+        "value": "e26",
+        "description": "S-nitrosylated proteins"
+       },
+       {
+        "value": "e27",
+        "description": "Structure of the nuclear pore"
+       },
+       {
+        "value": "e28",
+        "description": "Structure and processing of pre rRNA"
+       },
+       {
+        "value": "e29",
+        "description": "Maturation of cytosolic and nuclear Fe-S proteins"
+       },
+       {
+        "value": "e30",
+        "description": "Lsm proteins and RNA processing"
+       },
+       {
+        "value": "e31",
+        "description": "Initiation of translation"
+       },
+       {
+        "value": "e32",
+        "description": "Histone acetylation"
+       },
+       {
+        "value": "e33",
+        "description": "Genes coding for protein traffic related proteins"
+       },
+       {
+        "value": "e34",
+        "description": "Epigenetic switching mechanisms"
+       },
+       {
+        "value": "e35",
+        "description": "Arginine and proline metabolism"
+       },
+       {
+        "value": "e36",
+        "description": "Transcription and processing of snRNAs"
+       },
+       {
+        "value": "e37",
+        "description": "Parasitophorous vacuole proteins"
+       },
+       {
+        "value": "e38",
+        "description": "Biogenesis of cytochrome oxidase"
+       },
+       {
+        "value": "e39",
+        "description": "Lysine acetylated proteins"
+       },
+       {
+        "value": "e40",
+        "description": "ATP synthase complex"
+       },
+       {
+        "value": "e41",
+        "description": "Protein factors in pre-mRNA 3'-end processing"
+       },
+       {
+        "value": "e42",
+        "description": "Protein kinase coding genes"
+       },
+       {
+        "value": "e43",
+        "description": "Gene gating and mRNA export"
+       },
+       {
+        "value": "e44",
+        "description": "Proteolytic processing of the MSP1/6/7 complex"
+       },
+       {
+        "value": "e45",
+        "description": "Eukaryotic fMet/N-End Rule Pathway"
+       },
+       {
+        "value": "e46",
+        "description": "Maurer's clefts"
+       },
+       {
+        "value": "e47",
+        "description": "Evolution of parasite resistance to antifolates"
+       },
+       {
+        "value": "e48",
+        "description": "Transcription in prokaryotes"
+       },
+       {
+        "value": "e49",
+        "description": "SNAREs and their accessories"
+       },
+       {
+        "value": "e50",
+        "description": "Myristoylated proteins"
+       },
+       {
+        "value": "e51",
+        "description": "Mitochondrial division"
+       },
+       {
+        "value": "e52",
+        "description": "Methionine and Polyamine metabolism"
+       },
+       {
+        "value": "e53",
+        "description": "Helicases"
+       },
+       {
+        "value": "e54",
+        "description": "Functions of the ER-Mitochondrial contacts"
+       },
+       {
+        "value": "e55",
+        "description": "Proteins with ATPase activity"
+       },
+       {
+        "value": "e56",
+        "description": "Biogenesis of Maurer's clefts"
+       },
+       {
+        "value": "e57",
+        "description": "Mitochondrial disulfide relay system"
+       },
+       {
+        "value": "e58",
+        "description": "Malaria infection disrupts nitric oxide metabolism"
+       },
+       {
+        "value": "e59",
+        "description": "Histone post-translational modifications landscape"
+       },
+       {
+        "value": "e60",
+        "description": "Important interacting proteins"
+       },
+       {
+        "value": "e61",
+        "description": "Genes of the apicoplast genome"
+       },
+       {
+        "value": "e62",
+        "description": "Plasmodium falciparum histone acetylation and methylation"
+       },
+       {
+        "value": "e63",
+        "description": "Sphingomyelin and ceramide metabolism"
+       },
+       {
+        "value": "e64",
+        "description": "Post-translational modification -SUMOylation"
+       },
+       {
+        "value": "e65",
+        "description": "P. falciparum genes harboring G-quadruplexes"
+       },
+       {
+        "value": "e66",
+        "description": "Localization and function of some Hsp40s and Hsp70s"
+       },
+       {
+        "value": "e67",
+        "description": "Transporters of the mitochondrial and apicoplast membranes"
+       },
+       {
+        "value": "e68",
+        "description": "Mechanism of ubiquitin transfer"
+       },
+       {
+        "value": "e69",
+        "description": "Nicotinate and nicotinamide metabolism"
+       },
+       {
+        "value": "e70",
+        "description": "Mechanism of resistance to artemisinin"
+       },
+       {
+        "value": "e71",
+        "description": "LysoPC depletion induces gene activity"
+       },
+       {
+        "value": "e72",
+        "description": "Proteins of erythrocyte-derived microvesicles"
+       },
+       {
+        "value": "e73",
+        "description": "Mechanisms of alternative splicing by splice site selection"
+       },
+       {
+        "value": "e74",
+        "description": "tRNA modifications"
+       },
+       {
+        "value": "e75",
+        "description": "Proteome of the parasitophorous vacuole"
+       },
+       {
+        "value": "e76",
+        "description": "Proteins interacting with DnaJ proteins"
+       },
+       {
+        "value": "e77",
+        "description": "Properties of proteins exported to erythrocyte"
+       },
+       {
+        "value": "e78",
+        "description": "Merozoite ligands, their erythrocyte receptors"
+       },
+       {
+        "value": "e79",
+        "description": "Histone chaperones"
+       },
+       {
+        "value": "e80",
+        "description": "ER-to Golgi, translocation and quality control"
+       },
+       {
+        "value": "e81",
+        "description": "Centriole proteins"
+       },
+       {
+        "value": "e82",
+        "description": "CCR4 - NOT complex"
+       },
+       {
+        "value": "e83",
+        "description": "SRP independent translocation of GPI anchored proteins"
+       },
+       {
+        "value": "e84",
+        "description": "Biogenesis and functions of mitochondrial cytochrome c"
+       },
+       {
+        "value": "e85",
+        "description": "Subcellular location of adaptor proteins"
+       },
+       {
+        "value": "e86",
+        "description": "Genomic landscape of splicing regulators"
+       },
+       {
+        "value": "e87",
+        "description": "The ATG autophagic pathway"
+       },
+       {
+        "value": "e88",
+        "description": "Approved drugs with anti-malarial activity and their possible targets"
+       },
+       {
+        "value": "e89",
+        "description": "Ribosomal structure"
+       },
+       {
+        "value": "e90",
+        "description": "Prenylated proteins"
+       },
+       {
+        "value": "e91",
+        "description": "ER Sec61 translocon"
+       },
+       {
+        "value": "e92",
+        "description": "Protein-protein associations involving proteases"
+       },
+       {
+        "value": "e93",
+        "description": "Crosstalk between ubiquitination and SUMOylation"
+       },
+       {
+        "value": "e94",
+        "description": "Maturation of snRNAs requires nuclear and cytoplasmic regulatory steps"
+       },
+       {
+        "value": "e95",
+        "description": "Drug targets"
+       },
+       {
+        "value": "e96",
+        "description": "S-Glutathionylated proteins"
+       },
+       {
+        "value": "e97",
+        "description": "PfEMP1 domain architectures"
+       },
+       {
+        "value": "e98",
+        "description": "In vitro resistance to experimental antimalarials"
+       },
+       {
+        "value": "e99",
+        "description": "G6PD deficiency and malaria"
+       },
+       {
+        "value": "e100",
+        "description": "Import and export through the nuclear pore"
+       },
+       {
+        "value": "e101",
+        "description": "Genes encoding ubiquitin-related reactions"
+       },
+       {
+        "value": "e102",
+        "description": "Terpenoid metabolism"
+       },
+       {
+        "value": "e103",
+        "description": "Splicing of pre-mRNA"
+       },
+       {
+        "value": "e104",
+        "description": "RNA binding proteins"
+       },
+       {
+        "value": "e105",
+        "description": "Parasite invasion ligands and human erythrocyte receptors"
+       },
+       {
+        "value": "e106",
+        "description": "Compartmentalization of transcription site in the nucleus"
+       },
+       {
+        "value": "e107",
+        "description": "Working model for recognition of a stalled ribosome by recycling factors"
+       },
+       {
+        "value": "e108",
+        "description": "Structure of the mitotic centrosome"
+       },
+       {
+        "value": "e109",
+        "description": "Asparagine and Aspartate metabolism"
+       },
+       {
+        "value": "e110",
+        "description": "mRNA-binding proteins in trophozoite and schizonts"
+       },
+       {
+        "value": "e111",
+        "description": "Calcium - calmodulin activation of protein kinases"
+       },
+       {
+        "value": "e112",
+        "description": "Thioredoxin, Glutaredoxin and Peroxiredoxin"
+       },
+       {
+        "value": "e113",
+        "description": "Protein arginine methylation"
+       },
+       {
+        "value": "e114",
+        "description": "KEOPS complex"
+       },
+       {
+        "value": "e115",
+        "description": "DNA-protein crosslink repair"
+       },
+       {
+        "value": "e116",
+        "description": "Chromatin modifying proteins"
+       },
+       {
+        "value": "e117",
+        "description": "Arginine-methylated proteins"
+       },
+       {
+        "value": "e118",
+        "description": "Assisted assembly of Sm-class snRNPs"
+       },
+       {
+        "value": "e119",
+        "description": "Pyrimidine metabolism"
+       },
+       {
+        "value": "e120",
+        "description": "Food vacuole proteome"
+       },
+       {
+        "value": "e121",
+        "description": "The 35 most abundant proteins"
+       },
+       {
+        "value": "e122",
+        "description": "Proteins released from infected cells during rupture"
+       },
+       {
+        "value": "e123",
+        "description": "Acetylation recognition by the bromodomain and other modules"
+       },
+       {
+        "value": "e124",
+        "description": "Phenylalanine and Tyrosine metabolism"
+       },
+       {
+        "value": "e125",
+        "description": "CUL3 ubiquitin ligase is regulated by a calcium-dependent co-adaptor"
+       },
+       {
+        "value": "e126",
+        "description": "Isoprenoids metabolism"
+       },
+       {
+        "value": "e127",
+        "description": "The proteome of the apicoplast"
+       },
+       {
+        "value": "e128",
+        "description": "Protein N-terminal acetylation"
+       },
+       {
+        "value": "e129",
+        "description": "Phosphatidylcholine metabolism"
+       },
+       {
+        "value": "e130",
+        "description": "Modification of proteins by adenylylation and ADP-ribosylation"
+       },
+       {
+        "value": "e131",
+        "description": "tRNA thiolation"
+       },
+       {
+        "value": "e132",
+        "description": "Plasmodium ubiquitin-protein conjugates"
+       },
+       {
+        "value": "e133",
+        "description": "Mannose and Fructose metabolism"
+       },
+       {
+        "value": "e134",
+        "description": "Different kinesins with different roles"
+       },
+       {
+        "value": "e135",
+        "description": "DNA Replication"
+       },
+       {
+        "value": "e136",
+        "description": "Control of the mitotic spindle organization by kinesins"
+       },
+       {
+        "value": "e137",
+        "description": "Control of microtubule assembly"
+       },
+       {
+        "value": "e138",
+        "description": "Biosynthesis of Fe-S proteins in the apicoplast"
+       },
+       {
+        "value": "e139",
+        "description": "Mitochondrial copper transport pathways to cytochrome C oxidase subunits"
+       },
+       {
+        "value": "e140",
+        "description": "Location and function of the six HSP70s in infected erythrocytes"
+       },
+       {
+        "value": "e141",
+        "description": "Alternative splicing events confirmed by RNA-Seq"
+       },
+       {
+        "value": "e142",
+        "description": "Signaling machinery in malaria parasites"
+       },
+       {
+        "value": "e143",
+        "description": "Ribosome recycling and mRNA surveillance"
+       },
+       {
+        "value": "e144",
+        "description": "Postulated artemisinins' modes of action"
+       },
+       {
+        "value": "e145",
+        "description": "Autophagy and autophagy-related pathways"
+       },
+       {
+        "value": "e146",
+        "description": "Hemozoin and b-hematin formation"
+       },
+       {
+        "value": "e147",
+        "description": "Assembly of the retromer complex"
+       },
+       {
+        "value": "e148",
+        "description": "Putative SUMO substrates"
+       },
+       {
+        "value": "e149",
+        "description": "Rosette formation between normal and infected RBC"
+       },
+       {
+        "value": "e150",
+        "description": "Proteins of the parasitophorous vacuolar membrane"
+       },
+       {
+        "value": "e151",
+        "description": "Organellar distribution of translation components"
+       },
+       {
+        "value": "e152",
+        "description": "Established and putative Maurer's clefts proteins"
+       },
+       {
+        "value": "e153",
+        "description": "Components of translation machinery in apicoplast"
+       },
+       {
+        "value": "e154",
+        "description": "CoA biosynthesis"
+       },
+       {
+        "value": "e155",
+        "description": "Subcellular location of exported proteins"
+       },
+       {
+        "value": "e156",
+        "description": "Plasmodium falciparum chromatin landscape"
+       },
+       {
+        "value": "e157",
+        "description": "Interactions of HDAC1 with other proteins"
+       },
+       {
+        "value": "e158",
+        "description": "eIF5A Functions globally in translation elongation and termination"
+       },
+       {
+        "value": "e159",
+        "description": "RNA polymerase I transcribes rRNA"
+       },
+       {
+        "value": "e160",
+        "description": "GARP (Golgi-associated retrograde protein) complex"
+       },
+       {
+        "value": "e161",
+        "description": "Essential metabolic genes"
+       },
+       {
+        "value": "e162",
+        "description": "Parasite proteins co-exported  with Hsp70x"
+       },
+       {
+        "value": "e163",
+        "description": "Location of lipid raft-associated proteins"
+       },
+       {
+        "value": "e164",
+        "description": "Proteins associated with detergent-resistant membrane (DRM)"
+       },
+       {
+        "value": "e165",
+        "description": "Regulators of alternative splicing"
+       },
+       {
+        "value": "e166",
+        "description": "RNA polymerase II transcribes mRNA"
+       },
+       {
+        "value": "e167",
+        "description": "Potential models for lncRNA-TARE at chromosome ends"
+       },
+       {
+        "value": "e168",
+        "description": "4-hydroxynonenal-modified proteins"
+       },
+       {
+        "value": "e169",
+        "description": "Transporters of the ER/Golgi and digestive vacuole membranes"
+       },
+       {
+        "value": "e170",
+        "description": "Functional annotation of merozoite invasion-related proteins"
+       },
+       {
+        "value": "e171",
+        "description": "Classical COPI-mediated vesicular transport"
+       },
+       {
+        "value": "e172",
+        "description": "One-carbon enzyme systems serine hydroxymethyltransferase and glycine-cleavage complex"
+       },
+       {
+        "value": "e173",
+        "description": "Drug-target associations predicted for P. falciparum"
+       },
+       {
+        "value": "e174",
+        "description": "Transcripts translationally regulated in asexual blood stages"
+       },
+       {
+        "value": "e175",
+        "description": "Top ranked surface exposed proteins"
+       },
+       {
+        "value": "e176",
+        "description": "Protein-lysine methylation and demethylation"
+       },
+       {
+        "value": "e177",
+        "description": "Classical COPII-mediated vesicular transport"
+       },
+       {
+        "value": "e178",
+        "description": "Bulk mRNA transport through the nuclear pore"
+       },
+       {
+        "value": "e179",
+        "description": "Karyopherin/exportin-mediated nuclear export pathways"
+       },
+       {
+        "value": "e180",
+        "description": "SNAREs are traffic-specific"
+       },
+       {
+        "value": "e181",
+        "description": "Candidate genes related to virulence"
+       },
+       {
+        "value": "e182",
+        "description": "Transcription related proteins encoding genes"
+       },
+       {
+        "value": "e183",
+        "description": "Subcellular localization of exported proteins"
+       },
+       {
+        "value": "e184",
+        "description": "Splicing and non-sense-mediated decay factors"
+       },
+       {
+        "value": "e185",
+        "description": "Post-translational modification of elongation factor 2"
+       },
+       {
+        "value": "e186",
+        "description": "Pre-replicative complex formation and transition to replication"
+       },
+       {
+        "value": "e187",
+        "description": "pH regulation in the parasite cytosol"
+       },
+       {
+        "value": "e188",
+        "description": "Utilization of phospholipids"
+       },
+       {
+        "value": "e189",
+        "description": "Thiamine metabolism"
+       },
+       {
+        "value": "e190",
+        "description": "The ubiquitylation machineries of the ER for misfolded secretory proteins"
+       },
+       {
+        "value": "e191",
+        "description": "Post-translational modifications identified of histones"
+       },
+       {
+        "value": "e192",
+        "description": "Nitrogen metabolism"
+       },
+       {
+        "value": "e193",
+        "description": "Molecular model of vesicle exocytosis"
+       },
+       {
+        "value": "e194",
+        "description": "Maturation and export of 60S and 40S ribosomal subunits"
+       },
+       {
+        "value": "e195",
+        "description": "Glycolysis"
+       },
+       {
+        "value": "e196",
+        "description": "Genes involved in DNA repair"
+       },
+       {
+        "value": "e197",
+        "description": "Epigenetic regulation of specific genes and gene families in Plasmodium falciparum"
+       },
+       {
+        "value": "e198",
+        "description": "Domains of merozoite surface proteins"
+       },
+       {
+        "value": "e199",
+        "description": "Dolichol metabolism"
+       },
+       {
+        "value": "e200",
+        "description": "Activation of the calcium and cAMP signaling pathway by melatonin"
+       },
+       {
+        "value": "e201",
+        "description": "Proteins targeted by the thioredoxin superfamily enzymes"
+       },
+       {
+        "value": "e202",
+        "description": "RNA polymerase III transcribes tRNA and 5S rRNA"
+       },
+       {
+        "value": "e203",
+        "description": "Classical clathrin-mediated vesicular transport"
+       },
+       {
+        "value": "e204",
+        "description": "Translocon of exported proteins (PTEX)"
+       },
+       {
+        "value": "e205",
+        "description": "Pathway for Cytoplasmic 60S maturation"
+       },
+       {
+        "value": "e206",
+        "description": "Pathway for Cytoplasmic 40S maturation"
+       },
+       {
+        "value": "e207",
+        "description": "Sugar nucleotide biosynthesis"
+       },
+       {
+        "value": "e208",
+        "description": "Organellar ribosomal proteins"
+       },
+       {
+        "value": "e209",
+        "description": "Porphyrin metabolism"
+       },
+       {
+        "value": "e210",
+        "description": "The structure of translation initiation factor 3"
+       },
+       {
+        "value": "e211",
+        "description": "Architecture, Dynamic Formation, and Processing of the 90S Pre-ribosome during Early Ribosome Biogenesis"
+       },
+       {
+        "value": "e212",
+        "description": "Heterochromatin structure of the telomeric and subtelomeric regions"
+       },
+       {
+        "value": "e213",
+        "description": "Apicoplast Kae1api-protein interactions"
+       },
+       {
+        "value": "e214",
+        "description": "Localization of aminoacyl-tRNA ligases in the three protein translational compartments"
+       },
+       {
+        "value": "e215",
+        "description": "Hsp90-associated multiprotein complex (R2TP-Hsp90 complex)"
+       },
+       {
+        "value": "e216",
+        "description": "Transcription associated proteins implicated in the transcriptional machinery"
+       },
+       {
+        "value": "e217",
+        "description": "Organization of chaperone pathways in the cytosol"
+       },
+       {
+        "value": "e218",
+        "description": "Enzymes involved in glycerophospholipid synthesis"
+       },
+       {
+        "value": "e219",
+        "description": "Total palmitome of Plasmodium falciparum"
+       },
+       {
+        "value": "e220",
+        "description": "Secondary structure of spliceosomal RNAs"
+       },
+       {
+        "value": "e221",
+        "description": "Parasite proteins that form complexes with natural products"
+       },
+       {
+        "value": "e222",
+        "description": "ADP ribosylation factors functions in the secretory pathway"
+       },
+       {
+        "value": "e223",
+        "description": "Interactions between modified host cell membrane and endothelial cell"
+       },
+       {
+        "value": "e224",
+        "description": "Assembly and recycling of spliceosome components with respect to Prp8"
+       },
+       {
+        "value": "e225",
+        "description": "Processing or protecting stalled replication forks"
+       },
+       {
+        "value": "e226",
+        "description": "Kinetochores power chromosome movements in mitosis"
+       },
+       {
+        "value": "e227",
+        "description": "Various features of C/D and H/ACA snoRNAs"
+       },
+       {
+        "value": "e228",
+        "description": "Rab proteins"
+       },
+       {
+        "value": "e229",
+        "description": "Exportome - compiled from various sources"
+       },
+       {
+        "value": "e230",
+        "description": "Structure and organization of centromeric chromatin"
+       },
+       {
+        "value": "e231",
+        "description": "Differential proteome analysis under drug treatment"
+       },
+       {
+        "value": "e232",
+        "description": "Shikimate biosynthesis"
+       },
+       {
+        "value": "e233",
+        "description": "Aminosugars metabolism"
+       },
+       {
+        "value": "e234",
+        "description": "Signal recognition particle-mediated targeting of membrane and secretory proteins"
+       },
+       {
+        "value": "e235",
+        "description": "Protein-Protein Interactions between Human Erythrocytes and Plasmodium falciparum"
+       },
+       {
+        "value": "e236",
+        "description": "General roles of deubiquitinases"
+       },
+       {
+        "value": "e237",
+        "description": "Base excision repair of AP sites"
+       },
+       {
+        "value": "e238",
+        "description": "Putative Golgi disassembly and reassembly mechanisms"
+       },
+       {
+        "value": "e239",
+        "description": "The Atg8 and Atg12 ubiquitin-like conjugation systems"
+       },
+       {
+        "value": "e240",
+        "description": "Ribosome-associated protein quality control"
+       },
+       {
+        "value": "e241",
+        "description": "Domains binding modified histones"
+       },
+       {
+        "value": "e242",
+        "description": "Anaphase promoting complex ubiquitin-ligase"
+       },
+       {
+        "value": "e243",
+        "description": "Pre-ribosomal particles along the 60S assembly pathway"
+       },
+       {
+        "value": "e244",
+        "description": "Pre-ribosomal particles along the 40S assembly pathway"
+       },
+       {
+        "value": "e245",
+        "description": "Oxidative protein folding in the endoplasmic reticulum"
+       },
+       {
+        "value": "e246",
+        "description": "The homeostasis of Ca2+ in malaria parasites"
+       },
+       {
+        "value": "e247",
+        "description": "Effect of different motors on spindle length"
+       },
+       {
+        "value": "e248",
+        "description": "ATP-dependent chromatin remodeling complexes"
+       },
+       {
+        "value": "e249",
+        "description": "Chaperone-assisted protein folding"
+       },
+       {
+        "value": "e250",
+        "description": "Putative role of PfSR25 in activation of Ca2+ signaling and stress survival"
+       },
+       {
+        "value": "e251",
+        "description": "Stage-specific involvement of cyclic nucleotide signaling components and calcium-dependent protein kinases"
+       },
+       {
+        "value": "e252",
+        "description": "Peptidases and proteases"
+       },
+       {
+        "value": "e253",
+        "description": "Protein composition of affinity-purified exon and B-like complexes"
+       },
+       {
+        "value": "none_fits",
+        "description": "The words name no one of these entries: they name a group, several entries without choosing one, or nothing listed; or each entry is obsolete, broader, narrower or about something else."
+       }
+      ]
+     }
+    ]
+   },
+   "response": {
+    "answers": [
+     {
+      "type": "choice",
+      "name": "value",
+      "choice": "e8",
+      "probabilities": [
+       {
+        "value": "e0",
+        "probability": 0.01
+       },
+       {
+        "value": "e1",
+        "probability": 0.0
+       },
+       {
+        "value": "e2",
+        "probability": 0.0
+       },
+       {
+        "value": "e3",
+        "probability": 0.0
+       },
+       {
+        "value": "e4",
+        "probability": 0.0
+       },
+       {
+        "value": "e5",
+        "probability": 0.0
+       },
+       {
+        "value": "e6",
+        "probability": 0.01
+       },
+       {
+        "value": "e7",
+        "probability": 0.01
+       },
+       {
+        "value": "e8",
+        "probability": 0.92
+       },
+       {
+        "value": "e9",
+        "probability": 0.01
+       },
+       {
+        "value": "e10",
+        "probability": 0.0
+       },
+       {
+        "value": "e11",
+        "probability": 0.0
+       },
+       {
+        "value": "e12",
+        "probability": 0.0
+       },
+       {
+        "value": "e13",
+        "probability": 0.0
+       },
+       {
+        "value": "e14",
+        "probability": 0.0
+       },
+       {
+        "value": "e15",
+        "probability": 0.0
+       },
+       {
+        "value": "e16",
+        "probability": 0.0
+       },
+       {
+        "value": "e17",
+        "probability": 0.0
+       },
+       {
+        "value": "e18",
+        "probability": 0.0
+       },
+       {
+        "value": "e19",
+        "probability": 0.0
+       },
+       {
+        "value": "e20",
+        "probability": 0.0
+       },
+       {
+        "value": "e21",
+        "probability": 0.0
+       },
+       {
+        "value": "e22",
+        "probability": 0.0
+       },
+       {
+        "value": "e23",
+        "probability": 0.0
+       },
+       {
+        "value": "e24",
+        "probability": 0.0
+       },
+       {
+        "value": "e25",
+        "probability": 0.0
+       },
+       {
+        "value": "e26",
+        "probability": 0.0
+       },
+       {
+        "value": "e27",
+        "probability": 0.0
+       },
+       {
+        "value": "e28",
+        "probability": 0.0
+       },
+       {
+        "value": "e29",
+        "probability": 0.0
+       },
+       {
+        "value": "e30",
+        "probability": 0.0
+       },
+       {
+        "value": "e31",
+        "probability": 0.0
+       },
+       {
+        "value": "e32",
+        "probability": 0.0
+       },
+       {
+        "value": "e33",
+        "probability": 0.0
+       },
+       {
+        "value": "e34",
+        "probability": 0.0
+       },
+       {
+        "value": "e35",
+        "probability": 0.0
+       },
+       {
+        "value": "e36",
+        "probability": 0.0
+       },
+       {
+        "value": "e37",
+        "probability": 0.0
+       },
+       {
+        "value": "e38",
+        "probability": 0.0
+       },
+       {
+        "value": "e39",
+        "probability": 0.0
+       },
+       {
+        "value": "e40",
+        "probability": 0.0
+       },
+       {
+        "value": "e41",
+        "probability": 0.0
+       },
+       {
+        "value": "e42",
+        "probability": 0.0
+       },
+       {
+        "value": "e43",
+        "probability": 0.0
+       },
+       {
+        "value": "e44",
+        "probability": 0.0
+       },
+       {
+        "value": "e45",
+        "probability": 0.0
+       },
+       {
+        "value": "e46",
+        "probability": 0.0
+       },
+       {
+        "value": "e47",
+        "probability": 0.0
+       },
+       {
+        "value": "e48",
+        "probability": 0.0
+       },
+       {
+        "value": "e49",
+        "probability": 0.0
+       },
+       {
+        "value": "e50",
+        "probability": 0.0
+       },
+       {
+        "value": "e51",
+        "probability": 0.0
+       },
+       {
+        "value": "e52",
+        "probability": 0.0
+       },
+       {
+        "value": "e53",
+        "probability": 0.0
+       },
+       {
+        "value": "e54",
+        "probability": 0.0
+       },
+       {
+        "value": "e55",
+        "probability": 0.0
+       },
+       {
+        "value": "e56",
+        "probability": 0.0
+       },
+       {
+        "value": "e57",
+        "probability": 0.0
+       },
+       {
+        "value": "e58",
+        "probability": 0.0
+       },
+       {
+        "value": "e59",
+        "probability": 0.0
+       },
+       {
+        "value": "e60",
+        "probability": 0.0
+       },
+       {
+        "value": "e61",
+        "probability": 0.0
+       },
+       {
+        "value": "e62",
+        "probability": 0.0
+       },
+       {
+        "value": "e63",
+        "probability": 0.0
+       },
+       {
+        "value": "e64",
+        "probability": 0.0
+       },
+       {
+        "value": "e65",
+        "probability": 0.0
+       },
+       {
+        "value": "e66",
+        "probability": 0.0
+       },
+       {
+        "value": "e67",
+        "probability": 0.0
+       },
+       {
+        "value": "e68",
+        "probability": 0.0
+       },
+       {
+        "value": "e69",
+        "probability": 0.0
+       },
+       {
+        "value": "e70",
+        "probability": 0.0
+       },
+       {
+        "value": "e71",
+        "probability": 0.0
+       },
+       {
+        "value": "e72",
+        "probability": 0.0
+       },
+       {
+        "value": "e73",
+        "probability": 0.0
+       },
+       {
+        "value": "e74",
+        "probability": 0.0
+       },
+       {
+        "value": "e75",
+        "probability": 0.0
+       },
+       {
+        "value": "e76",
+        "probability": 0.0
+       },
+       {
+        "value": "e77",
+        "probability": 0.0
+       },
+       {
+        "value": "e78",
+        "probability": 0.0
+       },
+       {
+        "value": "e79",
+        "probability": 0.0
+       },
+       {
+        "value": "e80",
+        "probability": 0.0
+       },
+       {
+        "value": "e81",
+        "probability": 0.0
+       },
+       {
+        "value": "e82",
+        "probability": 0.0
+       },
+       {
+        "value": "e83",
+        "probability": 0.0
+       },
+       {
+        "value": "e84",
+        "probability": 0.0
+       },
+       {
+        "value": "e85",
+        "probability": 0.0
+       },
+       {
+        "value": "e86",
+        "probability": 0.0
+       },
+       {
+        "value": "e87",
+        "probability": 0.0
+       },
+       {
+        "value": "e88",
+        "probability": 0.0
+       },
+       {
+        "value": "e89",
+        "probability": 0.0
+       },
+       {
+        "value": "e90",
+        "probability": 0.0
+       },
+       {
+        "value": "e91",
+        "probability": 0.0
+       },
+       {
+        "value": "e92",
+        "probability": 0.0
+       },
+       {
+        "value": "e93",
+        "probability": 0.0
+       },
+       {
+        "value": "e94",
+        "probability": 0.0
+       },
+       {
+        "value": "e95",
+        "probability": 0.0
+       },
+       {
+        "value": "e96",
+        "probability": 0.0
+       },
+       {
+        "value": "e97",
+        "probability": 0.0
+       },
+       {
+        "value": "e98",
+        "probability": 0.0
+       },
+       {
+        "value": "e99",
+        "probability": 0.0
+       },
+       {
+        "value": "e100",
+        "probability": 0.0
+       },
+       {
+        "value": "e101",
+        "probability": 0.0
+       },
+       {
+        "value": "e102",
+        "probability": 0.0
+       },
+       {
+        "value": "e103",
+        "probability": 0.0
+       },
+       {
+        "value": "e104",
+        "probability": 0.0
+       },
+       {
+        "value": "e105",
+        "probability": 0.0
+       },
+       {
+        "value": "e106",
+        "probability": 0.0
+       },
+       {
+        "value": "e107",
+        "probability": 0.0
+       },
+       {
+        "value": "e108",
+        "probability": 0.0
+       },
+       {
+        "value": "e109",
+        "probability": 0.0
+       },
+       {
+        "value": "e110",
+        "probability": 0.0
+       },
+       {
+        "value": "e111",
+        "probability": 0.0
+       },
+       {
+        "value": "e112",
+        "probability": 0.0
+       },
+       {
+        "value": "e113",
+        "probability": 0.0
+       },
+       {
+        "value": "e114",
+        "probability": 0.0
+       },
+       {
+        "value": "e115",
+        "probability": 0.0
+       },
+       {
+        "value": "e116",
+        "probability": 0.0
+       },
+       {
+        "value": "e117",
+        "probability": 0.0
+       },
+       {
+        "value": "e118",
+        "probability": 0.0
+       },
+       {
+        "value": "e119",
+        "probability": 0.0
+       },
+       {
+        "value": "e120",
+        "probability": 0.0
+       },
+       {
+        "value": "e121",
+        "probability": 0.0
+       },
+       {
+        "value": "e122",
+        "probability": 0.0
+       },
+       {
+        "value": "e123",
+        "probability": 0.0
+       },
+       {
+        "value": "e124",
+        "probability": 0.0
+       },
+       {
+        "value": "e125",
+        "probability": 0.0
+       },
+       {
+        "value": "e126",
+        "probability": 0.0
+       },
+       {
+        "value": "e127",
+        "probability": 0.0
+       },
+       {
+        "value": "e128",
+        "probability": 0.0
+       },
+       {
+        "value": "e129",
+        "probability": 0.0
+       },
+       {
+        "value": "e130",
+        "probability": 0.0
+       },
+       {
+        "value": "e131",
+        "probability": 0.0
+       },
+       {
+        "value": "e132",
+        "probability": 0.0
+       },
+       {
+        "value": "e133",
+        "probability": 0.0
+       },
+       {
+        "value": "e134",
+        "probability": 0.0
+       },
+       {
+        "value": "e135",
+        "probability": 0.0
+       },
+       {
+        "value": "e136",
+        "probability": 0.0
+       },
+       {
+        "value": "e137",
+        "probability": 0.0
+       },
+       {
+        "value": "e138",
+        "probability": 0.0
+       },
+       {
+        "value": "e139",
+        "probability": 0.0
+       },
+       {
+        "value": "e140",
+        "probability": 0.0
+       },
+       {
+        "value": "e141",
+        "probability": 0.0
+       },
+       {
+        "value": "e142",
+        "probability": 0.0
+       },
+       {
+        "value": "e143",
+        "probability": 0.0
+       },
+       {
+        "value": "e144",
+        "probability": 0.0
+       },
+       {
+        "value": "e145",
+        "probability": 0.0
+       },
+       {
+        "value": "e146",
+        "probability": 0.0
+       },
+       {
+        "value": "e147",
+        "probability": 0.0
+       },
+       {
+        "value": "e148",
+        "probability": 0.0
+       },
+       {
+        "value": "e149",
+        "probability": 0.0
+       },
+       {
+        "value": "e150",
+        "probability": 0.0
+       },
+       {
+        "value": "e151",
+        "probability": 0.0
+       },
+       {
+        "value": "e152",
+        "probability": 0.0
+       },
+       {
+        "value": "e153",
+        "probability": 0.0
+       },
+       {
+        "value": "e154",
+        "probability": 0.0
+       },
+       {
+        "value": "e155",
+        "probability": 0.0
+       },
+       {
+        "value": "e156",
+        "probability": 0.0
+       },
+       {
+        "value": "e157",
+        "probability": 0.0
+       },
+       {
+        "value": "e158",
+        "probability": 0.0
+       },
+       {
+        "value": "e159",
+        "probability": 0.0
+       },
+       {
+        "value": "e160",
+        "probability": 0.0
+       },
+       {
+        "value": "e161",
+        "probability": 0.0
+       },
+       {
+        "value": "e162",
+        "probability": 0.0
+       },
+       {
+        "value": "e163",
+        "probability": 0.0
+       },
+       {
+        "value": "e164",
+        "probability": 0.0
+       },
+       {
+        "value": "e165",
+        "probability": 0.0
+       },
+       {
+        "value": "e166",
+        "probability": 0.0
+       },
+       {
+        "value": "e167",
+        "probability": 0.0
+       },
+       {
+        "value": "e168",
+        "probability": 0.0
+       },
+       {
+        "value": "e169",
+        "probability": 0.0
+       },
+       {
+        "value": "e170",
+        "probability": 0.0
+       },
+       {
+        "value": "e171",
+        "probability": 0.0
+       },
+       {
+        "value": "e172",
+        "probability": 0.0
+       },
+       {
+        "value": "e173",
+        "probability": 0.0
+       },
+       {
+        "value": "e174",
+        "probability": 0.0
+       },
+       {
+        "value": "e175",
+        "probability": 0.0
+       },
+       {
+        "value": "e176",
+        "probability": 0.0
+       },
+       {
+        "value": "e177",
+        "probability": 0.0
+       },
+       {
+        "value": "e178",
+        "probability": 0.0
+       },
+       {
+        "value": "e179",
+        "probability": 0.0
+       },
+       {
+        "value": "e180",
+        "probability": 0.0
+       },
+       {
+        "value": "e181",
+        "probability": 0.0
+       },
+       {
+        "value": "e182",
+        "probability": 0.0
+       },
+       {
+        "value": "e183",
+        "probability": 0.0
+       },
+       {
+        "value": "e184",
+        "probability": 0.0
+       },
+       {
+        "value": "e185",
+        "probability": 0.0
+       },
+       {
+        "value": "e186",
+        "probability": 0.0
+       },
+       {
+        "value": "e187",
+        "probability": 0.0
+       },
+       {
+        "value": "e188",
+        "probability": 0.0
+       },
+       {
+        "value": "e189",
+        "probability": 0.0
+       },
+       {
+        "value": "e190",
+        "probability": 0.0
+       },
+       {
+        "value": "e191",
+        "probability": 0.0
+       },
+       {
+        "value": "e192",
+        "probability": 0.0
+       },
+       {
+        "value": "e193",
+        "probability": 0.0
+       },
+       {
+        "value": "e194",
+        "probability": 0.0
+       },
+       {
+        "value": "e195",
+        "probability": 0.0
+       },
+       {
+        "value": "e196",
+        "probability": 0.0
+       },
+       {
+        "value": "e197",
+        "probability": 0.0
+       },
+       {
+        "value": "e198",
+        "probability": 0.0
+       },
+       {
+        "value": "e199",
+        "probability": 0.0
+       },
+       {
+        "value": "e200",
+        "probability": 0.0
+       },
+       {
+        "value": "e201",
+        "probability": 0.0
+       },
+       {
+        "value": "e202",
+        "probability": 0.0
+       },
+       {
+        "value": "e203",
+        "probability": 0.0
+       },
+       {
+        "value": "e204",
+        "probability": 0.0
+       },
+       {
+        "value": "e205",
+        "probability": 0.0
+       },
+       {
+        "value": "e206",
+        "probability": 0.0
+       },
+       {
+        "value": "e207",
+        "probability": 0.0
+       },
+       {
+        "value": "e208",
+        "probability": 0.0
+       },
+       {
+        "value": "e209",
+        "probability": 0.0
+       },
+       {
+        "value": "e210",
+        "probability": 0.0
+       },
+       {
+        "value": "e211",
+        "probability": 0.0
+       },
+       {
+        "value": "e212",
+        "probability": 0.0
+       },
+       {
+        "value": "e213",
+        "probability": 0.0
+       },
+       {
+        "value": "e214",
+        "probability": 0.0
+       },
+       {
+        "value": "e215",
+        "probability": 0.0
+       },
+       {
+        "value": "e216",
+        "probability": 0.0
+       },
+       {
+        "value": "e217",
+        "probability": 0.0
+       },
+       {
+        "value": "e218",
+        "probability": 0.0
+       },
+       {
+        "value": "e219",
+        "probability": 0.0
+       },
+       {
+        "value": "e220",
+        "probability": 0.0
+       },
+       {
+        "value": "e221",
+        "probability": 0.0
+       },
+       {
+        "value": "e222",
+        "probability": 0.0
+       },
+       {
+        "value": "e223",
+        "probability": 0.0
+       },
+       {
+        "value": "e224",
+        "probability": 0.0
+       },
+       {
+        "value": "e225",
+        "probability": 0.0
+       },
+       {
+        "value": "e226",
+        "probability": 0.0
+       },
+       {
+        "value": "e227",
+        "probability": 0.0
+       },
+       {
+        "value": "e228",
+        "probability": 0.0
+       },
+       {
+        "value": "e229",
+        "probability": 0.0
+       },
+       {
+        "value": "e230",
+        "probability": 0.0
+       },
+       {
+        "value": "e231",
+        "probability": 0.0
+       },
+       {
+        "value": "e232",
+        "probability": 0.0
+       },
+       {
+        "value": "e233",
+        "probability": 0.0
+       },
+       {
+        "value": "e234",
+        "probability": 0.0
+       },
+       {
+        "value": "e235",
+        "probability": 0.0
+       },
+       {
+        "value": "e236",
+        "probability": 0.0
+       },
+       {
+        "value": "e237",
+        "probability": 0.0
+       },
+       {
+        "value": "e238",
+        "probability": 0.0
+       },
+       {
+        "value": "e239",
+        "probability": 0.0
+       },
+       {
+        "value": "e240",
+        "probability": 0.0
+       },
+       {
+        "value": "e241",
+        "probability": 0.0
+       },
+       {
+        "value": "e242",
+        "probability": 0.0
+       },
+       {
+        "value": "e243",
+        "probability": 0.0
+       },
+       {
+        "value": "e244",
+        "probability": 0.0
+       },
+       {
+        "value": "e245",
+        "probability": 0.0
+       },
+       {
+        "value": "e246",
+        "probability": 0.0
+       },
+       {
+        "value": "e247",
+        "probability": 0.0
+       },
+       {
+        "value": "e248",
+        "probability": 0.0
+       },
+       {
+        "value": "e249",
+        "probability": 0.0
+       },
+       {
+        "value": "e250",
+        "probability": 0.0
+       },
+       {
+        "value": "e251",
+        "probability": 0.0
+       },
+       {
+        "value": "e252",
+        "probability": 0.01
+       },
+       {
+        "value": "e253",
+        "probability": 0.01
+       },
+       {
+        "value": "none_fits",
+        "probability": 0.02
+       }
+      ],
+      "confidence": 0.92
+     }
+    ],
+    "usage": {
+     "input_tokens": 3912,
+     "cached_tokens": 0,
+     "cache_write_tokens": 0
+    }
+   }
+  }
+ ]
+}

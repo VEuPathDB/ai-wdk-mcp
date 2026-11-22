@@ -21,8 +21,9 @@ warning. When `decide` answers None, the read returns what it returned before.
   and semantic ranking stays as it was. A pick inside the ranking gets
   `decision_probability`. The picks the ranking does not hold come after it, by
   probability, with no `relevance`.
-The read holds no rule for a term, a search or a site. No vocabulary read asks the
-service: [a stated term names an entry or is refused with candidates](a-stated-term-names-an-entry-or-is-refused-with-candidates.md).
+The read holds no rule for a term, a search or a site. A vocabulary refusal asks the
+service only to order the candidates it shows, never to bind:
+[a stated term names an entry or is refused with candidates](a-stated-term-names-an-entry-or-is-refused-with-candidates.md).
 
 # The searches offered whatever the ranking
 

@@ -1,0 +1,2087 @@
+{
+ "provenance": {
+  "row": "r287",
+  "arm": "choice",
+  "vocabulary": "plasmodb_interpro",
+  "phrase": "serine/threonine protein kinase",
+  "model": "gpt-6-luna",
+  "request_builder": "veupathdb_mcp.catalog.vocab_resolve.resolve_request",
+  "mcp": "b14b810",
+  "client": "veupathdb-py 0.9.0b10",
+  "recorded_for": "the offline vocabulary A/B, labelled set row r287; replayed to order a refusal's candidates"
+ },
+ "exchanges": [
+  {
+   "request": {
+    "model": "gpt-6-luna",
+    "input": "VEuPathDB site: plasmodb. Parameter: Specific Domain(s).\nThe researcher's words: \"serine/threonine protein kinase\"",
+    "questions": [
+     {
+      "type": "choice",
+      "name": "value",
+      "instructions": "Which entry of the parameter do the researcher's words name? Read each label. Choose none_fits when the words name a group, several entries without choosing one, or nothing listed.",
+      "choices": [
+       {
+        "value": "e0",
+        "description": "IPR050205 : SERINE/THREONINE-PROTEIN KINASE"
+       },
+       {
+        "value": "e1",
+        "description": "IPR051681 : SERINE/THREONINE-PROTEIN KINASE TNNI3K-RELATED"
+       },
+       {
+        "value": "e2",
+        "description": "IPR030616 : SERINE/THREONINE-PROTEIN KINASE IAL-RELATED"
+       },
+       {
+        "value": "e3",
+        "description": "IPR045269 : SERINE/THREONINE-PROTEIN KINASE UNC-51-RELATED"
+       },
+       {
+        "value": "e4",
+        "description": "IPR051272 : SERINE/THREONINE-PROTEIN KINASE RIO1"
+       },
+       {
+        "value": "e5",
+        "description": "IPR050167 : SERINE-THREONINE PROTEIN KINASE"
+       },
+       {
+        "value": "e6",
+        "description": "IPR051175 : SERINE/THREONINE-PROTEIN KINASE DOA-RELATED"
+       },
+       {
+        "value": "e7",
+        "description": "IPR050660 : SERINE/THREONINE-PROTEIN KINASE NEK"
+       },
+       {
+        "value": "e8",
+        "description": "IPR050236 : SERINE/THREONINE-PROTEIN KINASE"
+       },
+       {
+        "value": "e9",
+        "description": "IPR038765 : Cysteine proteinases"
+       },
+       {
+        "value": "e10",
+        "description": "IPR031675 : Serine-threonine protein phosphatase N-terminal domain"
+       },
+       {
+        "value": "e11",
+        "description": "IPR002067 : Mitochondrial carrier protein signature"
+       },
+       {
+        "value": "e12",
+        "description": "IPR014044 : Cysteine-rich secretory protein family"
+       },
+       {
+        "value": "e13",
+        "description": "IPR037239 : Oxysterol-binding protein-like"
+       },
+       {
+        "value": "e14",
+        "description": "IPR042091 : Spindle and kinetochore-associated protein 2"
+       },
+       {
+        "value": "e15",
+        "description": "IPR015120 : Siah interacting protein, N terminal"
+       },
+       {
+        "value": "e16",
+        "description": "IPR000424 : Single-strand binding protein family"
+       },
+       {
+        "value": "e17",
+        "description": "IPR006325 : signal recognition particle protein SRP54"
+       },
+       {
+        "value": "e18",
+        "description": "IPR032174 : Intron-binding protein aquarius N-terminal"
+       },
+       {
+        "value": "e19",
+        "description": "IPR034907 : Nucleoside diphosphate kinase"
+       },
+       {
+        "value": "e20",
+        "description": "IPR009000 : Translation proteins"
+       },
+       {
+        "value": "e21",
+        "description": "IPR022075 : Symplekin tight junction protein C terminal"
+       },
+       {
+        "value": "e22",
+        "description": "IPR000648 : Oxysterol-binding protein"
+       },
+       {
+        "value": "e23",
+        "description": "IPR000969 : Structure-specific recognition protein signature"
+       },
+       {
+        "value": "e24",
+        "description": "IPR012725 : Chaperone protein DnaK [dnaK]."
+       },
+       {
+        "value": "e25",
+        "description": "IPR012724 : Chaperone protein DnaJ [dnaJ]."
+       },
+       {
+        "value": "e26",
+        "description": "IPR008049 : Mini-chromosome maintenance (MCM) protein 6 signature"
+       },
+       {
+        "value": "e27",
+        "description": "IPR008047 : Mini-chromosome maintenance (MCM) protein 4 signature"
+       },
+       {
+        "value": "e28",
+        "description": "IPR008046 : Mini-chromosome maintenance (MCM) protein 3 signature"
+       },
+       {
+        "value": "e29",
+        "description": "IPR008045 : Mini-chromosome maintenance (MCM) protein 2 signature"
+       },
+       {
+        "value": "e30",
+        "description": "IPR048966 : Intron-binding protein aquarius, beta-barrel"
+       },
+       {
+        "value": "e31",
+        "description": "IPR011722 : Hemimethylated DNA-binding protein YccV like"
+       },
+       {
+        "value": "e32",
+        "description": "IPR004616 : Leucyl/phenylalanyl-tRNA protein transferase"
+       },
+       {
+        "value": "e33",
+        "description": "IPR010675 : Bicoid-interacting protein 3 (Bin3)"
+       },
+       {
+        "value": "e34",
+        "description": "IPR004143 : Biotin/lipoate A/B protein ligase family"
+       },
+       {
+        "value": "e35",
+        "description": "IPR031657 : Replication protein A OB domain"
+       },
+       {
+        "value": "e36",
+        "description": "IPR040131 : Glucose inhibited division protein A"
+       },
+       {
+        "value": "e37",
+        "description": "IPR008991 : Translation proteins SH3-like domain"
+       },
+       {
+        "value": "e38",
+        "description": "IPR004728 : Translocation protein Sec62"
+       },
+       {
+        "value": "e39",
+        "description": "IPR005225 : small GTP-binding protein domain"
+       },
+       {
+        "value": "e40",
+        "description": "IPR004405 : mRNA surveillance protein pelota"
+       },
+       {
+        "value": "e41",
+        "description": "IPR036561 : Mitochondrial glycoprotein MAM33-like"
+       },
+       {
+        "value": "e42",
+        "description": "IPR014758 : methionine--tRNA ligase"
+       },
+       {
+        "value": "e43",
+        "description": "IPR016188 : AIR synthase related protein, N-terminal domain"
+       },
+       {
+        "value": "e44",
+        "description": "IPR013969 : Oligosaccharide biosynthesis protein Alg14 like"
+       },
+       {
+        "value": "e45",
+        "description": "IPR010918 : AIR synthase related protein, C-terminal domain"
+       },
+       {
+        "value": "e46",
+        "description": "IPR049007 : Myosin A tail domain interacting protein, N-terminal"
+       },
+       {
+        "value": "e47",
+        "description": "IPR001365 : Adenosine deaminase"
+       },
+       {
+        "value": "e48",
+        "description": "IPR032189 : DNA mismatch repair protein Mlh1 C-terminus"
+       },
+       {
+        "value": "e49",
+        "description": "IPR019491 : Bacterial lipoate protein ligase C-terminus"
+       },
+       {
+        "value": "e50",
+        "description": "IPR038286 : Inositol polyphosphate kinase"
+       },
+       {
+        "value": "e51",
+        "description": "IPR009003 : Trypsin-like serine proteases"
+       },
+       {
+        "value": "e52",
+        "description": "IPR004806 : DNA repair protein Rad23 signature"
+       },
+       {
+        "value": "e53",
+        "description": "IPR007705 : Vesicle transport v-SNARE protein N-terminus"
+       },
+       {
+        "value": "e54",
+        "description": "IPR005635 : Inner centromere protein, ARK binding region"
+       },
+       {
+        "value": "e55",
+        "description": "IPR002133 : methionine adenosyltransferase"
+       },
+       {
+        "value": "e56",
+        "description": "IPR013842 : GTP-binding protein LepA C-terminus"
+       },
+       {
+        "value": "e57",
+        "description": "IPR036901 : Aspartate/ornithine carbamoyltransferase"
+       },
+       {
+        "value": "e58",
+        "description": "IPR006786 : pinin/SDK/memA/ protein conserved region"
+       },
+       {
+        "value": "e59",
+        "description": "IPR003210 : Signal recognition particle 14kD protein"
+       },
+       {
+        "value": "e60",
+        "description": "IPR010989 : t-snare proteins"
+       },
+       {
+        "value": "e61",
+        "description": "IPR001047 : ribosomal protein eS8"
+       },
+       {
+        "value": "e62",
+        "description": "IPR003428 : Mitochondrial glycoprotein"
+       },
+       {
+        "value": "e63",
+        "description": "IPR048738 : Centrosomal protein CEP104, ZnF"
+       },
+       {
+        "value": "e64",
+        "description": "IPR022636 : S-adenosylmethionine synthetase"
+       },
+       {
+        "value": "e65",
+        "description": "IPR036443 : Ran binding protein zinc finger-like"
+       },
+       {
+        "value": "e66",
+        "description": "IPR001564 : Nucleoside diphosphate kinase [ndk]."
+       },
+       {
+        "value": "e67",
+        "description": "IPR029021 : (Phosphotyrosine protein) phosphatases II"
+       },
+       {
+        "value": "e68",
+        "description": "IPR026898 : PrsW family intramembrane metalloprotease"
+       },
+       {
+        "value": "e69",
+        "description": "IPR022941 : Signal recognition particle 54 kDa protein [srp54]."
+       },
+       {
+        "value": "e70",
+        "description": "IPR056288 : Centrosomal protein of 76 kDa C-terminal domain"
+       },
+       {
+        "value": "e71",
+        "description": "IPR048283 : Adenosylmethionine decarboxylase"
+       },
+       {
+        "value": "e72",
+        "description": "IPR037198 : DNA mismatch repair protein MutL"
+       },
+       {
+        "value": "e73",
+        "description": "IPR025424 : YrhK-like protein"
+       },
+       {
+        "value": "e74",
+        "description": "IPR021911 : ATPase family AAA domain-containing protein 3, N-terminal"
+       },
+       {
+        "value": "e75",
+        "description": "IPR008825 : S-antigen protein"
+       },
+       {
+        "value": "e76",
+        "description": "IPR005344 : Transmembrane protein 33/Nucleoporin POM33"
+       },
+       {
+        "value": "e77",
+        "description": "IPR004843 : Calcineurin-like phosphoesterase"
+       },
+       {
+        "value": "e78",
+        "description": "IPR002737 : Memo-like protein"
+       },
+       {
+        "value": "e79",
+        "description": "IPR002674 : ribosomal protein eL43"
+       },
+       {
+        "value": "e80",
+        "description": "IPR004360 : Glyoxalase/Bleomycin resistance protein/Dioxygenase superfamily"
+       },
+       {
+        "value": "e81",
+        "description": "IPR056431 : C2 domain-containing protein 5, YbjQ-like domain"
+       },
+       {
+        "value": "e82",
+        "description": "IPR039432 : Signal recognition particle 9 kDa protein (SRP9)"
+       },
+       {
+        "value": "e83",
+        "description": "IPR001876 : Zn-finger in Ran binding protein and others"
+       },
+       {
+        "value": "e84",
+        "description": "IPR038725 : Pyridoxamine 5'-phosphate oxidase like"
+       },
+       {
+        "value": "e85",
+        "description": "IPR002932 : Conserved region in glutamate synthase"
+       },
+       {
+        "value": "e86",
+        "description": "IPR002347 : Enoyl-(Acyl carrier protein) reductase"
+       },
+       {
+        "value": "e87",
+        "description": "IPR027521 : Uncharacterised conserved protein"
+       },
+       {
+        "value": "e88",
+        "description": "IPR024586 : DnaJ-like protein C11, C-terminal"
+       },
+       {
+        "value": "e89",
+        "description": "IPR019155 : Uncharacterised conserved protein"
+       },
+       {
+        "value": "e90",
+        "description": "IPR003231 : Acyl carrier protein [acpP]."
+       },
+       {
+        "value": "e91",
+        "description": "IPR013598 : Exportin 1-like protein"
+       },
+       {
+        "value": "e92",
+        "description": "IPR004240 : Endomembrane protein 70"
+       },
+       {
+        "value": "e93",
+        "description": "IPR000001 : Kringle domain profile."
+       },
+       {
+        "value": "e94",
+        "description": "IPR035985 : Activating enzymes of the ubiquitin-like proteins"
+       },
+       {
+        "value": "e95",
+        "description": "IPR013936 : CRT-like, chloroquine-resistance transporter-like"
+       },
+       {
+        "value": "e96",
+        "description": "IPR013892 : Cytochrome c oxidase biogenesis protein Cmc1 like"
+       },
+       {
+        "value": "e97",
+        "description": "IPR015894 : Guanylate-binding protein, N-terminal domain"
+       },
+       {
+        "value": "e98",
+        "description": "IPR027546 : NAD-dependent protein deacylase [cobB]."
+       },
+       {
+        "value": "e99",
+        "description": "IPR007177 : Ribosome biogenesis protein, C-terminal"
+       },
+       {
+        "value": "e100",
+        "description": "IPR016067 : S-adenosylmethionine decarboxylase"
+       },
+       {
+        "value": "e101",
+        "description": "IPR012916 : RED-like protein N-terminal region"
+       },
+       {
+        "value": "e102",
+        "description": "IPR008010 : Eukaryotic membrane protein family"
+       },
+       {
+        "value": "e103",
+        "description": "IPR011009 : Protein kinase-like (PK-like)"
+       },
+       {
+        "value": "e104",
+        "description": "IPR009292 : rRNA biogenesis protein RRP36"
+       },
+       {
+        "value": "e105",
+        "description": "IPR036469 : Gametocyte protein Pfg27"
+       },
+       {
+        "value": "e106",
+        "description": "IPR022089 : Tryptophan-Threonine-rich plasmodium antigen C terminal"
+       },
+       {
+        "value": "e107",
+        "description": "IPR031703 : Lipin/Ned1/Smp2 multi-domain protein middle domain"
+       },
+       {
+        "value": "e108",
+        "description": "IPR019148 : Nuclear protein Es2"
+       },
+       {
+        "value": "e109",
+        "description": "IPR002415 : High mobility group-like nuclear protein signature"
+       },
+       {
+        "value": "e110",
+        "description": "IPR001045 : spermidine synthase"
+       },
+       {
+        "value": "e111",
+        "description": "IPR048739 : Centrosomal protein CEP104, N-terminal domain"
+       },
+       {
+        "value": "e112",
+        "description": "IPR010901 : Merozoite surface protein 1 (MSP1) C-terminus"
+       },
+       {
+        "value": "e113",
+        "description": "IPR003067 : Plasmodium circumsporozoite protein signature"
+       },
+       {
+        "value": "e114",
+        "description": "IPR033290 : Coiled-coil domain-containing protein 39"
+       },
+       {
+        "value": "e115",
+        "description": "IPR032396 : Centriolar protein SAS N-terminal domain"
+       },
+       {
+        "value": "e116",
+        "description": "IPR032277 : 40S ribosomal protein S4 C-terminus"
+       },
+       {
+        "value": "e117",
+        "description": "IPR027437 : 30s ribosomal protein s13, domain 2"
+       },
+       {
+        "value": "e118",
+        "description": "IPR019496 : FMR1-interacting protein 1 (NUFIP1)"
+       },
+       {
+        "value": "e119",
+        "description": "IPR013870 : Mitochondrial ribosomal protein L37"
+       },
+       {
+        "value": "e120",
+        "description": "IPR007603 : Plasma-membrane choline transporter"
+       },
+       {
+        "value": "e121",
+        "description": "IPR036045 : Sec1/munc18-like (SM) proteins"
+       },
+       {
+        "value": "e122",
+        "description": "IPR022086 : Inner membrane complex protein"
+       },
+       {
+        "value": "e123",
+        "description": "IPR013970 : Replication factor A protein 3"
+       },
+       {
+        "value": "e124",
+        "description": "IPR013926 : Kinase binding protein CGI-121"
+       },
+       {
+        "value": "e125",
+        "description": "IPR003021 : Repair protein Rad1/Rec1/Rad17"
+       },
+       {
+        "value": "e126",
+        "description": "IPR002320 : Threonine--tRNA ligase [thrS]."
+       },
+       {
+        "value": "e127",
+        "description": "IPR003994 : Ubiquitously expressed transcript protein signature"
+       },
+       {
+        "value": "e128",
+        "description": "IPR000806 : Rab GDI protein signature"
+       },
+       {
+        "value": "e129",
+        "description": "IPR040637 : Insertion domain in 60S ribosomal protein L10P"
+       },
+       {
+        "value": "e130",
+        "description": "IPR023184 : Ubiquinol-cytochrome C reductase hinge protein"
+       },
+       {
+        "value": "e131",
+        "description": "IPR004568 : phosphopantetheine--protein transferase domain"
+       },
+       {
+        "value": "e132",
+        "description": "IPR036726 : Obg GTP-binding protein N-terminal domain"
+       },
+       {
+        "value": "e133",
+        "description": "IPR019987 : Probable GTP-binding protein EngB [engB]."
+       },
+       {
+        "value": "e134",
+        "description": "IPR002809 : Integral membrane protein EMC3/TMCO1-like"
+       },
+       {
+        "value": "e135",
+        "description": "IPR022023 : U1 small nuclear ribonucleoprotein of 70kDa MW N terminal"
+       },
+       {
+        "value": "e136",
+        "description": "IPR045464 : F-box only protein C-terminal region"
+       },
+       {
+        "value": "e137",
+        "description": "IPR006096 : Glutamate/Leucine/Phenylalanine/Valine dehydrogenase"
+       },
+       {
+        "value": "e138",
+        "description": "IPR010441 : CH-like domain in sperm protein"
+       },
+       {
+        "value": "e139",
+        "description": "IPR005336 : Mitochondrial pyruvate carriers"
+       },
+       {
+        "value": "e140",
+        "description": "IPR054414 : Coiled-coil domain-containing protein 124 /Oxs1"
+       },
+       {
+        "value": "e141",
+        "description": "IPR019541 : Trappin protein transglutaminase binding domain"
+       },
+       {
+        "value": "e142",
+        "description": "IPR043141 : Ribosomal protein L10-like"
+       },
+       {
+        "value": "e143",
+        "description": "IPR022742 : Serine aminopeptidase, S33"
+       },
+       {
+        "value": "e144",
+        "description": "IPR011035 : Ribosomal protein L25-like"
+       },
+       {
+        "value": "e145",
+        "description": "IPR000652 : triose-phosphate isomerase"
+       },
+       {
+        "value": "e146",
+        "description": "IPR055261 : Phosphatidylinositol transfer protein"
+       },
+       {
+        "value": "e147",
+        "description": "IPR035368 : Nrap protein domain 3"
+       },
+       {
+        "value": "e148",
+        "description": "IPR029068 : Glyoxalase/Bleomycin resistance protein/Dihydroxybiphenyl dioxygenase"
+       },
+       {
+        "value": "e149",
+        "description": "IPR027485 : Hypothetical protein ph0010; domain 1"
+       },
+       {
+        "value": "e150",
+        "description": "IPR022309 : Ribosomal protein S8e"
+       },
+       {
+        "value": "e151",
+        "description": "IPR013272 : YL1 nuclear protein C-terminal domain"
+       },
+       {
+        "value": "e152",
+        "description": "IPR011641 : Tyrosine-protein kinase ephrin type A/B receptor-like"
+       },
+       {
+        "value": "e153",
+        "description": "IPR001714 : Methionine aminopeptidase-1 signature"
+       },
+       {
+        "value": "e154",
+        "description": "IPR001278 : arginine--tRNA ligase"
+       },
+       {
+        "value": "e155",
+        "description": "IPR000915 : Ribosomal protein L6e"
+       },
+       {
+        "value": "e156",
+        "description": "IPR022100 : Minichromosome loss protein, Mcl1, middle region"
+       },
+       {
+        "value": "e157",
+        "description": "IPR007482 : Protein tyrosine phosphatase-like protein, PTPLA"
+       },
+       {
+        "value": "e158",
+        "description": "IPR036140 : Profilin (actin-binding protein)"
+       },
+       {
+        "value": "e159",
+        "description": "IPR019398 : Pre-rRNA-processing protein TSR2"
+       },
+       {
+        "value": "e160",
+        "description": "IPR010784 : Merozoite surface protein (SPAM)"
+       },
+       {
+        "value": "e161",
+        "description": "IPR000535 : MSP (Major sperm protein) domain"
+       },
+       {
+        "value": "e162",
+        "description": "IPR008506 : SRP-independent targeting protein 2/TMEM208"
+       },
+       {
+        "value": "e163",
+        "description": "IPR036823 : Ribosomal protein S7 domain"
+       },
+       {
+        "value": "e164",
+        "description": "IPR028055 : 60Kd inner membrane protein"
+       },
+       {
+        "value": "e165",
+        "description": "IPR006876 : LMBR1-like membrane protein"
+       },
+       {
+        "value": "e166",
+        "description": "IPR005792 : protein disulfide-isomerase"
+       },
+       {
+        "value": "e167",
+        "description": "IPR005043 : CAS/CSE protein, C-terminus"
+       },
+       {
+        "value": "e168",
+        "description": "IPR029344 : Histone RNA hairpin-binding protein RNA-binding domain"
+       },
+       {
+        "value": "e169",
+        "description": "IPR000387 : Tyrosine specific protein phosphatases domain profile."
+       },
+       {
+        "value": "e170",
+        "description": "IPR024682 : Nuclear pore localisation protein NPL4"
+       },
+       {
+        "value": "e171",
+        "description": "IPR001921 : Ribosomal protein L7A family signature"
+       },
+       {
+        "value": "e172",
+        "description": "IPR011044 : YVTN repeat-like/Quinoprotein amine dehydrogenase"
+       },
+       {
+        "value": "e173",
+        "description": "IPR038630 : Ribosomal protein L24e"
+       },
+       {
+        "value": "e174",
+        "description": "IPR038551 : Ribosomal protein S26e"
+       },
+       {
+        "value": "e175",
+        "description": "IPR036351 : Ribosomal protein L32e"
+       },
+       {
+        "value": "e176",
+        "description": "IPR024794 : Ribosomal protein l15e"
+       },
+       {
+        "value": "e177",
+        "description": "IPR023626 : Ribosomal protein L39e"
+       },
+       {
+        "value": "e178",
+        "description": "IPR023621 : Ribosomal protein L31e"
+       },
+       {
+        "value": "e179",
+        "description": "IPR020103 : Pseudouridine synthase"
+       },
+       {
+        "value": "e180",
+        "description": "IPR018307 : Transport protein Avl9"
+       },
+       {
+        "value": "e181",
+        "description": "IPR009290 : Radial spoke protein 3"
+       },
+       {
+        "value": "e182",
+        "description": "IPR001569 : Ribosomal protein L37e"
+       },
+       {
+        "value": "e183",
+        "description": "IPR001266 : Ribosomal protein S19e"
+       },
+       {
+        "value": "e184",
+        "description": "IPR001147 : Ribosomal protein L21e"
+       },
+       {
+        "value": "e185",
+        "description": "IPR000892 : Ribosomal protein S26e"
+       },
+       {
+        "value": "e186",
+        "description": "IPR000748 : pseudouridine synthase"
+       },
+       {
+        "value": "e187",
+        "description": "IPR000509 : Ribosomal protein L36e"
+       },
+       {
+        "value": "e188",
+        "description": "IPR022040 : Temperature dependent protein affecting M2 dsRNA replication"
+       },
+       {
+        "value": "e189",
+        "description": "IPR022039 : Temperature dependent protein affecting M2 dsRNA replication"
+       },
+       {
+        "value": "e190",
+        "description": "IPR035994 : Purine and uridine phosphorylases"
+       },
+       {
+        "value": "e191",
+        "description": "IPR016151 : DNA repair protein MutS, domain I"
+       },
+       {
+        "value": "e192",
+        "description": "IPR000897 : SRP54-type protein, GTPase domain"
+       },
+       {
+        "value": "e193",
+        "description": "IPR009617 : Putative adipose-regulatory protein (Seipin)"
+       },
+       {
+        "value": "e194",
+        "description": "IPR002582 : Holo-[acyl-carrier-protein] synthase [acpS]."
+       },
+       {
+        "value": "e195",
+        "description": "IPR002634 : BolA-like protein"
+       },
+       {
+        "value": "e196",
+        "description": "IPR036838 : Ribosomal protein S10 domain"
+       },
+       {
+        "value": "e197",
+        "description": "IPR019007 : WW domain binding protein 11"
+       },
+       {
+        "value": "e198",
+        "description": "IPR003533 : Doublecortin domain profile."
+       },
+       {
+        "value": "e199",
+        "description": "IPR024321 : Falstatin, cysteine peptidase inhibitor"
+       },
+       {
+        "value": "e200",
+        "description": "IPR019378 : GDP-fucose protein O-fucosyltransferase"
+       },
+       {
+        "value": "e201",
+        "description": "IPR019349 : Mitochondrial ribosomal subunit protein"
+       },
+       {
+        "value": "e202",
+        "description": "IPR013155 : Anticodon-binding domain of tRNA ligase"
+       },
+       {
+        "value": "e203",
+        "description": "IPR011047 : Quinoprotein alcohol dehydrogenase-like"
+       },
+       {
+        "value": "e204",
+        "description": "IPR006910 : N terminus of Rad21 / Rec8 like protein"
+       },
+       {
+        "value": "e205",
+        "description": "IPR000530 : Ribosomal protein S12E family signature"
+       },
+       {
+        "value": "e206",
+        "description": "IPR005474 : Transketolase, thiamine diphosphate binding domain"
+       },
+       {
+        "value": "e207",
+        "description": "IPR036837 : Cation efflux protein cytoplasmic domain-like"
+       },
+       {
+        "value": "e208",
+        "description": "IPR036678 : DNA repair protein MutS, domain II"
+       },
+       {
+        "value": "e209",
+        "description": "IPR036043 : Phosphoglycerate kinase"
+       },
+       {
+        "value": "e210",
+        "description": "IPR020568 : Ribosomal protein S5 domain 2-like"
+       },
+       {
+        "value": "e211",
+        "description": "IPR013714 : COPI associated protein"
+       },
+       {
+        "value": "e212",
+        "description": "IPR007479 : Fe-S cluster assembly protein IscX"
+       },
+       {
+        "value": "e213",
+        "description": "IPR000425 : Major intrinsic protein"
+       },
+       {
+        "value": "e214",
+        "description": "IPR046523 : U3 small nucleolar RNA-associated protein 20 domain"
+       },
+       {
+        "value": "e215",
+        "description": "IPR008914 : Phosphatidylethanolamine-binding protein"
+       },
+       {
+        "value": "e216",
+        "description": "IPR005121 : Ferredoxin-fold anticodon binding domain"
+       },
+       {
+        "value": "e217",
+        "description": "IPR001533 : Pterin 4 alpha carbinolamine dehydratase"
+       },
+       {
+        "value": "e218",
+        "description": "IPR029004 : Ribosomal L28e protein family"
+       },
+       {
+        "value": "e219",
+        "description": "IPR011335 : Restriction endonuclease-like"
+       },
+       {
+        "value": "e220",
+        "description": "IPR011332 : Zn-binding ribosomal proteins"
+       },
+       {
+        "value": "e221",
+        "description": "IPR008949 : Farnesyl Diphosphate Synthase"
+       },
+       {
+        "value": "e222",
+        "description": "IPR008936 : Rho GTPase activation protein"
+       },
+       {
+        "value": "e223",
+        "description": "IPR002675 : Ribosomal L38e protein family"
+       },
+       {
+        "value": "e224",
+        "description": "IPR002671 : Ribosomal L22e protein family"
+       },
+       {
+        "value": "e225",
+        "description": "IPR001141 : Ribosomal L27e protein family"
+       },
+       {
+        "value": "e226",
+        "description": "IPR000119 : Bacterial DNA-binding protein"
+       },
+       {
+        "value": "e227",
+        "description": "IPR037485 : Peroxisome biogenesis protein 22, Haloacid dehydrogenase-like domain"
+       },
+       {
+        "value": "e228",
+        "description": "IPR006763 : Erythrocyte membrane-associated giant protein antigen 332"
+       },
+       {
+        "value": "e229",
+        "description": "IPR028877 : Large ribosomal subunit protein eL20 [rpl18a]."
+       },
+       {
+        "value": "e230",
+        "description": "IPR024954 : Structure-specific recognition protein (SSRP1)"
+       },
+       {
+        "value": "e231",
+        "description": "IPR000198 : Rho GTPase-activating proteins domain profile."
+       },
+       {
+        "value": "e232",
+        "description": "IPR000196 : Large ribosomal subunit protein eL19 [rpl19e]."
+       },
+       {
+        "value": "e233",
+        "description": "IPR036187 : DNA repair protein MutS, domain III"
+       },
+       {
+        "value": "e234",
+        "description": "IPR024781 : MSP7-like protein C-terminal domain"
+       },
+       {
+        "value": "e235",
+        "description": "IPR023391 : Preprotein translocase SecE subunit"
+       },
+       {
+        "value": "e236",
+        "description": "IPR023201 : Preprotein translocase SecY subunit"
+       },
+       {
+        "value": "e237",
+        "description": "IPR022281 : HslVU peptidase proteolytic subunit"
+       },
+       {
+        "value": "e238",
+        "description": "IPR000133 : ER lumen protein retaining receptor"
+       },
+       {
+        "value": "e239",
+        "description": "IPR034737 : Translationally controlled tumor protein (TCTP) domain profile."
+       },
+       {
+        "value": "e240",
+        "description": "IPR057266 : 50S ribosomal protein L5"
+       },
+       {
+        "value": "e241",
+        "description": "IPR035984 : Acyl-CoA binding protein"
+       },
+       {
+        "value": "e242",
+        "description": "IPR023672 : 50S ribosomal protein L2"
+       },
+       {
+        "value": "e243",
+        "description": "IPR019927 : 50S ribosomal protein L3"
+       },
+       {
+        "value": "e244",
+        "description": "IPR011941 : DNA repair protein RAD51"
+       },
+       {
+        "value": "e245",
+        "description": "IPR005880 : 50S ribosomal protein L2"
+       },
+       {
+        "value": "e246",
+        "description": "IPR005711 : 30S ribosomal protein S5"
+       },
+       {
+        "value": "e247",
+        "description": "IPR005710 : 30S ribosomal protein S4"
+       },
+       {
+        "value": "e248",
+        "description": "IPR005707 : 30S ribosomal protein S2"
+       },
+       {
+        "value": "e249",
+        "description": "IPR005703 : 30S ribosomal protein S3"
+       },
+       {
+        "value": "e250",
+        "description": "IPR003265 : HhH-GPD superfamily base excision DNA repair protein"
+       },
+       {
+        "value": "e251",
+        "description": "IPR013957 : U4/U6.U5 small nuclear ribonucleoproteins"
+       },
+       {
+        "value": "e252",
+        "description": "IPR044892 : Ribosomal protein L3, domain 3"
+       },
+       {
+        "value": "e253",
+        "description": "IPR014726 : Ribosomal protein L2, domain 3"
+       },
+       {
+        "value": "none_fits",
+        "description": "The words name no one of these entries: they name a group, several entries without choosing one, or nothing listed; or each entry is obsolete, broader, narrower or about something else."
+       }
+      ]
+     }
+    ]
+   },
+   "response": {
+    "answers": [
+     {
+      "type": "choice",
+      "name": "value",
+      "choice": "none_fits",
+      "probabilities": [
+       {
+        "value": "e0",
+        "probability": 0.36
+       },
+       {
+        "value": "e1",
+        "probability": 0.01
+       },
+       {
+        "value": "e2",
+        "probability": 0.01
+       },
+       {
+        "value": "e3",
+        "probability": 0.01
+       },
+       {
+        "value": "e4",
+        "probability": 0.01
+       },
+       {
+        "value": "e5",
+        "probability": 0.02
+       },
+       {
+        "value": "e6",
+        "probability": 0.0
+       },
+       {
+        "value": "e7",
+        "probability": 0.0
+       },
+       {
+        "value": "e8",
+        "probability": 0.07
+       },
+       {
+        "value": "e9",
+        "probability": 0.0
+       },
+       {
+        "value": "e10",
+        "probability": 0.0
+       },
+       {
+        "value": "e11",
+        "probability": 0.0
+       },
+       {
+        "value": "e12",
+        "probability": 0.0
+       },
+       {
+        "value": "e13",
+        "probability": 0.0
+       },
+       {
+        "value": "e14",
+        "probability": 0.0
+       },
+       {
+        "value": "e15",
+        "probability": 0.0
+       },
+       {
+        "value": "e16",
+        "probability": 0.0
+       },
+       {
+        "value": "e17",
+        "probability": 0.0
+       },
+       {
+        "value": "e18",
+        "probability": 0.0
+       },
+       {
+        "value": "e19",
+        "probability": 0.0
+       },
+       {
+        "value": "e20",
+        "probability": 0.0
+       },
+       {
+        "value": "e21",
+        "probability": 0.0
+       },
+       {
+        "value": "e22",
+        "probability": 0.0
+       },
+       {
+        "value": "e23",
+        "probability": 0.0
+       },
+       {
+        "value": "e24",
+        "probability": 0.0
+       },
+       {
+        "value": "e25",
+        "probability": 0.0
+       },
+       {
+        "value": "e26",
+        "probability": 0.0
+       },
+       {
+        "value": "e27",
+        "probability": 0.0
+       },
+       {
+        "value": "e28",
+        "probability": 0.0
+       },
+       {
+        "value": "e29",
+        "probability": 0.0
+       },
+       {
+        "value": "e30",
+        "probability": 0.0
+       },
+       {
+        "value": "e31",
+        "probability": 0.0
+       },
+       {
+        "value": "e32",
+        "probability": 0.0
+       },
+       {
+        "value": "e33",
+        "probability": 0.0
+       },
+       {
+        "value": "e34",
+        "probability": 0.0
+       },
+       {
+        "value": "e35",
+        "probability": 0.0
+       },
+       {
+        "value": "e36",
+        "probability": 0.0
+       },
+       {
+        "value": "e37",
+        "probability": 0.0
+       },
+       {
+        "value": "e38",
+        "probability": 0.0
+       },
+       {
+        "value": "e39",
+        "probability": 0.0
+       },
+       {
+        "value": "e40",
+        "probability": 0.0
+       },
+       {
+        "value": "e41",
+        "probability": 0.0
+       },
+       {
+        "value": "e42",
+        "probability": 0.0
+       },
+       {
+        "value": "e43",
+        "probability": 0.0
+       },
+       {
+        "value": "e44",
+        "probability": 0.0
+       },
+       {
+        "value": "e45",
+        "probability": 0.0
+       },
+       {
+        "value": "e46",
+        "probability": 0.0
+       },
+       {
+        "value": "e47",
+        "probability": 0.0
+       },
+       {
+        "value": "e48",
+        "probability": 0.0
+       },
+       {
+        "value": "e49",
+        "probability": 0.0
+       },
+       {
+        "value": "e50",
+        "probability": 0.0
+       },
+       {
+        "value": "e51",
+        "probability": 0.0
+       },
+       {
+        "value": "e52",
+        "probability": 0.0
+       },
+       {
+        "value": "e53",
+        "probability": 0.0
+       },
+       {
+        "value": "e54",
+        "probability": 0.0
+       },
+       {
+        "value": "e55",
+        "probability": 0.0
+       },
+       {
+        "value": "e56",
+        "probability": 0.0
+       },
+       {
+        "value": "e57",
+        "probability": 0.0
+       },
+       {
+        "value": "e58",
+        "probability": 0.0
+       },
+       {
+        "value": "e59",
+        "probability": 0.0
+       },
+       {
+        "value": "e60",
+        "probability": 0.0
+       },
+       {
+        "value": "e61",
+        "probability": 0.0
+       },
+       {
+        "value": "e62",
+        "probability": 0.0
+       },
+       {
+        "value": "e63",
+        "probability": 0.0
+       },
+       {
+        "value": "e64",
+        "probability": 0.0
+       },
+       {
+        "value": "e65",
+        "probability": 0.0
+       },
+       {
+        "value": "e66",
+        "probability": 0.0
+       },
+       {
+        "value": "e67",
+        "probability": 0.0
+       },
+       {
+        "value": "e68",
+        "probability": 0.0
+       },
+       {
+        "value": "e69",
+        "probability": 0.0
+       },
+       {
+        "value": "e70",
+        "probability": 0.0
+       },
+       {
+        "value": "e71",
+        "probability": 0.0
+       },
+       {
+        "value": "e72",
+        "probability": 0.0
+       },
+       {
+        "value": "e73",
+        "probability": 0.0
+       },
+       {
+        "value": "e74",
+        "probability": 0.0
+       },
+       {
+        "value": "e75",
+        "probability": 0.0
+       },
+       {
+        "value": "e76",
+        "probability": 0.0
+       },
+       {
+        "value": "e77",
+        "probability": 0.0
+       },
+       {
+        "value": "e78",
+        "probability": 0.0
+       },
+       {
+        "value": "e79",
+        "probability": 0.0
+       },
+       {
+        "value": "e80",
+        "probability": 0.0
+       },
+       {
+        "value": "e81",
+        "probability": 0.0
+       },
+       {
+        "value": "e82",
+        "probability": 0.0
+       },
+       {
+        "value": "e83",
+        "probability": 0.0
+       },
+       {
+        "value": "e84",
+        "probability": 0.0
+       },
+       {
+        "value": "e85",
+        "probability": 0.0
+       },
+       {
+        "value": "e86",
+        "probability": 0.0
+       },
+       {
+        "value": "e87",
+        "probability": 0.0
+       },
+       {
+        "value": "e88",
+        "probability": 0.0
+       },
+       {
+        "value": "e89",
+        "probability": 0.0
+       },
+       {
+        "value": "e90",
+        "probability": 0.0
+       },
+       {
+        "value": "e91",
+        "probability": 0.0
+       },
+       {
+        "value": "e92",
+        "probability": 0.0
+       },
+       {
+        "value": "e93",
+        "probability": 0.0
+       },
+       {
+        "value": "e94",
+        "probability": 0.0
+       },
+       {
+        "value": "e95",
+        "probability": 0.0
+       },
+       {
+        "value": "e96",
+        "probability": 0.0
+       },
+       {
+        "value": "e97",
+        "probability": 0.0
+       },
+       {
+        "value": "e98",
+        "probability": 0.0
+       },
+       {
+        "value": "e99",
+        "probability": 0.0
+       },
+       {
+        "value": "e100",
+        "probability": 0.0
+       },
+       {
+        "value": "e101",
+        "probability": 0.0
+       },
+       {
+        "value": "e102",
+        "probability": 0.0
+       },
+       {
+        "value": "e103",
+        "probability": 0.0
+       },
+       {
+        "value": "e104",
+        "probability": 0.0
+       },
+       {
+        "value": "e105",
+        "probability": 0.0
+       },
+       {
+        "value": "e106",
+        "probability": 0.0
+       },
+       {
+        "value": "e107",
+        "probability": 0.0
+       },
+       {
+        "value": "e108",
+        "probability": 0.0
+       },
+       {
+        "value": "e109",
+        "probability": 0.0
+       },
+       {
+        "value": "e110",
+        "probability": 0.0
+       },
+       {
+        "value": "e111",
+        "probability": 0.0
+       },
+       {
+        "value": "e112",
+        "probability": 0.0
+       },
+       {
+        "value": "e113",
+        "probability": 0.0
+       },
+       {
+        "value": "e114",
+        "probability": 0.0
+       },
+       {
+        "value": "e115",
+        "probability": 0.0
+       },
+       {
+        "value": "e116",
+        "probability": 0.0
+       },
+       {
+        "value": "e117",
+        "probability": 0.0
+       },
+       {
+        "value": "e118",
+        "probability": 0.0
+       },
+       {
+        "value": "e119",
+        "probability": 0.0
+       },
+       {
+        "value": "e120",
+        "probability": 0.0
+       },
+       {
+        "value": "e121",
+        "probability": 0.0
+       },
+       {
+        "value": "e122",
+        "probability": 0.0
+       },
+       {
+        "value": "e123",
+        "probability": 0.0
+       },
+       {
+        "value": "e124",
+        "probability": 0.0
+       },
+       {
+        "value": "e125",
+        "probability": 0.0
+       },
+       {
+        "value": "e126",
+        "probability": 0.0
+       },
+       {
+        "value": "e127",
+        "probability": 0.0
+       },
+       {
+        "value": "e128",
+        "probability": 0.0
+       },
+       {
+        "value": "e129",
+        "probability": 0.0
+       },
+       {
+        "value": "e130",
+        "probability": 0.0
+       },
+       {
+        "value": "e131",
+        "probability": 0.0
+       },
+       {
+        "value": "e132",
+        "probability": 0.0
+       },
+       {
+        "value": "e133",
+        "probability": 0.0
+       },
+       {
+        "value": "e134",
+        "probability": 0.0
+       },
+       {
+        "value": "e135",
+        "probability": 0.0
+       },
+       {
+        "value": "e136",
+        "probability": 0.0
+       },
+       {
+        "value": "e137",
+        "probability": 0.0
+       },
+       {
+        "value": "e138",
+        "probability": 0.0
+       },
+       {
+        "value": "e139",
+        "probability": 0.0
+       },
+       {
+        "value": "e140",
+        "probability": 0.0
+       },
+       {
+        "value": "e141",
+        "probability": 0.0
+       },
+       {
+        "value": "e142",
+        "probability": 0.0
+       },
+       {
+        "value": "e143",
+        "probability": 0.0
+       },
+       {
+        "value": "e144",
+        "probability": 0.0
+       },
+       {
+        "value": "e145",
+        "probability": 0.0
+       },
+       {
+        "value": "e146",
+        "probability": 0.0
+       },
+       {
+        "value": "e147",
+        "probability": 0.0
+       },
+       {
+        "value": "e148",
+        "probability": 0.0
+       },
+       {
+        "value": "e149",
+        "probability": 0.0
+       },
+       {
+        "value": "e150",
+        "probability": 0.0
+       },
+       {
+        "value": "e151",
+        "probability": 0.0
+       },
+       {
+        "value": "e152",
+        "probability": 0.0
+       },
+       {
+        "value": "e153",
+        "probability": 0.0
+       },
+       {
+        "value": "e154",
+        "probability": 0.0
+       },
+       {
+        "value": "e155",
+        "probability": 0.0
+       },
+       {
+        "value": "e156",
+        "probability": 0.0
+       },
+       {
+        "value": "e157",
+        "probability": 0.0
+       },
+       {
+        "value": "e158",
+        "probability": 0.0
+       },
+       {
+        "value": "e159",
+        "probability": 0.0
+       },
+       {
+        "value": "e160",
+        "probability": 0.0
+       },
+       {
+        "value": "e161",
+        "probability": 0.0
+       },
+       {
+        "value": "e162",
+        "probability": 0.0
+       },
+       {
+        "value": "e163",
+        "probability": 0.0
+       },
+       {
+        "value": "e164",
+        "probability": 0.0
+       },
+       {
+        "value": "e165",
+        "probability": 0.0
+       },
+       {
+        "value": "e166",
+        "probability": 0.0
+       },
+       {
+        "value": "e167",
+        "probability": 0.0
+       },
+       {
+        "value": "e168",
+        "probability": 0.0
+       },
+       {
+        "value": "e169",
+        "probability": 0.0
+       },
+       {
+        "value": "e170",
+        "probability": 0.0
+       },
+       {
+        "value": "e171",
+        "probability": 0.0
+       },
+       {
+        "value": "e172",
+        "probability": 0.0
+       },
+       {
+        "value": "e173",
+        "probability": 0.0
+       },
+       {
+        "value": "e174",
+        "probability": 0.0
+       },
+       {
+        "value": "e175",
+        "probability": 0.0
+       },
+       {
+        "value": "e176",
+        "probability": 0.0
+       },
+       {
+        "value": "e177",
+        "probability": 0.0
+       },
+       {
+        "value": "e178",
+        "probability": 0.0
+       },
+       {
+        "value": "e179",
+        "probability": 0.0
+       },
+       {
+        "value": "e180",
+        "probability": 0.0
+       },
+       {
+        "value": "e181",
+        "probability": 0.0
+       },
+       {
+        "value": "e182",
+        "probability": 0.0
+       },
+       {
+        "value": "e183",
+        "probability": 0.0
+       },
+       {
+        "value": "e184",
+        "probability": 0.0
+       },
+       {
+        "value": "e185",
+        "probability": 0.0
+       },
+       {
+        "value": "e186",
+        "probability": 0.0
+       },
+       {
+        "value": "e187",
+        "probability": 0.0
+       },
+       {
+        "value": "e188",
+        "probability": 0.0
+       },
+       {
+        "value": "e189",
+        "probability": 0.0
+       },
+       {
+        "value": "e190",
+        "probability": 0.0
+       },
+       {
+        "value": "e191",
+        "probability": 0.0
+       },
+       {
+        "value": "e192",
+        "probability": 0.0
+       },
+       {
+        "value": "e193",
+        "probability": 0.0
+       },
+       {
+        "value": "e194",
+        "probability": 0.0
+       },
+       {
+        "value": "e195",
+        "probability": 0.0
+       },
+       {
+        "value": "e196",
+        "probability": 0.0
+       },
+       {
+        "value": "e197",
+        "probability": 0.0
+       },
+       {
+        "value": "e198",
+        "probability": 0.0
+       },
+       {
+        "value": "e199",
+        "probability": 0.0
+       },
+       {
+        "value": "e200",
+        "probability": 0.0
+       },
+       {
+        "value": "e201",
+        "probability": 0.0
+       },
+       {
+        "value": "e202",
+        "probability": 0.0
+       },
+       {
+        "value": "e203",
+        "probability": 0.0
+       },
+       {
+        "value": "e204",
+        "probability": 0.0
+       },
+       {
+        "value": "e205",
+        "probability": 0.0
+       },
+       {
+        "value": "e206",
+        "probability": 0.0
+       },
+       {
+        "value": "e207",
+        "probability": 0.0
+       },
+       {
+        "value": "e208",
+        "probability": 0.0
+       },
+       {
+        "value": "e209",
+        "probability": 0.0
+       },
+       {
+        "value": "e210",
+        "probability": 0.0
+       },
+       {
+        "value": "e211",
+        "probability": 0.0
+       },
+       {
+        "value": "e212",
+        "probability": 0.0
+       },
+       {
+        "value": "e213",
+        "probability": 0.0
+       },
+       {
+        "value": "e214",
+        "probability": 0.0
+       },
+       {
+        "value": "e215",
+        "probability": 0.0
+       },
+       {
+        "value": "e216",
+        "probability": 0.0
+       },
+       {
+        "value": "e217",
+        "probability": 0.0
+       },
+       {
+        "value": "e218",
+        "probability": 0.0
+       },
+       {
+        "value": "e219",
+        "probability": 0.0
+       },
+       {
+        "value": "e220",
+        "probability": 0.0
+       },
+       {
+        "value": "e221",
+        "probability": 0.0
+       },
+       {
+        "value": "e222",
+        "probability": 0.0
+       },
+       {
+        "value": "e223",
+        "probability": 0.0
+       },
+       {
+        "value": "e224",
+        "probability": 0.0
+       },
+       {
+        "value": "e225",
+        "probability": 0.0
+       },
+       {
+        "value": "e226",
+        "probability": 0.0
+       },
+       {
+        "value": "e227",
+        "probability": 0.0
+       },
+       {
+        "value": "e228",
+        "probability": 0.0
+       },
+       {
+        "value": "e229",
+        "probability": 0.0
+       },
+       {
+        "value": "e230",
+        "probability": 0.0
+       },
+       {
+        "value": "e231",
+        "probability": 0.0
+       },
+       {
+        "value": "e232",
+        "probability": 0.0
+       },
+       {
+        "value": "e233",
+        "probability": 0.0
+       },
+       {
+        "value": "e234",
+        "probability": 0.0
+       },
+       {
+        "value": "e235",
+        "probability": 0.0
+       },
+       {
+        "value": "e236",
+        "probability": 0.0
+       },
+       {
+        "value": "e237",
+        "probability": 0.0
+       },
+       {
+        "value": "e238",
+        "probability": 0.0
+       },
+       {
+        "value": "e239",
+        "probability": 0.0
+       },
+       {
+        "value": "e240",
+        "probability": 0.0
+       },
+       {
+        "value": "e241",
+        "probability": 0.0
+       },
+       {
+        "value": "e242",
+        "probability": 0.0
+       },
+       {
+        "value": "e243",
+        "probability": 0.0
+       },
+       {
+        "value": "e244",
+        "probability": 0.0
+       },
+       {
+        "value": "e245",
+        "probability": 0.0
+       },
+       {
+        "value": "e246",
+        "probability": 0.0
+       },
+       {
+        "value": "e247",
+        "probability": 0.0
+       },
+       {
+        "value": "e248",
+        "probability": 0.0
+       },
+       {
+        "value": "e249",
+        "probability": 0.0
+       },
+       {
+        "value": "e250",
+        "probability": 0.0
+       },
+       {
+        "value": "e251",
+        "probability": 0.0
+       },
+       {
+        "value": "e252",
+        "probability": 0.0
+       },
+       {
+        "value": "e253",
+        "probability": 0.0
+       },
+       {
+        "value": "none_fits",
+        "probability": 0.51
+       }
+      ],
+      "confidence": 0.51
+     }
+    ],
+    "usage": {
+     "input_tokens": 5312,
+     "cached_tokens": 0,
+     "cache_write_tokens": 0
+    }
+   }
+  }
+ ]
+}

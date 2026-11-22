@@ -207,6 +207,13 @@ from veupathdb_mcp.catalog.taxonomy import (
 )
 from veupathdb_mcp.catalog.universal import universal_searches
 from veupathdb_mcp.catalog.validation_callbacks import make_validation_callbacks
+from veupathdb_mcp.catalog.vocab_resolve import (
+    NamedVocabulary,
+    ResolveContext,
+    ordered_by_vocabulary,
+    ordered_refusal,
+    resolve_request,
+)
 
 __all__ = [
     "CHARACTERS_WITHIN_READ_TIMEOUT",
@@ -246,6 +253,7 @@ __all__ = [
     "FilterReads",
     "GetParameterOptionsResult",
     "LabelReading",
+    "NamedVocabulary",
     "NoGeneRecordsError",
     "NoneOf",
     "OverrideMap",
@@ -270,6 +278,7 @@ __all__ = [
     "RadioReadings",
     "RecordTypeInfo",
     "RefusalAnswer",
+    "ResolveContext",
     "ResolvedParams",
     "ResolvedSearch",
     "SearchInspection",
@@ -339,6 +348,8 @@ __all__ = [
     "lookup_phyletic_codes",
     "make_record_type_resolver",
     "make_validation_callbacks",
+    "ordered_by_vocabulary",
+    "ordered_refusal",
     "organism_parameter",
     "ortho_taxonomy",
     "phyletic_tree_for_search",
@@ -355,6 +366,7 @@ __all__ = [
     "read_under_parents",
     "require_gene_records",
     "resolve_params_with_intent",
+    "resolve_request",
     "resolve_search_details",
     "resolve_search_record_type",
     "search_for_searches",

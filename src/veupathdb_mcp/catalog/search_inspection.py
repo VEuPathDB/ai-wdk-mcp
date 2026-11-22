@@ -57,6 +57,7 @@ from veupathdb_mcp.catalog.searches import (
 )
 from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
 from veupathdb_mcp.catalog.vocab_rendering import entries_of
+from veupathdb_mcp.catalog.vocab_resolve import ResolveContext
 
 _SEARCH_NOT_FOUND_STATUS = 404
 
@@ -288,10 +289,14 @@ async def read_stated_parameters(
     search_name: str,
     stated: Mapping[str, JsonValue] | None,
     *,
+    message: str,
     record_type: str | None = None,
     bound: Mapping[str, ParamValue] = NOTHING_BOUND,
 ) -> dict[str, ParamValue]:
-    """The values a caller states for one search, each read under its parents."""
+    """The values a caller states for one search, each read under its parents.
+
+    ``message`` is the researcher's message, or "" when the caller has none.
+    """
     if not stated:
         return {}
     rt = await resolve_search_record_type(
@@ -301,6 +306,7 @@ async def read_stated_parameters(
         wdk_fetch_at(site_id, rt, search_name),
         stated,
         WDKFilterReads(site_id, rt, search_name),
+        about=ResolveContext(site_id=site_id, message=message),
         bound=bound,
     )
 
@@ -317,7 +323,7 @@ async def read_radio_readings(
         site_id, search_name, _auto_resolved_record_type(record_type)
     )
     context = await read_stated_parameters(
-        site_id, search_name, context_values, record_type=rt
+        site_id, search_name, context_values, message="", record_type=rt
     )
     result = await get_search_params_under_context(
         get_wdk_client(site_id), rt, search_name, wire_map(context)

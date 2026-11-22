@@ -325,7 +325,11 @@ async def get_parameter_options(
             parameter_id,
             record_type=record_type,
             context_values=await search_inspection.read_stated_parameters(
-                site_id, search_name, context_values, record_type=record_type
+                site_id,
+                search_name,
+                context_values,
+                message="",
+                record_type=record_type,
             ),
             narrowing=search_inspection.VocabNarrowing(query=query),
         )
@@ -383,7 +387,11 @@ async def validate_search_parameters(
         return await validate_parameters(
             SearchContext(site_id, record_type or "", search_name),
             stated=await search_inspection.read_stated_parameters(
-                site_id, search_name, parameter_values, record_type=record_type
+                site_id,
+                search_name,
+                parameter_values,
+                message="",
+                record_type=record_type,
             ),
             callbacks=make_validation_callbacks(site_id),
         )

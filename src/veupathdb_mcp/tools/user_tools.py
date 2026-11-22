@@ -255,7 +255,11 @@ async def run_control_tests_on_search(
         raise ToolError(_NO_CONTROL_GENE)
     try:
         parameters = await read_stated_parameters(
-            site_id, target_search_name, target_parameters, record_type=record_type
+            site_id,
+            target_search_name,
+            target_parameters,
+            message="",
+            record_type=record_type,
         )
     except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc

@@ -16,7 +16,7 @@ from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKParameter, WDKSearchResponse
 
-from veupathdb_mcp.catalog import read_under_parents
+from veupathdb_mcp.catalog import ResolveContext, read_under_parents
 from veupathdb_mcp.catalog.param_dag import ParamFetcher
 from veupathdb_mcp.catalog.param_phyletic import (
     PhyleticUnresolvedProposal,
@@ -27,6 +27,8 @@ _TAXON = "search_genes_by_taxon"
 _SNPS = "search_genes_by_ngs_snps"
 _ORTHOLOGS = "search_genes_by_ortholog_pattern"
 _SRC = Path(__file__).resolve().parents[3] / "src"
+
+_ABOUT = ResolveContext(site_id="plasmodb")
 
 
 def _declarations(fixture: str) -> list[WDKParameter]:
@@ -46,7 +48,9 @@ def _serving(fixture: str) -> ParamFetcher:
 
 async def _refusal(fixture: str, stated: dict[str, JsonValue]) -> VocabularyEntryError:
     with pytest.raises(VocabularyEntryError) as refused:
-        await read_under_parents(_serving(fixture), stated, FilterReadsDouble())
+        await read_under_parents(
+            _serving(fixture), stated, FilterReadsDouble(), about=_ABOUT
+        )
     return refused.value
 
 
@@ -57,6 +61,7 @@ class TestAnOrganism:
             _serving(_TAXON),
             {"organism": ["plasmodium falciparum 3d7"]},
             FilterReadsDouble(),
+            about=_ABOUT,
         )
 
         assert read["organism"] == MultiPickValue(values=["Plasmodium falciparum 3D7"])
@@ -95,7 +100,10 @@ class TestASnpClass:
 
     async def test_a_class_in_another_case_binds(self) -> None:
         read = await read_under_parents(
-            _serving(_SNPS), {"snp_class": "missense"}, FilterReadsDouble()
+            _serving(_SNPS),
+            {"snp_class": "missense"},
+            FilterReadsDouble(),
+            about=_ABOUT,
         )
 
         assert read["snp_class"] == SinglePickValue(value="Missense")

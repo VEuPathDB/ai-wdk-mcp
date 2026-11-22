@@ -5,6 +5,12 @@ from __future__ import annotations
 import pytest
 from veupathdb.domain.parameters import VocabularyEntryError
 
+from veupathdb_mcp.catalog import (
+    ChoiceQuestion,
+    DecisionRequest,
+    DecisionResponse,
+    use_decisions_transport,
+)
 from veupathdb_mcp.gene_lookup import lookup
 from veupathdb_mcp.gene_lookup.lookup import lookup_genes_by_text
 from veupathdb_mcp.gene_lookup.result import GeneResult
@@ -95,4 +101,39 @@ async def test_a_stated_organism_that_names_no_entry_is_refused_with_candidates(
     [(param, resolution)] = refused.value.faults
     assert (param, resolution.phrase) == ("organism", "Pf3D7")
     assert resolution.candidates[0].value == _FALCIPARUM
+    assert site.searched == []
+
+
+async def test_a_refused_organism_leads_with_the_entry_a_choice_picks(
+    site: _Site,
+) -> None:
+    picked: list[str] = []
+
+    async def picks_the_last(request: DecisionRequest) -> DecisionResponse:
+        [question] = request.questions
+        assert isinstance(question, ChoiceQuestion)
+        last = question.choices[-2].value
+        picked.append(question.choices[-2].description)
+        return DecisionResponse.model_validate(
+            {
+                "answers": [
+                    {
+                        "type": "choice",
+                        "name": question.name,
+                        "choice": last,
+                        "probabilities": [{"value": last, "probability": 1.0}],
+                        "confidence": 1.0,
+                    }
+                ]
+            }
+        )
+
+    use_decisions_transport(picks_the_last)
+    with pytest.raises(VocabularyEntryError) as refused:
+        await lookup_genes_by_text("plasmodb", "kinase", organism="Pb", limit=20)
+
+    [(_, resolution)] = refused.value.faults
+    assert resolution.how == "unsettled"
+    assert resolution.candidates[0].value == picked[0]
+    assert picked[0] != "Plasmodium berghei ANKA"
     assert site.searched == []

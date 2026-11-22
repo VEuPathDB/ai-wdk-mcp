@@ -13,13 +13,15 @@ from veupathdb.domain.parameters import (
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKParameter
 
-from veupathdb_mcp.catalog import read_under_parents
+from veupathdb_mcp.catalog import ResolveContext, read_under_parents
 from veupathdb_mcp.catalog.param_dag import ParamFetcher, UnreadStatementError
 
 from .test_a_stated_value_is_read_once import by_organism
 
 _DECLARATION: TypeAdapter[WDKParameter] = TypeAdapter(WDKParameter)
 _VIVAX = "Plasmodium vivax P01"
+
+_ABOUT = ResolveContext(site_id="plasmodb")
 
 
 def _node(term: str, display: str, *children: JsonValue) -> JsonValue:
@@ -69,6 +71,7 @@ async def test_a_parent_stated_by_its_label_reaches_the_fetch_as_its_term() -> N
         _recording(seen, declarations, declarations),
         {"organism": ["P. vivax P01"], "strain": "x"},
         FilterReadsDouble(),
+        about=_ABOUT,
     )
 
     assert read["organism"] == MultiPickValue(values=[_VIVAX])
@@ -86,12 +89,14 @@ async def test_a_label_matches_its_leaf_and_a_species_with_no_node_is_refused() 
         _recording(seen, [organism], [organism]),
         {"organism": ["plasmodium vivax p01"]},
         FilterReadsDouble(),
+        about=_ABOUT,
     )
     with pytest.raises(VocabularyEntryError) as refused:
         await read_under_parents(
             _recording(seen, [organism], [organism]),
             {"organism": ["plasmodium vivax p01", "Plasmodium vivax"]},
             FilterReadsDouble(),
+            about=_ABOUT,
         )
 
     assert read["organism"] == MultiPickValue(values=[_VIVAX])
@@ -109,6 +114,7 @@ async def test_a_name_no_later_fetch_declares_is_refused_by_name() -> None:
             _recording(seen, first, [first[0]]),
             {"organism": [_VIVAX], "strain": "x"},
             FilterReadsDouble(),
+            about=_ABOUT,
         )
 
     assert len(seen) <= 6
@@ -131,6 +137,7 @@ async def test_a_dependent_stated_alone_reads_under_its_bound_parent() -> None:
         {"variation_sample_meta": _PERU},
         FilterReadsDouble(),
         bound={"organismSinglePick": MultiPickValue(values=[_VIVAX])},
+        about=_ABOUT,
     )
 
     assert list(read) == ["variation_sample_meta"]
@@ -153,6 +160,7 @@ async def test_a_dependent_under_another_bound_parent_is_refused() -> None:
                     values=["Plasmodium falciparum 3D7"]
                 )
             },
+            about=_ABOUT,
         )
 
 
@@ -181,7 +189,7 @@ async def test_a_stated_branch_of_a_leaf_counted_tree_is_read_as_its_leaves() ->
         return [organism]
 
     read = await read_under_parents(
-        fetch_at, {"organism": ["Plasmodium"]}, FilterReadsDouble()
+        fetch_at, {"organism": ["Plasmodium"]}, FilterReadsDouble(), about=_ABOUT
     )
 
     assert read == {

@@ -13,6 +13,7 @@ from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKOntologyTermSummary
 
 from veupathdb_mcp.catalog import (
+    ResolveContext,
     ValidatedParams,
     facet_ranges,
     read_under_parents,
@@ -33,6 +34,8 @@ _PF = ["Plasmodium falciparum 3D7"]
 pytestmark = pytest.mark.skipif(
     needs_qa_recording("wdk/search_genes_by_ngs_snps.json"), reason=NEEDS_QA_RECORDING
 )
+
+_ABOUT = ResolveContext(site_id="plasmodb")
 
 
 @pytest.fixture
@@ -96,6 +99,7 @@ async def test_a_read_refuses_a_selection_below_the_minimum() -> None:
                 "variation_sample_meta": [{"field": "sex", "value": ["female"]}],
             },
             reads,
+            about=_ABOUT,
         )
 
     [(param, context, _)] = reads.counts_read

@@ -24,6 +24,11 @@
   organism the query implies never removes a record; `GeneSearchResult.implied_organism`
   names it, and `suggested_organisms` and `suggest_organisms` are gone.
 - The client is taken at `v0.9.0b11`.
+- A vocabulary refusal leads its five shown candidates with the entry one Decisions
+  Choice picks among the 254 ranked (`ordered_refusal`, `ordered_by_vocabulary`,
+  `resolve_request`, `ResolveContext`); the pick never binds, and with no pick the ranking
+  stands. `read_under_parents` takes `about: ResolveContext` and
+  `read_stated_parameters` takes `message`. Held-out A/B: 95.6% against refuse's 86.0%.
 - Every value the catalog shows a model is its stated form, which the stated reader reads
   back to the same wire: the sheet's and the overview's `default` (`JsonValue`), the new
   `ParameterInfo.default` and `ParamSpecResponse.default` beside the wire the site holds,

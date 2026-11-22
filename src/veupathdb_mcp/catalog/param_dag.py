@@ -19,6 +19,7 @@ from veupathdb.domain.parameters import (
     PhyleticBinding,
     Stated,
     UnboundParameter,
+    VocabularyEntryError,
     leaf_terms,
     read_stated_values,
     to_wire,
@@ -63,6 +64,7 @@ from veupathdb_mcp.catalog.search_context import (
     get_search_params_under_context,
 )
 from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
+from veupathdb_mcp.catalog.vocab_resolve import ResolveContext, ordered_refusal
 
 _MAX_RESOLVE_DEPTH = 6
 
@@ -272,11 +274,13 @@ async def read_under_parents(
     stated: Mapping[str, JsonValue],
     reads: FilterReads,
     *,
+    about: ResolveContext,
     bound: Mapping[str, ParamValue] = NOTHING_BOUND,
 ) -> dict[str, ParamValue]:
     """Reads each stated value under the declarations its stated, bound and site-set
     parents give, and refuses a filter that selects nothing. A name of no parameter
-    is refused before any value is read."""
+    is refused before any value is read. A term no entry names is refused with its
+    candidates in the order ``ordered_refusal`` gives."""
     context = wire_map({n: v for n, v in bound.items() if n not in stated})
     read: dict[str, ParamValue] = {}
     declarations = await fetch_at(context)
@@ -294,9 +298,13 @@ async def read_under_parents(
             and d.name not in context
             and d.name not in waiting
         }
-        new = _read_ready(declarations, stated, context, read)
-        if not new and not sited:
-            new = read_declared([d for d in declarations if d.name in missing], stated)
+        try:
+            new = _read_ready(declarations, stated, context, read)
+            if not new and not sited:
+                pending = [d for d in declarations if d.name in missing]
+                new = read_declared(pending, stated)
+        except VocabularyEntryError as refusal:
+            raise await ordered_refusal(refusal, declarations, about) from refusal
         if not new and not sited:
             break
         await _refuse_misses(declarations, new, context, reads)

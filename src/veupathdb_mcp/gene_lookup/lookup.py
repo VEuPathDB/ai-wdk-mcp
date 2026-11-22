@@ -4,9 +4,18 @@ import asyncio
 from dataclasses import dataclass
 
 from veupathdb import get_logger
-from veupathdb.domain.parameters import VocabOption, entries_or_refusal
+from veupathdb.domain.parameters import (
+    VocabOption,
+    VocabularyEntryError,
+    entries_or_refusal,
+)
 from veupathdb.errors import VEuPathDBError
 
+from veupathdb_mcp.catalog.vocab_resolve import (
+    NamedVocabulary,
+    ResolveContext,
+    ordered_by_vocabulary,
+)
 from veupathdb_mcp.gene_lookup.rerank import (
     QueryIntent,
     ScoredResult,
@@ -280,7 +289,13 @@ async def _stated_organism(site_id: str, organism: str | None) -> str | None:
     if not organism or not organism.strip():
         return None
     declared = [VocabOption(value=o, display=o) for o in await list_organisms(site_id)]
-    [entry] = entries_or_refusal(ORGANISM_PARAM, declared, [organism.strip()])
+    try:
+        [entry] = entries_or_refusal(ORGANISM_PARAM, declared, [organism.strip()])
+    except VocabularyEntryError as refusal:
+        named = NamedVocabulary(display="Organism", options=declared)
+        raise await ordered_by_vocabulary(
+            refusal, {ORGANISM_PARAM: named}, ResolveContext(site_id=site_id)
+        ) from refusal
     return entry
 
 

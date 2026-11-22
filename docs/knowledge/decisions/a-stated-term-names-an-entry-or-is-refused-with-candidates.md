@@ -1,7 +1,7 @@
 ---
 type: Decision
 title: A stated term names an entry or is refused with candidates
-description: A stated pick, and a gene lookup's stated organism, bind only to the entry they spell after folding (case, spacing, a numeric equivalent); every other term is refused in one VocabularyEntryError that carries the ranked candidates, an organism guessed from a query never narrows a lookup, and no model chooses an entry; the offline A/B that rejected a Decisions choice, with and without a fit predicate.
+description: A stated pick, and a gene lookup's stated organism, bind only to the entry they spell after folding (case, spacing, a numeric equivalent); every other term is refused in one VocabularyEntryError whose shown candidates lead with the entry a Decisions choice picks, which never binds, an organism guessed from a query never narrows a lookup; the offline A/B of four arms that chose refusing over picking.
 tags: [catalog, vocabulary, parameters, decisions-api]
 status: stable
 ---
@@ -20,8 +20,25 @@ every shape fault of the call; any other refusal raises on its own. `_bound` bin
 filters only. `separation/eligibility.py` reads an organism through `exact_entry` alone.
 
 The phyletic species lists and a radio pair's free-text half name their nearest entries
-from the same `rank_entries`, by `entry_name` (`display (value)`). No served read asks a
-model which entry a phrase means, and a parameter read carries no picked entry.
+from the same `rank_entries`, by `entry_name` (`display (value)`). A parameter read
+carries no picked entry.
+
+# The order of the shown candidates
+
+`read_under_parents` (`about: ResolveContext`, the site and the researcher's message when
+there is one) and the gene lookup's stated organism pass every `VocabularyEntryError` they
+raise through `ordered_refusal` / `ordered_by_vocabulary` (`catalog/vocab_resolve.py`).
+For each fault it asks one Decisions Choice (`resolve_request`: the site, the parameter's
+display name, the words, the message) over the first 254 entries `rank_entries` ranks,
+plus `none_fits`. When the choice names an offered entry, that entry leads the five shown
+candidates and the ranking follows without it. The choice never binds: the refusal stands
+whatever its confidence, and no floor or fit predicate is read. With no answer (no key, a
+timeout, a mock deployment, a parse failure), `none_fits` or a choice that names no
+offered entry, the fault keeps the ranking. The call runs through `decide`, on whatever
+transport the host installs (the turn's keyed provider) and the Decisions timeout.
+Ordering is the one place: `read_under_parents` is the read every stated value passes, so
+`read_stated_parameters`, the served tools and a host's own read reach it. The
+canonicalizer's later refusals read values that read already named.
 
 # The gene lookup's organism
 
@@ -40,7 +57,9 @@ An offline A/B on 458 labelled rows over 25 recorded vocabularies (398 not exact
 folding), labelled twice blind and adjudicated before any arm ran (agreement on the kind
 97.2%), split into a dev half and a held-out half of 229 rows (197 not exact). Arms:
 refuse with the candidates; a Decisions Choice over up to 254 ranked candidates plus
-`none_fits` (`gpt-6-luna`); the same Choice capped by a fit predicate. A row is right
+`none_fits` (`gpt-6-luna`); the same Choice capped by a fit predicate; and, scored
+offline from the recorded Choice answers and pre-registered before scoring, refuse with
+the Choice's pick leading the shown five (`refuse_plus`). A row is right
 when the arm settles the gold entry, or refuses with a gold entry in the first five
 candidates or a gold answer of ambiguous or none. A settled wrong entry is confidently
 wrong, and an arm with one is not adopted.
@@ -52,6 +71,13 @@ wrong, and an arm with one is not adopted.
   wrong. Choice and fit at 0.80 is right on 208 (90.8%) with 1 confidently wrong:
   "Duffy binding like domain" settled to IPR008602 at choice 1.00 and fit 0.94, where
   the label is ambiguous between IPR008602 and IPR004258.
+- Held-out, refuse_plus: right on 219 of 229 (95.6%, Wilson 92.1-97.6%), 22 rows that
+  refuse misses and 0 it gets, and 0 confidently wrong because it never settles.
+  "citric acid cycle" on the Hagai pathways: the Choice picks `Mitochondrial TCA cycle`
+  at 0.92, which the ranking's five do not hold. On dev it is right on 217 of 229 (refuse
+  204); a floor on the pick changed nothing from 0.00 to 0.45. The pre-registered rule
+  (at least 2 points over refuse) holds at +9.6. One Choice per unclear phrase costs
+  about $0.00029 and 0.87 s (median).
 - 40 repeated rows gave the same answers. The live pass cost $0.153 (1.53 M input
   tokens); a Choice and fit cost $0.0003 and 1.7 s per row.
 
@@ -67,7 +93,10 @@ refuse arm's confident-error rate is 1.52%.
 - **The Choice alone.** No floor removes its confidently wrong rows on dev.
 - **The read's pick (`VocabPick`) and its floor setting.** They existed only for the
   rejected arm.
+- **Refuse with the ranking alone.** Never wrong, but 22 held-out refusals did not show
+  the entry the researcher meant, where the Choice's pick would have.
 
 Falsified by `tests/unit/catalog/test_a_stated_phrase_is_read_by_the_resolver.py`,
+`tests/unit/catalog/test_a_refusal_leads_with_the_decided_entry.py`,
 `tests/unit/catalog/test_a_value_is_read_under_its_parents.py` and
 `tests/unit/gene_lookup/test_an_organism_is_stated_or_only_ranks.py`.

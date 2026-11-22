@@ -1,0 +1,775 @@
+{
+ "provenance": {
+  "row": "r254",
+  "arm": "choice",
+  "vocabulary": "plasmodb_organism_tree",
+  "phrase": "Pf3D7",
+  "model": "gpt-6-luna",
+  "request_builder": "veupathdb_mcp.catalog.vocab_resolve.resolve_request",
+  "mcp": "b14b810",
+  "client": "veupathdb-py 0.9.0b10",
+  "recorded_for": "the offline vocabulary A/B, labelled set row r254; replayed to order a refusal's candidates"
+ },
+ "exchanges": [
+  {
+   "request": {
+    "model": "gpt-6-luna",
+    "input": "VEuPathDB site: plasmodb. Parameter: Organism.\nThe researcher's words: \"Pf3D7\"",
+    "questions": [
+     {
+      "type": "choice",
+      "name": "value",
+      "instructions": "Which entry of the parameter do the researcher's words name? Read each label. Choose none_fits when the words name a group, several entries without choosing one, or nothing listed.",
+      "choices": [
+       {
+        "value": "e0",
+        "description": "Plasmodium falciparum 3D7"
+       },
+       {
+        "value": "e1",
+        "description": "Plasmodium falciparum HB3"
+       },
+       {
+        "value": "e2",
+        "description": "Plasmodium falciparum Dd2"
+       },
+       {
+        "value": "e3",
+        "description": "Plasmodium falciparum 7G8"
+       },
+       {
+        "value": "e4",
+        "description": "Plasmodium falciparum SD01"
+       },
+       {
+        "value": "e5",
+        "description": "Plasmodium falciparum CD01"
+       },
+       {
+        "value": "e6",
+        "description": "Plasmodium fragile"
+       },
+       {
+        "value": "e7",
+        "description": "Plasmodium falciparum 7G8 2019"
+       },
+       {
+        "value": "e8",
+        "description": "Plasmodium falciparum NF135.C10"
+       },
+       {
+        "value": "e9",
+        "description": "Plasmodium falciparum"
+       },
+       {
+        "value": "e10",
+        "description": "Plasmodium falciparum IT"
+       },
+       {
+        "value": "e11",
+        "description": "Plasmodium reichenowi CDC"
+       },
+       {
+        "value": "e12",
+        "description": "Plasmodium praefalciparum"
+       },
+       {
+        "value": "e13",
+        "description": "Plasmodium falciparum GB4"
+       },
+       {
+        "value": "e14",
+        "description": "Plasmodium"
+       },
+       {
+        "value": "e15",
+        "description": "Plasmodium falciparum TG01"
+       },
+       {
+        "value": "e16",
+        "description": "Plasmodium falciparum SN01"
+       },
+       {
+        "value": "e17",
+        "description": "Plasmodium falciparum NF54"
+       },
+       {
+        "value": "e18",
+        "description": "Plasmodium falciparum ML01"
+       },
+       {
+        "value": "e19",
+        "description": "Plasmodium falciparum KH02"
+       },
+       {
+        "value": "e20",
+        "description": "Plasmodium falciparum KH01"
+       },
+       {
+        "value": "e21",
+        "description": "Plasmodium falciparum KE01"
+       },
+       {
+        "value": "e22",
+        "description": "Plasmodium falciparum GN01"
+       },
+       {
+        "value": "e23",
+        "description": "Plasmodium falciparum GA01"
+       },
+       {
+        "value": "e24",
+        "description": "Plasmodium falciparum NF166"
+       },
+       {
+        "value": "e25",
+        "description": "Plasmodium yoelii yoelii 17X"
+       },
+       {
+        "value": "e26",
+        "description": "Plasmodium vinckei lentum DE"
+       },
+       {
+        "value": "e27",
+        "description": "Plasmodium gaboni strain SY75"
+       },
+       {
+        "value": "e28",
+        "description": "Plasmodiidae"
+       },
+       {
+        "value": "e29",
+        "description": "Plasmodium yoelii yoelii 17XNL"
+       },
+       {
+        "value": "e30",
+        "description": "Plasmodium fragile strain nilgiri"
+       },
+       {
+        "value": "e31",
+        "description": "Plasmodium vinckei brucechwatti DA"
+       },
+       {
+        "value": "e32",
+        "description": "Plasmodium yoelii yoelii 17XNL 2023"
+       },
+       {
+        "value": "e33",
+        "description": "Plasmodium inui"
+       },
+       {
+        "value": "e34",
+        "description": "Plasmodium praefalciparum strain G01"
+       },
+       {
+        "value": "e35",
+        "description": "Plasmodium vivax"
+       },
+       {
+        "value": "e36",
+        "description": "Plasmodium ovale"
+       },
+       {
+        "value": "e37",
+        "description": "Plasmodium yoelii"
+       },
+       {
+        "value": "e38",
+        "description": "Plasmodium gaboni"
+       },
+       {
+        "value": "e39",
+        "description": "Plasmodium adleri"
+       },
+       {
+        "value": "e40",
+        "description": "Plasmodium vinckei"
+       },
+       {
+        "value": "e41",
+        "description": "Plasmodium berghei"
+       },
+       {
+        "value": "e42",
+        "description": "Plasmodium relictum"
+       },
+       {
+        "value": "e43",
+        "description": "Plasmodium malariae"
+       },
+       {
+        "value": "e44",
+        "description": "Plasmodium knowlesi"
+       },
+       {
+        "value": "e45",
+        "description": "Plasmodium coatneyi"
+       },
+       {
+        "value": "e46",
+        "description": "Plasmodium chabaudi"
+       },
+       {
+        "value": "e47",
+        "description": "Plasmodium vivax PAM"
+       },
+       {
+        "value": "e48",
+        "description": "Plasmodium vivax P01"
+       },
+       {
+        "value": "e49",
+        "description": "Plasmodium cynomolgi"
+       },
+       {
+        "value": "e50",
+        "description": "Plasmodium vivax PvW1"
+       },
+       {
+        "value": "e51",
+        "description": "Plasmodium reichenowi"
+       },
+       {
+        "value": "e52",
+        "description": "Plasmodium blacklocki"
+       },
+       {
+        "value": "e53",
+        "description": "Plasmodium adleri G01"
+       },
+       {
+        "value": "e54",
+        "description": "Plasmodium vivax Sal-1"
+       },
+       {
+        "value": "e55",
+        "description": "Plasmodium gallinaceum"
+       },
+       {
+        "value": "e56",
+        "description": "Plasmodium brasilianum"
+       },
+       {
+        "value": "e57",
+        "description": "Plasmodium billcollinsi"
+       },
+       {
+        "value": "e58",
+        "description": "Plasmodium berghei ANKA"
+       },
+       {
+        "value": "e59",
+        "description": "Plasmodium malariae UG01"
+       },
+       {
+        "value": "e60",
+        "description": "Plasmodium vivax-like sp."
+       },
+       {
+        "value": "e61",
+        "description": "Plasmodium reichenowi G01"
+       },
+       {
+        "value": "e62",
+        "description": "Plasmodium gallinaceum 8A"
+       },
+       {
+        "value": "e63",
+        "description": "Plasmodium blacklocki G01"
+       },
+       {
+        "value": "e64",
+        "description": "Plasmodium yoelii yoelii YM"
+       },
+       {
+        "value": "e65",
+        "description": "Plasmodium vivax-like Pvl01"
+       },
+       {
+        "value": "e66",
+        "description": "Plasmodium coatneyi Hackeri"
+       },
+       {
+        "value": "e67",
+        "description": "Plasmodium billcollinsi G01"
+       },
+       {
+        "value": "e68",
+        "description": "Plasmodium knowlesi strain H"
+       },
+       {
+        "value": "e69",
+        "description": "Plasmodium gaboni strain G01"
+       },
+       {
+        "value": "e70",
+        "description": "Plasmodium chabaudi chabaudi"
+       },
+       {
+        "value": "e71",
+        "description": "Plasmodium vinckei vinckei CY"
+       },
+       {
+        "value": "e72",
+        "description": "Plasmodium relictum SGS1-like"
+       },
+       {
+        "value": "e73",
+        "description": "Plasmodium ovale curtisi GH01"
+       },
+       {
+        "value": "e74",
+        "description": "Plasmodium inui San Antonio 1"
+       },
+       {
+        "value": "e75",
+        "description": "Plasmodium cynomolgi strain M"
+       },
+       {
+        "value": "e76",
+        "description": "Plasmodium cynomolgi strain B"
+       },
+       {
+        "value": "e77",
+        "description": "Plasmodium vinckei Cameroon EL"
+       },
+       {
+        "value": "e78",
+        "description": "Plasmodium knowlesi strain A1H1"
+       },
+       {
+        "value": "e79",
+        "description": "Plasmodium chabaudi chabaudi CB"
+       },
+       {
+        "value": "e80",
+        "description": "Plasmodium vinckei petteri CR 2020"
+       },
+       {
+        "value": "e81",
+        "description": "Plasmodium ovale wallikeri PowCR01"
+       },
+       {
+        "value": "e82",
+        "description": "Plasmodium vinckei petteri strain CR"
+       },
+       {
+        "value": "e83",
+        "description": "Plasmodium brasilianum strain Bolivian I"
+       },
+       {
+        "value": "e84",
+        "description": "Plasmodium vinckei vinckei strain vinckei"
+       },
+       {
+        "value": "e85",
+        "description": "Plasmodium knowlesi strain Malayan Strain Pk1 A"
+       },
+       {
+        "value": "e86",
+        "description": "Hepatocystis sp. ex Piliocolobus tephrosceles 2019"
+       },
+       {
+        "value": "e87",
+        "description": "Hepatocystis"
+       },
+       {
+        "value": "e88",
+        "description": "Haemoproteus tartakovskyi strain SISKIN1"
+       },
+       {
+        "value": "e89",
+        "description": "Haemoproteidae"
+       },
+       {
+        "value": "none_fits",
+        "description": "The words name no one of these entries: they name a group, several entries without choosing one, or nothing listed; or each entry is obsolete, broader, narrower or about something else."
+       }
+      ]
+     }
+    ]
+   },
+   "response": {
+    "answers": [
+     {
+      "type": "choice",
+      "name": "value",
+      "choice": "e0",
+      "probabilities": [
+       {
+        "value": "e0",
+        "probability": 1.0
+       },
+       {
+        "value": "e1",
+        "probability": 0.0
+       },
+       {
+        "value": "e2",
+        "probability": 0.0
+       },
+       {
+        "value": "e3",
+        "probability": 0.0
+       },
+       {
+        "value": "e4",
+        "probability": 0.0
+       },
+       {
+        "value": "e5",
+        "probability": 0.0
+       },
+       {
+        "value": "e6",
+        "probability": 0.0
+       },
+       {
+        "value": "e7",
+        "probability": 0.0
+       },
+       {
+        "value": "e8",
+        "probability": 0.0
+       },
+       {
+        "value": "e9",
+        "probability": 0.0
+       },
+       {
+        "value": "e10",
+        "probability": 0.0
+       },
+       {
+        "value": "e11",
+        "probability": 0.0
+       },
+       {
+        "value": "e12",
+        "probability": 0.0
+       },
+       {
+        "value": "e13",
+        "probability": 0.0
+       },
+       {
+        "value": "e14",
+        "probability": 0.0
+       },
+       {
+        "value": "e15",
+        "probability": 0.0
+       },
+       {
+        "value": "e16",
+        "probability": 0.0
+       },
+       {
+        "value": "e17",
+        "probability": 0.0
+       },
+       {
+        "value": "e18",
+        "probability": 0.0
+       },
+       {
+        "value": "e19",
+        "probability": 0.0
+       },
+       {
+        "value": "e20",
+        "probability": 0.0
+       },
+       {
+        "value": "e21",
+        "probability": 0.0
+       },
+       {
+        "value": "e22",
+        "probability": 0.0
+       },
+       {
+        "value": "e23",
+        "probability": 0.0
+       },
+       {
+        "value": "e24",
+        "probability": 0.0
+       },
+       {
+        "value": "e25",
+        "probability": 0.0
+       },
+       {
+        "value": "e26",
+        "probability": 0.0
+       },
+       {
+        "value": "e27",
+        "probability": 0.0
+       },
+       {
+        "value": "e28",
+        "probability": 0.0
+       },
+       {
+        "value": "e29",
+        "probability": 0.0
+       },
+       {
+        "value": "e30",
+        "probability": 0.0
+       },
+       {
+        "value": "e31",
+        "probability": 0.0
+       },
+       {
+        "value": "e32",
+        "probability": 0.0
+       },
+       {
+        "value": "e33",
+        "probability": 0.0
+       },
+       {
+        "value": "e34",
+        "probability": 0.0
+       },
+       {
+        "value": "e35",
+        "probability": 0.0
+       },
+       {
+        "value": "e36",
+        "probability": 0.0
+       },
+       {
+        "value": "e37",
+        "probability": 0.0
+       },
+       {
+        "value": "e38",
+        "probability": 0.0
+       },
+       {
+        "value": "e39",
+        "probability": 0.0
+       },
+       {
+        "value": "e40",
+        "probability": 0.0
+       },
+       {
+        "value": "e41",
+        "probability": 0.0
+       },
+       {
+        "value": "e42",
+        "probability": 0.0
+       },
+       {
+        "value": "e43",
+        "probability": 0.0
+       },
+       {
+        "value": "e44",
+        "probability": 0.0
+       },
+       {
+        "value": "e45",
+        "probability": 0.0
+       },
+       {
+        "value": "e46",
+        "probability": 0.0
+       },
+       {
+        "value": "e47",
+        "probability": 0.0
+       },
+       {
+        "value": "e48",
+        "probability": 0.0
+       },
+       {
+        "value": "e49",
+        "probability": 0.0
+       },
+       {
+        "value": "e50",
+        "probability": 0.0
+       },
+       {
+        "value": "e51",
+        "probability": 0.0
+       },
+       {
+        "value": "e52",
+        "probability": 0.0
+       },
+       {
+        "value": "e53",
+        "probability": 0.0
+       },
+       {
+        "value": "e54",
+        "probability": 0.0
+       },
+       {
+        "value": "e55",
+        "probability": 0.0
+       },
+       {
+        "value": "e56",
+        "probability": 0.0
+       },
+       {
+        "value": "e57",
+        "probability": 0.0
+       },
+       {
+        "value": "e58",
+        "probability": 0.0
+       },
+       {
+        "value": "e59",
+        "probability": 0.0
+       },
+       {
+        "value": "e60",
+        "probability": 0.0
+       },
+       {
+        "value": "e61",
+        "probability": 0.0
+       },
+       {
+        "value": "e62",
+        "probability": 0.0
+       },
+       {
+        "value": "e63",
+        "probability": 0.0
+       },
+       {
+        "value": "e64",
+        "probability": 0.0
+       },
+       {
+        "value": "e65",
+        "probability": 0.0
+       },
+       {
+        "value": "e66",
+        "probability": 0.0
+       },
+       {
+        "value": "e67",
+        "probability": 0.0
+       },
+       {
+        "value": "e68",
+        "probability": 0.0
+       },
+       {
+        "value": "e69",
+        "probability": 0.0
+       },
+       {
+        "value": "e70",
+        "probability": 0.0
+       },
+       {
+        "value": "e71",
+        "probability": 0.0
+       },
+       {
+        "value": "e72",
+        "probability": 0.0
+       },
+       {
+        "value": "e73",
+        "probability": 0.0
+       },
+       {
+        "value": "e74",
+        "probability": 0.0
+       },
+       {
+        "value": "e75",
+        "probability": 0.0
+       },
+       {
+        "value": "e76",
+        "probability": 0.0
+       },
+       {
+        "value": "e77",
+        "probability": 0.0
+       },
+       {
+        "value": "e78",
+        "probability": 0.0
+       },
+       {
+        "value": "e79",
+        "probability": 0.0
+       },
+       {
+        "value": "e80",
+        "probability": 0.0
+       },
+       {
+        "value": "e81",
+        "probability": 0.0
+       },
+       {
+        "value": "e82",
+        "probability": 0.0
+       },
+       {
+        "value": "e83",
+        "probability": 0.0
+       },
+       {
+        "value": "e84",
+        "probability": 0.0
+       },
+       {
+        "value": "e85",
+        "probability": 0.0
+       },
+       {
+        "value": "e86",
+        "probability": 0.0
+       },
+       {
+        "value": "e87",
+        "probability": 0.0
+       },
+       {
+        "value": "e88",
+        "probability": 0.0
+       },
+       {
+        "value": "e89",
+        "probability": 0.0
+       },
+       {
+        "value": "none_fits",
+        "probability": 0.0
+       }
+      ],
+      "confidence": 1.0
+     }
+    ],
+    "usage": {
+     "input_tokens": 1563,
+     "cached_tokens": 0,
+     "cache_write_tokens": 0
+    }
+   }
+  }
+ ]
+}
