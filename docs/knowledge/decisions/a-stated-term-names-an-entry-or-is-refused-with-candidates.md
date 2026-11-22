@@ -60,7 +60,7 @@ context read (`param_resolution`) drops a value it cannot name and refuses nothi
 # The gene lookup's organism
 
 `lookup_gene_records` reads a stated `organism` through `entries_or_refusal` against the
-organisms the site declares (`gene_lookup/organisms.py:list_organisms`), before any
+organisms the site declares (`catalog/organisms.py:list_organisms`), before any
 search: an organism the site does not list is refused with the ranked candidates, and the
 entry it names restricts the searches and the records. An organism the query's own words
 imply (`rerank.analyse_query`, scored by `organism.score_organism_match`) is a guess: it

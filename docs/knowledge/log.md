@@ -1,5 +1,25 @@
 # Knowledge log
 
+## 2026-11-22 - 0.9.0b17: the declaration alone names the organism parameter
+
+- `catalog/organisms.py` holds the one rule. `organism_parameter_of(site_id, parameters)`
+  names the parameter that carries `highlightReferenceOrganisms` in `organismProperties`
+  (veupathdb-py 0.9.0b12 `is_organism`), or else one that carries `organismProperties`
+  and whose every leaf is an exact entry (`exact_entry`) of `list_organisms(site_id)`.
+  plasmodb `GenesWithAlphafold.organismsWithAlphafold` is named by the second part;
+  `GenesByMassSpec.ms_assay` is named by neither, so its samples are no organism scope.
+  `organism_parameter` reads one declaration and applies it.
+- `format_param_info_typed(params, *, organism)` and `format_typed_param(..., *, organism)`
+  take the organism parameter from the caller; every served read passes
+  `organism_parameter_of`. `param_dag`'s stated-value reads judge no organism and pass None.
+  `applied_context` and `parent_defaults` are one `ParentValues`.
+- `list_organisms` and `TAXON_SEARCH` move to `veupathdb_mcp.catalog`, and the taxon
+  search's organism parameter is the marked one, not the one named `organism`.
+  `gene_lookup` no longer exports `list_organisms`.
+- `separation.bind` takes `site_id`, and `organism_overrides` binds the organisms only into
+  the organism parameter.
+- `veupathdb-mcp` is 0.9.0b17.
+
 ## 2026-11-22 - 0.9.0b16: a refusal asks a bounded number of choices
 
 - One refusal asks a Decisions choice for at most its first `SHOWN_CANDIDATES` (5)

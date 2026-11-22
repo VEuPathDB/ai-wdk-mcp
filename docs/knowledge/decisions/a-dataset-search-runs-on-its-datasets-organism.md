@@ -8,7 +8,10 @@ status: stable
 
 # The choice
 
-WDK marks a search's organism parameter with `properties.organismProperties`. A
+A search's organism parameter is the one `catalog.organism_parameter_of` names: the
+parameter whose `properties.organismProperties` holds `highlightReferenceOrganisms`
+(veupathdb-py WDK-PARAM-013), or else one with `organismProperties` whose every leaf is
+an exact entry of the site's organism list. A
 search generated for one dataset, such as an RNA-Seq percentile or fold-change search,
 publishes no such parameter: its organism is the organism of the data it runs on. WDK
 publishes that link on the dataset record. The `References` table of
