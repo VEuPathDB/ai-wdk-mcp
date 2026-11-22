@@ -82,6 +82,11 @@ def streamed(monkeypatch: pytest.MonkeyPatch) -> _Recorder:
             for r in results
         ]
 
+    async def declared(site_id: str) -> list[str]:
+        del site_id
+        return ["Plasmodium falciparum 3D7"]
+
+    monkeypatch.setattr(lookup, "list_organisms", declared)
     monkeypatch.setattr(lookup, "fetch_site_search_genes", page)
     monkeypatch.setattr(lookup, "stream_site_search_gene_ids", recorder)
     monkeypatch.setattr(lookup, "fetch_wdk_text_genes", no_wdk_text)

@@ -1,4 +1,4 @@
-"""Organism fuzzy matching for gene lookup."""
+"""How well a gene lookup's words imply an organism, for ranking only."""
 
 import json
 import re
@@ -105,27 +105,6 @@ def score_organism_match(query: str, organism: str) -> float:
         if compact_score > 0
         else _score_token_overlap(set(q.split()), set(o.split()))
     )
-
-
-def suggest_organisms(
-    query: str,
-    available: list[str],
-    *,
-    max_suggestions: int = 5,
-    min_score: float = 0.40,
-) -> list[str]:
-    """Return available organism names that fuzzy-match the query, best first."""
-    if not query or not available:
-        return []
-
-    scored: list[tuple[float, str]] = []
-    for org in available:
-        s = score_organism_match(query, org)
-        if s >= min_score:
-            scored.append((s, org))
-
-    scored.sort(key=lambda x: (-x[0], x[1]))
-    return [name for _, name in scored[:max_suggestions]]
 
 
 def normalize_organism(raw: str) -> str:

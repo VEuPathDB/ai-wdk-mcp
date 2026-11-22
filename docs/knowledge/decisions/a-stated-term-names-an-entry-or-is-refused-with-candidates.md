@@ -1,25 +1,38 @@
 ---
 type: Decision
 title: A stated term names an entry or is refused with candidates
-description: A stated pick binds only to the entry it spells after folding (case, spacing, a numeric equivalent); every other term of the parameter is refused in one VocabularyEntryError that carries the ranked candidates, and no model chooses an entry; the offline A/B that rejected a Decisions choice, with and without a fit predicate.
+description: A stated pick, and a gene lookup's stated organism, bind only to the entry they spell after folding (case, spacing, a numeric equivalent); every other term is refused in one VocabularyEntryError that carries the ranked candidates, an organism guessed from a query never narrows a lookup, and no model chooses an entry; the offline A/B that rejected a Decisions choice, with and without a fit predicate.
 tags: [catalog, vocabulary, parameters, decisions-api]
 status: stable
 ---
 
 # The choice
 
-`_bound` in `src/veupathdb_mcp/catalog/param_dag.py` reads each stated pick through the
-client's exact step, `exact_or_candidates(options, term, SHOWN_CANDIDATES)`
-(`veupathdb-py: src/veupathdb/domain/parameters/vocab_lookup.py`). A term binds to the
-entry it names after folding case and spacing, or to the entry a numeric term equals.
-Every other term of the parameter is gathered into one `VocabularyEntryError`, one fault
-per term, each with the first `SHOWN_CANDIDATES` (5) entries `rank_entries` ranks. A
-parameter with no vocabulary keeps its terms. Only vocabulary faults of one parameter are
-gathered; any other refusal raises on its own.
+The client's stated reader (`read_stated_values`, which `read_declared` in
+`src/veupathdb_mcp/catalog/param_dag.py` calls) names each stated pick through
+`entries_or_refusal` (`veupathdb-py: src/veupathdb/domain/parameters/vocab_lookup.py`),
+the same step the canonicalizer runs. A term binds to the entry it names after folding
+case and spacing, or to the entry a numeric term equals (`exact_entry`). Every other term
+of the parameter is gathered into one `VocabularyEntryError`, one fault per term, each
+with the first `SHOWN_CANDIDATES` (5) entries `rank_entries` ranks. A parameter with no
+vocabulary keeps its terms. Only vocabulary faults of one parameter are gathered, after
+every shape fault of the call; any other refusal raises on its own. `_bound` binds
+filters only. `separation/eligibility.py` reads an organism through `exact_entry` alone.
 
 The phyletic species lists and a radio pair's free-text half name their nearest entries
 from the same `rank_entries`, by `entry_name` (`display (value)`). No served read asks a
 model which entry a phrase means, and a parameter read carries no picked entry.
+
+# The gene lookup's organism
+
+`lookup_gene_records` reads a stated `organism` through `entries_or_refusal` against the
+organisms the site declares (`gene_lookup/organisms.py:list_organisms`), before any
+search: an organism the site does not list is refused with the ranked candidates, and the
+entry it names restricts the searches and the records. An organism the query's own words
+imply (`rerank.analyse_query`, scored by `organism.score_organism_match`) is a guess: it
+adds an organism-restricted search to the pool and weighs the ranking, never removes a
+record, and the result names it as `implied_organism`. The fuzzy suggestions of a stated
+organism are gone.
 
 # What was measured
 
@@ -55,5 +68,6 @@ refuse arm's confident-error rate is 1.52%.
 - **The read's pick (`VocabPick`) and its floor setting.** They existed only for the
   rejected arm.
 
-Falsified by `tests/unit/catalog/test_a_stated_phrase_is_read_by_the_resolver.py` and
-`tests/unit/catalog/test_a_value_is_read_under_its_parents.py`.
+Falsified by `tests/unit/catalog/test_a_stated_phrase_is_read_by_the_resolver.py`,
+`tests/unit/catalog/test_a_value_is_read_under_its_parents.py` and
+`tests/unit/gene_lookup/test_an_organism_is_stated_or_only_ranks.py`.

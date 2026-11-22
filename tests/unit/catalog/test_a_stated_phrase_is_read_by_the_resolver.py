@@ -7,8 +7,11 @@ from pathlib import Path
 import pytest
 from pydantic import JsonValue
 from tests._support.filter_reads import FilterReadsDouble
-from veupathdb.domain.parameters import MultiPickValue, VocabularyEntryError
-from veupathdb.errors import ValidationError
+from veupathdb.domain.parameters import (
+    MultiPickValue,
+    SinglePickValue,
+    VocabularyEntryError,
+)
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKParameter, WDKSearchResponse
@@ -83,14 +86,19 @@ class TestAnOrganism:
 @pytest.mark.skipif(needs_qa_recording(f"wdk/{_SNPS}.json"), reason=NEEDS_QA_RECORDING)
 class TestASnpClass:
     async def test_non_synonymous_is_refused_and_never_binds_synonymous(self) -> None:
-        with pytest.raises(ValidationError) as refused:
-            await read_under_parents(
-                _serving(_SNPS), {"snp_class": "non-synonymous"}, FilterReadsDouble()
-            )
+        refused = await _refusal(_SNPS, {"snp_class": "non-synonymous"})
 
-        detail = str(refused.value.detail)
-        assert "'non-synonymous'" in detail
-        assert "'Synonymous'" in detail
+        [(param, resolution)] = refused.faults
+        assert param == "snp_class"
+        assert resolution.value is None
+        assert "Synonymous" in [c.value for c in resolution.candidates]
+
+    async def test_a_class_in_another_case_binds(self) -> None:
+        read = await read_under_parents(
+            _serving(_SNPS), {"snp_class": "missense"}, FilterReadsDouble()
+        )
+
+        assert read["snp_class"] == SinglePickValue(value="Missense")
 
 
 @pytest.mark.skipif(

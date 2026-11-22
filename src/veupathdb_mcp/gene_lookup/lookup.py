@@ -1,9 +1,10 @@
 """Gene text lookup. Runs concurrent search strategies, then scores, deduplicates, and ranks results."""
 
 import asyncio
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from veupathdb import get_logger
+from veupathdb.domain.parameters import VocabOption, entries_or_refusal
 from veupathdb.errors import VEuPathDBError
 
 from veupathdb_mcp.gene_lookup.rerank import (
@@ -14,7 +15,8 @@ from veupathdb_mcp.gene_lookup.rerank import (
 )
 
 from .hydrate import hydrate_sparse_gene_results
-from .organism import score_organism_match, suggest_organisms
+from .organism import score_organism_match
+from .organisms import ORGANISM_PARAM, list_organisms
 from .result import GeneResult
 from .scoring import score_gene_relevance
 from .site_search import (
@@ -44,7 +46,7 @@ class GeneSearchResult:
 
     records: list[GeneResult]
     total_count: int
-    suggested_organisms: list[str] | None = field(default=None)
+    implied_organism: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -273,28 +275,19 @@ def _append_streamed_tail(
     ]
 
 
-def _apply_organism_filter(
-    results: list[GeneResult],
-    *,
-    organism: str | None,
-    explicit_organism: str | None,
-    available_organisms: list[str],
-) -> tuple[list[GeneResult], list[str] | None]:
-    """Filter results by organism and suggest organisms when the filter is unknown."""
-    if not organism:
-        return results, None
+async def _stated_organism(site_id: str, organism: str | None) -> str | None:
+    """The site entry a stated organism names, or a refusal with candidates."""
+    if not organism or not organism.strip():
+        return None
+    declared = [VocabOption(value=o, display=o) for o in await list_organisms(site_id)]
+    [entry] = entries_or_refusal(ORGANISM_PARAM, declared, [organism.strip()])
+    return entry
 
-    organism_input = organism.strip()
-    ol = organism_input.lower()
 
-    if explicit_organism:
-        filtered = [r for r in results if r.organism.strip().lower() == ol]
-        return filtered, None
-
-    suggested = suggest_organisms(organism_input, available_organisms)
-    if not suggested:
-        return [], available_organisms[:10]
-    return results, suggested
+def _of_organism(results: list[GeneResult], organism: str | None) -> list[GeneResult]:
+    if organism is None:
+        return results
+    return [r for r in results if r.organism == organism]
 
 
 def _build_response(
@@ -303,7 +296,7 @@ def _build_response(
     pool_size: int,
     site_search_total: int,
     wdk_totals: tuple[int, int],
-    suggested_organisms: list[str] | None,
+    implied_organism: str | None,
 ) -> GeneSearchResult:
     """Build the final typed response.
 
@@ -317,7 +310,7 @@ def _build_response(
     return GeneSearchResult(
         records=paginated,
         total_count=authoritative_total,
-        suggested_organisms=suggested_organisms,
+        implied_organism=implied_organism,
     )
 
 
@@ -335,6 +328,7 @@ async def lookup_genes_by_text(
     limit: int = 20,
 ) -> GeneSearchResult:
     """Search for gene records with several concurrent strategies."""
+    explicit_organism = await _stated_organism(site_id, organism)
     needed = offset + limit
     is_multi_word = len(query.strip().split()) >= _MIN_WORDS_FOR_MULTI_WORD
 
@@ -347,14 +341,6 @@ async def lookup_genes_by_text(
     intent = analyse_query(
         query, available_organisms, organism_scorer=score_organism_match
     )
-
-    explicit_organism: str | None = None
-    if organism:
-        organism_lower = organism.strip().lower()
-        for avail in available_organisms:
-            if avail.lower() == organism_lower:
-                explicit_organism = avail
-                break
 
     effective_organism = explicit_organism or intent.implied_organism
 
@@ -389,12 +375,7 @@ async def lookup_genes_by_text(
     )
     results = _append_streamed_tail(_merge_and_rank(query, described), streamed_results)
 
-    results, suggested_organisms = _apply_organism_filter(
-        results,
-        organism=organism,
-        explicit_organism=explicit_organism,
-        available_organisms=available_organisms,
-    )
+    results = _of_organism(results, explicit_organism)
 
     paginated = await hydrate_sparse_gene_results(
         site_id, results[offset : offset + limit]
@@ -405,5 +386,5 @@ async def lookup_genes_by_text(
         pool_size=len(results),
         site_search_total=organism_total if explicit_organism else primary_total,
         wdk_totals=(wdk_id_result.total_count, wdk_broad_result.total_count),
-        suggested_organisms=suggested_organisms,
+        implied_organism=None if explicit_organism else intent.implied_organism,
     )

@@ -103,7 +103,11 @@ async def lookup_gene_records(
     Args:
         site_id: VEuPathDB site, for example 'plasmodb'.
         query: Free text, for example 'PfAP2-G' or 'gametocyte surface antigen'.
-        organism: Organism to restrict to, for example 'Plasmodium falciparum 3D7'.
+        organism: Organism to restrict to, as the site names it, for example
+            'Plasmodium falciparum 3D7'. A name the site does not list is refused
+            with the nearest organisms it does. An organism the query's own words
+            imply never restricts the lookup; the result names it as
+            `implied_organism`.
         limit: Largest number of records to return.
     """
     return await lookup_genes_by_text(site_id, query, organism=organism, limit=limit)

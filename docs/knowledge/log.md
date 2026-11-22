@@ -16,7 +16,14 @@
   dev. `ParameterInfo.vocab_pick`, `VocabPick`, `catalog/vocab_pick.py`, the read's pick
   in `read_parameter_options` and `DECISIONS_VOCAB_MIN_CONFIDENCE` are deleted; the
   Decisions client stays for the search candidates. `separation/eligibility.py` takes an
-  organism through the same exact step.
+  organism through the client's `exact_entry`.
+- The client's stated reader names every pick through `entries_or_refusal` (veupathdb-py
+  0.9.0b11), so `snp_class: "missense"` binds `Missense` and `_bound` binds filters only.
+- `lookup_gene_records` reads a stated organism through the same step against the
+  organisms the site declares, and refuses one the site does not list with candidates. An
+  organism the query implies never removes a record; `GeneSearchResult.implied_organism`
+  names it, and `suggested_organisms` and `suggest_organisms` are gone.
+- The client is taken at `v0.9.0b11`.
 - A phyletic refusal and a radio pair issue carry the `SHOWN_CANDIDATES` (5) entries the
   client's `rank_entries` ranks first (`nearest: list[VocabOption]`); `nearest_entries`
   is gone from the client. The phyletic refusal names each as the client's `entry_name`

@@ -80,14 +80,21 @@ async def test_the_typed_wrapper_is_not_a_stated_shape() -> None:
     assert [fault.name for fault in refused.value.faults] == ["MinPercentMinorAlleles"]
 
 
-async def test_two_bad_values_are_refused_in_one_error() -> None:
+async def test_two_values_of_the_wrong_shape_are_refused_in_one_error() -> None:
     with pytest.raises(StatedValuesError) as refused:
-        await _resolve({"MinPercentMinorAlleles": "five", "snp_class": "Nonsense"})
+        await _resolve({"MinPercentMinorAlleles": "five", "snp_class": 5})
 
     assert sorted(fault.name for fault in refused.value.faults) == [
         "MinPercentMinorAlleles",
         "snp_class",
     ]
+
+
+async def test_a_shape_fault_is_refused_before_a_term_no_entry_names() -> None:
+    with pytest.raises(StatedValuesError) as refused:
+        await _resolve({"MinPercentMinorAlleles": "five", "snp_class": "Nonsense"})
+
+    assert [fault.name for fault in refused.value.faults] == ["MinPercentMinorAlleles"]
 
 
 async def test_a_site_set_name_is_refused_before_its_value_is_read() -> None:
