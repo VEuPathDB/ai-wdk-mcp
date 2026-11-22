@@ -300,9 +300,13 @@ _READER = _Reader()
 
 @final
 class BoundValues(Mapping[str, ParamValue]):
+    __slots__ = ("_values",)
+
     def __init__(self, values: Mapping[str, ParamValue], reader: _Reader) -> None:
-        del reader
-        self._values = dict(values)
+        if reader is not _READER:
+            msg = "only read_under_parents binds values"
+            raise TypeError(msg)
+        self._values: Mapping[str, ParamValue] = MappingProxyType(dict(values))
 
     def __getitem__(self, name: str) -> ParamValue:
         return self._values[name]

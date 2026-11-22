@@ -1,5 +1,10 @@
 # Knowledge log
 
+## 2026-11-22 - A reading is built by the reader and cannot change
+
+- `BoundValues` refuses any sentinel but the reader's own and holds its values in a
+  read-only mapping, so `NOTHING_READ` and every reading stay as read.
+
 ## 2026-11-22 - Values compare by ==, and the reader returns BoundValues
 
 - veupathdb-py defines equality on the value types, so `held_default`, the
