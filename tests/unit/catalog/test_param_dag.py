@@ -301,9 +301,19 @@ class TestAnUnknownOverrideIsRefused:
         exc = info.value
         assert isinstance(exc, ValidationError)
         assert exc.code is VEuPathDBErrorCode.VALIDATION_ERROR
-        assert exc.unknown == ["life_stage", "percentile"]
+        assert exc.unknown == ["percentile", "life_stage"]
         assert exc.valid == ["min_expression_percentile", "stage"]
-        assert exc.errors == [{"param": "life_stage"}, {"param": "percentile"}]
+        valid = "Valid names: ['min_expression_percentile', 'stage']."
+        assert exc.errors == [
+            {
+                "param": "percentile",
+                "detail": f"percentile is no parameter of this search. {valid}",
+            },
+            {
+                "param": "life_stage",
+                "detail": f"life_stage is no parameter of this search. {valid}",
+            },
+        ]
         assert exc.detail is not None
         assert "min_expression_percentile" in exc.detail
 

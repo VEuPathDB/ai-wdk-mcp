@@ -97,8 +97,8 @@ async def test_an_early_miss_and_a_later_entry_are_one_refusal() -> None:
 
     assert not isinstance(refused.value, VocabularyEntryError)
     assert [row.param for row in _rows(refused.value)] == [
-        "domain_typeahead",
         "gene_variant_stats",
+        "domain_typeahead",
     ]
 
 
@@ -114,9 +114,9 @@ async def test_the_walk_names_an_early_miss_and_a_later_entry_at_once() -> None:
             about=None,
         )
 
-    assert sorted(row.param for row in _rows(refused.value)) == [
-        "domain_typeahead",
+    assert [row.param for row in _rows(refused.value)] == [
         "gene_variant_stats",
+        "domain_typeahead",
     ]
 
 
@@ -131,6 +131,6 @@ async def test_a_refused_parent_skips_only_its_own_subtree() -> None:
         await read_under_parents(serving(*_both()), stated, _reads(), about=None)
 
     assert [row.param for row in _rows(refused.value)] == [
-        "domain_database",
         "gene_variant_stats",
+        "domain_database",
     ]

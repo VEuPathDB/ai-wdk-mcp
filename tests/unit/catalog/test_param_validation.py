@@ -202,9 +202,21 @@ class TestWdksOwnVerdictIsTheRefusal:
             await _validate_organism()
 
         assert excinfo.value.errors == [
-            {"param": "ec_wildcard", "messages": [_EMPTY_MESSAGE]},
-            {"param": "ec_source", "messages": [_EMPTY_MESSAGE]},
-            {"param": "ec_number_pattern", "messages": [_EMPTY_MESSAGE]},
+            {
+                "param": "ec_wildcard",
+                "messages": [_EMPTY_MESSAGE],
+                "detail": _EMPTY_MESSAGE,
+            },
+            {
+                "param": "ec_source",
+                "messages": [_EMPTY_MESSAGE],
+                "detail": _EMPTY_MESSAGE,
+            },
+            {
+                "param": "ec_number_pattern",
+                "messages": [_EMPTY_MESSAGE],
+                "detail": _EMPTY_MESSAGE,
+            },
         ]
 
     async def test_the_detail_joins_the_bundles_messages(
@@ -224,7 +236,11 @@ class TestWdksOwnVerdictIsTheRefusal:
             await _validate_organism()
 
         assert excinfo.value.errors == [
-            {"param": "min_molecular_weight", "messages": [_REGEX_MESSAGE]}
+            {
+                "param": "min_molecular_weight",
+                "messages": [_REGEX_MESSAGE],
+                "detail": _REGEX_MESSAGE,
+            }
         ]
 
 

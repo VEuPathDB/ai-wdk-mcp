@@ -37,8 +37,18 @@ deployment's key, and an outside client could otherwise spend it on every refusa
 only a host's in-process read, on the turn's keyed provider, orders a refusal. A
 refusal that joins entry rows with other rows (a wrong shape, an unknown name, a wrong
 kind, a filter that selects nothing) orders the candidates of every entry row and keeps
-each other row in its place. A walk reads every pass before it refuses: it skips only the
-parameters under a refused one and raises one refusal for every pass at the end. One
+each other row in its place. A walk reads every pass before it refuses: a name of no
+parameter, a site-set name, a site-set parameter with no value, a value that does not read,
+a phyletic list that derives no pattern and a filter that selects nothing are each noted, the
+walk skips only the parameters under a refused one, and it raises one refusal at the end. Its
+rows are in call order, by the position of their parameter in the call, then in the order
+they were found; a row of a parameter the call does not name comes last. Every row holds
+`param` and a one-line `detail`.
+
+The refusal's class depends on its rows only, never on `about`: a refusal with no entry row
+is raised as it is, one whose every row is an entry row is a `VocabularyEntryError`, and a
+mixed one is a `ValidationError` built from its rows (`vocab_resolve.ordered`). Callers read
+rows, not classes. One
 refusal asks a choice for at most its first `SHOWN_CANDIDATES` (5) terms, all at once
 (`ordered_terms`, the one function every path goes through); every later term keeps the
 ranking. The phyletic refusal (`PhyleticListError` for a species list term that names no

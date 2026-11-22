@@ -1,5 +1,19 @@
 # Knowledge log
 
+## 2026-11-22 - A walk raises once, in call order
+
+- The two walks raise nothing before the end. An unknown name, a site-set name (on every
+  pass), a site-set parameter with no value and a phyletic list that derives no pattern are
+  noted beside the read refusals and the filter misses (`_walk_refusals.Refusals`). A
+  phyletic list is derived only from lists that read. A held child refused under a moved
+  parent is noted too.
+- The rows are ordered by the position of their parameter in the call, then by the order they
+  were found (`vocab_resolve.gathered`). `UnknownParameterError` and `UnreadStatementError`
+  rows hold one `detail` per name.
+- `vocab_resolve.ordered` gives one result whatever `about` is: the refusal as it is when no
+  row is an entry row, a `VocabularyEntryError` when every row is, else a `ValidationError`
+  built from the rows, its detail one line per row.
+
 ## 2026-11-22 - A walk names the problems of every pass once
 
 - `read_under_parents` and `resolve_params_with_intent` keep reading after a refusal: a

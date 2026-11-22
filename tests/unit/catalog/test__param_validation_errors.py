@@ -73,7 +73,9 @@ class TestWdkRejection:
         )
 
         assert exc.title == "Invalid parameter value"
-        assert exc.errors == [{"param": "organism", "messages": [_EMPTY]}]
+        assert exc.errors == [
+            {"param": "organism", "messages": [_EMPTY], "detail": _EMPTY}
+        ]
 
     def test_the_detail_names_the_parameter_before_the_message(self) -> None:
         exc = wdk_rejection_error(

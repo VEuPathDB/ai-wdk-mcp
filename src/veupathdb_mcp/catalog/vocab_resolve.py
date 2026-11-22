@@ -6,7 +6,15 @@ import asyncio
 from collections.abc import Callable, Mapping, Sequence
 from typing import NoReturn
 
-from pydantic import BaseModel, ConfigDict, JsonValue, TypeAdapter, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    JsonValue,
+    TypeAdapter,
+    model_validator,
+)
+from veupathdb import JSONArray
 from veupathdb.domain.parameters import (
     DECIDED_CANDIDATES,
     SHOWN_CANDIDATES,
@@ -16,7 +24,7 @@ from veupathdb.domain.parameters import (
     flatten_vocab,
     rank_entries,
 )
-from veupathdb.errors import ValidationError, joined_refusal
+from veupathdb.errors import ValidationError
 from veupathdb.model import CamelModel
 from veupathdb.wdk import WDKParameter
 
@@ -186,6 +194,8 @@ class _RefusalRow(BaseModel):
     model_config = ConfigDict(extra="ignore")
     param: str | None = None
     detail: str | None = None
+    message: str | None = None
+    messages: list[str] = Field(default_factory=list)
     value: JsonValue = None
     candidates: list[VocabOption] | None = None
 
@@ -193,6 +203,9 @@ class _RefusalRow(BaseModel):
     @classmethod
     def _a_row_that_is_not_an_object_is_its_detail(cls, value: object) -> object:
         return value if isinstance(value, Mapping) else {"detail": str(value)}
+
+    def line(self) -> str:
+        return self.detail or self.message or " ".join(self.messages)
 
     def fault(self) -> tuple[str, Resolution] | None:
         if self.candidates is None or self.param is None:
@@ -207,10 +220,6 @@ class _RefusalRow(BaseModel):
 _ROWS: TypeAdapter[list[_RefusalRow]] = TypeAdapter(list[_RefusalRow])
 
 
-def _faults(refusal: ValidationError) -> list[tuple[str, Resolution] | None]:
-    return [row.fault() for row in _ROWS.validate_python(refusal.errors or [])]
-
-
 def refused_names(refusal: ValidationError) -> set[str]:
     return {
         row.param
@@ -219,37 +228,53 @@ def refused_names(refusal: ValidationError) -> set[str]:
     }
 
 
-def gathered(refusals: Sequence[ValidationError]) -> ValidationError:
-    joined = joined_refusal(refusals)
-    found = _faults(joined)
-    if len(refusals) == 1 or None in found:
-        return joined
-    return VocabularyEntryError([fault for fault in found if fault is not None])
+def _from_rows(title: str, rows: JSONArray) -> ValidationError:
+    parsed = _ROWS.validate_python(rows)
+    faults = [fault for row in parsed if (fault := row.fault()) is not None]
+    if faults and len(faults) == len(parsed):
+        return VocabularyEntryError(faults)
+    return ValidationError(
+        title=title, detail="\n".join(row.line() for row in parsed), errors=rows
+    )
 
 
-async def _ordered_rows(
+def gathered(
+    refusals: Sequence[ValidationError], order: Sequence[str]
+) -> ValidationError:
+    position = {name: index for index, name in enumerate(order)}
+    rows: JSONArray = [row for refusal in refusals for row in refusal.errors or []]
+    parsed = _ROWS.validate_python(rows)
+    ranked = sorted(
+        range(len(rows)),
+        key=lambda index: position.get(parsed[index].param or "", len(position)),
+    )
+    in_order = [rows[index] for index in ranked]
+    if len(refusals) == 1 and in_order == rows:
+        return refusals[0]
+    title = refusals[0].title if len(refusals) == 1 else "Invalid parameter values"
+    return _from_rows(title, in_order)
+
+
+async def ordered(
     refusal: ValidationError,
     declarations: Sequence[WDKParameter],
-    about: ResolveContext,
-) -> ValidationError | None:
-    found = _faults(refusal)
+    about: ResolveContext | None,
+) -> ValidationError:
+    rows = refusal.errors or []
+    found = [row.fault() for row in _ROWS.validate_python(rows)]
     faults = [fault for fault in found if fault is not None]
     if not faults:
-        return None
-    ordered = await ordered_refusal(VocabularyEntryError(faults), declarations, about)
-    if len(faults) == len(found):
-        return ordered
-    shown = iter(ordered.errors or [])
-    errors = [
-        held if fault is None else next(shown)
-        for fault, held in zip(found, refusal.errors or [], strict=True)
-    ]
-    return ValidationError(
-        title=refusal.title,
-        detail="\n".join(
-            row.detail or refusal.title for row in _ROWS.validate_python(errors)
-        ),
-        errors=errors,
+        return refusal
+    entries = VocabularyEntryError(faults)
+    if about is not None:
+        entries = await ordered_refusal(entries, declarations, about)
+    shown = iter(entries.errors or [])
+    return _from_rows(
+        refusal.title,
+        [
+            held if fault is None else next(shown)
+            for fault, held in zip(found, rows, strict=True)
+        ],
     )
 
 
@@ -258,9 +283,7 @@ async def refuse_ordered(
     declarations: Sequence[WDKParameter],
     about: ResolveContext | None,
 ) -> NoReturn:
-    ordered = (
-        None if about is None else await _ordered_rows(refusal, declarations, about)
-    )
-    if ordered is None:
+    shown = await ordered(refusal, declarations, about)
+    if shown is refusal:
         raise refusal
-    raise ordered from refusal
+    raise shown from refusal

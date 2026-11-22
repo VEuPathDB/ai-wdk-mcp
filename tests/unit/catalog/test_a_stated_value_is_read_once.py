@@ -4,10 +4,11 @@ from collections.abc import Awaitable, Callable
 
 import pytest
 from fastmcp.exceptions import ToolError
-from pydantic import JsonValue
+from pydantic import BaseModel, ConfigDict, JsonValue, TypeAdapter
 from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recorded_searches import recorded_search
 from veupathdb.domain.parameters import ParamValue, StatedValuesError
+from veupathdb.errors import ValidationError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.wdk import WDKParameter
 
@@ -62,6 +63,15 @@ async def _resolve(stated: dict[str, JsonValue]) -> ResolvedParams:
     )
 
 
+class _RefusalRow(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    param: str
+    detail: str
+
+
+_REFUSAL_ROWS: TypeAdapter[list[_RefusalRow]] = TypeAdapter(list[_RefusalRow])
+
+
 async def test_a_native_number_binds_as_its_shortest_decimal() -> None:
     resolved = await _resolve(
         {
@@ -85,21 +95,19 @@ async def test_two_values_of_the_wrong_shape_are_refused_in_one_error() -> None:
     with pytest.raises(StatedValuesError) as refused:
         await _resolve({"MinPercentMinorAlleles": "five", "snp_class": 5})
 
-    assert sorted(fault.name for fault in refused.value.faults) == [
+    assert [fault.name for fault in refused.value.faults] == [
         "MinPercentMinorAlleles",
         "snp_class",
     ]
 
 
 async def test_a_shape_fault_and_a_term_no_entry_names_are_one_refusal() -> None:
-    with pytest.raises(StatedValuesError) as refused:
+    with pytest.raises(ValidationError) as refused:
         await _resolve({"MinPercentMinorAlleles": "five", "snp_class": "Nonsense"})
 
-    assert [fault.name for fault in refused.value.faults] == [
-        "MinPercentMinorAlleles",
-        "snp_class",
-    ]
-    assert "snp_class has no entry 'Nonsense'" in refused.value.faults[1].text
+    rows = _REFUSAL_ROWS.validate_python(refused.value.errors)
+    assert [row.param for row in rows] == ["MinPercentMinorAlleles", "snp_class"]
+    assert "snp_class has no entry 'Nonsense'" in rows[1].detail
 
 
 async def test_a_site_set_name_is_refused_before_its_value_is_read() -> None:

@@ -124,9 +124,9 @@ class TestAReadUnderParents:
             )
 
         rows = _rows(refused.value)
-        assert sorted(row.param for row in rows) == [
-            "gene_variant_stats",
+        assert [row.param for row in rows] == [
             "variation_sample_meta",
+            "gene_variant_stats",
         ]
         assert "selects 1 " in refused.value.detail
         assert "selects none of it" in refused.value.detail
@@ -170,9 +170,9 @@ async def test_the_walk_names_two_filter_misses_at_once() -> None:
         )
 
     rows = _rows(refused.value)
-    assert sorted(row.param for row in rows) == [
-        "gene_variant_stats",
+    assert [row.param for row in rows] == [
         "variation_sample_meta",
+        "gene_variant_stats",
     ]
 
 
