@@ -19,6 +19,12 @@ repos:
         language: system
         pass_filenames: false
         types: [python]
+      - id: param-equality
+        name: param-equality
+        entry: bash -c "uv run python -m veupathdb.devtools.param_equality src scripts --allow scripts/param-equality-allowed.txt"
+        language: system
+        pass_filenames: false
+        types: [python]
       - id: pytest
         name: pytest (hermetic)
         entry: bash -c "uv run pytest tests/unit"

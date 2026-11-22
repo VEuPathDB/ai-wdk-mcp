@@ -21,6 +21,7 @@ from veupathdb.domain.parameters import (
     check_expression,
     fill_site_set_defaults,
     filled_site_set_defaults,
+    same_param_values,
     shown_stated,
     to_decoded_map,
 )
@@ -419,7 +420,7 @@ async def validate_parameters(
 
     # A tree param counts only its leaves, so a branch selection scores zero
     # until it is expanded. WDK must judge what will be sent, not what arrived.
-    if encode_wdk_params(canonical) != encode_wdk_params(stated):
+    if not same_param_values(canonical, stated):
         resolved = await resolve_search_details(
             ctx,
             resolved_record_type=resolved_record_type,

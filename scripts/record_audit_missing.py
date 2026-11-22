@@ -10,7 +10,6 @@ WDK_TEST_EMAIL and WDK_TEST_PASSWORD):
 
 import argparse
 import asyncio
-import json
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -21,6 +20,7 @@ from pydantic import BaseModel, ConfigDict, Discriminator, JsonValue
 from scripts.record_audit_fixtures import FIXTURES, act_as_the_test_account
 from veupathdb import JSONObject
 from veupathdb.devtools import use_qa_sites
+from veupathdb.domain.parameters import MultiPickValue, same_as_wire
 from veupathdb.jbrowse import (
     GenomeReader,
     GenomeWindow,
@@ -317,10 +317,14 @@ def _example_kept(case: MissingCase, call: SearchCall) -> SearchCall:
 
 
 def trim(case: MissingCase, calls: list[WireCall]) -> list[WireCall]:
-    absent = json.dumps([case.absent_organism])
+    absent = MultiPickValue(values=[case.absent_organism])
     taxa = [taxon for call in calls if (taxon := _taxon(call)) is not None]
     example = next(
-        (_example_kept(case, t) for t in taxa if t.parameters["organism"] != absent),
+        (
+            _example_kept(case, t)
+            for t in taxa
+            if not same_as_wire("organism", absent, t.parameters["organism"])
+        ),
         None,
     )
     if example is None:
@@ -336,7 +340,9 @@ def trim(case: MissingCase, calls: list[WireCall]) -> list[WireCall]:
         match _taxon(call):
             case None:
                 kept.append(call)
-            case taxon if taxon.parameters["organism"] == absent:
+            case taxon if same_as_wire(
+                "organism", absent, taxon.parameters["organism"]
+            ):
                 kept.append(_absent_kept(taxon, groups, window))
             case _:
                 kept.append(example)

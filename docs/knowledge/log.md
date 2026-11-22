@@ -1,5 +1,13 @@
 # Knowledge log
 
+## 2026-11-22 - A gate keeps the one equality
+
+- `python -m veupathdb.devtools.param_equality src scripts` runs in pre-commit, in CI and in
+  the README gate list, with an empty allowance: this package compares no parameter values
+  as text. `validate_parameters` reads again only when the canonical values differ from the
+  stated ones by `same_param_values`, and the missing-gene recorder picks calls by
+  `same_as_wire`.
+
 ## 2026-11-22 - A value is compared in its declared kind
 
 - `substituted_params` and `read_under_parents` pass the parameter's declared kind to
