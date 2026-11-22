@@ -25,7 +25,6 @@ from veupathdb.errors import (
     ValidationError,
     VEuPathDBError,
     VEuPathDBErrorCode,
-    param_message_rows,
 )
 from veupathdb.wdk import (
     WDKParameter,
@@ -83,6 +82,7 @@ class PhyleticUnresolvedProposal(BaseModel):
 
     unresolved: PhyleticUnresolved
     nearest: list[VocabOption] = Field(default_factory=list)
+    stated: dict[str, str] = Field(default_factory=dict)
 
 
 class PhyleticNoSelection(BaseModel):
@@ -102,39 +102,54 @@ class PhyleticListError(ValidationError):
     ) -> None:
         self.refused = refused
         match refused:
-            case PhyleticUnresolvedProposal(unresolved=unresolved, nearest=nearest):
-                named = [
-                    f"{name} names no entry {terms}"
-                    for name, terms in (
-                        ("included_species", unresolved.included_unknown),
-                        ("excluded_species", unresolved.excluded_unknown),
-                    )
-                    if terms
-                ]
-                if unresolved.conflicts:
-                    named.append(
-                        f"included_species and excluded_species both name "
-                        f"{unresolved.conflicts}"
-                    )
-                near = ", ".join(entry_name(entry) for entry in nearest)
-                detail = f"{'; '.join(named)}. Nearest entries: {near}."
+            case PhyleticUnresolvedProposal():
+                rows = _list_rows(refused)
             case PhyleticNoSelection():
-                detail = (
+                rows = _pattern_rows(
                     "included_species and excluded_species select no species, so "
                     "profile_pattern states no criterion. Name what must have an "
                     "ortholog and what must not."
                 )
             case None:
-                detail = (
-                    "profile_pattern is derived from included_species and "
-                    "excluded_species against the search's published parameters, "
-                    "and the call passed none."
+                rows = _pattern_rows(
+                    "The search's phyletic_indent_map and phyletic_term_map do not "
+                    "read as a species tree, so included_species and excluded_species "
+                    "derive no profile_pattern."
                 )
         super().__init__(
             title="The species parameters derive no profile_pattern",
-            detail=detail,
-            errors=param_message_rows({"profile_pattern": [detail]}),
+            detail="\n".join(str(row["detail"]) for row in rows),
+            errors=list(rows),
         )
+
+
+def _pattern_rows(detail: str) -> list[JSONObject]:
+    return [{"param": "profile_pattern", "detail": detail}]
+
+
+def _list_rows(refused: PhyleticUnresolvedProposal) -> list[JSONObject]:
+    unresolved = refused.unresolved
+    near = ", ".join(entry_name(entry) for entry in refused.nearest)
+    rows: list[JSONObject] = []
+    for name, unknown in (
+        ("included_species", unresolved.included_unknown),
+        ("excluded_species", unresolved.excluded_unknown),
+    ):
+        faults = [f"{name} names no entry {unknown}"] if unknown else []
+        if unresolved.conflicts:
+            other = (
+                "excluded_species" if name == "included_species" else "included_species"
+            )
+            faults.append(f"{name} and {other} both name {unresolved.conflicts}")
+        if faults:
+            rows.append(
+                {
+                    "param": name,
+                    "value": refused.stated.get(name),
+                    "detail": f"{'; '.join(faults)}. Nearest entries: {near}.",
+                }
+            )
+    return rows
 
 
 def is_phyletic_sheet(infos: list[ParameterInfo]) -> bool:
@@ -171,7 +186,9 @@ async def ordered_phyletic_refusal(
     nothing, by the entry a Decisions choice picks."""
     tree = phyletic_tree_of(list(declarations))
     match refusal.refused:
-        case PhyleticUnresolvedProposal(unresolved=unresolved) if tree is not None:
+        case PhyleticUnresolvedProposal(unresolved=unresolved) as proposal if (
+            tree is not None
+        ):
             displays = {d.name: d.display_name or d.name for d in declarations}
             labels = tree.labels()
             asked = [
@@ -185,9 +202,7 @@ async def ordered_phyletic_refusal(
             nearest = interleaved(
                 await ordered_terms(about, asked), _value, SHOWN_CANDIDATES
             )
-            return PhyleticListError(
-                PhyleticUnresolvedProposal(unresolved=unresolved, nearest=nearest)
-            )
+            return PhyleticListError(proposal.model_copy(update={"nearest": nearest}))
         case _:
             return refusal
 
@@ -213,6 +228,7 @@ def derive_phyletic_overrides(
     )
     if isinstance(binding, PhyleticUnresolved):
         return PhyleticUnresolvedProposal(
+            stated={name: text for name, text in proposals.items() if text is not None},
             unresolved=binding,
             nearest=_ranked_entries(
                 tree, [*binding.included_unknown, *binding.excluded_unknown]

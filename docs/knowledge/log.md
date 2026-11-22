@@ -1,5 +1,14 @@
 # Knowledge log
 
+## 2026-11-22 - A species list is refused on itself
+
+- `PhyleticListError` writes one row per species list that names no entry or claims a code
+  the other list claims, keyed `included_species` or `excluded_species`, with the stated text
+  as `value`. Only naming no list (`PhyleticNoSelection`) is a `profile_pattern` row.
+- A search whose `phyletic_indent_map` and `phyletic_term_map` do not read as a tree is refused
+  in its own words, not as an empty selection.
+- A refusal row is read by its `detail` alone (`_RefusalRow`).
+
 ## 2026-11-22 - A walk raises once, in call order
 
 - The two walks raise nothing before the end. An unknown name, a site-set name (on every
@@ -8,8 +17,7 @@
   phyletic list is derived only from lists that read. A held child refused under a moved
   parent is noted too.
 - The rows are ordered by the position of their parameter in the call, then by the order they
-  were found (`vocab_resolve.gathered`). A derived row (`profile_pattern`) follows its last
-  stated species list; a row with no stated source comes last. `UnknownParameterError` and `UnreadStatementError`
+  were found (`vocab_resolve.gathered`); a row of a name the call does not state comes last. `UnknownParameterError` and `UnreadStatementError`
   rows hold one `detail` per name.
 - `vocab_resolve.ordered` gives one result whatever `about` is: the refusal as it is when no
   row is an entry row, a `VocabularyEntryError` when every row is, else a `ValidationError`

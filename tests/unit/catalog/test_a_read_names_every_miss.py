@@ -62,6 +62,7 @@ class _Row(BaseModel):
     model_config = ConfigDict(extra="ignore")
     param: str
     detail: str
+    value: JsonValue = None
     candidates: list[VocabOption] | None = None
 
 

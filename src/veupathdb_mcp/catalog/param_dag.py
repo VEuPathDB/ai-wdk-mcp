@@ -159,20 +159,19 @@ async def _derived_phyletic(
         for name, value in overrides.items()
         if name in PHYLETIC_LIST_PARAMS
     }
-    match derive_phyletic_overrides(list(declarations), lists) if lists else None:
+    derived = (
+        derive_phyletic_overrides(list(declarations), lists)
+        if lists
+        else PhyleticNoSelection()
+    )
+    match derived:
         case PhyleticBinding() as binding:
             return {**overrides, **read_declared(declarations, binding.model_dump())}
-        case None:
-            refusal = PhyleticListError(PhyleticNoSelection())
-        case unresolved:
-            refusal = PhyleticListError(unresolved)
+        case refused_lists:
+            refusal = PhyleticListError(refused_lists)
     if about is not None:
         refusal = await ordered_phyletic_refusal(refusal, declarations, about)
-    refused.note(
-        refusal,
-        refused_names(refusal),
-        derived_from=tuple(sorted(PHYLETIC_LIST_PARAMS)),
-    )
+    refused.note(refusal, refused_names(refusal))
     return overrides
 
 

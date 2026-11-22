@@ -4,13 +4,11 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Callable, Mapping, Sequence
-from types import MappingProxyType
 from typing import NoReturn
 
 from pydantic import (
     BaseModel,
     ConfigDict,
-    Field,
     JsonValue,
     TypeAdapter,
     model_validator,
@@ -194,9 +192,7 @@ async def ordered_refusal(
 class _RefusalRow(BaseModel):
     model_config = ConfigDict(extra="ignore")
     param: str | None = None
-    detail: str | None = None
-    message: str | None = None
-    messages: list[str] = Field(default_factory=list)
+    detail: str = ""
     value: JsonValue = None
     candidates: list[VocabOption] | None = None
 
@@ -204,9 +200,6 @@ class _RefusalRow(BaseModel):
     @classmethod
     def _a_row_that_is_not_an_object_is_its_detail(cls, value: object) -> object:
         return value if isinstance(value, Mapping) else {"detail": str(value)}
-
-    def line(self) -> str:
-        return self.detail or self.message or " ".join(self.messages)
 
     def fault(self) -> tuple[str, Resolution] | None:
         if self.candidates is None or self.param is None:
@@ -235,30 +228,20 @@ def _from_rows(title: str, rows: JSONArray) -> ValidationError:
     if faults and len(faults) == len(parsed):
         return VocabularyEntryError(faults)
     return ValidationError(
-        title=title, detail="\n".join(row.line() for row in parsed), errors=rows
+        title=title, detail="\n".join(row.detail for row in parsed), errors=rows
     )
 
 
 def gathered(
-    refusals: Sequence[ValidationError],
-    order: Sequence[str],
-    sources: Mapping[str, Sequence[str]] = MappingProxyType({}),
+    refusals: Sequence[ValidationError], order: Sequence[str]
 ) -> ValidationError:
     position = {name: index for index, name in enumerate(order)}
-
-    def place(name: str | None) -> tuple[int, int]:
-        if name in position:
-            return position[name], 0
-        stated = [
-            position[source]
-            for source in sources.get(name or "", ())
-            if source in position
-        ]
-        return (max(stated), 1) if stated else (len(position), 0)
-
     rows: JSONArray = [row for refusal in refusals for row in refusal.errors or []]
     parsed = _ROWS.validate_python(rows)
-    ranked = sorted(range(len(rows)), key=lambda index: place(parsed[index].param))
+    ranked = sorted(
+        range(len(rows)),
+        key=lambda index: position.get(parsed[index].param or "", len(position)),
+    )
     in_order = [rows[index] for index in ranked]
     if len(refusals) == 1 and in_order == rows:
         return refusals[0]

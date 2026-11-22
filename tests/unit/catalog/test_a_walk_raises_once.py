@@ -16,11 +16,18 @@ from veupathdb_mcp.catalog import (
     read_under_parents,
     resolve_params_with_intent,
 )
+from veupathdb_mcp.catalog.param_dag import ParamFetcher
 from veupathdb_mcp.catalog.vocab_resolve import ResolveContext
 
-from .conftest import serving
-from .test_a_filter_statement_binds_by_its_facet import ngs_snps
+from .conftest import PHYLETIC_MAPS, serving
+from .test_a_filter_statement_binds_by_its_facet import (
+    ngs_snps,
+    variant_characteristics,
+)
+from .test_a_held_child_follows_a_changed_parent import _HELD, _PCHA
+from .test_a_read_gathers_every_pass import _interpro
 from .test_a_read_names_every_miss import _ABOUT, _PF, _rows
+from .test_a_value_is_read_under_its_parents import _VIVAX, _organism, _text
 
 _ORTHOLOGS = "search_genes_by_ortholog_pattern"
 
@@ -81,17 +88,68 @@ async def test_a_phyletic_refusal_and_an_organism_fault_are_one_refusal() -> Non
         search_name="GenesByOrthologPattern",
     )
 
-    assert [row.param for row in _rows(refusal)] == ["organism", "profile_pattern"]
+    assert [row.param for row in _rows(refusal)] == ["organism", "included_species"]
 
 
-async def test_a_derived_row_follows_the_list_it_is_derived_from() -> None:
+async def test_a_species_list_that_names_no_species_is_refused_on_itself() -> None:
     refusal = await _walked(
         _orthologs(),
         {"included_species": "no such species", "organism": ["Pf3D8"]},
         search_name="GenesByOrthologPattern",
     )
 
-    assert [row.param for row in _rows(refusal)] == ["profile_pattern", "organism"]
+    [species, organism] = _rows(refusal)
+    assert (species.param, organism.param) == ("included_species", "organism")
+    assert species.value == "no such species"
+    assert species.detail.startswith(
+        "included_species names no entry ['no such species']. Nearest entries: "
+    )
+
+
+async def test_each_species_list_that_names_no_species_has_its_own_row() -> None:
+    refusal = await _walked(
+        _orthologs(),
+        {"excluded_species": "no such clade", "included_species": "no such species"},
+        search_name="GenesByOrthologPattern",
+    )
+
+    rows = _rows(refusal)
+    assert [(row.param, row.value) for row in rows] == [
+        ("excluded_species", "no such clade"),
+        ("included_species", "no such species"),
+    ]
+
+
+async def test_naming_neither_list_selects_no_species() -> None:
+    refusal = await _walked(
+        _orthologs(), {"organism": ["Pf3D8"]}, search_name="GenesByOrthologPattern"
+    )
+
+    rows = _rows(refusal)
+    assert [row.param for row in rows] == ["organism", "profile_pattern"]
+    assert "select no species" in rows[1].detail
+
+
+def _without_the_tree() -> list[WDKParameter]:
+    return [
+        WDKStringParam(name=d.name, is_visible=False, allow_empty_value=True)
+        if d.name in PHYLETIC_MAPS
+        else d
+        for d in _orthologs()
+    ]
+
+
+async def test_a_search_whose_tree_does_not_read_names_its_maps() -> None:
+    refusal = await _walked(
+        _without_the_tree(),
+        {"included_species": "pfal", "organism": ["Pf3D8"]},
+        search_name="GenesByOrthologPattern",
+    )
+
+    rows = _rows(refusal)
+    assert [row.param for row in rows] == ["organism", "profile_pattern"]
+    assert "select no species" not in str(refusal.detail)
+    assert "phyletic_indent_map and phyletic_term_map" in rows[1].detail
 
 
 async def test_an_unknown_name_and_an_unnamed_entry_are_one_read_refusal() -> None:
@@ -158,3 +216,58 @@ async def test_a_mixed_refusal_is_a_plain_row_refusal() -> None:
 
     assert type(refusal) is ValidationError
     assert not isinstance(refusal, VocabularyEntryError)
+
+
+async def test_an_unread_name_and_an_unknown_name_are_one_refusal() -> None:
+    first = [_organism((_VIVAX, _VIVAX), dependents=("strain",)), _text("strain")]
+
+    refusal = await _read_by(
+        _first_then(first, [first[0]]),
+        {"organism": [_VIVAX], "strain": "x", "no_such": "y"},
+    )
+
+    [strain, unknown] = _rows(refusal)
+    assert (strain.param, unknown.param) == ("strain", "no_such")
+    assert strain.detail == (
+        "No read under the stated parents declares strain, so its value cannot be read."
+    )
+
+
+async def test_a_moved_parent_refusal_and_an_unnamed_entry_are_one_refusal() -> None:
+    with pytest.raises(ValidationError) as refused:
+        await read_under_parents(
+            serving(*variant_characteristics(), *_interpro()),
+            {
+                "organism_select_none": [_PCHA],
+                "organism": _PF,
+                "domain_database": "InterPro",
+                "domain_typeahead": ["serine/threonine protein kinase"],
+            },
+            FilterReadsDouble(
+                {"total_variants": "ontology_term_summary_total_variants"}
+            ),
+            about=None,
+            bound=_HELD,
+        )
+
+    rows = _rows(refused.value)
+    assert [row.param for row in rows] == ["domain_typeahead", "gene_variant_stats"]
+    assert rows[1].detail.startswith("organism_select_none moved from")
+
+
+async def _read_by(
+    fetch_at: ParamFetcher, stated: dict[str, JsonValue]
+) -> ValidationError:
+    with pytest.raises(ValidationError) as refused:
+        await read_under_parents(fetch_at, stated, FilterReadsDouble(), about=None)
+    return refused.value
+
+
+def _first_then(first: list[WDKParameter], later: list[WDKParameter]) -> ParamFetcher:
+    seen: list[dict[str, str]] = []
+
+    async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
+        seen.append(dict(context))
+        return first if len(seen) == 1 else later
+
+    return fetch_at
