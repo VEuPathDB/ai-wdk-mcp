@@ -1,5 +1,12 @@
 # Knowledge log
 
+## 2026-11-22 - A held child left out is read again under a new parent
+
+- `read_under_parents` reads a bound value the call leaves out again, in the form it is
+  shown, when a wire ancestor of it is stated with a new value, so an edit that moves an
+  organism re-reads the filter the step holds and refuses it there rather than sending it
+  unread. A site-set value is left to the site.
+
 ## 2026-11-22 - A value given back stands only while its parents stand
 
 - `read_under_parents` takes a value given back as its bound value only while no wire

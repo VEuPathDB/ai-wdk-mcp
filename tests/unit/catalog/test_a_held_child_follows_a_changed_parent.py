@@ -77,6 +77,11 @@ async def test_a_child_given_back_under_a_new_parent_is_read_again() -> None:
         )
 
 
+async def test_a_held_child_left_out_under_a_new_parent_is_read_again() -> None:
+    with pytest.raises(EmptyRangeError):
+        await _read({"organism_select_none": [_PCHA]})
+
+
 async def test_a_held_child_left_out_under_its_held_parent_is_not_read() -> None:
     assert await _read({"organism_select_none": [_PF]}) == {
         "organism_select_none": MultiPickValue(values=[_PF])

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable, Mapping, Sequence
+from collections.abc import Awaitable, Callable, Collection, Mapping, Sequence
 from functools import partial
 from types import MappingProxyType
 
@@ -23,6 +23,7 @@ from veupathdb.domain.parameters import (
     leaf_terms,
     read_stated_values,
     restates,
+    shown_stated,
     to_wire,
     wire_map,
 )
@@ -319,6 +320,23 @@ def _given_back(
         kept = standing
 
 
+def _followers(
+    declarations: Sequence[WDKParameter],
+    changed: Collection[str],
+    stated: Mapping[str, JsonValue],
+    bound: Mapping[str, ParamValue],
+) -> dict[str, JsonValue]:
+    parents = ParamGraph.of(declarations).wire_parents
+    site_set = {d.name for d in declarations if d.site_set}
+    return {
+        name: shown_stated(value)
+        for name, value in bound.items()
+        if name not in stated
+        and name not in site_set
+        and _ancestors(parents, name) & set(changed)
+    }
+
+
 async def read_under_parents(
     fetch_at: ParamFetcher,
     stated: Mapping[str, JsonValue],
@@ -332,11 +350,15 @@ async def read_under_parents(
     is refused before any value is read. A term no entry names is refused with its
     candidates ordered under ``about``; None sends no choice. A value given back
     as the bound value shows it is the bound value, and is not read, while no
-    parent of it is stated anew."""
+    parent of it is stated anew. A bound value left out whose parent is stated anew
+    is read again as it is shown."""
     context = wire_map({n: v for n, v in bound.items() if n not in stated})
     declarations = await fetch_at(context)
     kept = _given_back(declarations, stated, bound)
-    stated = {name: given for name, given in stated.items() if name not in kept}
+    stated = {
+        **{name: given for name, given in stated.items() if name not in kept},
+        **_followers(declarations, stated.keys() - kept.keys(), stated, bound),
+    }
     held_context = wire_map({n: v for n, v in bound.items() if n not in stated})
     if held_context != context:
         context = held_context
