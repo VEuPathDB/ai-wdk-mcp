@@ -1,5 +1,13 @@
 # Knowledge log
 
+## 2026-11-22 - One equality for every parameter comparison
+
+- `substituted_params` reads what was sent and what WDK echoed with
+  `ParameterCanonicalizer.held` and compares them with `same_param_value`; the per-kind wire
+  comparators are gone. A single pick WDK echoes as a one-term array reads as its term
+  (veupathdb-py `from_wire`).
+- `held_default` compares the default with the empty value through `same_value`.
+
 ## 2026-11-22 - A parent moves by the value WDK reads
 
 - `read_under_parents` counts a parent as moved only when its read value is not

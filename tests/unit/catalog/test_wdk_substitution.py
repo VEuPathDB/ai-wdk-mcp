@@ -9,13 +9,14 @@ from veupathdb.domain.parameters import (
     MultiPickValue,
     NumberValue,
     ParamSpecNormalized,
+    ParamValue,
     SinglePickValue,
     StringMembers,
     StringValue,
     from_wire,
 )
 
-from veupathdb_mcp.catalog.wdk_substitution import _comparable, substituted_params
+from veupathdb_mcp.catalog.wdk_substitution import substituted_params
 
 
 def _spec(name: str, param_type: str = "string") -> ParamSpecNormalized:
@@ -371,7 +372,14 @@ def test_a_filter_that_does_not_parse_compares_as_written(wire: str) -> None:
 
 
 def test_an_empty_filter_is_not_a_filter_with_no_clauses() -> None:
-    spec = ParamSpecNormalized(name="variation_sample_meta", param_type="filter")
+    def substituted(sent: ParamValue, echoed: str) -> list[str]:
+        return substituted_params(
+            sent={"filter_param": sent},
+            echoed={"filter_param": echoed},
+            specs=_UNPARSED_SPECS,
+            values_were_read=True,
+        )
 
-    assert _comparable(spec, "") != _comparable(spec, '{"filters": []}')
-    assert _comparable(spec, '{"filters":[]}') == _comparable(spec, '{"filters": []}')
+    assert substituted(FilterValue(empty=True), _NO_CLAUSES) == ["filter_param"]
+    assert substituted(FilterValue(), '{"filters":[]}') == []
+    assert substituted(FilterValue(), _NO_CLAUSES) == []

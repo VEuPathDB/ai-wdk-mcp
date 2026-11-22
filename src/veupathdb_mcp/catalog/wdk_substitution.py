@@ -2,68 +2,28 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping
+from collections.abc import Mapping
 
-from pydantic import TypeAdapter, ValidationError
 from veupathdb.domain.parameters import (
-    PHYLETIC_EXPRESSION_PARAM,
-    ClauseKey,
     FilterValue,
+    MultiPickValue,
+    ParameterCanonicalizer,
     ParamSpecNormalized,
     ParamValue,
-    PhyleticExpression,
+    same_param_value,
     to_wire,
 )
-from veupathdb.errors import VEuPathDBError
-
-_SELECTION_ADAPTER: TypeAdapter[list[str]] = TypeAdapter(list[str])
-
-Comparable = str | frozenset[str] | frozenset[ClauseKey] | PhyleticExpression
-"""A value reduced to what it states, so serialization cannot differ."""
-
-
-def _selection(wire: str) -> frozenset[str]:
-    """The values a vocabulary wire form selects, order and encoding aside."""
-    if not wire:
-        return frozenset()
-    try:
-        return frozenset(_SELECTION_ADAPTER.validate_json(wire))
-    except ValidationError:
-        return frozenset({wire})
-
-
-def _clauses(wire: str) -> frozenset[ClauseKey] | str:
-    """The clauses a filter wire form states, order and key order aside."""
-    if not wire:
-        return wire
-    try:
-        return FilterValue.model_validate_json(wire).clause_set
-    except ValidationError:
-        return wire
-
-
-def _expression(wire: str) -> PhyleticExpression | str:
-    try:
-        return PhyleticExpression.parse(wire)
-    except VEuPathDBError, ValidationError, RecursionError:
-        return wire
-
-
-_COMPARATORS: dict[str, Callable[[str], Comparable]] = {
-    "single-pick-vocabulary": _selection,
-    "multi-pick-vocabulary": _selection,
-    "filter": _clauses,
-}
 
 _UNREPORTED_TYPES = frozenset({"input-step"})
 """An input-step value is the wiring the caller made, never a WDK choice."""
 
 
-def _comparable(spec: ParamSpecNormalized | None, wire: str) -> Comparable:
-    if spec is not None and spec.name == PHYLETIC_EXPRESSION_PARAM:
-        return _expression(wire)
-    reader = _COMPARATORS.get(spec.param_type) if spec is not None else None
-    return reader(wire) if reader is not None else wire
+def _states_something(value: ParamValue | None) -> bool:
+    match value:
+        case None | MultiPickValue(values=[]) | FilterValue(filters=[], empty=False):
+            return False
+        case _:
+            return bool(to_wire(value))
 
 
 def substituted_params(
@@ -75,26 +35,25 @@ def substituted_params(
 ) -> list[str]:
     """Params whose echoed value is WDK's rather than the caller's.
 
-    Each kind is compared as what it states: a vocabulary as its selection, a
-    filter as its clauses, an expression as its parsed form, everything else as
-    its wire form. A definition WDK
+    Each value is read as its kind and compared with ``same_param_value``. A
+    definition WDK
     built without reading the caller's values describes no caller at all, so
     only the params left unset are read from it.
     """
-    sent_wire = {name: to_wire(value) for name, value in sent.items()}
+    reader = ParameterCanonicalizer(dict(specs))
+    theirs = reader.held(dict(echoed))
+    ours = reader.held({name: to_wire(value) for name, value in sent.items()})
     supplied: list[str] = []
-    for name, echoed_value in echoed.items():
+    for name in echoed:
         spec = specs.get(name)
         if spec is not None and spec.param_type in _UNREPORTED_TYPES:
             continue
-        theirs = _comparable(spec, echoed_value)
-        ours = sent_wire.get(name)
-        if ours is None:
-            if theirs:
+        if name not in sent:
+            if _states_something(theirs.get(name)):
                 supplied.append(name)
             continue
         if not values_were_read:
             continue
-        if _comparable(spec, ours) != theirs:
+        if not same_param_value(name, ours[name], theirs[name]):
             supplied.append(name)
     return sorted(supplied)
