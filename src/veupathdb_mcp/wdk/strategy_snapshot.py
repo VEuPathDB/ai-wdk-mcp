@@ -7,6 +7,10 @@ search's parameter specs from WDK.
 from pydantic import BaseModel, ConfigDict
 from veupathdb import get_logger
 from veupathdb.domain.strategy import (
+    ColocationParams,
+    CombineOp,
+    StepFilter,
+    StepSettings,
     StepValidation,
     StrategyAst,
     StrategyStepNode,
@@ -15,6 +19,8 @@ from veupathdb.domain.strategy import (
 )
 from veupathdb.errors import DataParsingError
 from veupathdb.wdk import (
+    BOOLEAN_OPERATOR_PARAM,
+    BOOLEAN_SEARCH_PREFIX,
     StrategyAPI,
     WDKSearch,
     WDKStep,
@@ -37,12 +43,48 @@ class WireStep(BaseModel):
     parameters: dict[str, str]
 
 
-def _extract_operator(parameters: dict[str, str]) -> str | None:
-    """Find the boolean operator in a combine step's parameter dict."""
-    for key, value in parameters.items():
-        if "operator" in key.lower():
-            return value
-    return None
+_SPAN_LOGIC = "GenesBySpanLogic"
+
+
+def _combine_of(step: WDKStep) -> tuple[CombineOp, ColocationParams | None]:
+    parameters = step.search_config.parameters
+    if step.search_name == _SPAN_LOGIC:
+        return CombineOp.COLOCATE, ColocationParams.from_wdk_params(parameters)
+    if not step.search_name.startswith(BOOLEAN_SEARCH_PREFIX):
+        msg = (
+            f"Combine step {step.id} runs {step.search_name}, which is neither "
+            f"a boolean search nor {_SPAN_LOGIC}"
+        )
+        raise DataParsingError(msg)
+    if BOOLEAN_OPERATOR_PARAM not in parameters:
+        msg = (
+            f"Combine step {step.id} has no {BOOLEAN_OPERATOR_PARAM} in "
+            f"searchConfig.parameters (keys: {list(parameters.keys())})"
+        )
+        raise DataParsingError(msg)
+    value = parameters[BOOLEAN_OPERATOR_PARAM]
+    try:
+        return parse_op(value), None
+    except ValueError as exc:
+        msg = (
+            f"Combine step {step.id} has {BOOLEAN_OPERATOR_PARAM} {value!r}, "
+            "which is not a combine operator"
+        )
+        raise DataParsingError(msg) from exc
+
+
+def _settings_on_the_wire(step: WDKStep, *, combine: bool) -> StepSettings:
+    config = step.search_config
+    operator, colocation = _combine_of(step) if combine else (None, None)
+    return StepSettings(
+        operator=operator,
+        colocation_params=colocation,
+        filters=[
+            StepFilter.model_validate(f.model_dump(by_alias=True, mode="json"))
+            for f in config.filters
+        ],
+        wdk_weight=config.wdk_weight or None,
+    )
 
 
 def _resolve_expanded_reference(
@@ -100,42 +142,37 @@ def _node_of(
         raise DataParsingError(msg)
 
     local_id = str(node.step_id)
-    display_name = step.custom_name or step.display_name or None
-    wire_parameters = step.search_config.parameters
-
-    if node.primary_input is not None and node.secondary_input is not None:
-        right = built[node.secondary_input.step_id]
-        raw_operator = _extract_operator(wire_parameters)
-        if raw_operator is None:
-            msg = (
-                f"Combine step {node.step_id} has no boolean operator in "
-                f"searchConfig.parameters (keys: {list(wire_parameters.keys())})"
-            )
-            raise DataParsingError(msg)
-        expanded_strategy_id, expanded_name = _resolve_expanded_reference(
-            step, right, steps
-        )
-        return StrategyStepNode(
-            search_name=step.search_name,
-            operator=parse_op(raw_operator),
-            primary_input=built[node.primary_input.step_id],
-            secondary_input=right,
-            display_name=display_name,
-            expanded_strategy_id=expanded_strategy_id,
-            expanded_name=expanded_name,
-            id=local_id,
-        )
-    wire_by_step_id[local_id] = WireStep(
-        record_class=step.record_class_name, parameters=dict(wire_parameters)
+    secondary = (
+        built[node.secondary_input.step_id]
+        if node.primary_input is not None and node.secondary_input is not None
+        else None
     )
+    settings = _settings_on_the_wire(step, combine=secondary is not None)
+    expanded_strategy_id, expanded_name = (
+        _resolve_expanded_reference(step, secondary, steps)
+        if secondary is not None
+        else (None, None)
+    )
+    if secondary is None:
+        wire_by_step_id[local_id] = WireStep(
+            record_class=step.record_class_name,
+            parameters=dict(step.search_config.parameters),
+        )
     return StrategyStepNode(
         search_name=step.search_name,
+        operator=settings.operator,
+        colocation_params=settings.colocation_params,
+        filters=settings.filters,
+        wdk_weight=settings.wdk_weight,
         primary_input=(
             built[node.primary_input.step_id]
             if node.primary_input is not None
             else None
         ),
-        display_name=display_name,
+        secondary_input=secondary,
+        display_name=step.custom_name or step.display_name or None,
+        expanded_strategy_id=expanded_strategy_id,
+        expanded_name=expanded_name,
         id=local_id,
     )
 

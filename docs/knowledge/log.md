@@ -1,5 +1,21 @@
 # Knowledge log
 
+## 2026-11-22 - A strategy read keeps weight, filters and colocation
+
+- `build_snapshot_from_wdk` reads each step's `wdkWeight` and `filters` through veupathdb-py
+  `StepSettings`, so `settings_of(node)` holds what the wire holds. A weight of 0 reads as
+  `None`, the WDK default.
+- A combine reads its operator by its search: a `boolean_question*` step from its
+  `bq_operator` parameter only, and a `GenesBySpanLogic` step as `COLOCATE` with
+  `ColocationParams.from_wdk_params`. Any other combine search, a boolean step with no
+  `bq_operator` or with one that names no combine operator, or a span step whose `span_*`
+  parameters do not read is a `DataParsingError`.
+- `build_snapshot_from_wdk` constructs each step's `StepSettings` with keyword arguments,
+  so a setting the read leaves out or misspells is a type error, not a silent default.
+- The boolean search names come from veupathdb-py (`BOOLEAN_SEARCH_PREFIX`,
+  `BOOLEAN_OPERATOR_PARAM`, and the operand prefixes the refusal reader places a
+  refusal by); this package states none of them again.
+
 ## 2026-11-23 - 0.9.0b21: entries that share a name are one name
 
 - It takes `veupathdb-py` 0.9.0b16, whose exact step names no entry for a name several entries

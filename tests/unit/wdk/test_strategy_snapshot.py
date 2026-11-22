@@ -10,7 +10,15 @@ import json
 
 import pytest
 from veupathdb.domain.parameters import HeldValue, MultiPickValue, StringValue
-from veupathdb.domain.strategy import CombineOp, StepValidation, walk
+from veupathdb.domain.strategy import (
+    ColocationParams,
+    CombineOp,
+    StepFilter,
+    StepSettings,
+    StepValidation,
+    settings_of,
+    walk,
+)
 from veupathdb.errors import DataParsingError, WDKError
 from veupathdb.wdk import (
     WDKSearchConfig,
@@ -422,3 +430,196 @@ async def test_a_term_the_vocabulary_lost_keeps_every_parameter(
 
     leaf = next(step for step in walk(ast.root) if step.search_name == "GenesByTaxon")
     assert leaf.parameters == {"organism": MultiPickValue(values=["Gone organism"])}
+
+
+def _wire_strategy(
+    root: dict[str, object], **steps: dict[str, object]
+) -> WDKStrategyDetails:
+    return WDKStrategyDetails.model_validate(
+        {
+            "strategyId": 7,
+            "name": "s",
+            "recordClassName": "transcript",
+            "rootStepId": 3,
+            "stepTree": {
+                "stepId": 3,
+                "primaryInput": {"stepId": 1},
+                "secondaryInput": {"stepId": 2},
+            },
+            "steps": {
+                "1": {
+                    "id": 1,
+                    "searchName": "GenesByText",
+                    "searchConfig": {
+                        "parameters": {"text_expression": "kinase"},
+                        "wdkWeight": 10,
+                        "filters": [
+                            {
+                                "name": "matched_transcript_filter_array",
+                                "value": {"values": ["Y"]},
+                                "disabled": False,
+                            }
+                        ],
+                    },
+                    "recordClassName": "transcript",
+                },
+                "2": {
+                    "id": 2,
+                    "searchName": "GenesByText",
+                    "searchConfig": {
+                        "parameters": {"text_expression": "rhoptry"},
+                        "wdkWeight": 5,
+                    },
+                    "recordClassName": "transcript",
+                },
+                "3": {"id": 3, "recordClassName": "transcript", **root},
+            }
+            | steps,
+        }
+    )
+
+
+def _union_root() -> dict[str, object]:
+    return {
+        "searchName": _BOOLEAN,
+        "searchConfig": {
+            "parameters": {
+                "bq_operator": "UNION",
+                "bq_left_op_": "",
+                "bq_right_op_": "",
+            }
+        },
+    }
+
+
+_COLOCATION = ColocationParams(
+    operation="contains", strand="same strand", begin_offset_a=500
+)
+
+
+def _span_root() -> dict[str, object]:
+    return {
+        "searchName": "GenesBySpanLogic",
+        "searchConfig": {
+            "parameters": {"span_a": "", "span_b": ""} | _COLOCATION.to_wdk_params()
+        },
+    }
+
+
+class TestTheReadKeepsEverySetting:
+    def test_a_leaf_keeps_its_weight_and_its_filters(self) -> None:
+        ast, _ = build_snapshot_from_wdk(_wire_strategy(_union_root()))
+
+        assert ast.root.primary_input is not None
+        leaf = settings_of(ast.root.primary_input)
+        assert leaf.wdk_weight == 10
+        assert leaf.filters == [
+            StepFilter(name="matched_transcript_filter_array", value={"values": ["Y"]})
+        ]
+
+    def test_the_second_leaf_keeps_its_weight(self) -> None:
+        ast, _ = build_snapshot_from_wdk(_wire_strategy(_union_root()))
+
+        assert ast.root.secondary_input is not None
+        assert settings_of(ast.root.secondary_input).wdk_weight == 5
+
+    def test_the_boolean_root_reads_its_operator(self) -> None:
+        ast, _ = build_snapshot_from_wdk(_wire_strategy(_union_root()))
+
+        assert settings_of(ast.root).operator is CombineOp.UNION
+
+    def test_a_combine_keeps_its_weight_and_its_filters(self) -> None:
+        root = _union_root()
+        root["searchConfig"] = {
+            "parameters": {"bq_operator": "INTERSECT"},
+            "wdkWeight": 3,
+            "filters": [{"name": "gene_boolean_filter_array", "value": ["YY"]}],
+        }
+
+        ast, _ = build_snapshot_from_wdk(_wire_strategy(root))
+
+        held = settings_of(ast.root)
+        assert held.operator is CombineOp.INTERSECT
+        assert held.wdk_weight == 3
+        assert held.filters == [
+            StepFilter(name="gene_boolean_filter_array", value=["YY"])
+        ]
+
+    def test_a_span_logic_root_reads_as_a_colocation(self) -> None:
+        ast, _ = build_snapshot_from_wdk(_wire_strategy(_span_root()))
+
+        held = settings_of(ast.root)
+        assert held.operator is CombineOp.COLOCATE
+        assert held.colocation_params == _COLOCATION
+        assert ast.root.search_name == "GenesBySpanLogic"
+
+    def test_a_span_logic_root_without_its_span_parameters_is_refused(self) -> None:
+        root = _span_root()
+        root["searchConfig"] = {"parameters": {"span_operation": "a_contain_b"}}
+
+        with pytest.raises(DataParsingError, match="span_strand"):
+            build_snapshot_from_wdk(_wire_strategy(root))
+
+    def test_a_weight_of_zero_reads_as_the_wdk_default(self) -> None:
+        details = _wire_strategy(
+            _union_root(),
+            **{
+                "2": {
+                    "id": 2,
+                    "searchName": "GenesByText",
+                    "searchConfig": {"parameters": {}, "wdkWeight": 0},
+                    "recordClassName": "transcript",
+                }
+            },
+        )
+
+        ast, _ = build_snapshot_from_wdk(details)
+
+        assert ast.root.secondary_input is not None
+        assert ast.root.secondary_input.wdk_weight is None
+
+    def test_a_boolean_operator_is_read_from_its_operator_parameter_only(
+        self,
+    ) -> None:
+        root = _union_root()
+        root["searchConfig"] = {"parameters": {"use_operator_words": "UNION"}}
+
+        with pytest.raises(DataParsingError, match="bq_operator"):
+            build_snapshot_from_wdk(_wire_strategy(root))
+
+    def test_a_combine_that_is_neither_boolean_nor_span_logic_is_refused(
+        self,
+    ) -> None:
+        root = {
+            "searchName": "GenesByWeightOperator",
+            "searchConfig": {"parameters": {"bq_operator": "UNION"}},
+        }
+
+        with pytest.raises(DataParsingError, match="GenesByWeightOperator"):
+            build_snapshot_from_wdk(_wire_strategy(root))
+
+
+def test_an_operator_wdk_does_not_name_is_a_parse_error_naming_it() -> None:
+    root = _union_root()
+    root["searchConfig"] = {"parameters": {"bq_operator": "SOMETIMES"}}
+
+    with pytest.raises(DataParsingError, match="SOMETIMES"):
+        build_snapshot_from_wdk(_wire_strategy(root))
+
+
+def test_a_span_root_holds_every_setting_the_wire_states() -> None:
+    root = _span_root()
+    root["searchConfig"] = {
+        "parameters": _COLOCATION.to_wdk_params(),
+        "wdkWeight": 4,
+        "filters": [{"name": "span_filter", "value": ["a"], "disabled": True}],
+    }
+
+    ast, _ = build_snapshot_from_wdk(_wire_strategy(root))
+
+    assert settings_of(ast.root) == StepSettings(
+        operator=CombineOp.COLOCATE,
+        colocation_params=_COLOCATION,
+        filters=[StepFilter(name="span_filter", value=["a"], disabled=True)],
+        wdk_weight=4,
+    )

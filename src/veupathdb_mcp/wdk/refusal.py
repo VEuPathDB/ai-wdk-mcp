@@ -13,11 +13,10 @@ from enum import StrEnum
 import pydantic
 from pydantic import ConfigDict, Field
 from veupathdb.model import CamelModel
+from veupathdb.wdk import BOOLEAN_LEFT_OPERAND_PREFIX, BOOLEAN_RIGHT_OPERAND_PREFIX
 
 _MAX_NESTING = 8
 
-_FIRST_OPERAND = "bq_left_op"
-_SECOND_OPERAND = "bq_right_op"
 
 # A value outside a parameter's vocabulary is the whole message WDK keys to it.
 _REFUSED_VALUE = re.compile(r"Invalid value '(?P<value>.*)'\.", re.DOTALL)
@@ -97,9 +96,9 @@ def _place(chain: list[str]) -> _StepPlace:
         return _StepPlace.RUN
     if len(chain) > 1:
         return _StepPlace.EARLIER
-    if chain[0].startswith(_FIRST_OPERAND):
+    if chain[0].startswith(BOOLEAN_LEFT_OPERAND_PREFIX):
         return _StepPlace.FIRST_INPUT
-    if chain[0].startswith(_SECOND_OPERAND):
+    if chain[0].startswith(BOOLEAN_RIGHT_OPERAND_PREFIX):
         return _StepPlace.SECOND_INPUT
     return _StepPlace.EARLIER
 
