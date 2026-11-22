@@ -22,7 +22,12 @@ from veupathdb.domain.parameters import (
 from veupathdb.errors import ValidationError, WDKError, param_message_rows
 from veupathdb.wdk import WDKEnumParam, WDKParameter, WDKSearchResponse, WDKStringParam
 
-from veupathdb_mcp.catalog import param_validation
+from veupathdb_mcp.catalog import (
+    DecisionRequest,
+    DecisionResponse,
+    param_validation,
+    use_decisions_transport,
+)
 
 from .conftest import wdk_search_response
 
@@ -261,3 +266,22 @@ class TestTheCanonicalValuesAreShownInTheirStatedForm:
             "organism": [_ORGANISM],
             "ec_wildcard": "'2.7.*' (kept as the site holds it)",
         }
+
+
+class TestARefusedTermIsOrderedByTheChoice:
+    async def test_the_refusal_asks_the_choice_and_still_refuses(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _serve(monkeypatch, _response())
+        asked: list[DecisionRequest] = []
+
+        async def send(request: DecisionRequest) -> DecisionResponse | None:
+            asked.append(request)
+            return None
+
+        use_decisions_transport(send)
+        result = await _validate({"organism": MultiPickValue(values=["Pf3D7"])})
+
+        assert result.validation.is_valid is False
+        [request] = asked
+        assert 'The researcher\'s words: "Pf3D7"' in request.input

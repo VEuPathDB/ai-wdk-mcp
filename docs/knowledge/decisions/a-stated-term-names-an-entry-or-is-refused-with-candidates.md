@@ -25,9 +25,13 @@ carries no picked entry.
 
 # The order of the shown candidates
 
-`read_under_parents` (`about: ResolveContext`, the site and the researcher's message when
-there is one) and the gene lookup's stated organism pass every `VocabularyEntryError` they
-raise through `ordered_refusal` / `ordered_by_vocabulary` (`catalog/vocab_resolve.py`).
+Every async read that can refuse a term passes the `VocabularyEntryError` through
+`ordered_refusal` / `ordered_by_vocabulary` (`catalog/vocab_resolve.py`): the two walks
+in `catalog/param_dag.py` (`read_under_parents` and `resolve_params_with_intent`, each
+taking `about: ResolveContext`, the site and the researcher's message when there is one),
+the canonicalizer calls of `validate_parameters` and `validate_search_params`, and the
+gene lookup's stated organism. The naming step itself is the client's synchronous stated
+reader, so the ordering wraps the readers rather than living in `_bound`.
 For each fault it asks one Decisions Choice (`resolve_request`: the site, the parameter's
 display name, the words, the message) over the first 254 entries `rank_entries` ranks,
 plus `none_fits`. When the choice names an offered entry, that entry leads the five shown
@@ -36,9 +40,9 @@ whatever its confidence, and no floor or fit predicate is read. With no answer (
 timeout, a mock deployment, a parse failure), `none_fits` or a choice that names no
 offered entry, the fault keeps the ranking. The call runs through `decide`, on whatever
 transport the host installs (the turn's keyed provider) and the Decisions timeout.
-Ordering is the one place: `read_under_parents` is the read every stated value passes, so
-`read_stated_parameters`, the served tools and a host's own read reach it. The
-canonicalizer's later refusals read values that read already named.
+`resolve_params_with_intent` takes `about=None` from the separation enumerator, which
+skips a candidate a refusal names and shows the refusal to no one. The web editor's
+context read (`param_resolution`) drops a value it cannot name and refuses nothing.
 
 # The gene lookup's organism
 

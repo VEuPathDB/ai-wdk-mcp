@@ -204,6 +204,7 @@ async def test_an_override_of_a_visible_read_only_parameter_is_refused() -> None
             search_name="GenesByReadOnly",
             intent=ParamIntent(),
             stated={"fixed": "gene", "text": "kinase"},
+            about=None,
         )
 
 
@@ -233,6 +234,7 @@ async def test_an_unknown_override_lists_no_read_only_name() -> None:
             search_name="GenesByReadOnly",
             intent=ParamIntent(),
             stated={"txt": "kinase"},
+            about=None,
         )
 
     assert refused.value.valid == ["text"]

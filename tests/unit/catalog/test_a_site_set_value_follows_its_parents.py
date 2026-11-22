@@ -182,6 +182,7 @@ async def test_a_facet_statement_binds_under_its_stated_organism() -> None:
         intent=ParamIntent(),
         search_name=CTX.search_name,
         stated=_samples(VIVAX),
+        about=None,
     )
 
     value = resolved.params["variation_sample_meta"]
@@ -200,4 +201,5 @@ async def test_the_same_statement_under_another_organism_is_refused() -> None:
             intent=ParamIntent(),
             search_name=CTX.search_name,
             stated=_samples("Plasmodium falciparum 3D7"),
+            about=None,
         )

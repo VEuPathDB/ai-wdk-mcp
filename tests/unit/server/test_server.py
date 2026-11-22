@@ -46,7 +46,12 @@ from veupathdb_mcp.audit import (
 )
 from veupathdb_mcp.audit.gene_ids import MAX_MATCHES
 from veupathdb_mcp.auth import CredentialMode, McpCredential
-from veupathdb_mcp.catalog import experiments, search_inspection, sites
+from veupathdb_mcp.catalog import (
+    ResolveContext,
+    experiments,
+    search_inspection,
+    sites,
+)
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.experiments import ExperimentMatch, UnknownExperimentError
 from veupathdb_mcp.catalog.models import RecordTypeInfo
@@ -1091,8 +1096,10 @@ async def test_a_binding_call_answers_from_the_parameter_walk(
         intent: ParamIntent,
         search_name: str,
         stated: dict[str, JsonValue],
+        about: ResolveContext | None,
     ) -> ResolvedParams:
         del fetch_at, filter_reads
+        assert about == ResolveContext(site_id=SITE)
         seen.append((search_name, intent.text, stated))
         return ResolvedParams(params={"organism": StringValue(value="P. falciparum")})
 
@@ -1124,8 +1131,9 @@ async def test_an_override_that_names_no_parameter_is_a_tool_error(
         intent: ParamIntent,
         search_name: str,
         stated: dict[str, JsonValue],
+        about: ResolveContext | None,
     ) -> ResolvedParams:
-        del fetch_at, filter_reads, intent, search_name, stated
+        del fetch_at, filter_reads, intent, search_name, stated, about
         raise UnknownParameterError(["orgnism"], ["organism"])
 
     monkeypatch.setattr(catalog_tools, "resolve_params_with_intent", refuse)

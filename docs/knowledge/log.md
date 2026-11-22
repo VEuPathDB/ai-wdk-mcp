@@ -27,8 +27,11 @@
 - A vocabulary refusal leads its five shown candidates with the entry one Decisions
   Choice picks among the 254 ranked (`ordered_refusal`, `ordered_by_vocabulary`,
   `resolve_request`, `ResolveContext`); the pick never binds, and with no pick the ranking
-  stands. `read_under_parents` takes `about: ResolveContext` and
+  stands. `read_under_parents` and `resolve_params_with_intent` take
+  `about: ResolveContext` (None for a caller that shows the refusal to no one), and
   `read_stated_parameters` takes `message`. Held-out A/B: 95.6% against refuse's 86.0%.
+- A separation candidate whose stated term names no entry is skipped, as one whose value
+  its kind cannot read is.
 - Every value the catalog shows a model is its stated form, which the stated reader reads
   back to the same wire: the sheet's and the overview's `default` (`JsonValue`), the new
   `ParameterInfo.default` and `ParamSpecResponse.default` beside the wire the site holds,

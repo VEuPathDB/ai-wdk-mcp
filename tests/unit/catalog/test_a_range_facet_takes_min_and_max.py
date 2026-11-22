@@ -53,6 +53,7 @@ async def _wire(info: ParameterInfo, statement: object) -> list[dict[str, object
         search_name="GenesByFacet",
         intent=ParamIntent(),
         stated={info.name: cast("JsonValue", statement)},
+        about=None,
     )
     value = resolved.params[info.name]
     assert isinstance(value, FilterValue)

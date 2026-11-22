@@ -1,6 +1,6 @@
 """Validation of search parameter values."""
 
-from collections.abc import Awaitable, Callable, Mapping
+from collections.abc import Awaitable, Callable, Mapping, Sequence
 from dataclasses import dataclass
 from types import MappingProxyType
 
@@ -16,6 +16,7 @@ from veupathdb.domain.parameters import (
     ParamValue,
     PhyleticExpression,
     StringValue,
+    VocabularyEntryError,
     canonical_census_pattern,
     check_expression,
     fill_site_set_defaults,
@@ -27,6 +28,7 @@ from veupathdb.domain.strategy import StepValidation
 from veupathdb.errors import ValidationError, VEuPathDBError
 from veupathdb.model import CamelModel
 from veupathdb.wdk import (
+    WDKParameter,
     WDKSearchResponse,
     encode_wdk_params,
     get_wdk_client,
@@ -45,6 +47,7 @@ from veupathdb_mcp.catalog.param_adapters import (
 from veupathdb_mcp.catalog.phyletic_logic import admit_expression
 from veupathdb_mcp.catalog.search_context import context_for_metadata_read
 from veupathdb_mcp.catalog.taxonomy import ortho_taxonomy
+from veupathdb_mcp.catalog.vocab_resolve import ResolveContext, ordered_refusal
 from veupathdb_mcp.catalog.wdk_substitution import substituted_params
 from veupathdb_mcp.tool_errors import ToolErrorPayload
 
@@ -244,9 +247,11 @@ async def validate_search_params(
     allowed = _extract_param_names_from_response(response)
     spec_map = adapt_param_specs_from_search(response.search_data)
     try:
-        canonicalizer = ParameterCanonicalizer(spec_map)
-        normalized = canonicalizer.canonicalize(
-            _filter_context_values(raw_context, allowed)
+        normalized = await _canonical(
+            ParameterCanonicalizer(spec_map),
+            _filter_context_values(raw_context, allowed),
+            response.search_data.parameters or [],
+            ctx.site_id,
         )
     except ValidationError as exc:
         return ValidationResponse(
@@ -346,6 +351,20 @@ def _refuses_a_statement(
     return any(text not in known for text in errors.general)
 
 
+async def _canonical(
+    canonicalizer: ParameterCanonicalizer,
+    values: dict[str, ParamValue],
+    declarations: Sequence[WDKParameter],
+    site_id: str,
+) -> dict[str, ParamValue]:
+    """The canonical values, or a vocabulary refusal with its candidates ordered."""
+    try:
+        return canonicalizer.canonicalize(values)
+    except VocabularyEntryError as refusal:
+        about = ResolveContext(site_id=site_id)
+        raise await ordered_refusal(refusal, declarations, about) from refusal
+
+
 async def validate_parameters(
     ctx: SearchContext,
     *,
@@ -387,8 +406,12 @@ async def validate_parameters(
     param_spec_map = adapt_param_specs_from_search(response.search_data)
     stated = await _checked_phyletic_expression(ctx.site_id, response, stated)
     stated = _canonical_census_pattern(response, stated)
-    canonicalizer = ParameterCanonicalizer(param_spec_map)
-    canonical: dict[str, ParamValue] = canonicalizer.canonicalize(stated)
+    canonical = await _canonical(
+        ParameterCanonicalizer(param_spec_map),
+        stated,
+        response.search_data.parameters or [],
+        ctx.site_id,
+    )
 
     # A tree param counts only its leaves, so a branch selection scores zero
     # until it is expanded. WDK must judge what will be sent, not what arrived.
@@ -423,7 +446,12 @@ async def validate_parameters(
         param_spec_map=param_spec_map,
         canonical_values=fill_site_set_defaults(param_spec_map, {**held, **canonical}),
     )
-    caller_canonical = ParameterCanonicalizer(param_spec_map).canonicalize(stated)
+    caller_canonical = await _canonical(
+        ParameterCanonicalizer(param_spec_map),
+        stated,
+        response.search_data.parameters or [],
+        ctx.site_id,
+    )
     filled = fill_site_set_defaults(param_spec_map, {**held, **caller_canonical})
     echoed = {
         spec.name: spec.initial_display_value

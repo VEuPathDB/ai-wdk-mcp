@@ -9,6 +9,7 @@ from veupathdb.domain import SearchContext
 from veupathdb.errors import VEuPathDBError
 
 from veupathdb_mcp.catalog import (
+    ResolveContext,
     experiments,
     parameters,
     search_inspection,
@@ -493,6 +494,7 @@ async def resolve_search_parameters(
             intent=ParamIntent(text=criterion),
             search_name=search_name,
             stated=overrides or {},
+            about=ResolveContext(site_id=site_id),
         )
     except VEuPathDBError as exc:
         raise ToolError(exc.detail or exc.title) from exc

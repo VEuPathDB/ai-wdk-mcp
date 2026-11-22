@@ -68,6 +68,7 @@ async def _variant_stats(statement: list[object], reads: FilterReadsDouble) -> N
         intent=ParamIntent(),
         search_name="GenesByVariantCharacteristics",
         stated={"organism_select_none": _PF, "gene_variant_stats": statement},
+        about=None,
     )
 
 
@@ -78,6 +79,7 @@ async def _samples(statement: list[object], reads: FilterReadsDouble) -> None:
         intent=ParamIntent(),
         search_name="GenesByNgsSnps",
         stated={"organismSinglePick": _PF, "variation_sample_meta": statement},
+        about=None,
     )
 
 

@@ -134,6 +134,7 @@ async def test_the_resolve_walk_binds_a_hidden_parameter_at_its_default() -> Non
         search_name=SEARCH,
         intent=ParamIntent(),
         stated={},
+        about=None,
     )
 
     assert {name: resolved.params[name].to_wire() for name in HIDDEN} == {
@@ -155,6 +156,7 @@ async def test_a_hidden_required_parameter_with_no_default_refuses_the_search() 
             intent=ParamIntent(),
             search_name=SEARCH,
             stated={},
+            about=None,
         )
 
     assert refused.value.detail == (
@@ -175,6 +177,7 @@ async def test_a_hidden_input_step_is_left_to_the_step_tree() -> None:
         search_name=SEARCH,
         intent=ParamIntent(),
         stated={},
+        about=None,
     )
 
     assert "gene_result" not in resolved.unresolved_required
@@ -191,6 +194,7 @@ async def test_the_resolve_walk_refuses_a_hidden_override_by_name() -> None:
             intent=ParamIntent(),
             stated={"WebServicesPath": "dflt"},
             search_name=SEARCH,
+            about=None,
         )
 
     assert refused.value.detail == (
@@ -242,6 +246,7 @@ async def test_the_walk_derives_profile_pattern_from_the_two_lists() -> None:
         search_name=SEARCH,
         intent=ParamIntent(),
         stated={"included_species": "pfal", "excluded_species": "hsap"},
+        about=None,
     )
 
     assert resolved.params["profile_pattern"] == StringValue(value="%hsap:N%pfal:Y%")
@@ -261,6 +266,7 @@ async def test_a_stated_phyletic_value_is_refused_by_name(name: str) -> None:
             search_name=SEARCH,
             intent=ParamIntent(),
             stated={"included_species": "pfal", name: "%pfal:Y%"},
+            about=None,
         )
 
 
@@ -274,6 +280,7 @@ async def test_lists_that_name_no_entry_are_refused_with_the_nearest() -> None:
             search_name=SEARCH,
             intent=ParamIntent(),
             stated={"included_species": "Plasmodium vivax"},
+            about=None,
         )
 
 
@@ -326,6 +333,7 @@ async def test_a_phyletic_search_with_neither_list_is_refused() -> None:
             search_name=SEARCH,
             intent=ParamIntent(),
             stated={},
+            about=None,
         )
 
 
@@ -339,6 +347,7 @@ async def test_an_unknown_name_lists_only_the_visible_names() -> None:
             search_name=SEARCH,
             intent=ParamIntent(),
             stated={"included_species": "pfal", "speciess": "x"},
+            about=None,
         )
 
     assert refused.value.valid == ["excluded_species", "included_species"]

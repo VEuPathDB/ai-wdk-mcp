@@ -49,6 +49,7 @@ async def _resolve(
         search_name="GenesByPairs",
         intent=ParamIntent(),
         stated=stated or {},
+        about=None,
     )
 
 

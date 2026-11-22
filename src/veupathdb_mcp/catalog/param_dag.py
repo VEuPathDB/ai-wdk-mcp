@@ -221,6 +221,21 @@ def _read_pass(
     return _with_derived_phyletic(infos, read, declarations) if first else read
 
 
+async def _named_or_ordered[T](
+    read: Callable[[], T],
+    declarations: Sequence[WDKParameter],
+    about: ResolveContext | None,
+) -> T:
+    """The read, or its vocabulary refusal with the candidates ``ordered_refusal``
+    orders under ``about``. None leaves the ranking."""
+    try:
+        return read()
+    except VocabularyEntryError as refusal:
+        if about is None:
+            raise
+        raise await ordered_refusal(refusal, declarations, about) from refusal
+
+
 async def _refuse_misses(
     declarations: Sequence[WDKParameter],
     read: Mapping[str, ParamValue],
@@ -298,13 +313,16 @@ async def read_under_parents(
             and d.name not in context
             and d.name not in waiting
         }
-        try:
-            new = _read_ready(declarations, stated, context, read)
-            if not new and not sited:
-                pending = [d for d in declarations if d.name in missing]
-                new = read_declared(pending, stated)
-        except VocabularyEntryError as refusal:
-            raise await ordered_refusal(refusal, declarations, about) from refusal
+        new = await _named_or_ordered(
+            partial(_read_ready, declarations, stated, context, read),
+            declarations,
+            about,
+        )
+        if not new and not sited:
+            pending = [d for d in declarations if d.name in missing]
+            new = await _named_or_ordered(
+                partial(read_declared, pending, stated), declarations, about
+            )
         if not new and not sited:
             break
         await _refuse_misses(declarations, new, context, reads)
@@ -455,6 +473,7 @@ async def resolve_params_with_intent(
     intent: ParamIntent,
     search_name: str,
     stated: Mapping[str, JsonValue],
+    about: ResolveContext | None,
 ) -> ResolvedParams:
     """Walks the dependency DAG and resolves each param from a stated value, an
     automatic value, the scalar default, or an open slot. Re-fetches after each pick
@@ -462,6 +481,9 @@ async def resolve_params_with_intent(
 
     Each stated value is read under the declarations fetched once its parents are
     bound. A name that is no parameter of the search raises ``UnknownParameterError``.
+    A term no entry names is refused with its candidates ordered by
+    ``ordered_refusal`` under ``about``; None leaves the ranking, for a caller
+    that shows the refusal to no one.
     """
     overrides: OverrideMap = {}
     context: dict[str, str] = {}
@@ -477,8 +499,18 @@ async def resolve_params_with_intent(
         infos = format_param_info_typed(declarations)
         declared = {d.name: d for d in declarations}
         _refuse_hidden_overrides(infos, stated, search_name)
-        overrides = _read_pass(
-            infos, declarations, stated, context, overrides, first=pass_index == 0
+        overrides = await _named_or_ordered(
+            partial(
+                _read_pass,
+                infos,
+                declarations,
+                stated,
+                context,
+                overrides,
+                first=pass_index == 0,
+            ),
+            declarations,
+            about,
         )
         # Siblings decide whether one numeric param owns a stated quantity.
         resolution = _Resolution(

@@ -62,3 +62,49 @@ async def test_a_proposal_that_states_no_range_binds_the_site_default() -> None:
     bound = await bind(_SEARCH, _infos, FilterReadsDouble(), proposal, [])
 
     assert bound["period_range"].to_wire() == '{"min": 20.0, "max": 28.0}'
+
+
+_PICK = WDKSearch.model_validate(
+    {
+        "urlSegment": "GenesBySnps",
+        "fullName": "GeneQuestions.GenesBySnps",
+        "displayName": "Genes by SNP class",
+        "outputRecordClassName": "transcript",
+        "parameters": [
+            {
+                "name": "snp_class",
+                "displayName": "SNP class",
+                "type": "single-pick-vocabulary",
+                "displayType": "select",
+                "isVisible": True,
+                "isReadOnly": False,
+                "allowEmptyValue": False,
+                "initialDisplayValue": "Missense",
+                "vocabulary": [
+                    ["Missense", "Missense", None],
+                    ["Synonymous", "Synonymous", None],
+                ],
+                "dependentParams": [],
+            }
+        ],
+    }
+)
+
+
+async def test_a_proposal_whose_term_names_no_entry_is_skipped() -> None:
+    async def picks(context: dict[str, str]) -> list[WDKParameter]:
+        del context
+        return _PICK.parameters or []
+
+    proposal = Proposal(
+        search_name=_PICK.url_segment,
+        source=CandidateSource.CATALOG,
+        basis="the site's catalog",
+        stated={"snp_class": "non-synonymous"},
+    )
+
+    with pytest.raises(CandidateSkippedError) as skipped:
+        await bind(_PICK, picks, FilterReadsDouble(), proposal, [])
+
+    assert skipped.value.reason == "unbound_required"
+    assert "non-synonymous" in str(skipped.value.detail)

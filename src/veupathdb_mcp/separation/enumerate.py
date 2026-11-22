@@ -17,6 +17,7 @@ from veupathdb.domain.parameters import (
     FilterValue,
     ParamValue,
     StatedValuesError,
+    VocabularyEntryError,
 )
 from veupathdb.errors import VEuPathDBError
 from veupathdb.wdk import WDKParameter, WDKSearch, encode_params
@@ -226,10 +227,12 @@ async def bind(
             intent=ParamIntent(text=proposal.intent),
             search_name=search.url_segment,
             stated=_overrides(search, infos, proposal, organisms),
+            about=None,
         )
     except (
         UnknownParameterError,
         StatedValuesError,
+        VocabularyEntryError,
         FilterStatementError,
         EmptyRangeError,
         TooFewSelectedError,

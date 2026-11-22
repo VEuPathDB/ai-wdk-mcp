@@ -68,6 +68,7 @@ async def _resolve(
         search_name="GenesByDefaults",
         intent=ParamIntent(text=text),
         stated=stated or {},
+        about=None,
     )
 
 
@@ -264,6 +265,7 @@ async def _resolve_text(stated: dict[str, JsonValue] | None = None) -> ResolvedP
         search_name="GenesByDefaults",
         intent=ParamIntent(),
         stated=stated or {},
+        about=None,
     )
 
 
@@ -422,6 +424,7 @@ async def _under_organism(
         search_name="GenesByDefaults",
         intent=ParamIntent(text="expression profile of the protease genes"),
         stated={"organism": [chosen]},
+        about=None,
     )
     return (
         {name: to_wire(value) for name, value in resolved.params.items()},

@@ -30,6 +30,7 @@ async def _resolve(
         search_name="GenesByRhythm",
         intent=ParamIntent(text="genes with a rhythm"),
         stated=stated or {},
+        about=None,
     )
 
 

@@ -58,6 +58,7 @@ async def _resolve(stated: dict[str, JsonValue]) -> ResolvedParams:
         intent=ParamIntent(),
         search_name=SEARCH,
         stated=stated,
+        about=None,
     )
 
 

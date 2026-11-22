@@ -55,6 +55,7 @@ async def _walk(
         search_name="GenesByRNASeqEvidence",
         intent=intent or ParamIntent(),
         stated=stated or {},
+        about=None,
     )
 
 

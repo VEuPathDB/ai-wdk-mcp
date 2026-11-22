@@ -57,6 +57,7 @@ async def test_a_range_statement_binds_its_facet_and_reads_its_range_once() -> N
             "organism_select_none": _PF,
             "gene_variant_stats": [{"field": "total_variants", "value": {"min": 6}}],
         },
+        about=None,
     )
 
     value = resolved.params["gene_variant_stats"]
@@ -85,6 +86,7 @@ async def test_a_facet_named_by_a_part_of_its_name_is_refused() -> None:
                 "organism_select_none": _PF,
                 "gene_variant_stats": [{"field": "variants", "value": {"min": 6}}],
             },
+            about=None,
         )
 
     assert "No facet is named 'variants'" in caught.value.detail
@@ -104,6 +106,7 @@ async def test_a_member_statement_reads_no_range_and_counts_what_it_selects() ->
             "organismSinglePick": _PF,
             "variation_sample_meta": [{"field": "sex", "value": ["female"]}],
         },
+        about=None,
     )
 
     value = resolved.params["variation_sample_meta"]
