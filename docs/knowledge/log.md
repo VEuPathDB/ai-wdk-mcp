@@ -1,5 +1,19 @@
 # Knowledge log
 
+## 2026-11-22 - Values compare by ==, and the reader returns BoundValues
+
+- veupathdb-py defines equality on the value types, so `held_default`, the
+  `validate_parameters` re-read and `read_under_parents` compare with `==`; a held parent
+  in another writing reads in the typed parent's kind and moves nothing
+  (`test_a_held_parent_in_another_writing_has_not_moved.py`). `substituted_params` keeps
+  `same_param_value` with the spec's kind, since both sides can be held.
+- `read_under_parents`, `read_stated_parameters` and `read_stated_context` return
+  `BoundValues`, a read-only mapping whose constructor takes a sentinel only `param_dag`
+  holds (`NOTHING_READ` is the empty reading). Ruff's banned-api rule refuses an import or
+  attribute read of the sentinel. `validate_parameters` takes any mapping of stated values.
+- `OrthologRow.member` builds the group member by model validation from the row's
+  attributes.
+
 ## 2026-11-22 - A gate keeps the one equality
 
 - `python -m veupathdb.devtools.param_equality src scripts` runs in pre-commit, in CI and in

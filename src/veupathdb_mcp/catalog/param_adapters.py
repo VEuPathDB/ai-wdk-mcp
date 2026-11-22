@@ -10,7 +10,6 @@ from veupathdb.domain.parameters import (
     ParamSpecNormalized,
     ParamValue,
     empty_value,
-    same_value,
 )
 from veupathdb.wdk import WDKParameter, WDKSearch
 
@@ -59,7 +58,7 @@ def held_default(param: WDKParameter) -> ParamValue | None:
     specs = {param.name: adapt_param_from_wdk(param)}
     held = ParameterCanonicalizer(specs).held({param.name: wire}).get(param.name)
     if held is None or (
-        not param.allow_empty_value and same_value(held, empty_value(param.type))
+        not param.allow_empty_value and held == empty_value(param.type)
     ):
         return None
     return held

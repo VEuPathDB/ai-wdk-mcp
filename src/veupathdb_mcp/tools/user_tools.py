@@ -276,7 +276,7 @@ async def run_control_tests_on_search(
         site_id=site_id,
         record_type=record_type,
         target_search_name=target_search_name,
-        target_parameters=parameters,
+        target_parameters=dict(parameters),
         controls_search_name="GeneByLocusTag",
         controls_param_name="ds_gene_ids",
         controls_value_format="newline",

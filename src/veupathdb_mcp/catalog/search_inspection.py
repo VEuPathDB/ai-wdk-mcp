@@ -33,6 +33,8 @@ from veupathdb_mcp.catalog.overview_formatting import (
 from veupathdb_mcp.catalog.param_adapters import held_default
 from veupathdb_mcp.catalog.param_dag import (
     NOTHING_BOUND,
+    NOTHING_READ,
+    BoundValues,
     MovedParentError,
     ParamFetcher,
     read_under_parents,
@@ -311,13 +313,13 @@ async def read_stated_parameters(
     about: ResolveContext | None,
     record_type: str | None = None,
     bound: Mapping[str, ParamValue] = NOTHING_BOUND,
-) -> dict[str, ParamValue]:
+) -> BoundValues:
     """The values a caller states for one search, each read under its parents.
 
     A refusal's candidates are ordered under ``about``; None sends no choice.
     """
     if not stated:
-        return {}
+        return NOTHING_READ
     fetch_at, reads = await _site_reader(site_id, search_name, record_type)
     return await read_under_parents(fetch_at, stated, reads, about=about, bound=bound)
 
@@ -330,10 +332,10 @@ async def read_stated_context(
     about: ResolveContext | None,
     record_type: str | None = None,
     bound: Mapping[str, ParamValue] = NOTHING_BOUND,
-) -> tuple[dict[str, ParamValue], list[MovedParentError]]:
+) -> tuple[BoundValues, list[MovedParentError]]:
     stale: list[MovedParentError] = []
     if not stated:
-        return {}, stale
+        return NOTHING_READ, stale
     fetch_at, reads = await _site_reader(site_id, search_name, record_type)
     values = await read_under_parents(
         fetch_at, stated, reads, about=about, bound=bound, stale=stale

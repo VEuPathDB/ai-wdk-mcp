@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable, Mapping, Sequence
+from collections.abc import Awaitable, Callable, Iterator, Mapping, Sequence
 from enum import StrEnum
 from functools import partial
 from types import MappingProxyType
+from typing import final
 
 from pydantic import Field, JsonValue
 from veupathdb.domain import SearchContext
@@ -20,7 +21,6 @@ from veupathdb.domain.parameters import (
     MultiPickValue,
     NumberMembers,
     ParamGraph,
-    ParamKind,
     ParamSpecNormalized,
     ParamValue,
     PhyleticBinding,
@@ -36,7 +36,6 @@ from veupathdb.domain.parameters import (
     rank_entries,
     read_stated_values,
     restates,
-    same_param_value,
     shown_stated,
     shown_stated_text,
     to_wire,
@@ -292,6 +291,32 @@ ParamFetcher = Callable[[dict[str, str]], Awaitable[list[WDKParameter]]]
 NOTHING_BOUND: Mapping[str, ParamValue] = MappingProxyType({})
 
 
+class _Reader:
+    pass
+
+
+_READER = _Reader()
+
+
+@final
+class BoundValues(Mapping[str, ParamValue]):
+    def __init__(self, values: Mapping[str, ParamValue], reader: _Reader) -> None:
+        del reader
+        self._values = dict(values)
+
+    def __getitem__(self, name: str) -> ParamValue:
+        return self._values[name]
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self._values)
+
+    def __len__(self) -> int:
+        return len(self._values)
+
+
+NOTHING_READ = BoundValues({}, _READER)
+
+
 def as_tree_leaves(
     declarations: Sequence[WDKParameter], values: Mapping[str, ParamValue]
 ) -> dict[str, ParamValue]:
@@ -447,14 +472,15 @@ async def read_under_parents(
     about: ResolveContext | None,
     bound: Mapping[str, ParamValue] = NOTHING_BOUND,
     stale: list[MovedParentError] | None = None,
-) -> dict[str, ParamValue]:
+) -> BoundValues:
     """Reads each stated value under the declarations its stated, bound and site-set
     parents give, and refuses a filter that selects nothing. A name of no parameter
     is refused before any value is read. A term no entry names is refused with its
     candidates ordered under ``about``; None sends no choice."""
-    return await _read_held(
+    read = await _read_held(
         fetch_at, stated, reads, about=about, bound=bound, noted=stale
     )
+    return BoundValues(read, _READER)
 
 
 async def _read_held(
@@ -483,12 +509,10 @@ async def _read_held(
         about=about,
         bound={n: v for n, v in bound.items() if n not in standing},
     )
-    kinds: dict[str, ParamKind] = {d.name: d.type for d in declarations}
     moved = {
         name
         for name, value in read.items()
-        if name not in bound
-        or not same_param_value(name, kinds.get(name), bound[name], value)
+        if name not in bound or bound[name] != value
     }
     site_set = {d.name for d in declarations if d.site_set}
     followers = {

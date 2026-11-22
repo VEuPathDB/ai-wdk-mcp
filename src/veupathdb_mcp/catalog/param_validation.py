@@ -21,7 +21,6 @@ from veupathdb.domain.parameters import (
     check_expression,
     fill_site_set_defaults,
     filled_site_set_defaults,
-    same_param_values,
     shown_stated,
     to_decoded_map,
 )
@@ -372,7 +371,7 @@ async def _canonical(
 async def validate_parameters(
     ctx: SearchContext,
     *,
-    stated: dict[str, ParamValue],
+    stated: Mapping[str, ParamValue],
     context: Mapping[str, ParamValue] = NOTHING_HELD,
     held_validation: StepValidation | None = None,
     callbacks: ValidationCallbacks,
@@ -409,18 +408,18 @@ async def validate_parameters(
         )
 
     param_spec_map = adapt_param_specs_from_search(response.search_data)
-    stated = await _checked_phyletic_expression(ctx.site_id, response, stated)
-    stated = _canonical_census_pattern(response, stated)
+    written = await _checked_phyletic_expression(ctx.site_id, response, dict(stated))
+    written = _canonical_census_pattern(response, written)
     canonical = await _canonical(
         ParameterCanonicalizer(param_spec_map),
-        stated,
+        written,
         response.search_data.parameters or [],
         about,
     )
 
     # A tree param counts only its leaves, so a branch selection scores zero
     # until it is expanded. WDK must judge what will be sent, not what arrived.
-    if not same_param_values(canonical, stated):
+    if canonical != written:
         resolved = await resolve_search_details(
             ctx,
             resolved_record_type=resolved_record_type,
@@ -433,7 +432,7 @@ async def validate_parameters(
     # so it casts no verdict either way.
     if resolved.values_were_read and _refuses_a_statement(
         response.validation,
-        stated=stated,
+        stated=written,
         context=held,
         held_validation=held_validation,
     ):
@@ -453,7 +452,7 @@ async def validate_parameters(
     )
     caller_canonical = await _canonical(
         ParameterCanonicalizer(param_spec_map),
-        stated,
+        written,
         response.search_data.parameters or [],
         about,
     )

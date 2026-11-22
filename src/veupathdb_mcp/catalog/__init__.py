@@ -72,6 +72,8 @@ from veupathdb_mcp.catalog.overview_formatting import (
 )
 from veupathdb_mcp.catalog.param_adapters import adapt_param_specs_from_search
 from veupathdb_mcp.catalog.param_dag import (
+    NOTHING_READ,
+    BoundValues,
     MovedParentError,
     ParamFetcher,
     ResolvedParams,
@@ -236,6 +238,7 @@ __all__ = [
     "GENE_RECORD_TYPE",
     "MAX_EXPRESSION_TERMS",
     "MAX_EXPRESSION_WORK",
+    "NOTHING_READ",
     "PHYLETIC_PROFILE_SEARCH",
     "RADIO_OFF",
     "SUBSET_QUERY",
@@ -244,6 +247,7 @@ __all__ = [
     "AllExcept",
     "AllOf",
     "AnyOf",
+    "BoundValues",
     "Choice",
     "ChoiceAnswer",
     "ChoiceProbability",

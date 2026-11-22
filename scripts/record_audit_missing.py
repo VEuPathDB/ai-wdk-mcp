@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Discriminator, JsonValue
 from scripts.record_audit_fixtures import FIXTURES, act_as_the_test_account
 from veupathdb import JSONObject
 from veupathdb.devtools import use_qa_sites
-from veupathdb.domain.parameters import MultiPickValue, same_as_wire
+from veupathdb.domain.parameters import HeldValue, MultiPickValue
 from veupathdb.jbrowse import (
     GenomeReader,
     GenomeWindow,
@@ -323,7 +323,7 @@ def trim(case: MissingCase, calls: list[WireCall]) -> list[WireCall]:
         (
             _example_kept(case, t)
             for t in taxa
-            if not same_as_wire("organism", absent, t.parameters["organism"])
+            if absent != HeldValue(wire=t.parameters["organism"])
         ),
         None,
     )
@@ -340,9 +340,7 @@ def trim(case: MissingCase, calls: list[WireCall]) -> list[WireCall]:
         match _taxon(call):
             case None:
                 kept.append(call)
-            case taxon if same_as_wire(
-                "organism", absent, taxon.parameters["organism"]
-            ):
+            case taxon if absent == HeldValue(wire=taxon.parameters["organism"]):
                 kept.append(_absent_kept(taxon, groups, window))
             case _:
                 kept.append(example)
