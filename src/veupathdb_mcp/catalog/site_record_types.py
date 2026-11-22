@@ -1,6 +1,3 @@
-"""The record types a site declares: its loaded catalog's, or one read of the
-site's /record-types held for the process."""
-
 from __future__ import annotations
 
 from veupathdb.wdk import get_wdk_client

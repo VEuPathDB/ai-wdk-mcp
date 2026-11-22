@@ -21,7 +21,6 @@ _HELD: dict[str, PhyleticTree] = {}
 
 
 async def serves_ortho_taxonomy(site_id: str) -> bool:
-    """Whether the site's declared record types list OrthoMCL's helper record."""
     return ORTHO_TAXONOMY_RECORD_TYPE in await declared_record_types(site_id)
 
 
