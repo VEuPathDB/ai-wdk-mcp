@@ -97,8 +97,6 @@ class PhyleticUnresolvedProposal(BaseModel):
 
 
 class PhyleticTreeUnread(BaseModel):
-    """The search's species maps give no tree, so no list can be read."""
-
     orthomcl_elsewhere: bool
 
 
@@ -241,8 +239,7 @@ def derive_phyletic_overrides(
 ) -> PhyleticDerivation | None:
     """The three parameter values a proposal of the two species lists states.
 
-    ``None`` means the derivation does not apply, because the search is not
-    phyletic. A list left null, and a list the call never names, both count as
+    ``None`` means the search's species tree does not read. A list left null, and a list the call never names, both count as
     the empty selection, and two empty selections state no criterion at all.
     """
     tree = phyletic_tree_of(definition_params)

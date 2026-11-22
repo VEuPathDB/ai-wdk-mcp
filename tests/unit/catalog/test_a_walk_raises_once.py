@@ -339,3 +339,18 @@ async def test_a_component_site_whose_tree_does_not_read_names_orthomcl() -> Non
 
 async def test_orthomcl_whose_tree_does_not_read_names_no_route() -> None:
     assert await _no_tree_on("orthomcl") == _NO_TREE
+
+
+async def test_a_code_both_lists_name_is_refused_on_each_list() -> None:
+    refusal = await _walked(
+        _orthologs(),
+        {"excluded_species": "pfal", "included_species": "pfal"},
+        search_name="GenesByOrthologPattern",
+    )
+
+    rows = _rows(refusal)
+    assert [(row.param, row.value) for row in rows] == [
+        ("excluded_species", "pfal"),
+        ("included_species", "pfal"),
+    ]
+    assert all("both name ['pfal']" in row.detail for row in rows)
