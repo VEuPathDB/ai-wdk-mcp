@@ -13,7 +13,10 @@ from veupathdb.domain.parameters import (
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 
 from veupathdb_mcp.catalog import read_under_parents
-from veupathdb_mcp.catalog.param_dag import MovedParentError
+from veupathdb_mcp.catalog.param_dag import (
+    MovedParentError,
+    read_context_under_parents,
+)
 
 from .conftest import serving
 from .test_a_filter_statement_binds_by_its_facet import (
@@ -135,3 +138,19 @@ async def test_a_kept_child_under_a_new_parent_is_offered_the_new_members() -> N
     )
     assert "Under the new organismSinglePick, variation_sample_meta offers: " in detail
     assert "Geographically dispersed P. falciparum isolates" in detail
+
+
+async def test_a_context_read_notes_a_stale_child_and_binds_nothing_for_it() -> None:
+    read = await read_context_under_parents(
+        serving(*variant_characteristics()),
+        {"organism_select_none": [_PCHA]},
+        FilterReadsDouble({"total_variants": "ontology_term_summary_total_variants"}),
+        about=None,
+        bound=_HELD,
+    )
+
+    assert read.values == {"organism_select_none": MultiPickValue(values=[_PCHA])}
+    [stale] = read.stale
+    assert stale.child == "gene_variant_stats"
+    assert stale.detail.startswith(_MOVED)
+    assert stale.detail.endswith(_ASK)

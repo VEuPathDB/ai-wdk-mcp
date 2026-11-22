@@ -33,6 +33,8 @@ from veupathdb_mcp.catalog.overview_formatting import (
 from veupathdb_mcp.catalog.param_adapters import held_default
 from veupathdb_mcp.catalog.param_dag import (
     NOTHING_BOUND,
+    ContextRead,
+    read_context_under_parents,
     read_under_parents,
     wdk_fetch_at,
 )
@@ -308,6 +310,29 @@ async def read_stated_parameters(
         site_id, search_name, _auto_resolved_record_type(record_type)
     )
     return await read_under_parents(
+        wdk_fetch_at(site_id, rt, search_name),
+        stated,
+        WDKFilterReads(site_id, rt, search_name),
+        about=about,
+        bound=bound,
+    )
+
+
+async def read_stated_context(
+    site_id: str,
+    search_name: str,
+    stated: Mapping[str, JsonValue] | None,
+    *,
+    about: ResolveContext | None,
+    record_type: str | None = None,
+    bound: Mapping[str, ParamValue] = NOTHING_BOUND,
+) -> ContextRead:
+    if not stated:
+        return ContextRead(values={}, stale=[])
+    rt = await resolve_search_record_type(
+        site_id, search_name, _auto_resolved_record_type(record_type)
+    )
+    return await read_context_under_parents(
         wdk_fetch_at(site_id, rt, search_name),
         stated,
         WDKFilterReads(site_id, rt, search_name),

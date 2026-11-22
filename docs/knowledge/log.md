@@ -1,5 +1,13 @@
 # Knowledge log
 
+## 2026-11-22 - A context read notes a stale child instead of refusing
+
+- `read_context_under_parents` and `read_stated_context` read a context the way
+  `read_under_parents` does, but a held child that no longer reads under a moved parent is
+  returned as a `MovedParentError` in `ContextRead.stale` and bound to nothing, so an options
+  read still answers and names the child to fix. A write reads through
+  `read_under_parents`, which still refuses it.
+
 ## 2026-11-22 - A child refused under a moved parent is told so
 
 - `read_under_parents` reads each held child whose parent a call moves on its own, after

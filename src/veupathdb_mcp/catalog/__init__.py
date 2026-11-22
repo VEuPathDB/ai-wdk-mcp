@@ -72,10 +72,13 @@ from veupathdb_mcp.catalog.overview_formatting import (
 )
 from veupathdb_mcp.catalog.param_adapters import adapt_param_specs_from_search
 from veupathdb_mcp.catalog.param_dag import (
+    ContextRead,
+    MovedParentError,
     ParamFetcher,
     ResolvedParams,
     UnknownParameterError,
     as_tree_leaves,
+    read_context_under_parents,
     read_declared,
     read_under_parents,
     resolve_params_with_intent,
@@ -176,6 +179,7 @@ from veupathdb_mcp.catalog.search_inspection import (
     inspect_search,
     read_parameter_options,
     read_radio_readings,
+    read_stated_context,
     read_stated_parameters,
 )
 from veupathdb_mcp.catalog.searches import (
@@ -249,6 +253,7 @@ __all__ = [
     "CodeSet",
     "CompareTerm",
     "ComparedGroups",
+    "ContextRead",
     "CountTerm",
     "DecisionRequest",
     "DecisionResponse",
@@ -265,6 +270,7 @@ __all__ = [
     "FilterReads",
     "GetParameterOptionsResult",
     "LabelReading",
+    "MovedParentError",
     "NamedVocabulary",
     "NoGeneRecordsError",
     "NoneOf",
@@ -374,11 +380,13 @@ __all__ = [
     "radio_pairs",
     "radio_readings",
     "rank_experiments_elsewhere",
+    "read_context_under_parents",
     "read_declared",
     "read_experiment",
     "read_parameter_options",
     "read_radio_readings",
     "read_search_definition",
+    "read_stated_context",
     "read_stated_parameters",
     "read_under_parents",
     "require_gene_records",

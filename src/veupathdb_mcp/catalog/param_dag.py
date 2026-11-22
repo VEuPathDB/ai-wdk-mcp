@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable, Collection, Mapping, Sequence
+from dataclasses import dataclass
 from enum import StrEnum
 from functools import partial
 from types import MappingProxyType
@@ -428,6 +429,41 @@ async def read_under_parents(
     as the bound value shows it is the bound value, and is not read, while no
     parent of it is stated anew. A bound value given back or left out whose parent
     is stated anew is read again under the new parent, and refused as such."""
+    return await _read_held(
+        fetch_at, stated, reads, about=about, bound=bound, noted=None
+    )
+
+
+@dataclass(frozen=True)
+class ContextRead:
+    values: dict[str, ParamValue]
+    stale: list[MovedParentError]
+
+
+async def read_context_under_parents(
+    fetch_at: ParamFetcher,
+    stated: Mapping[str, JsonValue],
+    reads: FilterReads,
+    *,
+    about: ResolveContext | None,
+    bound: Mapping[str, ParamValue] = NOTHING_BOUND,
+) -> ContextRead:
+    noted: list[MovedParentError] = []
+    values = await _read_held(
+        fetch_at, stated, reads, about=about, bound=bound, noted=noted
+    )
+    return ContextRead(values=values, stale=noted)
+
+
+async def _read_held(
+    fetch_at: ParamFetcher,
+    stated: Mapping[str, JsonValue],
+    reads: FilterReads,
+    *,
+    about: ResolveContext | None,
+    bound: Mapping[str, ParamValue],
+    noted: list[MovedParentError] | None,
+) -> dict[str, ParamValue]:
     first_context = wire_map({n: v for n, v in bound.items() if n not in stated})
     declarations = await fetch_at(first_context)
     fetched = _Fetched(fetch_at, first_context, declarations)
@@ -466,13 +502,16 @@ async def read_under_parents(
                 for parent in sorted(_ancestors(parents, child) & changed)
                 if parent in read
             }
-            raise MovedParentError(
+            stale = MovedParentError(
                 child,
                 bound[child],
                 new_parents,
                 refusal,
                 _candidates(fresh[child], bound[child]) if child in fresh else [],
-            ) from refusal
+            )
+            if noted is None:
+                raise stale from refusal
+            noted.append(stale)
     return read
 
 
