@@ -11,9 +11,7 @@ from veupathdb.domain.parameters import (
 from veupathdb.model import CamelModel
 
 
-class ParamSpecResponse(CamelModel):
-    """Normalized parameter spec (UI-friendly) with typed vocab/ontology/parsers."""
-
+class _ParamSpecFields(CamelModel):
     name: str
     display_name: str | None = Field(default=None)
     type: str
@@ -23,9 +21,6 @@ class ParamSpecResponse(CamelModel):
     min_selected_count: int | None = Field(default=None)
     max_selected_count: int | None = Field(default=None)
     count_only_leaves: bool = Field(default=False)
-    initial_display_value: str | None = Field(default=None)
-    # The default in the form a caller states it back. None when WDK holds none.
-    default: JsonValue = None
     vocabulary: WDKVocabulary | None = None
     min: float | None = None
     max: float | None = None
@@ -44,6 +39,19 @@ class ParamSpecResponse(CamelModel):
     parsers: list[WDKDatasetParser] | None = Field(default=None)
     default_id_list: str | None = Field(default=None)
     record_class_name: str | None = Field(default=None)
+
+
+class ParamSpecResponse(_ParamSpecFields):
+    """Normalized parameter spec (UI-friendly) with the default as WDK holds it."""
+
+    initial_display_value: str | None = Field(default=None)
+
+
+class StatedParamSpec(_ParamSpecFields):
+    """A parameter spec a model reads, with the default in the form it is stated."""
+
+    # None when WDK holds no default a caller can state.
+    default: JsonValue = None
 
 
 @dataclass(frozen=True, slots=True)

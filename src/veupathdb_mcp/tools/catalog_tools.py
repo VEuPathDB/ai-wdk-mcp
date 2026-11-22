@@ -18,7 +18,7 @@ from veupathdb_mcp.catalog import (
 from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 from veupathdb_mcp.catalog.experiments import ExperimentMatch, UnknownExperimentError
 from veupathdb_mcp.catalog.facet_ranges import WDKFilterReads
-from veupathdb_mcp.catalog.models import ParamSpecResponse, RecordTypeInfo, SearchMatch
+from veupathdb_mcp.catalog.models import RecordTypeInfo, SearchMatch, StatedParamSpec
 from veupathdb_mcp.catalog.overview_formatting import SearchOverviewResult
 from veupathdb_mcp.catalog.param_dag import (
     ResolvedParams,
@@ -27,7 +27,7 @@ from veupathdb_mcp.catalog.param_dag import (
 )
 from veupathdb_mcp.catalog.param_formatting import GetParameterOptionsResult
 from veupathdb_mcp.catalog.param_intent import ParamIntent
-from veupathdb_mcp.catalog.param_specs_formatting import build_param_specs
+from veupathdb_mcp.catalog.param_specs_formatting import build_stated_param_specs
 from veupathdb_mcp.catalog.param_validation import ValidatedParams, validate_parameters
 from veupathdb_mcp.catalog.phyletic_pattern import PhyleticPattern
 from veupathdb_mcp.catalog.search_inspection import UnknownSearchError
@@ -337,7 +337,7 @@ async def get_search_param_specs(
     site_id: str,
     search_name: str,
     record_type: str | None = None,
-) -> list[ParamSpecResponse]:
+) -> list[StatedParamSpec]:
     """Read one search's parameters in their normalized spec shape.
 
     A spec marked isReadOnly is set by the site and takes no stated value.
@@ -355,7 +355,9 @@ async def get_search_param_specs(
         msg = f"search_name is not on this site. {exc.guidance}"
         raise ToolError(msg) from exc
     return [
-        spec for spec in build_param_specs(inspection.definition) if spec.is_visible
+        spec
+        for spec in build_stated_param_specs(inspection.definition)
+        if spec.is_visible
     ]
 
 

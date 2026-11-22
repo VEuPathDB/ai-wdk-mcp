@@ -58,6 +58,7 @@ from veupathdb_mcp.catalog.models import (
     ParamSpecResponse,
     RecordTypeInfo,
     SearchMatch,
+    StatedParamSpec,
 )
 from veupathdb_mcp.catalog.overview_formatting import (
     SearchOverviewResult,
@@ -102,6 +103,7 @@ from veupathdb_mcp.catalog.param_sheet import SheetEntry, build_sheet
 from veupathdb_mcp.catalog.param_specs_formatting import (
     build_param_specs,
     build_param_specs_from_list,
+    build_stated_param_specs,
 )
 from veupathdb_mcp.catalog.param_validation import (
     ResolvedSearch,
@@ -278,6 +280,7 @@ __all__ = [
     "SheetEntry",
     "SideCounts",
     "SiteSetParameterError",
+    "StatedParamSpec",
     "TooFewSelectedError",
     "UnknownExperimentError",
     "UnknownParameterError",
@@ -296,6 +299,7 @@ __all__ = [
     "build_param_specs",
     "build_param_specs_from_list",
     "build_sheet",
+    "build_stated_param_specs",
     "check_radio_pairs",
     "compare_counts",
     "contrast_role_of",
