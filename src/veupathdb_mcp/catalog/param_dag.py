@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable, Collection, Mapping, Sequence
+from enum import StrEnum
 from functools import partial
 from types import MappingProxyType
 
@@ -10,24 +11,31 @@ from pydantic import Field, JsonValue
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
     PHYLETIC_LIST_PARAMS,
+    SHOWN_CANDIDATES,
     FilterFacets,
     FilterProposals,
+    FilterValue,
     MultiPickValue,
     ParamGraph,
     ParamSpecNormalized,
     ParamValue,
     PhyleticBinding,
+    SinglePickValue,
     Stated,
     UnboundParameter,
     VocabularyEntryError,
+    entry_name,
+    flatten_vocab,
     leaf_terms,
+    rank_entries,
     read_stated_values,
     restates,
     shown_stated,
+    shown_stated_text,
     to_wire,
     wire_map,
 )
-from veupathdb.errors import ValidationError
+from veupathdb.errors import ValidationError, VEuPathDBError, param_message_rows
 from veupathdb.model import CamelModel
 from veupathdb.wdk import WDKParameter, get_wdk_client
 
@@ -337,6 +345,74 @@ def _followers(
     }
 
 
+class MovedParentError(ValidationError):
+    def __init__(
+        self,
+        child: str,
+        held: ParamValue,
+        moved: Mapping[str, tuple[ParamValue | None, ParamValue]],
+        refusal: VEuPathDBError[StrEnum],
+        candidates: Sequence[str],
+    ) -> None:
+        self.child = child
+        parents = ", ".join(
+            f"{name} moved from {_shown(old)} to {shown_stated_text(new)}"
+            for name, (old, new) in moved.items()
+        )
+        names = " and ".join(moved)
+        refused = refusal.detail or refusal.title
+        unsaid = [c for c in candidates if c.split(": ", 1)[-1] not in refused]
+        offered = (
+            f" Under the new {names}, {child} offers: {'; '.join(unsaid)}."
+            if unsaid
+            else ""
+        )
+        detail = (
+            f"{parents}, so {child}, which held {shown_stated_text(held)}, was read "
+            f"again under it and refused: {refused}{offered} "
+            f"State {child} again under the new {names}, or leave it out if a reader "
+            "can keep it."
+        )
+        super().__init__(
+            title="A held value no longer reads under its new parent",
+            detail=detail,
+            errors=param_message_rows({child: [detail]}),
+        )
+
+
+def _shown(value: ParamValue | None) -> str:
+    return "unset" if value is None else shown_stated_text(value)
+
+
+def _candidates(declaration: WDKParameter, held: ParamValue) -> list[str]:
+    match held:
+        case SinglePickValue(value=term):
+            return _ranked(declaration, [term])
+        case MultiPickValue(values=terms):
+            return _ranked(declaration, terms)
+        case FilterValue(filters=clauses) if clauses:
+            return _members(declaration, {clause.field for clause in clauses})
+        case _:
+            return _members(declaration, None)
+
+
+def _members(declaration: WDKParameter, fields: set[str] | None) -> list[str]:
+    return [
+        f"{facet.display}: {', '.join(facet.members)}"
+        for facet in FilterFacets.of(declaration).root
+        if facet.members and (fields is None or facet.term in fields)
+    ]
+
+
+def _ranked(declaration: WDKParameter, terms: Sequence[str]) -> list[str]:
+    options = flatten_vocab(declaration.vocabulary)
+    ranked: dict[str, str] = {}
+    for term in terms:
+        for option in rank_entries(options, term, SHOWN_CANDIDATES):
+            ranked.setdefault(option.value, entry_name(option))
+    return list(ranked.values())[:SHOWN_CANDIDATES]
+
+
 async def read_under_parents(
     fetch_at: ParamFetcher,
     stated: Mapping[str, JsonValue],
@@ -350,20 +426,89 @@ async def read_under_parents(
     is refused before any value is read. A term no entry names is refused with its
     candidates ordered under ``about``; None sends no choice. A value given back
     as the bound value shows it is the bound value, and is not read, while no
-    parent of it is stated anew. A bound value left out whose parent is stated anew
-    is read again as it is shown."""
-    context = wire_map({n: v for n, v in bound.items() if n not in stated})
-    declarations = await fetch_at(context)
+    parent of it is stated anew. A bound value given back or left out whose parent
+    is stated anew is read again under the new parent, and refused as such."""
+    first_context = wire_map({n: v for n, v in bound.items() if n not in stated})
+    declarations = await fetch_at(first_context)
+    fetched = _Fetched(fetch_at, first_context, declarations)
+    parents = ParamGraph.of(declarations).wire_parents
     kept = _given_back(declarations, stated, bound)
-    stated = {
-        **{name: given for name, given in stated.items() if name not in kept},
-        **_followers(declarations, stated.keys() - kept.keys(), stated, bound),
+    changed = stated.keys() - kept.keys()
+    followers = _followers(declarations, changed, stated, bound)
+    moved = {
+        name: given
+        for name, given in {**stated, **followers}.items()
+        if name in bound and name not in kept and _ancestors(parents, name) & changed
     }
-    held_context = wire_map({n: v for n, v in bound.items() if n not in stated})
-    if held_context != context:
-        context = held_context
-        declarations = await fetch_at(context)
+    standing = {
+        name: given
+        for name, given in stated.items()
+        if name not in kept and name not in moved
+    }
+    unmoved = {n: v for n, v in bound.items() if n not in moved}
+    read = {
+        **await _read_standing(fetched, standing, reads, about=about, bound=unmoved),
+        **kept,
+    }
+    order = ParamGraph.of(declarations).fill_order
+    for child in sorted(
+        moved, key=lambda name: order.index(name) if name in order else 0
+    ):
+        under = {**unmoved, **read}
+        try:
+            read |= await _read_standing(
+                fetched, {child: moved[child]}, reads, about=about, bound=under
+            )
+        except VEuPathDBError as refusal:
+            fresh = {d.name: d for d in await fetch_at(wire_map(under))}
+            new_parents = {
+                parent: (bound.get(parent), read[parent])
+                for parent in sorted(_ancestors(parents, child) & changed)
+                if parent in read
+            }
+            raise MovedParentError(
+                child,
+                bound[child],
+                new_parents,
+                refusal,
+                _candidates(fresh[child], bound[child]) if child in fresh else [],
+            ) from refusal
+    return read
+
+
+class _Fetched:
+    def __init__(
+        self,
+        fetch_at: ParamFetcher,
+        context: dict[str, str],
+        declarations: list[WDKParameter],
+    ) -> None:
+        self.fetch_at = fetch_at
+        self._first: tuple[dict[str, str], list[WDKParameter]] | None = (
+            context,
+            declarations,
+        )
+
+    async def __call__(self, context: dict[str, str]) -> list[WDKParameter]:
+        first, self._first = self._first, None
+        if first is not None and first[0] == context:
+            return first[1]
+        return await self.fetch_at(context)
+
+
+async def _read_standing(
+    fetch_at: _Fetched,
+    stated: Mapping[str, JsonValue],
+    reads: FilterReads,
+    *,
+    about: ResolveContext | None,
+    bound: Mapping[str, ParamValue],
+) -> dict[str, ParamValue]:
+    if not stated:
+        return {}
+    context = wire_map({n: v for n, v in bound.items() if n not in stated})
     read: dict[str, ParamValue] = {}
+    declarations = await fetch_at(context)
     _refuse_unknown_overrides(
         format_param_info_typed(declarations, organism=None),
         stated,
@@ -371,7 +516,7 @@ async def read_under_parents(
     for _ in range(_MAX_RESOLVE_DEPTH):
         missing = stated.keys() - read.keys()
         if not missing:
-            return {**as_tree_leaves(declarations, read), **kept}
+            return as_tree_leaves(declarations, read)
         waiting = _waiting(declarations, stated, context)
         sited = {
             d.name: d.initial_display_value
@@ -401,7 +546,7 @@ async def read_under_parents(
     unread = sorted(stated.keys() - read.keys())
     if unread:
         raise UnreadStatementError(unread)
-    return {**as_tree_leaves(declarations, read), **kept}
+    return as_tree_leaves(declarations, read)
 
 
 def wdk_fetch_at(site_id: str, record_type: str, search_name: str) -> ParamFetcher:

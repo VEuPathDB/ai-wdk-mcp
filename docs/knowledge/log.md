@@ -1,5 +1,14 @@
 # Knowledge log
 
+## 2026-11-22 - A child refused under a moved parent is told so
+
+- `read_under_parents` reads each held child whose parent a call moves on its own, after
+  the rest, and a refusal of one is a `MovedParentError`: it names each parent with its
+  old and new value, the child and what it held, the reader's own refusal, the child's
+  members or ranked entries under the new parent that refusal did not already list, and
+  asks to state the child again under the new parent or leave it out if a reader can
+  keep it.
+
 ## 2026-11-22 - A held child left out is read again under a new parent
 
 - `read_under_parents` reads a bound value the call leaves out again, in the form it is
