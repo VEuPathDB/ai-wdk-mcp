@@ -417,3 +417,72 @@ class TestTheRefreshAnswersWithTheStaleDependentsOnly:
         await _refreshed_specs({})
 
         assert asked == []
+
+
+_PICKS = ["Pf3D7", "PvP01"]
+
+
+def _counting(
+    monkeypatch: pytest.MonkeyPatch,
+    canonical: dict[str, ParamValue],
+) -> list[JSONObject]:
+    reads: list[JSONObject] = []
+    response = wdk_search_response(
+        "GenesByOrganism",
+        [
+            _enum_param(
+                "organism",
+                type_="multi-pick-vocabulary",
+                vocab=[[t, t, None] for t in [*_PICKS, "PkH"]],
+            )
+        ],
+        level="NONE",
+        is_valid=True,
+    )
+
+    async def _resolve(
+        ctx: SearchContext, *, resolved_record_type: str, parameters: JSONObject
+    ) -> param_validation.ResolvedSearch:
+        del ctx, resolved_record_type
+        reads.append(parameters)
+        return param_validation.ResolvedSearch(response=response, values_were_read=True)
+
+    async def _canonical(*_args: object) -> dict[str, ParamValue]:
+        return canonical
+
+    monkeypatch.setattr(param_validation, "resolve_search_details", _resolve)
+    monkeypatch.setattr(param_validation, "_canonical", _canonical)
+    return reads
+
+
+async def _validate_picks() -> None:
+    await param_validation.validate_parameters(
+        _CTX,
+        stated={"organism": MultiPickValue(values=_PICKS)},
+        callbacks=validation_callbacks(),
+        about=None,
+    )
+
+
+async def test_a_value_the_catalog_only_rewrites_is_not_read_again(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    reads = _counting(monkeypatch, {"organism": MultiPickValue(values=_PICKS[::-1])})
+
+    await _validate_picks()
+
+    assert len(reads) == 1
+
+
+async def test_a_value_the_catalog_moves_is_read_again(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    moved = MultiPickValue(values=[*_PICKS, "PkH"])
+    reads = _counting(monkeypatch, {"organism": moved})
+
+    await _validate_picks()
+
+    assert [read["organism"] for read in reads] == [
+        MultiPickValue(values=_PICKS),
+        moved,
+    ]
