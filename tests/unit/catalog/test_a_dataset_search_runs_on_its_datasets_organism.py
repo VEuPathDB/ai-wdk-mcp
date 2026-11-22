@@ -8,6 +8,7 @@ from unittest.mock import MagicMock
 import pytest
 from tests._support.recorded_catalog import (
     CATALOG_FIXTURES,
+    LISTS_DATASETS,
     RecordedDatasetSite,
     recorded_catalog,
 )
@@ -50,7 +51,7 @@ def test_the_recording_is_the_request_the_build_posts() -> None:
 )
 async def test_a_card_lists_its_organisms_apart() -> None:
     cards = await load_dataset_metadata(
-        RecordedDatasetSite("cryptodb_all_datasets.json"), "cryptodb"
+        RecordedDatasetSite("cryptodb_all_datasets.json"), "cryptodb", LISTS_DATASETS
     )
     by_id = {card.dataset_id: card for card in cards}
 

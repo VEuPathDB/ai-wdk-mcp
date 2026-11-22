@@ -5,10 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from tests._support.recorded_catalog import LISTS_DATASETS
 from tests._support.recordings import TEST_ROOT
 from veupathdb import JSONObject
 from veupathdb.devtools import WDKExchange
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
+from veupathdb.wdk import WDKRecordType
 
 from veupathdb_mcp.catalog.catalog_metadata import (
     DATASET_REPORT_PATH,
@@ -23,6 +25,11 @@ _KNOWLESI = "Cytoadherent and wild-type P. knowlesi (experiment 2)"
 _KNOWLESI_RNASEQ = (
     "GenesByRNASeqpknoH_pknoH_Chuang_Cytoadherant_RNASeq_unstranded_ebi_rnaSeq_RSRC"
 )
+
+
+_ORTHOMCL_TYPES = [
+    WDKRecordType(url_segment=name) for name in ("group", "sequence", "helper")
+]
 
 
 class _RecordedSite:
@@ -40,7 +47,7 @@ class _RecordedSite:
 
 @pytest.fixture(scope="module")
 async def plasmodb() -> list[ExperimentCard]:
-    return await load_dataset_metadata(_RecordedSite(), "plasmodb")
+    return await load_dataset_metadata(_RecordedSite(), "plasmodb", LISTS_DATASETS)
 
 
 def _named(cards: list[ExperimentCard], name: str) -> ExperimentCard:
@@ -65,7 +72,7 @@ def test_the_recording_is_the_request_the_build_posts() -> None:
 async def test_the_build_asks_for_the_attributes_and_tables_a_card_reads() -> None:
     site = _RecordedSite()
 
-    await load_dataset_metadata(site, "plasmodb")
+    await load_dataset_metadata(site, "plasmodb", LISTS_DATASETS)
 
     assert site.posted == [(DATASET_REPORT_PATH, dataset_report_request())]
     report = dataset_report_request()["reportConfig"]
@@ -282,7 +289,15 @@ class _OneRecordSite:
 
 
 async def test_a_publication_without_a_pmid_keeps_its_dataset() -> None:
-    cards = await load_dataset_metadata(_OneRecordSite(), "vectorbase")
+    cards = await load_dataset_metadata(_OneRecordSite(), "vectorbase", LISTS_DATASETS)
 
     assert [card.dataset_id for card in cards] == ["DS_af57b0e081"]
     assert cards[0].pmids == []
+
+
+async def test_a_site_that_lists_no_dataset_record_type_is_asked_for_none() -> None:
+    site = _RecordedSite()
+
+    cards = await load_dataset_metadata(site, "orthomcl", _ORTHOMCL_TYPES)
+
+    assert (cards, site.posted) == ([], [])

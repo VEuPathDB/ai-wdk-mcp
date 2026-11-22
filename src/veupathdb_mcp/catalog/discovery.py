@@ -148,7 +148,9 @@ class SearchCatalog:
                 client, record_types, expanded_supported=expanded_supported
             )
 
-            self._datasets = await load_dataset_metadata(client, self.site_id)
+            self._datasets = await load_dataset_metadata(
+                client, self.site_id, record_types
+            )
 
             onto = await load_ontology_categories(client, self.site_id)
             self._search_categories = onto.search_categories

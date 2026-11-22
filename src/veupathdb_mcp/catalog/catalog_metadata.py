@@ -1,5 +1,7 @@
 """Catalog metadata helpers: dataset cards, ontology categories, record type processing."""
 
+from collections.abc import Sequence
+
 from pydantic import ConfigDict, Field
 from veupathdb import JSONObject, get_logger
 from veupathdb.errors import VEuPathDBError
@@ -12,7 +14,10 @@ from veupathdb_mcp.catalog.experiment_card import ExperimentCard
 logger = get_logger(__name__)
 
 
-DATASET_REPORT_PATH = "/record-types/dataset/searches/AllDatasets/reports/standard"
+DATASET_RECORD_TYPE = "dataset"
+DATASET_REPORT_PATH = (
+    f"/record-types/{DATASET_RECORD_TYPE}/searches/AllDatasets/reports/standard"
+)
 
 # The attributes and tables a card reads, and nothing else.
 _CARD_ATTRIBUTES = [
@@ -39,9 +44,12 @@ def dataset_report_request() -> JSONObject:
 
 
 async def load_dataset_metadata(
-    client: VEuPathDBClient, site_id: str
+    client: VEuPathDBClient, site_id: str, record_types: Sequence[WDKRecordType]
 ) -> list[ExperimentCard]:
-    """Read every dataset the site publishes as a card. Return none on failure."""
+    """Read every dataset the site publishes as a card. Return none on failure,
+    and none from a site whose record types list no dataset."""
+    if all(rt.url_segment != DATASET_RECORD_TYPE for rt in record_types):
+        return []
     try:
         answer = await client.post(DATASET_REPORT_PATH, json=dataset_report_request())
         report = DatasetReport.model_validate(answer)

@@ -41,12 +41,15 @@ class RecordedDatasetSite:
         return []
 
 
+LISTS_DATASETS = [WDKRecordType(url_segment="dataset")]
+
+
 async def recorded_catalog(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, site_id: str
 ) -> SearchCatalog:
     """The site's catalog, built from its recorded dataset report alone."""
     site = RecordedDatasetSite(f"{site_id}_all_datasets.json")
-    cards = await load_dataset_metadata(site, site_id)
+    cards = await load_dataset_metadata(site, site_id, LISTS_DATASETS)
 
     async def _datasets(*_args: object) -> list[ExperimentCard]:
         return cards

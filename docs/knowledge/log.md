@@ -1,5 +1,11 @@
 # Knowledge log
 
+## 2026-11-22 - A catalog build asks for datasets only where the site lists them
+
+- `load_dataset_metadata` takes the record types the catalog build already read and asks
+  for `dataset/AllDatasets` only when they list `dataset`. OrthoMCL lists `group`,
+  `sequence` and `helper`, so its build sends no dataset report and logs no 404.
+
 ## 2026-11-22 - A filter with no clauses defaults to []
 
 - A filter parameter's sheet default and served spec default with no clauses is `[]`, the
