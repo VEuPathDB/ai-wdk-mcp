@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable, Iterator, Mapping, Sequence
-from enum import StrEnum
 from functools import partial
 from types import MappingProxyType
 from typing import final
@@ -43,6 +42,7 @@ from veupathdb.domain.parameters import (
 from veupathdb.errors import (
     ValidationError,
     VEuPathDBError,
+    VEuPathDBErrorCode,
     param_message_rows,
 )
 from veupathdb.model import CamelModel
@@ -415,7 +415,7 @@ class MovedParentError(ValidationError):
         child: str,
         held: ParamValue,
         moved: Mapping[str, tuple[ParamValue | None, ParamValue]],
-        refusal: VEuPathDBError[StrEnum],
+        refusal: VEuPathDBError[VEuPathDBErrorCode],
         candidates: Sequence[str],
     ) -> None:
         self.child = child
@@ -592,29 +592,34 @@ async def _read_held(
     ):
         under = {**unmoved, **read}
         under_child = Refusals()
-        got = await _read_standing(
-            fetched, {child: followers[child]}, reads, under_child, bound=under
-        )
-        refusal = await under_child.one([child], about)
-        if refusal is None:
-            read |= got
-            continue
-        fresh = {d.name: d for d in await fetch_at(wire_map(under))}
+        try:
+            got = await _read_standing(
+                fetched, {child: followers[child]}, reads, under_child, bound=under
+            )
+        except VEuPathDBError as failure:
+            if noted is None:
+                raise
+            refusal: VEuPathDBError[VEuPathDBErrorCode] = failure
+            offered: list[str] = []
+        else:
+            read_refusal = await under_child.one([child], about)
+            if read_refusal is None:
+                read |= got
+                continue
+            refusal = read_refusal
+            fresh = {d.name: d for d in await fetch_at(wire_map(under))}
+            offered = (
+                await _candidates(
+                    fresh[child], bound[child], about, refusal.detail or refusal.title
+                )
+                if child in fresh
+                else []
+            )
         new_parents = {
             parent: (bound.get(parent), read[parent])
             for parent in sorted(ancestors(graph.wire_parents, child) & moved)
         }
-        stale = MovedParentError(
-            child,
-            bound[child],
-            new_parents,
-            refusal,
-            await _candidates(
-                fresh[child], bound[child], about, refusal.detail or refusal.title
-            )
-            if child in fresh
-            else [],
-        )
+        stale = MovedParentError(child, bound[child], new_parents, refusal, offered)
         if noted is None:
             refused.note(stale, {child})
         else:

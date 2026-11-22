@@ -1,5 +1,13 @@
 # Knowledge log
 
+## 2026-11-22 - A follower that cannot be read is noted on an options read
+
+- On a context read (`stale=[...]`), an error that stops a held child's re-read under a moved
+  parent (a site that does not answer) is noted as that child's `MovedParentError`, and the
+  read returns. On a write the error propagates: a value that cannot be checked is never bound.
+- A write still re-reads every follower after another refusal, so the one refusal names every
+  stale child beside the other problems.
+
 ## 2026-11-22 - A species list is refused on itself
 
 - `PhyleticListError` writes one row per species list that names no entry or claims a code
