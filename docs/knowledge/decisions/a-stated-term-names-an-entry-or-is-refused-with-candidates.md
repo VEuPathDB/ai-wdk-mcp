@@ -15,9 +15,9 @@ the same step the canonicalizer runs. A term binds to the entry it names after f
 case and spacing, or to the entry a numeric term equals (`exact_entry`). Every other term
 of the parameter is gathered into one `VocabularyEntryError`, one fault per term, each
 with the first `SHOWN_CANDIDATES` (5) entries `rank_entries` ranks. A parameter with no
-vocabulary keeps its terms. Only vocabulary faults of one parameter are gathered, after
-every shape fault of the call; any other refusal raises on its own. `_bound` binds
-filters only. `separation/eligibility.py` reads an organism through `exact_entry` alone.
+vocabulary keeps its terms. The entry faults of every parameter of the call are gathered
+into that one refusal; with a shape fault beside them the call raises one refusal that
+names both, each row with its `detail`. `_bound` binds filters only. `separation/eligibility.py` reads an organism through `exact_entry` alone.
 
 The phyletic species lists and a radio pair's free-text half name their nearest entries
 from the same `rank_entries`, by `entry_name` (`display (value)`). A parameter read
@@ -33,7 +33,9 @@ lookup's stated organism (`lookup_genes_by_text`). Each takes a required keyword
 `about: ResolveContext | None`: the site and the researcher's message, or None, which
 sends no choice. A served tool passes None: the server's Decisions calls run on the
 deployment's key, and an outside client could otherwise spend it on every refusal, so
-only a host's in-process read, on the turn's keyed provider, orders a refusal. One
+only a host's in-process read, on the turn's keyed provider, orders a refusal. A
+canonicalizer refusal that joins entry rows with other rows (an unknown name, a wrong
+kind) orders the candidates of every entry row and keeps each other row in its place. One
 refusal asks a choice for at most its first `SHOWN_CANDIDATES` (5) terms, all at once
 (`ordered_terms`, the one function every path goes through); every later term keeps the
 ranking. The phyletic refusal (`PhyleticListError` for a species list term that names no

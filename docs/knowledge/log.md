@@ -1,5 +1,16 @@
 # Knowledge log
 
+## 2026-11-22 - A read names every miss once
+
+- `read_under_parents` and `resolve_params_with_intent` read every stated filter before they
+  refuse one, and raise one refusal (veupathdb-py `joined_refusal`) that names every filter
+  whose range selects nothing or whose selection is under its minimum. One miss keeps its
+  own type (`EmptyRangeError`, `TooFewSelectedError`). Each row of both carries `detail`.
+  `facet_ranges.filter_miss` returns the miss of one filter, or None.
+- `validate_parameters` and `validate_search_params` order the candidates of every entry row
+  of a canonicalizer refusal under `about` through `ordered_refusal`, also when the refusal
+  joins entry rows with other rows; the other rows keep their place and their text.
+
 ## 2026-11-22 - 0.9.0b18: values compare by ==, and the reader returns a reading
 
 - Takes veupathdb-py 0.9.0b13, whose value kinds define `==` by what WDK reads.

@@ -4,7 +4,14 @@ from collections.abc import Awaitable, Callable, Mapping, Sequence
 from dataclasses import dataclass
 from types import MappingProxyType
 
-from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    JsonValue,
+    TypeAdapter,
+    model_validator,
+)
 from veupathdb import JSONObject, get_logger
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import (
@@ -15,7 +22,9 @@ from veupathdb.domain.parameters import (
     ParamSpecNormalized,
     ParamValue,
     PhyleticExpression,
+    Resolution,
     StringValue,
+    VocabOption,
     VocabularyEntryError,
     canonical_census_pattern,
     check_expression,
@@ -81,11 +90,22 @@ class _ValidationErrorEntry(BaseModel):
     message: str | None = None
     messages: list[str] = Field(default_factory=list)
     detail: str | None = None
+    value: JsonValue = None
+    candidates: list[VocabOption] | None = None
 
     @model_validator(mode="before")
     @classmethod
     def _a_row_that_is_not_an_object_is_one_message(cls, value: object) -> object:
         return value if isinstance(value, Mapping) else {"message": str(value)}
+
+    def fault(self) -> tuple[str, Resolution] | None:
+        if self.candidates is None or self.param is None:
+            return None
+        return self.param, Resolution(
+            phrase=str(self.value),
+            how="unsettled" if self.candidates else "none",
+            candidates=self.candidates,
+        )
 
 
 _REFUSAL_ROWS: TypeAdapter[list[_ValidationErrorEntry]] = TypeAdapter(
@@ -358,14 +378,44 @@ async def _canonical(
     declarations: Sequence[WDKParameter],
     about: ResolveContext | None,
 ) -> dict[str, ParamValue]:
-    """The canonical values, or a vocabulary refusal with its candidates ordered
-    under ``about``. None leaves the ranking."""
+    """The canonical values, or the refusal with the candidates of every entry
+    row ordered under ``about``. None leaves the ranking."""
     try:
         return canonicalizer.canonicalize(values)
-    except VocabularyEntryError as refusal:
-        if about is None:
+    except ValidationError as refusal:
+        ordered = (
+            None if about is None else await _ordered(refusal, declarations, about)
+        )
+        if ordered is None:
             raise
-        raise await ordered_refusal(refusal, declarations, about) from refusal
+        raise ordered from refusal
+
+
+async def _ordered(
+    refusal: ValidationError,
+    declarations: Sequence[WDKParameter],
+    about: ResolveContext,
+) -> ValidationError | None:
+    raw = refusal.errors or []
+    found = [row.fault() for row in _REFUSAL_ROWS.validate_python(raw)]
+    faults = [fault for fault in found if fault is not None]
+    if not faults:
+        return None
+    ordered = await ordered_refusal(VocabularyEntryError(faults), declarations, about)
+    if len(faults) == len(found):
+        return ordered
+    shown = iter(ordered.errors or [])
+    errors = [
+        held if fault is None else next(shown)
+        for fault, held in zip(found, raw, strict=True)
+    ]
+    return ValidationError(
+        title=refusal.title,
+        detail="\n".join(
+            row.detail or refusal.title for row in _REFUSAL_ROWS.validate_python(errors)
+        ),
+        errors=errors,
+    )
 
 
 async def validate_parameters(

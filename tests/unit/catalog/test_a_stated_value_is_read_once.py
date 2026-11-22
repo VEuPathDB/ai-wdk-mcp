@@ -91,11 +91,15 @@ async def test_two_values_of_the_wrong_shape_are_refused_in_one_error() -> None:
     ]
 
 
-async def test_a_shape_fault_is_refused_before_a_term_no_entry_names() -> None:
+async def test_a_shape_fault_and_a_term_no_entry_names_are_one_refusal() -> None:
     with pytest.raises(StatedValuesError) as refused:
         await _resolve({"MinPercentMinorAlleles": "five", "snp_class": "Nonsense"})
 
-    assert [fault.name for fault in refused.value.faults] == ["MinPercentMinorAlleles"]
+    assert [fault.name for fault in refused.value.faults] == [
+        "MinPercentMinorAlleles",
+        "snp_class",
+    ]
+    assert "snp_class has no entry 'Nonsense'" in refused.value.faults[1].text
 
 
 async def test_a_site_set_name_is_refused_before_its_value_is_read() -> None:

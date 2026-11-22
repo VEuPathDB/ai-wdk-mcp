@@ -50,51 +50,55 @@ class EmptyRangeError(ValidationError):
         span: FacetRange,
         stated: NumberBounds | DateBounds,
     ) -> None:
+        detail = (
+            f"{facet.term} ({facet.display}) on {param} spans {span.text()}; "
+            f"{stated.text()} selects none of it. State a range inside it."
+        )
         super().__init__(
             title="Range selects nothing",
-            detail=(
-                f"{facet.term} ({facet.display}) on {param} spans {span.text()}; "
-                f"{stated.text()} selects none of it. State a range inside it."
-            ),
-            errors=[{"param": param, "field": facet.term}],
+            detail=detail,
+            errors=[{"param": param, "field": facet.term, "detail": detail}],
         )
 
 
 class TooFewSelectedError(ValidationError):
     def __init__(self, declaration: WDKFilterParam, count: int) -> None:
         unit = declaration.filter_data_type_display_name or "records"
+        detail = (
+            f"{declaration.name} ({declaration.display_name}) selects {count:,} "
+            f"{unit}; it needs at least {declaration.min_selected_count:,}. "
+            "State a wider filter."
+        )
         super().__init__(
             title="Filter selects too few",
-            detail=(
-                f"{declaration.name} ({declaration.display_name}) selects {count:,} "
-                f"{unit}; it needs at least {declaration.min_selected_count:,}. "
-                "State a wider filter."
-            ),
-            errors=[{"param": declaration.name}],
+            detail=detail,
+            errors=[{"param": declaration.name, "detail": detail}],
         )
 
 
-async def refuse_filter_misses(
+async def filter_miss(
     declaration: WDKParameter,
     value: ParamValue,
     context: dict[str, str],
     reads: FilterReads,
-) -> None:
+) -> EmptyRangeError | TooFewSelectedError | None:
     match declaration, value:
         case WDKFilterParam(), FilterValue():
-            await _refuse_empty_ranges(declaration, value, context, reads)
-            if declaration.min_selected_count > 0:
-                count = await reads.selected(declaration.name, context, value)
-                if count is not None and count < declaration.min_selected_count:
-                    raise TooFewSelectedError(declaration, count)
+            empty = await _empty_range(declaration, value, context, reads)
+            if empty is not None or declaration.min_selected_count <= 0:
+                return empty
+            count = await reads.selected(declaration.name, context, value)
+            if count is not None and count < declaration.min_selected_count:
+                return TooFewSelectedError(declaration, count)
+    return None
 
 
-async def _refuse_empty_ranges(
+async def _empty_range(
     declaration: WDKFilterParam,
     value: FilterValue,
     context: dict[str, str],
     reads: FilterReads,
-) -> None:
+) -> EmptyRangeError | None:
     facets = {facet.term: facet for facet in FilterFacets.of(declaration).root}
     for clause in value.filters:
         match clause:
@@ -103,7 +107,8 @@ async def _refuse_empty_ranges(
                 others = [c for c in value.filters if c is not clause]
                 span = await reads.range(declaration.name, facet, context, others)
                 if span is not None and not span.selects(bounds):
-                    raise EmptyRangeError(declaration.name, facet, span, bounds)
+                    return EmptyRangeError(declaration.name, facet, span, bounds)
+    return None
 
 
 async def with_ranges(

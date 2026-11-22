@@ -41,7 +41,12 @@ from veupathdb.domain.parameters import (
     to_wire,
     wire_map,
 )
-from veupathdb.errors import ValidationError, VEuPathDBError, param_message_rows
+from veupathdb.errors import (
+    ValidationError,
+    VEuPathDBError,
+    joined_refusal,
+    param_message_rows,
+)
 from veupathdb.model import CamelModel
 from veupathdb.wdk import WDKParameter, get_wdk_client
 
@@ -58,7 +63,7 @@ from veupathdb_mcp.catalog._param_filters import _resolve_filter_param
 from veupathdb_mcp.catalog.discovery_service import (
     get_discovery_service,
 )
-from veupathdb_mcp.catalog.facet_ranges import FilterReads, refuse_filter_misses
+from veupathdb_mcp.catalog.facet_ranges import FilterReads, filter_miss
 from veupathdb_mcp.catalog.param_adapters import adapt_param_from_wdk
 from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,
@@ -264,7 +269,21 @@ async def _named_or_ordered[T](
         raise await ordered_phyletic_refusal(refusal, declarations, about) from refusal
 
 
-async def _refuse_misses(
+async def _note_miss(
+    misses: list[ValidationError],
+    declaration: WDKParameter,
+    value: ParamValue,
+    *,
+    context: dict[str, str],
+    reads: FilterReads,
+) -> None:
+    miss = await filter_miss(declaration, value, context, reads)
+    if miss is not None:
+        misses.append(miss)
+
+
+async def _note_misses(
+    misses: list[ValidationError],
     declarations: Sequence[WDKParameter],
     read: Mapping[str, ParamValue],
     context: dict[str, str],
@@ -273,15 +292,16 @@ async def _refuse_misses(
     parents = ParamGraph.of(declarations).wire_parents
     for declaration in declarations:
         if declaration.name in read:
-            await refuse_filter_misses(
+            await _note_miss(
+                misses,
                 declaration,
                 read[declaration.name],
-                {
+                context={
                     p: context[p]
                     for p in parents.get(declaration.name, ())
                     if p in context
                 },
-                reads,
+                reads=reads,
             )
 
 
@@ -591,6 +611,7 @@ async def _read_standing(
         return {}
     context = wire_map({n: v for n, v in bound.items() if n not in stated})
     read: dict[str, ParamValue] = {}
+    misses: list[ValidationError] = []
     declarations = await fetch_at(context)
     _refuse_unknown_overrides(
         format_param_info_typed(declarations, organism=None),
@@ -599,7 +620,7 @@ async def _read_standing(
     for _ in range(_MAX_RESOLVE_DEPTH):
         missing = stated.keys() - read.keys()
         if not missing:
-            return as_tree_leaves(declarations, read)
+            break
         waiting = _waiting(declarations, stated, context)
         sited = {
             d.name: d.initial_display_value
@@ -621,7 +642,7 @@ async def _read_standing(
             )
         if not new and not sited:
             break
-        await _refuse_misses(declarations, new, context, reads)
+        await _note_misses(misses, declarations, new, context, reads)
         read |= new
         context |= sited | wire_map(new)
         if stated.keys() - read.keys():
@@ -629,6 +650,8 @@ async def _read_standing(
     unread = sorted(stated.keys() - read.keys())
     if unread:
         raise UnreadStatementError(unread)
+    if misses:
+        raise joined_refusal(misses)
     return as_tree_leaves(declarations, read)
 
 
@@ -789,6 +812,7 @@ async def resolve_params_with_intent(
     unread: list[str] = []
     seen: set[str] = set()
     provenance: dict[str, Provenance] = {}
+    misses: list[ValidationError] = []
     ledger = _VocabLedger()
     for pass_index in range(_MAX_RESOLVE_DEPTH):
         declarations = await fetch_at(context)
@@ -840,7 +864,8 @@ async def resolve_params_with_intent(
                 resolution,
                 ledger,
                 partial(
-                    refuse_filter_misses,
+                    _note_miss,
+                    misses,
                     declared[info.name],
                     context={p: context[p] for p in info.wire_parents},
                     reads=filter_reads,
@@ -863,6 +888,8 @@ async def resolve_params_with_intent(
             progressed = True
         if not progressed:
             break
+    if misses:
+        raise joined_refusal(misses)
     return ResolvedParams(
         params=params,
         provenance=provenance,
