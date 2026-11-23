@@ -1,5 +1,14 @@
 # Knowledge log
 
+## 2026-11-23 - 0.9.0b19: a refusal names every problem once
+
+- This release carries the refusal work since 0.9.0b18: a read and a walk name every miss
+  once, each species list is refused on itself, a phyletic derivation is refused by one
+  function on one site, a refused walk names the quantity it held back, and an options read
+  notes a follower it cannot read.
+- It takes `veupathdb-py` 0.9.0b14.
+- `veupathdb-mcp` is 0.9.0b19.
+
 ## 2026-11-23 - A refused walk names the quantity it held back
 
 - When `resolve_params_with_intent` refuses, its one refusal also names each numeric parameter
