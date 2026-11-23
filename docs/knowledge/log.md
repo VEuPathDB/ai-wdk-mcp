@@ -1,5 +1,13 @@
 # Knowledge log
 
+## 2026-11-23 - A refused walk names the quantity it held back
+
+- When `resolve_params_with_intent` refuses, its one refusal also names each numeric parameter
+  whose default a quantity in the request held back (`UnreadQuantityError`, one row per
+  parameter, `unread_quantity` its sentence), so a caller fixes both in one call. A misnamed
+  override may be that quantity, so a walk that refuses an unknown name names it alone. A walk
+  that does not refuse still returns `unread`.
+
 ## 2026-11-22 - One function refuses a phyletic derivation
 
 - `phyletic_refusal(refused, declarations, site)` turns a derivation that binds no pattern

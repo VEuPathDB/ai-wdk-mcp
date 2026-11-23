@@ -78,10 +78,12 @@ from veupathdb_mcp.catalog.param_dag import (
     ParamFetcher,
     ResolvedParams,
     UnknownParameterError,
+    UnreadQuantityError,
     as_tree_leaves,
     read_declared,
     read_under_parents,
     resolve_params_with_intent,
+    unread_quantity,
     wdk_fetch_at,
 )
 from veupathdb_mcp.catalog.param_discovery import fetch_search_details
@@ -315,6 +317,7 @@ __all__ = [
     "UnknownParameterError",
     "UnknownSearchError",
     "UnlistedSearchError",
+    "UnreadQuantityError",
     "VagueSearchQueryError",
     "ValidatedParams",
     "ValidationCallbacks",
@@ -404,6 +407,7 @@ __all__ = [
     "study_assay",
     "study_organisms",
     "universal_searches",
+    "unread_quantity",
     "use_decisions_transport",
     "validate_parameters",
     "validate_search_params",

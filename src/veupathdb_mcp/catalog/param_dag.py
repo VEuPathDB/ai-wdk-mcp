@@ -187,6 +187,41 @@ def _visible_slot(
     return None
 
 
+def unread_quantity(name: str) -> str:
+    return (
+        f"The request states a quantity and {name} was left null. Pass the stated "
+        f"value, or say in the criterion text why the default is right."
+    )
+
+
+class UnreadQuantityError(ValidationError):
+    """A numeric parameter whose default a quantity the request states holds back."""
+
+    def __init__(self, unread: list[str]) -> None:
+        super().__init__(
+            title="Unread quantity",
+            detail=" ".join(unread_quantity(name) for name in unread),
+            errors=[
+                {"param": name, "detail": unread_quantity(name)} for name in unread
+            ],
+        )
+
+
+async def _raise_once(
+    refused: Refusals,
+    unread: list[str],
+    order: list[str],
+    about: ResolveContext | None,
+) -> None:
+    """A walk that refuses names its held-back quantities in the same refusal.
+
+    A misnamed override may be the quantity held back, so it is named alone.
+    """
+    if refused.problems and unread:
+        refused.note(UnreadQuantityError(unread), set(unread))
+    await refused.raise_once(order, about)
+
+
 class UnreadStatementError(ValidationError):
     """A stated name that no fetch under its parents declares."""
 
@@ -847,6 +882,7 @@ async def resolve_params_with_intent(
     provenance: dict[str, Provenance] = {}
     refused = Refusals()
     ledger = _VocabLedger()
+    declared: dict[str, WDKParameter] = {}
     for pass_index in range(_MAX_RESOLVE_DEPTH):
         declarations = await fetch_at(context)
         infos = format_param_info_typed(declarations, organism=None)
@@ -921,7 +957,8 @@ async def resolve_params_with_intent(
             progressed = True
         if not progressed:
             break
-    await refused.raise_once(list(stated), about)
+    misnamed = set(stated) - set(declared)
+    await _raise_once(refused, [] if misnamed else unread, list(stated), about)
     return ResolvedParams(
         params=params,
         provenance=provenance,

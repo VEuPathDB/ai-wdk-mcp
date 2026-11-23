@@ -21,12 +21,14 @@ from veupathdb.domain.parameters import (
     VocabOption,
     to_wire,
 )
+from veupathdb.errors import ValidationError
 
 from veupathdb_mcp.catalog.param_dag import (
     ParameterInfo,
     ParamFetcher,
     ResolvedParams,
     resolve_params_with_intent,
+    unread_quantity,
 )
 from veupathdb_mcp.catalog.param_intent import ParamIntent, Provenance
 
@@ -112,6 +114,19 @@ class TestTheWalkDisclosesWhatItDefaulted:
 class TestAStatedQuantityIsReportedUnread:
     """Taking a default when the request states a quantity answers a question
     nobody asked and reports it as the user's intent."""
+
+    async def test_a_walk_that_refuses_names_the_quantity_it_held_back(self) -> None:
+        with pytest.raises(ValidationError) as refused:
+            await _resolve(
+                "top 10 percent",
+                _numeric(_PCT),
+                param_info("stage", allowed=_STAGES),
+                stated={"stage": "gametocyte"},
+            )
+
+        rows = {row["param"]: row["detail"] for row in refused.value.errors or []}
+        assert set(rows) == {"stage", _PCT}
+        assert rows[_PCT] == unread_quantity(_PCT)
 
     async def test_a_stated_quantity_left_null_is_reported_not_defaulted(self) -> None:
         resolved = await _resolve("top 10 percent, so percentile 90", _numeric(_PCT))
