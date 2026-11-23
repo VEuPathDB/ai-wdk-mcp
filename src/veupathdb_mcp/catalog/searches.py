@@ -75,15 +75,12 @@ def _query_rejection(query: str, *, has_keywords: bool) -> SearchQueryRejection 
     if not q and not has_keywords:
         return SearchQueryRejection(
             error="query_required",
-            message="search_for_searches(query=...) requires a non-empty query.",
+            message="A search query must not be empty.",
         )
     if len(_query_tokens(q)) < _MIN_QUERY_TOKENS and not has_keywords:
         return SearchQueryRejection(
             error="query_too_vague",
-            message=(
-                "search_for_searches(query=...) requires 2+ specific keywords. "
-                "Be descriptive."
-            ),
+            message=("A search query needs 2+ specific keywords. Be descriptive."),
             query=q,
             examples=[
                 "vector salivary gland",

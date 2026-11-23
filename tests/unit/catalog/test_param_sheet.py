@@ -64,7 +64,9 @@ def test_a_large_vocabulary_is_shortlisted_and_says_so() -> None:
     assert len(entry.vocabulary) == TOP_K
     assert entry.vocabulary_total == DIRECT_MAX + 500
     assert entry.vocabulary[0].value == "GO:9999999"
-    assert "get_parameter_options" in (entry.vocabulary_note or "")
+    assert "read go_typeahead again with query='<keyword>'" in (
+        entry.vocabulary_note or ""
+    )
     assert "most relevant to the request by name" in (entry.vocabulary_note or "")
 
 

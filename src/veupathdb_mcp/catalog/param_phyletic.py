@@ -69,8 +69,7 @@ LOOKUP_HINT = (
 )
 
 EXPRESSION_LOOKUP_HINT = (
-    f"Pass these codes to build_phyletic_expression, which writes "
-    f"{PHYLETIC_EXPRESSION_PARAM} from them. A code with leaf=true is one genome (one "
+    f"These codes are the units of {PHYLETIC_EXPRESSION_PARAM}. A code with leaf=true is one genome (one "
     "proteome): several strains of one species are several genomes, grouped under "
     "species. A code with leaf=false is a clade, and genomes is the number of genomes "
     "under it. A clade is only what its label names, so a genus with no clade of its "

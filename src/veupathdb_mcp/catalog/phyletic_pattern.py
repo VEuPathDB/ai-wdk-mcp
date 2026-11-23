@@ -32,7 +32,7 @@ MAX_PATTERN_TERMS = 128
 
 _CODES = Field(
     min_length=1,
-    description="Clade or genome codes from lookup_phyletic_codes, read together.",
+    description="Clade or genome codes the phyletic tree carries, read together.",
 )
 
 

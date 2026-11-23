@@ -61,8 +61,8 @@ def _build_dependency_section(
         info.name: DependencyEntry(
             depends_on=info.stated_parents,
             instruction=(
-                f"Set {', '.join(info.stated_parents)} first, then call "
-                "get_parameter_options(...)"
+                f"Set {', '.join(info.stated_parents)} first, then read the "
+                "parameter again with its parents bound"
             ),
         )
         for info in infos

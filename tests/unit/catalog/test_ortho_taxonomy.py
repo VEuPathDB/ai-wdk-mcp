@@ -85,8 +85,9 @@ async def test_a_site_with_no_taxonomy_refuses_an_expression_with_its_own_search
     assert refusal.value.detail == (
         "plasmodb serves no OrthoMCL taxonomy and no search that takes "
         "phyletic_expression; only OrthoMCL's GroupsByPhyleticPattern does. On "
-        "plasmodb, GenesByOrthologPattern states a phyletic profile: put the codes "
-        "lookup_phyletic_codes returns in included_species and excluded_species."
+        "plasmodb, GenesByOrthologPattern states a phyletic profile: put the clade "
+        "and genome codes the phyletic tree carries in included_species and "
+        "excluded_species."
     )
 
 
@@ -195,10 +196,9 @@ def test_the_two_hints_name_the_parameter_each_search_takes() -> None:
     assert "included_species" in LOOKUP_HINT
 
 
-def test_the_expression_hint_names_the_builder_and_counts_genomes() -> None:
+def test_the_expression_hint_counts_genomes() -> None:
     assert EXPRESSION_LOOKUP_HINT == (
-        "Pass these codes to build_phyletic_expression, which writes "
-        "phyletic_expression from them. A code with leaf=true is one genome (one "
+        "These codes are the units of phyletic_expression. A code with leaf=true is one genome (one "
         "proteome): several strains of one species are several genomes, grouped "
         "under species. A code with leaf=false is a clade, and genomes is the number "
         "of genomes under it. A clade is only what its label names, so a genus with "

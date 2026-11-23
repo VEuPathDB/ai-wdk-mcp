@@ -71,13 +71,12 @@ _PHYLETIC_EXPRESSION_HELP = (
     "OR, so write an OR of AND terms. Two OR conditions in one AND term multiply out "
     "into every pairing of their terms, each term repeating the shared units. <, <= "
     "and >= count only groups with at least one protein in the list; write absence "
-    "as L=0T. ALL is every genome. Find codes with lookup_phyletic_codes. The "
-    "parameter declares no length limit, but an expression past "
+    "as L=0T. ALL is every genome. The codes are the clade and genome codes the "
+    "phyletic tree carries, such as 'pfal' for P. falciparum or 'hsap' for H. "
+    "sapiens. The parameter declares no length limit, but an expression past "
     f"{MAX_EXPRESSION_TERMS} OR terms, {CHARACTERS_WITHIN_READ_TIMEOUT} characters, "
     f"or {MAX_EXPRESSION_WORK} for its OR terms times its characters is refused "
-    "before it is sent. Build the expression with "
-    "build_phyletic_expression, which takes the groups wanted as a typed pattern, "
-    "writes the expression from the site's taxonomy and counts its groups."
+    "before it is sent."
 )
 
 
@@ -336,9 +335,8 @@ def _format_vocabulary(param: WDKParameter, lookup: VocabLookup | None) -> _Voca
             suffix = "\n(Pass a parent node to auto-select all its children)"
             if truncated:
                 suffix += (
-                    f"\nNote: tree truncated; use get_parameter_options("
-                    f"search_name='<search>', parameter_id='{param.name}', "
-                    f"query='<keyword>') to see values for a specific category."
+                    f"\nNote: tree truncated; read {param.name} again with "
+                    f"query='<keyword>' to see values for a specific category."
                 )
             return _VocabFields(allowed_values_tree=tree_text + suffix)
     elif vocabulary is not None:
@@ -482,9 +480,8 @@ def cut_facets_note(
     if not cut:
         return None
     return (
-        f"Facets {', '.join(cut)} show part of their members; call "
-        f"get_parameter_options(search_name, '{name}', query='<keyword>') "
-        "to read the rest."
+        f"Facets {', '.join(cut)} show part of their members; read {name} "
+        "again with query='<keyword>' to read the rest."
     )
 
 

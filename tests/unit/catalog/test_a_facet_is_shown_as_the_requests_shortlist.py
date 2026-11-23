@@ -70,7 +70,7 @@ def test_the_sheet_shows_a_long_facet_as_the_requests_shortlist() -> None:
     assert len(facets[_SAMPLE_NAME]) == TOP_K
     assert "Gambia" in facets[_COUNTRY]
     assert "Sample name" in (entry.vocabulary_note or "")
-    assert "get_parameter_options" in (entry.vocabulary_note or "")
+    assert "again with query='<keyword>'" in (entry.vocabulary_note or "")
 
 
 async def test_a_read_with_a_query_shows_the_facet_values_it_names(

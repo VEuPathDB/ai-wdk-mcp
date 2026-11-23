@@ -60,8 +60,8 @@ async def site_taxonomy(site_id: str) -> PhyleticTree:
                 f"{site_id} serves no OrthoMCL taxonomy and no search that takes "
                 f"{PHYLETIC_EXPRESSION_PARAM}; only OrthoMCL's "
                 f"{PHYLETIC_EXPRESSION_SEARCH} does. On {site_id}, "
-                f"{PHYLETIC_PROFILE_SEARCH} states a phyletic profile: put the codes "
-                f"lookup_phyletic_codes returns in {lists}."
+                f"{PHYLETIC_PROFILE_SEARCH} states a phyletic profile: put the clade "
+                f"and genome codes the phyletic tree carries in {lists}."
             ),
         )
     tree = await ortho_taxonomy(site_id)

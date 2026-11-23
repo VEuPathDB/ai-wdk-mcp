@@ -142,8 +142,8 @@ def shortlist_slot[Slot: UnboundParameter](slot: Slot, query: str) -> Slot:
         return slot
     note = (
         f"{len(slot.options)} values; the {len(shown)} the request names best are "
-        f"listed. get_parameter_options with query='<words>' reads the values the "
-        f"cut left out."
+        f"listed. A read of the parameter with query='<words>' reads the values "
+        f"the cut left out."
     )
     return slot.model_copy(
         update={"options": shown, "question": f"{slot.question} ({note})"}

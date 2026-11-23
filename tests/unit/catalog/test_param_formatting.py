@@ -439,7 +439,7 @@ class TestTheDependencyLinks:
         ]
 
 
-class TestTheExpressionSheetStatesTheGrammarAndNamesTheBuilder:
+class TestTheExpressionSheetStatesTheGrammar:
     @staticmethod
     def _help() -> str:
         return format_typed_param(
@@ -459,7 +459,7 @@ class TestTheExpressionSheetStatesTheGrammarAndNamesTheBuilder:
         assert "a count ending in T counts the genomes that hold a protein" in help_text
         assert "a bare count counts proteins over the listed genomes" in help_text
         assert "T counts taxa" not in help_text
-        assert "lookup_phyletic_codes" in help_text
+        assert "the clade and genome codes the phyletic tree carries" in help_text
 
     def test_it_states_the_precedence_the_site_reads(self) -> None:
         help_text = self._help()
@@ -492,12 +492,9 @@ class TestTheExpressionSheetStatesTheGrammarAndNamesTheBuilder:
             "characters is refused before it is sent." in " ".join(self._help().split())
         )
 
-    def test_it_names_the_builder_and_no_recipe(self) -> None:
+    def test_it_names_no_tool_and_no_recipe(self) -> None:
         help_text = " ".join(self._help().split())
 
-        assert (
-            "Build the expression with build_phyletic_expression, which takes the "
-            "groups wanted as a typed pattern" in help_text
-        )
+        assert "build_phyletic_expression" not in help_text
         assert "ceil(" not in help_text
         assert "Example" not in help_text

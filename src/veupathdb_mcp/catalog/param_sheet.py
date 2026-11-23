@@ -45,8 +45,8 @@ def _note(
     if total > shown:
         parts.append(
             f"{total} values; the {shown} most relevant to the request by name are "
-            f"shown. If the value you need is absent, call get_parameter_options("
-            f"search_name, '{info.name}', query='<keyword>') before deciding it does not exist."
+            f"shown. If the value you need is absent, read {info.name} again with "
+            f"query='<keyword>' before deciding it does not exist."
         )
     cut = cut_facets_note(info.name, info.facets(), facets)
     if cut:

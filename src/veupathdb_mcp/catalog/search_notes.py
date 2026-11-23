@@ -17,8 +17,8 @@ _SINGLE_COPY = (
     "returns no group; widen those two ranges to reach it. Single copy over named "
     "genomes, a list "
     "or a clade L of N genomes, is the GroupsByPhyleticPattern expression L=NT AND "
-    "L=N, one protein in every genome of L, with N the genome count "
-    "lookup_phyletic_codes gives."
+    "L=N, one protein in every genome of L, with N the genome count the "
+    "phyletic tree gives for L."
 )
 
 _NOTES: Mapping[tuple[str, str], str] = {
