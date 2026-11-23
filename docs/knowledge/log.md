@@ -15,6 +15,9 @@
 - The boolean search names come from veupathdb-py (`BOOLEAN_SEARCH_PREFIX`,
   `BOOLEAN_OPERATOR_PARAM`, and the operand prefixes the refusal reader places a
   refusal by); this package states none of them again.
+- An expanded combine keeps its `expandedName` and states no `expanded_strategy_id`. WDK
+  copies an inserted saved strategy's steps into the strategy that holds them, so a step's
+  `strategyId` names that strategy and no step names the saved one.
 
 ## 2026-11-23 - 0.9.0b21: entries that share a name are one name
 

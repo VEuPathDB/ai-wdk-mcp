@@ -93,27 +93,6 @@ def settings_on_the_wire(step: WDKStep, *, combine: bool) -> StepSettings:
     )
 
 
-def _resolve_expanded_reference(
-    combine_step: WDKStep,
-    secondary_node: StrategyStepNode,
-    steps: dict[str, WDKStep],
-) -> tuple[int | None, str | None]:
-    """Map the WDK expanded reference onto the secondary input.
-
-    WDK marks the secondary input of a combine as expanded when that branch
-    comes from a saved strategy.
-    """
-    if not combine_step.expanded:
-        return (None, None)
-    secondary_step_id = int(secondary_node.id) if secondary_node.id.isdigit() else None
-    if secondary_step_id is None:
-        return (None, None)
-    secondary_wdk = steps.get(str(secondary_step_id))
-    if secondary_wdk is None or secondary_wdk.strategy_id is None:
-        return (None, None)
-    return (secondary_wdk.strategy_id, combine_step.expanded_name)
-
-
 def _build_node(
     tree_node: WDKStepTree,
     steps: dict[str, WDKStep],
@@ -154,11 +133,6 @@ def _node_of(
         else None
     )
     settings = settings_on_the_wire(step, combine=secondary is not None)
-    expanded_strategy_id, expanded_name = (
-        _resolve_expanded_reference(step, secondary, steps)
-        if secondary is not None
-        else (None, None)
-    )
     if secondary is None:
         wire_by_step_id[local_id] = WireStep(
             record_class=step.record_class_name,
@@ -177,8 +151,9 @@ def _node_of(
         ),
         secondary_input=secondary,
         display_name=step.custom_name or step.display_name or None,
-        expanded_strategy_id=expanded_strategy_id,
-        expanded_name=expanded_name,
+        expanded_name=(
+            step.expanded_name if secondary is not None and step.expanded else None
+        ),
         id=local_id,
     )
 

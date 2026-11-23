@@ -112,13 +112,15 @@ class TestTheAstBuiltFromWdk:
         assert transform.primary_input is not None
         assert transform.primary_input.id == "10"
 
-    def test_an_expanded_combine_names_the_saved_strategy_on_its_secondary(
+    def test_an_expanded_combine_keeps_its_name_and_states_no_saved_strategy(
         self,
     ) -> None:
         ast, _ = build_snapshot_from_wdk(_details())
 
-        assert ast.root.expanded_strategy_id == 99
-        assert ast.root.expanded_name == "saved-1"
+        assert (ast.root.expanded_strategy_id, ast.root.expanded_name) == (
+            None,
+            "saved-1",
+        )
 
     def test_only_leaf_and_transform_wire_parameters_go_to_the_sidecar(self) -> None:
         _, wire = build_snapshot_from_wdk(_details())
