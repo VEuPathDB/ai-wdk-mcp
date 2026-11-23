@@ -1,5 +1,13 @@
 # Knowledge log
 
+## 2026-11-24 - 0.9.0b22: a strategy read keeps every step setting
+
+- This release carries the strategy read work since 0.9.0b21: weight, filters and
+  colocation read from the wire, a step read on its own states its operator, and an
+  expanded step states no saved strategy.
+- It takes `veupathdb-py` 0.9.0b17.
+- `veupathdb-mcp` is 0.9.0b22.
+
 ## 2026-11-22 - A strategy read keeps weight, filters and colocation
 
 - `build_snapshot_from_wdk` reads each step's `wdkWeight` and `filters` through veupathdb-py
