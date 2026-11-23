@@ -1,5 +1,11 @@
 # Knowledge log
 
+## 2026-11-23 - 0.9.0b21: entries that share a name are one name
+
+- It takes `veupathdb-py` 0.9.0b16, whose exact step names no entry for a name several entries
+  share past their accessions, and whose lookups list those groups (`VocabLookup.same_named`).
+- `veupathdb-mcp` is 0.9.0b21.
+
 ## 2026-11-23 - 0.9.0b20: the catalog names no host tool
 
 - No catalog text or refusal names a served tool. A phyletic text states where the codes come
