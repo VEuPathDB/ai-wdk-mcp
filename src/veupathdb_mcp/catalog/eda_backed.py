@@ -114,21 +114,22 @@ def eda_backed_guidance(search: EdaBackedSearch) -> str:
             f"value for it."
         ),
         (
-            "Instead: search_eda_studies, then describe_eda_study, then "
-            "open_eda_analysis, then set_eda_filters, then preview_eda_subset."
+            "Instead the study is found, an analysis is opened on it, its "
+            "filters are set and its subset is previewed."
         ),
     ]
     if search.is_compute_backed:
         lines.append(
             "This search exports the genes that pass a volcano plot's "
-            "thresholds, so run_eda_compute must complete before create_eda_step."
+            "thresholds, so the differential expression compute must complete "
+            "before the step is made."
         )
     if not search.reads_the_spec:
         lines.append(
             "This search declares the parameter and never reads it; its gene "
             "list comes from its own parameters."
         )
-    lines.append("create_eda_step builds the step from the open analysis.")
+    lines.append("The step is built from the open analysis.")
     return " ".join(lines)
 
 

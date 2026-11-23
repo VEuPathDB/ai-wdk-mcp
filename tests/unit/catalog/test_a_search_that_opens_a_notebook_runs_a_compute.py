@@ -65,4 +65,7 @@ def test_the_deseq_user_dataset_search_asks_for_the_compute_first() -> None:
 
     guidance = eda_backed_guidance(described)
 
-    assert "run_eda_compute must complete before create_eda_step" in guidance
+    assert (
+        "the differential expression compute must complete before the step is made"
+        in guidance
+    )

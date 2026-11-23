@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 import pytest
 from veupathdb.domain.parameters import WDKTreeBoxVocabNode, WDKVocabNodeData
 from veupathdb.wdk import WDKParameter, WDKSearch, WDKStringParam
@@ -249,9 +251,11 @@ def test_the_guidance_tells_the_model_to_use_the_eda_tools() -> None:
     assert described is not None
     guidance = eda_backed_guidance(described)
     assert "eda_analysis_spec" in guidance
-    assert "create_eda_step" in guidance
-    assert "run_eda_compute" in guidance
+    assert "The step is built from the open analysis." in guidance
+    assert "the differential expression compute must complete" in guidance
     assert "set_criterion" not in guidance
+    named = set(re.findall(r"\b[a-z]+(?:_[a-z]+)+\b", guidance))
+    assert named == {"eda_analysis_spec"}
 
 
 def test_the_subset_guidance_does_not_mention_a_compute() -> None:
@@ -264,8 +268,8 @@ def test_the_subset_guidance_does_not_mention_a_compute() -> None:
     )
     assert described is not None
     guidance = eda_backed_guidance(described)
-    assert "run_eda_compute" not in guidance
-    assert "open_eda_analysis" in guidance
+    assert "compute must complete" not in guidance
+    assert "an analysis is opened on it" in guidance
 
 
 def test_the_inert_search_guidance_says_the_spec_is_never_read() -> None:
@@ -308,8 +312,8 @@ async def test_inspecting_an_eda_backed_search_carries_the_guidance(
     result = await inspect_search("plasmodb", "GenesByRNASeqXDESeq")
 
     assert "eda_analysis_spec" in result.overview.eda_guidance
-    assert "create_eda_step" in result.overview.eda_guidance
-    assert "run_eda_compute" in result.overview.eda_guidance
+    assert "The step is built from the open analysis." in result.overview.eda_guidance
+    assert "compute must complete" in result.overview.eda_guidance
 
 
 async def test_inspecting_a_subset_backed_search_carries_the_guidance(
@@ -328,9 +332,9 @@ async def test_inspecting_a_subset_backed_search_carries_the_guidance(
 
     result = await inspect_search("plasmodb", "GenesByPhenotypeEdaSubset_X")
 
-    assert "set_eda_filters" in result.overview.eda_guidance
-    assert "create_eda_step" in result.overview.eda_guidance
-    assert "run_eda_compute" not in result.overview.eda_guidance
+    assert "its filters are set" in result.overview.eda_guidance
+    assert "The step is built from the open analysis." in result.overview.eda_guidance
+    assert "compute must complete" not in result.overview.eda_guidance
 
 
 async def test_inspecting_a_plain_search_carries_no_guidance(
