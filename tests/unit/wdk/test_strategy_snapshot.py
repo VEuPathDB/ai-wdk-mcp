@@ -33,6 +33,8 @@ from veupathdb_mcp.wdk import (
     build_snapshot_from_wdk,
     canonicalize_synced_parameters,
     param_decoding,
+    runs_a_combine,
+    settings_on_the_wire,
 )
 
 _BOOLEAN = "boolean_question_TranscriptRecordClasses_TranscriptRecordClass"
@@ -623,3 +625,23 @@ def test_a_span_root_holds_every_setting_the_wire_states() -> None:
         filters=[StepFilter(name="span_filter", value=["a"], disabled=True)],
         wdk_weight=4,
     )
+
+
+@pytest.mark.parametrize(
+    ("step", "combine", "operator"),
+    [
+        (_step(7, _BOOLEAN, {"bq_operator": "MINUS"}), True, CombineOp.MINUS),
+        (
+            _step(8, "GenesBySpanLogic", ColocationParams().to_wdk_params()),
+            True,
+            CombineOp.COLOCATE,
+        ),
+        (_step(9, "GenesByTaxon", {"organism": "Pf3D7"}), False, None),
+    ],
+)
+def test_a_step_read_on_its_own_states_its_operator(
+    step: WDKStep, combine: bool, operator: CombineOp | None
+) -> None:
+    read = settings_on_the_wire(step, combine=runs_a_combine(step))
+
+    assert (runs_a_combine(step), read.operator) == (combine, operator)

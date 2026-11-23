@@ -84,6 +84,8 @@ from veupathdb_mcp.wdk.strategy_snapshot import (
     WireStep,
     build_snapshot_from_wdk,
     canonicalize_synced_parameters,
+    runs_a_combine,
+    settings_on_the_wire,
 )
 
 __all__ = [
@@ -150,6 +152,8 @@ __all__ = [
     "list_step_columns",
     "order_primary_key",
     "read_group_proteins",
+    "runs_a_combine",
+    "settings_on_the_wire",
     "step_download_url",
     "step_sample_records",
     "step_view_filters",

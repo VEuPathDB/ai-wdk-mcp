@@ -877,6 +877,8 @@
     "list_step_columns",
     "order_primary_key",
     "read_group_proteins",
+    "runs_a_combine",
+    "settings_on_the_wire",
     "step_download_url",
     "step_sample_records",
     "step_view_filters",

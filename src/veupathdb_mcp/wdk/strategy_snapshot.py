@@ -73,7 +73,13 @@ def _combine_of(step: WDKStep) -> tuple[CombineOp, ColocationParams | None]:
         raise DataParsingError(msg) from exc
 
 
-def _settings_on_the_wire(step: WDKStep, *, combine: bool) -> StepSettings:
+def runs_a_combine(step: WDKStep) -> bool:
+    return step.search_name == _SPAN_LOGIC or step.search_name.startswith(
+        BOOLEAN_SEARCH_PREFIX
+    )
+
+
+def settings_on_the_wire(step: WDKStep, *, combine: bool) -> StepSettings:
     config = step.search_config
     operator, colocation = _combine_of(step) if combine else (None, None)
     return StepSettings(
@@ -147,7 +153,7 @@ def _node_of(
         if node.primary_input is not None and node.secondary_input is not None
         else None
     )
-    settings = _settings_on_the_wire(step, combine=secondary is not None)
+    settings = settings_on_the_wire(step, combine=secondary is not None)
     expanded_strategy_id, expanded_name = (
         _resolve_expanded_reference(step, secondary, steps)
         if secondary is not None
