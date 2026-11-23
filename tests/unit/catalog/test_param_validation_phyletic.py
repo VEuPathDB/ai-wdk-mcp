@@ -141,12 +141,14 @@ class TestAProsePatternIsRefusedBeforeThePush:
 
         assert "%code:Y%" in (excinfo.value.detail or "")
 
-    async def test_the_refusal_names_the_lookup_tool(self, readable_tree: None) -> None:
+    async def test_the_refusal_says_where_the_codes_come_from(
+        self, readable_tree: None
+    ) -> None:
         del readable_tree
         with pytest.raises(ValidationError) as excinfo:
             await _validate(_PROSE)
 
-        assert "lookup_phyletic_codes" in (excinfo.value.detail or "")
+        assert "the phyletic tree carries" in (excinfo.value.detail or "")
 
 
 class TestAnUnknownCodeIsRefusedBeforeThePush:

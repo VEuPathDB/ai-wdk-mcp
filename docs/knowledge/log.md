@@ -1,5 +1,17 @@
 # Knowledge log
 
+## 2026-11-23 - 0.9.0b20: the catalog names no host tool
+
+- No catalog text or refusal names a served tool. A phyletic text states where the codes come
+  from (the clade and genome codes the phyletic tree carries), a cut vocabulary says to read the
+  parameter again with a query, the EDA-backed search guidance states the workflow without the
+  host's EDA tools, and a vague search query is refused without a tool name, because
+  a host serves these texts to agents that may not hold the tool. The served tools' own
+  descriptions still name their sibling tools. A unit test scans every catalog literal for a
+  served tool name.
+- It takes `veupathdb-py` 0.9.0b15.
+- `veupathdb-mcp` is 0.9.0b20.
+
 ## 2026-11-23 - 0.9.0b19: a refusal names every problem once
 
 - This release carries the refusal work since 0.9.0b18: a read and a walk name every miss
