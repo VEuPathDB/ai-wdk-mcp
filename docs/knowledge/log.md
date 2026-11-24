@@ -1,5 +1,15 @@
 # Knowledge log
 
+## 2026-11-24 - 0.9.0b24: a refused narrowing is reported
+
+- `get_search_params_under_context` returns `NotNarrowed`, the published view and the
+  site's refusal, when WDK does not narrow; it no longer returns the published view in
+  its place. A caller takes `narrowed_or_published` or `narrowed_or_raise`.
+- `wdk_fetch_at` keeps the walk on the published view; `wdk_fetch_under_parents_at` raises
+  the refusal, for a reader that labels a value from the vocabulary under its parents.
+- It takes `veupathdb-py` 0.9.0b18.
+- `veupathdb-mcp` is 0.9.0b24.
+
 ## 2026-11-24 - 0.9.0b23: a tree lookup tells same-named entries apart
 
 - A vocabulary read narrowed over a tree passes each entry's place to `read_options`, so

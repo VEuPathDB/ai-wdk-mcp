@@ -46,7 +46,7 @@ from veupathdb.errors import (
     param_message_rows,
 )
 from veupathdb.model import CamelModel
-from veupathdb.wdk import WDKParameter, get_wdk_client
+from veupathdb.wdk import WDKParameter, WDKSearchResponse, get_wdk_client
 
 from veupathdb_mcp.catalog._param_binding import (
     OverrideMap,
@@ -81,7 +81,10 @@ from veupathdb_mcp.catalog.param_phyletic import (
     phyletic_refusal,
 )
 from veupathdb_mcp.catalog.search_context import (
+    NotNarrowed,
     get_search_params_under_context,
+    narrowed_or_published,
+    narrowed_or_raise,
 )
 from veupathdb_mcp.catalog.site_set_params import SiteSetParameterError
 from veupathdb_mcp.catalog.vocab_resolve import (
@@ -723,23 +726,41 @@ async def _read_standing(
     return as_tree_leaves(declarations, read)
 
 
+async def _read_under(
+    site_id: str, record_type: str, search_name: str, context: dict[str, str]
+) -> WDKSearchResponse | NotNarrowed:
+    # The catalog holds the published view for the process, so every pass of
+    # the walk sends the same parameter shape at the cost of one HTTP read.
+    published = await get_discovery_service().get_search_details(
+        SearchContext(site_id, record_type, search_name), expand_params=True
+    )
+    return await get_search_params_under_context(
+        get_wdk_client(site_id),
+        record_type,
+        search_name,
+        context,
+        published=published,
+    )
+
+
 def wdk_fetch_at(site_id: str, record_type: str, search_name: str) -> ParamFetcher:
-    ctx = SearchContext(site_id, record_type, search_name)
+    """The walk's reads; a context WDK refuses to narrow reads the published view."""
 
     async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
-        # The catalog holds the published view for the process, so every pass of
-        # the walk sends the same parameter shape at the cost of one HTTP read.
-        published = await get_discovery_service().get_search_details(
-            ctx, expand_params=True
-        )
-        resp = await get_search_params_under_context(
-            get_wdk_client(site_id),
-            record_type,
-            search_name,
-            context,
-            published=published,
-        )
-        return resp.search_data.parameters or []
+        read = await _read_under(site_id, record_type, search_name, context)
+        return narrowed_or_published(read, search_name).search_data.parameters or []
+
+    return fetch_at
+
+
+def wdk_fetch_under_parents_at(
+    site_id: str, record_type: str, search_name: str
+) -> ParamFetcher:
+    """Reads under the parent values; a context WDK refuses to narrow raises."""
+
+    async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
+        read = await _read_under(site_id, record_type, search_name, context)
+        return narrowed_or_raise(read).search_data.parameters or []
 
     return fetch_at
 

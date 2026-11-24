@@ -54,6 +54,7 @@ from veupathdb_mcp.catalog.radio_pairs import radio_pairs
 from veupathdb_mcp.catalog.radio_readings import RadioReadings, radio_readings
 from veupathdb_mcp.catalog.search_context import (
     get_search_params_under_context,
+    narrowed_or_published,
 )
 from veupathdb_mcp.catalog.searches import (
     UnlistedSearchError,
@@ -362,10 +363,10 @@ async def read_radio_readings(
     context = await read_stated_parameters(
         site_id, search_name, context_values, about=about, record_type=rt
     )
-    result = await get_search_params_under_context(
+    read = await get_search_params_under_context(
         get_wdk_client(site_id), rt, search_name, wire_map(context)
     )
-    data = result.search_data
+    data = narrowed_or_published(read, search_name).search_data
     return radio_readings(radio_pairs(data.properties), data.parameters or [], term)
 
 

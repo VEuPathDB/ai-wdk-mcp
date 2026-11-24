@@ -3,12 +3,48 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from enum import StrEnum
 
+from pydantic import BaseModel, ConfigDict
 from veupathdb import get_logger
 from veupathdb.errors import VEuPathDBError
 from veupathdb.wdk import VEuPathDBClient, WDKParameter, WDKSearchResponse
 
 logger = get_logger(__name__)
+
+
+class NotNarrowed(BaseModel):
+    """WDK refused to narrow the parameters under a context."""
+
+    model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
+
+    published: WDKSearchResponse
+    refusal: VEuPathDBError[StrEnum]
+
+
+def narrowed_or_published(
+    read: WDKSearchResponse | NotNarrowed, search_name: str
+) -> WDKSearchResponse:
+    """The narrowed view, or the published one where WDK refused to narrow."""
+    match read:
+        case NotNarrowed():
+            logger.warning(
+                "WDK could not contextualize search params; using the static view",
+                search=search_name,
+                error=str(read.refusal),
+            )
+            return read.published
+        case WDKSearchResponse():
+            return read
+
+
+def narrowed_or_raise(read: WDKSearchResponse | NotNarrowed) -> WDKSearchResponse:
+    """The narrowed view; raises the site's refusal where WDK refused to narrow."""
+    match read:
+        case NotNarrowed():
+            raise read.refusal
+        case WDKSearchResponse():
+            return read
 
 
 def context_for_metadata_read(
@@ -36,17 +72,13 @@ async def get_search_params_under_context(
     context: dict[str, str],
     *,
     published: WDKSearchResponse | None = None,
-) -> WDKSearchResponse:
-    """A search's parameters, narrowed by ``context`` when WDK can narrow them.
+) -> WDKSearchResponse | NotNarrowed:
+    """A search's parameters, narrowed by ``context``, or the refusal when WDK
+    does not narrow them.
 
-    Narrowing replaces a dependent param's static vocabulary with the one valid
-    under its parents. WDK can refuse to narrow a value it accepts on the run
-    endpoint, so a refusal costs vocabulary precision and never the search.
-
-    ``published`` is the static view. It supplies the parameter shape the read
-    must send and the answer a refusal falls back to. A caller that holds a
-    cached one passes it; otherwise this reads it, and raises when it is
-    unreachable.
+    ``published`` is the static view and supplies the parameter shape the read
+    sends. A caller that holds a cached one passes it; otherwise this reads it,
+    and raises when it is unreachable.
     """
     if published is None:
         published = await client.get_search_details(
@@ -64,11 +96,4 @@ async def get_search_params_under_context(
             expand_params=True,
         )
     except VEuPathDBError as exc:
-        logger.warning(
-            "WDK could not contextualize search params; using the static view",
-            search=search_name,
-            record_type=record_type,
-            context_params=sorted(context),
-            error=str(exc),
-        )
-        return published
+        return NotNarrowed(published=published, refusal=exc)

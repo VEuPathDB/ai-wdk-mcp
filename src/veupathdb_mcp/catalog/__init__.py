@@ -85,6 +85,7 @@ from veupathdb_mcp.catalog.param_dag import (
     resolve_params_with_intent,
     unread_quantity,
     wdk_fetch_at,
+    wdk_fetch_under_parents_at,
 )
 from veupathdb_mcp.catalog.param_discovery import fetch_search_details
 from veupathdb_mcp.catalog.param_formatting import (
@@ -173,7 +174,12 @@ from veupathdb_mcp.catalog.radio_readings import (
     RadioReadings,
     radio_readings,
 )
-from veupathdb_mcp.catalog.search_context import get_search_params_under_context
+from veupathdb_mcp.catalog.search_context import (
+    NotNarrowed,
+    get_search_params_under_context,
+    narrowed_or_published,
+    narrowed_or_raise,
+)
 from veupathdb_mcp.catalog.search_inspection import (
     SearchInspection,
     UnknownSearchError,
@@ -277,6 +283,7 @@ __all__ = [
     "NamedVocabulary",
     "NoGeneRecordsError",
     "NoneOf",
+    "NotNarrowed",
     "OverrideMap",
     "ParamFetcher",
     "ParamIntent",
@@ -372,6 +379,8 @@ __all__ = [
     "lookup_phyletic_codes",
     "make_record_type_resolver",
     "make_validation_callbacks",
+    "narrowed_or_published",
+    "narrowed_or_raise",
     "ordered_by_vocabulary",
     "ordered_refusal",
     "ordered_terms",
@@ -412,5 +421,6 @@ __all__ = [
     "validate_parameters",
     "validate_search_params",
     "wdk_fetch_at",
+    "wdk_fetch_under_parents_at",
     "write_phyletic_expression",
 ]

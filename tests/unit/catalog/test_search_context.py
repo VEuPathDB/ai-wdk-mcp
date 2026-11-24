@@ -29,6 +29,7 @@ from veupathdb.errors import VEuPathDBError, WDKError
 from veupathdb.wdk import WDKParameter, WDKSearch, WDKSearchResponse, WDKStringParam
 
 from veupathdb_mcp.catalog.search_context import (
+    NotNarrowed,
     context_for_metadata_read,
     get_search_params_under_context,
 )
@@ -120,17 +121,21 @@ class TestContextIsUsedWhenItWorks:
 
 class TestContextFailureDegrades:
     @pytest.mark.asyncio
-    async def test_a_5xx_falls_back_to_the_static_view(self) -> None:
-        client = _client(
-            contextual=WDKError("500 Internal Error", status=500),
-            plain=_response(_param("static")),
-        )
+    async def test_a_5xx_is_a_view_not_narrowed_that_holds_the_static_one(
+        self,
+    ) -> None:
+        refusal = WDKError("500 Internal Error", status=500)
+        client = _client(contextual=refusal, plain=_response(_param("static")))
 
         result = await get_search_params_under_context(
             client, "transcript", "GenesByOrthologPattern", {"organism": "[]"}
         )
 
-        assert result.search_data.param_names == ["static"]
+        assert isinstance(result, NotNarrowed)
+        assert (result.published.search_data.param_names, result.refusal) == (
+            ["static"],
+            refusal,
+        )
 
     @pytest.mark.asyncio
     async def test_both_endpoints_are_tried_when_wdk_cannot_contextualize(self) -> None:

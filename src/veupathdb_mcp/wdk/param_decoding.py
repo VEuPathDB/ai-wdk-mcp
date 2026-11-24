@@ -6,7 +6,10 @@ from veupathdb.errors import VEuPathDBError
 from veupathdb.wdk import StrategyAPI, WDKSearch
 
 from veupathdb_mcp.catalog.param_adapters import adapt_param_specs_from_search
-from veupathdb_mcp.catalog.search_context import get_search_params_under_context
+from veupathdb_mcp.catalog.search_context import (
+    get_search_params_under_context,
+    narrowed_or_published,
+)
 
 logger = get_logger(__name__)
 
@@ -21,7 +24,7 @@ async def load_search_spec(
 ) -> WDKSearch | None:
     """Load a search spec, narrowed by the given context. None if unreachable."""
     try:
-        response = await get_search_params_under_context(
+        read = await get_search_params_under_context(
             api.client, record_type, search_name, context
         )
     except VEuPathDBError as exc:
@@ -32,7 +35,7 @@ async def load_search_spec(
             error=str(exc),
         )
         return None
-    return response.search_data
+    return narrowed_or_published(read, search_name).search_data
 
 
 def decode_wire_parameters(
