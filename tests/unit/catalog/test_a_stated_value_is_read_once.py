@@ -9,9 +9,10 @@ from tests._support.filter_reads import FilterReadsDouble
 from tests._support.recorded_searches import recorded_search
 from veupathdb.domain import SearchContext
 from veupathdb.domain.parameters import ParamValue, StatedValuesError
+from veupathdb.domain.strategy import StepValidation
 from veupathdb.errors import ValidationError
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
-from veupathdb.wdk import WDKParameter
+from veupathdb.wdk import WDKParameter, WDKSearch, WDKSearchResponse
 
 from veupathdb_mcp.catalog import (
     ParameterInfo,
@@ -120,6 +121,22 @@ async def test_a_site_set_name_is_refused_before_its_value_is_read() -> None:
 def served(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(catalog_tools, "wdk_fetch_at", lambda *args: by_organism)
     monkeypatch.setattr(search_inspection, "wdk_fetch_at", lambda *args: by_organism)
+
+    async def _under(
+        site_id: str, record_type: str, search_name: str, context: dict[str, str]
+    ) -> WDKSearchResponse:
+        del site_id, record_type
+        parameters = await by_organism(context)
+        return WDKSearchResponse(
+            search_data=WDKSearch(
+                url_segment=search_name,
+                param_names=[p.name for p in parameters],
+                parameters=parameters,
+            ),
+            validation=StepValidation(level="NONE", is_valid=False),
+        )
+
+    monkeypatch.setattr(search_inspection, "read_search_under", _under)
     monkeypatch.setattr(
         search_inspection, "WDKFilterReads", lambda *args: FilterReadsDouble()
     )

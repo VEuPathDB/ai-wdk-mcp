@@ -726,9 +726,10 @@ async def _read_standing(
     return as_tree_leaves(declarations, read)
 
 
-async def _read_under(
+async def read_search_under(
     site_id: str, record_type: str, search_name: str, context: dict[str, str]
 ) -> WDKSearchResponse | NotNarrowed:
+    """A search's definition under ``context``, or why the site did not narrow it."""
     # The catalog holds the published view for the process, so every pass of
     # the walk sends the same parameter shape at the cost of one HTTP read.
     published = await get_discovery_service().get_search_details(
@@ -747,7 +748,7 @@ def wdk_fetch_at(site_id: str, record_type: str, search_name: str) -> ParamFetch
     """The walk's reads; a context WDK refuses to narrow reads the published view."""
 
     async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
-        read = await _read_under(site_id, record_type, search_name, context)
+        read = await read_search_under(site_id, record_type, search_name, context)
         return narrowed_or_published(read, search_name).search_data.parameters or []
 
     return fetch_at
@@ -759,7 +760,7 @@ def wdk_fetch_under_parents_at(
     """Reads under the parent values; a context WDK refuses to narrow raises."""
 
     async def fetch_at(context: dict[str, str]) -> list[WDKParameter]:
-        read = await _read_under(site_id, record_type, search_name, context)
+        read = await read_search_under(site_id, record_type, search_name, context)
         return narrowed_or_raise(read).search_data.parameters or []
 
     return fetch_at

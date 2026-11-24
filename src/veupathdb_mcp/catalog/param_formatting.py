@@ -133,6 +133,8 @@ class ParameterInfo(CamelModel):
     allowed_values_total: int | None = None
     allowed_values_tree: str | None = None
     allowed_values_note: str | None = None
+    # Set when the vocabulary is the published one because the site did not narrow it.
+    not_narrowed: str | None = None
     # The shown entries that carry the request's words. None when no request ranked the read.
     allowed_values_from_request: int | None = None
     # The terms of the entries the site ships as a prompt, left out of every list.

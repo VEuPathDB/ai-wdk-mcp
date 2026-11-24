@@ -1,5 +1,19 @@
 # Knowledge log
 
+## 2026-11-24 - 0.9.0b25: a read the site did not narrow says why
+
+- `NotNarrowed` is two types. `NarrowingFailed` holds the site's refusal (a 5xx after
+  retries, a timeout). `NarrowingUnsupported` is a context WDK refuses for any value, read
+  from the measured pair: organism with a non-empty `profile_pattern` on
+  `GenesByOrthologPattern` returns 500 on the narrowing read and 200 on the run, so the
+  read is not sent. Each carries the note a caller states.
+- `wdk_fetch_under_parents_at` raises the refusal for the first and
+  `NarrowingUnsupportedError` with the note for the second.
+- `read_parameter_options` reads through `read_search_under`; options from the published
+  view carry `ParameterInfo.not_narrowed`, never nothing.
+- It takes `veupathdb-py` 0.9.0b18.
+- `veupathdb-mcp` is 0.9.0b25.
+
 ## 2026-11-24 - 0.9.0b24: a refused narrowing is reported
 
 - `get_search_params_under_context` returns `NotNarrowed`, the published view and the

@@ -38,6 +38,7 @@ from veupathdb_mcp.catalog.param_dag import (
     BoundValues,
     MovedParentError,
     ParamFetcher,
+    read_search_under,
     read_under_parents,
     wdk_fetch_at,
 )
@@ -55,6 +56,7 @@ from veupathdb_mcp.catalog.radio_readings import RadioReadings, radio_readings
 from veupathdb_mcp.catalog.search_context import (
     get_search_params_under_context,
     narrowed_or_published,
+    not_narrowed_note,
 )
 from veupathdb_mcp.catalog.searches import (
     UnlistedSearchError,
@@ -390,7 +392,8 @@ async def read_parameter_options(
         site_id, search_name, _auto_resolved_record_type(record_type)
     )
     context = dict(context_values or {})
-    all_params = await wdk_fetch_at(site_id, rt, search_name)(wire_map(context))
+    under = await read_search_under(site_id, rt, search_name, wire_map(context))
+    all_params = narrowed_or_published(under, search_name).search_data.parameters or []
     if any(p.name == parameter_id and p.site_set for p in all_params):
         raise SiteSetParameterError(parameter_id, search_name)
 
@@ -446,7 +449,12 @@ async def read_parameter_options(
                 },
                 WDKFilterReads(site_id, rt, search_name),
             )
-            return shown.model_copy(update={"filter_fields": ranged})
+            return shown.model_copy(
+                update={
+                    "filter_fields": ranged,
+                    "not_narrowed": not_narrowed_note(under),
+                }
+            )
 
     valid = [p.name for p in all_params if p.bindable]
     return ParameterNotOnSearch(

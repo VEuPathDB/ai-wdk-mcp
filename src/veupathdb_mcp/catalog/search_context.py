@@ -7,31 +7,58 @@ from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict
 from veupathdb import get_logger
-from veupathdb.errors import VEuPathDBError
+from veupathdb.errors import ValidationError, VEuPathDBError
 from veupathdb.wdk import VEuPathDBClient, WDKParameter, WDKSearchResponse
 
 logger = get_logger(__name__)
 
 
-class NotNarrowed(BaseModel):
-    """WDK refused to narrow the parameters under a context."""
+_NOT_NARROWED = "not narrowed to your parent values"
+_PHYLETIC_NOTE = (
+    f"{_NOT_NARROWED}; the site does not narrow organism with a phyletic pattern"
+)
+
+
+class NarrowingFailed(BaseModel):
+    """The site did not answer the read under a context."""
 
     model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
 
     published: WDKSearchResponse
     refusal: VEuPathDBError[StrEnum]
 
+    @property
+    def note(self) -> str:
+        return f"{_NOT_NARROWED}; the site did not answer the read (HTTP {self.refusal.status})"
+
+
+class NarrowingUnsupported(BaseModel):
+    """The site does not narrow this context, so the read is not sent."""
+
+    model_config = ConfigDict(frozen=True)
+
+    published: WDKSearchResponse
+    note: str
+
+
+type NotNarrowed = NarrowingFailed | NarrowingUnsupported
+
+
+class NarrowingUnsupportedError(ValidationError):
+    def __init__(self, note: str) -> None:
+        super().__init__(title="The site does not narrow these values", detail=note)
+
 
 def narrowed_or_published(
     read: WDKSearchResponse | NotNarrowed, search_name: str
 ) -> WDKSearchResponse:
-    """The narrowed view, or the published one where WDK refused to narrow."""
+    """The narrowed view, or the published one where the site did not narrow."""
     match read:
-        case NotNarrowed():
+        case NarrowingFailed() | NarrowingUnsupported():
             logger.warning(
-                "WDK could not contextualize search params; using the static view",
+                "search params not narrowed; using the static view",
                 search=search_name,
-                error=str(read.refusal),
+                note=read.note,
             )
             return read.published
         case WDKSearchResponse():
@@ -39,12 +66,34 @@ def narrowed_or_published(
 
 
 def narrowed_or_raise(read: WDKSearchResponse | NotNarrowed) -> WDKSearchResponse:
-    """The narrowed view; raises the site's refusal where WDK refused to narrow."""
+    """The narrowed view; raises where the site did not narrow."""
     match read:
-        case NotNarrowed():
+        case NarrowingFailed():
             raise read.refusal
+        case NarrowingUnsupported():
+            raise NarrowingUnsupportedError(read.note)
         case WDKSearchResponse():
             return read
+
+
+def not_narrowed_note(read: WDKSearchResponse | NotNarrowed) -> str | None:
+    """What a read from the published view states; None for a narrowed read."""
+    match read:
+        case NarrowingFailed() | NarrowingUnsupported():
+            return read.note
+        case WDKSearchResponse():
+            return None
+
+
+def _never_narrowed(search_name: str, context: dict[str, str]) -> str | None:
+    """The measured contexts WDK refuses to narrow for any value."""
+    if (
+        search_name == "GenesByOrthologPattern"
+        and context.get("organism", "[]") != "[]"
+        and context.get("profile_pattern")
+    ):
+        return _PHYLETIC_NOTE
+    return None
 
 
 def context_for_metadata_read(
@@ -73,8 +122,8 @@ async def get_search_params_under_context(
     *,
     published: WDKSearchResponse | None = None,
 ) -> WDKSearchResponse | NotNarrowed:
-    """A search's parameters, narrowed by ``context``, or the refusal when WDK
-    does not narrow them.
+    """A search's parameters, narrowed by ``context``, or why WDK did not narrow
+    them: the site failed, or the context is one WDK refuses for any value.
 
     ``published`` is the static view and supplies the parameter shape the read
     sends. A caller that holds a cached one passes it; otherwise this reads it,
@@ -86,6 +135,9 @@ async def get_search_params_under_context(
         )
     if not context:
         return published
+    never = _never_narrowed(search_name, context)
+    if never is not None:
+        return NarrowingUnsupported(published=published, note=never)
     try:
         return await client.get_search_details_with_params(
             record_type,
@@ -96,4 +148,4 @@ async def get_search_params_under_context(
             expand_params=True,
         )
     except VEuPathDBError as exc:
-        return NotNarrowed(published=published, refusal=exc)
+        return NarrowingFailed(published=published, refusal=exc)

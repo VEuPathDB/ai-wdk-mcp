@@ -81,6 +81,7 @@ from veupathdb_mcp.catalog.param_dag import (
     UnreadQuantityError,
     as_tree_leaves,
     read_declared,
+    read_search_under,
     read_under_parents,
     resolve_params_with_intent,
     unread_quantity,
@@ -175,10 +176,14 @@ from veupathdb_mcp.catalog.radio_readings import (
     radio_readings,
 )
 from veupathdb_mcp.catalog.search_context import (
+    NarrowingFailed,
+    NarrowingUnsupported,
+    NarrowingUnsupportedError,
     NotNarrowed,
     get_search_params_under_context,
     narrowed_or_published,
     narrowed_or_raise,
+    not_narrowed_note,
 )
 from veupathdb_mcp.catalog.search_inspection import (
     SearchInspection,
@@ -281,6 +286,9 @@ __all__ = [
     "LabelReading",
     "MovedParentError",
     "NamedVocabulary",
+    "NarrowingFailed",
+    "NarrowingUnsupported",
+    "NarrowingUnsupportedError",
     "NoGeneRecordsError",
     "NoneOf",
     "NotNarrowed",
@@ -381,6 +389,7 @@ __all__ = [
     "make_validation_callbacks",
     "narrowed_or_published",
     "narrowed_or_raise",
+    "not_narrowed_note",
     "ordered_by_vocabulary",
     "ordered_refusal",
     "ordered_terms",
@@ -398,6 +407,7 @@ __all__ = [
     "read_parameter_options",
     "read_radio_readings",
     "read_search_definition",
+    "read_search_under",
     "read_stated_context",
     "read_stated_parameters",
     "read_under_parents",

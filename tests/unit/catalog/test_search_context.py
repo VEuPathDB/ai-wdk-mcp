@@ -29,7 +29,8 @@ from veupathdb.errors import VEuPathDBError, WDKError
 from veupathdb.wdk import WDKParameter, WDKSearch, WDKSearchResponse, WDKStringParam
 
 from veupathdb_mcp.catalog.search_context import (
-    NotNarrowed,
+    NarrowingFailed,
+    NarrowingUnsupported,
     context_for_metadata_read,
     get_search_params_under_context,
 )
@@ -131,11 +132,50 @@ class TestContextFailureDegrades:
             client, "transcript", "GenesByOrthologPattern", {"organism": "[]"}
         )
 
-        assert isinstance(result, NotNarrowed)
+        assert isinstance(result, NarrowingFailed)
         assert (result.published.search_data.param_names, result.refusal) == (
             ["static"],
             refusal,
         )
+
+    @pytest.mark.asyncio
+    async def test_organism_with_a_phyletic_pattern_is_never_sent_to_narrow(
+        self,
+    ) -> None:
+        client = _client(
+            contextual=_response(_param("narrowed")), plain=_response(_param("static"))
+        )
+
+        result = await get_search_params_under_context(
+            client,
+            "transcript",
+            "GenesByOrthologPattern",
+            {"organism": '["Plasmodium falciparum 3D7"]', "profile_pattern": "pfal=1T"},
+        )
+
+        assert result == NarrowingUnsupported(
+            published=_response(_param("static")),
+            note=(
+                "not narrowed to your parent values; the site does not narrow "
+                "organism with a phyletic pattern"
+            ),
+        )
+        assert client.get_search_details_with_params.await_count == 0
+
+    @pytest.mark.asyncio
+    async def test_organism_alone_is_narrowed(self) -> None:
+        client = _client(
+            contextual=_response(_param("narrowed")), plain=_response(_param("static"))
+        )
+
+        result = await get_search_params_under_context(
+            client,
+            "transcript",
+            "GenesByOrthologPattern",
+            {"organism": '["Plasmodium falciparum 3D7"]'},
+        )
+
+        assert result == _response(_param("narrowed"))
 
     @pytest.mark.asyncio
     async def test_both_endpoints_are_tried_when_wdk_cannot_contextualize(self) -> None:
