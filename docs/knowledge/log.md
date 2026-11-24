@@ -1,5 +1,12 @@
 # Knowledge log
 
+## 2026-11-24 - 0.9.0b23: a tree lookup tells same-named entries apart
+
+- A vocabulary read narrowed over a tree passes each entry's place to `read_options`, so
+  entries that share a name under different organisms are not one name.
+- It takes `veupathdb-py` 0.9.0b18.
+- `veupathdb-mcp` is 0.9.0b23.
+
 ## 2026-11-24 - 0.9.0b22: a strategy read keeps every step setting
 
 - This release carries the strategy read work since 0.9.0b21: weight, filters and
