@@ -19,6 +19,7 @@ from veupathdb.domain.parameters import (
     VocabRead,
     WDKTreeBoxVocabNode,
     read_options,
+    vocab_paths,
     wire_map,
 )
 from veupathdb.errors import WDKError
@@ -211,7 +212,10 @@ def _filter_vocab(
     if vocab is None or not narrowing.terms:
         return param, None
     read = read_options(
-        entries_of(vocab), narrowing.terms, request_terms=narrowing.request_terms
+        entries_of(vocab),
+        narrowing.terms,
+        request_terms=narrowing.request_terms,
+        under=vocab_paths(vocab),
     )
 
     if isinstance(vocab, WDKTreeBoxVocabNode):
