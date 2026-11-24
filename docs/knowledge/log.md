@@ -1,5 +1,12 @@
 # Knowledge log
 
+## 2026-11-24 - 0.9.0b27: no reading of a radio pair
+
+- `read_radio_readings`, `radio_readings`, `RadioReadings`, `LabelReading` and
+  `DescriptionReading` are deleted: no host read them. `check_radio_pairs` and the
+  accession note of `read_parameter_options` stay.
+- `veupathdb-mcp` is 0.9.0b27.
+
 ## 2026-11-24 - 0.9.0b26: a radio reading the site did not narrow says why
 
 - `read_radio_readings` reads through `get_search_params_under_context`. A context the

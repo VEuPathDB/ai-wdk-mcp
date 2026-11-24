@@ -46,7 +46,6 @@ def _stub_client(monkeypatch: pytest.MonkeyPatch, fixture: str) -> MagicMock:
     client.get_search_details = AsyncMock(return_value=response)
     client.get_search_details_with_params = AsyncMock(return_value=response)
     monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
-    monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
     serve_reads(monkeypatch, response, client)
     return client
 
@@ -475,7 +474,6 @@ async def test_an_options_read_takes_a_half_open_range_bound_on_the_search(
     client.get_search_details = AsyncMock(return_value=response)
     client.get_search_details_with_params = AsyncMock(return_value=response)
     monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
-    monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
     serve_reads(monkeypatch, response, client)
 
     result = await read_parameter_options(

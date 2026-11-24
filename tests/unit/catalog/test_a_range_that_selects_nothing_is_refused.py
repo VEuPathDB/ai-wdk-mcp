@@ -285,7 +285,6 @@ async def _options_read(
     client.get_search_details = AsyncMock(return_value=response)
     client.get_search_details_with_params = AsyncMock(return_value=response)
     monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
-    monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
     serve_reads(monkeypatch, response, client)
     reads = FilterReadsDouble(
         {"total_variants": "ontology_term_summary_total_variants"}

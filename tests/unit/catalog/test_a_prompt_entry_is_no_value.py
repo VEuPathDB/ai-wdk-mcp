@@ -13,7 +13,7 @@ from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
 from veupathdb.testing.wdk_fixtures import load_recorded
 from veupathdb.wdk import WDKEnumParam, WDKSearchResponse
 
-from veupathdb_mcp.catalog import search_inspection, searches
+from veupathdb_mcp.catalog import searches
 from veupathdb_mcp.catalog.param_formatting import (
     ParameterInfo,
     format_typed_param,
@@ -98,7 +98,6 @@ async def test_a_narrowed_read_matches_no_prompt(
     client.get_search_details = AsyncMock(return_value=response)
     client.get_search_details_with_params = AsyncMock(return_value=response)
     monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
-    monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
     serve_reads(monkeypatch, response, client)
 
     info = await read_parameter_options(

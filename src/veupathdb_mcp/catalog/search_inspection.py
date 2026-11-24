@@ -23,7 +23,7 @@ from veupathdb.domain.parameters import (
     wire_map,
 )
 from veupathdb.errors import WDKError
-from veupathdb.wdk import WDKParameter, WDKSearch, get_wdk_client
+from veupathdb.wdk import WDKParameter, WDKSearch
 
 from veupathdb_mcp.catalog.facet_ranges import FilterReads, WDKFilterReads, with_ranges
 from veupathdb_mcp.catalog.organisms import organism_parameter_of
@@ -51,11 +51,7 @@ from veupathdb_mcp.catalog.param_formatting import (
     format_typed_param,
     phyletic_options_for,
 )
-from veupathdb_mcp.catalog.radio_pairs import radio_pairs
-from veupathdb_mcp.catalog.radio_readings import RadioReadings, radio_readings
 from veupathdb_mcp.catalog.search_context import (
-    NarrowingFailed,
-    get_search_params_under_context,
     narrowed_or_published,
     not_narrowed_note,
 )
@@ -349,35 +345,6 @@ async def read_stated_context(
         fetch_at, stated, reads, about=about, bound=bound, stale=stale
     )
     return values, stale
-
-
-async def read_radio_readings(
-    site_id: str,
-    search_name: str,
-    term: str,
-    *,
-    about: ResolveContext | None,
-    record_type: str | None = None,
-    context_values: Mapping[str, JsonValue] | None = None,
-) -> list[RadioReadings]:
-    rt = await resolve_search_record_type(
-        site_id, search_name, _auto_resolved_record_type(record_type)
-    )
-    context = await read_stated_parameters(
-        site_id, search_name, context_values, about=about, record_type=rt
-    )
-    read = await get_search_params_under_context(
-        get_wdk_client(site_id), rt, search_name, wire_map(context)
-    )
-    match read:
-        case NarrowingFailed(refusal=refusal):
-            raise refusal
-        case _:
-            data = narrowed_or_published(read, search_name).search_data
-    found = radio_readings(radio_pairs(data.properties), data.parameters or [], term)
-    return [
-        r.model_copy(update={"not_narrowed": not_narrowed_note(read)}) for r in found
-    ]
 
 
 async def read_parameter_options(

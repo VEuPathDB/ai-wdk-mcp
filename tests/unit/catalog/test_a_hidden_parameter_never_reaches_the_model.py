@@ -44,20 +44,12 @@ def served(monkeypatch: pytest.MonkeyPatch) -> None:
         del site_id, search_name, wanted
         return "transcript"
 
-    async def under_context(*args: object, **kwargs: object) -> WDKSearchResponse:
-        del args, kwargs
-        return _snps()
-
     async def definition(site_id: str, rt: str, search_name: str) -> object:
         del site_id, rt, search_name
         return _snps().search_data
 
     monkeypatch.setattr(search_inspection, "resolve_search_record_type", record_type)
-    monkeypatch.setattr(
-        search_inspection, "get_search_params_under_context", under_context
-    )
     monkeypatch.setattr(search_inspection, "read_search_definition", definition)
-    monkeypatch.setattr(search_inspection, "get_wdk_client", lambda site_id: None)
     serve_reads(monkeypatch, _snps())
 
 

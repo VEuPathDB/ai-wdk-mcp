@@ -11,7 +11,7 @@ from tests._support.wdk_reads import serve_reads
 from veupathdb.domain.parameters import ParamValue, SinglePickValue
 from veupathdb.wdk import WDKSearchResponse
 
-from veupathdb_mcp.catalog import search_inspection, searches
+from veupathdb_mcp.catalog import searches
 
 FIXTURES = Path(__file__).parent / "fixtures"
 DAL972 = "tritrypdb_dal972_pfam_refresh"
@@ -56,5 +56,4 @@ def serve(monkeypatch: pytest.MonkeyPatch, name: str) -> None:
     client.get_search_details = AsyncMock(return_value=response)
     client.get_search_details_with_params = AsyncMock(return_value=response)
     monkeypatch.setattr(searches, "get_wdk_client", lambda _site: client)
-    monkeypatch.setattr(search_inspection, "get_wdk_client", lambda _site: client)
     serve_reads(monkeypatch, response, client)

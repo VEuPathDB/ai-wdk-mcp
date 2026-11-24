@@ -169,12 +169,6 @@ from veupathdb_mcp.catalog.radio_pairs import (
     check_radio_pairs,
     radio_pairs,
 )
-from veupathdb_mcp.catalog.radio_readings import (
-    DescriptionReading,
-    LabelReading,
-    RadioReadings,
-    radio_readings,
-)
 from veupathdb_mcp.catalog.search_context import (
     NarrowingFailed,
     NarrowingUnsupported,
@@ -191,7 +185,6 @@ from veupathdb_mcp.catalog.search_inspection import (
     VocabNarrowing,
     inspect_search,
     read_parameter_options,
-    read_radio_readings,
     read_stated_context,
     read_stated_parameters,
 )
@@ -273,7 +266,6 @@ __all__ = [
     "DecisionResponse",
     "DecisionUsage",
     "DecisionsTransport",
-    "DescriptionReading",
     "EachGenomeOf",
     "EachSpeciesOf",
     "EdaBackedSearch",
@@ -283,7 +275,6 @@ __all__ = [
     "ExperimentMatch",
     "FilterReads",
     "GetParameterOptionsResult",
-    "LabelReading",
     "MovedParentError",
     "NamedVocabulary",
     "NarrowingFailed",
@@ -311,7 +302,6 @@ __all__ = [
     "Provenance",
     "RadioPair",
     "RadioPairIssue",
-    "RadioReadings",
     "RecordTypeInfo",
     "RefusalAnswer",
     "ResolveContext",
@@ -400,12 +390,10 @@ __all__ = [
     "phyletic_tree_for_search",
     "post_decision",
     "radio_pairs",
-    "radio_readings",
     "rank_experiments_elsewhere",
     "read_declared",
     "read_experiment",
     "read_parameter_options",
-    "read_radio_readings",
     "read_search_definition",
     "read_search_under",
     "read_stated_context",
