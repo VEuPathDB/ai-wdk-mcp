@@ -54,6 +54,7 @@ from veupathdb_mcp.catalog.param_formatting import (
 from veupathdb_mcp.catalog.radio_pairs import radio_pairs
 from veupathdb_mcp.catalog.radio_readings import RadioReadings, radio_readings
 from veupathdb_mcp.catalog.search_context import (
+    NarrowingFailed,
     get_search_params_under_context,
     narrowed_or_published,
     not_narrowed_note,
@@ -368,8 +369,15 @@ async def read_radio_readings(
     read = await get_search_params_under_context(
         get_wdk_client(site_id), rt, search_name, wire_map(context)
     )
-    data = narrowed_or_published(read, search_name).search_data
-    return radio_readings(radio_pairs(data.properties), data.parameters or [], term)
+    match read:
+        case NarrowingFailed(refusal=refusal):
+            raise refusal
+        case _:
+            data = narrowed_or_published(read, search_name).search_data
+    found = radio_readings(radio_pairs(data.properties), data.parameters or [], term)
+    return [
+        r.model_copy(update={"not_narrowed": not_narrowed_note(read)}) for r in found
+    ]
 
 
 async def read_parameter_options(

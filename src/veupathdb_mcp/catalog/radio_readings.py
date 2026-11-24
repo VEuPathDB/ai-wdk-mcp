@@ -41,6 +41,7 @@ class RadioReadings(CamelModel):
     label: LabelReading | None = None
     description: DescriptionReading | None = None
     accession: AccessionNames | None = None
+    not_narrowed: str | None = None
 
 
 def _picked(param: WDKParameter, values: list[str]) -> ParamValue | None:

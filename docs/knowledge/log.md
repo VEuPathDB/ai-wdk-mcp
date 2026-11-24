@@ -1,5 +1,14 @@
 # Knowledge log
 
+## 2026-11-24 - 0.9.0b26: a radio reading the site did not narrow says why
+
+- `read_radio_readings` reads through `get_search_params_under_context`. A context the
+  site never narrows gives readings from the published view, each with
+  `RadioReadings.not_narrowed` set to the note; a site that did not answer the read
+  raises its refusal. A narrowed read carries no mark.
+- It takes `veupathdb-py` 0.9.0b18.
+- `veupathdb-mcp` is 0.9.0b26.
+
 ## 2026-11-24 - 0.9.0b25: a read the site did not narrow says why
 
 - `NotNarrowed` is two types. `NarrowingFailed` holds the site's refusal (a 5xx after

@@ -22,7 +22,9 @@ reads each pair a search declares in `radio-params` and answers `RadioReadings`:
   the value followed by a name.
 
 `read_radio_readings(site_id, search_name, term, *, record_type, context_values)` reads
-the parameters under the parents the caller binds and calls `radio_readings`. Each
+the parameters under the parents the caller binds and calls `radio_readings`. Where the
+site never narrows that context, each reading carries `not_narrowed`, the note; where the
+site did not answer the read, the call raises its refusal. Each
 reading's `params` goes to `count_search_answer` beside the caller's other values.
 
 `check_radio_pairs` accepts a free-text value beside a vocabulary half bound to `N/A`
