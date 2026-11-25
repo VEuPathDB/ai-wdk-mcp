@@ -1,7 +1,7 @@
 ---
 type: Decision
 title: The catalog shares a search definition across logins
-description: The site catalog keeps one copy of each search definition for every login, because no gene search lists a user's own data today, and a step write reads its definitions through the site client, which keeps each one for fifteen minutes under its login; a per-request catalog was rejected for the load it puts on the sites.
+description: The site catalog keeps one copy of each search definition for every login, because no gene search lists a user's own data today, and a step write reads its definitions through the site client, which keeps each one for an hour under its login; a per-request catalog was rejected for the load it puts on the sites.
 tags: [catalog, search-definitions, wdk-load, users]
 status: stable
 ---
@@ -18,9 +18,9 @@ Target Gene List of a step analysis form. No gene search uses one, so every logi
 the same definition from the catalog.
 
 A step write does not read the catalog's copy. It reads through the site client, which
-keeps each definition for fifteen minutes under that login only (veupathdb-py,
+keeps each definition for an hour under that login only (veupathdb-py,
 `decisions/a-turn-reads-once-and-a-definition-is-kept-for-a-time.md`), so a separation
-run reads each definition once in any fifteen minutes; a run that lasts longer reads it
+run reads each definition once in any hour; a run that lasts longer reads it
 again, and its charges do not count that read.
 
 Each site release is checked for a gene search whose vocabulary takes `user_id`. One

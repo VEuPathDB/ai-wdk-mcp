@@ -1,8 +1,8 @@
 # Knowledge log
 
-## 2026-11-25 - 0.9.0b28: veupathdb-py 0.9.0b20, a definition is kept for fifteen minutes
+## 2026-11-25 - 0.9.0b28: veupathdb-py 0.9.0b20, a definition is kept for an hour
 
-- veupathdb-py 0.9.0b20 keeps each search definition for fifteen minutes in the site client
+- veupathdb-py 0.9.0b20 keeps each search definition for an hour in one store per process
   and deletes `search_definitions_read_once`, so `separate` opens no scope of its own.
 - `veupathdb-mcp` is 0.9.0b28.
 
