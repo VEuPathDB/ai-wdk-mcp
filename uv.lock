@@ -2123,7 +2123,7 @@ dev = [
 [[package]]
 name = "veupathdb-py"
 version = "0.9.0b20"
-source = { git = "https://github.com/VEuPathDB/ai-veupathdb-client?tag=v0.9.0b20#9e95ddd23bcac0562a1ea9fa82cadd3f0888d418" }
+source = { git = "https://github.com/VEuPathDB/ai-veupathdb-client?tag=v0.9.0b20#82c81710fc47d254feaf49b092c98dea65cadf0b" }
 dependencies = [
     { name = "httpx" },
     { name = "json5" },
