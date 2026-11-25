@@ -1,5 +1,11 @@
 # Knowledge log
 
+## 2026-11-25 - 0.9.0b28: veupathdb-py 0.9.0b20, a definition is kept for fifteen minutes
+
+- veupathdb-py 0.9.0b20 keeps each search definition for fifteen minutes in the site client
+  and deletes `search_definitions_read_once`, so `separate` opens no scope of its own.
+- `veupathdb-mcp` is 0.9.0b28.
+
 ## 2026-11-24 - 0.9.0b27: no reading of a radio pair
 
 - `read_radio_readings`, `radio_readings`, `RadioReadings`, `LabelReading` and

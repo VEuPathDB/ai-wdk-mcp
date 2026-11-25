@@ -16,11 +16,7 @@ from veupathdb.auth_context import veupathdb_auth_token_ctx
 from veupathdb.domain.parameters import MultiPickValue, SinglePickValue
 from veupathdb.domain.strategy import CombineOp
 from veupathdb.testing import NEEDS_QA_RECORDING, needs_qa_recording
-from veupathdb.wdk import (
-    get_strategy_api,
-    get_wdk_client,
-    search_definitions_read_once,
-)
+from veupathdb.wdk import get_strategy_api, get_wdk_client
 
 from veupathdb_mcp.controls import ControlsSearch, upload_controls
 from veupathdb_mcp.gene_lookup import resolve_gene_ids
@@ -123,8 +119,7 @@ async def _ignore(update: SeparationUpdate) -> None:
 async def test_every_stage_costs_the_requests_its_charge_names(
     replay: _Replay,
 ) -> None:
-    with search_definitions_read_once():
-        await _one_run()
+    await _one_run()
 
     assert replay.stages() == {
         "resolve_positives": RESOLVE_REQUESTS,

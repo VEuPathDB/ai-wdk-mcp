@@ -19,9 +19,10 @@ UPLOAD_REQUESTS = 2
 """The controls parameter-type read and the one dataset of every control."""
 
 MEASURE_REQUESTS = 7
-"""Three steps, the strategy, the count, the answer and the delete. A run reads each
-search definition once, so the candidate's search and the controls search are read
-before, and the site client keeps the combine's boolean search once it is read."""
+"""Three steps, the strategy, the count, the answer and the delete. The site client
+keeps each search definition for fifteen minutes, so the candidate's search and the
+controls search are read before, and it keeps the combine's boolean search once it is
+read."""
 
 SEARCH_READ_REQUESTS = 1
 """One read of a search: its definition, first read by the catalog or by the
