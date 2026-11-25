@@ -20,9 +20,10 @@ UPLOAD_REQUESTS = 2
 
 MEASURE_REQUESTS = 7
 """Three steps, the strategy, the count, the answer and the delete. The site client
-keeps each search definition for fifteen minutes, so the candidate's search and the
-controls search are read before, and it keeps the combine's boolean search once it is
-read."""
+keeps each search definition for fifteen minutes, so a measurement within fifteen
+minutes of the read of its search and the controls search reads neither again; a later
+one reads them again, and no charge counts that read. The client keeps the combine's
+boolean search once it is read."""
 
 SEARCH_READ_REQUESTS = 1
 """One read of a search: its definition, first read by the catalog or by the

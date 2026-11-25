@@ -20,7 +20,8 @@ the same definition from the catalog.
 A step write does not read the catalog's copy. It reads through the site client, which
 keeps each definition for fifteen minutes under that login only (veupathdb-py,
 `decisions/a-turn-reads-once-and-a-definition-is-kept-for-a-time.md`), so a separation
-run reads each definition once.
+run reads each definition once in any fifteen minutes; a run that lasts longer reads it
+again, and its charges do not count that read.
 
 Each site release is checked for a gene search whose vocabulary takes `user_id`. One
 such search would make the catalog's copy show the first login's data to every other
